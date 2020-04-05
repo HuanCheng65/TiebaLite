@@ -1,9 +1,9 @@
 package com.huanchengfly.tieba.api.retrofit.interceptors
 
-import com.huanchengfly.tieba.api.addAllEncoded
-import com.huanchengfly.tieba.api.forEachNonNull
 import com.huanchengfly.tieba.api.Header
 import com.huanchengfly.tieba.api.Method
+import com.huanchengfly.tieba.api.addAllEncoded
+import com.huanchengfly.tieba.api.forEachNonNull
 import okhttp3.FormBody
 import okhttp3.Interceptor
 import okhttp3.Response
@@ -13,9 +13,9 @@ import kotlin.math.roundToInt
 class StParamInterceptor(private val method: Boolean = false) : Interceptor {
     override fun intercept(chain: Interceptor.Chain): Response {
         val request = chain.request()
-        var headers = request.headers()
-        var httpUrl = request.url()
-        var body = request.body()
+        var headers = request.headers
+        var httpUrl = request.url
+        var body = request.body
 
         //是否强制加到 Query(暂不存在强制加到 FormBody 的情况)
         var forceQuery = false
@@ -52,8 +52,8 @@ class StParamInterceptor(private val method: Boolean = false) : Interceptor {
 
         when {
             //如果是 GET 则添加到 Query
-            request.method() == Method.GET || forceQuery -> {
-                httpUrl = request.url().newBuilder().apply {
+            request.method == Method.GET || forceQuery -> {
+                httpUrl = request.url.newBuilder().apply {
                     additionParams.forEachNonNull { name, value ->
                         addQueryParameter(name, value)
                     }
@@ -87,7 +87,7 @@ class StParamInterceptor(private val method: Boolean = false) : Interceptor {
                 request.newBuilder()
                         .headers(headers)
                         .url(httpUrl)
-                        .method(request.method(), body)
+                        .method(request.method, body)
                         .build()
         )
     }

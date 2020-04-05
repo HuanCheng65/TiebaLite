@@ -11,9 +11,9 @@ import okhttp3.Response
 object ForceLoginInterceptor : Interceptor {
     override fun intercept(chain: Interceptor.Chain): Response {
         val request = chain.request()
-        var headers = request.headers()
-        var httpUrl = request.url()
-        var body = request.body()
+        var headers = request.headers
+        var httpUrl = request.url
+        var body = request.body
 
         //是否强制登录
         var forceLogin = false
@@ -31,7 +31,7 @@ object ForceLoginInterceptor : Interceptor {
                 request.newBuilder()
                         .headers(headers)
                         .url(httpUrl)
-                        .method(request.method(), body)
+                        .method(request.method, body)
                         .build()
         )
     }

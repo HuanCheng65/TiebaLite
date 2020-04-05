@@ -1,11 +1,6 @@
 package com.huanchengfly.tieba.api.retrofit.interceptors
 
-import com.huanchengfly.tieba.api.ParamExpression
-import com.huanchengfly.tieba.api.addAllEncoded
-import com.huanchengfly.tieba.api.containsEncodedName
-import com.huanchengfly.tieba.api.forEachNonNull
-import com.huanchengfly.tieba.api.Header
-import com.huanchengfly.tieba.api.Method
+import com.huanchengfly.tieba.api.*
 import okhttp3.FormBody
 import okhttp3.Interceptor
 import okhttp3.Response
@@ -13,9 +8,9 @@ import okhttp3.Response
 class CommonParamInterceptor(private vararg val additionParams: ParamExpression) : Interceptor {
     override fun intercept(chain: Interceptor.Chain): Response {
         val request = chain.request()
-        var headers = request.headers()
-        var httpUrl = request.url()
-        var body = request.body()
+        var headers = request.headers
+        var httpUrl = request.url
+        var body = request.body
 
         //是否强制加到 Query(暂不存在强制加到 FormBody 的情况)
         var forceQuery = false
@@ -27,10 +22,10 @@ class CommonParamInterceptor(private vararg val additionParams: ParamExpression)
 
         when {
             //如果是 GET 则添加到 Query
-            request.method() == Method.GET || forceQuery -> {
-                httpUrl = request.url().newBuilder().apply {
+            request.method == Method.GET || forceQuery -> {
+                httpUrl = request.url.newBuilder().apply {
                     additionParams.forEachNonNull { name, value ->
-                        if (request.url().queryParameter(name) == null) addQueryParameter(name, value)
+                        if (request.url.queryParameter(name) == null) addQueryParameter(name, value)
                     }
                 }.build()
             }
@@ -48,7 +43,7 @@ class CommonParamInterceptor(private vararg val additionParams: ParamExpression)
             body is FormBody -> {
                 body = FormBody.Builder().addAllEncoded(body).apply {
                     additionParams.forEachNonNull { name, value ->
-                        if (!(request.body() as FormBody).containsEncodedName(name)) add(name, value)
+                        if (!(request.body as FormBody).containsEncodedName(name)) add(name, value)
                     }
                 }.build()
             }
@@ -62,7 +57,7 @@ class CommonParamInterceptor(private vararg val additionParams: ParamExpression)
                 request.newBuilder()
                         .headers(headers)
                         .url(httpUrl)
-                        .method(request.method(), body)
+                        .method(request.method, body)
                         .build()
         )
     }

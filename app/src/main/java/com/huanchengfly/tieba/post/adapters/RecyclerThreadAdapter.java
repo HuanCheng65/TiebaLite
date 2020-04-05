@@ -847,7 +847,7 @@ public class RecyclerThreadAdapter extends MultiBaseAdapter<ThreadContentBean.Po
                             videoPlayerStandard.setUp(contentBean.getLink(), "");
                             videoPlayerStandard.setLayoutParams(getLayoutParams(contentBean, postListItemBean.getFloor()));
                             videoPlayerStandard.setId(R.id.video_player);
-                            ImageUtil.load(videoPlayerStandard.thumbImageView, ImageUtil.LOAD_TYPE_SMALL_PIC, contentBean.getSrc(), true);
+                            ImageUtil.load(videoPlayerStandard.posterImageView, ImageUtil.LOAD_TYPE_SMALL_PIC, contentBean.getSrc(), true);
                             views.add(videoPlayerStandard);
                         } else {
                             MyImageView videoImageView = new MyImageView(mContext);

@@ -9,9 +9,9 @@ import okhttp3.Response
 object AddCookieInterceptor : Interceptor {
     override fun intercept(chain: Interceptor.Chain): Response {
         val request = chain.request()
-        var headers = request.headers()
-        val httpUrl = request.url()
-        val body = request.body()
+        var headers = request.headers
+        val httpUrl = request.url
+        val body = request.body
 
         var addCookie = true
         val addCookieHeader = headers[Header.ADD_COOKIE]
@@ -33,7 +33,7 @@ object AddCookieInterceptor : Interceptor {
                 request.newBuilder()
                         .headers(headers)
                         .url(httpUrl)
-                        .method(request.method(), body)
+                        .method(request.method, body)
                         .build()
         )
     }

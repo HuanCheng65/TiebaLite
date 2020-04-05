@@ -264,7 +264,7 @@ public class PersonalizedFeedAdapter extends MultiBaseAdapter<PersonalizedBean.T
                 VideoPlayerStandard videoPlayerStandard = viewHolder.getView(R.id.forum_item_content_video);
                 videoPlayerStandard.setLayoutParams(getLayoutParams((RelativeLayout.LayoutParams) videoPlayerStandard.getLayoutParams()));
                 videoPlayerStandard.setUp(threadBean.getVideoInfo().getVideoUrl(), "");
-                ImageUtil.load(videoPlayerStandard.thumbImageView, ImageUtil.LOAD_TYPE_SMALL_PIC, threadBean.getVideoInfo().getThumbnailUrl(), true);
+                ImageUtil.load(videoPlayerStandard.posterImageView, ImageUtil.LOAD_TYPE_SMALL_PIC, threadBean.getVideoInfo().getThumbnailUrl(), true);
                 break;
         }
         if (!TextUtils.isEmpty(threadBean.getForumName()))

@@ -24,21 +24,21 @@ fun String.urlDecode() : String {
 }
 
 fun FormBody.containsEncodedName(name: String): Boolean {
-    repeat(size()) {
+    repeat(size) {
         if (encodedName(it) == name) return true
     }
     return false
 }
 
 inline fun FormBody.forEach(block: (String, String) -> Unit) {
-    repeat(size()) {
+    repeat(size) {
         block(encodedName(it), encodedValue(it))
     }
 }
 
 fun FormBody.raw() =
         StringBuilder().apply {
-            repeat(size()) {
+            repeat(size) {
                 if (it != 0) append('&')
                 append(encodedName(it))
                 append('=')
@@ -48,7 +48,7 @@ fun FormBody.raw() =
 
 fun FormBody.sortedEncodedRaw(separator: Boolean = true): String {
     val nameAndValue = ArrayList<String>()
-    repeat(size()) {
+    repeat(size) {
         nameAndValue.add("${encodedName(it)}=${encodedValue(it)}")
     }
     if (separator) return nameAndValue.sorted().joinToString(separator = "&")
@@ -57,7 +57,7 @@ fun FormBody.sortedEncodedRaw(separator: Boolean = true): String {
 
 fun FormBody.sortedRaw(separator: Boolean = true): String {
     val nameAndValue = ArrayList<String>()
-    repeat(size()) {
+    repeat(size) {
         nameAndValue.add("${name(it)}=${value(it)}")
     }
     if (separator) return nameAndValue.sorted().joinToString(separator = "&")
@@ -66,7 +66,7 @@ fun FormBody.sortedRaw(separator: Boolean = true): String {
 
 fun FormBody.Builder.addAllEncoded(formBody: FormBody): FormBody.Builder {
     with(formBody) {
-        repeat(size()) {
+        repeat(size) {
             addEncoded(encodedName(it), encodedValue(it))
         }
     }

@@ -53,7 +53,6 @@ public class ForumAdapter extends MultiBaseAdapter<ForumPageBean.ThreadBean> {
     public static final int TYPE_THREAD_VIDEO = 14;
     private ForumPageBean data;
     private Map<String, ForumPageBean.UserBean> userBeanMap;
-    private NavigationHelper navigationHelper;
     private GoodClassifyAdapter goodClassifyAdapter;
     private List<Long> ids;
     private boolean good;
@@ -62,7 +61,6 @@ public class ForumAdapter extends MultiBaseAdapter<ForumPageBean.ThreadBean> {
         super(context, null, true);
         ids = new ArrayList<>();
         userBeanMap = new HashMap<>();
-        navigationHelper = NavigationHelper.newInstance(mContext);
         good = isGood;
         if (isGood) {
             View goodView = Util.inflate(mContext, R.layout.layout_header_forum_good);
@@ -303,7 +301,7 @@ public class ForumAdapter extends MultiBaseAdapter<ForumPageBean.ThreadBean> {
                 VideoPlayerStandard videoPlayerStandard = viewHolder.getView(R.id.forum_item_content_video);
                 videoPlayerStandard.setLayoutParams(getLayoutParams((RelativeLayout.LayoutParams) videoPlayerStandard.getLayoutParams()));
                 videoPlayerStandard.setUp(threadBean.getVideoInfo().getVideoUrl(), "");
-                ImageUtil.load(videoPlayerStandard.thumbImageView, ImageUtil.LOAD_TYPE_SMALL_PIC, threadBean.getVideoInfo().getThumbnailUrl(), true);
+                ImageUtil.load(videoPlayerStandard.posterImageView, ImageUtil.LOAD_TYPE_SMALL_PIC, threadBean.getVideoInfo().getThumbnailUrl(), true);
                 break;
         }
     }

@@ -177,7 +177,7 @@ class FloorActivity : BaseActivity() {
                     hasMore = false
                     recyclerViewAdapter!!.loadEnd()
                 }
-                toolbar.title = getString(R.string.title_floor_loaded, subFloorListBean.post!!.floor)
+                toolbar.title = getString(R.string.title_floor_loaded, subFloorListBean.post.floor)
                 dataBean = subFloorListBean
                 recyclerViewAdapter!!.setData(subFloorListBean)
                 refreshLayout.isRefreshing = false

@@ -1,8 +1,8 @@
 package com.huanchengfly.tieba.api.interceptors
 
 import android.util.Log
-import com.huanchengfly.tieba.api.containsEncodedName
 import com.huanchengfly.tieba.api.Param
+import com.huanchengfly.tieba.api.containsEncodedName
 import com.huanchengfly.tieba.api.sortedEncodedRaw
 import com.huanchengfly.tieba.api.sortedRaw
 import com.huanchengfly.toMD5
@@ -20,14 +20,14 @@ import okhttp3.Response
 class SortAndSignInterceptor(private val appSecret: String) : Interceptor {
     override fun intercept(chain: Interceptor.Chain): Response {
         var request = chain.request()
-        val url = request.url()
-        val body = request.body()
+        val url = request.url
+        val body = request.body
 
         request = when {
             url.queryParameter("BDUSS") != null && url.queryParameter(Param.SIGN) == null -> {
                 Log.i("SortAndSign", "get")
-                val sortedQuery = url.query()!!.split('&').sorted().joinToString(separator = "")
-                val sortedEncodedQuery = url.encodedQuery()!!.split('&').sorted().joinToString(separator = "&")
+                val sortedQuery = url.query!!.split('&').sorted().joinToString(separator = "")
+                val sortedEncodedQuery = url.encodedQuery!!.split('&').sorted().joinToString(separator = "&")
                 request.newBuilder()
                         .url(url.newBuilder()
                                 .encodedQuery("$sortedEncodedQuery&${Param.SIGN}=${calculateSign(sortedQuery, appSecret)}")
@@ -47,7 +47,7 @@ class SortAndSignInterceptor(private val appSecret: String) : Interceptor {
                     addEncoded(Param.SIGN, calculateSign(body.sortedRaw(false), appSecret))
                 }.build()
                 request.newBuilder()
-                        .method(request.method(), formBody)
+                        .method(request.method, formBody)
                         .build()
             }
 

@@ -8,7 +8,7 @@ import okhttp3.Response
 class CommonHeaderInterceptor(private vararg val additionHeaders: ParamExpression) : Interceptor {
     override fun intercept(chain: Interceptor.Chain): Response {
         val request = chain.request()
-        val headers = request.headers()
+        val headers = request.headers
 
         return chain.proceed(request.newBuilder().apply {
             additionHeaders.forEachNonNull { name, value ->
