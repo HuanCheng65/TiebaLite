@@ -124,6 +124,7 @@ public class ForumAdapter extends MultiBaseAdapter<ForumPageBean.ThreadBean> {
             Toast.makeText(mContext, R.string.toast_cannot_view, Toast.LENGTH_SHORT).show();
             return;
         }
+        this.data = data;
         ids = new ArrayList<>();
         List<ForumPageBean.ThreadBean> threadBeans = new ArrayList<>();
         for (ForumPageBean.ThreadBean threadBean : data.getThreadList()) {
@@ -136,7 +137,6 @@ public class ForumAdapter extends MultiBaseAdapter<ForumPageBean.ThreadBean> {
         setNewData(threadBeans);
         addUser(data.getUserList());
         refreshGood();
-        this.data = data;
     }
 
     public void addData(ForumPageBean data) {
