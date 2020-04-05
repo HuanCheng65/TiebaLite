@@ -1,13 +1,38 @@
-version: 2.1
-
-orbs:
- android: circleci/android@0.2.1
+version: 2
 
 jobs:
   build:
-    executor: android/android
-        
+    working_directory: ~/code
+
+    docker:
+      - image: circleci/android:api-29-ndk
+
+    environment:
+      JVM_OPTS: -Xmx4G
+
     steps:
       - checkout
       - run:
-          command: ./gradlew build
+          name: Create release.keystore.jks
+          command: openssl aes-256-cbc -d -in "${releaseKeyStore}.encrypted" -k $RELEASE_ENCRYPT_SECRET_KEY -md md5 >> $releaseKeyStore
+      - run:
+          name: Create keystore.properies
+          command: printf 'releaseKeyAlias=%s\nreleaseKeyPassword=%s\nreleaseKeyStore=%s\nreleaseStorePassword=%s' $releaseKeyAlias $releaseKeyPassword $releaseKeyStore $releaseStorePassword > keystore.properties
+      - restore_cache:
+          key: jars-{{ checksum "build.gradle" }}-{{ checksum  "app/build.gradle" }}
+      - run:
+          name: Fix 'Permission denied'
+          command: chmod +x ./gradlew
+      - run:
+          name: Download Dependencies
+          command: ./gradlew androidDependencies
+      - save_cache:
+          paths:
+          - ~/.gradle
+          key: jars-{{ checksum "build.gradle" }}-{{ checksum  "app/build.gradle" }}
+      - run:
+          name: Initial build
+          command: ./gradlew clean resguardRelease --no-daemon --stacktrace
+      - store_artifacts:
+          path: app/build/outputs/apk/
+          destination: apks/

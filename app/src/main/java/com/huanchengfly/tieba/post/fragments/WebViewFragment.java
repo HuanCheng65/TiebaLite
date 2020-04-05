@@ -58,8 +58,7 @@ import java.util.List;
 import static com.huanchengfly.tieba.post.utils.FileUtil.FILE_TYPE_DOWNLOAD;
 
 public class WebViewFragment extends BaseFragment implements DownloadListener {
-
-    public static final String TAG = "WebViewFragment";
+    public static final String TAG = WebViewFragment.class.getSimpleName();
     private static final String DEFAULT_TITLE = "贴吧 Lite";
     private final static int FILE_CHOOSER_RESULT_CODE = 1;
     private String mUrl;
@@ -75,7 +74,6 @@ public class WebViewFragment extends BaseFragment implements DownloadListener {
     private NavigationHelper navigationHelper;
     private ValueCallback<Uri> uploadMessage;
     private ValueCallback<Uri[]> uploadMessageAboveL;
-    private HistoryHelper helper;
     private SwipeRefreshLayout swipeRefreshLayout;
 
     public WebViewFragment() {
@@ -127,7 +125,6 @@ public class WebViewFragment extends BaseFragment implements DownloadListener {
 
     private boolean isEnabledLocationFunction() {
         int locationMode = 0;
-        String locationProviders;
         try {
             locationMode = Settings.Secure.getInt(getAttachContext().getContentResolver(), Settings.Secure.LOCATION_MODE);
         } catch (Settings.SettingNotFoundException e) {
@@ -198,7 +195,7 @@ public class WebViewFragment extends BaseFragment implements DownloadListener {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        helper = new HistoryHelper(getAttachContext());
+        HistoryHelper helper = new HistoryHelper(getAttachContext());
         initData();
         Bundle bundle = getArguments();
         navigationHelper = NavigationHelper.newInstance(getAttachContext());
@@ -289,7 +286,7 @@ public class WebViewFragment extends BaseFragment implements DownloadListener {
         Intent i = new Intent(Intent.ACTION_GET_CONTENT);
         i.addCategory(Intent.CATEGORY_OPENABLE);
         i.setType("image/*");
-        startActivityForResult(Intent.createChooser(i, "选择图片"), FILE_CHOOSER_RESULT_CODE);
+        startActivityForResult(Intent.createChooser(i, getAttachContext().getString(R.string.title_select_pic)), FILE_CHOOSER_RESULT_CODE);
     }
 
     @Override
@@ -342,14 +339,6 @@ public class WebViewFragment extends BaseFragment implements DownloadListener {
         }
 
         @Override
-        public WebResourceResponse shouldInterceptRequest(WebView view, String url) {
-            if (url.contains("//hm.baidu.com/")) {
-                return AssetUtil.getEmptyResponse();
-            }
-            return null;
-        }
-
-        @Override
         public WebResourceResponse shouldInterceptRequest(WebView view, WebResourceRequest request) {
             String url = request.getUrl().toString();
             return shouldInterceptRequest(view, url);
@@ -379,6 +368,7 @@ public class WebViewFragment extends BaseFragment implements DownloadListener {
     }
 
     private class ChromeClient extends WebChromeClient {
+        @SuppressLint("WrongConstant")
         @Override
         public void onGeolocationPermissionsShowPrompt(String origin, GeolocationPermissions.Callback callback) {
             Uri uri = Uri.parse(mWebView.getUrl());
@@ -417,7 +407,7 @@ public class WebViewFragment extends BaseFragment implements DownloadListener {
         @Override
         public boolean onJsAlert(WebView webView, String url, String message, JsResult result) {
             DialogUtil.build(webView.getContext())
-                    .setMessage(message).setPositiveButton("确定", null)
+                    .setMessage(message).setPositiveButton(R.string.button_sure_default, null)
                     .setCancelable(false)
                     .create().show();
             result.confirm();
