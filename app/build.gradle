@@ -22,8 +22,6 @@ andResGuard {
     useSign = true
     keepRoot = false
     mergeDuplicatedRes = true
-    // add <yourpackagename>.R.drawable.icon into whitelist.
-    // because the launcher will get the icon with his name
     whiteList = ["R.mipmap.ic_launcher",
                  "R.mipmap.ic_launcher_foreground",
                  "R.mipmap.ic_launcher_round",
@@ -62,8 +60,8 @@ android {
         applicationId "com.huanchengfly.tieba.post"
         minSdkVersion 21
         targetSdkVersion 29
-        versionCode 38005
-        versionName "3.8.1 α"
+        versionCode 38006
+        versionName "3.8.1 Beta"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         project.ext.set("archivesBaseName", versionName.replace(" ", "_") + "(" + versionCode + ")")
     }
@@ -87,7 +85,7 @@ android {
 }
 
 dependencies {
-    implementation 'org.jetbrains:annotations:15.0'
+    implementation 'org.jetbrains:annotations:19.0.0'
 
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
 
@@ -114,15 +112,15 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
 
     //Glide
-    implementation 'com.github.bumptech.glide:glide:4.8.0'
-    annotationProcessor 'com.github.bumptech.glide:compiler:4.8.0'
-    implementation 'com.github.bumptech.glide:okhttp3-integration:4.3.1'
+    implementation 'com.github.bumptech.glide:glide:4.11.0'
+    annotationProcessor 'com.github.bumptech.glide:compiler:4.11.0'
+    implementation 'com.github.bumptech.glide:okhttp3-integration:4.11.0'
 
     implementation 'com.google.android.material:material:1.2.0-alpha05'
 
-    implementation 'com.squareup.okhttp3:okhttp:3.14.0'
-    implementation 'com.squareup.retrofit2:retrofit:2.5.0'
-    implementation 'com.squareup.retrofit2:converter-gson:2.5.0'
+    implementation 'com.squareup.okhttp3:okhttp:4.4.1'
+    implementation 'com.squareup.retrofit2:retrofit:2.8.1'
+    implementation 'com.squareup.retrofit2:converter-gson:2.8.1'
     implementation 'com.tsy:myokhttp:1.1.4'
 
     implementation 'com.google.code.gson:gson:2.8.6'
@@ -133,7 +131,7 @@ dependencies {
     implementation 'com.github.lygttpod:SuperTextView:2.1.8'
     implementation 'com.davemorrissey.labs:subsampling-scale-image-view:3.10.0'
     implementation 'com.bm.photoview:library:1.4.1'
-    implementation 'cn.jzvd:jiaozivideoplayer:7.0.5'
+    implementation 'cn.jzvd:jiaozivideoplayer:7.2.3'
     implementation 'com.jrummyapps:colorpicker:2.1.7'
 
     implementation 'com.zhihu.android:matisse:0.5.3-beta3'
@@ -144,7 +142,6 @@ dependencies {
 
     implementation 'com.github.yalantis:ucrop:2.2.4'
 
-    //implementation 'com.jaeger.statusbarutil:library:1.5.1'
     implementation 'com.billy.android:pre-loader:2.1.0'
 
     implementation 'com.jakewharton:butterknife:10.2.1'
