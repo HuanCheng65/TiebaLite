@@ -23,8 +23,12 @@ applicationProperties.load(new FileInputStream(rootProject.file("application.pro
 def SHA1 = System.getenv("CIRCLE_SHA1")
 def applicationVersionCode = applicationProperties["versionCode"].toInteger()
 def applicationVersionName = applicationProperties["versionName"]
+def isPerVersion = applicationProperties["isPerVersion"] == "true"
 if (SHA1 != null) {
-    applicationVersionName = applicationVersionName + "-${SHA1.substring(0, 8)}"
+    applicationVersionName = applicationVersionName + ".${SHA1.substring(0, 8)}"
+}
+if (isPerVersion) {
+    applicationVersionName = applicationVersionName + "-${applicationProperties["perVersion"]}"
 }
 
 andResGuard {
