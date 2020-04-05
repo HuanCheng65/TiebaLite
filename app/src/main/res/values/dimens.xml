@@ -1,0 +1,21 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <dimen name="footer_view_height">40dp</dimen>
+    <dimen name="header_view_height">56dp</dimen>
+    <dimen name="thread_bottom_bar_height">48dp</dimen>
+    <dimen name="reply_bar_height">48dp</dimen>
+    <dimen name="my_info_total_height">80dp</dimen>
+    <dimen name="app_bar_elevation">0dp</dimen>
+    <dimen name="spacing_medium">2dp</dimen>
+
+    <dimen name="text_size_user_name">14sp</dimen>
+    <dimen name="text_size_user_small">12sp</dimen>
+
+    <dimen name="radius">8dp</dimen>
+    <dimen name="text_size_hot_title">16sp</dimen>
+    <dimen name="text_size_hot_desc">14sp</dimen>
+    <dimen name="text_size_refresh_tip">14sp</dimen>
+    <dimen name="size_forum_list_avatar">36dp</dimen>
+    <dimen name="default_small_pic_radius">8dp</dimen>
+    <dimen name="padding_start_default">16dp</dimen>
+    <dimen name="padding_end_default">16dp</dimen>
+</resources>

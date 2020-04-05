@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".fragments.MyInfoFragment">
+
+    <com.scwang.wave.MultiWaveHeader
+        app:mwhWaveHeight="45dp"
+        app:mwhWaves="85,0,1,0.4,90"
+        app:mwhIsRunning="true"
+        app:mwhColorAlpha="1"
+        app:mwhVelocity="1"
+        android:id="@+id/wave_header"
+        android:layout_width="match_parent"
+        android:layout_height="160dp" />
+    
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <com.google.android.material.appbar.AppBarLayout
+            android:id="@+id/appbar"
+            android:background="@color/transparent"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:stateListAnimator="@animator/appbar_elevation">
+
+            <com.huanchengfly.tieba.widgets.theme.TintToolbar
+                app:popupTheme="?attr/actionOverflowMenuStyle"
+                app:titleTextAppearance="@style/Toolbar.Title"
+                app:subtitleTextAppearance="@style/Toolbar.Subtitle"
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                app:toolbarBackgroundTint="@color/transparent"
+                app:itemTint="@color/default_color_toolbar_item"
+                app:secondaryItemTint="@color/default_color_toolbar_item_secondary"
+                app:activeItemTint="@color/default_color_toolbar_item_active"
+                app:title="@string/title_default" />
+
+        </com.google.android.material.appbar.AppBarLayout>
+
+        <com.huanchengfly.tieba.widgets.theme.TintSwipeRefreshLayout
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"
+            android:id="@+id/my_refresh"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <androidx.core.widget.NestedScrollView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <RelativeLayout
+                        android:background="?attr/selectableItemBackground"
+                        android:id="@+id/my_info"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:padding="16dp">
+
+                        <ImageView
+                            android:id="@+id/my_info_avatar"
+                            android:layout_width="50dp"
+                            android:layout_height="50dp"
+                            android:layout_alignParentStart="true"
+                            android:layout_centerVertical="true"
+                            android:background="@drawable/bg_placeholder_circle"
+                            android:contentDescription="@string/content_avatar"
+                            android:scaleType="centerInside"
+                            tools:srcCompat="@tools:sample/avatars" />
+
+                        <RelativeLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:layout_marginStart="12dp"
+                            android:layout_marginEnd="12dp"
+                            android:layout_toStartOf="@+id/my_info_arrow"
+                            android:layout_toEndOf="@id/my_info_avatar">
+
+                            <com.huanchengfly.tieba.widgets.theme.TintTextView
+                                android:id="@+id/my_info_username"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                app:tint="@color/default_color_toolbar_item"
+                                android:textSize="16sp"
+                                android:textStyle="bold" />
+
+                            <com.huanchengfly.tieba.widgets.theme.TintTextView
+                                android:layout_marginTop="4dp"
+                                android:id="@+id/my_info_content"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_below="@id/my_info_username"
+                                app:tint="@color/default_color_toolbar_item_secondary"
+                                android:textSize="14sp" />
+                        </RelativeLayout>
+
+                        <com.huanchengfly.tieba.widgets.theme.TintImageView
+                            android:id="@+id/my_info_arrow"
+                            android:layout_width="18dp"
+                            android:layout_height="18dp"
+                            android:layout_alignParentEnd="true"
+                            android:layout_centerVertical="true"
+                            app:srcCompat="@drawable/ic_chevron_right_black_24dp"
+                            app:tint="@color/default_color_toolbar_item"
+                            tools:ignore="ContentDescription" />
+
+                    </RelativeLayout>
+
+                    <androidx.gridlayout.widget.GridLayout
+                        android:id="@+id/my_info_grid"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/my_info_total_height"
+                        app:columnCount="4"
+                        android:layout_marginTop="16dp"
+                        app:orientation="vertical"
+                        app:rowCount="1">
+
+                        <com.huanchengfly.tieba.widgets.theme.TintSuperTextView
+                            android:id="@+id/my_info_grid_follows"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            app:layout_column="0"
+                            app:layout_columnSpan="1"
+                            app:layout_columnWeight="1"
+                            app:centerBottomTextColor="@color/default_color_text_secondary"
+                            app:centerTextColor="@color/default_color_text"
+                            app:sCenterBottomTextSize="14sp"
+                            app:sCenterBottomTextString="关注"
+                            app:sCenterTextSize="21sp"
+                            app:sDividerLineType="none"
+                            app:sBackgroundDrawableRes="?attr/selectableItemBackground"
+                            tools:sCenterTextString="999" />
+
+                        <com.huanchengfly.tieba.widgets.theme.TintSuperTextView
+                            android:id="@+id/my_info_grid_fans"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            app:layout_column="0"
+                            app:layout_columnSpan="1"
+                            app:layout_columnWeight="1"
+                            app:centerBottomTextColor="@color/default_color_text_secondary"
+                            app:centerTextColor="@color/default_color_text"
+                            app:sCenterBottomTextSize="14sp"
+                            app:sCenterBottomTextString="粉丝"
+                            app:sCenterTextSize="21sp"
+                            app:sDividerLineType="none"
+                            app:sBackgroundDrawableRes="?attr/selectableItemBackground"
+                            tools:sCenterTextString="999" />
+
+                        <com.huanchengfly.tieba.widgets.theme.TintSuperTextView
+                            android:id="@+id/my_info_grid_forums"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            app:layout_column="0"
+                            app:layout_columnSpan="1"
+                            app:layout_columnWeight="1"
+                            app:centerBottomTextColor="@color/default_color_text_secondary"
+                            app:centerTextColor="@color/default_color_text"
+                            app:sCenterBottomTextSize="14sp"
+                            app:sCenterBottomTextString="关注的吧"
+                            app:sCenterTextSize="21sp"
+                            app:sDividerLineType="none"
+                            app:sBackgroundDrawableRes="?attr/selectableItemBackground"
+                            tools:sCenterTextString="999" />
+
+                        <com.huanchengfly.tieba.widgets.theme.TintSuperTextView
+                            android:id="@+id/my_info_grid_threads"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            app:layout_column="0"
+                            app:layout_columnSpan="1"
+                            app:layout_columnWeight="1"
+                            app:centerBottomTextColor="@color/default_color_text_secondary"
+                            app:centerTextColor="@color/default_color_text"
+                            app:sCenterBottomTextSize="14sp"
+                            app:sCenterBottomTextString="贴子"
+                            app:sCenterTextSize="21sp"
+                            app:sDividerLineType="none"
+                            app:sBackgroundDrawableRes="?attr/selectableItemBackground"
+                            tools:sCenterTextString="999" />
+                    </androidx.gridlayout.widget.GridLayout>
+
+                    <com.huanchengfly.tieba.widgets.theme.TintNavigationView
+                        app:itemHorizontalPadding="24dp"
+                        app:itemIconPadding="16dp"
+                        app:elevation="0dp"
+                        android:id="@+id/my_info_navigation"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        app:itemTextTint="@color/default_color_text"
+                        app:itemTextAppearance="@style/TextAppearance.Bold"
+                        android:background="@color/transparent"
+                        app:itemBackground="?selectableItemBackground"
+                        app:menu="@menu/menu_my_info" />
+                </LinearLayout>
+            </androidx.core.widget.NestedScrollView>
+        </com.huanchengfly.tieba.widgets.theme.TintSwipeRefreshLayout>
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+</FrameLayout>

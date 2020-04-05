@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/icon_frame"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:minWidth="56dp"
+    android:gravity="start|center_vertical"
+    android:orientation="horizontal"
+    android:paddingEnd="8dp"
+    android:paddingTop="4dp"
+    android:paddingBottom="4dp">
+
+    <com.huanchengfly.tieba.widgets.theme.TintPreferenceImageView
+        app:tint="@color/default_color_primary"
+        android:id="@android:id/icon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:maxWidth="48dp"
+        app:maxHeight="48dp"/>
+
+</LinearLayout>

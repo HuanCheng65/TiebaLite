@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/background"
+    android:backgroundTint="@color/black"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:fitsSystemWindows="true"
+        android:id="@+id/appbar"
+        android:background="@color/transparent"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:stateListAnimator="@animator/appbar_elevation">
+
+        <com.huanchengfly.tieba.widgets.theme.TintToolbar
+            app:popupTheme="?attr/actionOverflowMenuStyle"
+            app:titleTextAppearance="@style/Toolbar.Title"
+            app:subtitleTextAppearance="@style/Toolbar.Subtitle"
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            app:toolbarBackgroundTint="@color/transparent"
+            app:itemTint="@color/theme_color_toolbar_item_translucent"
+            app:secondaryItemTint="@color/theme_color_toolbar_item_secondary_translucent"
+            app:activeItemTint="@color/theme_color_toolbar_item_active_translucent"
+            app:title="@string/title_dialog_translucent_theme" />
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <LinearLayout
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="16dp">
+        <com.huanchengfly.tieba.widgets.theme.TintMaterialButton
+            android:layout_marginTop="8dp"
+            android:id="@+id/select_pic"
+            android:text="@string/title_select_pic"
+            app:buttonTextColor="@color/color_text_translucent"
+            style="@style/Widget.Button.Dense"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <LinearLayout
+            android:visibility="gone"
+            android:id="@+id/select_color"
+            android:layout_marginTop="8dp"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <TextView
+                android:textColor="@color/color_text_translucent"
+                android:text="@string/title_select_color"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <com.huanchengfly.tieba.widgets.theme.TintMaterialButton
+                android:id="@+id/custom_color"
+                android:text="@string/title_custom_color"
+                app:buttonTextColor="@color/color_text_translucent"
+                style="@style/Widget.Button.Dense"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:layout_marginTop="4dp"
+                android:id="@+id/select_color_recycler_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+        <TextView
+            android:layout_marginTop="8dp"
+            android:textSize="14sp"
+            android:text="@string/title_translucent_theme_alpha"
+            android:textColor="@color/color_text_translucent"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+        <com.huanchengfly.tieba.widgets.theme.TintSeekBar
+            android:id="@+id/alpha"
+            android:layout_marginTop="4dp"
+            android:progress="255"
+            android:max="255"
+            android:progressDrawable="@drawable/bg_seekbar_round"
+            app:progressTint="@color/default_color_primary"
+            app:progressBackgroundTint="@color/default_color_divider"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+        <TextView
+            android:layout_marginTop="8dp"
+            android:textSize="14sp"
+            android:text="@string/title_translucent_theme_blur"
+            android:textColor="@color/color_text_translucent"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+        <com.huanchengfly.tieba.widgets.theme.TintSeekBar
+            android:id="@+id/blur"
+            android:layout_marginTop="4dp"
+            android:progress="0"
+            android:max="100"
+            android:progressDrawable="@drawable/bg_seekbar_round"
+            app:progressTint="@color/default_color_primary"
+            app:progressBackgroundTint="@color/default_color_divider"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:layout_marginTop="12dp"
+            android:textColor="@color/color_text_translucent"
+            android:id="@+id/tip"
+            android:textSize="14sp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+
+    <FrameLayout
+        android:id="@+id/progress"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <com.huanchengfly.tieba.widgets.theme.TintProgressBar
+            android:indeterminate="true"
+            android:layout_gravity="center"
+            style="@style/Widget.AppCompat.ProgressBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </FrameLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

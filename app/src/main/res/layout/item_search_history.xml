@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/history_item"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:padding="16dp"
+    android:background="?selectableItemBackground"
+    tools:background="@color/default_color_background">
+    <com.huanchengfly.tieba.widgets.theme.TintImageView
+        android:id="@+id/history_item_icon"
+        android:layout_gravity="center_vertical"
+        app:tint="@color/default_color_text"
+        android:src="@drawable/ic_round_watch_later_blue"
+        android:layout_width="18dp"
+        android:layout_height="18dp" />
+    <com.huanchengfly.tieba.widgets.theme.TintTextView
+        android:layout_toEndOf="@id/history_item_icon"
+        android:layout_alignParentEnd="true"
+        android:id="@+id/history_item_title"
+        app:tint="@color/default_color_text"
+        tools:text="Search History"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_gravity="center_vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+</RelativeLayout>

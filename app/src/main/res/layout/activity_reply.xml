@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/activity_reply_root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/transparent"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".activities.ReplyActivity">
+
+    <FrameLayout
+        android:id="@+id/webview_container"
+        android:layout_width="0dp"
+        android:layout_height="0dp" />
+
+    <com.huanchengfly.tieba.widgets.theme.TintConstraintLayout
+        android:id="@+id/activity_reply_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:background="@drawable/bg_round"
+        app:backgroundTint="@color/default_color_background">
+
+        <com.google.android.material.appbar.AppBarLayout
+            android:id="@+id/appbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/transparent"
+            android:stateListAnimator="@animator/appbar_elevation"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <com.huanchengfly.tieba.widgets.theme.TintToolbar
+                app:popupTheme="?attr/actionOverflowMenuStyle"
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:toolbarBackgroundTint="@color/transparent"
+                app:itemTint="@color/default_color_text"
+                app:secondaryItemTint="@color/default_color_text_secondary"
+                app:activeItemTint="@color/default_color_primary"
+                app:title="@string/title_reply" />
+        </com.google.android.material.appbar.AppBarLayout>
+
+        <com.huanchengfly.edittext.widget.UndoableEditText
+            android:textSize="14sp"
+            android:id="@+id/activity_reply_edit_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/transparent"
+            android:importantForAutofill="no"
+            android:gravity="top|start"
+            android:hint="@string/tip_reply"
+            android:inputType="textMultiLine|textImeMultiLine"
+            android:lines="5"
+            android:padding="12dp"
+            app:layout_constraintBottom_toTopOf="@+id/activity_reply_btn_bar"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/appbar"
+            tools:ignore="UnusedAttribute">
+            <requestFocus />
+        </com.huanchengfly.edittext.widget.UndoableEditText>
+
+        <LinearLayout
+            android:id="@+id/activity_reply_btn_bar"
+            style="@style/Widget.AppCompat.ButtonBar"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:orientation="horizontal"
+            android:padding="8dp"
+            android:weightSum="8"
+            app:layout_constraintBottom_toTopOf="@+id/activity_reply_panel_root"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/activity_reply_edit_text"
+            app:layout_constraintVertical_bias="1.0"
+            app:layout_constraintVertical_chainStyle="packed">
+
+            <com.huanchengfly.tieba.widgets.theme.TintImageView
+                app:tintList="@drawable/text_color_selector"
+                android:background="?attr/selectableItemBackground"
+                android:id="@+id/activity_reply_edit_emotion"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton.Icon"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="match_parent"
+                android:padding="4dp"
+                android:src="@drawable/ic_insert_emoticon" />
+
+            <com.huanchengfly.tieba.widgets.theme.TintImageView
+                app:tintList="@drawable/text_color_selector"
+                android:background="?attr/selectableItemBackground"
+                android:id="@+id/activity_reply_edit_insert_photo"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton.Icon"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:padding="4dp"
+                android:src="@drawable/ic_outline_insert_photo" />
+
+            <View
+                android:layout_weight="3"
+                android:layout_width="0dp"
+                android:layout_height="match_parent" />
+
+            <com.huanchengfly.tieba.widgets.theme.TintImageView
+                app:tintList="@drawable/text_color_selector"
+                android:background="?attr/selectableItemBackground"
+                android:id="@+id/activity_reply_edit_undo"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton.Icon"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:padding="4dp"
+                android:clickable="false"
+                android:src="@drawable/ic_outline_undo" />
+
+            <com.huanchengfly.tieba.widgets.theme.TintImageView
+                app:tintList="@drawable/text_color_selector"
+                android:background="?attr/selectableItemBackground"
+                android:id="@+id/activity_reply_edit_redo"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton.Icon"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:padding="4dp"
+                android:clickable="false"
+                android:src="@drawable/ic_outline_redo" />
+
+            <com.huanchengfly.tieba.widgets.theme.TintImageView
+                app:tintList="@drawable/text_color_selector"
+                android:background="?attr/selectableItemBackground"
+                android:id="@+id/activity_reply_edit_clear"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton.Icon"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:padding="4dp"
+                android:clickable="false"
+                android:src="@drawable/ic_outline_delete_forever" />
+
+        </LinearLayout>
+
+        <cn.dreamtobe.kpswitch.widget.KPSwitchFSPanelFrameLayout
+            android:id="@+id/activity_reply_panel_root"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/activity_reply_btn_bar"
+            app:layout_constraintVertical_bias="1.0">
+
+            <RelativeLayout
+                android:id="@+id/activity_reply_emotion"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <androidx.viewpager.widget.ViewPager
+                    android:layout_alignParentTop="true"
+                    android:id="@+id/activity_reply_emotion_view_pager"
+                    android:layout_width="match_parent"
+                    android:layout_above="@id/activity_reply_emotion_tab"
+                    android:layout_height="match_parent" />
+
+                <com.huanchengfly.tieba.widgets.theme.TintTabLayout
+                    style="@style/Widget.TabLayout"
+                    android:layout_alignParentBottom="true"
+                    android:id="@+id/activity_reply_emotion_tab"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+            </RelativeLayout>
+
+            <FrameLayout
+                android:id="@+id/activity_reply_insert_photo"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/activity_reply_insert_photo_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+            </FrameLayout>
+        </cn.dreamtobe.kpswitch.widget.KPSwitchFSPanelFrameLayout>
+    </com.huanchengfly.tieba.widgets.theme.TintConstraintLayout>
+</FrameLayout>

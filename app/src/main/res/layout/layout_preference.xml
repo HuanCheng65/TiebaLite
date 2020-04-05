@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:minHeight="?android:attr/listPreferredItemHeightSmall"
+    android:gravity="center_vertical"
+    android:paddingStart="?android:attr/listPreferredItemPaddingStart"
+    android:paddingEnd="?android:attr/listPreferredItemPaddingEnd"
+    android:background="?android:attr/selectableItemBackground"
+    android:clipToPadding="false"
+    android:focusable="true"
+    android:baselineAligned="false">
+
+    <include
+        layout="@layout/layout_preference_icon" />
+
+    <RelativeLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:paddingTop="16dp"
+        android:paddingBottom="16dp">
+
+        <com.huanchengfly.tieba.widgets.theme.TintTextView
+            android:id="@android:id/title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:singleLine="true"
+            android:textStyle="bold"
+            app:tintList="@drawable/text_color_selector"
+            android:textAppearance="@style/TextAppearance.MaterialSubhead"
+            android:ellipsize="marquee"
+            tools:ignore="PrivateResource" />
+
+        <com.huanchengfly.tieba.widgets.theme.TintTextView
+            android:layout_marginTop="4dp"
+            android:id="@android:id/summary"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@android:id/title"
+            android:layout_alignStart="@android:id/title"
+            android:textSize="14sp"
+            app:tintList="@drawable/text_color_secondary_selector"
+            android:maxLines="10"/>
+
+    </RelativeLayout>
+
+    <LinearLayout
+        android:id="@android:id/widget_frame"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:gravity="end|center_vertical"
+        android:paddingStart="16dp"
+        android:orientation="vertical"
+        tools:ignore="RtlSymmetry" />
+
+</LinearLayout>

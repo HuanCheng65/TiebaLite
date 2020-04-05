@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<litepal>
+    <dbname value="tblite" />
+    <version value="23" />
+    <list>
+        <mapping class="com.huanchengfly.tieba.post.models.database.Account" />
+        <mapping class="com.huanchengfly.tieba.post.models.database.Draft" />
+        <mapping class="com.huanchengfly.tieba.post.models.database.History" />
+        <mapping class="com.huanchengfly.tieba.post.models.database.Block" />
+        <mapping class="com.huanchengfly.tieba.post.models.database.TopForum" />
+        <mapping class="com.huanchengfly.tieba.post.models.database.SearchHistory" />
+    </list>
+</litepal>

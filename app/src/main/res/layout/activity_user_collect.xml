@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.huanchengfly.tieba.widgets.theme.TintCoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/background"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activities.UserCollectActivity">
+
+    <include
+        layout="@layout/layout_appbar" />
+
+    <fragment
+        android:id="@+id/fragment_my_collect"
+        android:name="com.huanchengfly.tieba.post.fragments.ThreadStoreFragment"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+</com.huanchengfly.tieba.widgets.theme.TintCoordinatorLayout>

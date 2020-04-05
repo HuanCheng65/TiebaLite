@@ -1,0 +1,59 @@
+{
+  "easyGoVersion": "1.0",
+  "client": "com.huanchengfly.tieba.post",
+  "logicEntities": [
+    {
+      "head": {
+        "function": "magicwindow",
+        "required": "true"
+      },
+      "body": {
+        "mode": "1",
+        "activityPairs": [
+          {
+            "from": "com.huanchengfly.tieba.post.MainActivity",
+            "to": "*"
+          },
+          {
+            "from": "com.huanchengfly.tieba.post.SearchActivity",
+            "to": "*"
+          },
+          {
+            "from": "com.huanchengfly.tieba.post.ForumActivity",
+            "to": "*"
+          },
+          {
+            "from": "com.huanchengfly.tieba.post.ThreadActivity",
+            "to": "*"
+          },
+          {
+            "from": "com.huanchengfly.tieba.post.activities.MessageActivity",
+            "to": "com.huanchengfly.tieba.post.FloorActivity"
+          },
+          {
+            "from": "com.huanchengfly.tieba.post.activities.HistoryActivity",
+            "to": "com.huanchengfly.tieba.post.ThreadActivity"
+          },
+          {
+            "from": "com.huanchengfly.tieba.post.activities.UserCollectActivity",
+            "to": "com.huanchengfly.tieba.post.activities.ThreadActivity"
+          },
+          {
+            "from": "com.huanchengfly.tieba.post.activities.UserActivity",
+            "to": "com.huanchengfly.tieba.post.activities.ThreadActivity"
+          },
+          {
+            "from": "com.huanchengfly.tieba.post.activities.HistoryActivity",
+            "to": "com.huanchengfly.tieba.post.activities.UserCollectActivity"
+          }
+        ],
+        "transActivities": [
+        ],
+        "UX": {
+          "supportRotationUxCompat": "true",
+          "isDraggable": "true"
+        }
+      }
+    }
+  ]
+}

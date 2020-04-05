@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#FFFFFF</color>
+    <color name="colorAccent">#4477E0</color>
+    <color name="colorUnselected">#FF6E7486</color>
+    <color name="colorToolbarText">#474b54</color>
+    <color name="transparent">#00000000</color>
+    <color name="color_place_holder">#FFF0F0F0</color>
+    <color name="color_place_holder_night">#99000000</color>
+    <color name="colorFloorCard">#FFF0F3F5</color>
+    <color name="color_shadow">#FEE9E9E9</color>
+
+    <color name="t">#00BFA5</color>
+
+    <color name="color_switch_track_bg">#C4C4C4</color>
+
+    <color name="color_swipe_refresh_bg">#FFF</color>
+
+    <color name="red">#FFC51100</color>
+    <color name="white">#FFF</color>
+    <color name="black">#000</color>
+    <color name="tieba">#4477E0</color>
+
+    <color name="color_text">#FF31343C</color>
+    <color name="color_text_secondary">#FF545967</color>
+    <color name="color_text_disabled">#6131343C</color>
+
+    <color name="color_text_night">#FFE6E7EE</color>
+    <color name="color_text_secondary_night">#B3E6E7EE</color>
+    <color name="color_text_disabled_night">#80E6E7EE</color>
+
+    <color name="color_text_translucent">#FFFFFFFF</color>
+    <color name="color_text_secondary_translucent">#B3FFFFFF</color>
+    <color name="color_text_disabled_translucent">#80FFFFFF</color>
+
+    <color name="default_color_primary">#FF4477E0</color>
+    <color name="default_color_accent">#FF4477E0</color>
+    <color name="default_color_text">#FF31343C</color>
+    <color name="default_color_text_on_primary">#FFFFFFFF</color>
+    <color name="default_color_text_secondary">#FF545967</color>
+    <color name="default_color_text_disabled">#6131343C</color>
+    <color name="default_color_toolbar">#FFFFFFFF</color>
+    <color name="default_color_toolbar_item">#FF474B54</color>
+    <color name="default_color_background">#FFFFFFFF</color>
+    <color name="default_color_nav">#FFFFFFFF</color>
+    <color name="default_color_unselected">#FF6E7486</color>
+    <color name="default_color_toolbar_item_active">#FF4477E0</color>
+    <color name="default_color_floor_card">#FFF0F3F5</color>
+    <color name="default_color_card">#FFFFFFFF</color>
+    <color name="default_color_divider">#FFF0F3F5</color>
+    <color name="default_color_shadow">#FEE9E9E9</color>
+    <color name="default_color_toolbar_item_secondary">#FF545967</color>
+    <color name="default_color_swipe_refresh_view_background">#FFFFFFFF</color>
+
+    <color name="theme_color_primary_white">@color/tieba</color>
+    <color name="theme_color_primary_tieba">@color/tieba</color>
+    <color name="theme_color_primary_pink">#FFFF9A9E</color>
+    <color name="theme_color_primary_red">@color/red</color>
+    <color name="theme_color_primary_black">@color/black</color>
+    <color name="theme_color_primary_purple">#FF512DA8</color>
+    <color name="theme_color_primary_dark">@color/tieba</color>
+    <color name="theme_color_primary_grey_dark">@color/tieba</color>
+    <color name="theme_color_primary_amoled_dark">@color/tieba</color>
+
+    <color name="theme_color_accent_white">@color/tieba</color>
+    <color name="theme_color_accent_tieba">@color/tieba</color>
+    <color name="theme_color_accent_pink">#FFFF9A9E</color>
+    <color name="theme_color_accent_red">@color/red_accent</color>
+    <color name="theme_color_accent_black">@color/black</color>
+    <color name="theme_color_accent_purple">#FF512DA8</color>
+    <color name="theme_color_accent_dark">@color/tieba</color>
+    <color name="theme_color_accent_grey_dark">@color/tieba</color>
+    <color name="theme_color_accent_amoled_dark">@color/tieba</color>
+
+    <color name="theme_color_toolbar_white">@color/white</color>
+    <color name="theme_color_toolbar_dark">#FF15202B</color>
+    <color name="theme_color_toolbar_grey_dark">#FF181818</color>
+    <color name="theme_color_toolbar_amoled_dark">@color/black</color>
+
+    <color name="theme_color_toolbar_item_light">#FF474B54</color>
+    <color name="theme_color_toolbar_item_translucent">#FFFFFFFF</color>
+    <color name="theme_color_toolbar_item_dark">@color/white</color>
+    <color name="theme_color_toolbar_item_night">#FFE6E7EE</color>
+
+    <color name="theme_color_toolbar_item_secondary_white">#DD545967</color>
+    <color name="theme_color_toolbar_item_secondary_light">#99FFFFFF</color>
+    <color name="theme_color_toolbar_item_secondary_translucent">#99FFFFFF</color>
+    <color name="theme_color_toolbar_item_secondary_dark">#CCE6E7EE</color>
+    <color name="theme_color_toolbar_item_secondary_grey_dark">#CCE6E7EE</color>
+    <color name="theme_color_toolbar_item_secondary_amoled_dark">#CCE6E7EE</color>
+
+    <color name="theme_color_toolbar_item_active_white">@color/theme_color_accent_white</color>
+    <color name="theme_color_toolbar_item_active_translucent">#FFFFFFFF</color>
+    <color name="theme_color_toolbar_item_active_dark">@color/white</color>
+    <color name="theme_color_toolbar_item_active_grey_dark">@color/white</color>
+    <color name="theme_color_toolbar_item_active_amoled_dark">@color/white</color>
+
+    <color name="theme_color_background_light">@color/white</color>
+    <color name="theme_color_background_dark">#FF131D28</color>
+    <color name="theme_color_background_grey_dark">#FF212121</color>
+    <color name="theme_color_background_amoled_dark">@color/black</color>
+
+    <color name="theme_color_nav_light">@color/white</color>
+    <color name="theme_color_nav_dark">#FF15202B</color>
+    <color name="theme_color_nav_grey_dark">#FF151515</color>
+    <color name="theme_color_nav_amoled_dark">@color/black</color>
+
+    <color name="theme_color_unselected_day">@color/colorUnselected</color>
+    <color name="theme_color_unselected_translucent">#5CFFFFFF</color>
+    <color name="theme_color_unselected_dark">#FF415C68</color>
+    <color name="theme_color_unselected_grey_dark">#FF5C5C5C</color>
+    <color name="theme_color_unselected_amoled_dark">#FF415C68</color>
+
+    <color name="theme_color_floor_card_light">@color/colorFloorCard</color>
+    <color name="theme_color_floor_card_translucent">#15FFFFFF</color>
+    <color name="theme_color_floor_card_dark">#FF1A2A39</color>
+    <color name="theme_color_floor_card_grey_dark">#FF2A2A2A</color>
+    <color name="theme_color_floor_card_amoled_dark">#FF151515</color>
+
+    <color name="theme_color_card_light">@color/white</color>
+    <color name="theme_color_card_translucent">#10FFFFFF</color>
+    <color name="theme_color_card_dark">#FF15202B</color>
+    <color name="theme_color_card_grey_dark">#FF2A2A2A</color>
+    <color name="theme_color_card_amoled_dark">#FF101010</color>
+
+    <color name="theme_color_swipe_refresh_view_background_light">@color/white</color>
+    <color name="theme_color_swipe_refresh_view_background_translucent">#FFFFFFFF</color>
+    <color name="theme_color_swipe_refresh_view_background_dark">#FF1C2938</color>
+    <color name="theme_color_swipe_refresh_view_background_grey_dark">#FF252525</color>
+    <color name="theme_color_swipe_refresh_view_background_amoled_dark">#FF1C1C1C</color>
+
+    <color name="theme_color_divider_light">@color/color_divider</color>
+    <color name="theme_color_divider_translucent">#10FFFFFF</color>
+    <color name="theme_color_divider_dark">#FF10171D</color>
+    <color name="theme_color_divider_grey_dark">#FF151515</color>
+    <color name="theme_color_divider_amoled_dark">#FF101010</color>
+
+    <color name="theme_color_shadow_day">@color/color_shadow</color>
+    <color name="theme_color_shadow_night">#FE191919</color>
+
+    <color name="red_accent">#FFC51100</color>
+
+    <color name="color_divider">#FFF0F3F5</color>
+
+    <color name="colorSplashBg">#ffffff</color>
+    <color name="icon_blue">#FF3373EE</color>
+    <color name="icon_purple">#FF8E6DCA</color>
+    <color name="black_trans">#50000000</color>
+</resources>

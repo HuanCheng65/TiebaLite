@@ -1,0 +1,152 @@
+buildscript {
+    repositories {
+        jcenter()
+        google()
+    }
+    dependencies {
+        classpath 'io.michaelrocks:paranoid-gradle-plugin:0.2.5'
+        classpath 'com.tencent.mm:AndResGuard-gradle-plugin:1.2.17'
+    }
+}
+
+apply plugin: 'AndResGuard'
+apply plugin: 'com.android.application'
+apply plugin: 'io.michaelrocks.paranoid'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-kapt'
+
+andResGuard {
+    mappingFile = null
+    use7zip = true
+    useSign = true
+    keepRoot = false
+    mergeDuplicatedRes = true
+    // add <yourpackagename>.R.drawable.icon into whitelist.
+    // because the launcher will get the icon with his name
+    whiteList = ["R.mipmap.ic_launcher",
+                 "R.mipmap.ic_launcher_foreground",
+                 "R.mipmap.ic_launcher_round",
+                 "R.drawable.ic_*",
+                 "R.color.theme_color_*",
+                 "R.id.*"]
+    compressFilePattern = ["*.png",
+                           "*.jpg",
+                           "*.jpeg",
+                           "*.gif",
+                           "*.webp",
+                           "resources.arsc"]
+    sevenzip {
+        path = "C:/Users/xppxu/AndroidStudioProjects/TiebaLite/app/7z/7za.exe"
+    }
+
+    /**
+     * Optional: if finalApkBackupPath is null, AndResGuard will overwrite final apk
+     * to the path which assemble[Task] write to*/
+    finalApkBackupPath = "${project.rootDir}/app/release/final.apk"
+    digestalg = "SHA-256"
+}
+
+android {
+    signingConfigs {
+        config {
+            keyAlias 'androiddebugkey'
+            keyPassword '123456789a'
+            storeFile file('D:/Sign/files/testkey.jks')
+            storePassword 'android'
+            v2SigningEnabled true
+        }
+    }
+    compileSdkVersion 29
+    defaultConfig {
+        applicationId "com.huanchengfly.tieba.post"
+        minSdkVersion 21
+        targetSdkVersion 29
+        versionCode 38005
+        versionName "3.8.1 α"
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        project.ext.set("archivesBaseName", versionName.replace(" ", "_") + "(" + versionCode + ")")
+    }
+    buildTypes {
+        release {
+            minifyEnabled true
+            shrinkResources true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            debuggable false
+            jniDebuggable false
+            signingConfig signingConfigs.config
+            zipAlignEnabled true
+            multiDexEnabled true
+        }
+    }
+    compileOptions {
+        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_1_8
+    }
+    buildToolsVersion '28.0.3'
+}
+
+dependencies {
+    implementation 'org.jetbrains:annotations:15.0'
+
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
+
+    //Local Files
+    implementation project(':SwipeBackLib')
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+
+    //兼容 Glide
+    implementation 'com.android.support:support-annotations:28.0.0'
+    annotationProcessor "com.android.support:support-annotations:28.0.0"
+
+    //AndroidX
+    implementation 'androidx.appcompat:appcompat:1.1.0'
+    implementation 'androidx.constraintlayout:constraintlayout:2.0.0-beta4'
+    implementation 'androidx.preference:preference:1.1.0'
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
+    implementation 'androidx.gridlayout:gridlayout:1.0.0'
+    implementation 'androidx.browser:browser:1.2.0'
+    implementation 'androidx.viewpager2:viewpager2:1.0.0'
+
+    //Test
+    testImplementation 'junit:junit:4.12'
+    androidTestImplementation 'androidx.test:runner:1.2.0'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
+
+    //Glide
+    implementation 'com.github.bumptech.glide:glide:4.8.0'
+    annotationProcessor 'com.github.bumptech.glide:compiler:4.8.0'
+    implementation 'com.github.bumptech.glide:okhttp3-integration:4.3.1'
+
+    implementation 'com.google.android.material:material:1.2.0-alpha05'
+
+    implementation 'com.squareup.okhttp3:okhttp:3.14.0'
+    implementation 'com.squareup.retrofit2:retrofit:2.5.0'
+    implementation 'com.squareup.retrofit2:converter-gson:2.5.0'
+    implementation 'com.tsy:myokhttp:1.1.4'
+
+    implementation 'com.google.code.gson:gson:2.8.6'
+    implementation 'cn.dreamtobe.kpswitch:library:1.6.2'
+    implementation 'org.litepal.android:java:3.0.0'
+    implementation 'com.github.SheHuan:RecyclerViewAdapter:1.2.6'
+    implementation 'com.lapism:searchview:27.1.1.0.0'
+    implementation 'com.github.lygttpod:SuperTextView:2.1.8'
+    implementation 'com.davemorrissey.labs:subsampling-scale-image-view:3.10.0'
+    implementation 'com.bm.photoview:library:1.4.1'
+    implementation 'cn.jzvd:jiaozivideoplayer:7.0.5'
+    implementation 'com.jrummyapps:colorpicker:2.1.7'
+
+    implementation 'com.zhihu.android:matisse:0.5.3-beta3'
+    implementation 'com.yanzhenjie:permission:2.0.3'
+    implementation 'com.gyf.immersionbar:immersionbar:3.0.0-beta02'
+    api 'com.flurry.android:analytics:12.2.0'
+    implementation 'androidx.palette:palette:1.0.0'
+
+    implementation 'com.github.yalantis:ucrop:2.2.4'
+
+    //implementation 'com.jaeger.statusbarutil:library:1.5.1'
+    implementation 'com.billy.android:pre-loader:2.1.0'
+
+    implementation 'com.jakewharton:butterknife:10.2.1'
+    kapt 'com.jakewharton:butterknife-compiler:10.2.1'
+}

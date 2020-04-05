@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="color_place_holder">#333</color>
+    <color name="colorSplashBg">#000</color>
+
+    <color name="color_swipe_refresh_bg">#1C2938</color>
+</resources>

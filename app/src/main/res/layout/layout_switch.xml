@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.huanchengfly.tieba.widgets.theme.TintSwitch xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:ignore="NewApi"
+    android:id="@android:id/switch_widget"
+    android:clickable="false"
+    android:focusable="false"
+    android:focusableInTouchMode="false"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_centerVertical="true"
+    app:track="@drawable/switch_ios_track"
+    android:thumb="@drawable/switch_ios_thumb"
+    style="@style/Widget.Switch"
+    app:trackTintList="@drawable/selector_switch_track"
+    app:thumbTint="@color/white"
+    app:switchBackgroundTint="@color/transparent" />

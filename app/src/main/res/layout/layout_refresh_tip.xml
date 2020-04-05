@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.huanchengfly.tieba.widgets.theme.TintRelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/feed_refresh_tip"
+    android:clickable="true"
+    android:focusable="true"
+    app:backgroundTint="@color/default_color_divider"
+    android:foreground="@drawable/fg_ripple"
+    android:paddingStart="12dp"
+    android:paddingEnd="12dp"
+    android:paddingTop="12dp"
+    android:visibility="gone"
+    android:paddingBottom="12dp"
+    tools:ignore="UnusedAttribute">
+    <RelativeLayout
+        android:layout_centerInParent="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <com.huanchengfly.tieba.widgets.theme.TintImageView
+            android:id="@+id/refresh_tip_icon"
+            android:layout_centerVertical="true"
+            app:srcCompat="@drawable/ic_round_refresh"
+            app:tint="@color/default_color_primary"
+            android:layout_width="18dp"
+            android:layout_height="18dp" />
+
+        <com.huanchengfly.tieba.widgets.theme.TintTextView
+            android:textStyle="bold"
+            android:layout_marginStart="8dp"
+            android:layout_toEndOf="@id/refresh_tip_icon"
+            app:tint="@color/default_color_primary"
+            android:textSize="13sp"
+            android:text="@string/tip_refresh"
+            android:layout_centerVertical="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </RelativeLayout>
+</com.huanchengfly.tieba.widgets.theme.TintRelativeLayout>

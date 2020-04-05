@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.huanchengfly.tieba.widgets.theme.TintCoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/background"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".FloorActivity">
+
+    <include
+        layout="@layout/layout_appbar"/>
+
+    <com.huanchengfly.tieba.widgets.theme.TintSwipeRefreshLayout
+        android:id="@+id/floor_refresh_view"
+        android:layout_marginBottom="@dimen/reply_bar_height"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/floor_recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+    </com.huanchengfly.tieba.widgets.theme.TintSwipeRefreshLayout>
+
+    <com.huanchengfly.tieba.widgets.theme.TintConstraintLayout
+        android:id="@+id/floor_reply_bar"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/reply_bar_height"
+        android:layout_gravity="bottom"
+        app:backgroundTint="@color/default_color_nav"
+        android:padding="8dp"
+        android:elevation="4dp">
+
+        <com.huanchengfly.tieba.widgets.theme.TintImageView
+            android:layout_marginStart="4dp"
+            android:id="@+id/floor_reply_bar_icon"
+            android:layout_width="18dp"
+            android:layout_height="18dp"
+            app:tint="@color/default_color_text_secondary"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/ic_create_twotone" />
+
+        <com.huanchengfly.tieba.widgets.theme.TintTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:text="@string/tip_thread_reply"
+            app:tint="@color/default_color_text_secondary"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/floor_reply_bar_icon"
+            app:layout_constraintTop_toTopOf="parent" />
+    </com.huanchengfly.tieba.widgets.theme.TintConstraintLayout>
+
+</com.huanchengfly.tieba.widgets.theme.TintCoordinatorLayout>

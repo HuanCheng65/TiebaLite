@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:padding="8dp"
+    android:paddingStart="18dp"
+    android:paddingEnd="18dp"
+    android:layout_height="wrap_content"
+    android:layout_width="match_parent">
+    <com.huanchengfly.tieba.widgets.theme.TintTextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/forum_list_title"
+        android:gravity="start|center_vertical"
+        android:id="@+id/forum_title_text"
+        app:tint="@color/default_color_text_secondary"
+        android:layout_toStartOf="@id/forum_title_icon"
+        android:layout_alignWithParentIfMissing="true"
+        android:layout_centerVertical="true"
+        android:layout_alignParentStart="true" />
+
+    <com.huanchengfly.tieba.widgets.theme.TintImageView
+        android:visibility="gone"
+        app:tint="@color/default_color_text_secondary"
+        app:srcCompat="@drawable/ic_keyboard_arrow_down"
+        android:id="@+id/forum_title_icon"
+        android:layout_centerVertical="true"
+        android:layout_alignParentEnd="true"
+        android:layout_width="18dp"
+        android:layout_height="18dp" />
+</RelativeLayout>

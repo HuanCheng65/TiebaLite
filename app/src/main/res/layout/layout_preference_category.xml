@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.huanchengfly.tieba.widgets.theme.TintTextView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:paddingTop="22dp"
+    android:paddingBottom="12dp"
+    android:layout_marginStart="?android:attr/listPreferredItemPaddingStart"
+    android:maxLines="1"
+    android:textStyle="bold"
+    android:ellipsize="end"
+    android:textSize="16sp"
+    app:tint="@color/default_color_primary"
+    android:id="@android:id/title" />

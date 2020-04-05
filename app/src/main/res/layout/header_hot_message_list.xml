@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.huanchengfly.tieba.widgets.theme.TintRelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:padding="8dp"
+    android:paddingStart="20dp"
+    android:paddingEnd="20dp"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+    <com.huanchengfly.tieba.widgets.theme.TintTextView
+        android:layout_centerVertical="true"
+        android:id="@+id/header_title"
+        app:tint="@color/default_color_text"
+        android:text="@string/title_hot_message_list"
+        android:textSize="@dimen/text_size_hot_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+    <com.huanchengfly.tieba.widgets.theme.TintTextView
+        android:layout_marginStart="4dp"
+        android:layout_centerVertical="true"
+        android:layout_toEndOf="@id/header_title"
+        app:tint="@color/default_color_text_secondary"
+        android:text="@string/desc_hot_message_list"
+        android:textSize="@dimen/text_size_hot_desc"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+</com.huanchengfly.tieba.widgets.theme.TintRelativeLayout>

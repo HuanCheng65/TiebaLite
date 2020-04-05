@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/my_info_collect"
+        android:icon="@drawable/ic_round_star_yellow"
+        android:title="@string/my_info_collect" />
+    <item
+        android:id="@+id/my_info_history"
+        android:icon="@drawable/ic_round_watch_later_blue"
+        android:title="@string/my_info_history" />
+    <item
+        android:id="@+id/my_info_theme"
+        android:icon="@drawable/ic_round_format_paint_red"
+        android:title="@string/my_info_theme"
+        app:actionLayout="@layout/switch_item" />
+    <item
+        android:id="@+id/my_info_service_center"
+        android:icon="@drawable/ic_round_help_green"
+        android:title="@string/my_info_service_center" />
+    <item android:id="@+id/menu_test"
+        android:visible="false"
+        android:title="Test" />
+    <item
+        android:id="@+id/my_info_settings"
+        android:icon="@drawable/ic_round_settings_grey"
+        android:title="@string/my_info_settings" />
+</menu>

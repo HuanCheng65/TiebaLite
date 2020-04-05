@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:padding="16dp"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+    <RelativeLayout
+        android:id="@+id/permission_header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <com.huanchengfly.tieba.widgets.theme.TintImageView
+            tools:src="@drawable/ic_round_location_on"
+            android:id="@+id/permission_icon"
+            app:tint="@color/default_color_primary"
+            android:layout_width="36dp"
+            android:layout_height="36dp" />
+        <RelativeLayout
+            android:layout_marginStart="16dp"
+            android:layout_toEndOf="@id/permission_icon"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <com.huanchengfly.tieba.widgets.theme.TintTextView
+                app:tint="@color/default_color_text"
+                android:textStyle="bold"
+                android:textSize="20sp"
+                tools:text="要允许 m.baidu.com 访问您的位置信息吗？"
+                android:id="@+id/permission_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+        </RelativeLayout>
+    </RelativeLayout>
+    <RelativeLayout
+        android:layout_marginTop="16dp"
+        android:layout_below="@id/permission_header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <com.huanchengfly.tieba.widgets.theme.TintCheckBox
+            android:id="@+id/permission_actions_checkbox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="@style/Widget.AppCompat.CompoundButton.CheckBox"
+            android:layout_centerVertical="true"
+            app:buttonTint="@drawable/tint_checkbox"
+            app:textColor="@color/default_color_text_secondary"
+            android:minHeight="0dp"
+            android:text="@string/title_not_ask"
+            android:textStyle="bold" />
+        <RelativeLayout
+            android:layout_centerVertical="true"
+            android:layout_toEndOf="@id/permission_actions_checkbox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <com.huanchengfly.tieba.widgets.theme.TintMaterialButton
+                android:layout_marginEnd="8dp"
+                android:layout_toStartOf="@id/permission_actions_allow"
+                android:id="@+id/permission_actions_denied"
+                android:text="@string/button_denied"
+                style="@style/Widget.Button.Flat.Dense"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+            <com.huanchengfly.tieba.widgets.theme.TintMaterialButton
+                android:id="@+id/permission_actions_allow"
+                android:text="@string/button_allow"
+                style="@style/Widget.Button.Dense"
+                android:layout_alignParentEnd="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+        </RelativeLayout>
+    </RelativeLayout>
+</RelativeLayout>

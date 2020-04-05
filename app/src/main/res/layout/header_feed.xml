@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:tools="http://schemas.android.com/tools"
+    android:padding="8dp"
+    android:paddingStart="@dimen/padding_start_default"
+    android:paddingEnd="@dimen/padding_end_default"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="horizontal"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+    <com.huanchengfly.tieba.widgets.theme.TintRelativeLayout
+        android:id="@+id/hot_message"
+        app:backgroundTint="@color/default_color_floor_card"
+        android:background="@drawable/bg_radius_50dp"
+        android:foreground="@drawable/fg_ripple_radius_50dp"
+        android:padding="8dp"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:ignore="UnusedAttribute">
+        <com.huanchengfly.tieba.widgets.theme.TintTextView
+            android:text="@string/title_hot_message"
+            android:gravity="center"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:textStyle="bold"
+            app:tint="@color/default_color_text_secondary"
+            android:id="@+id/text"
+            android:layout_centerInParent="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </com.huanchengfly.tieba.widgets.theme.TintRelativeLayout>
+</LinearLayout>

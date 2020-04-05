@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <shape
+            android:shape="rectangle">
+            <gradient
+                android:angle="0"
+                android:startColor="@color/colorSplashBg"
+                android:endColor="@color/colorSplashBg"
+                android:type="linear"/>
+        </shape>
+    </item>
+    <item
+        android:height="120dp"
+        android:width="120dp"
+        android:gravity="center">
+        <bitmap
+            android:src="@drawable/ic_splash" />
+    </item>
+    <item
+        android:height="100dp"
+        android:width="200dp"
+        android:bottom="35dp"
+        android:gravity="bottom|center_horizontal">
+        <bitmap
+            android:src="@drawable/ic_splash_text" />
+    </item>
+</layer-list>

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".fragments.ForumListFragment">
+    <com.huanchengfly.tieba.widgets.theme.TintSwipeRefreshLayout
+        android:layout_width="match_parent"
+        android:id="@+id/refresh"
+        android:layout_height="match_parent">
+            <androidx.recyclerview.widget.RecyclerView
+                android:overScrollMode="never"
+                android:id="@+id/forum_list_recycler"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+    </com.huanchengfly.tieba.widgets.theme.TintSwipeRefreshLayout>
+</RelativeLayout>

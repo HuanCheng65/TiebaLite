@@ -1,0 +1,28 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <com.huanchengfly.tieba.widgets.theme.TintTextView
+        android:textStyle="bold"
+        app:tint="@color/default_color_text_secondary"
+        android:layout_marginEnd="8dp"
+        android:id="@+id/my_info_night_tv"
+        android:text="@string/my_info_night"
+        android:gravity="center"
+        android:layout_centerVertical="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <com.huanchengfly.tieba.widgets.theme.TintSwitch
+        app:track="@drawable/switch_ios_track"
+        android:thumb="@drawable/switch_ios_thumb"
+        style="@style/Widget.Switch"
+        app:trackTintList="@drawable/selector_switch_track"
+        app:thumbTint="@color/white"
+        app:switchBackgroundTint="@color/transparent"
+        android:id="@+id/my_info_night_switch"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_toEndOf="@id/my_info_night_tv" />
+</RelativeLayout>

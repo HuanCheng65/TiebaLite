@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/background"
+    android:background="@color/white"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.huanchengfly.intro.BaseIntroActivity">
+    <com.huanchengfly.intro.widgets.MyViewPager
+        android:id="@+id/view_pager"
+        android:layout_alignParentTop="true"
+        android:layout_above="@id/bottom_bar"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <RelativeLayout
+        android:paddingStart="32dp"
+        android:paddingEnd="32dp"
+        android:padding="16dp"
+        android:elevation="4dp"
+        android:layout_alignParentBottom="true"
+        android:id="@+id/bottom_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <com.google.android.material.button.MaterialButton
+            app:cornerRadius="18dp"
+            android:id="@+id/button_prev"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"
+            android:textColor="?android:textColorSecondary"
+            style="@style/Widget.MaterialComponents.Button.TextButton"
+            android:visibility="invisible"
+            tools:visibility="visible"
+            android:text="@string/button_prev"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <com.google.android.material.button.MaterialButton
+            app:cornerRadius="18dp"
+            android:id="@+id/button_next"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:textColor="@color/white"
+            app:backgroundTint="?colorAccent"
+            style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
+            android:text="@string/button_next_default"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </RelativeLayout>
+</RelativeLayout>

@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="Theme">
+        <attr name="colorPrimary" format="color" />
+        <attr name="colorAccent" format="color" />
+        <attr name="colorToolbarItem" format="color" />
+        <attr name="colorText" format="color" />
+        <attr name="colorTextOnPrimary" format="color" />
+        <attr name="colorTextSecondary" format="color" />
+        <attr name="color_text_disabled" format="color" />
+        <attr name="colorBg" format="color" />
+        <attr name="colorUnselected" format="color" />
+        <attr name="colorNavBar" format="color" />
+        <attr name="colorToolbar" format="color" />
+        <attr name="colorToolbarItemActive" format="color" />
+        <attr name="colorFloorCard" format="color" />
+        <attr name="colorCard" format="color" />
+        <attr name="colorDivider" format="color" />
+        <attr name="shadow_color" format="color" />
+        <attr name="color_toolbar_item_secondary" format="color" />
+        <attr name="color_swipe_refresh_layout_background" format="color" />
+    </declare-styleable>
+
+    <declare-styleable name="ShadowLayout">
+        <attr name="shadow_layout_color" format="color"/>
+        <attr name="shadow_layout_background_color" format="color"/>
+        <attr name="shadow_layout_offsetX" format="dimension"/>
+        <attr name="shadow_layout_offsetY" format="dimension"/>
+        <attr name="shadow_layout_blur" format="dimension"/>
+        <attr name="shadow_layout_radius" format="dimension"/>
+    </declare-styleable>
+
+    <declare-styleable name="TintTabLayout">
+        <attr name="layoutBackground" format="color" />
+        <attr name="tabTextColor" format="color" />
+        <attr name="tabIconTint" format="color" />
+        <attr name="tabSelectedTextColor" format="color" />
+    </declare-styleable>
+
+    <declare-styleable name="TintView">
+        <attr name="backgroundTint" format="color" />
+        <attr name="tint" format="color" />
+        <attr name="tintList" format="color" />
+    </declare-styleable>
+
+    <declare-styleable name="TintNavigationView">
+        <attr name="navigationBackgroundTint" format="color" />
+        <attr name="itemIconTint" format="color" />
+        <attr name="itemTextTint" format="color" />
+    </declare-styleable>
+
+    <declare-styleable name="TintBottomNavigationView">
+        <attr name="bottomNavigationBackgroundTint" format="color" />
+        <attr name="itemIconTintList" format="color" />
+        <attr name="itemTextTintList" format="color" />
+    </declare-styleable>
+
+    <declare-styleable name="TintToolbar">
+        <attr name="toolbarBackgroundTint" format="color" />
+        <attr name="itemTint" format="color" />
+        <attr name="secondaryItemTint" format="color" />
+        <attr name="activeItemTint" format="color" />
+    </declare-styleable>
+
+    <declare-styleable name="TintSwitch">
+        <attr name="switchBackgroundTint" format="color" />
+        <attr name="thumbTint" format="color" />
+        <attr name="trackTintList" format="color" />
+    </declare-styleable>
+
+    <declare-styleable name="TintMaterialCardView">
+        <attr name="materialCardBackgroundTint" format="color" />
+        <attr name="strokeColor" format="color" />
+    </declare-styleable>
+
+    <declare-styleable name="TintSuperTextView">
+        <attr name="superTextViewBackgroundTint" format="color" />
+        <attr name="leftTextColor" format="color" />
+        <attr name="leftTopTextColor" format="color" />
+        <attr name="leftBottomTextColor" format="color" />
+        <attr name="centerTextColor" format="color" />
+        <attr name="centerTopTextColor" format="color" />
+        <attr name="centerBottomTextColor" format="color" />
+        <attr name="rightTextColor" format="color" />
+        <attr name="rightTopTextColor" format="color" />
+        <attr name="rightBottomTextColor" format="color" />
+        <attr name="dividerLineColor" format="color" />
+        <attr name="leftIconTint" format="color" />
+        <attr name="rightIconTint" format="color" />
+    </declare-styleable>
+
+    <declare-styleable name="TintSeekbar">
+        <attr name="seekbarBackgroundTint" format="color" />
+        <attr name="progressTint" format="color" />
+        <attr name="progressBackgroundTint" format="color" />
+    </declare-styleable>
+
+    <declare-styleable name="TintMaterialButton">
+        <attr name="buttonBackgroundTint" format="color" />
+        <attr name="buttonTextColor" format="color" />
+        <attr name="buttonStrokeColor" format="color" />
+    </declare-styleable>
+
+    <declare-styleable name="TintCheckBox">
+        <attr name="checkboxBackgroundTint" format="color" />
+        <attr name="buttonTint" format="color" />
+        <attr name="textColor" format="color" />
+    </declare-styleable>
+
+    <declare-styleable name="TintSearchView">
+        <attr name="searchBackground" format="color" />
+        <attr name="searchItemColor" format="color" />
+        <attr name="hintColor" format="color" />
+    </declare-styleable>
+
+    <declare-styleable name="TintTextInputLayout">
+        <attr name="inputLayoutBoxStrokeColor" format="color" />
+    </declare-styleable>
+
+    <attr name="mwhWaves" format="string|enum">
+        <enum name="MultiWave" value="-1"/>
+        <enum name="PairWave" value="-2"/>
+    </attr>
+
+    <attr name="mwhShape" format="enum">
+        <enum name="Rect" value="0"/>
+        <enum name="RoundRect" value="1"/>
+        <enum name="Oval" value="2"/>
+    </attr>
+
+    <declare-styleable name="MultiWaveHeader">
+        <attr name="mwhWaveHeight" format="dimension"/>
+        <attr name="mwhStartColor" format="color"/>
+        <attr name="mwhCloseColor" format="color"/>
+        <attr name="mwhIsRunning" format="boolean"/>
+        <attr name="mwhEnableFullScreen" format="boolean"/>
+        <attr name="mwhColorAlpha" format="fraction|float"/>
+        <attr name="mwhProgress" format="fraction|float"/>
+        <attr name="mwhVelocity" format="fraction|float"/>
+        <attr name="mwhGradientAngle" format="integer"/>
+        <attr name="mwhCornerRadius" format="dimension"/>
+        <attr name="mwhWaves"/>
+        <attr name="mwhShape"/>
+    </declare-styleable>
+
+    <declare-styleable name="MyViewPager">
+        <attr name="orientation" />
+        <attr format="boolean" name="can_scroll"/>
+    </declare-styleable>
+</resources>

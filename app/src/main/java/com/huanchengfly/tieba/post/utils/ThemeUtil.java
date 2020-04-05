@@ -1,0 +1,334 @@
+package com.huanchengfly.tieba.post.utils;
+
+import android.annotation.SuppressLint;
+import android.app.Activity;
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.content.res.ColorStateList;
+import android.content.res.Resources;
+import android.graphics.Color;
+import android.graphics.drawable.Drawable;
+import android.view.View;
+import android.view.ViewGroup;
+import android.webkit.WebView;
+import android.widget.TextView;
+
+import androidx.annotation.ColorInt;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.annotation.StringDef;
+import androidx.annotation.StyleRes;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.load.resource.bitmap.BitmapTransformation;
+import com.bumptech.glide.request.RequestOptions;
+import com.bumptech.glide.request.target.CustomViewTarget;
+import com.bumptech.glide.request.transition.Transition;
+import com.google.android.material.appbar.AppBarLayout;
+import com.huanchengfly.theme.utils.ThemeUtils;
+import com.huanchengfly.tieba.post.R;
+import com.huanchengfly.tieba.post.activities.base.BaseActivity;
+import com.huanchengfly.tieba.widgets.theme.TintSwipeRefreshLayout;
+
+import java.io.File;
+
+public class ThemeUtil {
+    public static final String TAG = "ThemeUtil";
+
+    public static final String SP_THEME = "theme";
+    public static final String SP_DARK_THEME = "dark_theme";
+    public static final String SP_OLD_THEME = "old_theme";
+    public static final String SP_SWITCH_REASON = "switch_reason";
+
+    public static final String THEME_TRANSLUCENT = "translucent";
+    public static final String THEME_CUSTOM = "custom";
+    public static final String THEME_WHITE = "white";
+    public static final String THEME_TIEBA = "tieba";
+    public static final String THEME_BLACK = "black";
+    public static final String THEME_PURPLE = "purple";
+    public static final String THEME_PINK = "pink";
+    public static final String THEME_RED = "red";
+    public static final String THEME_BLUE_DARK = "dark";
+    public static final String THEME_GREY_DARK = "grey_dark";
+    public static final String THEME_AMOLED_DARK = "amoled_dark";
+
+    public static final String SP_CUSTOM_PRIMARY_COLOR = "custom_primary_color";
+    public static final String SP_TRANSLUCENT_PRIMARY_COLOR = "translucent_primary_color";
+    public static final String SP_CUSTOM_STATUS_BAR_FONT_DARK = "custom_status_bar_font_dark";
+    public static final String SP_CUSTOM_TOOLBAR_PRIMARY_COLOR = "custom_toolbar_primary_color";
+
+    public static final String REASON_MANUALLY = "manually";
+    public static final String REASON_FOLLOW_SYSTEM = "follow_system";
+    public static final String REASON_TIME = "time";
+    public static final String SP_TRANSLUCENT_THEME_BACKGROUND_PATH = "translucent_theme_background_path";
+
+    public static int getTextColor(Context context) {
+        return ThemeUtils.getColorByAttr(context, R.attr.colorText);
+    }
+
+    public static int getSecondaryTextColor(Context context) {
+        return ThemeUtils.getColorByAttr(context, R.attr.colorTextSecondary);
+    }
+
+    public static void switchToNightMode(Activity context) {
+        switchToNightMode(context, REASON_MANUALLY);
+    }
+
+    public static void switchToNightMode(Activity context, @Reason String reason) {
+        switchToNightMode(context, reason, true);
+    }
+
+    public static void refreshUI(Activity activity) {
+        if (activity instanceof BaseActivity) {
+            ((BaseActivity) activity).refreshUIIfNeed();
+            return;
+        }
+        ThemeUtils.refreshUI(activity);
+    }
+
+    @SuppressLint("ApplySharedPref")
+    public static void switchToNightMode(Activity context, @Reason String reason, boolean recreate) {
+        getSharedPreferences(context)
+                .edit()
+                .putString(SP_SWITCH_REASON, reason)
+                .putString(SP_OLD_THEME, getTheme(context))
+                .putString(SP_THEME, getSharedPreferences(context).getString(SP_DARK_THEME, THEME_BLUE_DARK))
+                .commit();
+        if (recreate) {
+            refreshUI(context);
+        }
+    }
+
+    @SuppressLint("ApplySharedPref")
+    public static void switchFromNightMode(Activity context) {
+        switchFromNightMode(context, REASON_MANUALLY);
+    }
+
+    @SuppressLint("ApplySharedPref")
+    public static void switchFromNightMode(Activity context, boolean recreate) {
+        switchFromNightMode(context, REASON_MANUALLY, recreate);
+    }
+
+    @SuppressLint("ApplySharedPref")
+    public static void switchFromNightMode(Activity context, @Reason String reason) {
+        switchFromNightMode(context, reason, true);
+    }
+
+    @SuppressLint("ApplySharedPref")
+    public static void switchFromNightMode(Activity context, @Reason String reason, boolean recreate) {
+        getSharedPreferences(context)
+                .edit()
+                .putString(SP_SWITCH_REASON, reason)
+                .putString(SP_THEME, getSharedPreferences(context).getString(SP_OLD_THEME, ThemeUtil.THEME_WHITE))
+                .commit();
+        //context.recreate();
+        if (recreate) refreshUI(context);
+    }
+
+    public static SharedPreferences getSharedPreferences(Context context) {
+        return context.getSharedPreferences("settings", Context.MODE_PRIVATE);
+    }
+
+    public static void setChipThemeByLevel(String level, View parent, TextView... textViews) {
+        setChipTheme(Util.getIconColorByLevel(level), parent, textViews);
+    }
+
+    public static void setChipTheme(@ColorInt int color, View parent, TextView... textViews) {
+        if (getSharedPreferences(parent.getContext()).getBoolean("level_icon_old_style", false)) {
+            parent.setBackgroundTintList(ColorStateList.valueOf(color));
+            for (TextView textView : textViews) {
+                textView.setTextColor(ThemeUtils.getColorByAttr(parent.getContext(), R.attr.colorBg));
+            }
+        } else {
+            parent.setBackgroundTintList(ColorStateList.valueOf(color).withAlpha(60));
+            for (TextView textView : textViews) {
+                textView.setTextColor(color);
+            }
+        }
+    }
+
+    public static void setThemeForSwipeRefreshLayout(SwipeRefreshLayout swipeRefreshLayout) {
+        if (swipeRefreshLayout instanceof TintSwipeRefreshLayout) {
+            ((TintSwipeRefreshLayout) swipeRefreshLayout).tint();
+            return;
+        }
+        Context context = swipeRefreshLayout.getContext();
+        Resources resources = context.getResources();
+        if (resources != null) {
+            swipeRefreshLayout.setProgressBackgroundColorSchemeColor(resources.getColor(R.color.color_swipe_refresh_bg));
+            swipeRefreshLayout.setColorSchemeColors(ThemeUtils.getColorByAttr(context, R.attr.colorAccent));
+        }
+    }
+
+    public static boolean isNightMode(Context context) {
+        return isNightMode(getTheme(context));
+    }
+
+    public static boolean isNightMode(String theme) {
+        return theme.toLowerCase().contains("dark");
+    }
+
+    public static boolean isStatusBarFontDark(Context context) {
+        boolean isDark = false;
+        switch (getTheme(context)) {
+            case THEME_WHITE:
+                isDark = true;
+                break;
+            case THEME_CUSTOM:
+                isDark = SharedPreferencesUtil.get(context, SharedPreferencesUtil.SP_SETTINGS)
+                        .getBoolean(SP_CUSTOM_STATUS_BAR_FONT_DARK, false);
+                break;
+        }
+        return isDark;
+    }
+
+    public static boolean isNavigationBarFontDark(Context context) {
+        return !isNightMode(context);
+    }
+
+    public static void setTheme(Activity context) {
+        String nowTheme = getTheme(context);
+        context.setTheme(getThemeByName(nowTheme));
+    }
+
+    public static void setTranslucentThemeWebViewBackground(WebView webView) {
+        if (webView == null) {
+            return;
+        }
+        if (!THEME_TRANSLUCENT.equals(ThemeUtil.getTheme(webView.getContext()))) {
+            return;
+        }
+        webView.setBackgroundColor(Color.WHITE);
+    }
+
+    public static void setAppBarFitsSystemWindow(View view, boolean appBarFitsSystemWindow) {
+        if (view == null) return;
+        if (view instanceof AppBarLayout) {
+            view.setFitsSystemWindows(appBarFitsSystemWindow);
+            ((AppBarLayout) view).setClipToPadding(!appBarFitsSystemWindow);
+            return;
+        }
+        if (view instanceof ViewGroup) {
+            for (int i = 0; i < ((ViewGroup) view).getChildCount(); i++) {
+                setAppBarFitsSystemWindow(((ViewGroup) view).getChildAt(i), appBarFitsSystemWindow);
+            }
+        }
+    }
+
+    public static void setTranslucentThemeBackground(View view, boolean setFitsSystemWindow, BitmapTransformation... transformations) {
+        if (view == null) {
+            return;
+        }
+        if (!THEME_TRANSLUCENT.equals(ThemeUtil.getTheme(view.getContext()))) {
+            if (setFitsSystemWindow) {
+                setAppBarFitsSystemWindow(view, false);
+                view.setFitsSystemWindows(false);
+                ((ViewGroup) view).setClipToPadding(true);
+            }
+            return;
+        }
+        if (setFitsSystemWindow) {
+            if (view instanceof CoordinatorLayout) {
+                setAppBarFitsSystemWindow(view, true);
+                view.setFitsSystemWindows(false);
+                ((ViewGroup) view).setClipToPadding(true);
+            } else {
+                setAppBarFitsSystemWindow(view, false);
+                view.setFitsSystemWindows(true);
+                ((ViewGroup) view).setClipToPadding(false);
+            }
+        }
+        view.setBackgroundTintList(null);
+        String backgroundFilePath = SharedPreferencesUtil.get(view.getContext(), SharedPreferencesUtil.SP_SETTINGS)
+                .getString(SP_TRANSLUCENT_THEME_BACKGROUND_PATH, null);
+        if (backgroundFilePath == null) {
+            view.setBackgroundColor(Color.BLACK);
+            return;
+        }
+        RequestOptions bgOptions = RequestOptions.centerCropTransform()
+                .skipMemoryCache(true)
+                .diskCacheStrategy(DiskCacheStrategy.NONE);
+        if (transformations != null && transformations.length > 0) {
+            bgOptions = bgOptions.transforms(transformations);
+        }
+        Glide.with(view)
+                .asDrawable()
+                .load(new File(backgroundFilePath))
+                .apply(bgOptions)
+                .into(new CustomViewTarget<View, Drawable>(view) {
+                    @Override
+                    public void onLoadFailed(@Nullable Drawable errorDrawable) {
+                        getView().setBackgroundColor(Color.BLACK);
+                    }
+
+                    @Override
+                    public void onResourceReady(@NonNull Drawable resource, @Nullable Transition<? super Drawable> transition) {
+                        getView().setBackground(resource);
+                    }
+
+                    @Override
+                    protected void onResourceCleared(@Nullable Drawable placeholder) {
+                        getView().setBackgroundColor(Color.BLACK);
+                    }
+                });
+    }
+
+    public static void setTranslucentThemeBackground(View view) {
+        setTranslucentThemeBackground(view, true);
+    }
+
+    @StyleRes
+    public static int getThemeByName(String themeName) {
+        switch (themeName.toLowerCase()) {
+            case THEME_TRANSLUCENT:
+                return R.style.TiebaLite_Translucent;
+            case THEME_WHITE:
+                return R.style.TiebaLite_White;
+            case THEME_TIEBA:
+                return R.style.TiebaLite_Tieba;
+            case THEME_BLACK:
+                return R.style.TiebaLite_Black;
+            case THEME_PURPLE:
+                return R.style.TiebaLite_Purple;
+            case THEME_PINK:
+                return R.style.TiebaLite_Pink;
+            case THEME_RED:
+                return R.style.TiebaLite_Red;
+            case THEME_BLUE_DARK:
+                return R.style.TiebaLite_Dark;
+            case THEME_GREY_DARK:
+                return R.style.TiebaLite_Dark_Grey;
+            case THEME_AMOLED_DARK:
+                return R.style.TiebaLite_Dark_Amoled;
+            default:
+                return R.style.TiebaLite_White;
+        }
+    }
+
+    public static String getTheme(Context context) {
+        String theme = getSharedPreferences(context).getString(SP_THEME, THEME_WHITE);
+        switch (theme.toLowerCase()) {
+            case THEME_TRANSLUCENT:
+            case THEME_CUSTOM:
+            case THEME_WHITE:
+            case THEME_TIEBA:
+            case THEME_BLACK:
+            case THEME_PURPLE:
+            case THEME_PINK:
+            case THEME_RED:
+            case THEME_BLUE_DARK:
+            case THEME_GREY_DARK:
+            case THEME_AMOLED_DARK:
+                return theme.toLowerCase();
+            default:
+                return THEME_WHITE;
+        }
+    }
+
+    @StringDef({REASON_MANUALLY, REASON_FOLLOW_SYSTEM, REASON_TIME})
+    public @interface Reason {
+    }
+}

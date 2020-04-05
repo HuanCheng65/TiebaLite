@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--suppress AndroidElementNotAllowed -->
+<androidx.preference.PreferenceScreen
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <androidx.preference.PreferenceCategory
+        android:layout="@layout/layout_preference_category_no_title">
+
+        <androidx.preference.DropDownPreference
+            android:layout="@layout/layout_preference_dropdown"
+            android:icon="@drawable/ic_round_photo_size_select_actual"
+            android:key="image_load_type"
+            android:entries="@array/image_load_type_entries"
+            android:entryValues="@array/image_load_type_entry_values"
+            android:defaultValue="0"
+            android:title="@string/title_settings_image_load_type" />
+
+        <androidx.preference.DropDownPreference
+            android:layout="@layout/layout_preference_dropdown"
+            android:entries="@array/sort_type_entries"
+            android:entryValues="@array/sort_type_entry_values"
+            android:title="@string/title_settings_default_sort_type"
+            android:defaultValue="0"
+            android:key="default_sort_type"
+            android:icon="@drawable/ic_round_calendar_view_day" />
+
+        <SwitchPreference
+            android:layout="@layout/layout_preference"
+            android:widgetLayout="@layout/layout_switch"
+            android:icon="@drawable/ic_quick_yellow"
+            android:defaultValue="true"
+            android:key="showShortcutInThread"
+            android:title="@string/settings_show_shortcut"
+            android:summaryOff="@string/tip_show_shortcut_in_thread"
+            android:summaryOn="@string/tip_show_shortcut_in_thread_on" />
+
+        <SwitchPreference
+            android:layout="@layout/layout_preference"
+            android:widgetLayout="@layout/layout_switch"
+            android:icon="@drawable/ic_round_star_yellow"
+            android:defaultValue="true"
+            android:key="collect_thread_see_lz"
+            android:title="@string/settings_collect_thread_see_lz"
+            android:summaryOff="@string/tip_collect_thread_see_lz"
+            android:summaryOn="@string/tip_collect_thread_see_lz_on" />
+
+        <SwitchPreference
+            android:layout="@layout/layout_preference"
+            android:widgetLayout="@layout/layout_switch"
+            android:icon="@drawable/ic_arrow_dropup_circle"
+            android:defaultValue="true"
+            android:key="show_top_forum_in_normal_list"
+            android:title="@string/title_settings_show_top_forum_in_normal_list"
+            android:summary="@string/summary_show_top_forum_in_normal_list" />
+
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="show_both_username_and_nickname"
+            android:title="@string/title_show_both_username_and_nickname" />
+    </androidx.preference.PreferenceCategory>
+</androidx.preference.PreferenceScreen>

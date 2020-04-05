@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout android:id="@+id/forum_item_content_text_holder"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_alignWithParentIfMissing="true"
+    android:layout_below="@id/forum_item_title_holder"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <com.huanchengfly.tieba.widgets.theme.TintTextView
+        android:textSize="16sp"
+        android:letterSpacing="0.02"
+        android:lineSpacingMultiplier="1.2"
+        android:lineSpacingExtra="0.5dp"
+        app:tint="@color/default_color_text"
+        android:id="@+id/forum_item_content_text"
+        tools:text="内容"
+        android:ellipsize="end"
+        android:maxLines="3"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+</FrameLayout>

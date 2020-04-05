@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/explore_auto_sign"
+        android:focusable="true"
+        android:clickable="true"
+        app:cardElevation="0dp"
+        app:contentPadding="16dp"
+        app:cardBackgroundColor="@color/transparent"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <ImageView
+                android:layout_alignParentStart="true"
+                android:id="@+id/explore_icon_auto_sign"
+                android:layout_centerVertical="true"
+                android:src="@drawable/ic_round_offline_pin_blue"
+                android:tint="@color/default_color_accent"
+                android:layout_width="30dp"
+                android:layout_height="30dp" />
+
+            <TextView
+                android:layout_marginStart="16dp"
+                android:layout_marginBottom="4dp"
+                android:text="@string/title_auto_sign"
+                android:textColor="@color/default_color_text"
+                android:id="@+id/explore_title_auto_sign"
+                android:layout_toEndOf="@+id/explore_icon_auto_sign"
+                android:textStyle="bold"
+                android:textSize="15sp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:layout_alignStart="@id/explore_title_auto_sign"
+                android:textSize="13sp"
+                android:text="@string/summary_auto_sign"
+                android:textColor="@color/default_color_text_secondary"
+                android:id="@+id/explore_subtitle_auto_sign"
+                android:layout_below="@id/explore_title_auto_sign"
+                android:layout_toEndOf="@+id/explore_icon_auto_sign"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+        </RelativeLayout>
+    </com.google.android.material.card.MaterialCardView>
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/explore_qq"
+        android:focusable="true"
+        android:clickable="true"
+        app:cardElevation="0dp"
+        app:contentPadding="16dp"
+        android:layout_marginTop="8dp"
+        app:cardBackgroundColor="@color/transparent"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <ImageView
+                android:layout_alignParentStart="true"
+                android:id="@+id/explore_icon_qq"
+                android:layout_centerVertical="true"
+                android:src="@drawable/ic_qq"
+                android:tint="@color/default_color_accent"
+                android:layout_width="30dp"
+                android:layout_height="30dp" />
+
+            <TextView
+                android:layout_marginStart="16dp"
+                android:layout_marginBottom="4dp"
+                android:text="@string/title_join_group"
+                android:textColor="@color/default_color_text"
+                android:id="@+id/explore_title_qq"
+                android:layout_toEndOf="@+id/explore_icon_qq"
+                android:textStyle="bold"
+                android:textSize="15sp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:layout_alignStart="@id/explore_title_qq"
+                android:textSize="13sp"
+                android:text="@string/summary_join_group"
+                android:textColor="@color/default_color_text_secondary"
+                android:id="@+id/explore_subtitle_qq"
+                android:layout_below="@id/explore_title_qq"
+                android:layout_toEndOf="@+id/explore_icon_qq"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+        </RelativeLayout>
+    </com.google.android.material.card.MaterialCardView>
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/explore_donate"
+        android:focusable="true"
+        android:clickable="true"
+        app:cardElevation="0dp"
+        app:contentPadding="16dp"
+        android:layout_marginTop="8dp"
+        app:cardBackgroundColor="@color/transparent"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <ImageView
+                android:layout_alignParentStart="true"
+                android:id="@+id/explore_icon_donate"
+                android:layout_centerVertical="true"
+                android:src="@drawable/ic_round_monetization_on"
+                android:tint="@color/default_color_accent"
+                android:layout_width="30dp"
+                android:layout_height="30dp" />
+
+            <TextView
+                android:layout_marginStart="16dp"
+                android:layout_marginBottom="4dp"
+                android:text="@string/title_donate"
+                android:textColor="@color/default_color_text"
+                android:id="@+id/explore_title_donate"
+                android:layout_toEndOf="@+id/explore_icon_donate"
+                android:textStyle="bold"
+                android:textSize="15sp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:layout_alignStart="@id/explore_title_donate"
+                android:textSize="13sp"
+                android:text="@string/summary_donate"
+                android:textColor="@color/default_color_text_secondary"
+                android:id="@+id/explore_subtitle_donate"
+                android:layout_below="@id/explore_title_donate"
+                android:layout_toEndOf="@+id/explore_icon_donate"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+        </RelativeLayout>
+    </com.google.android.material.card.MaterialCardView>
+</LinearLayout>

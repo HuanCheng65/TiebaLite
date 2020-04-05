@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.huanchengfly.tieba.widgets.theme.TintRelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/background"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+
+    <FrameLayout
+        android:id="@+id/appbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <com.huanchengfly.tieba.widgets.theme.TintToolbar
+            app:popupTheme="?attr/actionOverflowMenuStyle"
+            app:navigationIcon="@null"
+            app:toolbarBackgroundTint="@color/default_color_toolbar"
+            app:itemTint="@color/default_color_toolbar_item"
+            app:secondaryItemTint="@color/default_color_toolbar_item_secondary"
+            app:activeItemTint="@color/default_color_toolbar_item_active"
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            app:title="@string/title_main"
+            app:titleTextAppearance="@style/Toolbar.Title"
+            app:subtitleTextAppearance="@style/Toolbar.Subtitle" />
+    </FrameLayout>
+
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:layout_above="@id/navbar"
+        android:layout_below="@id/appbar"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <com.huanchengfly.tieba.widgets.MyViewPager
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"
+            android:id="@+id/mViewPager"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+    <com.huanchengfly.tieba.widgets.theme.TintBottomNavigationView
+        android:id="@+id/navbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        app:bottomNavigationBackgroundTint="@color/default_color_nav"
+        app:elevation="4dp"
+        app:itemIconTintList="@drawable/bottom_item_icon_tint_list"
+        app:itemTextTintList="@drawable/bottom_item_icon_tint_list"
+        app:labelVisibilityMode="unlabeled"
+        app:menu="@menu/navbar_main" />
+
+    <com.lapism.searchview.widget.SearchView
+        style="@style/Widget.SearchBar"
+        android:layout_alignParentTop="true"
+        app:search_hint="@string/hint_search"
+        android:id="@+id/toolbar_search_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+</com.huanchengfly.tieba.widgets.theme.TintRelativeLayout>

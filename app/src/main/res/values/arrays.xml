@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="sort_type_entry_values">
+        <item>0</item>
+        <item>1</item>
+    </string-array>
+
+    <string-array name="sort_type_entries">
+        <item>@string/title_sort_by_reply</item>
+        <item>@string/title_sort_by_send</item>
+    </string-array>
+
+    <string-array name="image_load_type_entry_values">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+    </string-array>
+
+    <string-array name="image_load_type_entries">
+        <item>@string/title_image_load_type_smart_origin</item>
+        <item>@string/title_image_load_type_smart_load</item>
+        <item>@string/title_image_load_type_all_origin</item>
+        <item>@string/title_image_load_type_all_no</item>
+    </string-array>
+
+    <string-array name="theme_values">
+        <item>translucent</item>
+        <item>custom</item>
+        <item>white</item>
+        <item>tieba</item>
+        <item>black</item>
+        <item>pink</item>
+        <item>red</item>
+        <item>purple</item>
+        <item>dark</item>
+        <item>grey_dark</item>
+        <item>amoled_dark</item>
+    </string-array>
+
+    <string-array name="themeNames">
+        <item>透明(BETA)</item>
+        <item>自定义</item>
+        <item>素雅白</item>
+        <item>深海蓝</item>
+        <item>高级黑</item>
+        <item>少女粉</item>
+        <item>新年红</item>
+        <item>星空紫</item>
+        <item>静谧蓝</item>
+        <item>深邃灰</item>
+        <item>A屏黑</item>
+    </string-array>
+
+    <string-array name="dark_theme_names">
+        <item>静谧蓝</item>
+        <item>深邃灰</item>
+        <item>A屏黑</item>
+    </string-array>
+
+    <string-array name="dark_theme_values">
+        <item>dark</item>
+        <item>grey_dark</item>
+        <item>amoled_dark</item>
+    </string-array>
+</resources>

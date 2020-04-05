@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shortcuts xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    tools:ignore="UnusedAttribute">
+    <shortcut
+        android:icon="@drawable/ic_shortcut_oksign"
+        android:shortcutId="oksign"
+        android:shortcutLongLabel="@string/shortcut_oksign"
+        android:shortcutShortLabel="@string/shortcut_oksign">
+        <intent
+            android:action="com.huanchengfly.tieba.post.action.OKSIGN"
+            android:targetClass="com.huanchengfly.tieba.post.activities.OKSignActivity"
+            android:targetPackage="com.huanchengfly.tieba.post" />
+    </shortcut>
+    <shortcut
+        android:icon="@drawable/ic_shortcut_collect"
+        android:shortcutId="my_collect"
+        android:shortcutLongLabel="@string/shortcut_my_collect"
+        android:shortcutShortLabel="@string/shortcut_my_collect">
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:targetClass="com.huanchengfly.tieba.post.activities.UserCollectActivity"
+            android:targetPackage="com.huanchengfly.tieba.post" />
+    </shortcut>
+    <shortcut
+        android:icon="@drawable/ic_shortcut_message"
+        android:shortcutId="my_message"
+        android:shortcutLongLabel="@string/shortcut_my_message"
+        android:shortcutShortLabel="@string/shortcut_my_message">
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:targetClass="com.huanchengfly.tieba.post.activities.MessageActivity"
+            android:targetPackage="com.huanchengfly.tieba.post" />
+    </shortcut>
+</shortcuts>

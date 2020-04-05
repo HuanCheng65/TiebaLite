@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.huanchengfly.tieba.widgets.theme.TintSwipeRefreshLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/fragment_message_refresh_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/fragment_message_recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+</com.huanchengfly.tieba.widgets.theme.TintSwipeRefreshLayout>

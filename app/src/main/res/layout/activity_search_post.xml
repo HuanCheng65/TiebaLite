@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.huanchengfly.tieba.widgets.theme.TintCoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/background"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/transparent"
+    tools:context=".activities.SearchPostActivity">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appbar"
+        android:background="@color/transparent"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:stateListAnimator="@animator/appbar_elevation">
+        <com.lapism.searchview.widget.SearchView
+            style="@style/Widget.SearchBar.Flat"
+            app:search_version_margins="toolbar"
+            app:search_version="toolbar"
+            app:search_hint="@string/hint_search"
+            android:id="@+id/toolbar_search_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <com.huanchengfly.tieba.widgets.theme.TintSwipeRefreshLayout
+        android:id="@+id/search_post_refresh_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/transparent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/search_post_recycler_view"
+            android:background="@color/transparent"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </com.huanchengfly.tieba.widgets.theme.TintSwipeRefreshLayout>
+</com.huanchengfly.tieba.widgets.theme.TintCoordinatorLayout>
