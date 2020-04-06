@@ -35,4 +35,7 @@ jobs:
           command: ./gradlew clean resguardRelease --no-daemon --stacktrace
       - store_artifacts:
           path: app/release/
-          destination: apks/
+          destination: apk/
+      - store_artifacts:
+          path: app/build/outputs/mapping/release/
+          destination: mapping/
