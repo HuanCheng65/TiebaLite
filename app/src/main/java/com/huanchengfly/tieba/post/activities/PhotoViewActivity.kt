@@ -288,20 +288,25 @@ class PhotoViewActivity : BaseActivity(), OnChangeBottomBarVisibilityListener, T
         const val OBJ_TYPE_THREAD_PAGE = "pb"
         const val OBJ_TYPE_FORUM_PAGE = "frs"
         private val handler = Handler()
+
+        @JvmStatic
         fun launch(context: Context, photoViewBean: PhotoViewBean) {
             launch(context, arrayOf(photoViewBean))
         }
 
+        @JvmStatic
         fun launch(context: Context, photoViewBeanList: List<PhotoViewBean>) {
             launch(context, photoViewBeanList.toTypedArray(), 0)
         }
 
+        @JvmStatic
         fun launch(context: Context, photoViewBeanList: List<PhotoViewBean>, position: Int) {
             launch(context, photoViewBeanList.toTypedArray(), position)
         }
 
+        @JvmStatic
         @JvmOverloads
-        fun launch(context: Context, photoViewBeans: Array<PhotoViewBean>?, position: Int = 0) {
+        fun launch(context: Context, photoViewBeans: Array<PhotoViewBean>, position: Int = 0) {
             context.startActivity(Intent(context, PhotoViewActivity::class.java)
                     .putExtra(EXTRA_BEANS, photoViewBeans)
                     .putExtra(EXTRA_POSITION, position)
