@@ -37,6 +37,7 @@ import com.huanchengfly.tieba.post.activities.UserActivity;
 import com.huanchengfly.tieba.post.activities.UserCollectActivity;
 import com.huanchengfly.tieba.post.interfaces.Refreshable;
 import com.huanchengfly.tieba.post.models.MyInfoBean;
+import com.huanchengfly.tieba.post.models.database.Account;
 import com.huanchengfly.tieba.post.utils.AccountUtil;
 import com.huanchengfly.tieba.post.utils.ImageUtil;
 import com.huanchengfly.tieba.post.utils.NavigationHelper;
@@ -49,6 +50,8 @@ import com.huanchengfly.utils.ColorUtils;
 import com.scwang.wave.MultiWaveHeader;
 
 import org.jetbrains.annotations.NotNull;
+
+import java.util.Objects;
 
 import static com.huanchengfly.tieba.post.utils.ThemeUtil.SP_CUSTOM_TOOLBAR_PRIMARY_COLOR;
 import static com.huanchengfly.tieba.post.utils.ThemeUtil.THEME_TRANSLUCENT;
@@ -190,8 +193,13 @@ public class MyInfoFragment extends BaseFragment implements NavigationView.OnNav
         multiWaveHeader = contentView.findViewById(R.id.wave_header);
         RelativeLayout cardView = contentView.findViewById(R.id.my_info);
         cardView.setOnClickListener((View view) -> {
-            if (AccountUtil.isLoggedIn(getAttachContext()) && data != null) {
-                NavigationHelper.toUserSpaceWithAnim(getAttachContext(), String.valueOf(data.getData().getUid()), data.getData().getAvatarUrl(), avatarImageView);
+            if (AccountUtil.isLoggedIn(getAttachContext())) {
+                if (data != null) {
+                    NavigationHelper.toUserSpaceWithAnim(getAttachContext(), String.valueOf(data.getData().getUid()), data.getData().getAvatarUrl(), avatarImageView);
+                } else {
+                    Account loginInfo = Objects.requireNonNull(AccountUtil.getLoginInfo(getAttachContext()));
+                    NavigationHelper.toUserSpaceWithAnim(getAttachContext(), String.valueOf(loginInfo.getUid()), loginInfo.getPortrait(), avatarImageView);
+                }
             } else {
                 getAttachContext().startActivity(new Intent(getAttachContext(), LoginActivity.class));
             }

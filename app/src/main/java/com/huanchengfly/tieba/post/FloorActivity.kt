@@ -170,7 +170,7 @@ class FloorActivity : BaseActivity() {
             }
 
             override fun onResponse(call: Call<SubFloorListBean>, response: Response<SubFloorListBean>) {
-                val subFloorListBean = response.body()!!
+                val subFloorListBean = response.body() ?: return
                 pid = subFloorListBean.post!!.id
                 spid = null
                 if (Integer.valueOf(subFloorListBean.page!!.currentPage) >= Integer.valueOf(subFloorListBean.page.totalPage)) {

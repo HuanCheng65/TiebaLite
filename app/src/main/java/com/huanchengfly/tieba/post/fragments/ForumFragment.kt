@@ -96,7 +96,7 @@ class ForumFragment : BaseFragment(), Refreshable, OnSwitchListener, ScrollTopab
         val bundle = arguments
         if (savedInstanceState == null && bundle != null) {
             forumName = bundle.getString(PARAM_FORUM_NAME)
-            isGood = bundle.getBoolean(PARAM_IS_GOOD)
+            isGood = bundle.getBoolean(PARAM_IS_GOOD, false)
             sortType = valueOf(bundle.getInt(PARAM_SORT_TYPE))
             preload = bundle.getBoolean(PARAM_PRELOAD)
             preloadId = bundle.getInt(PARAM_PRELOAD_ID)

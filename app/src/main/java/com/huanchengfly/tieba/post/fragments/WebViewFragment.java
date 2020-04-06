@@ -381,7 +381,7 @@ public class WebViewFragment extends BaseFragment implements DownloadListener {
                         .setOnGrantedCallback(isForever -> {
                             AndPermission.with(getAttachContext())
                                     .runtime()
-                                    .permission(Permission.Group.LOCATION)
+                                    .permission(Permission.ACCESS_COARSE_LOCATION, Permission.ACCESS_FINE_LOCATION)
                                     .onGranted((List<String> permissions) -> {
                                         if (isEnabledLocationFunction()) {
                                             callback.invoke(origin, true, isForever);

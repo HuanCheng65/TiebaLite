@@ -94,8 +94,17 @@ public final class NavigationHelper {
     public void navigationByData(int action) {
         switch (action) {
             case ACTION_LOGIN:
-                mContext.startActivity(new Intent(mContext, LoginActivity.class));
+                startActivity(new Intent(mContext, LoginActivity.class));
                 break;
+        }
+    }
+
+    private void startActivity(Intent intent) {
+        try {
+            mContext.startActivity(intent);
+        } catch (ActivityNotFoundException e) {
+            e.printStackTrace();
+            Toast.makeText(mContext, R.string.toast_nav_failed, Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -104,7 +113,7 @@ public final class NavigationHelper {
             case ACTION_FORUM:
                 Intent intent = new Intent(mContext, ForumActivity.class);
                 intent.putExtra(EXTRA_FORUM_NAME, data);
-                mContext.startActivity(intent);
+                startActivity(intent);
                 break;
             case ACTION_URL:
                 navigationByUrl(data);
@@ -116,7 +125,7 @@ public final class NavigationHelper {
                 navigationByUrl(mContext.getString(R.string.url_user_home, data, 0));
                 break;
             case ACTION_USER_BY_UID:
-                mContext.startActivity(new Intent(mContext, UserActivity.class).putExtra(UserActivity.EXTRA_UID, data));
+                startActivity(new Intent(mContext, UserActivity.class).putExtra(UserActivity.EXTRA_UID, data));
                 break;
         }
     }
@@ -134,7 +143,7 @@ public final class NavigationHelper {
                     from = from == null ? "" : from;
                     maxPid = maxPid == null ? "" : maxPid;
                     boolean seeLz = (seeLzStr != null && seeLzStr.equalsIgnoreCase("1"));
-                    mContext.startActivity(new Intent(mContext, ThreadActivity.class)
+                    startActivity(new Intent(mContext, ThreadActivity.class)
                             .putExtra("tid", tid)
                             .putExtra("pid", pid)
                             .putExtra("from", from)
@@ -149,7 +158,7 @@ public final class NavigationHelper {
                 if (floorTid != null) {
                     pid = floorPid == null ? "" : floorPid;
                     String spid = floorSPid == null ? "" : floorSPid;
-                    mContext.startActivity(new Intent(mContext, FloorActivity.class)
+                    startActivity(new Intent(mContext, FloorActivity.class)
                             .putExtra("tid", floorTid)
                             .putExtra("pid", pid)
                             .putExtra("spid", spid));
@@ -205,7 +214,7 @@ public final class NavigationHelper {
                     } else if (kz != null) {
                         Intent intent = new Intent(mContext, ThreadActivity.class);
                         intent.putExtra("url", url);
-                        mContext.startActivity(intent);
+                        startActivity(intent);
                         return true;
                     }
                 } else if (path.startsWith("/index/tbwise") || path.equalsIgnoreCase("/")) {
@@ -219,7 +228,7 @@ public final class NavigationHelper {
                 } else if (path.startsWith("/p/")) {
                     Intent intent = new Intent(mContext, ThreadActivity.class);
                     intent.putExtra("url", url);
-                    mContext.startActivity(intent);
+                    startActivity(intent);
                     return true;
                 }
             }
@@ -227,7 +236,7 @@ public final class NavigationHelper {
                 if (!(activityName.startsWith("WebViewActivity") || activityName.startsWith("LoginActivity"))) {
                     boolean isTiebaLink = host.contains("tieba.baidu.com") || host.contains("wappass.baidu.com") || host.contains("ufosdk.baidu.com") || host.contains("m.help.baidu.com");
                     if (isTiebaLink || SharedPreferencesUtil.get(mContext, SharedPreferencesUtil.SP_SETTINGS).getBoolean("use_webview", true)) {
-                        mContext.startActivity(new Intent(mContext, WebViewActivity.class).putExtra("url", url));
+                        startActivity(new Intent(mContext, WebViewActivity.class).putExtra("url", url));
                         return true;
                     } else {
                         if (SharedPreferencesUtil.get(mContext, SharedPreferencesUtil.SP_SETTINGS).getBoolean("use_custom_tabs", true)) {
@@ -237,10 +246,10 @@ public final class NavigationHelper {
                             try {
                                 intentBuilder.build().launchUrl(mContext, uri);
                             } catch (ActivityNotFoundException e) {
-                                mContext.startActivity(new Intent(Intent.ACTION_VIEW, uri));
+                                startActivity(new Intent(Intent.ACTION_VIEW, uri));
                             }
                         } else {
-                            mContext.startActivity(new Intent(Intent.ACTION_VIEW, uri));
+                            startActivity(new Intent(Intent.ACTION_VIEW, uri));
                         }
                     }
                 }
@@ -268,7 +277,7 @@ public final class NavigationHelper {
                                     oldHost + scheme,
                                     mContext.getString(R.string.title_start_app_permission, oldHost, appName),
                                     R.drawable.ic_round_exit_to_app))
-                            .setOnGrantedCallback(isForever -> mContext.startActivity(intent))
+                            .setOnGrantedCallback(isForever -> startActivity(intent))
                             .show();
                 }
                 return true;
@@ -296,7 +305,7 @@ public final class NavigationHelper {
                                     oldHost + scheme,
                                     mContext.getString(R.string.title_start_app_permission, oldHost, appName),
                                     R.drawable.ic_round_exit_to_app))
-                            .setOnGrantedCallback(isForever -> mContext.startActivity(intent))
+                            .setOnGrantedCallback(isForever -> startActivity(intent))
                             .show();
                 }
                 return true;

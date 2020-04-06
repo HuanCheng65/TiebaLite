@@ -668,7 +668,7 @@ class ThreadActivity : BaseActivity(), View.OnClickListener {
     }
 
     override fun finish() {
-        if (dataBean != null) {
+        if (dataBean != null && dataBean!!.thread != null) {
             val postListItemBean = lastVisibleItem
             var extras = ""
             if (postListItemBean != null) {
@@ -682,8 +682,9 @@ class ThreadActivity : BaseActivity(), View.OnClickListener {
                     .setExtras(extras)
                     .setTitle(dataBean!!.thread.title)
                     .setType(HistoryHelper.TYPE_THREAD)
-            if (dataBean!!.thread != null && dataBean!!.thread.author != null) {
-                history.setAvatar(dataBean!!.thread.author.portrait).username = dataBean!!.thread.author.nameShow
+            if (dataBean!!.thread.author != null) {
+                history.avatar = dataBean!!.thread.author.portrait
+                history.username = dataBean!!.thread.author.nameShow
             }
             historyHelper!!.writeHistory(history)
         }

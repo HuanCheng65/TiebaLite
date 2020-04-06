@@ -125,6 +125,10 @@ class ForumActivity : BaseActivity(), View.OnClickListener, OnRefreshedListener 
             forumName = intent.getStringExtra(EXTRA_FORUM_NAME)
             title = getString(R.string.title_forum, forumName)
         }
+        if (forumName == null) {
+            finish()
+            return
+        }
         initView()
         setTitle(title)
         initData()

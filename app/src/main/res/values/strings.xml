@@ -383,4 +383,5 @@
     <string name="toast_sign_failed">签到失败 %s</string>
     <string name="toast_like_failed">关注失败 %s</string>
     <string name="toast_please_login">请先登录</string>
+    <string name="toast_nav_failed">跳转失败</string>
 </resources>
