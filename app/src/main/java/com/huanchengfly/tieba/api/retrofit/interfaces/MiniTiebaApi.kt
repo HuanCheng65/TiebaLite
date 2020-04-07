@@ -189,6 +189,7 @@ interface MiniTiebaApi {
             @Field("fid") forumId: String,
             @Field("word") forumName: String,
             @Field("z") threadId: String,
+            @Field("tbs") tbs: String,
             @Field("src") src: Int = 1,
             @Field("is_vipdel") is_vip_del: Int = 0,
             @Field("delete_my_post") delete_my_post: Int = 1
@@ -202,6 +203,7 @@ interface MiniTiebaApi {
             @Field("word") forumName: String,
             @Field("z") threadId: String,
             @Field("pid") postId: String,
+            @Field("tbs") tbs: String,
             @Field("isfloor") is_floor: Int,
             @Field("src") src: Int,
             @Field("is_vipdel") is_vip_del: Int,

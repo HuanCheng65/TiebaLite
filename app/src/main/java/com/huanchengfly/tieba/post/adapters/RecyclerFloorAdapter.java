@@ -158,7 +158,7 @@ public class RecyclerFloorAdapter extends CommonBaseAdapter<SubFloorListBean.Pos
                                 ConfirmDialogFragment.newInstance(mContext.getString(R.string.title_dialog_del_post))
                                         .setOnConfirmListener(() -> {
                                             TiebaApi.getInstance()
-                                                    .delPost(dataBean.getForum().getId(), dataBean.getForum().getName(), dataBean.getThread().getId(), postInfo.getId(), true, true)
+                                                    .delPost(dataBean.getForum().getId(), dataBean.getForum().getName(), dataBean.getThread().getId(), postInfo.getId(), dataBean.getAnti().getTbs(), true, true)
                                                     .enqueue(new Callback<CommonResponse>() {
                                                         @Override
                                                         public void onResponse(@NotNull Call<CommonResponse> call, @NotNull Response<CommonResponse> response) {

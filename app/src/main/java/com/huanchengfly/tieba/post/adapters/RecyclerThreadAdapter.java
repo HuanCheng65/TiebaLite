@@ -451,7 +451,7 @@ public class RecyclerThreadAdapter extends MultiBaseAdapter<ThreadContentBean.Po
                                 ConfirmDialogFragment.newInstance(mContext.getString(R.string.title_dialog_del_post))
                                         .setOnConfirmListener(() -> {
                                             TiebaApi.getInstance()
-                                                    .delPost(dataBean.getForum().getId(), dataBean.getForum().getName(), dataBean.getThread().getId(), subPostListItemBean.getId(), true, true)
+                                                    .delPost(dataBean.getForum().getId(), dataBean.getForum().getName(), dataBean.getThread().getId(), subPostListItemBean.getId(), dataBean.getAnti().getTbs(), true, true)
                                                     .enqueue(new Callback<CommonResponse>() {
                                                         @Override
                                                         public void onResponse(@NotNull Call<CommonResponse> call, @NotNull Response<CommonResponse> response) {
@@ -525,7 +525,7 @@ public class RecyclerThreadAdapter extends MultiBaseAdapter<ThreadContentBean.Po
                                 ConfirmDialogFragment.newInstance(mContext.getString(R.string.title_dialog_del_post))
                                         .setOnConfirmListener(() -> {
                                             TiebaApi.getInstance()
-                                                    .delPost(dataBean.getForum().getId(), dataBean.getForum().getName(), dataBean.getThread().getId(), postListItemBean.getId(), TextUtils.equals(dataBean.getUser().getId(), postListItemBean.getAuthorId()), false)
+                                                    .delPost(dataBean.getForum().getId(), dataBean.getForum().getName(), dataBean.getThread().getId(), postListItemBean.getId(), dataBean.getAnti().getTbs(), TextUtils.equals(dataBean.getUser().getId(), postListItemBean.getAuthorId()), false)
                                                     .enqueue(new Callback<CommonResponse>() {
                                                         @Override
                                                         public void onResponse(@NotNull Call<CommonResponse> call, @NotNull Response<CommonResponse> response) {

@@ -526,7 +526,7 @@ class ThreadActivity : BaseActivity(), View.OnClickListener {
             } else {
                 mAdapter.isImmersive = false
             }
-            R.id.menu_delete -> TiebaApi.getInstance().delThread(dataBean!!.forum.id, dataBean!!.forum.name, dataBean!!.thread.id).enqueue(object : Callback<CommonResponse> {
+            R.id.menu_delete -> TiebaApi.getInstance().delThread(dataBean!!.forum.id, dataBean!!.forum.name, dataBean!!.thread.id, dataBean!!.anti.tbs).enqueue(object : Callback<CommonResponse> {
                 override fun onFailure(call: Call<CommonResponse>, t: Throwable) {
                     Toast.makeText(this@ThreadActivity, getString(R.string.toast_delete_error, t.message), Toast.LENGTH_SHORT).show()
                 }
