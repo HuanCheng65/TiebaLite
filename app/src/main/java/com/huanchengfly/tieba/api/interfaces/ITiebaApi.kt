@@ -197,7 +197,8 @@ interface ITiebaApi {
     fun delThread(
             forumId: String,
             forumName: String,
-            threadId: String
+            threadId: String,
+            tbs: String
     ): Call<CommonResponse>
 
     /**
@@ -217,6 +218,7 @@ interface ITiebaApi {
             forumName: String,
             threadId: String,
             postId: String,
+            tbs: String,
             isFloor: Boolean,
             delMyPost: Boolean
     ): Call<CommonResponse>

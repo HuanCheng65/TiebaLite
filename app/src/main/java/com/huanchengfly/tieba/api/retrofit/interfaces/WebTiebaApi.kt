@@ -96,9 +96,13 @@ interface WebTiebaApi {
             @Query("ct") ct: String = "2"
     ): Call<SearchThreadBean>
 
-    @GET("/mo/q/cooluploadpic")
+    @Headers(
+            "${Header.FORCE_LOGIN}: ${Header.FORCE_LOGIN_TRUE}"
+    )
+    @POST("/mo/q/cooluploadpic")
+    @FormUrlEncoded
     fun webUploadPic(
-            @Query("pic") base64: String?,
+            @Field("pic") base64: String?,
             @Query("type") type: String = "ajax",
             @Query("r") r: String = Math.random().toString()
     ): Call<WebUploadPicBean>

@@ -49,19 +49,21 @@ public class UploadHelper {
             next();
             return;
         }
-        TiebaApi.getInstance().webUploadPic(photoInfoBean).enqueue(new Callback<WebUploadPicBean>() {
-            @Override
-            public void onResponse(@NotNull Call<WebUploadPicBean> call, @NotNull Response<WebUploadPicBean> response) {
-                photoInfoBean.setWebUploadPicBean(response.body());
-                callback.onProgress(now + 1, uploadList.size());
-                next();
-            }
+        TiebaApi.getInstance()
+                .webUploadPic(photoInfoBean)
+                .enqueue(new Callback<WebUploadPicBean>() {
+                    @Override
+                    public void onResponse(@NotNull Call<WebUploadPicBean> call, @NotNull Response<WebUploadPicBean> response) {
+                        photoInfoBean.setWebUploadPicBean(response.body());
+                        callback.onProgress(now + 1, uploadList.size());
+                        next();
+                    }
 
-            @Override
-            public void onFailure(@NotNull Call<WebUploadPicBean> call, @NotNull Throwable t) {
-                callback.onFailure(t.getMessage());
-            }
-        });
+                    @Override
+                    public void onFailure(@NotNull Call<WebUploadPicBean> call, @NotNull Throwable t) {
+                        callback.onFailure(t.getMessage());
+                    }
+                });
     }
 
     public void start() {

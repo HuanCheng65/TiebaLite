@@ -10,6 +10,7 @@ import com.huanchengfly.tieba.api.models.*
 import com.huanchengfly.tieba.api.models.web.ForumBean
 import com.huanchengfly.tieba.api.models.web.HotMessageListBean
 import com.huanchengfly.tieba.api.retrofit.RetrofitTiebaApi
+import com.huanchengfly.tieba.api.urlDecode
 import com.huanchengfly.tieba.post.base.BaseApplication
 import com.huanchengfly.tieba.post.models.DislikeBean
 import com.huanchengfly.tieba.post.models.MyInfoBean
@@ -25,9 +26,14 @@ import java.net.URLEncoder
 object MixedTiebaApiImpl : ITiebaApi {
     override fun personalized(loadType: Int, page: Int): Call<PersonalizedBean> = RetrofitTiebaApi.MINI_TIEBA_API.personalized(loadType, page)
 
-    override fun agree(threadId: String, postId: String): Call<AgreeBean> = RetrofitTiebaApi.MINI_TIEBA_API.agree(postId, threadId)
+    override fun agree(
+            threadId: String,
+            postId: String
+    ): Call<AgreeBean> =
+            RetrofitTiebaApi.MINI_TIEBA_API.agree(postId, threadId)
 
-    override fun disagree(threadId: String, postId: String): Call<AgreeBean> = RetrofitTiebaApi.MINI_TIEBA_API.disagree(postId, threadId)
+    override fun disagree(threadId: String,
+                          postId: String): Call<AgreeBean> = RetrofitTiebaApi.MINI_TIEBA_API.disagree(postId, threadId)
 
     override fun forumRecommend(): Call<ForumRecommend> = RetrofitTiebaApi.MINI_TIEBA_API.forumRecommend()
 
@@ -72,11 +78,34 @@ object MixedTiebaApiImpl : ITiebaApi {
 
     override fun sign(forumName: String, tbs: String): Call<SignResultBean> = RetrofitTiebaApi.MINI_TIEBA_API.sign(forumName, tbs)
 
-    override fun delThread(forumId: String, forumName: String, threadId: String): Call<CommonResponse> = RetrofitTiebaApi.MINI_TIEBA_API.delThread(forumId, forumName, threadId)
+    override fun delThread(
+            forumId: String,
+            forumName: String,
+            threadId: String,
+            tbs: String
+    ): Call<CommonResponse> =
+            RetrofitTiebaApi.MINI_TIEBA_API.delThread(forumId, forumName, threadId, tbs)
 
     override fun delPost(
-            forumId: String, forumName: String, threadId: String, postId: String, isFloor: Boolean, delMyPost: Boolean
-    ): Call<CommonResponse> = RetrofitTiebaApi.MINI_TIEBA_API.delPost(forumId, forumName, threadId, postId, is_floor = if (isFloor) 1 else 0, src = if (isFloor) 3 else 1, is_vip_del = if (delMyPost) 0 else 1, delete_my_post = if (delMyPost) 1 else 0)
+            forumId: String,
+            forumName: String,
+            threadId: String,
+            postId: String,
+            tbs: String,
+            isFloor: Boolean,
+            delMyPost: Boolean
+    ): Call<CommonResponse> =
+            RetrofitTiebaApi.MINI_TIEBA_API.delPost(
+                    forumId,
+                    forumName,
+                    threadId,
+                    postId,
+                    tbs,
+                    is_floor = if (isFloor) 1 else 0,
+                    src = if (isFloor) 3 else 1,
+                    is_vip_del = if (delMyPost) 0 else 1,
+                    delete_my_post = if (delMyPost) 1 else 0
+            )
 
     override fun searchPost(
             keyword: String, forumName: String, onlyThread: Boolean, page: Int, pageSize: Int
