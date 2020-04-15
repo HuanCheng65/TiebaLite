@@ -54,8 +54,6 @@ public class ExploreFragment extends BaseIntroFragment implements View.OnClickLi
     protected void initCustomLayout(ViewGroup container) {
         super.initCustomLayout(container);
         container.findViewById(R.id.explore_auto_sign).setOnClickListener(this);
-        container.findViewById(R.id.explore_qq).setOnClickListener(this);
-        container.findViewById(R.id.explore_donate).setOnClickListener(this);
     }
 
     @Override
