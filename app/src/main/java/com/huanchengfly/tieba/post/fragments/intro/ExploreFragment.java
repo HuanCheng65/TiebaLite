@@ -64,12 +64,6 @@ public class ExploreFragment extends BaseIntroFragment implements View.OnClickLi
             case R.id.explore_auto_sign:
                 startActivity(new Intent(getAttachContext(), SettingsActivity.class).putExtra("scroll_to_preference", "auto_sign"));
                 break;
-            case R.id.explore_qq:
-                startActivity(new Intent(getAttachContext(), AboutActivity.class).putExtra("action", "join_group"));
-                break;
-            case R.id.explore_donate:
-                startActivity(new Intent(getAttachContext(), AboutActivity.class).putExtra("action", "donate"));
-                break;
         }
     }
 }

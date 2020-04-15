@@ -57,6 +57,7 @@ import java.util.List;
 
 import static com.huanchengfly.tieba.post.utils.FileUtil.FILE_TYPE_DOWNLOAD;
 
+//TODO: 代码太烂，需要重写
 public class WebViewFragment extends BaseFragment implements DownloadListener {
     public static final String TAG = WebViewFragment.class.getSimpleName();
     private static final String DEFAULT_TITLE = "贴吧 Lite";

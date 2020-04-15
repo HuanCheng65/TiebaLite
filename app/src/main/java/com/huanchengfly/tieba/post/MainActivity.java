@@ -7,6 +7,7 @@ import android.app.job.JobScheduler;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -275,6 +276,14 @@ public class MainActivity extends BaseActivity implements BottomNavigationView.O
         findView();
         initView();
         initListener();
+        if (!SharedPreferencesUtil.get(SharedPreferencesUtil.SP_APP_DATA).getBoolean("notice_dialog", false)) {
+            showDialog(DialogUtil.build(this)
+                    .setTitle(R.string.title_dialog_notice)
+                    .setMessage(R.string.message_dialog_notice)
+                    .setPositiveButton(R.string.button_sure_default, (dialog, which) -> SharedPreferencesUtil.put(this, SharedPreferencesUtil.SP_APP_DATA, "notice_dialog", true))
+                    .setCancelable(false)
+                    .create());
+        }
         if (savedInstanceState == null) {
             clearSwitchReason();
         }
@@ -394,14 +403,6 @@ public class MainActivity extends BaseActivity implements BottomNavigationView.O
                                 .setTitle(R.string.title_dialog_changelog)
                                 .setMessage(data.getResult())
                                 .setPositiveButton(R.string.button_ok, null)
-                                .setNegativeButton(R.string.title_join_group, (dialog, which) -> {
-                                    FlurryAgent.logEvent("clickedJoinQQGroupInChangelog");
-                                    startActivity(new Intent(MainActivity.this, AboutActivity.class).putExtra(AboutActivity.EXTRA_ACTION, AboutActivity.EXTRA_ACTION_JOIN_GROUP));
-                                })
-                                .setNeutralButton(R.string.button_support_me, (dialog, which) -> {
-                                    FlurryAgent.logEvent("clickedSupportBtnInChangelog");
-                                    startActivity(new Intent(MainActivity.this, AboutActivity.class).putExtra(AboutActivity.EXTRA_ACTION, AboutActivity.EXTRA_ACTION_DONATE));
-                                })
                                 .create());
                     }
                 }

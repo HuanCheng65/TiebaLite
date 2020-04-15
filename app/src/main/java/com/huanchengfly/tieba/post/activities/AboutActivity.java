@@ -3,7 +3,6 @@ package com.huanchengfly.tieba.post.activities;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.RelativeLayout;
@@ -11,50 +10,32 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.widget.Toolbar;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
-import com.flurry.android.FlurryAgent;
 import com.huanchengfly.about.AboutPage;
 import com.huanchengfly.theme.utils.ThemeUtils;
 import com.huanchengfly.tieba.api.LiteApi;
 import com.huanchengfly.tieba.api.interfaces.CommonAPICallback;
 import com.huanchengfly.tieba.api.models.NewUpdateBean;
-import com.huanchengfly.tieba.api.models.UpdateInfoBean;
 import com.huanchengfly.tieba.post.R;
 import com.huanchengfly.tieba.post.activities.base.BaseActivity;
-import com.huanchengfly.tieba.post.base.BaseApplication;
-import com.huanchengfly.tieba.post.models.PhotoViewBean;
-import com.huanchengfly.tieba.post.utils.CacheUtil;
-import com.huanchengfly.tieba.post.utils.DialogUtil;
 import com.huanchengfly.tieba.post.utils.NavigationHelper;
 import com.huanchengfly.tieba.post.utils.ThemeUtil;
 import com.huanchengfly.tieba.post.utils.VersionUtil;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class AboutActivity extends BaseActivity implements View.OnClickListener {
     public static final int STATE_ERROR = 0;
     public static final int STATE_NO_UPDATE = 1;
     public static final int STATE_UPDATE = 2;
-    public static final String EXTRA_ACTION = "action";
-    public static final String EXTRA_ACTION_JOIN_GROUP = "join_group";
-    public static final String EXTRA_ACTION_DONATE = "donate";
-    public static final String CACHE_ID_QQ_GROUP = "qq_group";
     private View updateTip;
     private TextView updateTipHeaderTv;
     private TextView updateTipTitleTv;
     private TextView updateTipContentTv;
     private Button dismissBtn;
-    private List<UpdateInfoBean.GroupInfo> groupInfoList;
     private int updateState;
     private Button downloadBtn;
     private NewUpdateBean.ResultBean resultBean;
     private AboutPage mAboutPage;
     private NavigationHelper navigationHelper;
-    private String action;
-    private boolean actionExecuted = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,45 +64,13 @@ public class AboutActivity extends BaseActivity implements View.OnClickListener 
         mAboutPage = new AboutPage(this)
                 .setHeaderView(headerView)
                 .addTitle("应用信息", colorIcon)
-                .addItem(new AboutPage.Item("当前版本", VersionUtil.getVersionName(this), R.drawable.ic_round_info, colorIcon).setOnClickListener(v -> checkUpdate()))
-                .addItem(new AboutPage.Item("前往官网").setIcon(R.drawable.ic_codepen, colorIcon).setOnClickListener(v -> navigationHelper.navigationByData(NavigationHelper.ACTION_URL, "https://tblite.huanchengfly.tk/")))
-                .addItem(new AboutPage.Item(getString(R.string.title_join_group), "获取最新更新、提出建议或反馈").setIcon(R.drawable.ic_round_forum, colorIcon).setOnClickListener(v -> {
-                    openJoinGroupDialog();
-                }))
-                .addTitle("开发参与", colorIcon)
-                .addItem(new AboutPage.Item("@幻了个城fly", "贴吧 Lite 开发者", "https://ww1.sinaimg.cn/large/007rAy9hgy1g1cohwq5rsj30hs0hsmxs.jpg").setIntent(new Intent(Intent.ACTION_VIEW, Uri.parse("coolmarket://u/603089")).setPackage("com.coolapk.market").addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)))
-                .addItem(new AboutPage.Item("@WeAreFun", "UI 设计指导", "https://ww1.sinaimg.cn/large/007rAy9hgy1g1cohx88l1j30dc0dcmyr.jpg").setIntent(new Intent(Intent.ACTION_VIEW, Uri.parse("coolmarket://u/475044")).setPackage("com.coolapk.market").addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)))
-                .addItem(new AboutPage.Item("@Fairyex", "图标设计", "https://ww1.sinaimg.cn/large/007rAy9hgy1g1cohx146ij30dc0dcabx.jpg").setIntent(new Intent(Intent.ACTION_VIEW, Uri.parse("coolmarket://u/466253")).setPackage("com.coolapk.market").addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)))
-                .addTitle("支持我", colorIcon)
-                .addItem(new AboutPage.Item("微信捐赠").setIcon(R.drawable.ic_wechat, colorIcon).setOnClickListener(v -> {
-                    PhotoViewActivity.launch(this, new PhotoViewBean("https://huancheng65.github.io/TiebaLite/wechat_donate_qrcode.png", true));
-                    FlurryAgent.logEvent("clickedWechatDonate");
-                }))
-                .addItem(new AboutPage.Item("支付宝捐赠")
-                        .setIcon(R.drawable.ic_alipay, colorIcon)
-                        .setOnClickListener(v -> {
-                            navigationHelper.navigationByData(NavigationHelper.ACTION_URL, "https://qr.alipay.com/FKX06385UK8W8T8X2MG827");
-                            FlurryAgent.logEvent("clickedAlipayDonate");
-                        }))
-                .addItem(new AboutPage.Item("支付宝领红包")
-                        .setIcon(R.drawable.ic_archive, colorIcon)
-                        .setOnClickListener(v -> {
-                            navigationHelper.navigationByData(NavigationHelper.ACTION_URL, "https://qr.alipay.com/c1x06336wvvmfwjwlzbq4a5");
-                            FlurryAgent.logEvent("clickedAlipayRedpack");
-                        }));
+                .addItem(new AboutPage.Item("当前版本", VersionUtil.getVersionName(this), R.drawable.ic_round_info, colorIcon))
+                .addItem(new AboutPage.Item("源代码").setIcon(R.drawable.ic_codepen, colorIcon).setOnClickListener(v -> navigationHelper.navigationByData(NavigationHelper.ACTION_URL, "https://github.com/HuanCheng65/TiebaLite")));
         mAboutPage.into(mainView);
-        RecyclerView recyclerView = mAboutPage.getRecyclerView();
-        action = getIntent().getStringExtra(EXTRA_ACTION);
-        if (action != null) {
-            if (EXTRA_ACTION_DONATE.equals(action)) {
-                ((LinearLayoutManager) recyclerView.getLayoutManager()).scrollToPositionWithOffset(9, 0);
-                actionExecuted = true;
-            }
-        }
         checkUpdate();
-        loadGroups();
     }
 
+    /*
     private void openJoinGroupDialog() {
         if (groupInfoList == null) {
             return;
@@ -143,7 +92,6 @@ public class AboutActivity extends BaseActivity implements View.OnClickListener 
                 })
                 .show();
     }
-
     private void loadGroups() {
         UpdateInfoBean cache = CacheUtil.getCache(this, CACHE_ID_QQ_GROUP, UpdateInfoBean.class);
         if (cache != null) {
@@ -192,6 +140,7 @@ public class AboutActivity extends BaseActivity implements View.OnClickListener 
             }
         });
     }
+    */
 
     private void checkUpdate() {
         LiteApi.getInstance().newCheckUpdate(new CommonAPICallback<NewUpdateBean>() {
