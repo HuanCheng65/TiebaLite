@@ -5,7 +5,6 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.os.Bundle
-import android.text.TextUtils
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.widget.Toolbar
@@ -115,7 +114,6 @@ class FloorFragment : BaseBottomSheetDialogFragment() {
         appBarLayout.setBackgroundResource(R.drawable.bg_toolbar)
         mLayoutManager = MyLinearLayoutManager(attachContext)
         recyclerViewAdapter = RecyclerFloorAdapter(attachContext).apply {
-            openAutoLoadMore()
             setLoadingView(R.layout.layout_footer_loading)
             setLoadEndView(R.layout.layout_footer_loadend)
             setLoadFailedView(R.layout.layout_footer_load_failed)
@@ -126,7 +124,7 @@ class FloorFragment : BaseBottomSheetDialogFragment() {
             layoutManager = mLayoutManager
             addItemDecoration(ThreadDivider(attachContext))
         }
-        if (!TextUtils.isEmpty(tid) && !TextUtils.isEmpty(pid)) {
+        if (tid.isNotEmpty() && (pid.isNotEmpty() || !spid.isNullOrEmpty())) {
             refresh(jump)
         }
     }
@@ -155,53 +153,53 @@ class FloorFragment : BaseBottomSheetDialogFragment() {
     }
 
     private fun refresh(jump: Boolean = false) {
-        TiebaApi.getInstance().floor(tid, pn, pid, spid).enqueue(object : Callback<SubFloorListBean> {
-            override fun onFailure(call: Call<SubFloorListBean>, t: Throwable) {
-                Toast.makeText(attachContext, t.message, Toast.LENGTH_SHORT).show()
-                recyclerViewAdapter!!.loadFailed()
-            }
+        TiebaApi.getInstance()
+                .floor(tid, pn, pid, spid)
+                .enqueue(object : Callback<SubFloorListBean> {
+                    override fun onFailure(call: Call<SubFloorListBean>, t: Throwable) {
+                        Toast.makeText(attachContext, t.message, Toast.LENGTH_SHORT).show()
+                        recyclerViewAdapter!!.loadFailed()
+                    }
 
-            override fun onResponse(call: Call<SubFloorListBean>, response: Response<SubFloorListBean>) {
-                val subFloorListBean = response.body()!!
-                if (Integer.valueOf(subFloorListBean.page!!.currentPage) >= Integer.valueOf(subFloorListBean.page.totalPage)) {
-                    hasMore = false
-                    recyclerViewAdapter!!.loadEnd()
-                } else {
-                    hasMore = true
-                }
-                toolbar.title = attachContext.getString(R.string.title_floor_loaded, subFloorListBean.post!!.floor)
-                dataBean = subFloorListBean
-                recyclerViewAdapter!!.setData(subFloorListBean)
-                if (jump) {
-                    mLayoutManager!!.scrollToPositionWithOffset(1, 0)
-                }
-            }
-        })
+                    override fun onResponse(call: Call<SubFloorListBean>, response: Response<SubFloorListBean>) {
+                        val subFloorListBean = response.body() ?: return
+                        dataBean = subFloorListBean
+                        recyclerViewAdapter!!.setData(subFloorListBean)
+                        hasMore = subFloorListBean.page!!.currentPage.toInt() < subFloorListBean.page.totalPage.toInt()
+                        if (!hasMore) {
+                            recyclerViewAdapter!!.loadEnd()
+                        }
+                        toolbar.title = attachContext.getString(R.string.title_floor_loaded, subFloorListBean.post!!.floor)
+                        if (jump) {
+                            mLayoutManager!!.scrollToPositionWithOffset(1, 0)
+                        }
+                    }
+                })
     }
 
     private fun loadMore(loadMore: Boolean) {
+        if (!hasMore) return
         if (loadMore) {
             pn += 1
         }
-        if (hasMore) {
-            TiebaApi.getInstance().floor(tid, pn, pid, spid).enqueue(object : Callback<SubFloorListBean> {
-                override fun onFailure(call: Call<SubFloorListBean>, t: Throwable) {
-                    recyclerViewAdapter!!.loadFailed()
-                }
-
-                override fun onResponse(call: Call<SubFloorListBean>, response: Response<SubFloorListBean>) {
-                    val subFloorListBean = response.body()!!
-                    recyclerViewAdapter!!.addData(subFloorListBean)
-                    if (Integer.valueOf(subFloorListBean.page!!.currentPage) >= Integer.valueOf(subFloorListBean.page.totalPage)) {
-                        hasMore = false
-                        recyclerViewAdapter!!.loadEnd()
-                    } else {
-                        hasMore = true
+        TiebaApi.getInstance()
+                .floor(tid, pn, pid, spid)
+                .enqueue(object : Callback<SubFloorListBean> {
+                    override fun onFailure(call: Call<SubFloorListBean>, t: Throwable) {
+                        recyclerViewAdapter!!.loadFailed()
                     }
-                }
 
-            })
-        }
+                    override fun onResponse(call: Call<SubFloorListBean>, response: Response<SubFloorListBean>) {
+                        val subFloorListBean = response.body() ?: return
+                        dataBean = subFloorListBean
+                        recyclerViewAdapter!!.addData(subFloorListBean)
+                        hasMore = subFloorListBean.page!!.currentPage.toInt() < subFloorListBean.page.totalPage.toInt()
+                        if (!hasMore) {
+                            recyclerViewAdapter!!.loadEnd()
+                        }
+                    }
+
+                })
     }
 
     companion object {

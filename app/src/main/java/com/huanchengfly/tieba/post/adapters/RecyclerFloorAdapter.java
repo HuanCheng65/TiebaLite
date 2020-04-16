@@ -92,19 +92,16 @@ public class RecyclerFloorAdapter extends CommonBaseAdapter<SubFloorListBean.Pos
         defaultRequestOptions = new RequestOptions()
                 .placeholder(R.drawable.bg_placeholder)
                 .skipMemoryCache(true);
-        openAutoLoadMore();
     }
 
     public void setData(SubFloorListBean data) {
         dataBean = data;
         data.getSubPostList().add(0, data.getPost());
-        openAutoLoadMore();
         setNewData(data.getSubPostList());
     }
 
     public void addData(SubFloorListBean data) {
         dataBean = data;
-        openAutoLoadMore();
         setLoadMoreData(data.getSubPostList());
     }
 

@@ -121,7 +121,7 @@ class OKSignService : IntentService(TAG) {
             }
 
             override fun onResponse(call: Call<SignResultBean>, response: Response<SignResultBean>) {
-                val signResultBean = response.body()!!
+                val signResultBean = response.body() ?: return
                 if (position < signData.size - 1) {
                     position += 1
                     if (signResultBean.userInfo != null) {
@@ -154,7 +154,7 @@ class OKSignService : IntentService(TAG) {
                                 }
 
                                 override fun onResponse(call: Call<ForumRecommend>, response: Response<ForumRecommend>) {
-                                    val itemBeanList = response.body()!!.likeForum
+                                    val itemBeanList = response.body()?.likeForum ?: return
                                     for ((_, forumName, _, isSign) in itemBeanList) {
                                         if ("1" != isSign) {
                                             signData.add(SignDataBean(forumName, data.data.getItbTbs()))

@@ -54,7 +54,7 @@ class NotifyJobService : JobService() {
             }
 
             override fun onResponse(call: Call<MsgBean>, response: Response<MsgBean>) {
-                val msgBean = response.body()!!
+                val msgBean = response.body() ?: return
                 if (notificationManager != null) {
                     var total = 0
                     if ("0" != msgBean.message.replyMe) {
