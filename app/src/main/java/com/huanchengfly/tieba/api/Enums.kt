@@ -23,8 +23,8 @@ enum class ForumSortType(val value: Int) {
 }
 
 enum class SearchThreadOrder(val value: Int) {
-    NEW(0),
-    OLD(1),
+    NEW(1),
+    OLD(0),
     RELEVANT(2);
 
     override fun toString(): String {

@@ -44,7 +44,6 @@ class FloorFragment : BaseBottomSheetDialogFragment() {
     private var pid = ""
     private var spid: String? = null
     private var jump = false
-    private var hasMore = false
     private var pn = 1
     private var mLayoutManager: LinearLayoutManager? = null
     private val replyReceiver: BroadcastReceiver = object : BroadcastReceiver() {
@@ -165,8 +164,7 @@ class FloorFragment : BaseBottomSheetDialogFragment() {
                         val subFloorListBean = response.body() ?: return
                         dataBean = subFloorListBean
                         recyclerViewAdapter!!.setData(subFloorListBean)
-                        hasMore = subFloorListBean.page!!.currentPage.toInt() < subFloorListBean.page.totalPage.toInt()
-                        if (!hasMore) {
+                        if (subFloorListBean.page!!.currentPage.toInt() >= subFloorListBean.page.totalPage.toInt()) {
                             recyclerViewAdapter!!.loadEnd()
                         }
                         toolbar.title = attachContext.getString(R.string.title_floor_loaded, subFloorListBean.post!!.floor)
@@ -178,7 +176,6 @@ class FloorFragment : BaseBottomSheetDialogFragment() {
     }
 
     private fun loadMore(loadMore: Boolean) {
-        if (!hasMore) return
         if (loadMore) {
             pn += 1
         }
@@ -193,8 +190,7 @@ class FloorFragment : BaseBottomSheetDialogFragment() {
                         val subFloorListBean = response.body() ?: return
                         dataBean = subFloorListBean
                         recyclerViewAdapter!!.addData(subFloorListBean)
-                        hasMore = subFloorListBean.page!!.currentPage.toInt() < subFloorListBean.page.totalPage.toInt()
-                        if (!hasMore) {
+                        if (subFloorListBean.page!!.currentPage.toInt() >= subFloorListBean.page.totalPage.toInt()) {
                             recyclerViewAdapter!!.loadEnd()
                         }
                     }
