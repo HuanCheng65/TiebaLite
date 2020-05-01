@@ -116,12 +116,12 @@ class FloorFragment : BaseBottomSheetDialogFragment() {
             setLoadingView(R.layout.layout_footer_loading)
             setLoadEndView(R.layout.layout_footer_loadend)
             setLoadFailedView(R.layout.layout_footer_load_failed)
-            setOnLoadMoreListener { loadMore(!it) }
+            setOnLoadMoreListener { load(it) }
         }
         recyclerView.apply {
-            adapter = recyclerViewAdapter
-            layoutManager = mLayoutManager
             addItemDecoration(ThreadDivider(attachContext))
+            layoutManager = mLayoutManager
+            adapter = recyclerViewAdapter
         }
         if (tid.isNotEmpty() && (pid.isNotEmpty() || !spid.isNullOrEmpty())) {
             refresh(jump)
@@ -175,8 +175,8 @@ class FloorFragment : BaseBottomSheetDialogFragment() {
                 })
     }
 
-    private fun loadMore(loadMore: Boolean) {
-        if (loadMore) {
+    private fun load(reload: Boolean) {
+        if (!reload) {
             pn += 1
         }
         TiebaApi.getInstance()

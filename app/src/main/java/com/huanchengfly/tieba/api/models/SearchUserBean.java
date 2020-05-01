@@ -2,7 +2,7 @@ package com.huanchengfly.tieba.api.models;
 
 import com.google.gson.annotations.JsonAdapter;
 import com.google.gson.annotations.SerializedName;
-import com.huanchengfly.tieba.api.adapters.ExactMatchAdapter;
+import com.huanchengfly.tieba.api.adapters.UserExactMatchAdapter;
 import com.huanchengfly.tieba.api.adapters.UserFuzzyMatchAdapter;
 import com.huanchengfly.tieba.post.models.BaseBean;
 
@@ -32,7 +32,7 @@ public class SearchUserBean extends BaseBean {
         private int pageNum;
         @SerializedName("has_more")
         private int hasMore;
-        @JsonAdapter(ExactMatchAdapter.class)
+        @JsonAdapter(UserExactMatchAdapter.class)
         private UserBean exactMatch;
         @JsonAdapter(UserFuzzyMatchAdapter.class)
         private List<UserBean> fuzzyMatch;
