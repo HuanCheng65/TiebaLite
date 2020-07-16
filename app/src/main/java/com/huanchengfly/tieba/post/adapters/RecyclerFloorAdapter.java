@@ -10,6 +10,7 @@ import android.text.format.DateUtils;
 import android.text.method.LinkMovementMethod;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -257,22 +258,23 @@ public class RecyclerFloorAdapter extends CommonBaseAdapter<SubFloorListBean.Pos
         if (!contentBean.getType().equals("3") && !contentBean.getType().equals("5")) {
             return defaultLayoutParams;
         }
-        Float widthFloat, heightFloat = 0F;
-        if (contentBean.getType().equals("3")) {
+        float widthFloat, heightFloat;
+        if (contentBean.getType().equals("3") || contentBean.getType().equals("20")) {
             String[] strings = contentBean.getBsize().split(",");
-            widthFloat = Float.valueOf(strings[0]);
-            heightFloat = Float.valueOf(strings[1]);
-        } else {
-            widthFloat = Float.valueOf(contentBean.getWidth());
-            heightFloat = Float.valueOf(contentBean.getHeight());
-        }
-        if (widthFloat >= this.maxWidth) {
-            heightFloat = heightFloat * (this.maxWidth / widthFloat);
+            widthFloat = Float.parseFloat(strings[0]);
+            heightFloat = Float.parseFloat(strings[1]);
+            heightFloat *= this.maxWidth / widthFloat;
             widthFloat = this.maxWidth;
+        } else {
+            float width = Float.parseFloat(contentBean.getWidth());
+            widthFloat = this.maxWidth;
+            heightFloat = Float.parseFloat(contentBean.getHeight());
+            heightFloat *= widthFloat / width;
         }
         int width = Math.round(widthFloat);
         int height = Math.round(heightFloat);
         LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(width, height);
+        layoutParams.gravity = Gravity.CENTER_HORIZONTAL;
         layoutParams.setMargins(0, 8, 0, 8);
         return layoutParams;
     }
@@ -370,8 +372,8 @@ public class RecyclerFloorAdapter extends CommonBaseAdapter<SubFloorListBean.Pos
                     imageView.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
                     ImageUtil.load(imageView, ImageUtil.LOAD_TYPE_SMALL_PIC, contentBean.getSrc());
                     List<PhotoViewBean> photoViewBeans = new ArrayList<>();
-                    photoViewBeans.add(new PhotoViewBean(ImageUtil.getNonNullString(contentBean.getCdnSrc(), contentBean.getCdnSrcActive(), contentBean.getBigCdnSrc(), contentBean.getOriginSrc()),
-                            ImageUtil.getNonNullString(contentBean.getOriginSrc(), contentBean.getBigCdnSrc(), contentBean.getCdnSrcActive(), contentBean.getCdnSrc()),
+                    photoViewBeans.add(new PhotoViewBean(ImageUtil.getNonNullString(contentBean.getSrc(), contentBean.getOriginSrc()),
+                            ImageUtil.getNonNullString(contentBean.getOriginSrc(), contentBean.getSrc()),
                             "1".equals(contentBean.getIsLongPic())));
                     ImageUtil.initImageView(imageView, photoViewBeans, 0);
                     views.add(imageView);
