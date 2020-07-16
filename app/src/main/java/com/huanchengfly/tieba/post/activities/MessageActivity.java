@@ -37,7 +37,8 @@ public class MessageActivity extends BaseActivity {
         }
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.activity_message_list_content, MessageFragment.newInstance(getIntent().getIntExtra("type", MessageFragment.TYPE_REPLY_ME)), MessageFragment.class.getSimpleName()).commit();
+                    .replace(R.id.activity_message_list_content,
+                            MessageFragment.newInstance(getIntent().getIntExtra("type", MessageFragment.TYPE_REPLY_ME), true), MessageFragment.class.getSimpleName()).commit();
         }
     }
 }
