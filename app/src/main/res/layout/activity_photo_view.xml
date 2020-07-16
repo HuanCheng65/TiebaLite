@@ -7,14 +7,6 @@
     android:id="@+id/background"
     android:background="@color/black"
     tools:context=".activities.PhotoViewActivity">
-    <com.huanchengfly.tieba.widgets.theme.TintProgressBar
-        android:id="@+id/progressBar"
-        android:visibility="gone"
-        android:layout_gravity="center"
-        app:progressTint="@color/default_color_accent"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        style="@style/Widget.AppCompat.ProgressBar"/>
     <androidx.viewpager2.widget.ViewPager2
         android:orientation="horizontal"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"

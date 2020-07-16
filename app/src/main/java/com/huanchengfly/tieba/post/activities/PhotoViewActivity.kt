@@ -11,7 +11,6 @@ import android.os.Bundle
 import android.os.Handler
 import android.view.MenuItem
 import android.view.View
-import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.widget.Toolbar
@@ -37,8 +36,6 @@ import retrofit2.Response
 import java.util.*
 
 class PhotoViewActivity : BaseActivity(), OnChangeBottomBarVisibilityListener, Toolbar.OnMenuItemClickListener {
-    @BindView(R.id.progressBar)
-    lateinit var progressBar: ProgressBar
     @BindView(R.id.counter)
     lateinit var mCounter: TextView
     @BindView(R.id.bottom_app_bar)
@@ -63,14 +60,12 @@ class PhotoViewActivity : BaseActivity(), OnChangeBottomBarVisibilityListener, T
 
     private fun loadMore() {
         if (loadFinished) {
-            progressBar.visibility = View.GONE
             return
         }
         if (mLoading) {
             return
         }
         mLoading = true
-        progressBar.visibility = View.VISIBLE
         val lastBean = photoViewBeans[photoViewBeans.size - 1]
         getInstance().picPage(
                 forumId!!,
@@ -84,7 +79,6 @@ class PhotoViewActivity : BaseActivity(), OnChangeBottomBarVisibilityListener, T
             override fun onResponse(call: Call<PicPageBean?>, response: Response<PicPageBean?>) {
                 val data = response.body()!!
                 mLoading = false
-                progressBar.visibility = View.GONE
                 amount = data.picAmount ?: "${photoViewBeans.size}"
                 updateCounter(mViewPager.currentItem)
                 val picBeans: MutableList<PicPageBean.PicBean> = ArrayList()
@@ -121,7 +115,6 @@ class PhotoViewActivity : BaseActivity(), OnChangeBottomBarVisibilityListener, T
 
             override fun onFailure(call: Call<PicPageBean?>, t: Throwable) {
                 mLoading = false
-                progressBar.visibility = View.GONE
             }
         })
     }
@@ -172,7 +165,6 @@ class PhotoViewActivity : BaseActivity(), OnChangeBottomBarVisibilityListener, T
             }
         })
         if (isFrs) {
-            progressBar.visibility = View.VISIBLE
             loadFrs()
         }
     }
