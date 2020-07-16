@@ -138,7 +138,7 @@
             android:name=".activities.AboutActivity"
             android:configChanges="screenSize|screenLayout|orientation|smallestScreenSize|keyboardHidden"
             android:windowSoftInputMode="adjustResize" />
-        <activity android:name=".activities.JumpActivity">
+        <activity android:name=".activities.DispatchActivity">
             <intent-filter>
                 <data
                     android:host="tieba.baidu.com"
@@ -152,6 +152,9 @@
                 <data
                     android:host="tieba.baidu.com"
                     android:scheme="https" />
+                <data
+                    android:host="unidispatch"
+                    android:scheme="com.baidu.tieba" />
 
                 <action android:name="android.intent.action.VIEW" />
 

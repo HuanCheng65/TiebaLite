@@ -314,8 +314,8 @@ class ThreadActivity : BaseActivity(), View.OnClickListener {
 
     private var preloadId = -1
     private fun preload() {
+        PreLoader.destroy(preloadId)
         if (hasMore() && !sort) {
-            PreLoader.destroy(preloadId)
             preloadId = PreLoader.preLoad(ThreadContentLoader(tid!!, page + 1, seeLz))
         }
     }
