@@ -171,8 +171,8 @@
 
 -keep class cn.jzvd.*{*;}
 
- -keep class com.gyf.immersionbar.* {*;}
- -dontwarn com.gyf.immersionbar.**
+-keep class com.gyf.immersionbar.* {*;}
+-dontwarn com.gyf.immersionbar.**
 
 -keep class com.huanchengfly.tieba.post.models.** { *; }
 -keep class com.huanchengfly.tieba.api.models.** { *; }
