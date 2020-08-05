@@ -1,7 +1,6 @@
 package com.huanchengfly.tieba.post.fragments
 
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -127,21 +126,23 @@ class ForumFragment : BaseFragment(), Refreshable, OnSwitchListener, ScrollTopab
             layoutManager = MyLinearLayoutManager(attachContext)
             addItemDecoration(ForumDivider(attachContext, LinearLayoutManager.VERTICAL))
             adapter = mAdapter
-            addOnScrollListener(object : RecyclerView.OnScrollListener() {
-                override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
-                    super.onScrollStateChanged(recyclerView, newState)
-                    if (!Util.canLoadGlide(attachContext)) {
-                        return
+            if (!appPreferences.loadPictureWhenScroll) {
+                addOnScrollListener(object : RecyclerView.OnScrollListener() {
+                    override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+                        super.onScrollStateChanged(recyclerView, newState)
+                        if (!Util.canLoadGlide(attachContext)) {
+                            return
+                        }
+                        if (newState == RecyclerView.SCROLL_STATE_IDLE) {
+                            Glide.with(attachContext)
+                                    .resumeRequests()
+                        } else {
+                            Glide.with(attachContext)
+                                    .pauseRequests()
+                        }
                     }
-                    if (newState == RecyclerView.SCROLL_STATE_IDLE) {
-                        Glide.with(attachContext)
-                                .resumeRequests()
-                    } else {
-                        Glide.with(attachContext)
-                                .pauseRequests()
-                    }
-                }
-            })
+                })
+            }
             addOnChildAttachStateChangeListener(object : OnChildAttachStateChangeListener {
                 override fun onChildViewAttachedToWindow(view: View) {}
                 override fun onChildViewDetachedFromWindow(view: View) {

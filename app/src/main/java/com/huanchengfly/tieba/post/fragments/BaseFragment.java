@@ -17,6 +17,7 @@ import androidx.fragment.app.Fragment;
 
 import com.huanchengfly.tieba.post.interfaces.BackHandledInterface;
 import com.huanchengfly.tieba.post.interfaces.Refreshable;
+import com.huanchengfly.tieba.post.utils.AppPreferencesUtils;
 import com.huanchengfly.tieba.post.utils.HandleBackUtil;
 
 import org.jetbrains.annotations.NotNull;
@@ -47,6 +48,10 @@ public abstract class BaseFragment extends Fragment implements BackHandledInterf
 
     public boolean isFirstVisible() {
         return isFirstVisible;
+    }
+
+    protected AppPreferencesUtils getAppPreferences() {
+        return new AppPreferencesUtils(attachContext);
     }
 
     @TargetApi(23)

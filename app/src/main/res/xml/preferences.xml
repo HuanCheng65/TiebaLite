@@ -94,9 +94,16 @@
             android:summary="@string/summary_show_top_forum_in_normal_list" />
 
         <SwitchPreference
+            android:icon="@drawable/ic_round_verified"
             android:defaultValue="false"
             android:key="show_both_username_and_nickname"
             android:title="@string/title_show_both_username_and_nickname" />
+
+        <SwitchPreference
+            android:icon="@drawable/ic_round_hourglass_full"
+            android:defaultValue="true"
+            android:key="loadPictureWhenScroll"
+            android:title="@string/title_load_picture_when_scroll" />
 
         <Preference
             android:enabled="false"
@@ -139,11 +146,13 @@
             android:title="@string/title_hide_explore" />
 
         <SwitchPreference
+            android:icon="@drawable/ic_round_outlet"
             android:defaultValue="false"
             android:key="level_icon_old_style"
             android:title="@string/title_level_old_style" />
 
         <androidx.preference.SeekBarPreference
+            android:icon="@drawable/ic_round_rounded_corner"
             app:min="0"
             android:max="16"
             app:showSeekBarValue="true"

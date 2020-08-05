@@ -29,6 +29,7 @@ import com.huanchengfly.theme.utils.ThemeUtils;
 import com.huanchengfly.tieba.post.R;
 import com.huanchengfly.tieba.post.base.BaseApplication;
 import com.huanchengfly.tieba.post.base.Config;
+import com.huanchengfly.tieba.post.utils.AppPreferencesUtils;
 import com.huanchengfly.tieba.post.utils.HandleBackUtil;
 import com.huanchengfly.tieba.post.utils.SharedPreferencesUtil;
 import com.huanchengfly.tieba.post.utils.ThemeUtil;
@@ -52,6 +53,10 @@ public abstract class BaseActivity extends SwipeBackActivity implements ExtraRef
 
     protected int getLayoutId() {
         return NO_LAYOUT;
+    }
+
+    protected AppPreferencesUtils getAppPreferences() {
+        return new AppPreferencesUtils(this);
     }
 
     @Override

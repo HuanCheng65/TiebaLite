@@ -60,21 +60,23 @@ class PersonalizedFeedFragment : BaseFragment(), PersonalizedFeedAdapter.OnRefre
         }
         recyclerView.apply {
             addItemDecoration(FeedDivider(attachContext))
-            addOnScrollListener(object : RecyclerView.OnScrollListener() {
-                override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
-                    super.onScrollStateChanged(recyclerView, newState)
-                    if (!Util.canLoadGlide(attachContext)) {
-                        return
+            if (!appPreferences.loadPictureWhenScroll) {
+                addOnScrollListener(object : RecyclerView.OnScrollListener() {
+                    override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+                        super.onScrollStateChanged(recyclerView, newState)
+                        if (!Util.canLoadGlide(attachContext)) {
+                            return
+                        }
+                        if (newState == RecyclerView.SCROLL_STATE_IDLE) {
+                            Glide.with(attachContext)
+                                    .resumeRequests()
+                        } else {
+                            Glide.with(attachContext)
+                                    .pauseRequests()
+                        }
                     }
-                    if (newState == RecyclerView.SCROLL_STATE_IDLE) {
-                        Glide.with(attachContext)
-                                .resumeRequests()
-                    } else {
-                        Glide.with(attachContext)
-                                .pauseRequests()
-                    }
-                }
-            })
+                })
+            }
             addOnChildAttachStateChangeListener(object : OnChildAttachStateChangeListener {
                 override fun onChildViewAttachedToWindow(view: View) {}
                 override fun onChildViewDetachedFromWindow(view: View) {

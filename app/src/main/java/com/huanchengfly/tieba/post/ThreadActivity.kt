@@ -180,21 +180,23 @@ class ThreadActivity : BaseActivity(), View.OnClickListener {
             addItemDecoration(ThreadDivider(this@ThreadActivity))
             layoutManager = mLayoutManager
             adapter = mAdapter
-            addOnScrollListener(object : RecyclerView.OnScrollListener() {
-                override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
-                    super.onScrollStateChanged(recyclerView, newState)
-                    if (!Util.canLoadGlide(this@ThreadActivity)) {
-                        return
+            if (!appPreferences.loadPictureWhenScroll) {
+                addOnScrollListener(object : RecyclerView.OnScrollListener() {
+                    override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+                        super.onScrollStateChanged(recyclerView, newState)
+                        if (!Util.canLoadGlide(this@ThreadActivity)) {
+                            return
+                        }
+                        if (newState == RecyclerView.SCROLL_STATE_IDLE) {
+                            Glide.with(this@ThreadActivity)
+                                    .resumeRequests()
+                        } else {
+                            Glide.with(this@ThreadActivity)
+                                    .pauseRequests()
+                        }
                     }
-                    if (newState == RecyclerView.SCROLL_STATE_IDLE) {
-                        Glide.with(this@ThreadActivity)
-                                .resumeRequests()
-                    } else {
-                        Glide.with(this@ThreadActivity)
-                                .pauseRequests()
-                    }
-                }
-            })
+                })
+            }
             addOnScrollListener(object : RecyclerView.OnScrollListener() {
                 override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
                     refreshTitle()

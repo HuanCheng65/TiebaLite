@@ -7,7 +7,6 @@ import android.app.job.JobScheduler;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -30,7 +29,6 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.viewpager.widget.ViewPager;
 
-import com.flurry.android.FlurryAgent;
 import com.google.android.material.bottomnavigation.BottomNavigationItemView;
 import com.google.android.material.bottomnavigation.BottomNavigationMenuView;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -41,7 +39,6 @@ import com.huanchengfly.tieba.api.interfaces.CommonAPICallback;
 import com.huanchengfly.tieba.api.interfaces.CommonCallback;
 import com.huanchengfly.tieba.api.models.ChangelogBean;
 import com.huanchengfly.tieba.api.models.NewUpdateBean;
-import com.huanchengfly.tieba.post.activities.AboutActivity;
 import com.huanchengfly.tieba.post.activities.NewIntroActivity;
 import com.huanchengfly.tieba.post.activities.UpdateInfoActivity;
 import com.huanchengfly.tieba.post.activities.base.BaseActivity;
@@ -104,11 +101,11 @@ public class MainActivity extends BaseActivity implements BottomNavigationView.O
                 .getBoolean("follow_system_night", false) && !TextUtils.equals(reason, ThemeUtil.REASON_MANUALLY);
         if (followSystemNight) {
             if (BaseApplication.isSystemNight() && !ThemeUtil.isNightMode(this)) {
+                SharedPreferencesUtil.put(ThemeUtil.getSharedPreferences(this), SP_SHOULD_SHOW_SNACKBAR, true);
                 ThemeUtil.switchToNightMode(this, ThemeUtil.REASON_FOLLOW_SYSTEM, false);
-                SharedPreferencesUtil.put(ThemeUtil.getSharedPreferences(this), SP_SHOULD_SHOW_SNACKBAR, true);
             } else if (!BaseApplication.isSystemNight() && ThemeUtil.isNightMode(this) && TextUtils.equals(reason, ThemeUtil.REASON_FOLLOW_SYSTEM)) {
-                ThemeUtil.switchFromNightMode(this, ThemeUtil.REASON_FOLLOW_SYSTEM, false);
                 SharedPreferencesUtil.put(ThemeUtil.getSharedPreferences(this), SP_SHOULD_SHOW_SNACKBAR, true);
+                ThemeUtil.switchFromNightMode(this, ThemeUtil.REASON_FOLLOW_SYSTEM, false);
             }
         }
         super.onResume();

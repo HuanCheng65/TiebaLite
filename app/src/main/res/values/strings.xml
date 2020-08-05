@@ -354,4 +354,5 @@
     <string name="toast_nav_failed">跳转失败</string>
     <string name="title_dialog_notice">免责声明</string>
     <string name="message_dialog_notice">本软件仅供交流学习使用，严禁用于商业用途，请于下载后 24 小时内删除。</string>
+    <string name="title_load_picture_when_scroll">滑动时加载图片</string>
 </resources>

@@ -22,7 +22,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatDelegate;
 
-import com.billy.android.preloader.PreLoader;
 import com.flurry.android.FlurryAgent;
 import com.huanchengfly.theme.interfaces.ThemeSwitcher;
 import com.huanchengfly.theme.utils.ThemeUtils;
@@ -35,7 +34,6 @@ import com.huanchengfly.tieba.post.utils.QuickPreviewUtil;
 import com.huanchengfly.tieba.post.utils.SharedPreferencesUtil;
 import com.huanchengfly.tieba.post.utils.ThemeUtil;
 import com.huanchengfly.tieba.post.utils.Util;
-import com.huanchengfly.tieba.post.utils.preload.loaders.LikeForumListLoader;
 import com.huanchengfly.utils.MD5Util;
 
 import org.intellij.lang.annotations.RegExp;
