@@ -1,234 +1,206 @@
-package com.huanchengfly.tieba.post.fragments;
+package com.huanchengfly.tieba.post.fragments
 
+import android.annotation.SuppressLint
+import android.content.DialogInterface
+import android.content.Intent
+import android.os.Build
+import android.os.Bundle
+import android.view.View
+import android.widget.Toast
+import androidx.core.content.ContextCompat
+import androidx.preference.EditTextPreference
+import androidx.preference.ListPreference
+import androidx.preference.Preference
+import androidx.preference.SwitchPreference
+import com.google.android.material.snackbar.Snackbar
+import com.huanchengfly.theme.utils.ThemeUtils
+import com.huanchengfly.tieba.api.LiteApi.Companion.instance
+import com.huanchengfly.tieba.api.interfaces.CommonAPICallback
+import com.huanchengfly.tieba.api.models.NewUpdateBean
+import com.huanchengfly.tieba.post.R
+import com.huanchengfly.tieba.post.activities.BlockListActivity
+import com.huanchengfly.tieba.post.activities.LoginActivity
+import com.huanchengfly.tieba.post.components.prefs.TimePickerPreference
+import com.huanchengfly.tieba.post.models.database.Account
+import com.huanchengfly.tieba.post.models.database.Block
+import com.huanchengfly.tieba.post.utils.*
+import com.huanchengfly.utils.GlideCacheUtil
+import com.lapism.searchview.database.SearchHistoryTable
+import java.util.*
 
-import android.annotation.SuppressLint;
-import android.content.Intent;
-import android.os.Build;
-import android.os.Bundle;
-import android.view.View;
-import android.widget.Toast;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.core.content.ContextCompat;
-import androidx.preference.EditTextPreference;
-import androidx.preference.ListPreference;
-import androidx.preference.Preference;
-import androidx.preference.SwitchPreference;
-
-import com.google.android.material.snackbar.Snackbar;
-import com.huanchengfly.theme.utils.ThemeUtils;
-import com.huanchengfly.tieba.api.LiteApi;
-import com.huanchengfly.tieba.api.interfaces.CommonAPICallback;
-import com.huanchengfly.tieba.api.models.NewUpdateBean;
-import com.huanchengfly.tieba.post.R;
-import com.huanchengfly.tieba.post.activities.BlockListActivity;
-import com.huanchengfly.tieba.post.activities.LoginActivity;
-import com.huanchengfly.tieba.post.components.prefs.TimePickerPreference;
-import com.huanchengfly.tieba.post.models.database.Account;
-import com.huanchengfly.tieba.post.models.database.Block;
-import com.huanchengfly.tieba.post.utils.AccountUtil;
-import com.huanchengfly.tieba.post.utils.DialogUtil;
-import com.huanchengfly.tieba.post.utils.DisplayUtil;
-import com.huanchengfly.tieba.post.utils.TiebaUtil;
-import com.huanchengfly.tieba.post.utils.Util;
-import com.huanchengfly.tieba.post.utils.VersionUtil;
-import com.huanchengfly.utils.GlideCacheUtil;
-import com.lapism.searchview.database.SearchHistoryTable;
-
-import java.util.ArrayList;
-import java.util.List;
-
-public class SettingsFragment extends PreferencesFragment {
-    public static final String TAG = "SettingsFragment";
-
-    private Account loginInfo;
-
-    public SettingsFragment() {
+class SettingsFragment : PreferencesFragment() {
+    private var loginInfo: Account? = null
+    override fun onResume() {
+        super.onResume()
+        refresh()
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        refresh();
-    }
-
-    private void refresh() {
-        loginInfo = AccountUtil.getLoginInfo(getAttachContext());
-        List<Account> accounts = AccountUtil.getAllAccounts();
-        List<String> usernameList = new ArrayList<>();
-        List<String> idList = new ArrayList<>();
-        for (Account account : accounts) {
-            usernameList.add(account.getNameShow());
-            idList.add(String.valueOf(account.getId()));
+    private fun refresh() {
+        loginInfo = AccountUtil.getLoginInfo(attachContext)
+        val accounts = AccountUtil.getAllAccounts()
+        val usernameList: MutableList<String> = ArrayList()
+        val idList: MutableList<String> = ArrayList()
+        for (account in accounts) {
+            usernameList.add(account.nameShow)
+            idList.add(account.id.toString())
         }
-        ListPreference accountsPreference = findPreference("switch_account");
-        accountsPreference.setEntries(usernameList.toArray(new String[0]));
-        accountsPreference.setEntryValues(idList.toArray(new String[0]));
+        val accountsPreference = findPreference<ListPreference>("switch_account")
+        accountsPreference!!.entries = usernameList.toTypedArray()
+        accountsPreference.entryValues = idList.toTypedArray()
         if (loginInfo != null) {
-            accountsPreference.setValue(String.valueOf(loginInfo.getId()));
-            accountsPreference.setSummary("已登录账号 " + loginInfo.getNameShow());
+            accountsPreference.value = loginInfo!!.id.toString()
+            accountsPreference.summary = "已登录账号 " + loginInfo!!.nameShow
         } else {
-            accountsPreference.setSummary("未登录");
+            accountsPreference.summary = "未登录"
         }
     }
 
     @SuppressLint("ApplySharedPref")
-    @Override
-    public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
-        getPreferenceManager().setSharedPreferencesName("settings");
-        addPreferencesFromResource(R.xml.preferences);
-        ListPreference accountsPreference = findPreference("switch_account");
-        accountsPreference.setOnPreferenceChangeListener((preference, newValue) -> {
-            if (AccountUtil.switchUser(getAttachContext(), Integer.valueOf((String) newValue))) {
-                refresh();
-                Toast.makeText(getAttachContext(), R.string.toast_switch_success, Toast.LENGTH_SHORT).show();
+    override fun onCreatePreferences(savedInstanceState: Bundle, rootKey: String) {
+        preferenceManager.sharedPreferencesName = "settings"
+        addPreferencesFromResource(R.xml.preferences)
+        val accountsPreference = findPreference<ListPreference>("switch_account")
+        accountsPreference!!.onPreferenceChangeListener = Preference.OnPreferenceChangeListener { _: Preference?, newValue: Any? ->
+            if (AccountUtil.switchUser(attachContext, Integer.valueOf((newValue as String?)!!))) {
+                refresh()
+                Toast.makeText(attachContext, R.string.toast_switch_success, Toast.LENGTH_SHORT).show()
             }
-            return false;
-        });
-        findPreference("copy_bduss").setOnPreferenceClickListener(preference -> {
-            Account account = AccountUtil.getLoginInfo(getAttachContext());
+            false
+        }
+        findPreference<Preference>("copy_bduss")!!.onPreferenceClickListener = Preference.OnPreferenceClickListener {
+            val account = AccountUtil.getLoginInfo(attachContext)
             if (account != null) {
-                TiebaUtil.copyText(getAttachContext(), account.getBduss());
+                TiebaUtil.copyText(attachContext, account.bduss)
             }
-            return true;
-        });
-        findPreference("clear_search_history").setOnPreferenceClickListener(preference -> {
-            new SearchHistoryTable(getAttachContext()).clearDatabase();
-            if (getView() != null)
-                Util.createSnackbar(getView(), R.string.toast_clear_success, Snackbar.LENGTH_SHORT).show();
-            return true;
-        });
-        findPreference("exit_account").setEnabled(AccountUtil.isLoggedIn(getAttachContext()));
-        findPreference("exit_account").setOnPreferenceClickListener(preference -> {
-            DialogUtil.build(getAttachContext())
+            true
+        }
+        findPreference<Preference>("clear_search_history")!!.onPreferenceClickListener = Preference.OnPreferenceClickListener {
+            SearchHistoryTable(attachContext).clearDatabase()
+            if (view != null) Util.createSnackbar(view!!, R.string.toast_clear_success, Snackbar.LENGTH_SHORT).show()
+            true
+        }
+        findPreference<Preference>("exit_account")!!.isEnabled = AccountUtil.isLoggedIn(attachContext)
+        findPreference<Preference>("exit_account")!!.onPreferenceClickListener = Preference.OnPreferenceClickListener {
+            DialogUtil.build(attachContext)
                     .setMessage(R.string.title_dialog_exit_account)
-                    .setPositiveButton(R.string.button_sure_default, (dialog, which) -> {
-                        AccountUtil.exit(getAttachContext());
-                        refresh();
-                        if (AccountUtil.getLoginInfo(getAttachContext()) == null) {
-                            getAttachContext().startActivity(new Intent(getAttachContext(), LoginActivity.class));
+                    .setPositiveButton(R.string.button_sure_default) { _: DialogInterface?, _: Int ->
+                        AccountUtil.exit(attachContext)
+                        refresh()
+                        if (AccountUtil.getLoginInfo(attachContext) == null) {
+                            attachContext.startActivity(Intent(attachContext, LoginActivity::class.java))
                         }
-                    })
+                    }
                     .setNegativeButton(R.string.button_cancel, null)
                     .create()
-                    .show();
-            return true;
-        });
-        findPreference("black_list").setOnPreferenceClickListener(preference -> {
-            startActivity(new Intent(getAttachContext(), BlockListActivity.class).putExtra("category", Block.CATEGORY_BLACK_LIST));
-            return true;
-        });
+                    .show()
+            true
+        }
+        findPreference<Preference>("black_list")!!.onPreferenceClickListener = Preference.OnPreferenceClickListener {
+            startActivity(Intent(attachContext, BlockListActivity::class.java).putExtra("category", Block.CATEGORY_BLACK_LIST))
+            true
+        }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-            findPreference("follow_system_night").setEnabled(true);
-            findPreference("follow_system_night").setSummary(null);
+            findPreference<Preference>("follow_system_night")!!.isEnabled = true
+            findPreference<Preference>("follow_system_night")!!.summary = null
         } else {
-            findPreference("follow_system_night").setEnabled(false);
-            findPreference("follow_system_night").setSummary(R.string.summary_follow_system_night_disabled);
+            findPreference<Preference>("follow_system_night")!!.isEnabled = false
+            findPreference<Preference>("follow_system_night")!!.setSummary(R.string.summary_follow_system_night_disabled)
         }
-        findPreference("show_top_forum_in_normal_list").setOnPreferenceChangeListener((preference, newValue) -> {
-            preference.setSummary(R.string.summary_show_top_forum_in_normal_list_changed);
-            return true;
-        });
-        findPreference("status_bar_darker").setOnPreferenceChangeListener((preference, newValue) -> {
-            preference.setSummary(R.string.summary_status_bar_darker_changed);
-            return true;
-        });
-        findPreference("hideExplore").setOnPreferenceChangeListener((preference, newValue) -> {
-            preference.setSummary(R.string.summary_change_need_restart);
-            return true;
-        });
-        findPreference("white_list").setOnPreferenceClickListener(preference -> {
-            startActivity(new Intent(getAttachContext(), BlockListActivity.class).putExtra("category", Block.CATEGORY_WHITE_LIST));
-            return true;
-        });
-        TimePickerPreference timePickerPreference = findPreference("auto_sign_time");
-        timePickerPreference.setOnPreferenceChangeListener((preference, newValue) -> {
-            preference.setSummary(getAttachContext().getString(R.string.summary_auto_sign_time, (String) newValue));
-            return true;
-        });
-        timePickerPreference.setSummary(getAttachContext().getString(R.string.summary_auto_sign_time, getPreferenceManager().getSharedPreferences().getString("auto_sign_time", "09:00")));
-        Preference clearCache = findPreference("clear_cache");
-        clearCache.setSummary(getAttachContext().getString(R.string.tip_cache, GlideCacheUtil.getInstance().getCacheSize(getAttachContext())));
-        clearCache.setOnPreferenceClickListener(preference -> {
-            GlideCacheUtil.getInstance().clearImageAllCache(getAttachContext());
-            if (getView() != null)
-                Util.createSnackbar(getView(), R.string.toast_clear_cache_success, Snackbar.LENGTH_SHORT).show();
-            preference.setSummary(getAttachContext().getString(R.string.tip_cache, "0.0B"));
-            return true;
-        });
-        EditTextPreference littleTaliPreference = findPreference("little_tail");
-        String littleTali = getPreferenceManager().getSharedPreferences().getString("little_tail", "");
-        if (littleTali.isEmpty()) {
-            littleTaliPreference.setSummary(R.string.tip_no_little_tail);
+        findPreference<Preference>("show_top_forum_in_normal_list")!!.onPreferenceChangeListener = Preference.OnPreferenceChangeListener { preference: Preference, _: Any? ->
+            preference.setSummary(R.string.summary_show_top_forum_in_normal_list_changed)
+            true
+        }
+        findPreference<Preference>("status_bar_darker")!!.onPreferenceChangeListener = Preference.OnPreferenceChangeListener { preference: Preference, _: Any? ->
+            preference.setSummary(R.string.summary_status_bar_darker_changed)
+            true
+        }
+        findPreference<Preference>("hideExplore")!!.onPreferenceChangeListener = Preference.OnPreferenceChangeListener { preference: Preference, _: Any? ->
+            preference.setSummary(R.string.summary_change_need_restart)
+            true
+        }
+        findPreference<Preference>("white_list")!!.onPreferenceClickListener = Preference.OnPreferenceClickListener {
+            startActivity(Intent(attachContext, BlockListActivity::class.java).putExtra("category", Block.CATEGORY_WHITE_LIST))
+            true
+        }
+        val timePickerPreference = findPreference<TimePickerPreference>("auto_sign_time")
+        timePickerPreference!!.onPreferenceChangeListener = Preference.OnPreferenceChangeListener { preference: Preference, newValue: Any? ->
+            preference.summary = attachContext.getString(R.string.summary_auto_sign_time, newValue as String?)
+            true
+        }
+        timePickerPreference.summary = attachContext.getString(R.string.summary_auto_sign_time, preferenceManager.sharedPreferences.getString("auto_sign_time", "09:00"))
+        val clearCache = findPreference<Preference>("clear_cache")
+        clearCache!!.summary = attachContext.getString(R.string.tip_cache, GlideCacheUtil.getInstance().getCacheSize(attachContext))
+        clearCache.onPreferenceClickListener = Preference.OnPreferenceClickListener { preference: Preference ->
+            GlideCacheUtil.getInstance().clearImageAllCache(attachContext)
+            if (view != null) Util.createSnackbar(view!!, R.string.toast_clear_cache_success, Snackbar.LENGTH_SHORT).show()
+            preference.summary = attachContext.getString(R.string.tip_cache, "0.0B")
+            true
+        }
+        val littleTaliPreference = findPreference<EditTextPreference>("little_tail")
+        val littleTali = preferenceManager.sharedPreferences.getString("little_tail", "")
+        if (littleTali!!.isEmpty()) {
+            littleTaliPreference!!.setSummary(R.string.tip_no_little_tail)
         } else {
-            littleTaliPreference.setSummary(littleTali);
-            littleTaliPreference.setText(littleTali);
+            littleTaliPreference!!.summary = littleTali
+            littleTaliPreference.text = littleTali
         }
-        littleTaliPreference.setOnPreferenceChangeListener((preference, value) -> {
-            if (value instanceof String) {
-                String tail = (String) value;
-                if (tail.isEmpty()) {
-                    littleTaliPreference.setSummary(R.string.tip_no_little_tail);
+        littleTaliPreference.onPreferenceChangeListener = Preference.OnPreferenceChangeListener { _: Preference?, value: Any? ->
+            if (value is String) {
+                if (value.isEmpty()) {
+                    littleTaliPreference.setSummary(R.string.tip_no_little_tail)
                 } else {
-                    littleTaliPreference.setSummary(tail);
-                    littleTaliPreference.setText(tail);
+                    littleTaliPreference.summary = value
+                    littleTaliPreference.text = value
                 }
             }
-            return true;
-        });
-        Preference aboutPreference = findPreference("about");
-        LiteApi.getInstance().newCheckUpdate(new CommonAPICallback<NewUpdateBean>() {
-            @Override
-            public void onSuccess(NewUpdateBean data) {
-                if (data.isHasUpdate()) {
-                    aboutPreference.setSummary(getAttachContext().getString(R.string.tip_new_version, data.getResult().getVersionName()));
+            true
+        }
+        val aboutPreference = findPreference<Preference>("about")
+        instance!!.newCheckUpdate(object : CommonAPICallback<NewUpdateBean?> {
+            override fun onSuccess(data: NewUpdateBean?) {
+                if (data != null) {
+                    if (data.isHasUpdate) {
+                        aboutPreference!!.summary = attachContext.getString(R.string.tip_new_version, data.result.versionName)
+                    }
                 }
             }
 
-            @Override
-            public void onFailure(int code, String error) {
-            }
-        });
-        SwitchPreference useCustomTabs = findPreference("use_custom_tabs");
-        useCustomTabs.setEnabled(!getPreferenceManager().getSharedPreferences().getBoolean("use_webview", true));
-        findPreference("use_webview").setOnPreferenceChangeListener((preference, newValue) -> {
-            useCustomTabs.setEnabled(!(boolean) newValue);
-            return true;
-        });
-        initListPreference("dark_theme", "dark");
-        aboutPreference.setSummary(getString(R.string.tip_about, VersionUtil.getVersionName(getAttachContext())));
-        refresh();
+            override fun onFailure(code: Int, error: String) {}
+        })
+        val useCustomTabs = findPreference<SwitchPreference>("use_custom_tabs")
+        useCustomTabs!!.isEnabled = !preferenceManager.sharedPreferences.getBoolean("use_webview", true)
+        findPreference<Preference>("use_webview")!!.onPreferenceChangeListener = Preference.OnPreferenceChangeListener { _: Preference?, newValue: Any? ->
+            useCustomTabs.isEnabled != newValue as Boolean
+            true
+        }
+        initListPreference("dark_theme", "dark")
+        aboutPreference!!.summary = getString(R.string.tip_about, VersionUtil.getVersionName(attachContext))
+        refresh()
     }
 
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        setDivider(ThemeUtils.tintDrawable(ContextCompat.getDrawable(getAttachContext(), R.drawable.drawable_divider_8dp), ThemeUtils.getColorByAttr(getAttachContext(), R.attr.colorDivider)));
-        setDividerHeight(DisplayUtil.dp2px(getAttachContext(), 8));
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        setDivider(ThemeUtils.tintDrawable(ContextCompat.getDrawable(attachContext, R.drawable.drawable_divider_8dp), ThemeUtils.getColorByAttr(attachContext, R.attr.colorDivider)))
+        setDividerHeight(DisplayUtil.dp2px(attachContext, 8f))
     }
 
-    private void initSwitchPreference(String key) {
-        initSwitchPreference(key, false);
+    private fun initSwitchPreference(key: String, defValue: Boolean = false) {
+        val switchPreference = findPreference<SwitchPreference>(key)
+        initSwitchPreference(switchPreference, defValue)
     }
 
-    private void initSwitchPreference(SwitchPreference switchPreference) {
-        initSwitchPreference(switchPreference, false);
+    private fun initSwitchPreference(switchPreference: SwitchPreference?, defValue: Boolean = false) {
+        val value = preferenceManager.sharedPreferences.getBoolean(switchPreference!!.key, defValue)
+        switchPreference.isChecked = value
     }
 
-    private void initSwitchPreference(String key, boolean defValue) {
-        SwitchPreference switchPreference = findPreference(key);
-        initSwitchPreference(switchPreference, defValue);
+    private fun initListPreference(key: String, defValue: String) {
+        val listPreference = findPreference<ListPreference>(key)
+        val value = preferenceManager.sharedPreferences.getString(key, defValue)
+        listPreference!!.value = value
     }
 
-    private void initSwitchPreference(SwitchPreference switchPreference, boolean defValue) {
-        boolean value = getPreferenceManager().getSharedPreferences().getBoolean(switchPreference.getKey(), defValue);
-        switchPreference.setChecked(value);
-    }
-
-    private void initListPreference(String key, String defValue) {
-        ListPreference listPreference = findPreference(key);
-        String value = getPreferenceManager().getSharedPreferences().getString(key, defValue);
-        listPreference.setValue(value);
+    companion object {
+        const val TAG = "SettingsFragment"
     }
 }
