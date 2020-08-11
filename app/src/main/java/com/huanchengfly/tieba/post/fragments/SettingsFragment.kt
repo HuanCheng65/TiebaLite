@@ -56,7 +56,7 @@ class SettingsFragment : PreferencesFragment() {
     }
 
     @SuppressLint("ApplySharedPref")
-    override fun onCreatePreferences(savedInstanceState: Bundle, rootKey: String) {
+    override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         preferenceManager.sharedPreferencesName = "settings"
         addPreferencesFromResource(R.xml.preferences)
         val accountsPreference = findPreference<ListPreference>("switch_account")
