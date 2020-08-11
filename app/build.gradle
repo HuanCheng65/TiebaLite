@@ -69,7 +69,7 @@ android {
     }
     compileSdkVersion 29
     defaultConfig {
-        applicationId "com.huanchengfly.tieba.post"
+        applicationId "top.goforce.tieba.post"
         minSdkVersion 21
         targetSdkVersion 29
         versionCode applicationVersionCode
@@ -110,7 +110,7 @@ dependencies {
     kapt "com.android.support:support-annotations:28.0.0"
 
     //AndroidX
-    implementation 'androidx.appcompat:appcompat:1.1.0'
+    implementation 'androidx.appcompat:appcompat:1.2.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.0.0-rc1'
     implementation 'androidx.preference:preference:1.1.1'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
@@ -120,6 +120,9 @@ dependencies {
 
     //Test
     testImplementation 'junit:junit:4.13'
+    androidTestImplementation 'androidx.test:core:1.2.0'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.1'
+    androidTestImplementation 'androidx.test:rules:1.2.0'
     androidTestImplementation 'androidx.test:runner:1.2.0'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
 
