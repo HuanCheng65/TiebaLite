@@ -1,163 +1,138 @@
-package com.huanchengfly.tieba.post;
+package com.huanchengfly.tieba.post
 
-import android.annotation.SuppressLint;
-import android.app.Activity;
-import android.app.job.JobInfo;
-import android.app.job.JobScheduler;
-import android.content.BroadcastReceiver;
-import android.content.ComponentName;
-import android.content.Context;
-import android.content.Intent;
-import android.graphics.Typeface;
-import android.os.Bundle;
-import android.os.Handler;
-import android.text.SpannableStringBuilder;
-import android.text.Spanned;
-import android.text.TextUtils;
-import android.text.style.ForegroundColorSpan;
-import android.text.style.StyleSpan;
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.View;
-import android.widget.FrameLayout;
-import android.widget.TextView;
-import android.widget.Toast;
+import android.annotation.SuppressLint
+import android.app.Activity
+import android.app.job.JobInfo
+import android.app.job.JobScheduler
+import android.content.*
+import android.graphics.Typeface
+import android.os.Bundle
+import android.os.Handler
+import android.text.SpannableStringBuilder
+import android.text.Spanned
+import android.text.TextUtils
+import android.text.style.ForegroundColorSpan
+import android.text.style.StyleSpan
+import android.util.Log
+import android.view.LayoutInflater
+import android.view.Menu
+import android.view.MenuItem
+import android.view.View
+import android.widget.FrameLayout
+import android.widget.TextView
+import android.widget.Toast
+import androidx.viewpager.widget.ViewPager.OnPageChangeListener
+import com.google.android.material.bottomnavigation.BottomNavigationItemView
+import com.google.android.material.bottomnavigation.BottomNavigationMenuView
+import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.android.material.bottomnavigation.BottomNavigationView.OnNavigationItemReselectedListener
+import com.google.android.material.snackbar.Snackbar
+import com.huanchengfly.tieba.api.Error
+import com.huanchengfly.tieba.api.LiteApi.Companion.instance
+import com.huanchengfly.tieba.api.interfaces.CommonAPICallback
+import com.huanchengfly.tieba.api.interfaces.CommonCallback
+import com.huanchengfly.tieba.api.models.ChangelogBean
+import com.huanchengfly.tieba.api.models.NewUpdateBean
+import com.huanchengfly.tieba.post.activities.NewIntroActivity
+import com.huanchengfly.tieba.post.activities.UpdateInfoActivity
+import com.huanchengfly.tieba.post.activities.base.BaseActivity
+import com.huanchengfly.tieba.post.adapters.MainSearchAdapter
+import com.huanchengfly.tieba.post.adapters.ViewPagerAdapter
+import com.huanchengfly.tieba.post.base.BaseApplication
+import com.huanchengfly.tieba.post.fragments.ForumListFragment
+import com.huanchengfly.tieba.post.fragments.MessageFragment
+import com.huanchengfly.tieba.post.fragments.MyInfoFragment
+import com.huanchengfly.tieba.post.fragments.PersonalizedFeedFragment
+import com.huanchengfly.tieba.post.interfaces.Refreshable
+import com.huanchengfly.tieba.post.models.MyInfoBean
+import com.huanchengfly.tieba.post.models.database.SearchHistory
+import com.huanchengfly.tieba.post.services.NotifyJobService
+import com.huanchengfly.tieba.post.utils.*
+import com.huanchengfly.tieba.widgets.MyViewPager
+import com.huanchengfly.tieba.widgets.theme.TintToolbar
+import com.lapism.searchview.Search
+import com.lapism.searchview.widget.SearchView
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
-import androidx.viewpager.widget.ViewPager;
-
-import com.google.android.material.bottomnavigation.BottomNavigationItemView;
-import com.google.android.material.bottomnavigation.BottomNavigationMenuView;
-import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.android.material.snackbar.Snackbar;
-import com.huanchengfly.tieba.api.Error;
-import com.huanchengfly.tieba.api.LiteApi;
-import com.huanchengfly.tieba.api.interfaces.CommonAPICallback;
-import com.huanchengfly.tieba.api.interfaces.CommonCallback;
-import com.huanchengfly.tieba.api.models.ChangelogBean;
-import com.huanchengfly.tieba.api.models.NewUpdateBean;
-import com.huanchengfly.tieba.post.activities.NewIntroActivity;
-import com.huanchengfly.tieba.post.activities.UpdateInfoActivity;
-import com.huanchengfly.tieba.post.activities.base.BaseActivity;
-import com.huanchengfly.tieba.post.adapters.MainSearchAdapter;
-import com.huanchengfly.tieba.post.adapters.ViewPagerAdapter;
-import com.huanchengfly.tieba.post.base.BaseApplication;
-import com.huanchengfly.tieba.post.fragments.BaseFragment;
-import com.huanchengfly.tieba.post.fragments.ForumListFragment;
-import com.huanchengfly.tieba.post.fragments.MessageFragment;
-import com.huanchengfly.tieba.post.fragments.MyInfoFragment;
-import com.huanchengfly.tieba.post.fragments.PersonalizedFeedFragment;
-import com.huanchengfly.tieba.post.interfaces.Refreshable;
-import com.huanchengfly.tieba.post.models.MyInfoBean;
-import com.huanchengfly.tieba.post.models.database.SearchHistory;
-import com.huanchengfly.tieba.post.services.NotifyJobService;
-import com.huanchengfly.tieba.post.utils.AccountUtil;
-import com.huanchengfly.tieba.post.utils.DialogUtil;
-import com.huanchengfly.tieba.post.utils.DisplayUtil;
-import com.huanchengfly.tieba.post.utils.HandleBackUtil;
-import com.huanchengfly.tieba.post.utils.JobServiceUtil;
-import com.huanchengfly.tieba.post.utils.NavigationHelper;
-import com.huanchengfly.tieba.post.utils.ReceiverUtil;
-import com.huanchengfly.tieba.post.utils.SharedPreferencesUtil;
-import com.huanchengfly.tieba.post.utils.ThemeUtil;
-import com.huanchengfly.tieba.post.utils.TiebaUtil;
-import com.huanchengfly.tieba.post.utils.Util;
-import com.huanchengfly.tieba.post.utils.VersionUtil;
-import com.huanchengfly.tieba.widgets.MyViewPager;
-import com.huanchengfly.tieba.widgets.theme.TintToolbar;
-import com.lapism.searchview.Search;
-import com.lapism.searchview.widget.SearchView;
-
-import java.util.List;
-
-import static com.huanchengfly.tieba.post.utils.ThemeUtil.THEME_TRANSLUCENT;
-
-public class MainActivity extends BaseActivity implements BottomNavigationView.OnNavigationItemSelectedListener, MainSearchAdapter.OnSearchItemClickListener, BottomNavigationView.OnNavigationItemReselectedListener {
-    public static final String TAG = "MainActivity";
-    public static final String SP_SHOULD_SHOW_SNACKBAR = "should_show_snackbar";
-    private static Handler handler = new Handler();
-    public ViewPagerAdapter mAdapter = new ViewPagerAdapter(getSupportFragmentManager());
-    private TintToolbar mToolbar;
-    private MyViewPager mViewPager;
-    private BottomNavigationView mBottomNavigationView;
-    private BottomNavigationMenuView menuView;
-    private SearchView mSearchView;
-    private long lastTime = 0;
-    private NavigationHelper navigationHelper;
-    private boolean hideExplore;
-    private TextView badgeTextView;
-    private BroadcastReceiver newMessageReceiver = new NewMessageReceiver();
-    private BroadcastReceiver accountSwitchReceiver = new AccountSwitchReceiver();
-    private FrameLayout appbar;
-    private MainSearchAdapter mSearchAdapter;
-
-    @Override
-    public void onResume() {
-        String reason = ThemeUtil.getSharedPreferences(this).getString(ThemeUtil.SP_SWITCH_REASON, null);
-        boolean followSystemNight = SharedPreferencesUtil.get(this, SharedPreferencesUtil.SP_SETTINGS)
-                .getBoolean("follow_system_night", false) && !TextUtils.equals(reason, ThemeUtil.REASON_MANUALLY);
+open class MainActivity : BaseActivity(), BottomNavigationView.OnNavigationItemSelectedListener, MainSearchAdapter.OnSearchItemClickListener, OnNavigationItemReselectedListener {
+    var mAdapter: ViewPagerAdapter? = ViewPagerAdapter(supportFragmentManager)
+    private var mToolbar: TintToolbar? = null
+    private var mViewPager: MyViewPager? = null
+    private var mBottomNavigationView: BottomNavigationView? = null
+    private var menuView: BottomNavigationMenuView? = null
+    private var mSearchView: SearchView? = null
+    private var lastTime: Long = 0
+    private var navigationHelper: NavigationHelper? = null
+    private var hideExplore = false
+    private var badgeTextView: TextView? = null
+    private val newMessageReceiver: BroadcastReceiver = NewMessageReceiver()
+    private val accountSwitchReceiver: BroadcastReceiver = AccountSwitchReceiver()
+    private var appbar: FrameLayout? = null
+    private var mSearchAdapter: MainSearchAdapter? = null
+    public override fun onResume() {
+        val reason = ThemeUtil.getSharedPreferences(this).getString(ThemeUtil.SP_SWITCH_REASON, null)
+        val followSystemNight = SharedPreferencesUtil.get(this, SharedPreferencesUtil.SP_SETTINGS)
+                .getBoolean("follow_system_night", false) && !TextUtils.equals(reason, ThemeUtil.REASON_MANUALLY)
         if (followSystemNight) {
             if (BaseApplication.isSystemNight() && !ThemeUtil.isNightMode(this)) {
-                SharedPreferencesUtil.put(ThemeUtil.getSharedPreferences(this), SP_SHOULD_SHOW_SNACKBAR, true);
-                ThemeUtil.switchToNightMode(this, ThemeUtil.REASON_FOLLOW_SYSTEM, false);
+                SharedPreferencesUtil.put(ThemeUtil.getSharedPreferences(this), SP_SHOULD_SHOW_SNACKBAR, true)
+                ThemeUtil.switchToNightMode(this, ThemeUtil.REASON_FOLLOW_SYSTEM, false)
             } else if (!BaseApplication.isSystemNight() && ThemeUtil.isNightMode(this) && TextUtils.equals(reason, ThemeUtil.REASON_FOLLOW_SYSTEM)) {
-                SharedPreferencesUtil.put(ThemeUtil.getSharedPreferences(this), SP_SHOULD_SHOW_SNACKBAR, true);
-                ThemeUtil.switchFromNightMode(this, ThemeUtil.REASON_FOLLOW_SYSTEM, false);
+                SharedPreferencesUtil.put(ThemeUtil.getSharedPreferences(this), SP_SHOULD_SHOW_SNACKBAR, true)
+                ThemeUtil.switchFromNightMode(this, ThemeUtil.REASON_FOLLOW_SYSTEM, false)
             }
         }
-        super.onResume();
-        refreshSearchView();
-        ThemeUtil.setTranslucentThemeBackground(findViewById(R.id.background));
-        if (THEME_TRANSLUCENT.equals(ThemeUtil.getTheme(this))) {
-            mBottomNavigationView.setElevation(0f);
+        super.onResume()
+        refreshSearchView()
+        ThemeUtil.setTranslucentThemeBackground(findViewById(R.id.background))
+        if (ThemeUtil.THEME_TRANSLUCENT == ThemeUtil.getTheme(this)) {
+            mBottomNavigationView!!.elevation = 0f
         } else {
-            mBottomNavigationView.setElevation(DisplayUtil.dp2px(this, 4));
+            mBottomNavigationView!!.elevation = DisplayUtil.dp2px(this, 4f).toFloat()
         }
     }
 
-    @Override
-    public void onNavigationItemReselected(@NonNull MenuItem item) {
-        BaseFragment fragment = mAdapter.getCurrentFragment();
-        if (fragment instanceof Refreshable) {
-            ((Refreshable) fragment).onRefresh();
+    override fun onNavigationItemReselected(item: MenuItem) {
+        val fragment = mAdapter!!.currentFragment
+        if (fragment is Refreshable) {
+            (fragment as Refreshable).onRefresh()
         }
     }
 
-    public void openSearch() {
-        mSearchView.open(null);
+    fun openSearch() {
+        mSearchView!!.open(null)
     }
 
-    @Override
-    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.navbar_home:
-                mViewPager.setCurrentItem(0, false);
-                return true;
-            case R.id.navbar_explore:
+    override fun onNavigationItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.navbar_home -> {
+                mViewPager!!.setCurrentItem(0, false)
+                return true
+            }
+            R.id.navbar_explore -> {
                 if (!hideExplore) {
-                    mViewPager.setCurrentItem(1, false);
+                    mViewPager!!.setCurrentItem(1, false)
                 }
-                return true;
-            case R.id.navbar_msg:
-                mViewPager.setCurrentItem(hideExplore ? 1 : 2, false);
-                return true;
-            case R.id.navbar_user:
-                mViewPager.setCurrentItem(hideExplore ? 2 : 3, false);
-                return true;
+                return true
+            }
+            R.id.navbar_msg -> {
+                mViewPager!!.setCurrentItem(if (hideExplore) 1 else 2, false)
+                return true
+            }
+            R.id.navbar_user -> {
+                mViewPager!!.setCurrentItem(if (hideExplore) 2 else 3, false)
+                return true
+            }
         }
-        return false;
+        return false
     }
 
-    protected void findView() {
-        appbar = (FrameLayout) findViewById(R.id.appbar);
-        mToolbar = (TintToolbar) findViewById(R.id.toolbar);
-        mSearchView = (SearchView) findViewById(R.id.toolbar_search_view);
-        mBottomNavigationView = (BottomNavigationView) findViewById(R.id.navbar);
-        menuView = (BottomNavigationMenuView) mBottomNavigationView.getChildAt(0);
-        mViewPager = (MyViewPager) findViewById(R.id.mViewPager);
+    private fun findView() {
+        appbar = findViewById(R.id.appbar) as FrameLayout
+        mToolbar = findViewById(R.id.toolbar) as TintToolbar
+        mSearchView = findViewById(R.id.toolbar_search_view) as SearchView
+        mBottomNavigationView = findViewById(R.id.navbar) as BottomNavigationView
+        menuView = mBottomNavigationView!!.getChildAt(0) as BottomNavigationMenuView
+        mViewPager = findViewById(R.id.mViewPager) as MyViewPager
         /*
         int[][] states = new int[2][];
         states[0] = new int[] { android.R.attr.state_checked };
@@ -169,165 +144,151 @@ public class MainActivity extends BaseActivity implements BottomNavigationView.O
         */
     }
 
-    protected void initView() {
-        mSearchAdapter = new MainSearchAdapter(this);
-        mSearchAdapter.setOnSearchItemClickListener(this);
-        mSearchView.setAdapter(mSearchAdapter);
-        BottomNavigationItemView itemView = (BottomNavigationItemView) menuView.getChildAt(hideExplore ? 1 : 2);
-        View badge = LayoutInflater.from(MainActivity.this).inflate(R.layout.layout_badge, menuView, false);
-        itemView.addView(badge);
-        badgeTextView = badge.findViewById(R.id.tv_msg_count);
-        navigationHelper = NavigationHelper.newInstance(this);
-        setSupportActionBar(mToolbar);
-        hideExplore = getSharedPreferences("settings", MODE_PRIVATE).getBoolean("hideExplore", false);
+    protected fun initView() {
+        mSearchAdapter = MainSearchAdapter(this)
+        mSearchAdapter!!.onSearchItemClickListener = this
+        mSearchView!!.adapter = mSearchAdapter
+        val itemView = menuView!!.getChildAt(if (hideExplore) 1 else 2) as BottomNavigationItemView
+        val badge = LayoutInflater.from(this@MainActivity).inflate(R.layout.layout_badge, menuView, false)
+        itemView.addView(badge)
+        badgeTextView = badge.findViewById(R.id.tv_msg_count)
+        navigationHelper = NavigationHelper.newInstance(this)
+        setSupportActionBar(mToolbar)
+        hideExplore = getSharedPreferences("settings", Context.MODE_PRIVATE).getBoolean("hideExplore", false)
         if (hideExplore) {
-            mBottomNavigationView.getMenu().removeItem(R.id.navbar_explore);
+            mBottomNavigationView!!.menu.removeItem(R.id.navbar_explore)
         }
-        ForumListFragment fragmentHome = new ForumListFragment();
-        mAdapter.addFragment(fragmentHome);
+        val fragmentHome = ForumListFragment()
+        mAdapter!!.addFragment(fragmentHome)
         if (!hideExplore) {
-            PersonalizedFeedFragment personalizedFeedFragment = new PersonalizedFeedFragment();
-            mAdapter.addFragment(personalizedFeedFragment);
+            val personalizedFeedFragment = PersonalizedFeedFragment()
+            mAdapter!!.addFragment(personalizedFeedFragment)
         }
-        MessageFragment messageFragment = MessageFragment.newInstance(MessageFragment.TYPE_REPLY_ME);
-        mAdapter.addFragment(messageFragment);
-        MyInfoFragment fragmentMine = new MyInfoFragment();
-        mAdapter.addFragment(fragmentMine);
-        mViewPager.setCanScroll(false);
-        mViewPager.setAdapter(mAdapter);
-        mViewPager.setOffscreenPageLimit(mAdapter.getCount());
-        refreshSearchView();
+        val messageFragment = MessageFragment.newInstance(MessageFragment.TYPE_REPLY_ME)
+        mAdapter!!.addFragment(messageFragment)
+        val fragmentMine = MyInfoFragment()
+        mAdapter!!.addFragment(fragmentMine)
+        mViewPager!!.isCanScroll = false
+        mViewPager!!.adapter = mAdapter
+        mViewPager!!.offscreenPageLimit = mAdapter!!.count
+        refreshSearchView()
     }
 
-    @Override
-    public void refreshGlobal(Activity activity) {
-        super.refreshGlobal(activity);
-        refreshSearchView();
+    override fun refreshGlobal(activity: Activity) {
+        super.refreshGlobal(activity)
+        refreshSearchView()
     }
 
-    protected void refreshSearchView() {
+    private fun refreshSearchView() {
         if (mSearchView == null) {
-            return;
+            return
         }
-        mSearchAdapter.refreshData();
-        mSearchView.setTheme(ThemeUtil.isNightMode(this) || THEME_TRANSLUCENT.equals(ThemeUtil.getTheme(this)) ? Search.Theme.DARK : Search.Theme.LIGHT);
+        mSearchAdapter!!.refreshData()
+        mSearchView!!.theme = if (ThemeUtil.isNightMode(this) || ThemeUtil.THEME_TRANSLUCENT == ThemeUtil.getTheme(this)) Search.Theme.DARK else Search.Theme.LIGHT
     }
 
-    protected void initListener() {
-        mBottomNavigationView.setOnNavigationItemSelectedListener(this);
-        mBottomNavigationView.setOnNavigationItemReselectedListener(this);
-        mSearchView.setOnQueryTextListener(new Search.OnQueryTextListener() {
-            @Override
-            public void onQueryTextChange(CharSequence newText) {
+    protected fun initListener() {
+        mBottomNavigationView!!.setOnNavigationItemSelectedListener(this)
+        mBottomNavigationView!!.setOnNavigationItemReselectedListener(this)
+        mSearchView!!.setOnQueryTextListener(object : Search.OnQueryTextListener {
+            override fun onQueryTextChange(newText: CharSequence) {}
+            override fun onQueryTextSubmit(key: CharSequence): Boolean {
+                startActivity(Intent(this@MainActivity, SearchActivity::class.java)
+                        .putExtra(SearchActivity.EXTRA_KEYWORD, key.toString()))
+                SearchHistory(key.toString())
+                        .saveOrUpdate("content = ?", key.toString())
+                return true
             }
-
-            @Override
-            public boolean onQueryTextSubmit(CharSequence key) {
-                startActivity(new Intent(MainActivity.this, SearchActivity.class)
-                        .putExtra(SearchActivity.EXTRA_KEYWORD, key.toString()));
-                new SearchHistory(key.toString())
-                        .saveOrUpdate("content = ?", key.toString());
-                return true;
-            }
-        });
-        mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-            @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-            }
+        })
+        mViewPager!!.addOnPageChangeListener(object : OnPageChangeListener {
+            override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {}
 
             @SuppressLint("RestrictedApi")
-            @Override
-            public void onPageSelected(int position) {
-                BaseFragment baseFragment = mAdapter.getItem(position);
-                appbar.setVisibility(baseFragment.hasOwnAppbar() ? View.GONE : View.VISIBLE);
-                mBottomNavigationView.getMenu().getItem(position).setChecked(true);
-                mToolbar.setTitle(mBottomNavigationView.getMenu().getItem(position).getTitle());
-                if (position == (hideExplore ? 1 : 2)) {
-                    badgeTextView.setVisibility(View.GONE);
+            override fun onPageSelected(position: Int) {
+                val baseFragment = mAdapter!!.getItem(position)
+                appbar!!.visibility = if (baseFragment.hasOwnAppbar()) View.GONE else View.VISIBLE
+                mBottomNavigationView!!.menu.getItem(position).isChecked = true
+                mToolbar!!.title = mBottomNavigationView!!.menu.getItem(position).title
+                if (position == (if (hideExplore) 1 else 2)) {
+                    badgeTextView!!.visibility = View.GONE
                 }
             }
 
-            @Override
-            public void onPageScrollStateChanged(int state) {
-            }
-        });
+            override fun onPageScrollStateChanged(state: Int) {}
+        })
     }
 
     @SuppressLint("ApplySharedPref")
-    protected void clearSwitchReason() {
+    protected fun clearSwitchReason() {
         if (TextUtils.equals(ThemeUtil.getSharedPreferences(this).getString(ThemeUtil.SP_SWITCH_REASON, null), ThemeUtil.REASON_MANUALLY)) {
-            ThemeUtil.getSharedPreferences(this).edit().remove(ThemeUtil.SP_SWITCH_REASON).commit();
+            ThemeUtil.getSharedPreferences(this).edit().remove(ThemeUtil.SP_SWITCH_REASON).commit()
         }
     }
 
-    protected boolean shouldShowSwitchSnackbar() {
-        return ThemeUtil.getSharedPreferences(this).getBoolean(SP_SHOULD_SHOW_SNACKBAR, false);
+    protected fun shouldShowSwitchSnackbar(): Boolean {
+        return ThemeUtil.getSharedPreferences(this).getBoolean(SP_SHOULD_SHOW_SNACKBAR, false)
     }
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setSwipeBackEnable(false);
-        setContentView(R.layout.activity_main);
-        ThemeUtil.setTranslucentThemeBackground(findViewById(R.id.background));
-        findView();
-        initView();
-        initListener();
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setSwipeBackEnable(false)
+        setContentView(R.layout.activity_main)
+        ThemeUtil.setTranslucentThemeBackground(findViewById(R.id.background))
+        findView()
+        initView()
+        initListener()
         if (!SharedPreferencesUtil.get(SharedPreferencesUtil.SP_APP_DATA).getBoolean("notice_dialog", false)) {
             showDialog(DialogUtil.build(this)
                     .setTitle(R.string.title_dialog_notice)
                     .setMessage(R.string.message_dialog_notice)
-                    .setPositiveButton(R.string.button_sure_default, (dialog, which) -> SharedPreferencesUtil.put(this, SharedPreferencesUtil.SP_APP_DATA, "notice_dialog", true))
+                    .setPositiveButton(R.string.button_sure_default) { _: DialogInterface?,
+                                                                       _: Int ->
+                        SharedPreferencesUtil.put(this, SharedPreferencesUtil.SP_APP_DATA, "notice_dialog", true)
+                    }
                     .setCancelable(false)
-                    .create());
+                    .create())
         }
         if (savedInstanceState == null) {
-            clearSwitchReason();
+            clearSwitchReason()
         }
         if (shouldShowSwitchSnackbar()) {
-            Util.createSnackbar(mViewPager, ThemeUtil.isNightMode(this) ? R.string.snackbar_auto_switch_to_night : R.string.snackbar_auto_switch_from_night, Snackbar.LENGTH_SHORT)
-                    .show();
-            SharedPreferencesUtil.put(ThemeUtil.getSharedPreferences(this), SP_SHOULD_SHOW_SNACKBAR, false);
+            Util.createSnackbar(mViewPager!!, if (ThemeUtil.isNightMode(this)) R.string.snackbar_auto_switch_to_night else R.string.snackbar_auto_switch_from_night, Snackbar.LENGTH_SHORT)
+                    .show()
+            SharedPreferencesUtil.put(ThemeUtil.getSharedPreferences(this), SP_SHOULD_SHOW_SNACKBAR, false)
         }
-        handler.postDelayed(() -> {
-            checkUpdate();
+        handler.postDelayed({
+            checkUpdate()
             try {
-                TiebaUtil.initAutoSign(this);
-            } catch (Exception e) {
-                e.printStackTrace();
+                TiebaUtil.initAutoSign(this)
+            } catch (e: Exception) {
+                e.printStackTrace()
             }
             if (AccountUtil.isLoggedIn(this) && AccountUtil.getCookie(this) == null) {
                 showDialog(DialogUtil.build(this)
                         .setTitle(R.string.title_dialog_update_stoken)
                         .setMessage(R.string.message_dialog_update_stoken)
-                        .setPositiveButton(R.string.button_sure_default, (dialog, which) -> startActivity(UpdateInfoActivity.newIntent(this, UpdateInfoActivity.ACTION_UPDATE_LOGIN_INFO)))
+                        .setPositiveButton(R.string.button_sure_default) { _: DialogInterface?, _: Int -> startActivity(UpdateInfoActivity.newIntent(this, UpdateInfoActivity.ACTION_UPDATE_LOGIN_INFO)) }
                         .setCancelable(false)
-                        .create());
+                        .create())
             }
-            AccountUtil.updateUserInfo(this, new CommonCallback<MyInfoBean>() {
-                @Override
-                public void onSuccess(MyInfoBean data) {
-                }
-
-                @Override
-                public void onFailure(int code, String error) {
+            AccountUtil.updateUserInfo(this, object : CommonCallback<MyInfoBean?> {
+                override fun onSuccess(data: MyInfoBean?) {}
+                override fun onFailure(code: Int, error: String) {
                     if (code == Error.ERROR_LOGGED_IN_EXPIRED) {
-                        showDialog(DialogUtil.build(MainActivity.this)
+                        showDialog(DialogUtil.build(this@MainActivity)
                                 .setTitle(R.string.title_dialog_logged_in_expired)
                                 .setMessage(R.string.message_dialog_logged_in_expired)
-                                .setPositiveButton(R.string.button_ok, (dialog, which) -> {
-                                    navigationHelper.navigationByData(NavigationHelper.ACTION_LOGIN);
-                                })
+                                .setPositiveButton(R.string.button_ok) { _: DialogInterface?, _: Int -> navigationHelper!!.navigationByData(NavigationHelper.ACTION_LOGIN) }
                                 .setCancelable(false)
-                                .create());
+                                .create())
                     }
                 }
-            });
-        }, 1000);
+            })
+        }, 1000)
         if (BaseApplication.isFirstRun()) {
-            startActivity(new Intent(this, NewIntroActivity.class));
+            startActivity(Intent(this, NewIntroActivity::class.java))
         } else if (!AccountUtil.isLoggedIn(this)) {
-            navigationHelper.navigationByData(NavigationHelper.ACTION_LOGIN);
+            navigationHelper!!.navigationByData(NavigationHelper.ACTION_LOGIN)
         }
         /*
         handler.postDelayed(() -> {
@@ -351,206 +312,198 @@ public class MainActivity extends BaseActivity implements BottomNavigationView.O
         */
     }
 
-    @Override
-    public void recreate() {
-        super.recreate();
-        Log.i(TAG, "recreate: ");
+    override fun recreate() {
+        super.recreate()
+        Log.i(TAG, "recreate: ")
     }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-        registerReceiver(newMessageReceiver, ReceiverUtil.createIntentFilter(NotifyJobService.ACTION_NEW_MESSAGE));
-        registerReceiver(accountSwitchReceiver, ReceiverUtil.createIntentFilter(AccountUtil.ACTION_SWITCH_ACCOUNT));
+    override fun onStart() {
+        super.onStart()
+        registerReceiver(newMessageReceiver, ReceiverUtil.createIntentFilter(NotifyJobService.ACTION_NEW_MESSAGE))
+        registerReceiver(accountSwitchReceiver, ReceiverUtil.createIntentFilter(AccountUtil.ACTION_SWITCH_ACCOUNT))
         try {
-            startService(new Intent(this, NotifyJobService.class));
-            JobInfo.Builder builder = new JobInfo.Builder(JobServiceUtil.getJobId(this), new ComponentName(this, NotifyJobService.class))
+            startService(Intent(this, NotifyJobService::class.java))
+            val builder = JobInfo.Builder(JobServiceUtil.getJobId(this), ComponentName(this, NotifyJobService::class.java))
                     .setPersisted(true)
                     .setPeriodic(30 * 60 * 1000L)
-                    .setRequiredNetworkType(JobInfo.NETWORK_TYPE_ANY);
-            JobScheduler jobScheduler = (JobScheduler) getSystemService(Context.JOB_SCHEDULER_SERVICE);
-            if (jobScheduler != null) jobScheduler.schedule(builder.build());
-        } catch (Exception ignored) {
+                    .setRequiredNetworkType(JobInfo.NETWORK_TYPE_ANY)
+            val jobScheduler = getSystemService(Context.JOB_SCHEDULER_SERVICE) as JobScheduler
+            jobScheduler.schedule(builder.build())
+        } catch (ignored: Exception) {
         }
     }
 
-    @Override
-    protected void onStop() {
+    override fun onStop() {
         try {
-            stopService(new Intent(this, NotifyJobService.class));
-        } catch (Exception ignored) {
+            stopService(Intent(this, NotifyJobService::class.java))
+        } catch (ignored: Exception) {
         }
-        unregisterReceiver(newMessageReceiver);
-        unregisterReceiver(accountSwitchReceiver);
-        super.onStop();
+        unregisterReceiver(newMessageReceiver)
+        unregisterReceiver(accountSwitchReceiver)
+        super.onStop()
     }
 
-    private void checkUpdate() {
-        int oldVersion = SharedPreferencesUtil.get(this, SharedPreferencesUtil.SP_APP_DATA).getInt("version", -1);
+    private fun checkUpdate() {
+        val oldVersion = SharedPreferencesUtil.get(this, SharedPreferencesUtil.SP_APP_DATA).getInt("version", -1)
         if (oldVersion < VersionUtil.getVersionCode(this)) {
-            LiteApi.getInstance().changelog(new CommonAPICallback<ChangelogBean>() {
-                @Override
-                public void onSuccess(ChangelogBean data) {
-                    SharedPreferencesUtil.get(MainActivity.this, SharedPreferencesUtil.SP_APP_DATA)
+            instance!!.changelog(object : CommonAPICallback<ChangelogBean?> {
+                override fun onSuccess(data: ChangelogBean?) {
+                    SharedPreferencesUtil.get(this@MainActivity, SharedPreferencesUtil.SP_APP_DATA)
                             .edit()
-                            .putInt("version", VersionUtil.getVersionCode(MainActivity.this))
-                            .apply();
-                    if (!TextUtils.isEmpty(data.getResult())) {
-                        showDialog(DialogUtil.build(MainActivity.this)
-                                .setTitle(R.string.title_dialog_changelog)
-                                .setMessage(data.getResult())
-                                .setPositiveButton(R.string.button_ok, null)
-                                .create());
+                            .putInt("version", VersionUtil.getVersionCode(this@MainActivity))
+                            .apply()
+                    if (data != null) {
+                        if (!TextUtils.isEmpty(data.result)) {
+                            showDialog(DialogUtil.build(this@MainActivity)
+                                    .setTitle(R.string.title_dialog_changelog)
+                                    .setMessage(data.result)
+                                    .setPositiveButton(R.string.button_ok, null)
+                                    .create())
+                        }
                     }
                 }
 
-                @Override
-                public void onFailure(int code, String error) {
-
-                }
-            });
+                override fun onFailure(code: Int, error: String) {}
+            })
         }
-        LiteApi.getInstance().newCheckUpdate(new CommonAPICallback<NewUpdateBean>() {
-            @Override
-            public void onSuccess(NewUpdateBean data) {
-                if (data.isHasUpdate()) {
-                    boolean cancelable = data.getResult().isCancelable();
-                    boolean ignored = SharedPreferencesUtil.get(MainActivity.this, SharedPreferencesUtil.SP_IGNORE_VERSIONS)
-                            .getBoolean(data.getResult().getVersionName() + "_" + data.getResult().getVersionCode(), false);
-                    if (ignored && cancelable) {
-                        return;
+        instance!!.newCheckUpdate(object : CommonAPICallback<NewUpdateBean?> {
+            override fun onSuccess(data: NewUpdateBean?) {
+                if (data != null) {
+                    if (data.isHasUpdate) {
+                        val cancelable = data.result.isCancelable
+                        val ignored = SharedPreferencesUtil.get(this@MainActivity, SharedPreferencesUtil.SP_IGNORE_VERSIONS)
+                                .getBoolean(data.result.versionName + "_" + data.result.versionCode, false)
+                        if (ignored && cancelable) {
+                            return
+                        }
+                        val builder = SpannableStringBuilder()
+                        if (data.result.versionType == 1) {
+                            val betaTip = getString(R.string.tip_beta_version)
+                            builder.append(betaTip, ForegroundColorSpan(resources.getColor(R.color.red, null)), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+                            builder.setSpan(StyleSpan(Typeface.BOLD), 0, betaTip.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+                        }
+                        for (content in data.result.updateContent) {
+                            builder.append(content)
+                            builder.append("\n")
+                        }
+                        val dialogBuilder = DialogUtil.build(this@MainActivity)
+                                .setTitle(getString(R.string.title_dialog_update, data.result.versionName))
+                                .setMessage(builder)
+                                .setPositiveButton(R.string.button_go_to_download) { _: DialogInterface?, _: Int -> VersionUtil.showDownloadDialog(this@MainActivity, data.result) }
+                                .setCancelable(cancelable)
+                        if (cancelable) {
+                            dialogBuilder.setNegativeButton(R.string.button_next_time, null)
+                            dialogBuilder.setNeutralButton(R.string.button_ignore_this_version) { _: DialogInterface?, _: Int ->
+                                SharedPreferencesUtil.get(this@MainActivity, SharedPreferencesUtil.SP_IGNORE_VERSIONS)
+                                        .edit()
+                                        .putBoolean(data.result.versionName + "_" + data.result.versionCode, true)
+                                        .apply()
+                            }
+                        }
+                        showDialog(dialogBuilder.create())
                     }
-                    SpannableStringBuilder builder = new SpannableStringBuilder();
-                    if (data.getResult().getVersionType() == 1) {
-                        String betaTip = getString(R.string.tip_beta_version);
-                        builder.append(betaTip, new ForegroundColorSpan(getResources().getColor(R.color.red)), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-                        builder.setSpan(new StyleSpan(Typeface.BOLD), 0, betaTip.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-                    }
-                    for (String content : data.getResult().getUpdateContent()) {
-                        builder.append(content);
-                        builder.append("\n");
-                    }
-                    AlertDialog.Builder dialogBuilder = DialogUtil.build(MainActivity.this)
-                            .setTitle(getString(R.string.title_dialog_update, data.getResult().getVersionName()))
-                            .setMessage(builder)
-                            .setPositiveButton(R.string.button_go_to_download, (dialog, which) -> {
-                                VersionUtil.showDownloadDialog(MainActivity.this, data.getResult());
-                            })
-                            .setCancelable(cancelable);
-                    if (cancelable) {
-                        dialogBuilder.setNegativeButton(R.string.button_next_time, null);
-                        dialogBuilder.setNeutralButton(R.string.button_ignore_this_version, (dialog, which) -> SharedPreferencesUtil.get(MainActivity.this, SharedPreferencesUtil.SP_IGNORE_VERSIONS)
-                                .edit()
-                                .putBoolean(data.getResult().getVersionName() + "_" + data.getResult().getVersionCode(), true)
-                                .apply());
-                    }
-                    showDialog(dialogBuilder.create());
                 }
             }
 
-            @Override
-            public void onFailure(int code, String error) {
+            override fun onFailure(code: Int, error: String) {}
+        })
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        menuInflater.inflate(R.menu.toolbar_menu, menu)
+        return super.onCreateOptionsMenu(menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.menu_sign -> {
+                TiebaUtil.startSign(this@MainActivity)
+                return true
             }
-        });
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.toolbar_menu, menu);
-        return super.onCreateOptionsMenu(menu);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.menu_sign:
-                TiebaUtil.startSign(MainActivity.this);
-                return true;
-            case R.id.action_search:
-                mSearchView.open(item);
-                return true;
+            R.id.action_search -> {
+                mSearchView!!.open(item)
+                return true
+            }
         }
-        return super.onOptionsItemSelected(item);
+        return super.onOptionsItemSelected(item)
     }
 
-    @Override
-    public void onBackPressed() {
-        if (mSearchView.isOpen()) {
-            mSearchView.close();
+    override fun onBackPressed() {
+        if (mSearchView!!.isOpen) {
+            mSearchView!!.close()
         } else {
             if (!HandleBackUtil.handleBackPress(this)) {
-                exit();
+                exit()
             }
         }
     }
 
-    public void exit(boolean isDouble) {
+    @JvmOverloads
+    fun exit(isDouble: Boolean = true) {
         if (!isDouble || System.currentTimeMillis() - lastTime < 2000) {
-            exitApplication();
+            exitApplication()
         } else {
-            lastTime = System.currentTimeMillis();
-            Toast.makeText(this, R.string.toast_double_key_exit, Toast.LENGTH_SHORT).show();
+            lastTime = System.currentTimeMillis()
+            Toast.makeText(this, R.string.toast_double_key_exit, Toast.LENGTH_SHORT).show()
         }
     }
 
-    public void exit() {
-        exit(true);
+    override fun setTitle(newTitle: String) {
+        mToolbar!!.title = newTitle
     }
 
-    @Override
-    public void setTitle(String newTitle) {
-        mToolbar.setTitle(newTitle);
+    override fun onSearchItemClick(position: Int, content: CharSequence) {
+        startActivity(Intent(this@MainActivity, SearchActivity::class.java)
+                .putExtra(SearchActivity.EXTRA_KEYWORD, content.toString()))
+        SearchHistory(content.toString())
+                .saveOrUpdate("content = ?", content.toString())
+        refreshSearchView()
     }
 
-    @Override
-    public void onSearchItemClick(int position, CharSequence content) {
-        startActivity(new Intent(MainActivity.this, SearchActivity.class)
-                .putExtra(SearchActivity.EXTRA_KEYWORD, content.toString()));
-        new SearchHistory(content.toString())
-                .saveOrUpdate("content = ?", content.toString());
-        refreshSearchView();
-    }
-
-    private class NewMessageReceiver extends BroadcastReceiver {
+    private inner class NewMessageReceiver : BroadcastReceiver() {
         @SuppressLint("RestrictedApi")
-        @Override
-        public void onReceive(Context context, Intent intent) {
+        override fun onReceive(context: Context, intent: Intent) {
             try {
-                String action = intent.getAction();
-                if (action != null && action.equals(NotifyJobService.ACTION_NEW_MESSAGE)) {
-                    String channel = intent.getStringExtra("channel");
-                    int count = intent.getIntExtra("count", 0);
-                    if (channel != null && channel.equals(NotifyJobService.CHANNEL_TOTAL) && badgeTextView != null) {
-                        badgeTextView.setText(String.valueOf(count));
+                val action = intent.action
+                if (action != null && action == NotifyJobService.ACTION_NEW_MESSAGE) {
+                    val channel = intent.getStringExtra("channel")
+                    val count = intent.getIntExtra("count", 0)
+                    if (channel != null && channel == NotifyJobService.CHANNEL_TOTAL && badgeTextView != null) {
+                        badgeTextView!!.text = count.toString()
                         if (count > 0) {
-                            badgeTextView.setVisibility(View.VISIBLE);
+                            badgeTextView!!.visibility = View.VISIBLE
                         }
                     }
                 }
-            } catch (Exception ignored) {
+            } catch (ignored: Exception) {
             }
         }
     }
 
-    private class AccountSwitchReceiver extends BroadcastReceiver {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            String action = intent.getAction();
-            if (action != null && action.equals(AccountUtil.ACTION_SWITCH_ACCOUNT)) {
+    private inner class AccountSwitchReceiver : BroadcastReceiver() {
+        override fun onReceive(context: Context, intent: Intent) {
+            val action = intent.action
+            if (action != null && action == AccountUtil.ACTION_SWITCH_ACCOUNT) {
                 if (mAdapter == null) {
-                    return;
+                    return
                 }
-                List<BaseFragment> fragments = mAdapter.getFragments();
-                for (BaseFragment fragment : fragments) {
+                val fragments = mAdapter!!.fragments
+                for (fragment in fragments) {
                     if (fragment != null) {
                         try {
-                            fragment.onAccountSwitch();
-                        } catch (Exception e) {
-                            e.printStackTrace();
+                            fragment.onAccountSwitch()
+                        } catch (e: Exception) {
+                            e.printStackTrace()
                         }
                     }
                 }
             }
         }
+    }
+
+    companion object {
+        const val TAG = "MainActivity"
+        const val SP_SHOULD_SHOW_SNACKBAR = "should_show_snackbar"
+        private val handler = Handler()
     }
 }
