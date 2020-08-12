@@ -10,7 +10,7 @@
         <intent
             android:action="com.huanchengfly.tieba.post.action.OKSIGN"
             android:targetClass="com.huanchengfly.tieba.post.activities.OKSignActivity"
-            android:targetPackage="top.goforce.tieba.post" />
+            android:targetPackage="com.huanchengfly.tieba.post" />
     </shortcut>
     <shortcut
         android:icon="@drawable/ic_shortcut_collect"
@@ -20,7 +20,7 @@
         <intent
             android:action="android.intent.action.VIEW"
             android:targetClass="com.huanchengfly.tieba.post.activities.UserCollectActivity"
-            android:targetPackage="top.goforce.tieba.post" />
+            android:targetPackage="com.huanchengfly.tieba.post" />
     </shortcut>
     <shortcut
         android:icon="@drawable/ic_shortcut_message"
@@ -30,6 +30,6 @@
         <intent
             android:action="android.intent.action.VIEW"
             android:targetClass="com.huanchengfly.tieba.post.activities.MessageActivity"
-            android:targetPackage="top.goforce.tieba.post" />
+            android:targetPackage="com.huanchengfly.tieba.post" />
     </shortcut>
 </shortcuts>
