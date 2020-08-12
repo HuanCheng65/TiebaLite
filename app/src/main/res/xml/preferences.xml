@@ -13,7 +13,7 @@
             android:title="@string/title_new_account"
             android:summary="@string/tip_account_error">
             <intent
-                android:targetPackage="top.goforce.tieba.post"
+                android:targetPackage="com.huanchengfly.tieba.post"
                 android:targetClass="com.huanchengfly.tieba.post.activities.LoginActivity"
                 android:action="android.intent.action.VIEW" />
         </Preference>
@@ -226,7 +226,7 @@
             android:icon="@drawable/ic_round_info"
             android:title="@string/title_about">
             <intent
-                android:targetPackage="top.goforce.tieba.post"
+                android:targetPackage="com.huanchengfly.tieba.post"
                 android:targetClass="com.huanchengfly.tieba.post.activities.AboutActivity"
                 android:action="android.intent.action.VIEW" />
         </Preference>

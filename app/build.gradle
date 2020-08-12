@@ -69,7 +69,7 @@ android {
     }
     compileSdkVersion 29
     defaultConfig {
-        applicationId "top.goforce.tieba.post"
+        applicationId "com.huanchengfly.tieba.post"
         minSdkVersion 21
         targetSdkVersion 29
         versionCode applicationVersionCode
