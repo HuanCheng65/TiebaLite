@@ -1,45 +1,29 @@
-package com.huanchengfly.tieba.api.models;
+package com.huanchengfly.tieba.api.models
 
-import java.util.Objects;
+import java.util.*
 
-public class ParamBean {
-    private String name;
-    private String value;
+class ParamBean(var name: String, var value: String) {
 
-    public ParamBean(String name, String value) {
-        this.name = name;
-        this.value = value;
+    fun setName(name: String): ParamBean {
+        this.name = name
+        return this
     }
 
-    public String getName() {
-        return name;
+    fun setValue(value: String): ParamBean {
+        this.value = value
+        return this
     }
 
-    public ParamBean setName(String name) {
-        this.name = name;
-        return this;
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is ParamBean) return false
+        val paramBean = other
+        return name == paramBean.name &&
+                value == paramBean.value
     }
 
-    public String getValue() {
-        return value;
+    override fun hashCode(): Int {
+        return Objects.hash(name, value)
     }
 
-    public ParamBean setValue(String value) {
-        this.value = value;
-        return this;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof ParamBean)) return false;
-        ParamBean paramBean = (ParamBean) o;
-        return Objects.equals(getName(), paramBean.getName()) &&
-                Objects.equals(getValue(), paramBean.getValue());
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(getName(), getValue());
-    }
 }
