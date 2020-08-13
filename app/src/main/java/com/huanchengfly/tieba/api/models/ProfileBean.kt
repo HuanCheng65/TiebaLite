@@ -1,136 +1,66 @@
-package com.huanchengfly.tieba.api.models;
+package com.huanchengfly.tieba.api.models
 
-import com.google.gson.annotations.SerializedName;
-import com.huanchengfly.tieba.post.models.BaseBean;
+import com.google.gson.annotations.SerializedName
+import com.huanchengfly.tieba.post.models.BaseBean
 
-public class ProfileBean extends BaseBean {
+class ProfileBean : BaseBean() {
     @SerializedName("error_code")
-    private String errorCode;
+    val errorCode: String? = null
+
     @SerializedName("error_msg")
-    private String errorMsg;
-    private AntiBean anti;
-    private UserBean user;
+    val errorMsg: String? = null
+    val anti: AntiBean? = null
+    val user: UserBean? = null
 
-    public String getErrorCode() {
-        return errorCode;
+    class AntiBean {
+        val tbs: String? = null
     }
 
-    public String getErrorMsg() {
-        return errorMsg;
-    }
+    class UserBean {
+        val id: String? = null
+        val name: String? = null
 
-    public AntiBean getAnti() {
-        return anti;
-    }
-
-    public UserBean getUser() {
-        return user;
-    }
-
-    public static class AntiBean {
-        private String tbs;
-
-        public String getTbs() {
-            return tbs;
-        }
-    }
-
-    public static class UserBean {
-        private String id;
-        private String name;
         @SerializedName("name_show")
-        private String nameShow;
-        private String portrait;
-        private String intro;
-        private String sex;
+        val nameShow: String? = null
+        val portrait: String? = null
+        val intro: String? = null
+        val sex: String? = null
+
         @SerializedName("post_num")
-        private String postNum;
+        val postNum: String? = null
+
         @SerializedName("repost_num")
-        private String repostNum;
+        val repostNum: String? = null
+
         @SerializedName("thread_num")
-        private String threadNum;
+        val threadNum: String? = null
+
         @SerializedName("tb_age")
-        private String tbAge;
+        val tbAge: String? = null
+
         @SerializedName("my_like_num")
-        private String myLikeNum;
+        val myLikeNum: String? = null
+
         @SerializedName("like_forum_num")
-        private String likeForumNum;
+        val likeForumNum: String? = null
+
         @SerializedName("concern_num")
-        private String concernNum;
+        val concernNum: String? = null
+
         @SerializedName("fans_num")
-        private String fansNum;
+        val fansNum: String? = null
+
         @SerializedName("has_concerned")
-        private String hasConcerned;
+        var hasConcerned: String? = null
+            private set
+
         @SerializedName("is_fans")
-        private String isFans;
+        val isFans: String? = null
 
-        public String getIntro() {
-            return intro;
+        fun setHasConcerned(hasConcerned: String?): UserBean {
+            this.hasConcerned = hasConcerned
+            return this
         }
 
-        public String getSex() {
-            return sex;
-        }
-
-        public String getPostNum() {
-            return postNum;
-        }
-
-        public String getRepostNum() {
-            return repostNum;
-        }
-
-        public String getThreadNum() {
-            return threadNum;
-        }
-
-        public String getTbAge() {
-            return tbAge;
-        }
-
-        public String getMyLikeNum() {
-            return myLikeNum;
-        }
-
-        public String getLikeForumNum() {
-            return likeForumNum;
-        }
-
-        public String getConcernNum() {
-            return concernNum;
-        }
-
-        public String getFansNum() {
-            return fansNum;
-        }
-
-        public String getHasConcerned() {
-            return hasConcerned;
-        }
-
-        public UserBean setHasConcerned(String hasConcerned) {
-            this.hasConcerned = hasConcerned;
-            return this;
-        }
-
-        public String getIsFans() {
-            return isFans;
-        }
-
-        public String getId() {
-            return id;
-        }
-
-        public String getName() {
-            return name;
-        }
-
-        public String getNameShow() {
-            return nameShow;
-        }
-
-        public String getPortrait() {
-            return portrait;
-        }
     }
 }
