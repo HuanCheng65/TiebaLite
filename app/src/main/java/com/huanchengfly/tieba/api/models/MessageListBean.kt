@@ -1,212 +1,103 @@
-package com.huanchengfly.tieba.api.models;
+package com.huanchengfly.tieba.api.models
 
-import com.google.gson.annotations.JsonAdapter;
-import com.google.gson.annotations.SerializedName;
-import com.huanchengfly.tieba.api.adapters.PortraitAdapter;
-import com.huanchengfly.tieba.post.models.BaseBean;
+import com.google.gson.annotations.JsonAdapter
+import com.google.gson.annotations.SerializedName
+import com.huanchengfly.tieba.api.adapters.PortraitAdapter
+import com.huanchengfly.tieba.post.models.BaseBean
 
-import java.util.List;
-
-public class MessageListBean extends BaseBean {
+class MessageListBean : BaseBean() {
     @SerializedName("error_code")
-    private String errorCode;
-    private long time;
+    val errorCode: String? = null
+    val time: Long = 0
+
     @SerializedName("reply_list")
-    private List<MessageInfoBean> replyList;
+    val replyList: List<MessageInfoBean>? = null
+
     @SerializedName("at_list")
-    private List<MessageInfoBean> atList;
-    private PageInfoBean page;
-    private MessageBean message;
+    val atList: List<MessageInfoBean>? = null
+    val page: PageInfoBean? = null
+    val message: MessageBean? = null
 
-    public int getErrorCode() {
-        return Integer.valueOf(errorCode);
+    fun getErrorCode() {
+        Integer.valueOf(errorCode!!)
     }
 
-    public long getTime() {
-        return time;
-    }
+    open inner class UserInfoBean {
+        val id: String? = null
+        val name: String? = null
 
-    public List<MessageInfoBean> getReplyList() {
-        return replyList;
-    }
-
-    public List<MessageInfoBean> getAtList() {
-        return atList;
-    }
-
-    public MessageBean getMessage() {
-        return message;
-    }
-
-    public PageInfoBean getPage() {
-        return page;
-    }
-
-    public class UserInfoBean {
-        private String id;
-        private String name;
         @SerializedName("name_show")
-        private String nameShow;
-        @JsonAdapter(PortraitAdapter.class)
-        private String portrait;
+        val nameShow: String? = null
 
-        public String getId() {
-            return id;
-        }
+        @JsonAdapter(PortraitAdapter::class)
+        val portrait: String? = null
 
-        public String getName() {
-            return name;
-        }
-
-        public String getNameShow() {
-            return nameShow;
-        }
-
-        public String getPortrait() {
-            return portrait;
-        }
     }
 
-    public class ReplyerInfoBean extends UserInfoBean {
+    inner class ReplyerInfoBean : UserInfoBean() {
         @SerializedName("is_friend")
-        private String isFriend;
+        val isFriend: String? = null
+
         @SerializedName("is_fans")
-        private String isFans;
+        val isFans: String? = null
 
-        public String getIsFriend() {
-            return isFriend;
-        }
-
-        public String getIsFans() {
-            return isFans;
-        }
     }
 
-    public class MessageInfoBean {
+    inner class MessageInfoBean {
         @SerializedName("is_floor")
-        private String isFloor;
-        private String title;
-        private String content;
+        val isFloor: String? = null
+        val title: String? = null
+        val content: String? = null
+
         @SerializedName("quote_content")
-        private String quoteContent;
-        private ReplyerInfoBean replyer;
+        val quoteContent: String? = null
+        val replyer: ReplyerInfoBean? = null
+
         @SerializedName("quote_user")
-        private UserInfoBean quoteUser;
+        val quoteUser: UserInfoBean? = null
+
         @SerializedName("thread_id")
-        private String threadId;
+        val threadId: String? = null
+
         @SerializedName("post_id")
-        private String postId;
-        private String time;
+        val postId: String? = null
+        val time: String? = null
+
         @SerializedName("fname")
-        private String forumName;
+        val forumName: String? = null
+
         @SerializedName("quote_pid")
-        private String quotePid;
+        val quotePid: String? = null
+
         @SerializedName("thread_type")
-        private String threadType;
-        private String unread;
+        val threadType: String? = null
+        val unread: String? = null
 
-        public String getUnread() {
-            return unread;
-        }
-
-        public String getIsFloor() {
-            return isFloor;
-        }
-
-        public String getTitle() {
-            return title;
-        }
-
-        public String getContent() {
-            return content;
-        }
-
-        public String getQuoteContent() {
-            return quoteContent;
-        }
-
-        public ReplyerInfoBean getReplyer() {
-            return replyer;
-        }
-
-        public UserInfoBean getQuoteUser() {
-            return quoteUser;
-        }
-
-        public String getThreadId() {
-            return threadId;
-        }
-
-        public String getPostId() {
-            return postId;
-        }
-
-        public String getTime() {
-            return time;
-        }
-
-        public String getForumName() {
-            return forumName;
-        }
-
-        public String getQuotePid() {
-            return quotePid;
-        }
-
-        public String getThreadType() {
-            return threadType;
-        }
     }
 
-    public class MessageBean {
+    inner class MessageBean {
         @SerializedName("replyme")
-        private String replyMe;
+        val replyMe: String? = null
+
         @SerializedName("atme")
-        private String atMe;
-        private String fans;
-        private String recycle;
+        val atMe: String? = null
+        val fans: String? = null
+        val recycle: String? = null
+
         @SerializedName("storethread")
-        private String storeThread;
+        val storeThread: String? = null
 
-        public String getReplyMe() {
-            return replyMe;
-        }
-
-        public String getAtMe() {
-            return atMe;
-        }
-
-        public String getFans() {
-            return fans;
-        }
-
-        public String getRecycle() {
-            return recycle;
-        }
-
-        public String getStoreThread() {
-            return storeThread;
-        }
     }
 
-    public class PageInfoBean {
+    inner class PageInfoBean {
         @SerializedName("current_page")
-        private String currentPage;
+        val currentPage: String? = null
+
         @SerializedName("has_more")
-        private String hasMore;
+        val hasMore: String? = null
+
         @SerializedName("has_prev")
-        private String hasPrev;
+        val hasPrev: String? = null
 
-        public String getHasMore() {
-            return hasMore;
-        }
-
-        public String getHasPrev() {
-            return hasPrev;
-        }
-
-        public String getCurrentPage() {
-            return currentPage;
-        }
     }
 }
