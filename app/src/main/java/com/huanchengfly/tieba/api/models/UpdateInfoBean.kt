@@ -1,142 +1,63 @@
-package com.huanchengfly.tieba.api.models;
+package com.huanchengfly.tieba.api.models
 
-import com.google.gson.annotations.SerializedName;
-import com.huanchengfly.tieba.post.models.BaseBean;
+import com.google.gson.annotations.SerializedName
+import com.huanchengfly.tieba.post.models.BaseBean
 
-import java.util.List;
-
-public class UpdateInfoBean extends BaseBean {
+class UpdateInfoBean : BaseBean() {
     @SerializedName("gruops")
-    private List<GroupInfo> groups;
-    private List<SupportmentBean> supportment;
+    val groups: List<GroupInfo>? = null
+    val supportment: List<SupportmentBean>? = null
 
-    public List<SupportmentBean> getSupportment() {
-        return supportment;
-    }
+    class SupportmentBean {
+        val id: String? = null
+        val title: String? = null
+        val subtitle: String? = null
 
-    public List<GroupInfo> getGroups() {
-        return groups;
-    }
-
-    public static class SupportmentBean {
-        private String id;
-        private String title;
-        private String subtitle;
         @SerializedName("expire_time")
-        private long expireTime;
-        private IconBean icon;
-        private ActionBean action;
+        val expireTime: Long = 0
+        val icon: IconBean? = null
+        val action: ActionBean? = null
 
-        public String getId() {
-            return id;
-        }
+        class IconBean {
+            val type = 0
+            val id: String? = null
+            val url: String? = null
 
-        public long getExpireTime() {
-            return expireTime;
-        }
-
-        public String getTitle() {
-            return title;
-        }
-
-        public String getSubtitle() {
-            return subtitle;
-        }
-
-        public IconBean getIcon() {
-            return icon;
-        }
-
-        public ActionBean getAction() {
-            return action;
-        }
-
-        public static class IconBean {
-            public static final int TYPE_RESOURCE = 0;
-            public static final int TYPE_IMAGE = 1;
-            private int type;
-            private String id;
-            private String url;
-
-            public int getType() {
-                return type;
-            }
-
-            public String getId() {
-                return id;
-            }
-
-            public String getUrl() {
-                return url;
+            companion object {
+                const val TYPE_RESOURCE = 0
+                const val TYPE_IMAGE = 1
             }
         }
 
-        public static class ActionBean {
-            public static final int TYPE_LINK = 0;
-            public static final int TYPE_IMAGE = 1;
-            private int type;
-            private String url;
+        class ActionBean {
+            val type = 0
+            val url: String? = null
 
-            public int getType() {
-                return type;
-            }
-
-            public String getUrl() {
-                return url;
+            companion object {
+                const val TYPE_LINK = 0
+                const val TYPE_IMAGE = 1
             }
         }
     }
 
-    public static class WebDiskBean {
-        private String link;
-        private String name;
-        private String password;
+    class WebDiskBean {
+        val link: String? = null
+        val name: String? = null
+        val password: String? = null
 
-        public String getLink() {
-            return link;
-        }
-
-        public String getName() {
-            return name;
-        }
-
-        public String getPassword() {
-            return password;
-        }
     }
 
-    public class GroupInfo {
-        private String type;
-        private String name;
+    inner class GroupInfo {
+        val type: String? = null
+        val name: String? = null
+
         @SerializedName("qq_group_key")
-        private String QGroupKey;
+        val qGroupKey: String? = null
+
         @SerializedName("qq_group_number")
-        private String QGroupNumber;
-        private String link;
-        private boolean enabled;
+        val qGroupNumber: String? = null
+        val link: String? = null
+        val isEnabled = false
 
-        public String getType() {
-            return type;
-        }
-
-        public String getQGroupNumber() {
-            return QGroupNumber;
-        }
-
-        public String getQGroupKey() {
-            return QGroupKey;
-        }
-
-        public String getName() {
-            return name;
-        }
-
-        public String getLink() {
-            return link;
-        }
-
-        public boolean isEnabled() {
-            return enabled;
-        }
     }
 }
