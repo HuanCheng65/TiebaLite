@@ -1,33 +1,19 @@
-package com.huanchengfly.tieba.api.models;
+package com.huanchengfly.tieba.api.models
 
-import com.google.gson.annotations.SerializedName;
-import com.huanchengfly.tieba.post.models.BaseBean;
-import com.huanchengfly.tieba.post.models.ErrorBean;
+import com.google.gson.annotations.SerializedName
+import com.huanchengfly.tieba.post.models.BaseBean
+import com.huanchengfly.tieba.post.models.ErrorBean
 
-public class MsgBean extends ErrorBean {
-    private MessageBean message;
+class MsgBean : ErrorBean() {
+    val message: MessageBean? = null
 
-    public MessageBean getMessage() {
-        return message;
-    }
-
-    public class MessageBean extends BaseBean {
+    inner class MessageBean : BaseBean() {
         @SerializedName("replyme")
-        private String replyMe;
+        val replyMe: String? = null
+
         @SerializedName("atme")
-        private String atMe;
-        private String fans;
+        val atMe: String? = null
+        val fans: String? = null
 
-        public String getReplyMe() {
-            return replyMe;
-        }
-
-        public String getAtMe() {
-            return atMe;
-        }
-
-        public String getFans() {
-            return fans;
-        }
     }
 }
