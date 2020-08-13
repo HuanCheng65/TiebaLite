@@ -83,14 +83,16 @@ class PhotoViewActivity : BaseActivity(), OnChangeBottomBarVisibilityListener, T
                 updateCounter(mViewPager.currentItem)
                 val picBeans: MutableList<PicPageBean.PicBean> = ArrayList()
                 val imgInfoBeans: MutableList<ImgInfoBean> = ArrayList()
-                if (data.picList.isNotEmpty()) {
-                    val index = data.picList.last().overAllIndex.toInt()
-                    loadFinished = index >= amount!!.toInt()
+                if (data.picList?.isNotEmpty()!!) {
+                    val index = data.picList.last().overAllIndex?.toInt()
+                    if (index != null) {
+                        loadFinished = index >= amount!!.toInt()
+                    }
                     picBeans.addAll(data.picList)
                     picBeans.forEach {
-                        imgInfoBeans.add(it.img.original)
+                        it.img?.original?.let { it1 -> imgInfoBeans.add(it1) }
                     }
-                    lastIndex = picBeans.first().overAllIndex.toInt()
+                    lastIndex = picBeans.first().overAllIndex?.toInt()!!
                     for (photoViewBean in photoViewBeans) {
                         val ind = lastIndex - (photoViewBeans.size - 1 - photoViewBeans.indexOf(photoViewBean))
                         photoViewBean.index = ind.toString()

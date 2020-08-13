@@ -26,22 +26,29 @@ class SearchForumBean : BaseBean() {
     open class ForumInfoBean {
         @SerializedName("forum_id")
         var forumId: Int? = null
+            private set
 
         @SerializedName("forum_name")
         var forumName: String? = null
+            private set
 
         @SerializedName("forum_name_show")
         var forumNameShow: String? = null
+            private set
         var avatar: String? = null
+            private set
 
         @SerializedName("post_num")
         var postNum: String? = null
+            private set
 
         @SerializedName("concern_num")
         var concernNum: String? = null
+            private set
 
         @SerializedName("has_concerned")
         var hasConcerned: Int? = null
+            private set
 
         fun setForumId(forumId: Int): ForumInfoBean {
             this.forumId = forumId

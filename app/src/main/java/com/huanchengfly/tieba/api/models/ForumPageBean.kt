@@ -9,7 +9,9 @@ import com.huanchengfly.tieba.post.models.ErrorBean
 
 class ForumPageBean : ErrorBean() {
     var forum: ForumBean? = null
+        private set
     var anti: AntiBean? = null
+        private set
     var user: UserBean? = null
     var page: PageBean? = null
 
@@ -87,6 +89,11 @@ class ForumPageBean : ErrorBean() {
 
         fun setIsLike(isLike: String?): ForumBean {
             this.isLike = isLike
+            return this
+        }
+
+        fun setIsExists(isExists: String?): ForumBean {
+            this.isExists = isExists
             return this
         }
 

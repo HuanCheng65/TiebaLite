@@ -159,8 +159,8 @@ class SettingsFragment : PreferencesFragment() {
         instance!!.newCheckUpdate(object : CommonAPICallback<NewUpdateBean?> {
             override fun onSuccess(data: NewUpdateBean?) {
                 if (data != null) {
-                    if (data.isHasUpdate) {
-                        aboutPreference!!.summary = attachContext.getString(R.string.tip_new_version, data.result.versionName)
+                    if (data.isHasUpdate == true) {
+                        aboutPreference!!.summary = attachContext.getString(R.string.tip_new_version, data.result?.versionName)
                     }
                 }
             }

@@ -9,11 +9,9 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import androidx.cardview.widget.CardView;
 import androidx.gridlayout.widget.GridLayout;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.bumptech.glide.Glide;
 import com.huanchengfly.tieba.api.models.ForumPageBean;
 import com.huanchengfly.tieba.post.R;
@@ -23,13 +21,7 @@ import com.huanchengfly.tieba.post.components.MyLinearLayoutManager;
 import com.huanchengfly.tieba.post.components.dividers.SpacesItemDecoration;
 import com.huanchengfly.tieba.post.interfaces.OnSwitchListener;
 import com.huanchengfly.tieba.post.models.PhotoViewBean;
-import com.huanchengfly.tieba.post.utils.BlockUtil;
-import com.huanchengfly.tieba.post.utils.DisplayUtil;
-import com.huanchengfly.tieba.post.utils.ImageUtil;
-import com.huanchengfly.tieba.post.utils.NavigationHelper;
-import com.huanchengfly.tieba.post.utils.SharedPreferencesUtil;
-import com.huanchengfly.tieba.post.utils.StringUtil;
-import com.huanchengfly.tieba.post.utils.Util;
+import com.huanchengfly.tieba.post.utils.*;
 import com.huanchengfly.tieba.post.utils.preload.PreloadUtil;
 import com.huanchengfly.tieba.post.utils.preload.loaders.ThreadContentLoader;
 import com.huanchengfly.tieba.widgets.MarkedImageView;
@@ -169,7 +161,7 @@ public class ForumAdapter extends MultiBaseAdapter<ForumPageBean.ThreadBean> {
         for (ForumPageBean.MediaInfoBean media : mediaInfoBeans) {
             photoViewBeans.add(new PhotoViewBean(ImageUtil.getNonNullString(media.getBigPic(), media.getSrcPic(), media.getOriginPic()),
                     ImageUtil.getNonNullString(media.getOriginPic(), media.getSrcPic(), media.getBigPic()),
-                    "1".equals(media.getIsLongPic())));
+                    "1".equals(media.isLongPic())));
         }
         ImageUtil.initImageView(imageView,
                 photoViewBeans,
@@ -205,13 +197,13 @@ public class ForumAdapter extends MultiBaseAdapter<ForumPageBean.ThreadBean> {
             return;
         }
         viewHolder.setText(R.id.forum_item_comment_count_text, threadBean.getReplyNum());
-        if ("1".equals(threadBean.getIsGood())) {
+        if ("1".equals(threadBean.isGood())) {
             viewHolder.setVisibility(R.id.forum_item_good_tip, View.VISIBLE);
         } else {
             viewHolder.setVisibility(R.id.forum_item_good_tip, View.GONE);
         }
         viewHolder.setOnClickListener(R.id.forum_item, view -> startActivity(threadBean));
-        if ("1".equals(threadBean.getIsNoTitle())) {
+        if ("1".equals(threadBean.isNoTitle())) {
             viewHolder.setVisibility(R.id.forum_item_title_holder, View.GONE);
         } else {
             viewHolder.setVisibility(R.id.forum_item_title_holder, View.VISIBLE);
@@ -241,7 +233,7 @@ public class ForumAdapter extends MultiBaseAdapter<ForumPageBean.ThreadBean> {
                     imageView.setLayoutParams(getLayoutParams((RelativeLayout.LayoutParams) imageView.getLayoutParams()));
                     setListenerForImageView(threadBean.getMedia(), imageView, 0, threadBean);
                     ForumPageBean.MediaInfoBean mediaInfoBean = threadBean.getMedia().get(0);
-                    if ("1".equals(mediaInfoBean.getIsGif())) {
+                    if ("1".equals(mediaInfoBean.isGif())) {
                         imageView.setMarkText("GIF");
                         imageView.setMarkVisible(true);
                     } else {
@@ -346,7 +338,7 @@ public class ForumAdapter extends MultiBaseAdapter<ForumPageBean.ThreadBean> {
 
     @Override
     protected int getViewType(int position, ForumPageBean.ThreadBean threadBean) {
-        if ("1".equals(threadBean.getIsTop())) {
+        if ("1".equals(threadBean.isTop())) {
             return TYPE_THREAD_TOP;
         }
         if (threadBean.getVideoInfo() != null) {

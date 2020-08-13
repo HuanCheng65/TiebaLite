@@ -460,8 +460,8 @@ class ForumActivity : BaseActivity(), View.OnClickListener, OnRefreshedListener 
 
             override fun onResponse(call: Call<ForumPageBean>, response: Response<ForumPageBean>) {
                 val forumPageBean = response.body()!!
-                mDataBean!!.forum = forumPageBean.forum
-                mDataBean!!.anti = forumPageBean.anti
+                mDataBean!!.setForum(forumPageBean.forum)
+                mDataBean!!.setAnti(forumPageBean.anti)
                 refreshHeaderView()
             }
 

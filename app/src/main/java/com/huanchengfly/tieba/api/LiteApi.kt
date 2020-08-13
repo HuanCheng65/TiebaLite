@@ -56,10 +56,10 @@ class LiteApi private constructor(context: Context) {
                     }
 
                     override fun onSuccess(statusCode: Int, response: NewUpdateBean) {
-                        if (response.isSuccess) {
+                        if (response.isSuccess == true) {
                             apiCallback.onSuccess(response)
                         } else {
-                            apiCallback.onFailure(response.errorCode, response.errorMsg)
+                            response.errorCode?.let { apiCallback.onFailure(it, response.errorMsg) }
                         }
                     }
                 })

@@ -57,23 +57,27 @@ class NotifyJobService : JobService() {
                 val msgBean = response.body() ?: return
                 if (notificationManager != null) {
                     var total = 0
-                    if ("0" != msgBean.message.replyMe) {
-                        val replyCount = Integer.valueOf(msgBean.message.replyMe)
-                        total += replyCount
+                    if ("0" != msgBean.message?.replyMe) {
+                        val replyCount = msgBean.message?.replyMe?.let { Integer.valueOf(it) }
+                        if (replyCount != null) {
+                            total += replyCount
+                        }
                         sendBroadcast(Intent()
                                 .setAction(ACTION_NEW_MESSAGE)
                                 .putExtra("channel", CHANNEL_REPLY)
                                 .putExtra("count", replyCount))
-                        updateNotification(getString(R.string.tips_message_reply, msgBean.message.replyMe), ID_REPLY, CHANNEL_REPLY, CHANNEL_REPLY_NAME, MessageActivity.createIntent(this@NotifyJobService, MessageFragment.TYPE_REPLY_ME))
+                        updateNotification(getString(R.string.tips_message_reply, msgBean.message?.replyMe), ID_REPLY, CHANNEL_REPLY, CHANNEL_REPLY_NAME, MessageActivity.createIntent(this@NotifyJobService, MessageFragment.TYPE_REPLY_ME))
                     }
-                    if ("0" != msgBean.message.atMe) {
-                        val atCount = Integer.valueOf(msgBean.message.atMe)
-                        total += atCount
+                    if ("0" != msgBean.message?.atMe) {
+                        val atCount = msgBean.message?.atMe?.let { Integer.valueOf(it) }
+                        if (atCount != null) {
+                            total += atCount
+                        }
                         sendBroadcast(Intent()
                                 .setAction(ACTION_NEW_MESSAGE)
                                 .putExtra("channel", CHANNEL_AT)
-                                .putExtra("count", msgBean.message.atMe))
-                        updateNotification(getString(R.string.tips_message_at, msgBean.message.atMe), ID_AT, CHANNEL_AT, CHANNEL_AT_NAME, MessageActivity.createIntent(this@NotifyJobService, MessageFragment.TYPE_AT_ME))
+                                .putExtra("count", msgBean.message?.atMe))
+                        updateNotification(getString(R.string.tips_message_at, msgBean.message?.atMe), ID_AT, CHANNEL_AT, CHANNEL_AT_NAME, MessageActivity.createIntent(this@NotifyJobService, MessageFragment.TYPE_AT_ME))
                     }
                     sendBroadcast(Intent()
                             .setAction(ACTION_NEW_MESSAGE)
