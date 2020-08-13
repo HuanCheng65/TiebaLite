@@ -1,116 +1,51 @@
-package com.huanchengfly.tieba.api.models;
+package com.huanchengfly.tieba.api.models
 
-import com.google.gson.annotations.SerializedName;
+import com.google.gson.annotations.SerializedName
 
-import java.util.List;
-
-public class SearchThreadBean {
+class SearchThreadBean {
     @SerializedName("no")
-    private int errorCode;
+    val errorCode: Int? = null
+
     @SerializedName("error")
-    private String errorMsg;
-    private DataBean data;
+    val errorMsg: String? = null
+    val data: DataBean? = null
 
-    public int getErrorCode() {
-        return errorCode;
-    }
-
-    public String getErrorMsg() {
-        return errorMsg;
-    }
-
-    public DataBean getData() {
-        return data;
-    }
-
-    public class DataBean {
+    inner class DataBean {
         @SerializedName("has_more")
-        private int hasMore;
+        val hasMore: Int? = null
+
         @SerializedName("current_page")
-        private int currentPage;
+        val currentPage: Int? = null
+
         @SerializedName("post_list")
-        private List<ThreadInfoBean> postList;
+        val postList: List<ThreadInfoBean>? = null
 
-        public int getHasMore() {
-            return hasMore;
-        }
-
-        public int getCurrentPage() {
-            return currentPage;
-        }
-
-        public List<ThreadInfoBean> getPostList() {
-            return postList;
-        }
     }
 
-    public class ThreadInfoBean {
-        private String tid;
-        private String pid;
-        private String title;
-        private String content;
-        private String time;
+    inner class ThreadInfoBean {
+        val tid: String? = null
+        val pid: String? = null
+        val title: String? = null
+        val content: String? = null
+        val time: String? = null
+
         @SerializedName("post_num")
-        private String postNum;
+        val postNum: String? = null
+
         @SerializedName("forum_name")
-        private String forumName;
-        private UserInfoBean user;
-        private int type;
+        val forumName: String? = null
+        val user: UserInfoBean? = null
+        val type: Int? = null
 
-        public String getForumName() {
-            return forumName;
-        }
-
-        public String getTid() {
-            return tid;
-        }
-
-        public String getPid() {
-            return pid;
-        }
-
-        public String getTitle() {
-            return title;
-        }
-
-        public String getContent() {
-            return content;
-        }
-
-        public String getTime() {
-            return time;
-        }
-
-        public String getPostNum() {
-            return postNum;
-        }
-
-        public UserInfoBean getUser() {
-            return user;
-        }
-
-        public int getType() {
-            return type;
-        }
     }
 
-    public class UserInfoBean {
+    inner class UserInfoBean {
         @SerializedName("user_name")
-        private String userName;
+        val userName: String? = null
+
         @SerializedName("user_id")
-        private String userId;
-        private String portrait;
+        val userId: String? = null
+        val portrait: String? = null
 
-        public String getUserName() {
-            return userName;
-        }
-
-        public String getUserId() {
-            return userId;
-        }
-
-        public String getPortrait() {
-            return portrait;
-        }
     }
 }
