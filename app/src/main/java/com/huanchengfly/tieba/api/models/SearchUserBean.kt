@@ -1,132 +1,82 @@
-package com.huanchengfly.tieba.api.models;
+package com.huanchengfly.tieba.api.models
 
-import com.google.gson.annotations.JsonAdapter;
-import com.google.gson.annotations.SerializedName;
-import com.huanchengfly.tieba.api.adapters.UserExactMatchAdapter;
-import com.huanchengfly.tieba.api.adapters.UserFuzzyMatchAdapter;
-import com.huanchengfly.tieba.post.models.BaseBean;
+import com.google.gson.annotations.JsonAdapter
+import com.google.gson.annotations.SerializedName
+import com.huanchengfly.tieba.api.adapters.UserExactMatchAdapter
+import com.huanchengfly.tieba.api.adapters.UserFuzzyMatchAdapter
+import com.huanchengfly.tieba.post.models.BaseBean
 
-import java.util.List;
-
-public class SearchUserBean extends BaseBean {
+class SearchUserBean : BaseBean() {
     @SerializedName("no")
-    private int errorCode;
+    val errorCode: Int? = null
+
     @SerializedName("error")
-    private String errorMsg;
-    private SearchUserDataBean data;
+    val errorMsg: String? = null
+    val data: SearchUserDataBean? = null
 
-    public SearchUserDataBean getData() {
-        return data;
-    }
-
-    public int getErrorCode() {
-        return errorCode;
-    }
-
-    public String getErrorMsg() {
-        return errorMsg;
-    }
-
-    public static class SearchUserDataBean {
+    class SearchUserDataBean {
         @SerializedName("pn")
-        private int pageNum;
+        val pageNum: Int? = null
+
         @SerializedName("has_more")
-        private int hasMore;
-        @JsonAdapter(UserExactMatchAdapter.class)
-        private UserBean exactMatch;
-        @JsonAdapter(UserFuzzyMatchAdapter.class)
-        private List<UserBean> fuzzyMatch;
+        val hasMore: Int? = null
 
-        public int getPageNum() {
-            return pageNum;
-        }
+        @JsonAdapter(UserExactMatchAdapter::class)
+        val exactMatch: UserBean? = null
 
-        public int getHasMore() {
-            return hasMore;
-        }
+        @JsonAdapter(UserFuzzyMatchAdapter::class)
+        val fuzzyMatch: List<UserBean>? = null
 
-        public UserBean getExactMatch() {
-            return exactMatch;
-        }
-
-        public List<UserBean> getFuzzyMatch() {
-            return fuzzyMatch;
-        }
     }
 
-    public static class UserBean {
-        private String id;
-        private String intro;
+    class UserBean {
+        var id: String? = null
+        var intro: String? = null
+
         @SerializedName("user_nickname")
-        private String userNickname;
-        private String name;
-        private String portrait;
+        var userNickname: String? = null
+        var name: String? = null
+        var portrait: String? = null
+
         @SerializedName("fans_num")
-        private String fansNum;
+        var fansNum: String? = null
+
         @SerializedName("has_concerned")
-        private int hasConcerned;
+        var hasConcerned = 0
 
-        public String getId() {
-            return id;
+        fun setId(id: String?): UserBean {
+            this.id = id
+            return this
         }
 
-        public UserBean setId(String id) {
-            this.id = id;
-            return this;
+        fun setIntro(intro: String?): UserBean {
+            this.intro = intro
+            return this
         }
 
-        public String getIntro() {
-            return intro;
+        fun setUserNickname(userNickname: String?): UserBean {
+            this.userNickname = userNickname
+            return this
         }
 
-        public UserBean setIntro(String intro) {
-            this.intro = intro;
-            return this;
+        fun setName(name: String?): UserBean {
+            this.name = name
+            return this
         }
 
-        public String getUserNickname() {
-            return userNickname;
+        fun setPortrait(portrait: String?): UserBean {
+            this.portrait = portrait
+            return this
         }
 
-        public UserBean setUserNickname(String userNickname) {
-            this.userNickname = userNickname;
-            return this;
+        fun setFansNum(fansNum: String?): UserBean {
+            this.fansNum = fansNum
+            return this
         }
 
-        public String getName() {
-            return name;
-        }
-
-        public UserBean setName(String name) {
-            this.name = name;
-            return this;
-        }
-
-        public String getPortrait() {
-            return portrait;
-        }
-
-        public UserBean setPortrait(String portrait) {
-            this.portrait = portrait;
-            return this;
-        }
-
-        public String getFansNum() {
-            return fansNum;
-        }
-
-        public UserBean setFansNum(String fansNum) {
-            this.fansNum = fansNum;
-            return this;
-        }
-
-        public int getHasConcerned() {
-            return hasConcerned;
-        }
-
-        public UserBean setHasConcerned(int hasConcerned) {
-            this.hasConcerned = hasConcerned;
-            return this;
+        fun setHasConcerned(hasConcerned: Int): UserBean {
+            this.hasConcerned = hasConcerned
+            return this
         }
     }
 }
