@@ -1,128 +1,58 @@
-package com.huanchengfly.tieba.api.models;
+package com.huanchengfly.tieba.api.models
 
-import com.google.gson.annotations.SerializedName;
+import com.google.gson.annotations.SerializedName
 
-import java.util.List;
-
-public class SearchPostBean {
+class SearchPostBean {
     @SerializedName("error_code")
-    private String errorCode;
+    val errorCode: String? = null
+
     @SerializedName("error_msg")
-    private String errorMsg;
-    private PageBean page;
+    val errorMsg: String? = null
+    val page: PageBean? = null
+
     @SerializedName("post_list")
-    private List<ThreadInfoBean> postList;
+    val postList: List<ThreadInfoBean>? = null
 
-    public PageBean getPage() {
-        return page;
-    }
-
-    public List<ThreadInfoBean> getPostList() {
-        return postList;
-    }
-
-    public String getErrorCode() {
-        return errorCode;
-    }
-
-    public String getErrorMsg() {
-        return errorMsg;
-    }
-
-    public static class PageBean {
+    class PageBean {
         @SerializedName("page_size")
-        private String pageSize;
-        private String offset;
+        val pageSize: String? = null
+        val offset: String? = null
+
         @SerializedName("current_page")
-        private String currentPage;
+        val currentPage: String? = null
+
         @SerializedName("total_count")
-        private String totalCount;
+        val totalCount: String? = null
+
         @SerializedName("total_page")
-        private String totalPage;
+        val totalPage: String? = null
+
         @SerializedName("has_more")
-        private String hasMore;
+        val hasMore: String? = null
+
         @SerializedName("has_prev")
-        private String hasPrev;
+        val hasPrev: String? = null
 
-        public String getPageSize() {
-            return pageSize;
-        }
-
-        public String getOffset() {
-            return offset;
-        }
-
-        public String getCurrentPage() {
-            return currentPage;
-        }
-
-        public String getTotalCount() {
-            return totalCount;
-        }
-
-        public String getTotalPage() {
-            return totalPage;
-        }
-
-        public String getHasMore() {
-            return hasMore;
-        }
-
-        public String getHasPrev() {
-            return hasPrev;
-        }
     }
 
-    public static class ThreadInfoBean {
-        private String tid;
-        private String pid;
-        private String title;
-        private String content;
-        private String time;
+    class ThreadInfoBean {
+        val tid: String? = null
+        val pid: String? = null
+        val title: String? = null
+        val content: String? = null
+        val time: String? = null
+
         @SerializedName("fname")
-        private String forumName;
-        private AuthorBean author;
+        val forumName: String? = null
+        val author: AuthorBean? = null
 
-        public AuthorBean getAuthor() {
-            return author;
-        }
-
-        public String getForumName() {
-            return forumName;
-        }
-
-        public String getTid() {
-            return tid;
-        }
-
-        public String getPid() {
-            return pid;
-        }
-
-        public String getTitle() {
-            return title;
-        }
-
-        public String getContent() {
-            return content;
-        }
-
-        public String getTime() {
-            return time;
-        }
     }
 
-    public static class AuthorBean {
-        private String name;
+    class AuthorBean {
+        val name: String? = null
+
         @SerializedName("name_show")
-        private String nameShow;
+        val nameShow: String? = null
 
-        public String getName() {
-            return name;
-        }
-
-        public String getNameShow() {
-            return nameShow;
-        }
     }
 }
