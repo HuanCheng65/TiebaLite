@@ -1,173 +1,80 @@
-package com.huanchengfly.tieba.api.models;
+package com.huanchengfly.tieba.api.models
 
-import com.google.gson.annotations.SerializedName;
-import com.huanchengfly.tieba.post.models.BaseBean;
+import com.google.gson.annotations.SerializedName
+import com.huanchengfly.tieba.post.models.BaseBean
 
-import java.util.List;
-
-public class ThreadStoreBean extends BaseBean {
+class ThreadStoreBean : BaseBean() {
     @SerializedName("error_code")
-    private String errorCode;
-    private ErrorInfo error;
+    val errorCode: String? = null
+    val error: ErrorInfo? = null
+
     @SerializedName("store_thread")
-    private List<ThreadStoreInfo> storeThread;
+    val storeThread: List<ThreadStoreInfo>? = null
 
-    public String getErrorCode() {
-        return errorCode;
-    }
-
-    public ErrorInfo getError() {
-        return error;
-    }
-
-    public List<ThreadStoreInfo> getStoreThread() {
-        return storeThread;
-    }
-
-    public class ThreadStoreInfo extends BaseBean {
+    inner class ThreadStoreInfo : BaseBean() {
         @SerializedName("thread_id")
-        private String threadId;
-        private String title;
+        val threadId: String? = null
+        val title: String? = null
+
         @SerializedName("forum_name")
-        private String forumName;
-        private AuthorInfo author;
-        private List<MediaInfo> media;
+        val forumName: String? = null
+        val author: AuthorInfo? = null
+        val media: List<MediaInfo>? = null
+
         @SerializedName("is_deleted")
-        private String isDeleted;
+        val isDeleted: String? = null
+
         @SerializedName("last_time")
-        private String lastTime;
-        private String type;
-        private String status;
+        val lastTime: String? = null
+        val type: String? = null
+        val status: String? = null
+
         @SerializedName("max_pid")
-        private String maxPid;
+        val maxPid: String? = null
+
         @SerializedName("min_pid")
-        private String minPid;
+        val minPid: String? = null
+
         @SerializedName("mark_pid")
-        private String markPid;
+        val markPid: String? = null
+
         @SerializedName("mark_status")
-        private String markStatus;
+        val markStatus: String? = null
 
-        public String getThreadId() {
-            return threadId;
-        }
-
-        public String getTitle() {
-            return title;
-        }
-
-        public String getForumName() {
-            return forumName;
-        }
-
-        public AuthorInfo getAuthor() {
-            return author;
-        }
-
-        public List<MediaInfo> getMedia() {
-            return media;
-        }
-
-        public String getIsDeleted() {
-            return isDeleted;
-        }
-
-        public String getLastTime() {
-            return lastTime;
-        }
-
-        public String getType() {
-            return type;
-        }
-
-        public String getStatus() {
-            return status;
-        }
-
-        public String getMaxPid() {
-            return maxPid;
-        }
-
-        public String getMinPid() {
-            return minPid;
-        }
-
-        public String getMarkPid() {
-            return markPid;
-        }
-
-        public String getMarkStatus() {
-            return markStatus;
-        }
     }
 
-    public class MediaInfo extends BaseBean {
-        private String type;
+    inner class MediaInfo : BaseBean() {
+        val type: String? = null
+
         @SerializedName("small_Pic")
-        private String smallPic;
+        val smallPic: String? = null
+
         @SerializedName("big_pic")
-        private String bigPic;
-        private String width;
-        private String height;
+        val bigPic: String? = null
+        val width: String? = null
+        val height: String? = null
 
-        public String getType() {
-            return type;
-        }
-
-        public String getSmallPic() {
-            return smallPic;
-        }
-
-        public String getBigPic() {
-            return bigPic;
-        }
-
-        public String getWidth() {
-            return width;
-        }
-
-        public String getHeight() {
-            return height;
-        }
     }
 
-    public class AuthorInfo extends BaseBean {
+    inner class AuthorInfo : BaseBean() {
         @SerializedName("lz_uid")
-        private String lzUid;
-        private String name;
+        val lzUid: String? = null
+        val name: String? = null
+
         @SerializedName("name_show")
-        private String nameShow;
+        val nameShow: String? = null
+
         @SerializedName("user_portrait")
-        private String userPortrait;
+        val userPortrait: String? = null
 
-        public String getLzUid() {
-            return lzUid;
-        }
-
-        public String getName() {
-            return name;
-        }
-
-        public String getNameShow() {
-            return nameShow;
-        }
-
-        public String getUserPortrait() {
-            return userPortrait;
-        }
     }
 
-    public class ErrorInfo extends BaseBean {
+    inner class ErrorInfo : BaseBean() {
         @SerializedName("errno")
-        private String errorCode;
+        val errorCode: String? = null
+
         @SerializedName("errmsg")
-        private String errorMsg;
+        val errorMsg: String? = null
 
-        public String getErrorCode() {
-            return errorCode;
-        }
-
-        public String getErrorMsg() {
-            return errorMsg;
-        }
     }
 }
