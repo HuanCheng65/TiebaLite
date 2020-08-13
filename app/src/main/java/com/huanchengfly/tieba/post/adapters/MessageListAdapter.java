@@ -4,9 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.text.format.DateUtils;
 import android.widget.TextView;
-
 import androidx.annotation.NonNull;
-
 import com.bumptech.glide.request.RequestOptions;
 import com.huanchengfly.tieba.api.models.MessageListBean;
 import com.huanchengfly.tieba.post.R;
@@ -72,7 +70,7 @@ public class MessageListAdapter extends CommonBaseAdapter<MessageListBean.Messag
             HashMap<String, String> hashMap = new HashMap<>();
             hashMap.put("tid", messageInfoBean.getThreadId());
             hashMap.put("spid", messageInfoBean.getPostId());
-            if (messageInfoBean.getIsFloor().equals("1")) {
+            if (messageInfoBean.isFloor().equals("1")) {
                 navigationHelper.navigationByData(NavigationHelper.ACTION_FLOOR, hashMap);
             } else {
                 hashMap.put("pid", messageInfoBean.getPostId());
@@ -85,7 +83,7 @@ public class MessageListAdapter extends CommonBaseAdapter<MessageListBean.Messag
         contentTextView.setText(StringUtil.getEmotionContent(EmotionUtil.EMOTION_ALL_TYPE, contentTextView, messageInfoBean.getContent()));
         TextView textView = viewHolder.getView(R.id.message_list_item_quote);
         if (type == MessageFragment.TYPE_REPLY_ME) {
-            if (messageInfoBean.getIsFloor().equals("1"))
+            if (messageInfoBean.isFloor().equals("1"))
                 textView.setText(StringUtil.getEmotionContent(EmotionUtil.EMOTION_ALL_TYPE, textView, messageInfoBean.getQuoteContent()));
             else
                 textView.setText(StringUtil.getEmotionContent(EmotionUtil.EMOTION_ALL_TYPE, textView, mContext.getString(R.string.text_message_list_item_reply_my_thread, messageInfoBean.getTitle())));
