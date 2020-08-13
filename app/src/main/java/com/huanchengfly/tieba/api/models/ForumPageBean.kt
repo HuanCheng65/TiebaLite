@@ -1,817 +1,422 @@
-package com.huanchengfly.tieba.api.models;
+package com.huanchengfly.tieba.api.models
 
-import com.google.gson.annotations.JsonAdapter;
-import com.google.gson.annotations.SerializedName;
-import com.huanchengfly.tieba.api.adapters.MediaAdapter;
-import com.huanchengfly.tieba.api.adapters.PortraitAdapter;
-import com.huanchengfly.tieba.post.models.BaseBean;
-import com.huanchengfly.tieba.post.models.ErrorBean;
+import com.google.gson.annotations.JsonAdapter
+import com.google.gson.annotations.SerializedName
+import com.huanchengfly.tieba.api.adapters.MediaAdapter
+import com.huanchengfly.tieba.api.adapters.PortraitAdapter
+import com.huanchengfly.tieba.post.models.BaseBean
+import com.huanchengfly.tieba.post.models.ErrorBean
 
-import java.util.List;
+class ForumPageBean : ErrorBean() {
+    var forum: ForumBean? = null
+    var anti: AntiBean? = null
+    var user: UserBean? = null
+    var page: PageBean? = null
 
-public class ForumPageBean extends ErrorBean {
-    private ForumBean forum;
-    private AntiBean anti;
-    private UserBean user;
-    private PageBean page;
     @SerializedName("thread_list")
-    private List<ThreadBean> threadList;
+    var threadList: List<ThreadBean>? = null
+
     @SerializedName("user_list")
-    private List<UserBean> userList;
+    var userList: List<UserBean>? = null
 
-    public ForumBean getForum() {
-        return forum;
+    fun setForum(forum: ForumBean?): ForumPageBean {
+        this.forum = forum
+        return this
     }
 
-    public ForumPageBean setForum(ForumBean forum) {
-        this.forum = forum;
-        return this;
+    fun setAnti(anti: AntiBean?): ForumPageBean {
+        this.anti = anti
+        return this
     }
 
-    public AntiBean getAnti() {
-        return anti;
+    class ZyqDefineBean : BaseBean() {
+        var name: String? = null
+        var link: String? = null
+
     }
 
-    public ForumPageBean setAnti(AntiBean anti) {
-        this.anti = anti;
-        return this;
+    class ManagerBean : BaseBean() {
+        val id: String? = null
+        val name: String? = null
+
     }
 
-    public UserBean getUser() {
-        return user;
-    }
+    class ForumBean : BaseBean() {
+        var id: String? = null
+        var name: String? = null
 
-    public void setUser(UserBean user) {
-        this.user = user;
-    }
-
-    public PageBean getPage() {
-        return page;
-    }
-
-    public void setPage(PageBean page) {
-        this.page = page;
-    }
-
-    public List<ThreadBean> getThreadList() {
-        return threadList;
-    }
-
-    public void setThreadList(List<ThreadBean> threadList) {
-        this.threadList = threadList;
-    }
-
-    public List<UserBean> getUserList() {
-        return userList;
-    }
-
-    public void setUserList(List<UserBean> userList) {
-        this.userList = userList;
-    }
-
-    public static class ZyqDefineBean extends BaseBean {
-        private String name;
-        private String link;
-
-        public String getName() {
-            return name;
-        }
-
-        public void setName(String name) {
-            this.name = name;
-        }
-
-        public String getLink() {
-            return link;
-        }
-
-        public void setLink(String link) {
-            this.link = link;
-        }
-    }
-
-    public static class ManagerBean extends BaseBean {
-        private String id;
-        private String name;
-
-        public String getId() {
-            return id;
-        }
-
-        public String getName() {
-            return name;
-        }
-    }
-
-    public static class ForumBean extends BaseBean {
-        private String id;
-        private String name;
         @SerializedName("is_like")
-        private String isLike;
+        var isLike: String? = null
+
         @SerializedName("user_level")
-        private String userLevel;
+        var userLevel: String? = null
+
         @SerializedName("level_id")
-        private String levelId;
+        var levelId: String? = null
+
         @SerializedName("level_name")
-        private String levelName;
+        var levelName: String? = null
+
         @SerializedName("is_exists")
-        private String isExists;
+        var isExists: String? = null
+
         @SerializedName("cur_score")
-        private String curScore;
+        var curScore: String? = null
+
         @SerializedName("levelup_score")
-        private String levelUpScore;
+        var levelUpScore: String? = null
+
         @SerializedName("member_num")
-        private String memberNum;
+        var memberNum: String? = null
+
         @SerializedName("post_num")
-        private String postNum;
-        private List<ManagerBean> managers;
-        private String zyqTitle;
-        private List<ZyqDefineBean> zyqDefine;
-        private List<String> zyqFriend;
+        var postNum: String? = null
+        var managers: List<ManagerBean>? = null
+        var zyqTitle: String? = null
+        var zyqDefine: List<ZyqDefineBean>? = null
+        var zyqFriend: List<String>? = null
+
         @SerializedName("good_classify")
-        private List<GoodClassifyBean> goodClassify;
-        private String slogan;
-        private String avatar;
-        private String tids;
+        var goodClassify: List<GoodClassifyBean>? = null
+        var slogan: String? = null
+        var avatar: String? = null
+        var tids: String? = null
+
         @SerializedName("sign_in_info")
-        private SignInInfo signInInfo;
+        var signInInfo: SignInInfo? = null
 
-        public List<ManagerBean> getManagers() {
-            return managers;
+        fun setIsLike(isLike: String?): ForumBean {
+            this.isLike = isLike
+            return this
         }
 
-        public void setManagers(List<ManagerBean> managers) {
-            this.managers = managers;
-        }
-
-        public String getZyqTitle() {
-            return zyqTitle;
-        }
-
-        public void setZyqTitle(String zyqTitle) {
-            this.zyqTitle = zyqTitle;
-        }
-
-        public List<ZyqDefineBean> getZyqDefine() {
-            return zyqDefine;
-        }
-
-        public void setZyqDefine(List<ZyqDefineBean> zyqDefine) {
-            this.zyqDefine = zyqDefine;
-        }
-
-        public List<String> getZyqFriend() {
-            return zyqFriend;
-        }
-
-        public void setZyqFriend(List<String> zyqFriend) {
-            this.zyqFriend = zyqFriend;
-        }
-
-        public String getMemberNum() {
-            return memberNum;
-        }
-
-        public void setMemberNum(String memberNum) {
-            this.memberNum = memberNum;
-        }
-
-        public String getPostNum() {
-            return postNum;
-        }
-
-        public void setPostNum(String postNum) {
-            this.postNum = postNum;
-        }
-
-        public SignInInfo getSignInInfo() {
-            return signInInfo;
-        }
-
-        public void setSignInInfo(SignInInfo signInInfo) {
-            this.signInInfo = signInInfo;
-        }
-
-        public String getId() {
-            return id;
-        }
-
-        public void setId(String id) {
-            this.id = id;
-        }
-
-        public String getName() {
-            return name;
-        }
-
-        public void setName(String name) {
-            this.name = name;
-        }
-
-        public String getIsLike() {
-            return isLike;
-        }
-
-        public ForumBean setIsLike(String isLike) {
-            this.isLike = isLike;
-            return this;
-        }
-
-        public String getUserLevel() {
-            return userLevel;
-        }
-
-        public void setUserLevel(String userLevel) {
-            this.userLevel = userLevel;
-        }
-
-        public String getLevelId() {
-            return levelId;
-        }
-
-        public void setLevelId(String levelId) {
-            this.levelId = levelId;
-        }
-
-        public String getLevelName() {
-            return levelName;
-        }
-
-        public void setLevelName(String levelName) {
-            this.levelName = levelName;
-        }
-
-        public String getIsExists() {
-            return isExists;
-        }
-
-        public void setIsExists(String isExists) {
-            this.isExists = isExists;
-        }
-
-        public String getCurScore() {
-            return curScore;
-        }
-
-        public void setCurScore(String curScore) {
-            this.curScore = curScore;
-        }
-
-        public String getLevelUpScore() {
-            return levelUpScore;
-        }
-
-        public void setLevelUpScore(String levelUpScore) {
-            this.levelUpScore = levelUpScore;
-        }
-
-        public List<GoodClassifyBean> getGoodClassify() {
-            return goodClassify;
-        }
-
-        public void setGoodClassify(List<GoodClassifyBean> goodClassify) {
-            this.goodClassify = goodClassify;
-        }
-
-        public String getSlogan() {
-            return slogan;
-        }
-
-        public void setSlogan(String slogan) {
-            this.slogan = slogan;
-        }
-
-        public String getAvatar() {
-            return avatar;
-        }
-
-        public void setAvatar(String avatar) {
-            this.avatar = avatar;
-        }
-
-        public String getTids() {
-            return tids;
-        }
-
-        public void setTids(String tids) {
-            this.tids = tids;
-        }
-
-        public static class SignInInfo {
+        class SignInInfo {
             @SerializedName("user_info")
-            private UserInfo userInfo;
+            val userInfo: UserInfo? = null
 
-            public UserInfo getUserInfo() {
-                return userInfo;
-            }
-
-            public static class UserInfo {
+            class UserInfo {
                 @SerializedName("is_sign_in")
-                private String isSignIn;
+                var isSignIn: String? = null
 
-                public String getIsSignIn() {
-                    return isSignIn;
-                }
-
-                public UserInfo setIsSignIn(String isSignIn) {
-                    this.isSignIn = isSignIn;
-                    return this;
+                fun setIsSignIn(isSignIn: String?): UserInfo {
+                    this.isSignIn = isSignIn
+                    return this
                 }
             }
         }
     }
 
-    public static class GoodClassifyBean extends BaseBean {
+    class GoodClassifyBean : BaseBean() {
         @SerializedName("class_id")
-        private String classId;
+        val classId: String? = null
+
         @SerializedName("class_name")
-        private String className;
+        val className: String? = null
 
-        public String getClassId() {
-            return classId;
-        }
-
-        public String getClassName() {
-            return className;
-        }
     }
 
-    public static class AntiBean extends BaseBean {
-        private String tbs;
+    class AntiBean : BaseBean() {
+        val tbs: String? = null
+
         @SerializedName("ifpost")
-        private String ifPost;
+        val ifPost: String? = null
+
         @SerializedName("forbid_flag")
-        private String forbidFlag;
+        val forbidFlag: String? = null
+
         @SerializedName("forbid_info")
-        private String forbidInfo;
+        val forbidInfo: String? = null
 
-        public String getIfPost() {
-            return ifPost;
-        }
-
-        public String getForbidFlag() {
-            return forbidFlag;
-        }
-
-        public String getForbidInfo() {
-            return forbidInfo;
-        }
-
-        public String getTbs() {
-            return tbs;
-        }
     }
 
-    public static class UserBean extends BaseBean {
-        private String id;
-        private String name;
-        @SerializedName(value = "name_show", alternate = {"nick"})
-        private String nameShow;
-        @JsonAdapter(PortraitAdapter.class)
-        private String portrait;
+    class UserBean : BaseBean() {
+        var id: String? = null
+        var name: String? = null
 
-        public String getId() {
-            return id;
-        }
+        @SerializedName(value = "name_show", alternate = ["nick"])
+        var nameShow: String? = null
 
-        public void setId(String id) {
-            this.id = id;
-        }
+        @JsonAdapter(PortraitAdapter::class)
+        var portrait: String? = null
 
-        public String getName() {
-            return name;
-        }
-
-        public void setName(String name) {
-            this.name = name;
-        }
-
-        public String getNameShow() {
-            return nameShow;
-        }
-
-        public void setNameShow(String nameShow) {
-            this.nameShow = nameShow;
-        }
-
-        public String getPortrait() {
-            return portrait;
-        }
-
-        public void setPortrait(String portrait) {
-            this.portrait = portrait;
-        }
     }
 
-    public static class PageBean extends BaseBean {
+    class PageBean : BaseBean() {
         @SerializedName("page_size")
-        private String pageSize;
-        private String offset;
+        var pageSize: String? = null
+        var offset: String? = null
+
         @SerializedName("current_page")
-        private String currentPage;
+        var currentPage: String? = null
+
         @SerializedName("total_count")
-        private String totalCount;
+        var totalCount: String? = null
+
         @SerializedName("total_page")
-        private String totalPage;
+        var totalPage: String? = null
+
         @SerializedName("has_more")
-        private String hasMore;
+        var hasMore: String? = null
+
         @SerializedName("has_prev")
-        private String hasPrev;
+        var hasPrev: String? = null
+
         @SerializedName("cur_good_id")
-        private String curGoodId;
+        var curGoodId: String? = null
 
-        public String getPageSize() {
-            return pageSize;
-        }
-
-        public void setPageSize(String pageSize) {
-            this.pageSize = pageSize;
-        }
-
-        public String getOffset() {
-            return offset;
-        }
-
-        public void setOffset(String offset) {
-            this.offset = offset;
-        }
-
-        public String getCurrentPage() {
-            return currentPage;
-        }
-
-        public void setCurrentPage(String currentPage) {
-            this.currentPage = currentPage;
-        }
-
-        public String getTotalCount() {
-            return totalCount;
-        }
-
-        public void setTotalCount(String totalCount) {
-            this.totalCount = totalCount;
-        }
-
-        public String getTotalPage() {
-            return totalPage;
-        }
-
-        public void setTotalPage(String totalPage) {
-            this.totalPage = totalPage;
-        }
-
-        public String getHasMore() {
-            return hasMore;
-        }
-
-        public void setHasMore(String hasMore) {
-            this.hasMore = hasMore;
-        }
-
-        public String getHasPrev() {
-            return hasPrev;
-        }
-
-        public void setHasPrev(String hasPrev) {
-            this.hasPrev = hasPrev;
-        }
-
-        public String getCurGoodId() {
-            return curGoodId;
-        }
-
-        public void setCurGoodId(String curGoodId) {
-            this.curGoodId = curGoodId;
-        }
     }
 
-    public static class ThreadBean extends BaseBean {
-        private String id;
-        private String tid;
-        private String title;
+    class ThreadBean : BaseBean() {
+        var id: String? = null
+            private set
+        var tid: String? = null
+            private set
+        var title: String? = null
+            private set
+
         @SerializedName("reply_num")
-        private String replyNum;
+        var replyNum: String? = null
+            private set
+
         @SerializedName("view_num")
-        private String viewNum;
+        var viewNum: String? = null
+            private set
+
         @SerializedName("last_time")
-        private String lastTime;
+        var lastTime: String? = null
+            private set
+
         @SerializedName("last_time_int")
-        private String lastTimeInt;
+        var lastTimeInt: String? = null
+            private set
+
         @SerializedName("create_time")
-        private String createTime;
+        var createTime: String? = null
+            private set
+
         @SerializedName("agree_num")
-        private String agreeNum;
+        var agreeNum: String? = null
+            private set
+
         @SerializedName("is_top")
-        private String isTop;
+        var isTop: String? = null
+            private set
+
         @SerializedName("is_good")
-        private String isGood;
+        var isGood: String? = null
+            private set
+
         @SerializedName("is_ntitle")
-        private String isNoTitle;
+        var isNoTitle: String? = null
+            private set
+
         @SerializedName("author_id")
-        private String authorId;
+        var authorId: String? = null
+            private set
+
         @SerializedName("video_info")
-        private VideoInfoBean videoInfo;
-        @JsonAdapter(MediaAdapter.class)
-        private List<MediaInfoBean> media;
+        var videoInfo: VideoInfoBean? = null
+            private set
+
+        @JsonAdapter(MediaAdapter::class)
+        var media: List<MediaInfoBean>? = null
+            private set
+
         @SerializedName("abstract")
-        private List<AbstractBean> abstractBeans;
-        private String abstractString;
+        var abstractBeans: List<AbstractBean>? = null
+            private set
+        private var abstractString: String? = null
 
-        public String getCreateTime() {
-            return createTime;
+        fun setCreateTime(createTime: String?): ThreadBean {
+            this.createTime = createTime
+            return this
         }
 
-        public ThreadBean setCreateTime(String createTime) {
-            this.createTime = createTime;
-            return this;
+        fun setMedia(media: List<MediaInfoBean>?): ThreadBean {
+            this.media = media
+            return this
         }
 
-        public List<MediaInfoBean> getMedia() {
-            return media;
+        fun setVideoInfo(videoInfo: VideoInfoBean?): ThreadBean {
+            this.videoInfo = videoInfo
+            return this
         }
 
-        public ThreadBean setMedia(List<MediaInfoBean> media) {
-            this.media = media;
-            return this;
+        fun setId(id: String?): ThreadBean {
+            this.id = id
+            return this
         }
 
-        public VideoInfoBean getVideoInfo() {
-            return videoInfo;
+        fun setTid(tid: String?): ThreadBean {
+            this.tid = tid
+            return this
         }
 
-        public ThreadBean setVideoInfo(VideoInfoBean videoInfo) {
-            this.videoInfo = videoInfo;
-            return this;
+        fun setTitle(title: String?): ThreadBean {
+            this.title = title
+            return this
         }
 
-        public String getId() {
-            return id;
+        fun setReplyNum(replyNum: String?): ThreadBean {
+            this.replyNum = replyNum
+            return this
         }
 
-        public ThreadBean setId(String id) {
-            this.id = id;
-            return this;
+        fun setViewNum(viewNum: String?): ThreadBean {
+            this.viewNum = viewNum
+            return this
         }
 
-        public String getTid() {
-            return tid;
+        fun setLastTime(lastTime: String?): ThreadBean {
+            this.lastTime = lastTime
+            return this
         }
 
-        public ThreadBean setTid(String tid) {
-            this.tid = tid;
-            return this;
+        fun setLastTimeInt(lastTimeInt: String?): ThreadBean {
+            this.lastTimeInt = lastTimeInt
+            return this
         }
 
-        public String getTitle() {
-            return title;
+        fun setAgreeNum(agreeNum: String?): ThreadBean {
+            this.agreeNum = agreeNum
+            return this
         }
 
-        public ThreadBean setTitle(String title) {
-            this.title = title;
-            return this;
+        fun setIsTop(isTop: String?): ThreadBean {
+            this.isTop = isTop
+            return this
         }
 
-        public String getReplyNum() {
-            return replyNum;
+        fun setIsGood(isGood: String?): ThreadBean {
+            this.isGood = isGood
+            return this
         }
 
-        public ThreadBean setReplyNum(String replyNum) {
-            this.replyNum = replyNum;
-            return this;
+        fun setIsNoTitle(isNoTitle: String?): ThreadBean {
+            this.isNoTitle = isNoTitle
+            return this
         }
 
-        public String getViewNum() {
-            return viewNum;
+        fun setAuthorId(authorId: String?): ThreadBean {
+            this.authorId = authorId
+            return this
         }
 
-        public ThreadBean setViewNum(String viewNum) {
-            this.viewNum = viewNum;
-            return this;
-        }
-
-        public String getLastTime() {
-            return lastTime;
-        }
-
-        public ThreadBean setLastTime(String lastTime) {
-            this.lastTime = lastTime;
-            return this;
-        }
-
-        public String getLastTimeInt() {
-            return lastTimeInt;
-        }
-
-        public ThreadBean setLastTimeInt(String lastTimeInt) {
-            this.lastTimeInt = lastTimeInt;
-            return this;
-        }
-
-        public String getAgreeNum() {
-            return agreeNum;
-        }
-
-        public ThreadBean setAgreeNum(String agreeNum) {
-            this.agreeNum = agreeNum;
-            return this;
-        }
-
-        public String getIsTop() {
-            return isTop;
-        }
-
-        public ThreadBean setIsTop(String isTop) {
-            this.isTop = isTop;
-            return this;
-        }
-
-        public String getIsGood() {
-            return isGood;
-        }
-
-        public ThreadBean setIsGood(String isGood) {
-            this.isGood = isGood;
-            return this;
-        }
-
-        public String getIsNoTitle() {
-            return isNoTitle;
-        }
-
-        public ThreadBean setIsNoTitle(String isNoTitle) {
-            this.isNoTitle = isNoTitle;
-            return this;
-        }
-
-        public String getAuthorId() {
-            return authorId;
-        }
-
-        public ThreadBean setAuthorId(String authorId) {
-            this.authorId = authorId;
-            return this;
-        }
-
-        public String getAbstractString() {
+        fun getAbstractString(): String? {
             if (abstractString != null) {
-                return abstractString;
+                return abstractString
             }
             if (abstractBeans != null) {
-                StringBuilder stringBuilder = new StringBuilder();
-                for (AbstractBean abstractBean : abstractBeans) {
-                    stringBuilder.append(abstractBean.getText());
+                val stringBuilder = StringBuilder()
+                for (abstractBean in abstractBeans!!) {
+                    stringBuilder.append(abstractBean.text)
                 }
-                return stringBuilder.toString();
+                return stringBuilder.toString()
             }
-            return null;
+            return null
         }
 
-        public ThreadBean setAbstractString(String abstractString) {
-            this.abstractString = abstractString;
-            return this;
+        fun setAbstractString(abstractString: String?): ThreadBean {
+            this.abstractString = abstractString
+            return this
         }
 
-        public List<AbstractBean> getAbstractBeans() {
-            return abstractBeans;
-        }
-
-        public ThreadBean setAbstractBeans(List<AbstractBean> abstractBeans) {
-            this.abstractBeans = abstractBeans;
-            return this;
+        fun setAbstractBeans(abstractBeans: List<AbstractBean>?): ThreadBean {
+            this.abstractBeans = abstractBeans
+            return this
         }
     }
 
-    public static class AbstractBean extends BaseBean {
-        private String type;
-        private String text;
+    class AbstractBean(val type: String, val text: String) : BaseBean()
 
-        public AbstractBean(String type, String text) {
-            this.type = type;
-            this.text = text;
-        }
+    class MediaInfoBean : BaseBean() {
+        var type: String? = null
+            private set
 
-        public String getType() {
-            return type;
-        }
-
-        public String getText() {
-            return text;
-        }
-    }
-
-    public static class MediaInfoBean extends BaseBean {
-        private String type;
         @SerializedName("show_original_btn")
-        private String showOriginalBtn;
+        var showOriginalBtn: String? = null
+            private set
+
         @SerializedName("is_long_pic")
-        private String isLongPic;
+        var isLongPic: String? = null
+            private set
+
         @SerializedName("is_gif")
-        private String isGif;
+        var isGif: String? = null
+            private set
+
         @SerializedName("big_pic")
-        private String bigPic;
+        var bigPic: String? = null
+            private set
+
         @SerializedName("src_pic")
-        private String srcPic;
+        var srcPic: String? = null
+            private set
+
         @SerializedName("post_id")
-        private String postId;
+        var postId: String? = null
+            private set
+
         @SerializedName("origin_pic")
-        private String originPic;
+        var originPic: String? = null
+            private set
 
-        public String getOriginPic() {
-            return originPic;
+        fun setOriginPic(originPic: String?): MediaInfoBean {
+            this.originPic = originPic
+            return this
         }
 
-        public MediaInfoBean setOriginPic(String originPic) {
-            this.originPic = originPic;
-            return this;
+        fun setType(type: String?): MediaInfoBean {
+            this.type = type
+            return this
         }
 
-        public String getType() {
-            return type;
+        fun setShowOriginalBtn(showOriginalBtn: String?): MediaInfoBean {
+            this.showOriginalBtn = showOriginalBtn
+            return this
         }
 
-        public MediaInfoBean setType(String type) {
-            this.type = type;
-            return this;
+        fun setIsLongPic(isLongPic: String?): MediaInfoBean {
+            this.isLongPic = isLongPic
+            return this
         }
 
-        public String getShowOriginalBtn() {
-            return showOriginalBtn;
+        fun setBigPic(bigPic: String?): MediaInfoBean {
+            this.bigPic = bigPic
+            return this
         }
 
-        public MediaInfoBean setShowOriginalBtn(String showOriginalBtn) {
-            this.showOriginalBtn = showOriginalBtn;
-            return this;
+        fun setSrcPic(srcPic: String?): MediaInfoBean {
+            this.srcPic = srcPic
+            return this
         }
 
-        public String getIsLongPic() {
-            return isLongPic;
+        fun setIsGif(isGif: String?): MediaInfoBean {
+            this.isGif = isGif
+            return this
         }
 
-        public MediaInfoBean setIsLongPic(String isLongPic) {
-            this.isLongPic = isLongPic;
-            return this;
-        }
-
-        public String getBigPic() {
-            return bigPic;
-        }
-
-        public MediaInfoBean setBigPic(String bigPic) {
-            this.bigPic = bigPic;
-            return this;
-        }
-
-        public String getSrcPic() {
-            return srcPic;
-        }
-
-        public MediaInfoBean setSrcPic(String srcPic) {
-            this.srcPic = srcPic;
-            return this;
-        }
-
-        public String getIsGif() {
-            return isGif;
-        }
-
-        public MediaInfoBean setIsGif(String isGif) {
-            this.isGif = isGif;
-            return this;
-        }
-
-        public String getPostId() {
-            return postId;
-        }
-
-        public MediaInfoBean setPostId(String postId) {
-            this.postId = postId;
-            return this;
+        fun setPostId(postId: String?): MediaInfoBean {
+            this.postId = postId
+            return this
         }
     }
 
-    public static class VideoInfoBean extends BaseBean {
+    class VideoInfoBean : BaseBean() {
         @SerializedName("video_url")
-        private String videoUrl;
+        var videoUrl: String? = null
+            private set
+
         @SerializedName("thumbnail_url")
-        private String thumbnailUrl;
+        val thumbnailUrl: String? = null
+
         @SerializedName("origin_video_url")
-        private String originVideoUrl;
+        val originVideoUrl: String? = null
 
-        public String getVideoUrl() {
-            return videoUrl;
+        fun setVideoUrl(videoUrl: String?): VideoInfoBean {
+            this.videoUrl = videoUrl
+            return this
         }
 
-        public VideoInfoBean setVideoUrl(String videoUrl) {
-            this.videoUrl = videoUrl;
-            return this;
-        }
-
-        public String getThumbnailUrl() {
-            return thumbnailUrl;
-        }
-
-        public String getOriginVideoUrl() {
-            return originVideoUrl;
-        }
     }
 }
