@@ -1,81 +1,47 @@
-package com.huanchengfly.tieba.api.models;
+package com.huanchengfly.tieba.api.models
 
-import com.google.gson.annotations.SerializedName;
-import com.huanchengfly.tieba.post.models.BaseBean;
-import com.huanchengfly.utils.GsonUtil;
+import com.google.gson.annotations.SerializedName
+import com.huanchengfly.tieba.post.models.BaseBean
+import com.huanchengfly.utils.GsonUtil
 
-public class SignResultBean extends BaseBean {
+class SignResultBean : BaseBean() {
     @SerializedName("user_info")
-    private UserInfo userInfo;
+    val userInfo: UserInfo? = null
+
     @SerializedName("error_code")
-    private String errorCode;
+    val errorCode: String? = null
+
+    fun getErrorCode() = Integer.valueOf(errorCode!!)
+
     @SerializedName("error_msg")
-    private String errorMsg;
-    private long time;
+    val errorMsg: String? = null
+    val time: Long? = null
 
-    public String getErrorMsg() {
-        return errorMsg;
+    override fun toString(): String {
+        return GsonUtil.getGson().toJson(this)
     }
 
-    public UserInfo getUserInfo() {
-        return userInfo;
-    }
-
-    public int getErrorCode() {
-        return Integer.valueOf(errorCode);
-    }
-
-    public long getTime() {
-        return time;
-    }
-
-    @Override
-    public String toString() {
-        return GsonUtil.getGson().toJson(this);
-    }
-
-    public class UserInfo extends BaseBean {
+    inner class UserInfo : BaseBean() {
         @SerializedName("user_id")
-        private String userId;
+        val userId: String? = null
+
         @SerializedName("is_sign_in")
-        private String isSignIn;
+        val isSignIn: String? = null
+
         @SerializedName("user_sign_rank")
-        private String userSignRank;
+        val userSignRank: String? = null
+
         @SerializedName("sign_time")
-        private String signTime;
+        val signTime: String? = null
+
         @SerializedName("sign_bonus_point")
-        private String signBonusPoint;
+        val signBonusPoint: String? = null
+
         @SerializedName("level_name")
-        private String levelName;
+        val levelName: String? = null
+
         @SerializedName("levelup_score")
-        private String levelUpScore;
+        val levelUpScore: String? = null
 
-        public String getUserId() {
-            return userId;
-        }
-
-        public String getIsSignIn() {
-            return isSignIn;
-        }
-
-        public String getUserSignRank() {
-            return userSignRank;
-        }
-
-        public String getSignTime() {
-            return signTime;
-        }
-
-        public String getSignBonusPoint() {
-            return signBonusPoint;
-        }
-
-        public String getLevelName() {
-            return levelName;
-        }
-
-        public String getLevelUpScore() {
-            return levelUpScore;
-        }
     }
 }
