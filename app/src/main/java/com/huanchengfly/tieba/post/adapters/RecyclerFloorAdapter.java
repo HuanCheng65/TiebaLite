@@ -17,7 +17,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.bumptech.glide.request.RequestOptions;
 import com.huanchengfly.tieba.api.TiebaApi;
 import com.huanchengfly.tieba.api.models.CommonResponse;
@@ -32,27 +31,19 @@ import com.huanchengfly.tieba.post.fragments.ConfirmDialogFragment;
 import com.huanchengfly.tieba.post.fragments.MenuDialogFragment;
 import com.huanchengfly.tieba.post.models.PhotoViewBean;
 import com.huanchengfly.tieba.post.models.ReplyInfoBean;
-import com.huanchengfly.tieba.post.utils.AccountUtil;
-import com.huanchengfly.tieba.post.utils.EmotionUtil;
-import com.huanchengfly.tieba.post.utils.ImageUtil;
-import com.huanchengfly.tieba.post.utils.NavigationHelper;
-import com.huanchengfly.tieba.post.utils.StringUtil;
-import com.huanchengfly.tieba.post.utils.ThemeUtil;
-import com.huanchengfly.tieba.post.utils.Util;
+import com.huanchengfly.tieba.post.utils.*;
 import com.huanchengfly.tieba.widgets.ContentLayout;
 import com.huanchengfly.tieba.widgets.VoicePlayerView;
 import com.huanchengfly.tieba.widgets.theme.TintTextView;
 import com.othershe.baseadapter.ViewHolder;
 import com.othershe.baseadapter.base.CommonBaseAdapter;
-
 import org.jetbrains.annotations.NotNull;
-
-import java.util.ArrayList;
-import java.util.List;
-
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class RecyclerFloorAdapter extends CommonBaseAdapter<SubFloorListBean.PostInfo> {
     public static final String TAG = "RecyclerFloorAdapter";
@@ -374,7 +365,7 @@ public class RecyclerFloorAdapter extends CommonBaseAdapter<SubFloorListBean.Pos
                     List<PhotoViewBean> photoViewBeans = new ArrayList<>();
                     photoViewBeans.add(new PhotoViewBean(ImageUtil.getNonNullString(contentBean.getSrc(), contentBean.getOriginSrc()),
                             ImageUtil.getNonNullString(contentBean.getOriginSrc(), contentBean.getSrc()),
-                            "1".equals(contentBean.getIsLongPic())));
+                            "1".equals(contentBean.isLongPic())));
                     ImageUtil.initImageView(imageView, photoViewBeans, 0);
                     views.add(imageView);
                     break;

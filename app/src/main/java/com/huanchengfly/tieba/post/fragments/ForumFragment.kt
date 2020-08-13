@@ -170,9 +170,9 @@ class ForumFragment : BaseFragment(), Refreshable, OnSwitchListener, ScrollTopab
             override fun onResponse(call: Call<ForumPageBean>, response: Response<ForumPageBean>) {
                 val forumPageBean = response.body()!!
                 mDataBean = forumPageBean
-                pageSize = forumPageBean.page.pageSize.toInt()
+                pageSize = forumPageBean.page?.pageSize?.toInt()!!
                 mAdapter.addData(forumPageBean)
-                if (mDataBean!!.page.hasMore == "0") {
+                if (mDataBean!!.page?.hasMore == "0") {
                     mAdapter.loadEnd()
                 }
             }
@@ -211,8 +211,8 @@ class ForumFragment : BaseFragment(), Refreshable, OnSwitchListener, ScrollTopab
                 }
                 mRefreshLayout.isRefreshing = false
                 mDataBean = forumPageBean
-                pageSize = forumPageBean.page.pageSize.toInt()
-                if (mDataBean!!.page.hasMore == "0") {
+                pageSize = forumPageBean.page?.pageSize?.toInt()!!
+                if (mDataBean!!.page?.hasMore == "0") {
                     mAdapter.loadEnd()
                 }
             }
@@ -225,7 +225,7 @@ class ForumFragment : BaseFragment(), Refreshable, OnSwitchListener, ScrollTopab
 
     override fun onSwitch(which: Int) {
         if (isGood && mDataBean != null) {
-            classifyId = mDataBean!!.forum.goodClassify[which].classId
+            classifyId = mDataBean!!.forum?.goodClassify?.get(which)?.classId!!
             refresh()
         }
     }
@@ -250,9 +250,9 @@ class ForumFragment : BaseFragment(), Refreshable, OnSwitchListener, ScrollTopab
             }
             mRefreshLayout.isRefreshing = false
             mDataBean = forumPageBean
-            pageSize = forumPageBean.page.pageSize.toInt()
+            pageSize = forumPageBean.page?.pageSize?.toInt()!!
             mAdapter.setData(forumPageBean)
-            if ("1" != mDataBean!!.page.hasMore) {
+            if ("1" != mDataBean!!.page?.hasMore) {
                 mAdapter.loadEnd()
             }
         }

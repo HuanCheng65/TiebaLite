@@ -12,14 +12,8 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
-import android.widget.Toast;
-
+import android.widget.*;
 import androidx.annotation.NonNull;
-
 import com.allen.library.SuperTextView;
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.bumptech.glide.request.RequestOptions;
@@ -40,15 +34,7 @@ import com.huanchengfly.tieba.post.fragments.FloorFragment;
 import com.huanchengfly.tieba.post.fragments.MenuDialogFragment;
 import com.huanchengfly.tieba.post.models.PhotoViewBean;
 import com.huanchengfly.tieba.post.models.ReplyInfoBean;
-import com.huanchengfly.tieba.post.utils.AccountUtil;
-import com.huanchengfly.tieba.post.utils.BlockUtil;
-import com.huanchengfly.tieba.post.utils.DisplayUtil;
-import com.huanchengfly.tieba.post.utils.EmotionUtil;
-import com.huanchengfly.tieba.post.utils.ImageUtil;
-import com.huanchengfly.tieba.post.utils.NavigationHelper;
-import com.huanchengfly.tieba.post.utils.StringUtil;
-import com.huanchengfly.tieba.post.utils.ThemeUtil;
-import com.huanchengfly.tieba.post.utils.Util;
+import com.huanchengfly.tieba.post.utils.*;
 import com.huanchengfly.tieba.widgets.ContentLayout;
 import com.huanchengfly.tieba.widgets.MyImageView;
 import com.huanchengfly.tieba.widgets.VideoPlayerStandard;
@@ -56,18 +42,12 @@ import com.huanchengfly.tieba.widgets.VoicePlayerView;
 import com.huanchengfly.tieba.widgets.theme.TintTextView;
 import com.othershe.baseadapter.ViewHolder;
 import com.othershe.baseadapter.base.MultiBaseAdapter;
-
 import org.jetbrains.annotations.NotNull;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
-
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+
+import java.util.*;
 
 import static com.huanchengfly.tieba.post.activities.PhotoViewActivity.OBJ_TYPE_THREAD_PAGE;
 import static com.huanchengfly.tieba.post.utils.Util.alphaColor;
@@ -175,7 +155,7 @@ public class RecyclerThreadAdapter extends MultiBaseAdapter<ThreadContentBean.Po
         if (forumView == null || dividerView == null || forumInfoBean == null) {
             return;
         }
-        if (!showForum || !mContext.getSharedPreferences("settings", Context.MODE_PRIVATE).getBoolean("showShortcutInThread", true) || "0".equals(forumInfoBean.getIsExists()) || forumInfoBean.getName().isEmpty()) {
+        if (!showForum || !mContext.getSharedPreferences("settings", Context.MODE_PRIVATE).getBoolean("showShortcutInThread", true) || "0".equals(forumInfoBean.isExists()) || forumInfoBean.getName().isEmpty()) {
             forumView.setVisibility(View.GONE);
             dividerView.setVisibility(View.GONE);
             return;
@@ -233,7 +213,7 @@ public class RecyclerThreadAdapter extends MultiBaseAdapter<ThreadContentBean.Po
                     if (contentBean.getType().equals("3")) {
                         photoViewBeans.add(new PhotoViewBean(url,
                                 ImageUtil.getNonNullString(contentBean.getOriginSrc(), contentBean.getBigCdnSrc(), contentBean.getCdnSrcActive(), contentBean.getCdnSrc()),
-                                "1".equals(contentBean.getIsLongPic())));
+                                "1".equals(contentBean.isLongPic())));
                     }/* else if (contentBean.getType().equals("20")) {
                         photoViewBeans.add(new PhotoViewBean(contentBean.getSrc(), contentBean.getSrc(), false));
                     }

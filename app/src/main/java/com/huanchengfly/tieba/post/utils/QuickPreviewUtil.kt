@@ -72,10 +72,10 @@ object QuickPreviewUtil {
             override fun onResponse(call: Call<ThreadContentBean>, response: Response<ThreadContentBean>) {
                 val threadContentBean = response.body()!!
                 callback.onSuccess(PreviewInfo()
-                        .setTitle(threadContentBean.thread.title)
-                        .setSubtitle(context.getString(R.string.subtitle_quick_preview_thread, threadContentBean.forum.name, threadContentBean.thread.replyNum))
+                        .setTitle(threadContentBean.thread?.title)
+                        .setSubtitle(context.getString(R.string.subtitle_quick_preview_thread, threadContentBean.forum?.name, threadContentBean.thread?.replyNum))
                         .setUrl(uri.toString())
-                        .setIconUrl(threadContentBean.thread.author.portrait))
+                        .setIconUrl(threadContentBean.thread?.author?.portrait))
             }
         })
     }
@@ -90,10 +90,10 @@ object QuickPreviewUtil {
             override fun onResponse(call: Call<ForumPageBean>, response: Response<ForumPageBean>) {
                 val forumPageBean = response.body()!!
                 callback.onSuccess(PreviewInfo()
-                        .setTitle(context.getString(R.string.title_forum, forumPageBean.forum.name))
-                        .setSubtitle(forumPageBean.forum.slogan)
+                        .setTitle(context.getString(R.string.title_forum, forumPageBean.forum?.name))
+                        .setSubtitle(forumPageBean.forum?.slogan)
                         .setUrl(uri.toString())
-                        .setIconUrl(forumPageBean.forum.avatar))
+                        .setIconUrl(forumPageBean.forum?.avatar))
             }
         })
     }

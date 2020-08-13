@@ -31,18 +31,25 @@ class SearchUserBean : BaseBean() {
 
     class UserBean {
         var id: String? = null
+            private set
         var intro: String? = null
+            private set
 
         @SerializedName("user_nickname")
         var userNickname: String? = null
+            private set
         var name: String? = null
+            private set
         var portrait: String? = null
+            private set
 
         @SerializedName("fans_num")
         var fansNum: String? = null
+            private set
 
         @SerializedName("has_concerned")
         var hasConcerned = 0
+            private set
 
         fun setId(id: String?): UserBean {
             this.id = id

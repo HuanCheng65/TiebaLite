@@ -5,17 +5,12 @@ import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.TextUtils;
 import android.widget.TextView;
-
 import com.huanchengfly.theme.utils.ThemeUtils;
 import com.huanchengfly.tieba.api.models.ThreadStoreBean;
 import com.huanchengfly.tieba.post.R;
 import com.huanchengfly.tieba.post.components.spans.RoundBackgroundColorSpan;
 import com.huanchengfly.tieba.post.interfaces.OnDeleteListener;
-import com.huanchengfly.tieba.post.utils.DisplayUtil;
-import com.huanchengfly.tieba.post.utils.ImageUtil;
-import com.huanchengfly.tieba.post.utils.StringUtil;
-import com.huanchengfly.tieba.post.utils.ThemeUtil;
-import com.huanchengfly.tieba.post.utils.Util;
+import com.huanchengfly.tieba.post.utils.*;
 import com.othershe.baseadapter.ViewHolder;
 import com.othershe.baseadapter.base.CommonBaseAdapter;
 
@@ -35,7 +30,7 @@ public class ThreadStoreAdapter extends CommonBaseAdapter<ThreadStoreBean.Thread
     @Override
     protected void convert(ViewHolder viewHolder, ThreadStoreBean.ThreadStoreInfo threadStoreInfo, int position) {
         TextView textView = viewHolder.getView(R.id.collect_item_title);
-        if ("1".equals(threadStoreInfo.getIsDeleted())) {
+        if ("1".equals(threadStoreInfo.isDeleted())) {
             textView.setTextColor(ThemeUtil.getSecondaryTextColor(mContext));
             viewHolder.setText(R.id.collect_item_header_title, R.string.tip_store_deleted);
         } else {

@@ -78,7 +78,7 @@ class SearchUserFragment : BaseFragment() {
                 mData = searchUserDataBean
                 mAdapter!!.setData(searchUserDataBean)
                 mRefreshLayout.isRefreshing = false
-                if (searchUserDataBean.hasMore == 0) mAdapter!!.loadEnd()
+                if (searchUserDataBean?.hasMore == 0) mAdapter!!.loadEnd()
             }
 
             override fun onFailure(call: Call<SearchUserBean>, t: Throwable) {
