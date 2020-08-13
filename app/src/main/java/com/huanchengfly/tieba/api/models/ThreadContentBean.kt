@@ -1,483 +1,220 @@
-package com.huanchengfly.tieba.api.models;
+package com.huanchengfly.tieba.api.models
 
-import com.google.gson.annotations.JsonAdapter;
-import com.google.gson.annotations.SerializedName;
-import com.huanchengfly.tieba.api.adapters.PortraitAdapter;
-import com.huanchengfly.tieba.api.adapters.SubPostListAdapter;
-import com.huanchengfly.tieba.post.models.BaseBean;
+import com.google.gson.annotations.JsonAdapter
+import com.google.gson.annotations.SerializedName
+import com.huanchengfly.tieba.api.adapters.PortraitAdapter
+import com.huanchengfly.tieba.api.adapters.SubPostListAdapter
+import com.huanchengfly.tieba.post.models.BaseBean
 
-import java.util.List;
-
-public class ThreadContentBean extends BaseBean {
+class ThreadContentBean : BaseBean() {
     @SerializedName("error_code")
-    private String errorCode;
+    val errorCode: String? = null
+
     @SerializedName("error_msg")
-    private String errorMsg;
+    val errorMsg: String? = null
+
     @SerializedName("post_list")
-    private List<PostListItemBean> postList;
-    private PageInfoBean page;
-    private UserInfoBean user;
-    private ForumInfoBean forum;
+    val postList: List<PostListItemBean>? = null
+    val page: PageInfoBean? = null
+    val user: UserInfoBean? = null
+    val forum: ForumInfoBean? = null
+
     @SerializedName("display_forum")
-    private ForumInfoBean displayForum;
+    val displayForum: ForumInfoBean? = null
+
     @SerializedName("has_floor")
-    private String hasFloor;
+    val hasFloor: String? = null
+
     @SerializedName("is_new_url")
-    private String isNewUrl;
+    val isNewUrl: String? = null
+
     @SerializedName("user_list")
-    private List<UserInfoBean> userList;
-    private ThreadBean thread;
-    private AntiInfoBean anti;
+    val userList: List<UserInfoBean>? = null
+    val thread: ThreadBean? = null
+    val anti: AntiInfoBean? = null
 
-    public String getErrorCode() {
-        return errorCode;
+    class AntiInfoBean {
+        val tbs: String? = null
     }
 
-    public String getErrorMsg() {
-        return errorMsg;
-    }
-
-    public List<PostListItemBean> getPostList() {
-        return postList;
-    }
-
-    public PageInfoBean getPage() {
-        return page;
-    }
-
-    public UserInfoBean getUser() {
-        return user;
-    }
-
-    public ForumInfoBean getForum() {
-        return forum;
-    }
-
-    public ForumInfoBean getDisplayForum() {
-        return displayForum;
-    }
-
-    public String getHasFloor() {
-        return hasFloor;
-    }
-
-    public String getIsNewUrl() {
-        return isNewUrl;
-    }
-
-    public List<UserInfoBean> getUserList() {
-        return userList;
-    }
-
-    public ThreadBean getThread() {
-        return thread;
-    }
-
-    public AntiInfoBean getAnti() {
-        return anti;
-    }
-
-    public static class AntiInfoBean {
-        private String tbs;
-
-        public String getTbs() {
-            return tbs;
-        }
-    }
-
-    public static class ThreadInfoBean {
+    class ThreadInfoBean {
         @SerializedName("thread_id")
-        private String threadId;
+        val threadId: String? = null
+
         @SerializedName("first_post_id")
-        private String firstPostId;
+        val firstPostId: String? = null
 
-        public String getThreadId() {
-            return threadId;
-        }
-
-        public String getFirstPostId() {
-            return firstPostId;
-        }
     }
 
-    public static class AgreeBean {
+    class AgreeBean {
         @SerializedName("agree_num")
-        private String agreeNum;
+        val agreeNum: String? = null
+
         @SerializedName("disagree_num")
-        private String disagreeNum;
+        val disagreeNum: String? = null
+
         @SerializedName("diff_agree_num")
-        private String diffAgreeNum;
+        val diffAgreeNum: String? = null
+
         @SerializedName("has_agree")
-        private String hasAgree;
+        val hasAgree: String? = null
 
-        public String getAgreeNum() {
-            return agreeNum;
-        }
-
-        public String getDisagreeNum() {
-            return disagreeNum;
-        }
-
-        public String getDiffAgreeNum() {
-            return diffAgreeNum;
-        }
-
-        public String getHasAgree() {
-            return hasAgree;
-        }
     }
 
-    public static class ThreadBean {
-        private String id;
-        private String title;
+    class ThreadBean {
+        val id: String? = null
+        val title: String? = null
+
         @SerializedName("thread_info")
-        private ThreadInfoBean threadInfo;
-        private UserInfoBean author;
+        val threadInfo: ThreadInfoBean? = null
+        val author: UserInfoBean? = null
+
         @SerializedName("reply_num")
-        private String replyNum;
+        val replyNum: String? = null
+
         @SerializedName("collect_status")
-        private String collectStatus;
+        val collectStatus: String? = null
+
         @SerializedName("agree_num")
-        private String agreeNum;
+        val agreeNum: String? = null
+
         @SerializedName("post_id")
-        private String postId;
+        val postId: String? = null
+
         @SerializedName("thread_id")
-        private String threadId;
-        private AgreeBean agree;
+        val threadId: String? = null
+        val agree: AgreeBean? = null
 
-        public String getThreadId() {
-            return threadId;
-        }
-
-        public String getPostId() {
-            return postId;
-        }
-
-        public ThreadInfoBean getThreadInfo() {
-            return threadInfo;
-        }
-
-        public String getAgreeNum() {
-            return agreeNum;
-        }
-
-        public AgreeBean getAgree() {
-            return agree;
-        }
-
-        public String getId() {
-            return id;
-        }
-
-        public String getTitle() {
-            return title;
-        }
-
-        public UserInfoBean getAuthor() {
-            return author;
-        }
-
-        public String getReplyNum() {
-            return replyNum;
-        }
-
-        public String getCollectStatus() {
-            return collectStatus;
-        }
     }
 
-    public static class UserInfoBean {
+    class UserInfoBean {
         @SerializedName("is_login")
-        private String isLogin;
-        private String id;
-        private String name;
+        val isLogin: String? = null
+        val id: String? = null
+        val name: String? = null
+
         @SerializedName("name_show")
-        private String nameShow;
-        @JsonAdapter(PortraitAdapter.class)
-        private String portrait;
-        private String type;
+        val nameShow: String? = null
+
+        @JsonAdapter(PortraitAdapter::class)
+        val portrait: String? = null
+        val type: String? = null
+
         @SerializedName("level_id")
-        private String levelId;
+        val levelId: String? = null
+
         @SerializedName("is_like")
-        private String isLike;
+        val isLike: String? = null
+
         @SerializedName("is_manager")
-        private String isManager;
+        val isManager: String? = null
 
-        public String getIsLogin() {
-            return isLogin;
-        }
-
-        public String getId() {
-            return id;
-        }
-
-        public String getName() {
-            return name;
-        }
-
-        public String getNameShow() {
-            return nameShow;
-        }
-
-        public String getPortrait() {
-            return portrait;
-        }
-
-        public String getType() {
-            return type;
-        }
-
-        public String getLevelId() {
-            return levelId;
-        }
-
-        public String getIsLike() {
-            return isLike;
-        }
-
-        public String getIsManager() {
-            return isManager;
-        }
     }
 
-    public static class ForumInfoBean extends BaseBean {
-        private String id;
-        private String name;
+    class ForumInfoBean : BaseBean() {
+        val id: String? = null
+        val name: String? = null
+
         @SerializedName("is_exists")
-        private String isExists;
-        private String avatar;
+        val isExists: String? = null
+        val avatar: String? = null
+
         @SerializedName("first_class")
-        private String firstClass;
+        val firstClass: String? = null
+
         @SerializedName("second_class")
-        private String secondClass;
+        val secondClass: String? = null
+
         @SerializedName("is_liked")
-        private String isLiked;
+        val isLiked: String? = null
+
         @SerializedName("is_brand_forum")
-        private String isBrandForum;
+        val isBrandForum: String? = null
 
-        public String getId() {
-            return id;
-        }
-
-        public String getName() {
-            return name;
-        }
-
-        public String getIsExists() {
-            return isExists;
-        }
-
-        public String getAvatar() {
-            return avatar;
-        }
-
-        public String getFirstClass() {
-            return firstClass;
-        }
-
-        public String getSecondClass() {
-            return secondClass;
-        }
-
-        public String getIsLiked() {
-            return isLiked;
-        }
-
-        public String getIsBrandForum() {
-            return isBrandForum;
-        }
     }
 
-    public static class PageInfoBean {
-        private String offset;
+    class PageInfoBean {
+        val offset: String? = null
+
         @SerializedName("current_page")
-        private String currentPage;
+        val currentPage: String? = null
+
         @SerializedName("total_page")
-        private String totalPage;
+        val totalPage: String? = null
+
         @SerializedName("has_more")
-        private String hasMore;
+        val hasMore: String? = null
+
         @SerializedName("has_prev")
-        private String hasPrev;
+        val hasPrev: String? = null
 
-        public String getOffset() {
-            return offset;
-        }
-
-        public String getCurrentPage() {
-            return currentPage;
-        }
-
-        public String getTotalPage() {
-            return totalPage;
-        }
-
-        public String getHasMore() {
-            return hasMore;
-        }
-
-        public String getHasPrev() {
-            return hasPrev;
-        }
     }
 
-    public static class PostListItemBean {
-        private String id;
-        private String title;
-        private String floor;
-        private String time;
-        private List<ContentBean> content;
+    class PostListItemBean {
+        val id: String? = null
+        val title: String? = null
+        val floor: String? = null
+        val time: String? = null
+        val content: List<ContentBean>? = null
+
         @SerializedName("author_id")
-        private String authorId;
-        private UserInfoBean author;
+        val authorId: String? = null
+        val author: UserInfoBean? = null
+
         @SerializedName("sub_post_number")
-        private String subPostNumber;
+        val subPostNumber: String? = null
+
         @SerializedName("sub_post_list")
-        @JsonAdapter(SubPostListAdapter.class)
-        private SubPostListBean subPostList;
+        @JsonAdapter(SubPostListAdapter::class)
+        val subPostList: SubPostListBean? = null
 
-        public String getId() {
-            return id;
-        }
-
-        public String getTitle() {
-            return title;
-        }
-
-        public String getFloor() {
-            return floor;
-        }
-
-        public String getTime() {
-            return time;
-        }
-
-        public List<ContentBean> getContent() {
-            return content;
-        }
-
-        public String getAuthorId() {
-            return authorId;
-        }
-
-        public UserInfoBean getAuthor() {
-            return author;
-        }
-
-        public String getSubPostNumber() {
-            return subPostNumber;
-        }
-
-        public SubPostListBean getSubPostList() {
-            return subPostList;
-        }
     }
 
-    public static class SubPostListBean {
-        private String pid;
+    class SubPostListBean {
+        val pid: String? = null
+
         @SerializedName("sub_post_list")
-        private List<PostListItemBean> subPostList;
+        val subPostList: List<PostListItemBean>? = null
 
-        public String getPid() {
-            return pid;
-        }
-
-        public List<PostListItemBean> getSubPostList() {
-            return subPostList;
-        }
     }
 
-    public static class ContentBean {
-        private String type;
-        private String text;
-        private String link;
-        private String src;
-        private String uid;
+    class ContentBean {
+        val type: String? = null
+        var text: String? = null
+            private set
+        val link: String? = null
+        val src: String? = null
+        val uid: String? = null
+
         @SerializedName("origin_src")
-        private String originSrc;
+        val originSrc: String? = null
+
         @SerializedName("cdn_src")
-        private String cdnSrc;
+        val cdnSrc: String? = null
+
         @SerializedName("cdn_src_active")
-        private String cdnSrcActive;
+        val cdnSrcActive: String? = null
+
         @SerializedName("big_cdn_src")
-        private String bigCdnSrc;
+        val bigCdnSrc: String? = null
+
         @SerializedName("during_time")
-        private String duringTime;
-        private String bsize;
-        private String c;
-        private String width;
-        private String height;
+        val duringTime: String? = null
+        val bsize: String? = null
+        val c: String? = null
+        val width: String? = null
+        val height: String? = null
+
         @SerializedName("is_long_pic")
-        private String isLongPic;
+        val isLongPic: String? = null
+
         @SerializedName("voice_md5")
-        private String voiceMD5;
+        val voiceMD5: String? = null
 
-        public String getCdnSrc() {
-            return cdnSrc;
+        fun setText(text: String?): ContentBean {
+            this.text = text
+            return this
         }
 
-        public String getCdnSrcActive() {
-            return cdnSrcActive;
-        }
-
-        public String getBigCdnSrc() {
-            return bigCdnSrc;
-        }
-
-        public String getUid() {
-            return uid;
-        }
-
-        public String getVoiceMD5() {
-            return voiceMD5;
-        }
-
-        public String getDuringTime() {
-            return duringTime;
-        }
-
-        public String getIsLongPic() {
-            return isLongPic;
-        }
-
-        public String getType() {
-            return type;
-        }
-
-        public String getText() {
-            return text;
-        }
-
-        public ContentBean setText(String text) {
-            this.text = text;
-            return this;
-        }
-
-        public String getLink() {
-            return link;
-        }
-
-        public String getSrc() {
-            return src;
-        }
-
-        public String getOriginSrc() {
-            return originSrc;
-        }
-
-        public String getBsize() {
-            return bsize;
-        }
-
-        public String getC() {
-            return c;
-        }
-
-        public String getWidth() {
-            return width;
-        }
-
-        public String getHeight() {
-            return height;
-        }
     }
 }
