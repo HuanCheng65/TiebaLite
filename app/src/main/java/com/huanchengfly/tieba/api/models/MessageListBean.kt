@@ -18,9 +18,7 @@ class MessageListBean : BaseBean() {
     val page: PageInfoBean? = null
     val message: MessageBean? = null
 
-    fun getErrorCode() {
-        Integer.valueOf(errorCode!!)
-    }
+    fun getErrorCode() = Integer.valueOf(errorCode!!)
 
     open inner class UserInfoBean {
         val id: String? = null
