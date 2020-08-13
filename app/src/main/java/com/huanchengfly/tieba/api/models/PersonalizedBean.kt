@@ -1,230 +1,107 @@
-package com.huanchengfly.tieba.api.models;
+package com.huanchengfly.tieba.api.models
 
-import com.google.gson.annotations.JsonAdapter;
-import com.google.gson.annotations.SerializedName;
-import com.huanchengfly.tieba.api.adapters.MediaAdapter;
-import com.huanchengfly.tieba.api.adapters.PortraitAdapter;
-import com.huanchengfly.tieba.api.models.ForumPageBean.AbstractBean;
-import com.huanchengfly.tieba.api.models.ForumPageBean.MediaInfoBean;
-import com.huanchengfly.tieba.api.models.ForumPageBean.VideoInfoBean;
+import com.google.gson.annotations.JsonAdapter
+import com.google.gson.annotations.SerializedName
+import com.huanchengfly.tieba.api.adapters.MediaAdapter
+import com.huanchengfly.tieba.api.adapters.PortraitAdapter
+import com.huanchengfly.tieba.api.models.ForumPageBean.*
 
-import java.util.List;
-
-public class PersonalizedBean {
+class PersonalizedBean {
     @SerializedName("error_code")
-    private String errorCode;
+    val errorCode: String? = null
+
     @SerializedName("error_msg")
-    private String errorMsg;
+    val errorMsg: String? = null
+
     @SerializedName("thread_list")
-    private List<ThreadBean> threadList;
+    val threadList: List<ThreadBean>? = null
+
     @SerializedName("thread_personalized")
-    private List<ThreadPersonalizedBean> threadPersonalized;
+    val threadPersonalized: List<ThreadPersonalizedBean>? = null
 
-    public String getErrorCode() {
-        return errorCode;
-    }
+    class ThreadPersonalizedBean {
+        val tid: String? = null
 
-    public String getErrorMsg() {
-        return errorMsg;
-    }
-
-    public List<ThreadBean> getThreadList() {
-        return threadList;
-    }
-
-    public List<ThreadPersonalizedBean> getThreadPersonalized() {
-        return threadPersonalized;
-    }
-
-    public static class ThreadPersonalizedBean {
-        private String tid;
         @SerializedName("dislike_resource")
-        private List<DislikeResourceBean> dislikeResource;
+        val dislikeResource: List<DislikeResourceBean>? = null
 
-        public String getTid() {
-            return tid;
-        }
-
-        public List<DislikeResourceBean> getDislikeResource() {
-            return dislikeResource;
-        }
     }
 
-    public static class DislikeResourceBean {
-        private String extra;
+    class DislikeResourceBean {
+        val extra: String? = null
+
         @SerializedName("dislike_id")
-        private String dislikeId;
+        val dislikeId: String? = null
+
         @SerializedName("dislike_reason")
-        private String dislikeReason;
+        val dislikeReason: String? = null
 
-        public String getExtra() {
-            return extra;
-        }
-
-        public String getDislikeId() {
-            return dislikeId;
-        }
-
-        public String getDislikeReason() {
-            return dislikeReason;
-        }
     }
 
-    public static class ThreadBean {
-        private String id;
-        private String tid;
-        private String title;
-        private AuthorBean author;
+    class ThreadBean {
+        val id: String? = null
+        val tid: String? = null
+        val title: String? = null
+        val author: AuthorBean? = null
+
         @SerializedName("reply_num")
-        private String replyNum;
+        val replyNum: String? = null
+
         @SerializedName("view_num")
-        private String viewNum;
+        val viewNum: String? = null
+
         @SerializedName("last_time")
-        private String lastTime;
+        val lastTime: String? = null
+
         @SerializedName("last_time_int")
-        private String lastTimeInt;
+        val lastTimeInt: String? = null
+
         @SerializedName("agree_num")
-        private String agreeNum;
+        val agreeNum: String? = null
+
         @SerializedName("is_top")
-        private String isTop;
+        val isTop: String? = null
+
         @SerializedName("is_good")
-        private String isGood;
+        val isGood: String? = null
+
         @SerializedName("is_ntitle")
-        private String isNoTitle;
+        val isNoTitle: String? = null
+
         @SerializedName("fid")
-        private String forumId;
+        val forumId: String? = null
+
         @SerializedName("fname")
-        private String forumName;
-        /*
-        @SerializedName("media_num")
-        private MediaNumBean mediaNum;
-        */
+        val forumName: String? = null
+
         @SerializedName("video_info")
-        private VideoInfoBean videoInfo;
-        @JsonAdapter(MediaAdapter.class)
-        private List<MediaInfoBean> media;
+        val videoInfo: VideoInfoBean? = null
+
+        @JsonAdapter(MediaAdapter::class)
+        val media: List<MediaInfoBean>? = null
+
         @SerializedName("abstract")
-        private List<AbstractBean> abstractBeans;
+        val abstractBeans: List<AbstractBean>? = null
+        var threadPersonalizedBean: ThreadPersonalizedBean? = null
 
-        private ThreadPersonalizedBean threadPersonalizedBean;
-
-        public ThreadPersonalizedBean getThreadPersonalizedBean() {
-            return threadPersonalizedBean;
-        }
-
-        public void setThreadPersonalizedBean(ThreadPersonalizedBean threadPersonalizedBean) {
-            this.threadPersonalizedBean = threadPersonalizedBean;
-        }
-
-        public String getForumId() {
-            return forumId;
-        }
-
-        public AuthorBean getAuthor() {
-            return author;
-        }
-
-        public String getForumName() {
-            return forumName;
-        }
-
-        public String getId() {
-            return id;
-        }
-
-        public String getTid() {
-            return tid;
-        }
-
-        public String getTitle() {
-            return title;
-        }
-
-        public String getReplyNum() {
-            return replyNum;
-        }
-
-        public String getViewNum() {
-            return viewNum;
-        }
-
-        public String getLastTime() {
-            return lastTime;
-        }
-
-        public String getLastTimeInt() {
-            return lastTimeInt;
-        }
-
-        public String getAgreeNum() {
-            return agreeNum;
-        }
-
-        public String getIsTop() {
-            return isTop;
-        }
-
-        public String getIsGood() {
-            return isGood;
-        }
-
-        public String getIsNoTitle() {
-            return isNoTitle;
-        }
-
-        /*public MediaNumBean getMediaNum() {
-            return mediaNum;
-        }*/
-
-        public VideoInfoBean getVideoInfo() {
-            return videoInfo;
-        }
-
-        public List<MediaInfoBean> getMedia() {
-            return media;
-        }
-
-        public List<AbstractBean> getAbstractBeans() {
-            return abstractBeans;
-        }
     }
 
-    public static class AuthorBean {
-        private String id;
-        private String name;
+    class AuthorBean {
+        val id: String? = null
+        val name: String? = null
+
         @SerializedName("name_show")
-        private String nameShow;
-        @JsonAdapter(PortraitAdapter.class)
-        private String portrait;
+        val nameShow: String? = null
+
+        @JsonAdapter(PortraitAdapter::class)
+        val portrait: String? = null
+
         @SerializedName("has_concerned")
-        private String hasConcerned;
+        val hasConcerned: String? = null
 
-        public String getId() {
-            return id;
-        }
-
-        public String getName() {
-            return name;
-        }
-
-        public String getNameShow() {
-            return nameShow;
-        }
-
-        public String getPortrait() {
-            return portrait;
-        }
-
-        public String getHasConcerned() {
-            return hasConcerned;
-        }
     }
 
-    public static class MediaNumBean {
-        private String pic;
-
-        public String getPic() {
-            return pic;
-        }
+    class MediaNumBean {
+        val pic: String? = null
     }
 }
