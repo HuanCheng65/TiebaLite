@@ -1,86 +1,39 @@
-package com.huanchengfly.tieba.api.models;
+package com.huanchengfly.tieba.api.models
 
-import com.google.gson.annotations.SerializedName;
+import com.google.gson.annotations.SerializedName
 
-import java.util.List;
+class NewUpdateBean {
+    val isSuccess: Boolean? = null
 
-public class NewUpdateBean {
-    private boolean success;
     @SerializedName("has_update")
-    private boolean hasUpdate;
+    val isHasUpdate: Boolean? = null
+
     @SerializedName("error_code")
-    private int errorCode;
+    val errorCode: Int? = null
+
     @SerializedName("error_message")
-    private String errorMsg;
-    private ResultBean result;
+    val errorMsg: String? = null
+    val result: ResultBean? = null
 
-    public int getErrorCode() {
-        return errorCode;
-    }
+    class ResultBean {
+        val isCancelable: Boolean? = null
 
-    public String getErrorMsg() {
-        return errorMsg;
-    }
-
-    public boolean isSuccess() {
-        return success;
-    }
-
-    public boolean isHasUpdate() {
-        return hasUpdate;
-    }
-
-    public ResultBean getResult() {
-        return result;
-    }
-
-    public static class ResultBean {
-        private boolean cancelable;
         @SerializedName("update_content")
-        private List<String> updateContent;
+        val updateContent: List<String>? = null
+
         @SerializedName("version_code")
-        private int versionCode;
+        val versionCode: Int? = null
+
         @SerializedName("version_name")
-        private String versionName;
+        val versionName: String? = null
+
         @SerializedName("version_type")
-        private int versionType;
-        private List<DownloadBean> downloads;
-
-        public List<DownloadBean> getDownloads() {
-            return downloads;
-        }
-
-        public boolean isCancelable() {
-            return cancelable;
-        }
-
-        public List<String> getUpdateContent() {
-            return updateContent;
-        }
-
-        public int getVersionCode() {
-            return versionCode;
-        }
-
-        public String getVersionName() {
-            return versionName;
-        }
-
-        public int getVersionType() {
-            return versionType;
-        }
+        val versionType: Int? = null
+        val downloads: List<DownloadBean>? = null
     }
 
-    public static class DownloadBean {
-        private String name;
-        private String url;
-
-        public String getName() {
-            return name;
-        }
-
-        public String getUrl() {
-            return url;
-        }
+    class DownloadBean {
+        val name: String? = null
+        val url: String? = null
     }
 }
