@@ -1,146 +1,64 @@
-package com.huanchengfly.tieba.api.models;
+package com.huanchengfly.tieba.api.models
 
-import com.google.gson.annotations.SerializedName;
-import com.huanchengfly.tieba.post.models.BaseBean;
+import com.google.gson.annotations.SerializedName
+import com.huanchengfly.tieba.post.models.BaseBean
 
-import java.util.List;
-
-public class PicPageBean extends BaseBean {
+class PicPageBean : BaseBean() {
     @SerializedName("error_code")
-    private String errorCode;
-    private ForumBean forum;
+    val errorCode: String? = null
+    val forum: ForumBean? = null
+
     @SerializedName("pic_amount")
-    private String picAmount;
+    val picAmount: String? = null
+
     @SerializedName("pic_list")
-    private List<PicBean> picList;
+    val picList: List<PicBean>? = null
 
-    public String getErrorCode() {
-        return errorCode;
+    class ForumBean {
+        val name: String? = null
+        val id: String? = null
+
     }
 
-    public ForumBean getForum() {
-        return forum;
-    }
-
-    public String getPicAmount() {
-        return picAmount;
-    }
-
-    public List<PicBean> getPicList() {
-        return picList;
-    }
-
-    public static class ForumBean {
-        private String name;
-        private String id;
-
-        public String getName() {
-            return name;
-        }
-
-        public String getId() {
-            return id;
-        }
-    }
-
-    public static class PicBean {
+    class PicBean {
         @SerializedName("overall_index")
-        private String overAllIndex;
-        private ImgBean img;
+        val overAllIndex: String? = null
+        val img: ImgBean? = null
+
         @SerializedName("post_id")
-        private String postId;
+        val postId: String? = null
+
         @SerializedName("user_id")
-        private String userId;
+        val userId: String? = null
+
         @SerializedName("user_name")
-        private String userName;
+        val userName: String? = null
 
-        public String getOverAllIndex() {
-            return overAllIndex;
-        }
-
-        public ImgBean getImg() {
-            return img;
-        }
-
-        public String getPostId() {
-            return postId;
-        }
-
-        public String getUserId() {
-            return userId;
-        }
-
-        public String getUserName() {
-            return userName;
-        }
     }
 
-    public static class ImgBean {
-        private ImgInfoBean original;
-        private ImgInfoBean medium;
-        private ImgInfoBean screen;
+    class ImgBean {
+        val original: ImgInfoBean? = null
+        val medium: ImgInfoBean? = null
+        val screen: ImgInfoBean? = null
 
-        public ImgInfoBean getOriginal() {
-            return original;
-        }
-
-        public ImgInfoBean getMedium() {
-            return medium;
-        }
-
-        public ImgInfoBean getScreen() {
-            return screen;
-        }
     }
 
-    public static class ImgInfoBean {
-        private String id;
-        private String width;
-        private String height;
-        private String size;
-        private String format;
+    class ImgInfoBean {
+        val id: String? = null
+        val width: String? = null
+        val height: String? = null
+        val size: String? = null
+        val format: String? = null
+
         @SerializedName("waterurl")
-        private String waterUrl;
+        val waterUrl: String? = null
+
         @SerializedName("big_cdn_src")
-        private String bigCdnSrc;
-        private String url;
+        val bigCdnSrc: String? = null
+        val url: String? = null
+
         @SerializedName("original_src")
-        private String originalSrc;
+        val originalSrc: String? = null
 
-        public String getId() {
-            return id;
-        }
-
-        public String getWidth() {
-            return width;
-        }
-
-        public String getHeight() {
-            return height;
-        }
-
-        public String getSize() {
-            return size;
-        }
-
-        public String getFormat() {
-            return format;
-        }
-
-        public String getWaterUrl() {
-            return waterUrl;
-        }
-
-        public String getBigCdnSrc() {
-            return bigCdnSrc;
-        }
-
-        public String getUrl() {
-            return url;
-        }
-
-        public String getOriginalSrc() {
-            return originalSrc;
-        }
     }
 }
