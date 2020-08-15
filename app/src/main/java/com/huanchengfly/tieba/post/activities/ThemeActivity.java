@@ -11,7 +11,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.SimpleItemAnimator;
 
 import com.huanchengfly.tieba.post.R;
-import com.huanchengfly.tieba.post.activities.base.BaseActivity;
 import com.huanchengfly.tieba.post.adapters.ThemeAdapter;
 import com.huanchengfly.tieba.post.utils.SharedPreferencesUtil;
 import com.huanchengfly.tieba.post.utils.ThemeUtil;

@@ -9,7 +9,7 @@
         android:id="@+id/thread_list_item"
         layout="@layout/layout_thread_list_item" />
 
-    <com.huanchengfly.tieba.widgets.theme.TintView
+    <com.huanchengfly.tieba.post.widgets.theme.TintView
         app:backgroundTint="@color/default_color_divider"
         android:layout_below="@id/thread_list_item"
         android:background="@drawable/drawable_divider_8dp"
@@ -17,7 +17,7 @@
         android:layout_width="match_parent"
         android:layout_height="8dp" />
 
-    <com.huanchengfly.tieba.widgets.theme.TintSuperTextView
+    <com.huanchengfly.tieba.post.widgets.theme.TintSuperTextView
         android:layout_below="@id/forum_bar_divider"
         app:sBackgroundDrawableRes="?attr/selectableItemBackground"
         android:elevation="0dp"

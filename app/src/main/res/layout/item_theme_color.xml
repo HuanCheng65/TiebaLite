@@ -11,7 +11,7 @@
         android:layout_width="36dp"
         android:layout_height="36dp" />
 
-    <com.huanchengfly.tieba.widgets.theme.TintImageView
+    <com.huanchengfly.tieba.post.widgets.theme.TintImageView
         android:visibility="gone"
         tools:backgroundTint="@color/black_trans"
         tools:tint="@color/white"

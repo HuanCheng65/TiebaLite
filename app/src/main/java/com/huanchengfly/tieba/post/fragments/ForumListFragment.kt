@@ -11,17 +11,17 @@ import androidx.recyclerview.widget.GridLayoutManager.SpanSizeLookup
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import butterknife.BindView
-import com.huanchengfly.tieba.api.Error
-import com.huanchengfly.tieba.api.ForumSortType
-import com.huanchengfly.tieba.api.TiebaApi
-import com.huanchengfly.tieba.api.models.CommonResponse
-import com.huanchengfly.tieba.api.models.ForumRecommend
-import com.huanchengfly.tieba.api.retrofit.exception.TiebaException
-import com.huanchengfly.tieba.api.retrofit.exception.TiebaLocalException
-import com.huanchengfly.tieba.post.ForumActivity
+import com.huanchengfly.tieba.post.api.Error
+import com.huanchengfly.tieba.post.api.ForumSortType
+import com.huanchengfly.tieba.post.api.TiebaApi
+import com.huanchengfly.tieba.post.api.models.CommonResponse
+import com.huanchengfly.tieba.post.api.models.ForumRecommend
+import com.huanchengfly.tieba.post.api.retrofit.exception.TiebaException
+import com.huanchengfly.tieba.post.api.retrofit.exception.TiebaLocalException
+import com.huanchengfly.tieba.post.activities.ForumActivity
 import com.huanchengfly.tieba.post.R
 import com.huanchengfly.tieba.post.adapters.LikeForumListAdapter
-import com.huanchengfly.tieba.post.base.BaseApplication
+import com.huanchengfly.tieba.post.BaseApplication
 import com.huanchengfly.tieba.post.interfaces.OnItemClickListener
 import com.huanchengfly.tieba.post.interfaces.OnItemLongClickListener
 import com.huanchengfly.tieba.post.interfaces.Refreshable
@@ -200,7 +200,7 @@ class ForumListFragment : BaseFragment(), Refreshable {
                         if (t is TiebaException) {
                             if (t !is TiebaLocalException || t.code != Error.ERROR_NOT_LOGGED_IN) {
                                 Toast.makeText(attachContext, t.message, Toast.LENGTH_SHORT).show()
-                            } else if (!BaseApplication.isFirstRun()) {
+                            } else if (!BaseApplication.isFirstRun) {
                                 Toast.makeText(attachContext, R.string.toast_please_login, Toast.LENGTH_SHORT).show()
                             }
                         } else Util.showNetworkErrorSnackbar(mRefreshView) { refresh() }

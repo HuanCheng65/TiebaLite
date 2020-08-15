@@ -5,7 +5,7 @@ import android.content.SharedPreferences;
 
 import androidx.annotation.StringDef;
 
-import com.huanchengfly.tieba.post.base.BaseApplication;
+import com.huanchengfly.tieba.post.BaseApplication;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;

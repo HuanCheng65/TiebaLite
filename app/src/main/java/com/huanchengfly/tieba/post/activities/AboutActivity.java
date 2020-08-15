@@ -11,16 +11,20 @@ import android.widget.TextView;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.widget.Toolbar;
 
-import com.huanchengfly.about.AboutPage;
-import com.huanchengfly.theme.utils.ThemeUtils;
-import com.huanchengfly.tieba.api.LiteApi;
-import com.huanchengfly.tieba.api.interfaces.CommonAPICallback;
-import com.huanchengfly.tieba.api.models.NewUpdateBean;
+import com.huanchengfly.tieba.post.ui.about.AboutPage;
+import com.huanchengfly.tieba.post.ui.theme.utils.ThemeUtils;
+import com.huanchengfly.tieba.post.api.LiteApi;
+import com.huanchengfly.tieba.post.api.interfaces.CommonAPICallback;
+import com.huanchengfly.tieba.post.api.models.NewUpdateBean;
 import com.huanchengfly.tieba.post.R;
-import com.huanchengfly.tieba.post.activities.base.BaseActivity;
 import com.huanchengfly.tieba.post.utils.NavigationHelper;
 import com.huanchengfly.tieba.post.utils.ThemeUtil;
 import com.huanchengfly.tieba.post.utils.VersionUtil;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
+import butterknife.Unbinder;
 
 public class AboutActivity extends BaseActivity implements View.OnClickListener {
     public static final int STATE_ERROR = 0;
@@ -31,27 +35,31 @@ public class AboutActivity extends BaseActivity implements View.OnClickListener 
     private TextView updateTipTitleTv;
     private TextView updateTipContentTv;
     private Button dismissBtn;
-    private int updateState;
     private Button downloadBtn;
+
+    private int updateState;
     private NewUpdateBean.ResultBean resultBean;
-    private AboutPage mAboutPage;
     private NavigationHelper navigationHelper;
+
+    @Override
+    protected int getLayoutId() {
+        return R.layout.activity_about;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_about);
         ThemeUtil.setTranslucentThemeBackground(findViewById(R.id.background));
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         RelativeLayout mainView = (RelativeLayout) findViewById(R.id.main);
         View headerView = View.inflate(this, R.layout.header_about, null);
-        navigationHelper = NavigationHelper.newInstance(this);
         updateTip = headerView.findViewById(R.id.header_update_tip_shadow);
         updateTipHeaderTv = headerView.findViewById(R.id.header_update_tip_header_title);
         updateTipTitleTv = headerView.findViewById(R.id.header_update_tip_title);
         updateTipContentTv = headerView.findViewById(R.id.header_update_tip_content);
-        downloadBtn = headerView.findViewById(R.id.header_update_tip_button_download);
         dismissBtn = headerView.findViewById(R.id.header_update_tip_button_dismiss);
+        downloadBtn = headerView.findViewById(R.id.header_update_tip_button_download);
+        navigationHelper = NavigationHelper.newInstance(this);
         downloadBtn.setOnClickListener(this);
         dismissBtn.setOnClickListener(this);
         setSupportActionBar(toolbar);
@@ -61,12 +69,12 @@ public class AboutActivity extends BaseActivity implements View.OnClickListener 
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
         int colorIcon = ThemeUtils.getColorByAttr(this, R.attr.colorAccent);
-        mAboutPage = new AboutPage(this)
+        new AboutPage(this)
                 .setHeaderView(headerView)
                 .addTitle("应用信息", colorIcon)
                 .addItem(new AboutPage.Item("当前版本", VersionUtil.getVersionName(this), R.drawable.ic_round_info, colorIcon))
-                .addItem(new AboutPage.Item("源代码").setIcon(R.drawable.ic_codepen, colorIcon).setOnClickListener(v -> navigationHelper.navigationByData(NavigationHelper.ACTION_URL, "https://github.com/HuanCheng65/TiebaLite")));
-        mAboutPage.into(mainView);
+                .addItem(new AboutPage.Item("源代码").setIcon(R.drawable.ic_codepen, colorIcon).setOnClickListener(v -> navigationHelper.navigationByData(NavigationHelper.ACTION_URL, "https://github.com/HuanCheng65/TiebaLite")))
+                .into(mainView);
         checkUpdate();
     }
 

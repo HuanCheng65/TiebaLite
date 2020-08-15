@@ -2,7 +2,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-    <com.huanchengfly.tieba.widgets.theme.TintTextView
+    <com.huanchengfly.tieba.post.widgets.theme.TintTextView
         android:textStyle="bold"
         app:tint="@color/default_color_text_secondary"
         android:layout_marginEnd="8dp"
@@ -13,7 +13,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 
-    <com.huanchengfly.tieba.widgets.theme.TintSwitch
+    <com.huanchengfly.tieba.post.widgets.theme.TintSwitch
         app:track="@drawable/switch_ios_track"
         android:thumb="@drawable/switch_ios_thumb"
         style="@style/Widget.Switch"

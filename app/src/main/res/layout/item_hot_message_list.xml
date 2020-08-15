@@ -6,7 +6,7 @@
     android:background="?attr/selectableItemBackground"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
-    <com.huanchengfly.tieba.widgets.theme.TintTextView
+    <com.huanchengfly.tieba.post.widgets.theme.TintTextView
         app:tint="@color/default_color_accent"
         android:layout_centerVertical="true"
         android:padding="4dp"
@@ -25,7 +25,7 @@
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
-        <com.huanchengfly.tieba.widgets.theme.TintTextView
+        <com.huanchengfly.tieba.post.widgets.theme.TintTextView
             android:id="@+id/hot_title"
             app:tint="@color/default_color_text"
             tools:text="震惊"
@@ -34,7 +34,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
-        <com.huanchengfly.tieba.widgets.theme.TintTextView
+        <com.huanchengfly.tieba.post.widgets.theme.TintTextView
             tools:text="某UP主咕咕咕"
             android:textSize="@dimen/text_size_hot_desc"
             android:layout_marginTop="4dp"

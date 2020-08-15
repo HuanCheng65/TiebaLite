@@ -12,7 +12,7 @@
         android:orientation="horizontal"
         android:weightSum="2"
         tools:ignore="UselessParent">
-        <com.huanchengfly.tieba.widgets.theme.TintSuperTextView
+        <com.huanchengfly.tieba.post.widgets.theme.TintSuperTextView
             app:centerTextColor="@color/default_color_text"
             app:sBackgroundDrawableRes="@color/transparent"
             android:id="@+id/search_order"
@@ -23,7 +23,7 @@
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="48dp" />
-        <com.huanchengfly.tieba.widgets.theme.TintSuperTextView
+        <com.huanchengfly.tieba.post.widgets.theme.TintSuperTextView
             app:centerTextColor="@color/default_color_text"
             app:sBackgroundDrawableRes="@color/transparent"
             android:id="@+id/search_filter"

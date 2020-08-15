@@ -14,7 +14,7 @@ import com.huanchengfly.tieba.post.R;
 import com.huanchengfly.tieba.post.components.MyViewHolder;
 import com.huanchengfly.tieba.post.models.database.Block;
 import com.huanchengfly.tieba.post.utils.BlockUtil;
-import com.huanchengfly.utils.GsonUtil;
+import com.huanchengfly.tieba.post.utils.GsonUtil;
 
 import org.litepal.LitePal;
 

@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto">
-    <com.huanchengfly.tieba.widgets.theme.TintSwipeRefreshLayout
+    <com.huanchengfly.tieba.post.widgets.theme.TintSwipeRefreshLayout
         android:id="@+id/refresh"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -11,5 +11,5 @@
             android:id="@+id/webView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"/>
-    </com.huanchengfly.tieba.widgets.theme.TintSwipeRefreshLayout>
+    </com.huanchengfly.tieba.post.widgets.theme.TintSwipeRefreshLayout>
 </FrameLayout>

@@ -33,7 +33,6 @@ import androidx.annotation.Nullable;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.google.android.material.snackbar.Snackbar;
-import com.huanchengfly.tieba.post.PermissionConstant;
 import com.huanchengfly.tieba.post.R;
 import com.huanchengfly.tieba.post.components.dialogs.PermissionDialog;
 import com.huanchengfly.tieba.post.interfaces.OnReceivedTitleListener;
@@ -47,7 +46,7 @@ import com.huanchengfly.tieba.post.utils.NavigationHelper;
 import com.huanchengfly.tieba.post.utils.ThemeUtil;
 import com.huanchengfly.tieba.post.utils.TiebaLiteJavaScript;
 import com.huanchengfly.tieba.post.utils.Util;
-import com.huanchengfly.utils.AssetUtil;
+import com.huanchengfly.tieba.post.utils.AssetUtil;
 import com.yanzhenjie.permission.AndPermission;
 import com.yanzhenjie.permission.runtime.Permission;
 
@@ -375,7 +374,7 @@ public class WebViewFragment extends BaseFragment implements DownloadListener {
             Uri uri = Uri.parse(mWebView.getUrl());
             if (uri != null && uri.getHost() != null) {
                 new PermissionDialog(getAttachContext(),
-                        new PermissionBean(PermissionConstant.PERMISSION_LOCATION,
+                        new PermissionBean(PermissionDialog.CustomPermission.PERMISSION_LOCATION,
                                 uri.getHost(),
                                 getAttachContext().getString(R.string.title_ask_permission, uri.getHost(), getAttachContext().getString(R.string.permission_name_location)),
                                 R.drawable.ic_round_location_on))

@@ -11,8 +11,8 @@ import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.huanchengfly.theme.interfaces.Tintable;
-import com.huanchengfly.theme.utils.ThemeUtils;
+import com.huanchengfly.tieba.post.ui.theme.interfaces.Tintable;
+import com.huanchengfly.tieba.post.ui.theme.utils.ThemeUtils;
 import com.huanchengfly.tieba.post.R;
 import com.huanchengfly.tieba.post.adapters.SearchForumAdapter;
 import com.huanchengfly.tieba.post.utils.DisplayUtil;

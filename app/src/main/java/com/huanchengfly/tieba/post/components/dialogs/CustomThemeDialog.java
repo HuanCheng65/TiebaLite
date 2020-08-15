@@ -14,9 +14,9 @@ import androidx.annotation.ColorInt;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 
-import com.huanchengfly.theme.utils.ThemeUtils;
+import com.huanchengfly.tieba.post.ui.theme.utils.ThemeUtils;
 import com.huanchengfly.tieba.post.R;
-import com.huanchengfly.tieba.post.base.BaseApplication;
+import com.huanchengfly.tieba.post.BaseApplication;
 import com.huanchengfly.tieba.post.utils.SharedPreferencesUtil;
 import com.jrummyapps.android.colorpicker.ColorPickerDialog;
 import com.jrummyapps.android.colorpicker.ColorPickerDialogListener;
@@ -84,7 +84,7 @@ public class CustomThemeDialog extends AlertDialog implements View.OnClickListen
         statusBarFont = contentView.findViewById(R.id.custom_theme_status_bar_font);
         toolbarPrimaryColor = contentView.findViewById(R.id.custom_theme_toolbar_primary_color);
         setView(contentView);
-        primaryColor = BaseApplication.getColorByAttr(getContext(), R.attr.colorPrimary, THEME_CUSTOM);
+        primaryColor = BaseApplication.ThemeDelegate.INSTANCE.getColorByAttr(getContext(), R.attr.colorPrimary, THEME_CUSTOM);
         statusBarFontDark = SharedPreferencesUtil.get(getContext(), SharedPreferencesUtil.SP_SETTINGS)
                 .getBoolean(SP_CUSTOM_STATUS_BAR_FONT_DARK, false);
         toolbarPrimary = SharedPreferencesUtil.get(getContext(), SharedPreferencesUtil.SP_SETTINGS)

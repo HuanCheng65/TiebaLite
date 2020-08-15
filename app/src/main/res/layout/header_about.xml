@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <com.huanchengfly.tieba.widgets.ShadowLayout
+    <com.huanchengfly.tieba.post.widgets.ShadowLayout
         android:id="@+id/header_update_tip_shadow"
         android:visibility="gone"
         android:layout_marginStart="6dp"
@@ -16,7 +16,7 @@
         app:shadow_layout_offsetY="4dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
-        <com.huanchengfly.tieba.widgets.theme.TintMaterialCardView
+        <com.huanchengfly.tieba.post.widgets.theme.TintMaterialCardView
             app:cardElevation="0dp"
             app:cardCornerRadius="8dp"
             app:contentPadding="16dp"
@@ -33,7 +33,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
 
-                    <com.huanchengfly.tieba.widgets.theme.TintImageView
+                    <com.huanchengfly.tieba.post.widgets.theme.TintImageView
                         app:tint="@color/default_color_primary"
                         android:layout_centerVertical="true"
                         app:srcCompat="@drawable/ic_ribbon"
@@ -42,7 +42,7 @@
                         android:layout_height="24dp"
                         tools:ignore="ContentDescription" />
 
-                    <com.huanchengfly.tieba.widgets.theme.TintTextView
+                    <com.huanchengfly.tieba.post.widgets.theme.TintTextView
                         app:tint="@color/default_color_primary"
                         tools:text="更新 · 正式版"
                         android:id="@+id/header_update_tip_header_title"
@@ -63,7 +63,7 @@
                     android:layout_below="@id/header_update_tip_header"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
-                    <com.huanchengfly.tieba.widgets.theme.TintTextView
+                    <com.huanchengfly.tieba.post.widgets.theme.TintTextView
                         android:ellipsize="end"
                         android:maxLines="1"
                         android:textSize="16sp"
@@ -73,7 +73,7 @@
                         android:id="@+id/header_update_tip_title"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content" />
-                    <com.huanchengfly.tieba.widgets.theme.TintTextView
+                    <com.huanchengfly.tieba.post.widgets.theme.TintTextView
                         android:lineSpacingMultiplier="1.2"
                         android:layout_marginTop="4dp"
                         android:textSize="14sp"
@@ -84,7 +84,7 @@
                         android:layout_height="wrap_content" />
                 </LinearLayout>
 
-                <com.huanchengfly.tieba.widgets.theme.TintMaterialButton
+                <com.huanchengfly.tieba.post.widgets.theme.TintMaterialButton
                     style="@style/Widget.Button.Flat.Dense"
                     android:id="@+id/header_update_tip_button_dismiss"
                     android:layout_width="wrap_content"
@@ -95,7 +95,7 @@
                     android:layout_toStartOf="@id/header_update_tip_button_download"
                     android:text="@string/button_next_time" />
 
-                <com.huanchengfly.tieba.widgets.theme.TintMaterialButton
+                <com.huanchengfly.tieba.post.widgets.theme.TintMaterialButton
                     style="@style/Widget.Button.Dense"
                     android:id="@+id/header_update_tip_button_download"
                     android:layout_width="wrap_content"
@@ -105,6 +105,6 @@
                     android:layout_marginTop="8dp"
                     android:text="@string/button_go_to_download" />
             </RelativeLayout>
-        </com.huanchengfly.tieba.widgets.theme.TintMaterialCardView>
-    </com.huanchengfly.tieba.widgets.ShadowLayout>
+        </com.huanchengfly.tieba.post.widgets.theme.TintMaterialCardView>
+    </com.huanchengfly.tieba.post.widgets.ShadowLayout>
 </RelativeLayout>

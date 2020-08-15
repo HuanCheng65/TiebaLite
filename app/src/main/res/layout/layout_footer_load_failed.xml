@@ -9,7 +9,7 @@
         android:id="@+id/footer_view"
         android:layout_width="wrap_content"
         android:layout_height="@dimen/footer_view_height">
-        <com.huanchengfly.tieba.widgets.theme.TintTextView
+        <com.huanchengfly.tieba.post.widgets.theme.TintTextView
             android:layout_centerVertical="true"
             android:textSize="14sp"
             android:id="@+id/footer_tip"

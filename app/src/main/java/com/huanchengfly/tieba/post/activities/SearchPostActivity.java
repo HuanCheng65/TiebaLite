@@ -9,10 +9,9 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import com.huanchengfly.tieba.api.TiebaApi;
-import com.huanchengfly.tieba.api.models.SearchPostBean;
+import com.huanchengfly.tieba.post.api.TiebaApi;
+import com.huanchengfly.tieba.post.api.models.SearchPostBean;
 import com.huanchengfly.tieba.post.R;
-import com.huanchengfly.tieba.post.activities.base.BaseActivity;
 import com.huanchengfly.tieba.post.adapters.SearchPostAdapter;
 import com.huanchengfly.tieba.post.components.MyLinearLayoutManager;
 import com.huanchengfly.tieba.post.components.dividers.RecycleViewDivider;

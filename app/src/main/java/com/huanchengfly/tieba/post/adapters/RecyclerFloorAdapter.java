@@ -18,13 +18,13 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.bumptech.glide.request.RequestOptions;
-import com.huanchengfly.tieba.api.TiebaApi;
-import com.huanchengfly.tieba.api.models.CommonResponse;
-import com.huanchengfly.tieba.api.models.SubFloorListBean;
-import com.huanchengfly.tieba.api.models.ThreadContentBean;
+import com.huanchengfly.tieba.post.api.TiebaApi;
+import com.huanchengfly.tieba.post.api.models.CommonResponse;
+import com.huanchengfly.tieba.post.api.models.SubFloorListBean;
+import com.huanchengfly.tieba.post.api.models.ThreadContentBean;
 import com.huanchengfly.tieba.post.R;
 import com.huanchengfly.tieba.post.activities.ReplyActivity;
-import com.huanchengfly.tieba.post.activities.base.BaseActivity;
+import com.huanchengfly.tieba.post.activities.BaseActivity;
 import com.huanchengfly.tieba.post.components.spans.MyURLSpan;
 import com.huanchengfly.tieba.post.components.spans.MyUserSpan;
 import com.huanchengfly.tieba.post.fragments.ConfirmDialogFragment;
@@ -32,9 +32,9 @@ import com.huanchengfly.tieba.post.fragments.MenuDialogFragment;
 import com.huanchengfly.tieba.post.models.PhotoViewBean;
 import com.huanchengfly.tieba.post.models.ReplyInfoBean;
 import com.huanchengfly.tieba.post.utils.*;
-import com.huanchengfly.tieba.widgets.ContentLayout;
-import com.huanchengfly.tieba.widgets.VoicePlayerView;
-import com.huanchengfly.tieba.widgets.theme.TintTextView;
+import com.huanchengfly.tieba.post.widgets.MyLinearLayout;
+import com.huanchengfly.tieba.post.widgets.VoicePlayerView;
+import com.huanchengfly.tieba.post.widgets.theme.TintTextView;
 import com.othershe.baseadapter.ViewHolder;
 import com.othershe.baseadapter.base.CommonBaseAdapter;
 import org.jetbrains.annotations.NotNull;
@@ -392,8 +392,8 @@ public class RecyclerFloorAdapter extends CommonBaseAdapter<SubFloorListBean.Pos
     }
 
     private void initContentView(ViewHolder viewHolder, SubFloorListBean.PostInfo postListItemBean) {
-        ContentLayout contentLayout = viewHolder.getView(R.id.thread_list_item_content_content);
-        contentLayout.removeAllViews();
-        contentLayout.addViews(getContentViews(postListItemBean));
+        MyLinearLayout myLinearLayout = viewHolder.getView(R.id.thread_list_item_content_content);
+        myLinearLayout.removeAllViews();
+        myLinearLayout.addViews(getContentViews(postListItemBean));
     }
 }

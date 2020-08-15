@@ -5,7 +5,6 @@ import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
-import android.util.Log;
 import android.view.View;
 
 import androidx.annotation.DrawableRes;
@@ -15,8 +14,8 @@ import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.huanchengfly.theme.interfaces.Tintable;
-import com.huanchengfly.theme.utils.ThemeUtils;
+import com.huanchengfly.tieba.post.ui.theme.interfaces.Tintable;
+import com.huanchengfly.tieba.post.ui.theme.utils.ThemeUtils;
 import com.huanchengfly.tieba.post.R;
 
 public class RecycleViewDivider extends RecyclerView.ItemDecoration implements Tintable {

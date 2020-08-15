@@ -175,7 +175,7 @@
 -dontwarn com.gyf.immersionbar.**
 
 -keep class com.huanchengfly.tieba.post.models.** { *; }
--keep class com.huanchengfly.tieba.api.models.** { *; }
+-keep class com.huanchengfly.tieba.post.api.models.** { *; }
 
 -keep public class com.huanchengfly.tieba.post.utils.TiebaLiteJavaScript { *; }
 

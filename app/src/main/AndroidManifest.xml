@@ -32,7 +32,7 @@
         android:smallScreens="true" />
 
     <application
-        android:name=".base.BaseApplication"
+        android:name=".BaseApplication"
         android:allowBackup="true"
         android:fullBackupContent="@xml/backup_descriptor"
         android:icon="@mipmap/ic_launcher"
@@ -43,7 +43,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="UnusedAttribute">
-        <activity android:name="com.huanchengfly.tieba.hotmessage.activities.HotMessageListActivity" />
+        <activity android:name=".activities.HotMessageListActivity" />
         <activity
             android:name=".activities.PhotoViewActivity"
             android:configChanges="screenSize|screenLayout|orientation|smallestScreenSize|keyboardHidden"
@@ -80,7 +80,7 @@
             android:value="true" />
 
         <activity
-            android:name=".MainActivity"
+            android:name=".activities.MainActivity"
             android:configChanges="screenSize|screenLayout|orientation|smallestScreenSize|keyboardHidden"
             android:resizeableActivity="true"
             android:theme="@style/AppTheme.Splash"
@@ -100,20 +100,20 @@
             android:configChanges="screenSize|screenLayout|orientation|smallestScreenSize|keyboardHidden"
             android:windowSoftInputMode="adjustResize" />
         <activity
-            android:name=".SearchActivity"
+            android:name=".activities.SearchActivity"
             android:configChanges="screenSize|screenLayout|orientation|smallestScreenSize|keyboardHidden"
             android:windowSoftInputMode="adjustResize" />
         <activity
-            android:name=".ForumActivity"
+            android:name=".activities.ForumActivity"
             android:configChanges="screenSize|screenLayout|orientation|smallestScreenSize|keyboardHidden"
             android:exported="true"
             android:windowSoftInputMode="adjustResize" />
         <activity
-            android:name=".ThreadActivity"
+            android:name=".activities.ThreadActivity"
             android:configChanges="screenSize|screenLayout|orientation|smallestScreenSize|keyboardHidden"
             android:windowSoftInputMode="adjustResize" />
         <activity
-            android:name=".WebViewActivity"
+            android:name=".activities.WebViewActivity"
             android:configChanges="screenSize|screenLayout|orientation|smallestScreenSize|keyboardHidden"
             android:windowSoftInputMode="adjustResize" />
         <activity
@@ -190,7 +190,7 @@
         </service>
 
         <activity
-            android:name=".FloorActivity"
+            android:name=".activities.FloorActivity"
             android:configChanges="screenSize|screenLayout|orientation|smallestScreenSize|keyboardHidden"
             android:windowSoftInputMode="adjustResize" />
         <activity

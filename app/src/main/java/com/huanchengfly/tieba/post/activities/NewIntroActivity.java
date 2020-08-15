@@ -3,9 +3,9 @@ package com.huanchengfly.tieba.post.activities;
 import android.content.Intent;
 import android.os.Build;
 
-import com.huanchengfly.intro.BaseIntroActivity;
-import com.huanchengfly.intro.fragments.AppIntroFragment;
-import com.huanchengfly.theme.utils.ThemeUtils;
+import com.huanchengfly.tieba.post.ui.intro.BaseIntroActivity;
+import com.huanchengfly.tieba.post.ui.intro.fragments.AppIntroFragment;
+import com.huanchengfly.tieba.post.ui.theme.utils.ThemeUtils;
 import com.huanchengfly.tieba.post.R;
 import com.huanchengfly.tieba.post.fragments.intro.CustomSettingsFragment;
 import com.huanchengfly.tieba.post.fragments.intro.ExploreFragment;

@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto">
-    <com.huanchengfly.tieba.widgets.theme.TintView
+    <com.huanchengfly.tieba.post.widgets.theme.TintView
         app:backgroundTint="@color/default_color_divider"
         android:layout_marginTop="16dp"
         android:visibility="gone"
@@ -39,7 +39,7 @@
             android:layout_toEndOf="@id/item_about_icon_holder"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
-            <com.huanchengfly.tieba.widgets.theme.TintTextView
+            <com.huanchengfly.tieba.post.widgets.theme.TintTextView
                 app:tint="@color/default_color_text"
                 android:textStyle="bold"
                 android:textSize="16sp"
@@ -47,7 +47,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
 
-            <com.huanchengfly.tieba.widgets.theme.TintTextView
+            <com.huanchengfly.tieba.post.widgets.theme.TintTextView
                 android:textSize="14sp"
                 app:tint="@color/default_color_text_secondary"
                 android:id="@+id/item_about_subtitle"

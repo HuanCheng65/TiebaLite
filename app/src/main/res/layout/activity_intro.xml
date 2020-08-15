@@ -7,8 +7,8 @@
     android:background="@color/white"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.huanchengfly.intro.BaseIntroActivity">
-    <com.huanchengfly.intro.widgets.MyViewPager
+    tools:context=".ui.intro.BaseIntroActivity">
+    <com.huanchengfly.tieba.post.ui.intro.widgets.MyViewPager
         android:id="@+id/view_pager"
         android:layout_alignParentTop="true"
         android:layout_above="@id/bottom_bar"

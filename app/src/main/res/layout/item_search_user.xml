@@ -25,7 +25,7 @@
             android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
-            <com.huanchengfly.tieba.widgets.theme.TintTextView
+            <com.huanchengfly.tieba.post.widgets.theme.TintTextView
                 android:textStyle="bold"
                 android:id="@+id/item_search_forum_title"
                 android:layout_width="match_parent"
@@ -34,7 +34,7 @@
                 android:textSize="18sp"
                 tools:text="Title" />
 
-            <com.huanchengfly.tieba.widgets.theme.TintTextView
+            <com.huanchengfly.tieba.post.widgets.theme.TintTextView
                 android:id="@+id/item_search_forum_subtitle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

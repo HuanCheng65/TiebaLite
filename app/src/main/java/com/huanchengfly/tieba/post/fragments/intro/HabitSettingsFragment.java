@@ -4,8 +4,8 @@ import android.view.ViewGroup;
 
 import androidx.annotation.Nullable;
 
-import com.huanchengfly.intro.fragments.BaseIntroFragment;
-import com.huanchengfly.theme.utils.ThemeUtils;
+import com.huanchengfly.tieba.post.ui.intro.fragments.BaseIntroFragment;
+import com.huanchengfly.tieba.post.ui.theme.utils.ThemeUtils;
 import com.huanchengfly.tieba.post.R;
 import com.huanchengfly.tieba.post.utils.SharedPreferencesUtil;
 

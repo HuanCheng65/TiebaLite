@@ -5,8 +5,7 @@ import android.os.Build;
 import android.provider.Settings;
 import android.text.TextUtils;
 
-import com.huanchengfly.tieba.post.base.BaseApplication;
-import com.huanchengfly.utils.MD5Util;
+import com.huanchengfly.tieba.post.BaseApplication;
 
 import java.util.UUID;
 

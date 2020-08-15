@@ -8,7 +8,7 @@ import androidx.annotation.NonNull;
 
 import com.bumptech.glide.load.engine.bitmap_recycle.BitmapPool;
 import com.bumptech.glide.load.resource.bitmap.BitmapTransformation;
-import com.huanchengfly.utils.FastBlur;
+import com.huanchengfly.tieba.post.utils.FastBlur;
 
 import java.security.MessageDigest;
 

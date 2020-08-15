@@ -31,7 +31,7 @@
             android:layout_height="0dp"
             android:layout_weight="1">
 
-            <com.huanchengfly.tieba.widgets.theme.TintTextView
+            <com.huanchengfly.tieba.post.widgets.theme.TintTextView
                 android:id="@android:id/title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -42,7 +42,7 @@
                 android:ellipsize="marquee"
                 tools:ignore="PrivateResource" />
 
-            <com.huanchengfly.tieba.widgets.theme.TintTextView
+            <com.huanchengfly.tieba.post.widgets.theme.TintTextView
                 android:layout_marginTop="4dp"
                 android:id="@android:id/summary"
                 android:layout_width="wrap_content"
@@ -64,7 +64,7 @@
             android:clipChildren="false"
             android:clipToPadding="false">
 
-            <com.huanchengfly.tieba.widgets.theme.TintSeekBar
+            <com.huanchengfly.tieba.post.widgets.theme.TintSeekBar
                 style="@style/Widget.AppCompat.SeekBar"
                 app:progressTint="@color/default_color_primary"
                 android:id="@+id/seekbar"
@@ -77,7 +77,7 @@
                 android:paddingBottom="@dimen/preference_seekbar_padding_vertical"
                 android:background="@null"/>
 
-            <com.huanchengfly.tieba.widgets.theme.TintTextView
+            <com.huanchengfly.tieba.post.widgets.theme.TintTextView
                 android:id="@+id/seekbar_value"
                 android:minWidth="@dimen/preference_seekbar_value_minWidth"
                 android:paddingStart="8dp"

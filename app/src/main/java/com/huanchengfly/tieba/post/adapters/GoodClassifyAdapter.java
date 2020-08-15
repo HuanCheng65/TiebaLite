@@ -8,8 +8,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.huanchengfly.theme.utils.ThemeUtils;
-import com.huanchengfly.tieba.api.models.ForumPageBean;
+import com.huanchengfly.tieba.post.ui.theme.utils.ThemeUtils;
+import com.huanchengfly.tieba.post.api.models.ForumPageBean;
 import com.huanchengfly.tieba.post.R;
 import com.huanchengfly.tieba.post.components.MyViewHolder;
 import com.huanchengfly.tieba.post.interfaces.OnSwitchListener;

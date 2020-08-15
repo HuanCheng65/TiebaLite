@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.huanchengfly.tieba.widgets.theme.TintCoordinatorLayout
+<com.huanchengfly.tieba.post.widgets.theme.TintCoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -25,7 +25,7 @@
             android:layout_height="wrap_content" />
     </com.google.android.material.appbar.AppBarLayout>
 
-    <com.huanchengfly.tieba.widgets.theme.TintSwipeRefreshLayout
+    <com.huanchengfly.tieba.post.widgets.theme.TintSwipeRefreshLayout
         android:id="@+id/search_post_refresh_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -36,5 +36,5 @@
             android:background="@color/transparent"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
-    </com.huanchengfly.tieba.widgets.theme.TintSwipeRefreshLayout>
-</com.huanchengfly.tieba.widgets.theme.TintCoordinatorLayout>
+    </com.huanchengfly.tieba.post.widgets.theme.TintSwipeRefreshLayout>
+</com.huanchengfly.tieba.post.widgets.theme.TintCoordinatorLayout>

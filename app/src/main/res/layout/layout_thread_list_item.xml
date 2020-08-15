@@ -15,7 +15,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <com.huanchengfly.tieba.widgets.theme.TintTextView
+        <com.huanchengfly.tieba.post.widgets.theme.TintTextView
             android:id="@+id/thread_list_item_content_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -51,7 +51,7 @@
             android:layout_toEndOf="@id/thread_list_item_user_avatar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
-            <com.huanchengfly.tieba.widgets.theme.TintTextView
+            <com.huanchengfly.tieba.post.widgets.theme.TintTextView
                 android:layout_centerVertical="true"
                 android:textStyle="bold"
                 android:id="@+id/thread_list_item_user_name"
@@ -107,7 +107,7 @@
             </RelativeLayout>
         </RelativeLayout>
 
-        <com.huanchengfly.tieba.widgets.theme.TintTextView
+        <com.huanchengfly.tieba.post.widgets.theme.TintTextView
             android:id="@+id/thread_list_item_user_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -119,7 +119,7 @@
             app:tint="@color/default_color_text_secondary"
             tools:text="第 1 楼 · 刚刚" />
 
-        <com.huanchengfly.tieba.widgets.theme.TintImageView
+        <com.huanchengfly.tieba.post.widgets.theme.TintImageView
             android:id="@+id/thread_list_item_reply"
             android:layout_width="18dp"
             android:layout_height="18dp"
@@ -143,14 +143,14 @@
         android:paddingStart="38dp"
         android:paddingEnd="4dp">
 
-        <com.huanchengfly.tieba.widgets.ContentLayout
+        <com.huanchengfly.tieba.post.widgets.MyLinearLayout
             android:id="@+id/thread_list_item_content_content"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
             tools:layout_height="36dp" />
 
-        <com.huanchengfly.tieba.widgets.theme.TintFloorMaterialCardView
+        <com.huanchengfly.tieba.post.widgets.theme.TintFloorMaterialCardView
             android:visibility="gone"
             tools:visibility="visible"
             android:id="@+id/thread_list_item_content_floor_card"
@@ -169,13 +169,13 @@
                 android:paddingTop="8dp"
                 android:paddingBottom="8dp">
 
-                <com.huanchengfly.tieba.widgets.ContentLayout
+                <com.huanchengfly.tieba.post.widgets.MyLinearLayout
                     android:id="@+id/thread_list_item_content_floor"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical" />
 
-                <com.huanchengfly.tieba.widgets.theme.TintTextView
+                <com.huanchengfly.tieba.post.widgets.theme.TintTextView
                     android:id="@+id/thread_list_item_content_floor_more"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -189,7 +189,7 @@
 
             </RelativeLayout>
 
-        </com.huanchengfly.tieba.widgets.theme.TintFloorMaterialCardView>
+        </com.huanchengfly.tieba.post.widgets.theme.TintFloorMaterialCardView>
 
     </RelativeLayout>
 </RelativeLayout>

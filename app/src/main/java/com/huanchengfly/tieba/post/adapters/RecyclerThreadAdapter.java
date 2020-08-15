@@ -17,14 +17,14 @@ import androidx.annotation.NonNull;
 import com.allen.library.SuperTextView;
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.bumptech.glide.request.RequestOptions;
-import com.huanchengfly.theme.utils.ThemeUtils;
-import com.huanchengfly.tieba.api.TiebaApi;
-import com.huanchengfly.tieba.api.models.CommonResponse;
-import com.huanchengfly.tieba.api.models.ThreadContentBean;
+import com.huanchengfly.tieba.post.ui.theme.utils.ThemeUtils;
+import com.huanchengfly.tieba.post.api.TiebaApi;
+import com.huanchengfly.tieba.post.api.models.CommonResponse;
+import com.huanchengfly.tieba.post.api.models.ThreadContentBean;
+import com.huanchengfly.tieba.post.BaseApplication;
 import com.huanchengfly.tieba.post.R;
 import com.huanchengfly.tieba.post.activities.ReplyActivity;
-import com.huanchengfly.tieba.post.activities.base.BaseActivity;
-import com.huanchengfly.tieba.post.base.Config;
+import com.huanchengfly.tieba.post.activities.BaseActivity;
 import com.huanchengfly.tieba.post.components.spans.MyImageSpan;
 import com.huanchengfly.tieba.post.components.spans.MyURLSpan;
 import com.huanchengfly.tieba.post.components.spans.MyUserSpan;
@@ -35,11 +35,11 @@ import com.huanchengfly.tieba.post.fragments.MenuDialogFragment;
 import com.huanchengfly.tieba.post.models.PhotoViewBean;
 import com.huanchengfly.tieba.post.models.ReplyInfoBean;
 import com.huanchengfly.tieba.post.utils.*;
-import com.huanchengfly.tieba.widgets.ContentLayout;
-import com.huanchengfly.tieba.widgets.MyImageView;
-import com.huanchengfly.tieba.widgets.VideoPlayerStandard;
-import com.huanchengfly.tieba.widgets.VoicePlayerView;
-import com.huanchengfly.tieba.widgets.theme.TintTextView;
+import com.huanchengfly.tieba.post.widgets.MyLinearLayout;
+import com.huanchengfly.tieba.post.widgets.MyImageView;
+import com.huanchengfly.tieba.post.widgets.VideoPlayerStandard;
+import com.huanchengfly.tieba.post.widgets.VoicePlayerView;
+import com.huanchengfly.tieba.post.widgets.theme.TintTextView;
 import com.othershe.baseadapter.ViewHolder;
 import com.othershe.baseadapter.base.MultiBaseAdapter;
 import org.jetbrains.annotations.NotNull;
@@ -98,7 +98,7 @@ public class RecyclerThreadAdapter extends MultiBaseAdapter<ThreadContentBean.Po
                 .skipMemoryCache(true);
         navigationHelper = NavigationHelper.newInstance(mContext);
         immersive = false;
-        this.screenWidthPx = Config.EXACT_SCREEN_WIDTH;
+        this.screenWidthPx = BaseApplication.ScreenInfo.EXACT_SCREEN_WIDTH;
         defaultLayoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         defaultLayoutParams.setMargins(0, 8, 0, 8);
         defaultRequestOptions = new RequestOptions()
@@ -331,8 +331,8 @@ public class RecyclerThreadAdapter extends MultiBaseAdapter<ThreadContentBean.Po
 
     private void initFloorView(ViewHolder holder, ThreadContentBean.PostListItemBean bean) {
         TextView more = holder.getView(R.id.thread_list_item_content_floor_more);
-        ContentLayout contentLayout = holder.getView(R.id.thread_list_item_content_floor);
-        contentLayout.removeAllViews();
+        MyLinearLayout myLinearLayout = holder.getView(R.id.thread_list_item_content_floor);
+        myLinearLayout.removeAllViews();
         if (bean.getSubPostList().getSubPostList() != null && bean.getSubPostList().getSubPostList().size() > 0) {
             holder.setVisibility(R.id.thread_list_item_content_floor_card, View.VISIBLE);
             int count = Integer.valueOf(bean.getSubPostNumber());
@@ -354,19 +354,19 @@ public class RecyclerThreadAdapter extends MultiBaseAdapter<ThreadContentBean.Po
                     if (postListItemBeans.size() < Integer.parseInt(bean.getSubPostNumber())) {
                         FloorFragment.newInstance(threadBean.getId(), bean.getSubPostList().getPid(), "", true).show(((BaseActivity) mContext).getSupportFragmentManager(), threadBean.getId() + "_Floor");
                     } else {
-                        contentLayout.removeAllViews();
+                        myLinearLayout.removeAllViews();
                         List<View> newViews = new ArrayList<>();
                         for (ThreadContentBean.PostListItemBean postListItemBean : postListItemBeans) {
                             newViews.add(getContentView(postListItemBean, bean));
                         }
-                        contentLayout.addViews(newViews);
+                        myLinearLayout.addViews(newViews);
                         more.setVisibility(View.GONE);
                     }
                 } catch (NumberFormatException e) {
                     e.printStackTrace();
                 }
             });
-            contentLayout.addViews(views);
+            myLinearLayout.addViews(views);
         } else {
             holder.setVisibility(R.id.thread_list_item_content_floor_card, View.GONE);
         }
@@ -874,9 +874,9 @@ public class RecyclerThreadAdapter extends MultiBaseAdapter<ThreadContentBean.Po
     }
 
     private void initContentView(ViewHolder viewHolder, ThreadContentBean.PostListItemBean postListItemBean) {
-        ContentLayout contentLayout = viewHolder.getView(R.id.thread_list_item_content_content);
-        contentLayout.removeAllViews();
-        contentLayout.addViews(getContentViews(postListItemBean));
+        MyLinearLayout myLinearLayout = viewHolder.getView(R.id.thread_list_item_content_content);
+        myLinearLayout.removeAllViews();
+        myLinearLayout.addViews(getContentViews(postListItemBean));
     }
 
     @Override

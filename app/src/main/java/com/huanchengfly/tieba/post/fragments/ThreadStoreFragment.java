@@ -16,9 +16,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.google.android.material.snackbar.Snackbar;
-import com.huanchengfly.tieba.api.TiebaApi;
-import com.huanchengfly.tieba.api.models.CommonResponse;
-import com.huanchengfly.tieba.api.models.ThreadStoreBean;
+import com.huanchengfly.tieba.post.api.TiebaApi;
+import com.huanchengfly.tieba.post.api.models.CommonResponse;
+import com.huanchengfly.tieba.post.api.models.ThreadStoreBean;
 import com.huanchengfly.tieba.post.R;
 import com.huanchengfly.tieba.post.adapters.ThreadStoreAdapter;
 import com.huanchengfly.tieba.post.components.MyLinearLayoutManager;

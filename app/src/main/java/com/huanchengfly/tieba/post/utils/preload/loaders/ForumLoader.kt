@@ -1,9 +1,9 @@
 package com.huanchengfly.tieba.post.utils.preload.loaders
 
 import com.billy.android.preloader.interfaces.DataLoader
-import com.huanchengfly.tieba.api.ForumSortType
-import com.huanchengfly.tieba.api.TiebaApi
-import com.huanchengfly.tieba.api.models.ForumPageBean
+import com.huanchengfly.tieba.post.api.ForumSortType
+import com.huanchengfly.tieba.post.api.TiebaApi
+import com.huanchengfly.tieba.post.api.models.ForumPageBean
 
 class ForumLoader constructor(
         private val forumName: String,

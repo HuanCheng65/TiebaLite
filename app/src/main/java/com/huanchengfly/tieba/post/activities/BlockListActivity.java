@@ -16,13 +16,12 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.snackbar.Snackbar;
 import com.huanchengfly.tieba.post.R;
-import com.huanchengfly.tieba.post.activities.base.BaseActivity;
 import com.huanchengfly.tieba.post.adapters.BlockListAdapter;
 import com.huanchengfly.tieba.post.components.dialogs.EditTextDialog;
 import com.huanchengfly.tieba.post.models.database.Block;
 import com.huanchengfly.tieba.post.utils.ThemeUtil;
 import com.huanchengfly.tieba.post.utils.Util;
-import com.huanchengfly.utils.GsonUtil;
+import com.huanchengfly.tieba.post.utils.GsonUtil;
 
 public class BlockListActivity extends BaseActivity {
     private Toolbar toolbar;

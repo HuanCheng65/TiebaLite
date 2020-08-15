@@ -14,10 +14,10 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.huanchengfly.tieba.post.R;
 
-import me.everything.android.ui.overscroll.IOverScrollDecor;
-import me.everything.android.ui.overscroll.IOverScrollUpdateListener;
-import me.everything.android.ui.overscroll.VerticalOverScrollBounceEffectDecorator;
-import me.everything.android.ui.overscroll.adapters.RecyclerViewOverScrollDecorAdapter;
+import com.huanchengfly.tieba.post.ui.overscroll.IOverScrollDecor;
+import com.huanchengfly.tieba.post.ui.overscroll.IOverScrollUpdateListener;
+import com.huanchengfly.tieba.post.ui.overscroll.VerticalOverScrollBounceEffectDecorator;
+import com.huanchengfly.tieba.post.ui.overscroll.adapters.RecyclerViewOverScrollDecorAdapter;
 
 public class AnimUtil {
     public static IOverScrollDecor setUpOverScroll(RecyclerView recyclerView) {

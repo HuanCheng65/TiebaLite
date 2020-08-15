@@ -13,14 +13,12 @@ import androidx.appcompat.widget.Toolbar;
 
 import com.google.android.material.snackbar.Snackbar;
 import com.huanchengfly.tieba.post.R;
-import com.huanchengfly.tieba.post.activities.base.BaseActivity;
 import com.huanchengfly.tieba.post.fragments.WebViewFragment;
 import com.huanchengfly.tieba.post.interfaces.WebViewListener;
 import com.huanchengfly.tieba.post.utils.AccountUtil;
 import com.huanchengfly.tieba.post.utils.DialogUtil;
 import com.huanchengfly.tieba.post.utils.ThemeUtil;
 import com.huanchengfly.tieba.post.utils.Util;
-import com.huanchengfly.utils.AssetUtil;
 
 public class UpdateInfoActivity extends BaseActivity implements WebViewListener {
     public static final int ACTION_UPDATE_LOGIN_INFO = 0;

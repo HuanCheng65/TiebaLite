@@ -7,7 +7,7 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.huanchengfly.tieba.api.models.ForumRecommend;
+import com.huanchengfly.tieba.post.api.models.ForumRecommend;
 import com.huanchengfly.tieba.post.R;
 import com.huanchengfly.tieba.post.components.MyViewHolder;
 import com.huanchengfly.tieba.post.interfaces.OnItemClickListener;

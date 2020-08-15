@@ -6,7 +6,7 @@
     android:layout_marginBottom="6dp"
     android:id="@+id/forum_item_title_holder"
     android:layout_height="wrap_content">
-    <com.huanchengfly.tieba.widgets.theme.TintTextView
+    <com.huanchengfly.tieba.post.widgets.theme.TintTextView
         android:id="@+id/forum_item_good_tip"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -15,7 +15,7 @@
         android:textStyle="bold"
         android:layout_marginEnd="4dp"
         android:text="@string/tip_good" />
-    <com.huanchengfly.tieba.widgets.theme.TintTextView
+    <com.huanchengfly.tieba.post.widgets.theme.TintTextView
         android:letterSpacing="0.02"
         android:layout_alignWithParentIfMissing="true"
         android:layout_toEndOf="@id/forum_item_good_tip"

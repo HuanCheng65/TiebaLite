@@ -28,10 +28,10 @@ import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.CustomViewTarget;
 import com.bumptech.glide.request.transition.Transition;
 import com.google.android.material.appbar.AppBarLayout;
-import com.huanchengfly.theme.utils.ThemeUtils;
+import com.huanchengfly.tieba.post.ui.theme.utils.ThemeUtils;
 import com.huanchengfly.tieba.post.R;
-import com.huanchengfly.tieba.post.activities.base.BaseActivity;
-import com.huanchengfly.tieba.widgets.theme.TintSwipeRefreshLayout;
+import com.huanchengfly.tieba.post.activities.BaseActivity;
+import com.huanchengfly.tieba.post.widgets.theme.TintSwipeRefreshLayout;
 
 import java.io.File;
 

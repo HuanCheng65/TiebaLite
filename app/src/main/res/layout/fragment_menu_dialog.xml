@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.huanchengfly.tieba.widgets.theme.TintRelativeLayout
+<com.huanchengfly.tieba.post.widgets.theme.TintRelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@drawable/bg_round"
@@ -8,7 +8,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <com.huanchengfly.tieba.widgets.theme.TintTextView
+    <com.huanchengfly.tieba.post.widgets.theme.TintTextView
         android:id="@+id/title_text_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -21,7 +21,7 @@
         android:textSize="16sp"
         android:textStyle="bold" />
 
-    <com.huanchengfly.tieba.widgets.theme.TintNavigationView
+    <com.huanchengfly.tieba.post.widgets.theme.TintNavigationView
         app:elevation="0dp"
         app:itemTextAppearance="@style/TextAppearance.Bold"
         android:layout_below="@id/title_text_view"
@@ -30,4 +30,4 @@
         android:id="@+id/navigation_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
-</com.huanchengfly.tieba.widgets.theme.TintRelativeLayout>
+</com.huanchengfly.tieba.post.widgets.theme.TintRelativeLayout>

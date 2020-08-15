@@ -4,7 +4,7 @@ import android.text.TextUtils;
 
 import androidx.annotation.NonNull;
 
-import com.huanchengfly.utils.GsonUtil;
+import com.huanchengfly.tieba.post.utils.GsonUtil;
 
 import java.util.Objects;
 

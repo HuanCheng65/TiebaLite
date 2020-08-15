@@ -28,7 +28,7 @@
             android:layout_height="wrap_content"
             android:stateListAnimator="@animator/appbar_elevation">
 
-            <com.huanchengfly.tieba.widgets.theme.TintToolbar
+            <com.huanchengfly.tieba.post.widgets.theme.TintToolbar
                 app:popupTheme="?attr/actionOverflowMenuStyle"
                 app:titleTextAppearance="@style/Toolbar.Title"
                 app:subtitleTextAppearance="@style/Toolbar.Subtitle"
@@ -43,7 +43,7 @@
 
         </com.google.android.material.appbar.AppBarLayout>
 
-        <com.huanchengfly.tieba.widgets.theme.TintSwipeRefreshLayout
+        <com.huanchengfly.tieba.post.widgets.theme.TintSwipeRefreshLayout
             app:layout_behavior="@string/appbar_scrolling_view_behavior"
             android:id="@+id/my_refresh"
             android:layout_width="match_parent"
@@ -85,7 +85,7 @@
                             android:layout_toStartOf="@+id/my_info_arrow"
                             android:layout_toEndOf="@id/my_info_avatar">
 
-                            <com.huanchengfly.tieba.widgets.theme.TintTextView
+                            <com.huanchengfly.tieba.post.widgets.theme.TintTextView
                                 android:id="@+id/my_info_username"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
@@ -93,7 +93,7 @@
                                 android:textSize="16sp"
                                 android:textStyle="bold" />
 
-                            <com.huanchengfly.tieba.widgets.theme.TintTextView
+                            <com.huanchengfly.tieba.post.widgets.theme.TintTextView
                                 android:layout_marginTop="4dp"
                                 android:id="@+id/my_info_content"
                                 android:layout_width="wrap_content"
@@ -103,7 +103,7 @@
                                 android:textSize="14sp" />
                         </RelativeLayout>
 
-                        <com.huanchengfly.tieba.widgets.theme.TintImageView
+                        <com.huanchengfly.tieba.post.widgets.theme.TintImageView
                             android:id="@+id/my_info_arrow"
                             android:layout_width="18dp"
                             android:layout_height="18dp"
@@ -124,7 +124,7 @@
                         app:orientation="vertical"
                         app:rowCount="1">
 
-                        <com.huanchengfly.tieba.widgets.theme.TintSuperTextView
+                        <com.huanchengfly.tieba.post.widgets.theme.TintSuperTextView
                             android:id="@+id/my_info_grid_follows"
                             android:layout_width="0dp"
                             android:layout_height="match_parent"
@@ -140,7 +140,7 @@
                             app:sBackgroundDrawableRes="?attr/selectableItemBackground"
                             tools:sCenterTextString="999" />
 
-                        <com.huanchengfly.tieba.widgets.theme.TintSuperTextView
+                        <com.huanchengfly.tieba.post.widgets.theme.TintSuperTextView
                             android:id="@+id/my_info_grid_fans"
                             android:layout_width="0dp"
                             android:layout_height="match_parent"
@@ -156,7 +156,7 @@
                             app:sBackgroundDrawableRes="?attr/selectableItemBackground"
                             tools:sCenterTextString="999" />
 
-                        <com.huanchengfly.tieba.widgets.theme.TintSuperTextView
+                        <com.huanchengfly.tieba.post.widgets.theme.TintSuperTextView
                             android:id="@+id/my_info_grid_forums"
                             android:layout_width="0dp"
                             android:layout_height="match_parent"
@@ -172,7 +172,7 @@
                             app:sBackgroundDrawableRes="?attr/selectableItemBackground"
                             tools:sCenterTextString="999" />
 
-                        <com.huanchengfly.tieba.widgets.theme.TintSuperTextView
+                        <com.huanchengfly.tieba.post.widgets.theme.TintSuperTextView
                             android:id="@+id/my_info_grid_threads"
                             android:layout_width="0dp"
                             android:layout_height="match_parent"
@@ -189,7 +189,7 @@
                             tools:sCenterTextString="999" />
                     </androidx.gridlayout.widget.GridLayout>
 
-                    <com.huanchengfly.tieba.widgets.theme.TintNavigationView
+                    <com.huanchengfly.tieba.post.widgets.theme.TintNavigationView
                         app:itemHorizontalPadding="24dp"
                         app:itemIconPadding="16dp"
                         app:elevation="0dp"
@@ -204,6 +204,6 @@
                         app:menu="@menu/menu_my_info" />
                 </LinearLayout>
             </androidx.core.widget.NestedScrollView>
-        </com.huanchengfly.tieba.widgets.theme.TintSwipeRefreshLayout>
+        </com.huanchengfly.tieba.post.widgets.theme.TintSwipeRefreshLayout>
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 </FrameLayout>

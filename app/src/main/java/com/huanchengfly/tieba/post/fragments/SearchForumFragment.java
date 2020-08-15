@@ -10,8 +10,8 @@ import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import com.huanchengfly.tieba.api.TiebaApi;
-import com.huanchengfly.tieba.api.models.SearchForumBean;
+import com.huanchengfly.tieba.post.api.TiebaApi;
+import com.huanchengfly.tieba.post.api.models.SearchForumBean;
 import com.huanchengfly.tieba.post.R;
 import com.huanchengfly.tieba.post.adapters.SearchForumAdapter;
 import com.huanchengfly.tieba.post.components.MyLinearLayoutManager;

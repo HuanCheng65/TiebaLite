@@ -6,16 +6,16 @@
     android:layout_height="match_parent"
     android:layout_gravity="center">
 
-    <com.huanchengfly.tieba.widgets.theme.TintRelativeLayout
+    <com.huanchengfly.tieba.post.widgets.theme.TintRelativeLayout
         app:backgroundTint="@color/default_color_floor_card"
         android:layout_centerInParent="true"
         android:layout_width="match_parent"
         android:layout_height="118dp">
-        <com.huanchengfly.tieba.widgets.theme.TintImageView
+        <com.huanchengfly.tieba.post.widgets.theme.TintImageView
             android:layout_centerInParent="true"
             android:layout_width="56dp"
             android:layout_height="56dp"
             app:tint="@color/default_color_text_secondary"
             app:srcCompat="@drawable/ic_round_add" />
-    </com.huanchengfly.tieba.widgets.theme.TintRelativeLayout>
+    </com.huanchengfly.tieba.post.widgets.theme.TintRelativeLayout>
 </RelativeLayout>

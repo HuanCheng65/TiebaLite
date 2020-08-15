@@ -18,14 +18,13 @@ import androidx.viewpager2.widget.ViewPager2
 import androidx.viewpager2.widget.ViewPager2.OnPageChangeCallback
 import butterknife.BindView
 import com.google.android.material.bottomappbar.BottomAppBar
-import com.huanchengfly.theme.utils.ThemeUtils
-import com.huanchengfly.tieba.api.TiebaApi.getInstance
-import com.huanchengfly.tieba.api.models.PicPageBean
-import com.huanchengfly.tieba.api.models.PicPageBean.ImgInfoBean
+import com.huanchengfly.tieba.post.ui.theme.utils.ThemeUtils
+import com.huanchengfly.tieba.post.api.TiebaApi.getInstance
+import com.huanchengfly.tieba.post.api.models.PicPageBean
+import com.huanchengfly.tieba.post.api.models.PicPageBean.ImgInfoBean
 import com.huanchengfly.tieba.post.R
-import com.huanchengfly.tieba.post.activities.base.BaseActivity
 import com.huanchengfly.tieba.post.adapters.PhotoViewAdapter
-import com.huanchengfly.tieba.post.base.Config
+import com.huanchengfly.tieba.post.BaseApplication.ScreenInfo
 import com.huanchengfly.tieba.post.fragments.PhotoViewFragment.OnChangeBottomBarVisibilityListener
 import com.huanchengfly.tieba.post.models.PhotoViewBean
 import com.huanchengfly.tieba.post.utils.AnimUtil
@@ -102,7 +101,7 @@ class PhotoViewActivity : BaseActivity(), OnChangeBottomBarVisibilityListener, T
                     val beans = imgInfoBeans.mapIndexed { i, it ->
                         PhotoViewBean(it.bigCdnSrc,
                                 it.originalSrc,
-                                (it.height ?: "0").toInt() > Config.EXACT_SCREEN_HEIGHT,
+                                (it.height ?: "0").toInt() > ScreenInfo.EXACT_SCREEN_HEIGHT,
                                 picBeans[i].overAllIndex,
                                 "2" == it.format)
                     }.toMutableList()
@@ -146,7 +145,7 @@ class PhotoViewActivity : BaseActivity(), OnChangeBottomBarVisibilityListener, T
         isFrs = intent.getBooleanExtra(EXTRA_IS_FRS, false)
         photoViewBeans = mutableListOf()
         startPosition = intent.getIntExtra(EXTRA_POSITION, 0)
-        val parcelables = intent.getParcelableArrayExtra(EXTRA_BEANS)
+        val parcelables = intent.getParcelableArrayExtra(EXTRA_BEANS)!!
         photoViewBeans.addAll(parcelables.map { it as PhotoViewBean })
         amount = photoViewBeans.size.toString()
         mAdapter = PhotoViewAdapter(this, photoViewBeans)

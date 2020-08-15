@@ -2,8 +2,8 @@ package com.huanchengfly.tieba.post.utils;
 
 import android.content.Context;
 
-import com.huanchengfly.tieba.api.TiebaApi;
-import com.huanchengfly.tieba.api.models.WebUploadPicBean;
+import com.huanchengfly.tieba.post.api.TiebaApi;
+import com.huanchengfly.tieba.post.api.models.WebUploadPicBean;
 import com.huanchengfly.tieba.post.interfaces.UploadCallback;
 import com.huanchengfly.tieba.post.models.PhotoInfoBean;
 

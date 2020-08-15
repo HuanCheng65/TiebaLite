@@ -13,7 +13,6 @@ import android.provider.MediaStore;
 import android.webkit.URLUtil;
 
 import com.huanchengfly.tieba.post.R;
-import com.huanchengfly.utils.PermissionUtil;
 import com.yanzhenjie.permission.runtime.Permission;
 
 import java.io.File;

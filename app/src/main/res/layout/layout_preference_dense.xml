@@ -23,7 +23,7 @@
         android:paddingTop="8dp"
         android:paddingBottom="12dp">
 
-        <com.huanchengfly.tieba.widgets.theme.TintTextView
+        <com.huanchengfly.tieba.post.widgets.theme.TintTextView
             android:id="@android:id/title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -35,7 +35,7 @@
             android:layout_marginBottom="4dp"
             tools:ignore="PrivateResource" />
 
-        <com.huanchengfly.tieba.widgets.theme.TintTextView
+        <com.huanchengfly.tieba.post.widgets.theme.TintTextView
             android:id="@android:id/summary"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

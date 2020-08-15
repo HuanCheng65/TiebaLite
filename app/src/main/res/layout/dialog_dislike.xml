@@ -11,7 +11,7 @@
         android:id="@+id/title_holder"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
-        <com.huanchengfly.tieba.widgets.theme.TintTextView
+        <com.huanchengfly.tieba.post.widgets.theme.TintTextView
             android:textSize="14sp"
             android:textStyle="bold"
             app:tint="@color/default_color_text"
@@ -22,7 +22,7 @@
             android:id="@+id/title_text_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
-        <com.huanchengfly.tieba.widgets.theme.TintMaterialButton
+        <com.huanchengfly.tieba.post.widgets.theme.TintMaterialButton
             style="@style/Widget.Button.Dense"
             android:text="@string/button_submit_dislike"
             android:id="@+id/submit_btn"

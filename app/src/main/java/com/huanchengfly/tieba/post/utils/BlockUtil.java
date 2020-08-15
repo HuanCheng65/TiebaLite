@@ -1,8 +1,7 @@
 package com.huanchengfly.tieba.post.utils;
 
-import com.huanchengfly.tieba.api.models.ThreadContentBean;
+import com.huanchengfly.tieba.post.api.models.ThreadContentBean;
 import com.huanchengfly.tieba.post.models.database.Block;
-import com.huanchengfly.utils.GsonUtil;
 
 import org.litepal.LitePal;
 

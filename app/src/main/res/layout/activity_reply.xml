@@ -13,7 +13,7 @@
         android:layout_width="0dp"
         android:layout_height="0dp" />
 
-    <com.huanchengfly.tieba.widgets.theme.TintConstraintLayout
+    <com.huanchengfly.tieba.post.widgets.theme.TintConstraintLayout
         android:id="@+id/activity_reply_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -31,7 +31,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
-            <com.huanchengfly.tieba.widgets.theme.TintToolbar
+            <com.huanchengfly.tieba.post.widgets.theme.TintToolbar
                 app:popupTheme="?attr/actionOverflowMenuStyle"
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
@@ -43,7 +43,7 @@
                 app:title="@string/title_reply" />
         </com.google.android.material.appbar.AppBarLayout>
 
-        <com.huanchengfly.edittext.widget.UndoableEditText
+        <com.huanchengfly.tieba.post.widgets.edittext.widget.UndoableEditText
             android:textSize="14sp"
             android:id="@+id/activity_reply_edit_text"
             android:layout_width="match_parent"
@@ -61,7 +61,7 @@
             app:layout_constraintTop_toBottomOf="@+id/appbar"
             tools:ignore="UnusedAttribute">
             <requestFocus />
-        </com.huanchengfly.edittext.widget.UndoableEditText>
+        </com.huanchengfly.tieba.post.widgets.edittext.widget.UndoableEditText>
 
         <LinearLayout
             android:id="@+id/activity_reply_btn_bar"
@@ -79,7 +79,7 @@
             app:layout_constraintVertical_bias="1.0"
             app:layout_constraintVertical_chainStyle="packed">
 
-            <com.huanchengfly.tieba.widgets.theme.TintImageView
+            <com.huanchengfly.tieba.post.widgets.theme.TintImageView
                 app:tintList="@drawable/text_color_selector"
                 android:background="?attr/selectableItemBackground"
                 android:id="@+id/activity_reply_edit_emotion"
@@ -90,7 +90,7 @@
                 android:padding="4dp"
                 android:src="@drawable/ic_insert_emoticon" />
 
-            <com.huanchengfly.tieba.widgets.theme.TintImageView
+            <com.huanchengfly.tieba.post.widgets.theme.TintImageView
                 app:tintList="@drawable/text_color_selector"
                 android:background="?attr/selectableItemBackground"
                 android:id="@+id/activity_reply_edit_insert_photo"
@@ -106,7 +106,7 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent" />
 
-            <com.huanchengfly.tieba.widgets.theme.TintImageView
+            <com.huanchengfly.tieba.post.widgets.theme.TintImageView
                 app:tintList="@drawable/text_color_selector"
                 android:background="?attr/selectableItemBackground"
                 android:id="@+id/activity_reply_edit_undo"
@@ -118,7 +118,7 @@
                 android:clickable="false"
                 android:src="@drawable/ic_outline_undo" />
 
-            <com.huanchengfly.tieba.widgets.theme.TintImageView
+            <com.huanchengfly.tieba.post.widgets.theme.TintImageView
                 app:tintList="@drawable/text_color_selector"
                 android:background="?attr/selectableItemBackground"
                 android:id="@+id/activity_reply_edit_redo"
@@ -130,7 +130,7 @@
                 android:clickable="false"
                 android:src="@drawable/ic_outline_redo" />
 
-            <com.huanchengfly.tieba.widgets.theme.TintImageView
+            <com.huanchengfly.tieba.post.widgets.theme.TintImageView
                 app:tintList="@drawable/text_color_selector"
                 android:background="?attr/selectableItemBackground"
                 android:id="@+id/activity_reply_edit_clear"
@@ -167,7 +167,7 @@
                     android:layout_above="@id/activity_reply_emotion_tab"
                     android:layout_height="match_parent" />
 
-                <com.huanchengfly.tieba.widgets.theme.TintTabLayout
+                <com.huanchengfly.tieba.post.widgets.theme.TintTabLayout
                     style="@style/Widget.TabLayout"
                     android:layout_alignParentBottom="true"
                     android:id="@+id/activity_reply_emotion_tab"
@@ -187,5 +187,5 @@
                     android:layout_height="match_parent" />
             </FrameLayout>
         </cn.dreamtobe.kpswitch.widget.KPSwitchFSPanelFrameLayout>
-    </com.huanchengfly.tieba.widgets.theme.TintConstraintLayout>
+    </com.huanchengfly.tieba.post.widgets.theme.TintConstraintLayout>
 </FrameLayout>

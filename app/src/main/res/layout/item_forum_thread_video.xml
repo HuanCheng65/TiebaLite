@@ -25,7 +25,7 @@
             <include
                 android:id="@+id/forum_item_content_text_holder"
                 layout="@layout/layout_forum_thread_content" />
-            <com.huanchengfly.tieba.widgets.VideoPlayerStandard
+            <com.huanchengfly.tieba.post.widgets.VideoPlayerStandard
                 android:layout_marginTop="8dp"
                 android:id="@+id/forum_item_content_video"
                 android:layout_below="@+id/forum_item_content_text_holder"

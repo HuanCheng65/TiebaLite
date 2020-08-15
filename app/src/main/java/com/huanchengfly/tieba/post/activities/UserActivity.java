@@ -17,13 +17,11 @@ import androidx.viewpager.widget.ViewPager;
 
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.tabs.TabLayout;
-import com.huanchengfly.theme.utils.ThemeUtils;
-import com.huanchengfly.tieba.api.TiebaApi;
-import com.huanchengfly.tieba.api.models.CommonResponse;
-import com.huanchengfly.tieba.api.models.ProfileBean;
+import com.huanchengfly.tieba.post.ui.theme.utils.ThemeUtils;
+import com.huanchengfly.tieba.post.api.TiebaApi;
+import com.huanchengfly.tieba.post.api.models.CommonResponse;
+import com.huanchengfly.tieba.post.api.models.ProfileBean;
 import com.huanchengfly.tieba.post.R;
-import com.huanchengfly.tieba.post.WebViewActivity;
-import com.huanchengfly.tieba.post.activities.base.BaseActivity;
 import com.huanchengfly.tieba.post.adapters.FragmentTabViewPagerAdapter;
 import com.huanchengfly.tieba.post.fragments.UserLikeForumFragment;
 import com.huanchengfly.tieba.post.fragments.UserPostFragment;
@@ -33,7 +31,7 @@ import com.huanchengfly.tieba.post.models.database.Block;
 import com.huanchengfly.tieba.post.utils.AccountUtil;
 import com.huanchengfly.tieba.post.utils.ImageUtil;
 import com.huanchengfly.tieba.post.utils.ThemeUtil;
-import com.huanchengfly.tieba.widgets.theme.TintMaterialButton;
+import com.huanchengfly.tieba.post.widgets.theme.TintMaterialButton;
 
 import org.jetbrains.annotations.NotNull;
 

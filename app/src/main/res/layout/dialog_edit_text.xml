@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <com.huanchengfly.tieba.widgets.theme.TintTextInputLayout
+    <com.huanchengfly.tieba.post.widgets.theme.TintTextInputLayout
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
         android:id="@+id/dialog_edit_text_layout"
         android:layout_width="0dp"
@@ -27,9 +27,9 @@
             android:layout_height="wrap_content"
             android:hint="@string/tip_input" />
 
-    </com.huanchengfly.tieba.widgets.theme.TintTextInputLayout>
+    </com.huanchengfly.tieba.post.widgets.theme.TintTextInputLayout>
 
-    <com.huanchengfly.tieba.widgets.theme.TintMaterialButton
+    <com.huanchengfly.tieba.post.widgets.theme.TintMaterialButton
         android:id="@+id/dialog_edit_text_cancel"
         style="@style/Widget.Button.Flat.Dense"
         android:layout_width="0dp"
@@ -42,7 +42,7 @@
         app:layout_constraintEnd_toStartOf="@+id/dialog_edit_text_submit"
         app:layout_constraintTop_toBottomOf="@+id/dialog_edit_text_layout" />
 
-    <com.huanchengfly.tieba.widgets.theme.TintMaterialButton
+    <com.huanchengfly.tieba.post.widgets.theme.TintMaterialButton
         android:id="@+id/dialog_edit_text_submit"
         style="@style/Widget.Button.Dense"
         android:layout_width="0dp"

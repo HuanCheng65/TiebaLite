@@ -7,7 +7,7 @@
     android:padding="12dp"
     android:layout_height="wrap_content">
 
-    <com.huanchengfly.tieba.widgets.theme.TintTextView
+    <com.huanchengfly.tieba.post.widgets.theme.TintTextView
         android:id="@+id/item_choose_title"
         android:layout_width="match_parent"
         android:layout_height="32dp"
@@ -19,7 +19,7 @@
         android:textSize="16sp"
         tools:text="Title" />
 
-    <com.huanchengfly.tieba.widgets.theme.TintImageView
+    <com.huanchengfly.tieba.post.widgets.theme.TintImageView
         android:layout_alignParentEnd="true"
         android:id="@+id/item_choose_icon"
         app:srcCompat="@drawable/ic_outline_check_circle"

@@ -128,4 +128,9 @@ public class PermissionDialog extends AlertDialog implements View.OnClickListene
             super.show();
         }
     }
+
+    public static class CustomPermission {
+        public static final int PERMISSION_LOCATION = 0;
+        public static final int PERMISSION_START_APP = 1;
+    }
 }

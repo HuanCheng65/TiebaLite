@@ -12,7 +12,7 @@
         android:layout_height="wrap_content"
         android:padding="16dp">
 
-        <com.huanchengfly.tieba.widgets.theme.TintTextView
+        <com.huanchengfly.tieba.post.widgets.theme.TintTextView
             android:id="@+id/item_search_thread_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -22,7 +22,7 @@
             android:textStyle="bold"
             tools:text="Title" />
 
-        <com.huanchengfly.tieba.widgets.theme.TintTextView
+        <com.huanchengfly.tieba.post.widgets.theme.TintTextView
             android:id="@+id/item_search_thread_content"
             android:layout_below="@id/item_search_thread_title"
             tools:text="Content"
@@ -32,7 +32,7 @@
             android:layout_marginBottom="4dp"
             android:layout_height="wrap_content" />
 
-        <com.huanchengfly.tieba.widgets.theme.TintTextView
+        <com.huanchengfly.tieba.post.widgets.theme.TintTextView
             android:id="@+id/item_search_thread_user"
             android:layout_below="@id/item_search_thread_content"
             tools:text="幻了个城fly"
@@ -41,7 +41,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
 
-        <com.huanchengfly.tieba.widgets.theme.TintTextView
+        <com.huanchengfly.tieba.post.widgets.theme.TintTextView
             android:layout_alignWithParentIfMissing="true"
             android:layout_toEndOf="@id/item_search_thread_user"
             android:layout_alignParentEnd="true"

@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".fragments.ForumListFragment">
-    <com.huanchengfly.tieba.widgets.theme.TintSwipeRefreshLayout
+    <com.huanchengfly.tieba.post.widgets.theme.TintSwipeRefreshLayout
         android:layout_width="match_parent"
         android:id="@+id/refresh"
         android:layout_height="match_parent">
@@ -13,5 +13,5 @@
                 android:id="@+id/forum_list_recycler"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" />
-    </com.huanchengfly.tieba.widgets.theme.TintSwipeRefreshLayout>
+    </com.huanchengfly.tieba.post.widgets.theme.TintSwipeRefreshLayout>
 </RelativeLayout>

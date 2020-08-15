@@ -7,8 +7,8 @@ import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
-import com.huanchengfly.ExtensionsKt;
-import com.huanchengfly.tieba.api.models.UserPostBean;
+import com.huanchengfly.tieba.post.ExtensionsKt;
+import com.huanchengfly.tieba.post.api.models.UserPostBean;
 import com.huanchengfly.tieba.post.R;
 import com.huanchengfly.tieba.post.utils.ImageUtil;
 import com.huanchengfly.tieba.post.utils.NavigationHelper;

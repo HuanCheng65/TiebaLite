@@ -117,32 +117,6 @@
         <attr name="inputLayoutBoxStrokeColor" format="color" />
     </declare-styleable>
 
-    <attr name="mwhWaves" format="string|enum">
-        <enum name="MultiWave" value="-1"/>
-        <enum name="PairWave" value="-2"/>
-    </attr>
-
-    <attr name="mwhShape" format="enum">
-        <enum name="Rect" value="0"/>
-        <enum name="RoundRect" value="1"/>
-        <enum name="Oval" value="2"/>
-    </attr>
-
-    <declare-styleable name="MultiWaveHeader">
-        <attr name="mwhWaveHeight" format="dimension"/>
-        <attr name="mwhStartColor" format="color"/>
-        <attr name="mwhCloseColor" format="color"/>
-        <attr name="mwhIsRunning" format="boolean"/>
-        <attr name="mwhEnableFullScreen" format="boolean"/>
-        <attr name="mwhColorAlpha" format="fraction|float"/>
-        <attr name="mwhProgress" format="fraction|float"/>
-        <attr name="mwhVelocity" format="fraction|float"/>
-        <attr name="mwhGradientAngle" format="integer"/>
-        <attr name="mwhCornerRadius" format="dimension"/>
-        <attr name="mwhWaves"/>
-        <attr name="mwhShape"/>
-    </declare-styleable>
-
     <declare-styleable name="MyViewPager">
         <attr name="orientation" />
         <attr format="boolean" name="can_scroll"/>

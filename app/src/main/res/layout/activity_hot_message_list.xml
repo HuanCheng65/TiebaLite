@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.huanchengfly.tieba.widgets.theme.TintCoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.huanchengfly.tieba.post.widgets.theme.TintCoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/background"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.huanchengfly.tieba.hotmessage.activities.HotMessageListActivity">
+    tools:context=".activities.HotMessageListActivity">
     <include
         layout="@layout/layout_appbar"/>
 
-    <com.huanchengfly.tieba.widgets.theme.TintSwipeRefreshLayout
+    <com.huanchengfly.tieba.post.widgets.theme.TintSwipeRefreshLayout
         android:id="@+id/refresh"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -20,5 +20,5 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"/>
 
-    </com.huanchengfly.tieba.widgets.theme.TintSwipeRefreshLayout>
-</com.huanchengfly.tieba.widgets.theme.TintCoordinatorLayout>
+    </com.huanchengfly.tieba.post.widgets.theme.TintSwipeRefreshLayout>
+</com.huanchengfly.tieba.post.widgets.theme.TintCoordinatorLayout>

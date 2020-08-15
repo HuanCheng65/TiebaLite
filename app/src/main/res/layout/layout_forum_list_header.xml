@@ -6,7 +6,7 @@
     android:paddingEnd="18dp"
     android:layout_height="wrap_content"
     android:layout_width="match_parent">
-    <com.huanchengfly.tieba.widgets.theme.TintTextView
+    <com.huanchengfly.tieba.post.widgets.theme.TintTextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/forum_list_title"
@@ -18,7 +18,7 @@
         android:layout_centerVertical="true"
         android:layout_alignParentStart="true" />
 
-    <com.huanchengfly.tieba.widgets.theme.TintImageView
+    <com.huanchengfly.tieba.post.widgets.theme.TintImageView
         android:visibility="gone"
         app:tint="@color/default_color_text_secondary"
         app:srcCompat="@drawable/ic_keyboard_arrow_down"

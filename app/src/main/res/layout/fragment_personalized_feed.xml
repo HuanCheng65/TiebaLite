@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".fragments.PersonalizedFeedFragment">
-    <com.huanchengfly.tieba.widgets.theme.TintSwipeRefreshLayout
+    <com.huanchengfly.tieba.post.widgets.theme.TintSwipeRefreshLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/refresh">
@@ -13,9 +13,9 @@
             android:id="@+id/recycler_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
-    </com.huanchengfly.tieba.widgets.theme.TintSwipeRefreshLayout>
+    </com.huanchengfly.tieba.post.widgets.theme.TintSwipeRefreshLayout>
 
-    <com.huanchengfly.tieba.widgets.ShadowLayout
+    <com.huanchengfly.tieba.post.widgets.ShadowLayout
         android:id="@+id/refresh_tip"
         android:layout_marginTop="8dp"
         app:shadow_layout_color="?attr/shadow_color"
@@ -27,7 +27,7 @@
         tools:visibility="visible"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
-        <com.huanchengfly.tieba.widgets.theme.TintRelativeLayout
+        <com.huanchengfly.tieba.post.widgets.theme.TintRelativeLayout
             android:background="@drawable/bg_radius_50dp"
             tools:backgroundTint="@color/default_color_accent"
             app:backgroundTint="@color/default_color_accent"
@@ -36,7 +36,7 @@
             android:paddingEnd="16dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
-            <com.huanchengfly.tieba.widgets.theme.TintTextView
+            <com.huanchengfly.tieba.post.widgets.theme.TintTextView
                 android:id="@+id/refresh_tip_text"
                 tools:text="更新了 12 条动态"
                 android:textColor="@color/white"
@@ -44,6 +44,6 @@
                 android:textSize="@dimen/text_size_refresh_tip"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
-        </com.huanchengfly.tieba.widgets.theme.TintRelativeLayout>
-    </com.huanchengfly.tieba.widgets.ShadowLayout>
+        </com.huanchengfly.tieba.post.widgets.theme.TintRelativeLayout>
+    </com.huanchengfly.tieba.post.widgets.ShadowLayout>
 </FrameLayout>

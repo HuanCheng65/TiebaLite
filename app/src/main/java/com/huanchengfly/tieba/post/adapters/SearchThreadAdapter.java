@@ -5,9 +5,9 @@ import android.text.format.DateUtils;
 import android.view.View;
 
 import com.allen.library.SuperTextView;
-import com.huanchengfly.tieba.api.SearchThreadFilter;
-import com.huanchengfly.tieba.api.SearchThreadOrder;
-import com.huanchengfly.tieba.api.models.SearchThreadBean;
+import com.huanchengfly.tieba.post.api.SearchThreadFilter;
+import com.huanchengfly.tieba.post.api.SearchThreadOrder;
+import com.huanchengfly.tieba.post.api.models.SearchThreadBean;
 import com.huanchengfly.tieba.post.R;
 import com.huanchengfly.tieba.post.components.dialogs.SingleChooseDialog;
 import com.huanchengfly.tieba.post.fragments.SearchThreadFragment;

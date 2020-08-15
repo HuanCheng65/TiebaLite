@@ -13,10 +13,10 @@ import androidx.cardview.widget.CardView;
 import androidx.gridlayout.widget.GridLayout;
 import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
-import com.huanchengfly.tieba.api.models.ForumPageBean;
+import com.huanchengfly.tieba.post.api.models.ForumPageBean;
+import com.huanchengfly.tieba.post.BaseApplication;
 import com.huanchengfly.tieba.post.R;
-import com.huanchengfly.tieba.post.ThreadActivity;
-import com.huanchengfly.tieba.post.base.Config;
+import com.huanchengfly.tieba.post.activities.ThreadActivity;
 import com.huanchengfly.tieba.post.components.MyLinearLayoutManager;
 import com.huanchengfly.tieba.post.components.dividers.SpacesItemDecoration;
 import com.huanchengfly.tieba.post.interfaces.OnSwitchListener;
@@ -24,8 +24,8 @@ import com.huanchengfly.tieba.post.models.PhotoViewBean;
 import com.huanchengfly.tieba.post.utils.*;
 import com.huanchengfly.tieba.post.utils.preload.PreloadUtil;
 import com.huanchengfly.tieba.post.utils.preload.loaders.ThreadContentLoader;
-import com.huanchengfly.tieba.widgets.MarkedImageView;
-import com.huanchengfly.tieba.widgets.VideoPlayerStandard;
+import com.huanchengfly.tieba.post.widgets.MarkedImageView;
+import com.huanchengfly.tieba.post.widgets.VideoPlayerStandard;
 import com.othershe.baseadapter.ViewHolder;
 import com.othershe.baseadapter.base.MultiBaseAdapter;
 
@@ -91,11 +91,11 @@ public class ForumAdapter extends MultiBaseAdapter<ForumPageBean.ThreadBean> {
     }
 
     private int getMaxWidth() {
-        return Config.EXACT_SCREEN_WIDTH - DisplayUtil.dp2px(mContext, 40);
+        return BaseApplication.ScreenInfo.EXACT_SCREEN_WIDTH - DisplayUtil.dp2px(mContext, 40);
     }
 
     private int getGridHeight() {
-        return (Config.EXACT_SCREEN_WIDTH - DisplayUtil.dp2px(mContext, 70)) / 3;
+        return (BaseApplication.ScreenInfo.EXACT_SCREEN_WIDTH - DisplayUtil.dp2px(mContext, 70)) / 3;
     }
 
     private RelativeLayout.LayoutParams getLayoutParams(RelativeLayout.LayoutParams layoutParams) {

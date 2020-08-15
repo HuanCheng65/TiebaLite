@@ -21,7 +21,7 @@
             android:layout_width="36dp"
             android:layout_height="36dp" />
 
-        <com.huanchengfly.tieba.widgets.theme.TintImageView
+        <com.huanchengfly.tieba.post.widgets.theme.TintImageView
             tools:backgroundTint="@color/black_trans"
             tools:tint="@color/white"
             app:backgroundTint="@color/black_trans"
@@ -41,7 +41,7 @@
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
-        <com.huanchengfly.tieba.widgets.theme.TintTextView
+        <com.huanchengfly.tieba.post.widgets.theme.TintTextView
             android:layout_gravity="center_vertical"
             android:id="@+id/theme_name"
             app:tint="@color/default_color_text"
@@ -49,7 +49,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
 
-        <com.huanchengfly.tieba.widgets.theme.TintTextView
+        <com.huanchengfly.tieba.post.widgets.theme.TintTextView
             android:layout_gravity="center_vertical"
             android:id="@+id/night_mode_tip"
             app:tint="@color/default_color_text_secondary"

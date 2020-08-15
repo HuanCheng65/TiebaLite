@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.huanchengfly.tieba.widgets.theme.TintCoordinatorLayout
+<com.huanchengfly.tieba.post.widgets.theme.TintCoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/loading_view"
@@ -12,7 +12,7 @@
         android:layout_height="wrap_content"
         android:stateListAnimator="@animator/appbar_elevation">
 
-        <com.huanchengfly.tieba.widgets.theme.TintToolbar
+        <com.huanchengfly.tieba.post.widgets.theme.TintToolbar
             app:popupTheme="?attr/actionOverflowMenuStyle"
             app:titleTextAppearance="@style/Toolbar.Title"
             app:subtitleTextAppearance="@style/Toolbar.Subtitle"
@@ -30,10 +30,10 @@
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-        <com.huanchengfly.tieba.widgets.theme.TintProgressBar
+        <com.huanchengfly.tieba.post.widgets.theme.TintProgressBar
             android:layout_centerInParent="true"
             style="@style/Widget.AppCompat.ProgressBar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
     </RelativeLayout>
-</com.huanchengfly.tieba.widgets.theme.TintCoordinatorLayout>
+</com.huanchengfly.tieba.post.widgets.theme.TintCoordinatorLayout>

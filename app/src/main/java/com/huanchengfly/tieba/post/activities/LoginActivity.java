@@ -12,9 +12,8 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.widget.Toolbar;
 
 import com.google.android.material.snackbar.Snackbar;
-import com.huanchengfly.tieba.api.interfaces.CommonCallback;
+import com.huanchengfly.tieba.post.api.interfaces.CommonCallback;
 import com.huanchengfly.tieba.post.R;
-import com.huanchengfly.tieba.post.activities.base.BaseActivity;
 import com.huanchengfly.tieba.post.fragments.WebViewFragment;
 import com.huanchengfly.tieba.post.interfaces.WebViewListener;
 import com.huanchengfly.tieba.post.models.MyInfoBean;

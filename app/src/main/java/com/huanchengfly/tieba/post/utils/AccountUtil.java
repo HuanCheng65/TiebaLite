@@ -8,10 +8,10 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.huanchengfly.tieba.api.Error;
-import com.huanchengfly.tieba.api.TiebaApi;
-import com.huanchengfly.tieba.api.interfaces.CommonCallback;
-import com.huanchengfly.tieba.api.retrofit.exception.TiebaException;
+import com.huanchengfly.tieba.post.api.Error;
+import com.huanchengfly.tieba.post.api.TiebaApi;
+import com.huanchengfly.tieba.post.api.interfaces.CommonCallback;
+import com.huanchengfly.tieba.post.api.retrofit.exception.TiebaException;
 import com.huanchengfly.tieba.post.R;
 import com.huanchengfly.tieba.post.models.MyInfoBean;
 import com.huanchengfly.tieba.post.models.database.Account;

@@ -8,7 +8,7 @@
     android:layout_height="wrap_content"
     android:stateListAnimator="@animator/appbar_elevation">
 
-    <com.huanchengfly.tieba.widgets.theme.TintToolbar
+    <com.huanchengfly.tieba.post.widgets.theme.TintToolbar
         app:popupTheme="?attr/actionOverflowMenuStyle"
         app:titleTextAppearance="@style/Toolbar.Title"
         app:subtitleTextAppearance="@style/Toolbar.Subtitle"

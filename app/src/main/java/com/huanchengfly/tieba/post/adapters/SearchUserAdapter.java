@@ -3,7 +3,7 @@ package com.huanchengfly.tieba.post.adapters;
 import android.content.Context;
 import android.text.TextUtils;
 
-import com.huanchengfly.tieba.api.models.SearchUserBean;
+import com.huanchengfly.tieba.post.api.models.SearchUserBean;
 import com.huanchengfly.tieba.post.R;
 import com.huanchengfly.tieba.post.utils.ImageUtil;
 import com.huanchengfly.tieba.post.utils.NavigationHelper;

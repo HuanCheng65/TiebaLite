@@ -18,7 +18,7 @@
         android:layout_width="@dimen/size_forum_list_avatar"
         android:layout_height="@dimen/size_forum_list_avatar" />
 
-    <com.huanchengfly.tieba.widgets.theme.TintTextView
+    <com.huanchengfly.tieba.post.widgets.theme.TintTextView
         android:layout_toEndOf="@id/forum_list_item_avatar"
         android:layout_alignWithParentIfMissing="true"
         android:id="@+id/forum_list_item_name"

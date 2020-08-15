@@ -1,7 +1,7 @@
 package com.huanchengfly.tieba.post.models;
 
 import com.google.gson.annotations.SerializedName;
-import com.huanchengfly.tieba.api.models.web.WebBaseBean;
+import com.huanchengfly.tieba.post.api.models.web.WebBaseBean;
 
 public class MyInfoBean extends WebBaseBean<MyInfoBean.MyInfoDataBean> {
     public class MyInfoDataBean {

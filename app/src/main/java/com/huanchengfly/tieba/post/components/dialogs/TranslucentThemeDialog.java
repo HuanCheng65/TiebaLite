@@ -13,7 +13,7 @@ import com.huanchengfly.tieba.post.R;
 import com.huanchengfly.tieba.post.components.MyImageEngine;
 import com.huanchengfly.tieba.post.utils.SharedPreferencesUtil;
 import com.huanchengfly.tieba.post.utils.ThemeUtil;
-import com.huanchengfly.utils.PermissionUtil;
+import com.huanchengfly.tieba.post.utils.PermissionUtil;
 import com.yanzhenjie.permission.Action;
 import com.yanzhenjie.permission.runtime.Permission;
 import com.zhihu.matisse.Matisse;

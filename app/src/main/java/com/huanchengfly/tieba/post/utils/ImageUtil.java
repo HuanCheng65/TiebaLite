@@ -38,10 +38,9 @@ import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.Target;
 import com.huanchengfly.tieba.post.R;
 import com.huanchengfly.tieba.post.activities.PhotoViewActivity;
-import com.huanchengfly.tieba.post.base.BaseApplication;
+import com.huanchengfly.tieba.post.BaseApplication;
 import com.huanchengfly.tieba.post.components.transformations.RadiusTransformation;
 import com.huanchengfly.tieba.post.models.PhotoViewBean;
-import com.huanchengfly.utils.PermissionUtil;
 import com.yanzhenjie.permission.runtime.Permission;
 import com.zhihu.matisse.MimeType;
 

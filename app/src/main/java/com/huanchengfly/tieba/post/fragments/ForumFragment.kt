@@ -12,11 +12,11 @@ import cn.jzvd.Jzvd
 import com.billy.android.preloader.PreLoader
 import com.billy.android.preloader.interfaces.DataListener
 import com.bumptech.glide.Glide
-import com.huanchengfly.tieba.api.ForumSortType
-import com.huanchengfly.tieba.api.ForumSortType.Companion.valueOf
-import com.huanchengfly.tieba.api.TiebaApi
-import com.huanchengfly.tieba.api.models.ForumPageBean
-import com.huanchengfly.tieba.api.retrofit.exception.TiebaException
+import com.huanchengfly.tieba.post.api.ForumSortType
+import com.huanchengfly.tieba.post.api.ForumSortType.Companion.valueOf
+import com.huanchengfly.tieba.post.api.TiebaApi
+import com.huanchengfly.tieba.post.api.models.ForumPageBean
+import com.huanchengfly.tieba.post.api.retrofit.exception.TiebaException
 import com.huanchengfly.tieba.post.R
 import com.huanchengfly.tieba.post.adapters.ForumAdapter
 import com.huanchengfly.tieba.post.components.MyLinearLayoutManager
@@ -25,7 +25,7 @@ import com.huanchengfly.tieba.post.interfaces.OnSwitchListener
 import com.huanchengfly.tieba.post.interfaces.Refreshable
 import com.huanchengfly.tieba.post.interfaces.ScrollTopable
 import com.huanchengfly.tieba.post.utils.Util
-import com.huanchengfly.tieba.widgets.VideoPlayerStandard
+import com.huanchengfly.tieba.post.widgets.VideoPlayerStandard
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response

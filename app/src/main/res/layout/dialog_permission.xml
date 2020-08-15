@@ -9,7 +9,7 @@
         android:id="@+id/permission_header"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
-        <com.huanchengfly.tieba.widgets.theme.TintImageView
+        <com.huanchengfly.tieba.post.widgets.theme.TintImageView
             tools:src="@drawable/ic_round_location_on"
             android:id="@+id/permission_icon"
             app:tint="@color/default_color_primary"
@@ -20,7 +20,7 @@
             android:layout_toEndOf="@id/permission_icon"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
-            <com.huanchengfly.tieba.widgets.theme.TintTextView
+            <com.huanchengfly.tieba.post.widgets.theme.TintTextView
                 app:tint="@color/default_color_text"
                 android:textStyle="bold"
                 android:textSize="20sp"
@@ -35,7 +35,7 @@
         android:layout_below="@id/permission_header"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
-        <com.huanchengfly.tieba.widgets.theme.TintCheckBox
+        <com.huanchengfly.tieba.post.widgets.theme.TintCheckBox
             android:id="@+id/permission_actions_checkbox"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -51,7 +51,7 @@
             android:layout_toEndOf="@id/permission_actions_checkbox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
-            <com.huanchengfly.tieba.widgets.theme.TintMaterialButton
+            <com.huanchengfly.tieba.post.widgets.theme.TintMaterialButton
                 android:layout_marginEnd="8dp"
                 android:layout_toStartOf="@id/permission_actions_allow"
                 android:id="@+id/permission_actions_denied"
@@ -59,7 +59,7 @@
                 style="@style/Widget.Button.Flat.Dense"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
-            <com.huanchengfly.tieba.widgets.theme.TintMaterialButton
+            <com.huanchengfly.tieba.post.widgets.theme.TintMaterialButton
                 android:id="@+id/permission_actions_allow"
                 android:text="@string/button_allow"
                 style="@style/Widget.Button.Dense"

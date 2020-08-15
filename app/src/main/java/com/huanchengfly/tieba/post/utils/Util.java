@@ -34,20 +34,19 @@ import androidx.appcompat.widget.AppCompatDrawableManager;
 
 import com.google.android.material.snackbar.Snackbar;
 import com.gyf.immersionbar.OSUtils;
-import com.huanchengfly.theme.utils.ThemeUtils;
+import com.huanchengfly.tieba.post.ui.theme.utils.ThemeUtils;
 import com.huanchengfly.tieba.post.R;
-import com.huanchengfly.tieba.post.base.BundleConfig;
-import com.huanchengfly.tieba.post.base.IntentConfig;
+import com.huanchengfly.tieba.post.BundleConfig;
+import com.huanchengfly.tieba.post.IntentConfig;
 import com.huanchengfly.tieba.post.components.dialogs.CopyTextDialog;
 import com.huanchengfly.tieba.post.fragments.MenuDialogFragment;
 
-import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Calendar;
 
 import static android.content.Intent.ACTION_VIEW;
-import static com.huanchengfly.utils.ColorUtils.greifyColor;
+import static com.huanchengfly.tieba.post.utils.ColorUtils.greifyColor;
 
 public class Util {
     public static final String TAG = "Util";

@@ -11,10 +11,8 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.widget.Toolbar;
 
 import com.google.gson.JsonSyntaxException;
-import com.huanchengfly.theme.utils.ThemeUtils;
+import com.huanchengfly.tieba.post.ui.theme.utils.ThemeUtils;
 import com.huanchengfly.tieba.post.R;
-import com.huanchengfly.tieba.post.ThreadActivity;
-import com.huanchengfly.tieba.post.activities.base.BaseActivity;
 import com.huanchengfly.tieba.post.adapters.HistoryListAdapter;
 import com.huanchengfly.tieba.post.models.ThreadHistoryInfoBean;
 import com.huanchengfly.tieba.post.models.database.History;
@@ -22,7 +20,7 @@ import com.huanchengfly.tieba.post.utils.DisplayUtil;
 import com.huanchengfly.tieba.post.utils.HistoryHelper;
 import com.huanchengfly.tieba.post.utils.NavigationHelper;
 import com.huanchengfly.tieba.post.utils.ThemeUtil;
-import com.huanchengfly.utils.GsonUtil;
+import com.huanchengfly.tieba.post.utils.GsonUtil;
 
 import java.util.HashMap;
 import java.util.List;

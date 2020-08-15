@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.huanchengfly.tieba.widgets.ShadowLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.huanchengfly.tieba.post.widgets.ShadowLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_marginStart="8dp"
     android:layout_marginEnd="8dp"
@@ -10,7 +10,7 @@
     app:shadow_layout_offsetY="4dp"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
-    <com.huanchengfly.tieba.widgets.theme.TintMaterialCardView
+    <com.huanchengfly.tieba.post.widgets.theme.TintMaterialCardView
         app:cardElevation="0dp"
         app:cardCornerRadius="8dp"
         app:contentPadding="16dp"
@@ -38,7 +38,7 @@
                 android:layout_toEndOf="@id/icon_holder"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
-                <com.huanchengfly.tieba.widgets.theme.TintTextView
+                <com.huanchengfly.tieba.post.widgets.theme.TintTextView
                     android:maxLines="2"
                     android:ellipsize="end"
                     app:tint="@color/default_color_text"
@@ -48,7 +48,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
 
-                <com.huanchengfly.tieba.widgets.theme.TintTextView
+                <com.huanchengfly.tieba.post.widgets.theme.TintTextView
                     android:textSize="14sp"
                     app:tint="@color/default_color_text_secondary"
                     android:id="@+id/subtitle"
@@ -57,5 +57,5 @@
                     android:layout_marginTop="4dp" />
             </LinearLayout>
         </RelativeLayout>
-    </com.huanchengfly.tieba.widgets.theme.TintMaterialCardView>
-</com.huanchengfly.tieba.widgets.ShadowLayout>
+    </com.huanchengfly.tieba.post.widgets.theme.TintMaterialCardView>
+</com.huanchengfly.tieba.post.widgets.ShadowLayout>

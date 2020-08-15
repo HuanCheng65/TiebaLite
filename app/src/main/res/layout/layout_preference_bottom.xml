@@ -19,7 +19,7 @@
         android:layout_height="wrap_content"
         android:layout_weight="1">
 
-        <com.huanchengfly.tieba.widgets.theme.TintTextView
+        <com.huanchengfly.tieba.post.widgets.theme.TintTextView
             android:id="@android:id/title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -30,7 +30,7 @@
             android:ellipsize="marquee"
             tools:ignore="PrivateResource" />
 
-        <com.huanchengfly.tieba.widgets.theme.TintTextView
+        <com.huanchengfly.tieba.post.widgets.theme.TintTextView
             android:id="@android:id/summary"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

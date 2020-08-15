@@ -9,7 +9,6 @@ import androidx.appcompat.widget.Toolbar;
 
 import com.google.android.material.appbar.AppBarLayout;
 import com.huanchengfly.tieba.post.R;
-import com.huanchengfly.tieba.post.activities.base.BaseActivity;
 import com.huanchengfly.tieba.post.fragments.MessageFragment;
 import com.huanchengfly.tieba.post.utils.ThemeUtil;
 

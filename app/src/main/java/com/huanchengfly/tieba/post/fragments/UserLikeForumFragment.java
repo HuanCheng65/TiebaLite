@@ -12,8 +12,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import com.huanchengfly.tieba.api.TiebaApi;
-import com.huanchengfly.tieba.api.models.UserLikeForumBean;
+import com.huanchengfly.tieba.post.api.TiebaApi;
+import com.huanchengfly.tieba.post.api.models.UserLikeForumBean;
 import com.huanchengfly.tieba.post.R;
 import com.huanchengfly.tieba.post.adapters.UserLikeForumAdapter;
 import com.huanchengfly.tieba.post.components.dividers.StaggeredDividerItemDecoration;

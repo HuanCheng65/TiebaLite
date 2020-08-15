@@ -6,8 +6,6 @@ import android.util.Base64;
 import androidx.annotation.Nullable;
 
 import com.google.gson.JsonSyntaxException;
-import com.huanchengfly.utils.GsonUtil;
-import com.huanchengfly.utils.MD5Util;
 
 import java.io.File;
 import java.io.IOException;

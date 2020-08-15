@@ -7,10 +7,10 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import butterknife.BindView
-import com.huanchengfly.tieba.api.SearchThreadFilter
-import com.huanchengfly.tieba.api.SearchThreadOrder
-import com.huanchengfly.tieba.api.TiebaApi
-import com.huanchengfly.tieba.api.models.SearchThreadBean
+import com.huanchengfly.tieba.post.api.SearchThreadFilter
+import com.huanchengfly.tieba.post.api.SearchThreadOrder
+import com.huanchengfly.tieba.post.api.TiebaApi
+import com.huanchengfly.tieba.post.api.models.SearchThreadBean
 import com.huanchengfly.tieba.post.R
 import com.huanchengfly.tieba.post.adapters.SearchThreadAdapter
 import com.huanchengfly.tieba.post.components.MyLinearLayoutManager

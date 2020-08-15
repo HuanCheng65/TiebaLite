@@ -6,7 +6,7 @@ import android.widget.TextView;
 
 import androidx.core.text.HtmlCompat;
 
-import com.huanchengfly.tieba.api.models.SearchPostBean;
+import com.huanchengfly.tieba.post.api.models.SearchPostBean;
 import com.huanchengfly.tieba.post.R;
 import com.huanchengfly.tieba.post.utils.NavigationHelper;
 import com.othershe.baseadapter.ViewHolder;

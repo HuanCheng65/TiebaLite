@@ -21,7 +21,7 @@ import com.huanchengfly.tieba.post.components.MyViewHolder;
 import com.huanchengfly.tieba.post.components.transformations.RadiusTransformation;
 import com.huanchengfly.tieba.post.models.PhotoInfoBean;
 import com.huanchengfly.tieba.post.utils.ThemeUtil;
-import com.huanchengfly.utils.PermissionUtil;
+import com.huanchengfly.tieba.post.utils.PermissionUtil;
 import com.yanzhenjie.permission.Action;
 import com.yanzhenjie.permission.runtime.Permission;
 import com.zhihu.matisse.Matisse;

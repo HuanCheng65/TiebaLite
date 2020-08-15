@@ -11,10 +11,10 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import androidx.viewpager.widget.ViewPager;
 
 import com.google.android.material.tabs.TabLayout;
-import com.huanchengfly.tieba.api.TiebaApi;
-import com.huanchengfly.tieba.api.models.MessageListBean;
-import com.huanchengfly.tieba.api.retrofit.exception.TiebaException;
-import com.huanchengfly.tieba.post.MainActivity;
+import com.huanchengfly.tieba.post.api.TiebaApi;
+import com.huanchengfly.tieba.post.api.models.MessageListBean;
+import com.huanchengfly.tieba.post.api.retrofit.exception.TiebaException;
+import com.huanchengfly.tieba.post.activities.MainActivity;
 import com.huanchengfly.tieba.post.R;
 import com.huanchengfly.tieba.post.adapters.MessageListAdapter;
 import com.huanchengfly.tieba.post.adapters.TabViewPagerAdapter;
@@ -24,7 +24,7 @@ import com.huanchengfly.tieba.post.interfaces.Refreshable;
 import com.huanchengfly.tieba.post.utils.DisplayUtil;
 import com.huanchengfly.tieba.post.utils.ThemeUtil;
 import com.huanchengfly.tieba.post.utils.Util;
-import com.huanchengfly.tieba.widgets.theme.TintImageView;
+import com.huanchengfly.tieba.post.widgets.theme.TintImageView;
 
 import org.jetbrains.annotations.NotNull;
 

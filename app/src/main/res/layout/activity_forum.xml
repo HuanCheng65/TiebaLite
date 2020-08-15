@@ -6,12 +6,12 @@
     android:id="@+id/background"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ForumActivity">
-    <com.huanchengfly.tieba.widgets.theme.TintCoordinatorLayout
+    tools:context=".activities.ForumActivity">
+    <com.huanchengfly.tieba.post.widgets.theme.TintCoordinatorLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <com.huanchengfly.tieba.widgets.theme.TintAppBarLayout
+        <com.huanchengfly.tieba.post.widgets.theme.TintAppBarLayout
             app:backgroundTint="@color/default_color_toolbar"
             android:id="@+id/appbar"
             android:layout_width="match_parent"
@@ -49,7 +49,7 @@
                         android:layout_marginEnd="16dp"
                         android:layout_toStartOf="@id/forum_header_button"
                         android:layout_toEndOf="@id/forum_header_avatar">
-                        <com.huanchengfly.tieba.widgets.theme.TintTextView
+                        <com.huanchengfly.tieba.post.widgets.theme.TintTextView
                             android:ellipsize="end"
                             android:maxLines="1"
                             android:id="@+id/forum_header_name"
@@ -60,7 +60,7 @@
                             android:textStyle="bold"
                             tools:text="minecraft吧" />
 
-                        <com.huanchengfly.tieba.widgets.theme.TintProgressBar
+                        <com.huanchengfly.tieba.post.widgets.theme.TintProgressBar
                             android:id="@+id/forum_header_progress"
                             style="@android:style/Widget.DeviceDefault.Light.ProgressBar.Horizontal"
                             android:layout_width="wrap_content"
@@ -75,7 +75,7 @@
                             android:progressDrawable="@drawable/drawable_progress"
                             app:progressTint="@color/default_color_toolbar_item_active" />
 
-                        <com.huanchengfly.tieba.widgets.theme.TintTextView
+                        <com.huanchengfly.tieba.post.widgets.theme.TintTextView
                             android:ellipsize="end"
                             android:maxLines="1"
                             android:layout_marginTop="2dp"
@@ -88,7 +88,7 @@
                             tools:text="LV9 大水逼" />
                     </RelativeLayout>
 
-                    <com.huanchengfly.tieba.widgets.theme.TintMaterialButton
+                    <com.huanchengfly.tieba.post.widgets.theme.TintMaterialButton
                         android:textStyle="bold"
                         app:strokeWidth="1.5dp"
                         app:buttonStrokeColor="@drawable/toolbar_button_color_selector"
@@ -102,7 +102,7 @@
                         android:enabled="true" />
                 </RelativeLayout>
 
-                <com.huanchengfly.tieba.widgets.theme.TintToolbar
+                <com.huanchengfly.tieba.post.widgets.theme.TintToolbar
                     android:minHeight="?attr/actionBarSize"
                     app:popupTheme="?attr/actionOverflowMenuStyle"
                     app:toolbarBackgroundTint="@color/transparent"
@@ -115,7 +115,7 @@
                     app:subtitleTextAppearance="@style/Toolbar.Subtitle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
-                    <com.huanchengfly.tieba.widgets.theme.TintMaterialButton
+                    <com.huanchengfly.tieba.post.widgets.theme.TintMaterialButton
                         android:textStyle="bold"
                         app:strokeWidth="1.5dp"
                         app:buttonStrokeColor="@drawable/toolbar_button_color_selector"
@@ -126,17 +126,17 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:enabled="true" />
-                </com.huanchengfly.tieba.widgets.theme.TintToolbar>
+                </com.huanchengfly.tieba.post.widgets.theme.TintToolbar>
             </com.google.android.material.appbar.CollapsingToolbarLayout>
 
-            <com.huanchengfly.tieba.widgets.theme.TintRelativeLayout
+            <com.huanchengfly.tieba.post.widgets.theme.TintRelativeLayout
                 android:background="@drawable/bg_round"
                 app:backgroundTint="@color/default_color_background"
                 android:visibility="invisible"
                 android:id="@+id/forum_tab_holder"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
-                <com.huanchengfly.tieba.widgets.theme.TintTabLayout
+                <com.huanchengfly.tieba.post.widgets.theme.TintTabLayout
                     android:layout_marginStart="6dp"
                     app:layoutBackground="@color/transparent"
                     style="@style/Widget.TabLayout"
@@ -156,7 +156,7 @@
                     android:layout_alignTop="@id/forum_tab"
                     android:layout_alignBottom="@id/forum_tab"
                     android:layout_height="match_parent">
-                    <com.huanchengfly.tieba.widgets.theme.TintTextView
+                    <com.huanchengfly.tieba.post.widgets.theme.TintTextView
                         android:textStyle="bold"
                         android:id="@+id/forum_sort_text"
                         app:tint="@color/default_color_text_secondary"
@@ -164,7 +164,7 @@
                         android:text="@string/title_sort_by_reply"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content" />
-                    <com.huanchengfly.tieba.widgets.theme.TintImageView
+                    <com.huanchengfly.tieba.post.widgets.theme.TintImageView
                         app:tint="@color/default_color_text_secondary"
                         android:layout_centerVertical="true"
                         android:layout_toEndOf="@id/forum_sort_text"
@@ -172,16 +172,16 @@
                         android:layout_width="18dp"
                         android:layout_height="18dp" />
                 </RelativeLayout>
-            </com.huanchengfly.tieba.widgets.theme.TintRelativeLayout>
-        </com.huanchengfly.tieba.widgets.theme.TintAppBarLayout>
+            </com.huanchengfly.tieba.post.widgets.theme.TintRelativeLayout>
+        </com.huanchengfly.tieba.post.widgets.theme.TintAppBarLayout>
 
-        <com.huanchengfly.tieba.widgets.MyViewPager
+        <com.huanchengfly.tieba.post.widgets.MyViewPager
             app:layout_behavior="@string/appbar_scrolling_view_behavior"
             android:id="@+id/forum_view_pager"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
 
-        <com.huanchengfly.tieba.widgets.theme.TintFloatingActionButton
+        <com.huanchengfly.tieba.post.widgets.theme.TintFloatingActionButton
             app:layout_behavior="com.huanchengfly.tieba.post.components.behaviors.FabBehavior"
             android:id="@+id/fab"
             android:visibility="invisible"
@@ -195,13 +195,13 @@
             app:backgroundTint="@color/default_color_primary"
             app:borderWidth="0dp" />
 
-        <com.huanchengfly.tieba.widgets.theme.TintSearchView
+        <com.huanchengfly.tieba.post.widgets.theme.TintSearchView
             style="@style/Widget.SearchBar"
             android:layout_gravity="top"
             android:id="@+id/toolbar_search_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
-    </com.huanchengfly.tieba.widgets.theme.TintCoordinatorLayout>
+    </com.huanchengfly.tieba.post.widgets.theme.TintCoordinatorLayout>
 
     <include
         android:id="@+id/loading_view"

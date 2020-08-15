@@ -12,7 +12,7 @@
     android:paddingTop="4dp"
     android:paddingBottom="4dp">
 
-    <com.huanchengfly.tieba.widgets.theme.TintPreferenceImageView
+    <com.huanchengfly.tieba.post.widgets.theme.TintPreferenceImageView
         app:tint="@color/default_color_primary"
         android:id="@android:id/icon"
         android:layout_width="wrap_content"

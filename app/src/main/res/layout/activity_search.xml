@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.huanchengfly.tieba.widgets.theme.TintCoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.huanchengfly.tieba.post.widgets.theme.TintCoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/background"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".SearchActivity">
+    tools:context=".activities.SearchActivity">
 
-    <com.huanchengfly.tieba.widgets.theme.TintAppBarLayout
+    <com.huanchengfly.tieba.post.widgets.theme.TintAppBarLayout
         app:backgroundTint="@color/default_color_toolbar"
         android:id="@+id/appbar"
         android:layout_width="match_parent"
@@ -20,17 +20,17 @@
             android:id="@+id/toolbar_search_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
-        <com.huanchengfly.tieba.widgets.theme.TintTabLayout
+        <com.huanchengfly.tieba.post.widgets.theme.TintTabLayout
             style="@style/Widget.TabLayout.Fixed"
             android:id="@+id/tab"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
-    </com.huanchengfly.tieba.widgets.theme.TintAppBarLayout>
+    </com.huanchengfly.tieba.post.widgets.theme.TintAppBarLayout>
 
-    <com.huanchengfly.tieba.widgets.MyViewPager
+    <com.huanchengfly.tieba.post.widgets.MyViewPager
         android:id="@+id/view_pager"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
-</com.huanchengfly.tieba.widgets.theme.TintCoordinatorLayout>
+</com.huanchengfly.tieba.post.widgets.theme.TintCoordinatorLayout>

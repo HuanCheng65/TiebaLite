@@ -33,18 +33,17 @@ import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
 import com.gyf.immersionbar.ImmersionBar;
-import com.huanchengfly.theme.utils.ThemeUtils;
+import com.huanchengfly.tieba.post.ui.theme.utils.ThemeUtils;
+import com.huanchengfly.tieba.post.BaseApplication;
 import com.huanchengfly.tieba.post.R;
-import com.huanchengfly.tieba.post.activities.base.BaseActivity;
 import com.huanchengfly.tieba.post.adapters.ThemeColorAdapter;
-import com.huanchengfly.tieba.post.base.Config;
 import com.huanchengfly.tieba.post.components.MyImageEngine;
 import com.huanchengfly.tieba.post.components.MyLinearLayoutManager;
 import com.huanchengfly.tieba.post.components.transformations.BlurTransformation;
 import com.huanchengfly.tieba.post.utils.ImageUtil;
 import com.huanchengfly.tieba.post.utils.SharedPreferencesUtil;
 import com.huanchengfly.tieba.post.utils.ThemeUtil;
-import com.huanchengfly.utils.PermissionUtil;
+import com.huanchengfly.tieba.post.utils.PermissionUtil;
 import com.jrummyapps.android.colorpicker.ColorPickerDialog;
 import com.jrummyapps.android.colorpicker.ColorPickerDialogListener;
 import com.yalantis.ucrop.UCrop;
@@ -58,7 +57,7 @@ import java.util.List;
 
 import static com.huanchengfly.tieba.post.utils.ThemeUtil.SP_TRANSLUCENT_PRIMARY_COLOR;
 import static com.huanchengfly.tieba.post.utils.ThemeUtil.THEME_TRANSLUCENT;
-import static com.huanchengfly.utils.ColorUtils.getDarkerColor;
+import static com.huanchengfly.tieba.post.utils.ColorUtils.getDarkerColor;
 
 public class TranslucentThemeActivity extends BaseActivity implements View.OnClickListener, SeekBar.OnSeekBarChangeListener, ColorPickerDialogListener {
     public static final String TAG = TranslucentThemeActivity.class.getSimpleName();
@@ -112,8 +111,8 @@ public class TranslucentThemeActivity extends BaseActivity implements View.OnCli
                             File file = ImageUtil.bitmapToFile(bitmap, new File(getCacheDir(), "origin_background.jpg"));
                             Uri sourceUri = Uri.fromFile(file);
                             Uri destUri = Uri.fromFile(new File(getCacheDir(), "cropped_background.jpg"));
-                            float height = (float) Config.EXACT_SCREEN_HEIGHT;
-                            float width = (float) Config.EXACT_SCREEN_WIDTH;
+                            float height = (float) BaseApplication.ScreenInfo.EXACT_SCREEN_HEIGHT;
+                            float width = (float) BaseApplication.ScreenInfo.EXACT_SCREEN_WIDTH;
                             UCrop.Options uCropOptions = new UCrop.Options();
                             uCropOptions.setShowCropFrame(true);
                             uCropOptions.setShowCropGrid(true);

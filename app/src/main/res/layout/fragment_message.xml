@@ -5,14 +5,14 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".fragments.MessageFragment">
-    <com.huanchengfly.tieba.widgets.theme.TintRelativeLayout
+    <com.huanchengfly.tieba.post.widgets.theme.TintRelativeLayout
         android:paddingStart="12dp"
         android:paddingEnd="12dp"
         app:backgroundTint="@color/default_color_toolbar"
         android:id="@+id/fragment_message_tab_holder"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
-        <com.huanchengfly.tieba.widgets.theme.TintTabLayout
+        <com.huanchengfly.tieba.post.widgets.theme.TintTabLayout
             android:layout_centerVertical="true"
             android:background="@color/transparent"
             android:layout_toStartOf="@id/search_btn"
@@ -22,7 +22,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
-        <com.huanchengfly.tieba.widgets.theme.TintImageView
+        <com.huanchengfly.tieba.post.widgets.theme.TintImageView
             android:padding="0dp"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:layout_centerVertical="true"
@@ -33,11 +33,11 @@
             android:layout_marginStart="16dp"
             android:layout_width="24dp"
             android:layout_height="24dp" />
-    </com.huanchengfly.tieba.widgets.theme.TintRelativeLayout>
-    <com.huanchengfly.tieba.widgets.MyViewPager
+    </com.huanchengfly.tieba.post.widgets.theme.TintRelativeLayout>
+    <com.huanchengfly.tieba.post.widgets.MyViewPager
         android:layout_below="@id/fragment_message_tab_holder"
         android:id="@+id/fragment_message_vp"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-    </com.huanchengfly.tieba.widgets.MyViewPager>
+    </com.huanchengfly.tieba.post.widgets.MyViewPager>
 </RelativeLayout>

@@ -5,8 +5,8 @@ import android.net.Uri;
 
 import androidx.annotation.Nullable;
 
-import com.huanchengfly.tieba.api.models.UploadResultBean;
-import com.huanchengfly.tieba.api.models.WebUploadPicBean;
+import com.huanchengfly.tieba.post.api.models.UploadResultBean;
+import com.huanchengfly.tieba.post.api.models.WebUploadPicBean;
 import com.huanchengfly.tieba.post.utils.FileUtil;
 
 import java.io.File;

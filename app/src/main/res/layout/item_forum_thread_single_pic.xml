@@ -26,7 +26,7 @@
             <include
                 android:id="@+id/forum_item_content_text_holder"
                 layout="@layout/layout_forum_thread_content" />
-            <com.huanchengfly.tieba.widgets.MarkedImageView
+            <com.huanchengfly.tieba.post.widgets.MarkedImageView
                 android:layout_marginTop="4dp"
                 android:layout_marginBottom="4dp"
                 android:scaleType="centerCrop"

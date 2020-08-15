@@ -12,16 +12,16 @@ import android.widget.TextView;
 import androidx.cardview.widget.CardView;
 import androidx.gridlayout.widget.GridLayout;
 import com.bumptech.glide.Glide;
-import com.huanchengfly.tieba.api.models.ForumPageBean;
-import com.huanchengfly.tieba.api.models.PersonalizedBean;
-import com.huanchengfly.tieba.hotmessage.activities.HotMessageListActivity;
+import com.huanchengfly.tieba.post.api.models.ForumPageBean;
+import com.huanchengfly.tieba.post.api.models.PersonalizedBean;
+import com.huanchengfly.tieba.post.activities.HotMessageListActivity;
+import com.huanchengfly.tieba.post.BaseApplication;
 import com.huanchengfly.tieba.post.R;
-import com.huanchengfly.tieba.post.base.Config;
 import com.huanchengfly.tieba.post.components.dialogs.DislikeDialog;
 import com.huanchengfly.tieba.post.models.PhotoViewBean;
 import com.huanchengfly.tieba.post.utils.*;
-import com.huanchengfly.tieba.widgets.MarkedImageView;
-import com.huanchengfly.tieba.widgets.VideoPlayerStandard;
+import com.huanchengfly.tieba.post.widgets.MarkedImageView;
+import com.huanchengfly.tieba.post.widgets.VideoPlayerStandard;
 import com.othershe.baseadapter.ViewHolder;
 import com.othershe.baseadapter.base.MultiBaseAdapter;
 
@@ -73,11 +73,11 @@ public class PersonalizedFeedAdapter extends MultiBaseAdapter<PersonalizedBean.T
     }
 
     private int getMaxWidth() {
-        return Config.EXACT_SCREEN_WIDTH - DisplayUtil.dp2px(mContext, 40);
+        return BaseApplication.ScreenInfo.EXACT_SCREEN_WIDTH - DisplayUtil.dp2px(mContext, 40);
     }
 
     private int getGridHeight() {
-        return (Config.EXACT_SCREEN_WIDTH - DisplayUtil.dp2px(mContext, 70)) / 3;
+        return (BaseApplication.ScreenInfo.EXACT_SCREEN_WIDTH - DisplayUtil.dp2px(mContext, 70)) / 3;
     }
 
     private RelativeLayout.LayoutParams getLayoutParams(RelativeLayout.LayoutParams layoutParams) {

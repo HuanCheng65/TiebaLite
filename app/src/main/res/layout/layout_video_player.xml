@@ -51,7 +51,7 @@
                 android:text="00:00"
                 android:textColor="#ffffff" />
 
-            <com.huanchengfly.tieba.widgets.theme.TintSeekBar
+            <com.huanchengfly.tieba.post.widgets.theme.TintSeekBar
                 android:id="@+id/bottom_seek_progress"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -99,7 +99,7 @@
                 android:src="@drawable/ic_round_fullscreen" />
         </LinearLayout>
 
-        <com.huanchengfly.tieba.widgets.theme.TintProgressBar
+        <com.huanchengfly.tieba.post.widgets.theme.TintProgressBar
             android:id="@+id/bottom_progress"
             style="?android:attr/progressBarStyleHorizontal"
             android:layout_width="match_parent"

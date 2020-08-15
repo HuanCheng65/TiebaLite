@@ -15,7 +15,7 @@
         android:layout_height="wrap_content"
         android:stateListAnimator="@animator/appbar_elevation">
 
-        <com.huanchengfly.tieba.widgets.theme.TintToolbar
+        <com.huanchengfly.tieba.post.widgets.theme.TintToolbar
             app:popupTheme="?attr/actionOverflowMenuStyle"
             app:titleTextAppearance="@style/Toolbar.Title"
             app:subtitleTextAppearance="@style/Toolbar.Subtitle"
@@ -36,7 +36,7 @@
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:padding="16dp">
-        <com.huanchengfly.tieba.widgets.theme.TintMaterialButton
+        <com.huanchengfly.tieba.post.widgets.theme.TintMaterialButton
             android:layout_marginTop="8dp"
             android:id="@+id/select_pic"
             android:text="@string/title_select_pic"
@@ -57,7 +57,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
 
-            <com.huanchengfly.tieba.widgets.theme.TintMaterialButton
+            <com.huanchengfly.tieba.post.widgets.theme.TintMaterialButton
                 android:id="@+id/custom_color"
                 android:text="@string/title_custom_color"
                 app:buttonTextColor="@color/color_text_translucent"
@@ -78,7 +78,7 @@
             android:textColor="@color/color_text_translucent"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
-        <com.huanchengfly.tieba.widgets.theme.TintSeekBar
+        <com.huanchengfly.tieba.post.widgets.theme.TintSeekBar
             android:id="@+id/alpha"
             android:layout_marginTop="4dp"
             android:progress="255"
@@ -95,7 +95,7 @@
             android:textColor="@color/color_text_translucent"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
-        <com.huanchengfly.tieba.widgets.theme.TintSeekBar
+        <com.huanchengfly.tieba.post.widgets.theme.TintSeekBar
             android:id="@+id/blur"
             android:layout_marginTop="4dp"
             android:progress="0"
@@ -119,7 +119,7 @@
         android:id="@+id/progress"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-        <com.huanchengfly.tieba.widgets.theme.TintProgressBar
+        <com.huanchengfly.tieba.post.widgets.theme.TintProgressBar
             android:indeterminate="true"
             android:layout_gravity="center"
             style="@style/Widget.AppCompat.ProgressBar"

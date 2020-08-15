@@ -6,7 +6,7 @@ import android.text.format.DateUtils;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import com.bumptech.glide.request.RequestOptions;
-import com.huanchengfly.tieba.api.models.MessageListBean;
+import com.huanchengfly.tieba.post.api.models.MessageListBean;
 import com.huanchengfly.tieba.post.R;
 import com.huanchengfly.tieba.post.fragments.BaseFragment;
 import com.huanchengfly.tieba.post.fragments.MessageFragment;

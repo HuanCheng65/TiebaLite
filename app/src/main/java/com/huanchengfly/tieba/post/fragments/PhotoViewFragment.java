@@ -24,12 +24,12 @@ import com.bumptech.glide.request.transition.Transition;
 import com.davemorrissey.labs.subscaleview.ImageSource;
 import com.davemorrissey.labs.subscaleview.ImageViewState;
 import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView;
+import com.huanchengfly.tieba.post.BaseApplication;
 import com.huanchengfly.tieba.post.R;
-import com.huanchengfly.tieba.post.base.Config;
 import com.huanchengfly.tieba.post.models.PhotoViewBean;
 import com.huanchengfly.tieba.post.utils.DialogUtil;
 import com.huanchengfly.tieba.post.utils.ImageUtil;
-import com.huanchengfly.tieba.widgets.MyPhotoView;
+import com.huanchengfly.tieba.post.widgets.MyPhotoView;
 
 import butterknife.BindView;
 
@@ -179,8 +179,8 @@ public class PhotoViewFragment extends BaseFragment {
     }
 
     private float getInitImageScale(Bitmap bitmap) {
-        int width = Config.EXACT_SCREEN_WIDTH;
-        int height = Config.EXACT_SCREEN_HEIGHT;
+        int width = BaseApplication.ScreenInfo.EXACT_SCREEN_WIDTH;
+        int height = BaseApplication.ScreenInfo.EXACT_SCREEN_HEIGHT;
         float scale = 1.0f;
         if (bitmap == null) return scale;
         // 拿到图片的宽和高

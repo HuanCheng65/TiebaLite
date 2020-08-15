@@ -12,9 +12,9 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import butterknife.BindView
 import cn.jzvd.Jzvd
 import com.bumptech.glide.Glide
-import com.huanchengfly.tieba.api.TiebaApi
-import com.huanchengfly.tieba.api.models.PersonalizedBean
-import com.huanchengfly.tieba.api.retrofit.exception.TiebaException
+import com.huanchengfly.tieba.post.api.TiebaApi
+import com.huanchengfly.tieba.post.api.models.PersonalizedBean
+import com.huanchengfly.tieba.post.api.retrofit.exception.TiebaException
 import com.huanchengfly.tieba.post.R
 import com.huanchengfly.tieba.post.adapters.PersonalizedFeedAdapter
 import com.huanchengfly.tieba.post.components.MyLinearLayoutManager
@@ -24,8 +24,8 @@ import com.huanchengfly.tieba.post.utils.AnimUtil
 import com.huanchengfly.tieba.post.utils.BlockUtil
 import com.huanchengfly.tieba.post.utils.ThemeUtil
 import com.huanchengfly.tieba.post.utils.Util
-import com.huanchengfly.tieba.widgets.ShadowLayout
-import com.huanchengfly.tieba.widgets.VideoPlayerStandard
+import com.huanchengfly.tieba.post.widgets.ShadowLayout
+import com.huanchengfly.tieba.post.widgets.VideoPlayerStandard
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response

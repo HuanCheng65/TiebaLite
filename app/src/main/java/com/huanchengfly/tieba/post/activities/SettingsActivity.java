@@ -7,7 +7,6 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.FragmentManager;
 
 import com.huanchengfly.tieba.post.R;
-import com.huanchengfly.tieba.post.activities.base.BaseActivity;
 import com.huanchengfly.tieba.post.fragments.SettingsFragment;
 import com.huanchengfly.tieba.post.utils.ThemeUtil;
 

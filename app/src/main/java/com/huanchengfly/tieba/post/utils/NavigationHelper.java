@@ -16,13 +16,12 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.browser.customtabs.CustomTabsIntent;
 
-import com.huanchengfly.theme.utils.ThemeUtils;
-import com.huanchengfly.tieba.post.FloorActivity;
-import com.huanchengfly.tieba.post.ForumActivity;
-import com.huanchengfly.tieba.post.PermissionConstant;
+import com.huanchengfly.tieba.post.ui.theme.utils.ThemeUtils;
+import com.huanchengfly.tieba.post.activities.FloorActivity;
+import com.huanchengfly.tieba.post.activities.ForumActivity;
 import com.huanchengfly.tieba.post.R;
-import com.huanchengfly.tieba.post.ThreadActivity;
-import com.huanchengfly.tieba.post.WebViewActivity;
+import com.huanchengfly.tieba.post.activities.ThreadActivity;
+import com.huanchengfly.tieba.post.activities.WebViewActivity;
 import com.huanchengfly.tieba.post.activities.LoginActivity;
 import com.huanchengfly.tieba.post.activities.UserActivity;
 import com.huanchengfly.tieba.post.components.dialogs.PermissionDialog;
@@ -32,7 +31,7 @@ import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Map;
 
-import static com.huanchengfly.tieba.post.ForumActivity.EXTRA_FORUM_NAME;
+import static com.huanchengfly.tieba.post.activities.ForumActivity.EXTRA_FORUM_NAME;
 
 public final class NavigationHelper {
     public static final String TAG = "NavigationHelper";
@@ -273,7 +272,7 @@ public final class NavigationHelper {
                         appName = mContext.getString(R.string.name_multiapp);
                     }
                     new PermissionDialog(mContext,
-                            new PermissionBean(PermissionConstant.PERMISSION_START_APP,
+                            new PermissionBean(PermissionDialog.CustomPermission.PERMISSION_START_APP,
                                     oldHost + scheme,
                                     mContext.getString(R.string.title_start_app_permission, oldHost, appName),
                                     R.drawable.ic_round_exit_to_app))
@@ -301,7 +300,7 @@ public final class NavigationHelper {
                         appName = mContext.getString(R.string.name_multiapp);
                     }
                     new PermissionDialog(mContext,
-                            new PermissionBean(PermissionConstant.PERMISSION_START_APP,
+                            new PermissionBean(PermissionDialog.CustomPermission.PERMISSION_START_APP,
                                     oldHost + scheme,
                                     mContext.getString(R.string.title_start_app_permission, oldHost, appName),
                                     R.drawable.ic_round_exit_to_app))
