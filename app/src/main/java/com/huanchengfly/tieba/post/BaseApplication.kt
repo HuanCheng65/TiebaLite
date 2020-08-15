@@ -4,11 +4,11 @@ import android.app.Activity
 import android.app.Application
 import android.content.ClipboardManager
 import android.content.Context
-import android.content.DialogInterface
 import android.content.Intent
 import android.content.res.ColorStateList
 import android.content.res.Configuration
 import android.graphics.Color
+import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Bundle
 import android.text.TextUtils
@@ -225,6 +225,9 @@ class BaseApplication : Application() {
 
     companion object {
         val TAG = BaseApplication::class.java.simpleName
+
+        @JvmStatic
+        var translucentBackground: Drawable? = null
 
         private val packageName: String
             get() = instance.packageName

@@ -32,32 +32,31 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.ViewPager;
 
 import com.google.android.material.tabs.TabLayout;
-import com.huanchengfly.tieba.post.widgets.edittext.widget.UndoableEditText;
-import com.huanchengfly.tieba.post.api.TiebaApi;
-import com.huanchengfly.tieba.post.api.interfaces.CommonCallback;
-import com.huanchengfly.tieba.post.api.models.WebReplyResultBean;
-import com.huanchengfly.tieba.post.api.retrofit.exception.TiebaException;
 import com.huanchengfly.tieba.post.R;
 import com.huanchengfly.tieba.post.adapters.InsertPhotoAdapter;
 import com.huanchengfly.tieba.post.adapters.TabViewPagerAdapter;
 import com.huanchengfly.tieba.post.adapters.TextWatcherAdapter;
+import com.huanchengfly.tieba.post.api.TiebaApi;
+import com.huanchengfly.tieba.post.api.interfaces.CommonCallback;
+import com.huanchengfly.tieba.post.api.models.WebReplyResultBean;
+import com.huanchengfly.tieba.post.api.retrofit.exception.TiebaException;
 import com.huanchengfly.tieba.post.components.EmotionViewFactory;
 import com.huanchengfly.tieba.post.components.dialogs.LoadingDialog;
-import com.huanchengfly.tieba.post.components.transformations.RadiusTransformation;
 import com.huanchengfly.tieba.post.interfaces.ReplyContentCallback;
 import com.huanchengfly.tieba.post.interfaces.UploadCallback;
 import com.huanchengfly.tieba.post.models.PhotoInfoBean;
 import com.huanchengfly.tieba.post.models.ReplyInfoBean;
 import com.huanchengfly.tieba.post.models.database.Draft;
+import com.huanchengfly.tieba.post.utils.AssetUtil;
 import com.huanchengfly.tieba.post.utils.EmotionUtil;
+import com.huanchengfly.tieba.post.utils.GsonUtil;
 import com.huanchengfly.tieba.post.utils.StringUtil;
 import com.huanchengfly.tieba.post.utils.ThemeUtil;
 import com.huanchengfly.tieba.post.utils.UploadHelper;
 import com.huanchengfly.tieba.post.utils.Util;
+import com.huanchengfly.tieba.post.widgets.edittext.widget.UndoableEditText;
 import com.huanchengfly.tieba.post.widgets.theme.TintConstraintLayout;
 import com.huanchengfly.tieba.post.widgets.theme.TintImageView;
-import com.huanchengfly.tieba.post.utils.AssetUtil;
-import com.huanchengfly.tieba.post.utils.GsonUtil;
 import com.zhihu.matisse.Matisse;
 
 import org.jetbrains.annotations.NotNull;
@@ -125,9 +124,7 @@ public class ReplyActivity extends BaseActivity implements View.OnClickListener 
         if (ThemeUtil.THEME_TRANSLUCENT.equals(ThemeUtil.getTheme(this))) {
             TintConstraintLayout constraintLayout = (TintConstraintLayout) findViewById(R.id.activity_reply_layout);
             constraintLayout.setBackgroundTintResId(0);
-            ThemeUtil.setTranslucentThemeBackground(constraintLayout,
-                    false,
-                    new RadiusTransformation(this, 8, RadiusTransformation.CORNER_TOP_LEFT | RadiusTransformation.CORNER_TOP_RIGHT));
+            ThemeUtil.setTranslucentBackground(constraintLayout);
         }
         Util.setStatusBarTransparent(this);
         getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);

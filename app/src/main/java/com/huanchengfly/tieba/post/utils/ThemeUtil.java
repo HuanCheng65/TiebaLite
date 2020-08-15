@@ -28,9 +28,10 @@ import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.CustomViewTarget;
 import com.bumptech.glide.request.transition.Transition;
 import com.google.android.material.appbar.AppBarLayout;
-import com.huanchengfly.tieba.post.ui.theme.utils.ThemeUtils;
+import com.huanchengfly.tieba.post.BaseApplication;
 import com.huanchengfly.tieba.post.R;
 import com.huanchengfly.tieba.post.activities.BaseActivity;
+import com.huanchengfly.tieba.post.ui.theme.utils.ThemeUtils;
 import com.huanchengfly.tieba.post.widgets.theme.TintSwipeRefreshLayout;
 
 import java.io.File;
@@ -218,6 +219,17 @@ public class ThemeUtil {
         }
     }
 
+    public static void setTranslucentBackground(View view) {
+        if (view == null) {
+            return;
+        }
+        if (!THEME_TRANSLUCENT.equals(ThemeUtil.getTheme(view.getContext()))) {
+            return;
+        }
+        view.setBackgroundTintList(null);
+        view.setBackgroundColor(Color.TRANSPARENT);
+    }
+
     public static void setTranslucentThemeBackground(View view, boolean setFitsSystemWindow, BitmapTransformation... transformations) {
         if (view == null) {
             return;
@@ -248,6 +260,10 @@ public class ThemeUtil {
             view.setBackgroundColor(Color.BLACK);
             return;
         }
+        if (BaseApplication.getTranslucentBackground() != null && (transformations == null || transformations.length == 0)) {
+            view.setBackground(BaseApplication.getTranslucentBackground());
+            return;
+        }
         RequestOptions bgOptions = RequestOptions.centerCropTransform()
                 .skipMemoryCache(true)
                 .diskCacheStrategy(DiskCacheStrategy.NONE);
@@ -266,6 +282,7 @@ public class ThemeUtil {
 
                     @Override
                     public void onResourceReady(@NonNull Drawable resource, @Nullable Transition<? super Drawable> transition) {
+                        BaseApplication.setTranslucentBackground(resource);
                         getView().setBackground(resource);
                     }
 

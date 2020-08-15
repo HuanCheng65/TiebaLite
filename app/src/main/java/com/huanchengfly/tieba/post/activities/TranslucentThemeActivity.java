@@ -33,17 +33,17 @@ import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
 import com.gyf.immersionbar.ImmersionBar;
-import com.huanchengfly.tieba.post.ui.theme.utils.ThemeUtils;
 import com.huanchengfly.tieba.post.BaseApplication;
 import com.huanchengfly.tieba.post.R;
 import com.huanchengfly.tieba.post.adapters.ThemeColorAdapter;
 import com.huanchengfly.tieba.post.components.MyImageEngine;
 import com.huanchengfly.tieba.post.components.MyLinearLayoutManager;
 import com.huanchengfly.tieba.post.components.transformations.BlurTransformation;
+import com.huanchengfly.tieba.post.ui.theme.utils.ThemeUtils;
 import com.huanchengfly.tieba.post.utils.ImageUtil;
+import com.huanchengfly.tieba.post.utils.PermissionUtil;
 import com.huanchengfly.tieba.post.utils.SharedPreferencesUtil;
 import com.huanchengfly.tieba.post.utils.ThemeUtil;
-import com.huanchengfly.tieba.post.utils.PermissionUtil;
 import com.jrummyapps.android.colorpicker.ColorPickerDialog;
 import com.jrummyapps.android.colorpicker.ColorPickerDialogListener;
 import com.yalantis.ucrop.UCrop;
@@ -55,9 +55,9 @@ import com.zhihu.matisse.MimeType;
 import java.io.File;
 import java.util.List;
 
+import static com.huanchengfly.tieba.post.utils.ColorUtils.getDarkerColor;
 import static com.huanchengfly.tieba.post.utils.ThemeUtil.SP_TRANSLUCENT_PRIMARY_COLOR;
 import static com.huanchengfly.tieba.post.utils.ThemeUtil.THEME_TRANSLUCENT;
-import static com.huanchengfly.tieba.post.utils.ColorUtils.getDarkerColor;
 
 public class TranslucentThemeActivity extends BaseActivity implements View.OnClickListener, SeekBar.OnSeekBarChangeListener, ColorPickerDialogListener {
     public static final String TAG = TranslucentThemeActivity.class.getSimpleName();
@@ -274,6 +274,7 @@ public class TranslucentThemeActivity extends BaseActivity implements View.OnCli
                             .putString(ThemeUtil.SP_OLD_THEME, THEME_TRANSLUCENT)
                             .commit();
                     Toast.makeText(TranslucentThemeActivity.this, R.string.toast_save_pic_success, Toast.LENGTH_SHORT).show();
+                    BaseApplication.setTranslucentBackground(null);
                     mProgress.setVisibility(View.GONE);
                     finish();
                 });

@@ -82,6 +82,12 @@ public class ThemeActivity extends BaseActivity {
         ThemeUtil.setTranslucentThemeBackground(findViewById(R.id.background));
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        ThemeUtil.setTranslucentThemeBackground(findViewById(R.id.background));
+    }
+
     @SuppressLint("ApplySharedPref")
     private void setTheme(String theme) {
         ThemeUtil.getSharedPreferences(ThemeActivity.this).edit().putString(ThemeUtil.SP_THEME, theme).commit();
