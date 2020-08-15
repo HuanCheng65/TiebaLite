@@ -102,8 +102,10 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
 
     //Local Files
-    implementation project(':SwipeBackLib')
     implementation fileTree(include: ['*.jar'], dir: 'libs')
+
+    //滑动返回
+    implementation 'me.imid.swipebacklayout.lib:library:1.1.0'
 
     //兼容 Glide
     implementation 'com.android.support:support-annotations:28.0.0'
