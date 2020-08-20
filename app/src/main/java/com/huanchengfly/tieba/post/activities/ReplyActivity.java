@@ -288,71 +288,16 @@ public class ReplyActivity extends BaseActivity implements View.OnClickListener 
         return needUpload;
     }
 
-    /*
-    private void getReplyContent(ReplyContentCallback callback) {
-        StringBuilder builder = new StringBuilder();
-        if (replyInfoBean.isSubFloor() && (replyInfoBean.getReplyUser() != null)) {
-            builder.append("回复 ");
-            builder.append(replyInfoBean.getReplyUser());
-            builder.append(" : ");
-            builder.append(editText.getText().toString());
-            callback.onSuccess(builder.toString());
-            return;
-        }
-        builder.append(editText.getText().toString());
-        if (!needUpload()) {
-            if (hasPhoto()) {
-                for (PhotoInfoBean photoInfoBean : insertPhotoAdapter.getFileList()) {
-                    if (photoInfoBean.getUploadResult() != null && photoInfoBean.getUploadResult().getInfo() != null) {
-                        builder.append(photoInfoBean.getUploadResult().getInfo().getPic());
-                    }
-                }
-            }
-            callback.onSuccess(builder.toString());
-            return;
-        }
-        StringBuilder picString = new StringBuilder();
-        UploadHelper.with(this)
-                .setFileList(insertPhotoAdapter.getFileList())
-                .setCallback(new UploadCallback() {
-                    @Override
-                    public void onSuccess(List<PhotoInfoBean> photoInfoBeans) {
-                        for (PhotoInfoBean photoInfoBean : photoInfoBeans) {
-                            if (photoInfoBean.getUploadResult() != null && photoInfoBean.getUploadResult().getInfo() != null) {
-                                picString.append(photoInfoBean.getUploadResult().getInfo().getPic());
-                            }
-                        }
-                        builder.append(picString.toString());
-                        callback.onSuccess(builder.toString());
-                    }
-
-                    @Override
-                    public void onStart(int total) {
-                        callback.onStart(total);
-                    }
-
-                    @Override
-                    public void onProgress(int current, int total) {
-                        callback.onProgress(current, total);
-                    }
-
-                    @Override
-                    public void onFailure(String error) {
-                        callback.onFailure(error);
-                    }
-                })
-                .start();
-    }
-    */
-
     private String getReplyContent() {
         StringBuilder builder = new StringBuilder();
         if (replyInfoBean.isSubFloor() && (replyInfoBean.getReplyUser() != null)) {
-            builder.append("回复 ");
-            builder.append(replyInfoBean.getReplyUser());
-            builder.append(" :");
+            builder.append("回复 ")
+                    .append(replyInfoBean.getReplyUser())
+                    .append(" :");
         }
-        builder.append(editText.getText().toString());
+        builder.append(editText.getText().toString())
+                .append("\n")
+                .append(getAppPreferences().getLittleTail());
         return builder.toString();
     }
 
@@ -515,14 +460,17 @@ public class ReplyActivity extends BaseActivity implements View.OnClickListener 
                     @Override
                     public void onSuccess(String bsk) {
                         if (replyInfoBean.getPid() == null && replyInfoBean.getFloorNum() == null) {
-                            TiebaApi.getInstance().webReply(replyInfoBean.getForumId(), replyInfoBean.getForumName(),
+                            TiebaApi.getInstance().webReply(
+                                    replyInfoBean.getForumId(),
+                                    replyInfoBean.getForumName(),
                                     replyInfoBean.getThreadId(),
                                     replyInfoBean.getTbs(),
                                     getReplyContent(),
                                     data,
                                     replyInfoBean.getNickName(),
                                     replyInfoBean.getPn(),
-                                    bsk).enqueue(mCallback);
+                                    bsk
+                            ).enqueue(mCallback);
                         } else {
                             if (replyInfoBean.isSubFloor() && replyInfoBean.getSpid() != null) {
                                 TiebaApi.getInstance().webReply(replyInfoBean.getForumId(), replyInfoBean.getForumName(),

@@ -27,7 +27,8 @@ import cn.jzvd.Jzvd
 import com.billy.android.preloader.PreLoader
 import com.bumptech.glide.Glide
 import com.google.android.material.snackbar.Snackbar
-import com.huanchengfly.tieba.post.ui.theme.utils.ThemeUtils
+import com.huanchengfly.tieba.post.R
+import com.huanchengfly.tieba.post.adapters.RecyclerThreadAdapter
 import com.huanchengfly.tieba.post.api.TiebaApi
 import com.huanchengfly.tieba.post.api.interfaces.CommonAPICallback
 import com.huanchengfly.tieba.post.api.models.AgreeBean
@@ -35,14 +36,13 @@ import com.huanchengfly.tieba.post.api.models.CommonResponse
 import com.huanchengfly.tieba.post.api.models.ThreadContentBean
 import com.huanchengfly.tieba.post.api.models.ThreadContentBean.PostListItemBean
 import com.huanchengfly.tieba.post.api.retrofit.exception.TiebaException
-import com.huanchengfly.tieba.post.R
-import com.huanchengfly.tieba.post.adapters.RecyclerThreadAdapter
 import com.huanchengfly.tieba.post.components.MyLinearLayoutManager
 import com.huanchengfly.tieba.post.components.dialogs.EditTextDialog
 import com.huanchengfly.tieba.post.components.dividers.ThreadDivider
 import com.huanchengfly.tieba.post.models.ReplyInfoBean
 import com.huanchengfly.tieba.post.models.ThreadHistoryInfoBean
 import com.huanchengfly.tieba.post.models.database.History
+import com.huanchengfly.tieba.post.ui.theme.utils.ThemeUtils
 import com.huanchengfly.tieba.post.utils.*
 import com.huanchengfly.tieba.post.utils.preload.PreloadUtil
 import com.huanchengfly.tieba.post.utils.preload.loaders.ThreadContentLoader
@@ -599,7 +599,7 @@ class ThreadActivity : BaseActivity(), View.OnClickListener {
 
     private fun collect(commonAPICallback: CommonAPICallback<CommonResponse>?, update: Boolean) {
         if (dataBean == null || tid == null) return
-        val postListItemBean = lastVisibleItem ?: return
+        val postListItemBean = firstVisibleItem ?: return
         TiebaApi.getInstance().addStore(tid!!, postListItemBean.id!!, tbs = dataBean!!.anti?.tbs!!).enqueue(object : Callback<CommonResponse> {
             override fun onFailure(call: Call<CommonResponse>, t: Throwable) {
                 if (t is TiebaException) {
@@ -695,7 +695,7 @@ class ThreadActivity : BaseActivity(), View.OnClickListener {
     private fun exit(): Boolean {
         if (collect) {
             DialogUtil.build(this)
-                    .setTitle("是否更新收藏楼层")
+                    .setMessage(R.string.message_update_store_floor)
                     .setPositiveButton(R.string.button_yes) { dialog: DialogInterface, _ ->
                         collect(object : CommonAPICallback<CommonResponse> {
                             override fun onSuccess(data: CommonResponse) {

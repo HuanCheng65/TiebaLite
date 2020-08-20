@@ -11,6 +11,7 @@ open class AppPreferencesUtils(context: Context) {
     //PreferenceManager.getDefaultSharedPreferences(context)
 
     var loadPictureWhenScroll by SharedPreferenceDelegates.boolean(true)
+    var littleTail by SharedPreferenceDelegates.string(key = "little_tail")
 
     private object SharedPreferenceDelegates {
         fun int(defaultValue: Int = 0) = object : ReadWriteProperty<AppPreferencesUtils, Int> {
@@ -81,13 +82,16 @@ open class AppPreferencesUtils(context: Context) {
                     }
                 }
 
-        fun string(defaultValue: String? = null) =
+        fun string(
+                defaultValue: String? = null,
+                key: String? = null
+        ) =
                 object : ReadWriteProperty<AppPreferencesUtils, String?> {
                     override fun getValue(
                             thisRef: AppPreferencesUtils,
                             property: KProperty<*>
                     ): String? {
-                        return thisRef.preferences.getString(property.name, defaultValue)
+                        return thisRef.preferences.getString(key ?: property.name, defaultValue)
                     }
 
                     override fun setValue(
@@ -95,7 +99,7 @@ open class AppPreferencesUtils(context: Context) {
                             property: KProperty<*>,
                             value: String?
                     ) {
-                        thisRef.preferences.edit().putString(property.name, value).apply()
+                        thisRef.preferences.edit().putString(key ?: property.name, value).apply()
                     }
                 }
 

@@ -358,4 +358,5 @@
     <string name="hint_reply">回复 %1$s</string>
     <string name="title_emotion_classic">经典</string>
     <string name="title_emotion_emoji">符号</string>
+    <string name="message_update_store_floor">是否更新收藏楼层</string>
 </resources>
