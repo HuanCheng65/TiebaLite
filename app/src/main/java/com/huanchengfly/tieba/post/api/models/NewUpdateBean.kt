@@ -4,10 +4,10 @@ import com.google.gson.annotations.SerializedName
 
 class NewUpdateBean {
     @SerializedName("success")
-    val isSuccess: Boolean
+    val isSuccess: Boolean = false
 
     @SerializedName("has_update")
-    val isHasUpdate: Boolean
+    val isHasUpdate: Boolean = false
 
     @SerializedName("error_code")
     val errorCode: Int? = null
