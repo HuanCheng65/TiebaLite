@@ -47,7 +47,8 @@ public class ThreadStoreAdapter extends CommonBaseAdapter<ThreadStoreBean.Thread
                 StringUtil.getAvatarUrl(threadStoreInfo.getAuthor().getUserPortrait())
         );
         SpannableStringBuilder builder = new SpannableStringBuilder();
-        if (!TextUtils.equals(threadStoreInfo.getCount(), "0")) {
+        if (!TextUtils.equals(threadStoreInfo.getCount(), "0") &&
+                !TextUtils.equals(threadStoreInfo.getPostNo(), "0")) {
             builder.append(mContext.getString(R.string.tip_thread_store_update, threadStoreInfo.getPostNo()),
                     new RoundBackgroundColorSpan(mContext, alphaColor(ThemeUtils.getColorByAttr(mContext, R.attr.colorAccent), 30),
                             ThemeUtils.getColorByAttr(mContext, R.attr.colorAccent),
