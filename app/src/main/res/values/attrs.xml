@@ -93,6 +93,7 @@
         <attr name="seekbarBackgroundTint" format="color" />
         <attr name="progressTint" format="color" />
         <attr name="progressBackgroundTint" format="color" />
+        <attr name="thumbColor" />
     </declare-styleable>
 
     <declare-styleable name="TintMaterialButton">
@@ -114,11 +115,23 @@
     </declare-styleable>
 
     <declare-styleable name="TintTextInputLayout">
-        <attr name="inputLayoutBoxStrokeColor" format="color" />
+        <attr name="boxStrokeColor" />
+        <attr name="hintTextColor" />
+        <attr name="placeholderTextColor" />
+    </declare-styleable>
+
+    <declare-styleable name="TintUndoableEditText">
+        <attr name="hintTextColor" format="color" />
+        <attr name="textColor" />
     </declare-styleable>
 
     <declare-styleable name="MyViewPager">
         <attr name="orientation" />
-        <attr format="boolean" name="can_scroll"/>
+        <attr format="boolean" name="can_scroll" />
+    </declare-styleable>
+
+    <declare-styleable name="TintEditText">
+        <attr name="textColor" />
+        <attr name="android:textColorHint" />
     </declare-styleable>
 </resources>

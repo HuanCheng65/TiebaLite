@@ -15,12 +15,12 @@ import butterknife.OnClick
 import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetBehavior.BottomSheetCallback
+import com.huanchengfly.tieba.post.R
+import com.huanchengfly.tieba.post.activities.ReplyActivity
+import com.huanchengfly.tieba.post.activities.ThreadActivity
+import com.huanchengfly.tieba.post.adapters.RecyclerFloorAdapter
 import com.huanchengfly.tieba.post.api.TiebaApi
 import com.huanchengfly.tieba.post.api.models.SubFloorListBean
-import com.huanchengfly.tieba.post.R
-import com.huanchengfly.tieba.post.activities.ThreadActivity
-import com.huanchengfly.tieba.post.activities.ReplyActivity
-import com.huanchengfly.tieba.post.adapters.RecyclerFloorAdapter
 import com.huanchengfly.tieba.post.components.MyLinearLayoutManager
 import com.huanchengfly.tieba.post.components.dividers.ThreadDivider
 import com.huanchengfly.tieba.post.components.transformations.RadiusTransformation
@@ -101,6 +101,7 @@ class FloorFragment : BaseBottomSheetDialogFragment() {
 
     override fun initView() {
         ThemeUtil.setTranslucentThemeBackground(rootView.findViewById(R.id.background),
+                false,
                 false,
                 RadiusTransformation(attachContext,
                         8,

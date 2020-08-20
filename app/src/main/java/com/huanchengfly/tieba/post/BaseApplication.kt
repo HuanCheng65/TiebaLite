@@ -290,17 +290,17 @@ class BaseApplication : Application() {
                 }
                 R.attr.colorText -> {
                     return if (ThemeUtil.THEME_TRANSLUCENT == theme) {
-                        context.getColorCompat(R.color.color_text_translucent)
+                        context.getColorCompat(R.color.color_text_translucent_light)
                     } else context.getColorCompat(if (ThemeUtil.isNightMode(context)) R.color.color_text_night else R.color.color_text)
                 }
                 R.attr.color_text_disabled -> {
                     return if (ThemeUtil.THEME_TRANSLUCENT == theme) {
-                        context.getColorCompat(R.color.color_text_disabled_translucent)
+                        context.getColorCompat(R.color.color_text_disabled_translucent_light)
                     } else context.getColorCompat(if (ThemeUtil.isNightMode(context)) R.color.color_text_disabled_night else R.color.color_text_disabled)
                 }
                 R.attr.colorTextSecondary -> {
                     return if (ThemeUtil.THEME_TRANSLUCENT == theme) {
-                        context.getColorCompat(R.color.color_text_secondary_translucent)
+                        context.getColorCompat(R.color.color_text_secondary_translucent_light)
                     } else context.getColorCompat(if (ThemeUtil.isNightMode(context)) R.color.color_text_secondary_night else R.color.color_text_secondary)
                 }
                 R.attr.colorTextOnPrimary -> {
@@ -318,7 +318,7 @@ class BaseApplication : Application() {
                 }
                 R.attr.colorUnselected -> {
                     return if (ThemeUtil.THEME_TRANSLUCENT == theme) {
-                        context.getColorCompat(R.color.theme_color_unselected_translucent)
+                        context.getColorCompat(R.color.theme_color_unselected_translucent_light)
                     } else context.getColorCompat(if (ThemeUtil.isNightMode(context)) resources.getIdentifier("theme_color_unselected_$theme", "color", packageName) else R.color.theme_color_unselected_day)
                 }
                 R.attr.colorNavBar -> {
@@ -331,7 +331,7 @@ class BaseApplication : Application() {
                 }
                 R.attr.colorFloorCard -> {
                     if (ThemeUtil.THEME_TRANSLUCENT == theme) {
-                        return context.getColorCompat(R.color.theme_color_floor_card_translucent)
+                        return context.getColorCompat(R.color.theme_color_floor_card_translucent_light)
                     }
                     return if (ThemeUtil.isNightMode(context)) {
                         context.getColorCompat(resources.getIdentifier("theme_color_floor_card_$theme", "color", packageName))
@@ -339,7 +339,7 @@ class BaseApplication : Application() {
                 }
                 R.attr.colorCard -> {
                     if (ThemeUtil.THEME_TRANSLUCENT == theme) {
-                        return context.getColorCompat(R.color.theme_color_card_translucent)
+                        return context.getColorCompat(R.color.theme_color_card_translucent_light)
                     }
                     return if (ThemeUtil.isNightMode(context)) {
                         context.getColorCompat(resources.getIdentifier("theme_color_card_$theme", "color", packageName))
@@ -347,7 +347,7 @@ class BaseApplication : Application() {
                 }
                 R.attr.colorDivider -> {
                     if (ThemeUtil.THEME_TRANSLUCENT == theme) {
-                        return context.getColorCompat(R.color.theme_color_divider_translucent)
+                        return context.getColorCompat(R.color.theme_color_divider_translucent_light)
                     }
                     return if (ThemeUtil.isNightMode(context)) {
                         context.getColorCompat(resources.getIdentifier("theme_color_divider_$theme", "color", packageName))
@@ -360,7 +360,7 @@ class BaseApplication : Application() {
                 }
                 R.attr.colorToolbarItem -> {
                     if (ThemeUtil.THEME_TRANSLUCENT == theme) {
-                        return context.getColorCompat(R.color.theme_color_toolbar_item_translucent)
+                        return context.getColorCompat(R.color.theme_color_toolbar_item_translucent_light)
                     }
                     return if (ThemeUtil.isNightMode(context)) {
                         context.getColorCompat(R.color.theme_color_toolbar_item_night)
@@ -368,7 +368,7 @@ class BaseApplication : Application() {
                 }
                 R.attr.colorToolbarItemActive -> {
                     if (ThemeUtil.THEME_TRANSLUCENT == theme) {
-                        return context.getColorCompat(R.color.theme_color_toolbar_item_active_translucent)
+                        return context.getColorCompat(R.color.theme_color_toolbar_item_active_translucent_light)
                     }
                     if (ThemeUtil.THEME_WHITE == theme) {
                         return context.getColorCompat(resources.getIdentifier("theme_color_toolbar_item_active_$theme", "color", packageName))
@@ -379,7 +379,7 @@ class BaseApplication : Application() {
                 }
                 R.attr.color_toolbar_item_secondary -> {
                     if (ThemeUtil.THEME_TRANSLUCENT == theme) {
-                        return context.getColorCompat(R.color.theme_color_toolbar_item_secondary_translucent)
+                        return context.getColorCompat(R.color.theme_color_toolbar_item_secondary_translucent_light)
                     }
                     return if (ThemeUtil.THEME_WHITE == theme || ThemeUtil.isNightMode(theme)) {
                         context.getColorCompat(resources.getIdentifier("theme_color_toolbar_item_secondary_$theme", "color", packageName))
@@ -387,7 +387,7 @@ class BaseApplication : Application() {
                 }
                 R.attr.color_swipe_refresh_layout_background -> {
                     if (ThemeUtil.THEME_TRANSLUCENT == theme) {
-                        return context.getColorCompat(R.color.theme_color_swipe_refresh_view_background_translucent)
+                        return context.getColorCompat(R.color.theme_color_swipe_refresh_view_background_translucent_light)
                     }
                     return if (ThemeUtil.isNightMode(theme)) {
                         context.getColorCompat(resources.getIdentifier("theme_color_swipe_refresh_view_background_$theme", "color", packageName))

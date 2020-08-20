@@ -10,15 +10,17 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.AppCompatSeekBar;
 
-import com.huanchengfly.tieba.post.ui.theme.interfaces.Tintable;
-import com.huanchengfly.tieba.post.ui.theme.utils.ThemeUtils;
 import com.huanchengfly.tieba.post.R;
+import com.huanchengfly.tieba.post.ui.theme.interfaces.Tintable;
+import com.huanchengfly.tieba.post.ui.theme.utils.ColorStateListUtils;
+import com.huanchengfly.tieba.post.ui.theme.utils.ThemeUtils;
 
 @SuppressLint("CustomViewStyleable")
 public class TintSeekBar extends AppCompatSeekBar implements Tintable {
     private int mBackgroundTintResId;
     private int mProgressTintResId;
     private int mProgressBackgroundTintResId;
+    private int mThumbColorResId;
 
     public TintSeekBar(@NonNull Context context) {
         this(context, null);
@@ -35,15 +37,17 @@ public class TintSeekBar extends AppCompatSeekBar implements Tintable {
         }
         if (attrs == null) {
             mBackgroundTintResId = 0;
-            mProgressTintResId = R.color.default_color_primary;
+            mProgressTintResId = 0;
             mProgressBackgroundTintResId = 0;
+            mThumbColorResId = 0;
             applyTintColor();
             return;
         }
         TypedArray array = getContext().obtainStyledAttributes(attrs, R.styleable.TintSeekbar, defStyleAttr, 0);
         mBackgroundTintResId = array.getResourceId(R.styleable.TintSeekbar_seekbarBackgroundTint, 0);
-        mProgressTintResId = array.getResourceId(R.styleable.TintSeekbar_progressTint, R.color.default_color_primary);
+        mProgressTintResId = array.getResourceId(R.styleable.TintSeekbar_progressTint, 0);
         mProgressBackgroundTintResId = array.getResourceId(R.styleable.TintSeekbar_progressBackgroundTint, 0);
+        mThumbColorResId = array.getResourceId(R.styleable.TintSeekbar_thumbColor, 0);
         array.recycle();
         applyTintColor();
     }
@@ -61,9 +65,13 @@ public class TintSeekBar extends AppCompatSeekBar implements Tintable {
                 setBackgroundTintList(ColorStateList.valueOf(ThemeUtils.getColorById(getContext(), mBackgroundTintResId)));
             }
         }
-        setProgressTintList(ColorStateList.valueOf(ThemeUtils.getColorById(getContext(), mProgressTintResId)));
+        if (mProgressTintResId != 0)
+            setProgressTintList(ColorStateList.valueOf(ThemeUtils.getColorById(getContext(), mProgressTintResId)));
         if (mProgressBackgroundTintResId != 0) {
             setProgressBackgroundTintList(ColorStateList.valueOf(ThemeUtils.getColorById(getContext(), mProgressBackgroundTintResId)));
+        }
+        if (mThumbColorResId != 0) {
+            setThumbTintList(ColorStateListUtils.createColorStateList(getContext(), mThumbColorResId));
         }
     }
 }

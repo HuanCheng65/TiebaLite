@@ -8,9 +8,9 @@ import android.util.AttributeSet;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.AlertDialogLayout;
 
+import com.huanchengfly.tieba.post.R;
 import com.huanchengfly.tieba.post.ui.theme.interfaces.Tintable;
 import com.huanchengfly.tieba.post.ui.theme.utils.ThemeUtils;
-import com.huanchengfly.tieba.post.R;
 import com.huanchengfly.tieba.post.utils.ThemeUtil;
 
 @SuppressLint("RestrictedApi")
@@ -48,6 +48,6 @@ public class TintAlertDialogLayout extends AlertDialogLayout implements Tintable
         } else {
             setBackground(ThemeUtils.tintDrawable(getBackground(), ThemeUtils.getColorById(getContext(), mBackgroundTintResId)));
         }
-        ThemeUtil.setTranslucentThemeBackground(this);
+        ThemeUtil.setTranslucentDialogBackground(this);
     }
 }

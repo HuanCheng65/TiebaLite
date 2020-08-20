@@ -25,9 +25,12 @@
             android:textColor="?android:attr/textColorSecondary"/>
 
         <com.huanchengfly.tieba.post.widgets.theme.TintTextInputLayout
-            app:inputLayoutBoxStrokeColor="@color/default_color_primary"
-            android:layout_marginTop="8dp"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+            app:boxBackgroundColor="@color/transparent"
+            app:boxStrokeColor="@color/default_color_primary"
+            app:hintTextColor="@color/default_color_primary"
+            app:placeholderTextColor="@color/default_color_primary"
+            android:layout_marginTop="8dp"
             android:layout_marginLeft="20dp"
             android:layout_marginRight="20dp"
             android:layout_marginStart="20dp"
@@ -36,6 +39,7 @@
             android:layout_height="wrap_content">
 
             <com.google.android.material.textfield.TextInputEditText
+                android:textCursorDrawable="@null"
                 android:id="@android:id/edit"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />

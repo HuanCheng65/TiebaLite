@@ -10,15 +10,11 @@ import android.util.Log;
 import android.view.MenuItem;
 
 import androidx.annotation.Nullable;
-import androidx.appcompat.widget.ActionMenuView;
 import androidx.appcompat.widget.Toolbar;
 
+import com.huanchengfly.tieba.post.R;
 import com.huanchengfly.tieba.post.ui.theme.interfaces.Tintable;
 import com.huanchengfly.tieba.post.ui.theme.utils.ThemeUtils;
-import com.huanchengfly.tieba.post.R;
-import com.huanchengfly.tieba.post.utils.ThemeUtil;
-
-import java.lang.reflect.Field;
 
 public class TintToolbar extends Toolbar implements Tintable {
     public static final String TAG = "TintToolbar";
@@ -148,39 +144,6 @@ public class TintToolbar extends Toolbar implements Tintable {
     public void inflateMenu(int resId) {
         super.inflateMenu(resId);
         applyTintColor();
-    }
-
-    @SuppressLint("RestrictedApi")
-    public void tintOverflowMenu() {
-        int popupTheme = R.style.OverflowMenu;
-        switch (ThemeUtil.getTheme(getContext())) {
-            case ThemeUtil.THEME_BLUE_DARK:
-                popupTheme = R.style.OverflowMenu_Dark;
-                break;
-            case ThemeUtil.THEME_AMOLED_DARK:
-                popupTheme = R.style.OverflowMenu_Dark_Amoled;
-                break;
-            default:
-                break;
-        }
-        setPopupTheme(popupTheme);
-        try {
-            getMenu();
-            Field field = Toolbar.class.getDeclaredField("mMenuView");
-            field.setAccessible(true);
-            ActionMenuView actionMenuView = (ActionMenuView) field.get(this);
-            if (actionMenuView == null) {
-                return;
-            }
-            actionMenuView.setPopupTheme(popupTheme);
-            Log.i(TAG, "tintOverflowMenu: finish");
-        } catch (NoSuchFieldException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (NullPointerException e) {
-            e.printStackTrace();
-        }
     }
 
     public void setBackgroundTintResId(int mBackgroundTintResId) {

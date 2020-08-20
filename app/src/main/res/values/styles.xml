@@ -231,24 +231,18 @@
         <item name="android:colorControlNormal">@color/theme_color_toolbar_item_dark</item>
     </style>
 
-    <style name="OverflowMenu" parent="Widget.AppCompat.Light.PopupMenu.Overflow">
-        <item name="android:popupBackground">@drawable/bg_popup</item>
-        <item name="android:dropDownHorizontalOffset">5dip</item>
-        <item name="android:dropDownVerticalOffset">5dip</item>
-        <item name="android:dropDownWidth">wrap_content</item>
-        <item name="android:overlapAnchor">true</item>
+    <style name="Animation" parent="@android:style/Animation.Activity" />
+
+    <style name="Animation.Bottom" parent="@style/Animation">
+        <item name="android:windowEnterAnimation">@anim/in_bottom</item>
+        <item name="android:windowExitAnimation">@anim/out_bottom</item>
     </style>
 
-    <style name="OverflowMenu.Dark" parent="Widget.AppCompat.PopupMenu.Overflow">
-        <item name="android:popupBackground">@drawable/bg_popup_dark</item>
-    </style>
-
-    <style name="OverflowMenu.Dark.Grey" parent="OverflowMenu.Dark">
-        <item name="android:popupBackground">@drawable/bg_popup_dark_grey</item>
-    </style>
-
-    <style name="OverflowMenu.Dark.Amoled" parent="OverflowMenu.Dark">
-        <item name="android:popupBackground">@drawable/bg_popup_amoled_dark</item>
+    <style name="Animation.Fade" parent="@style/Animation">
+        <item name="android:activityOpenEnterAnimation">@anim/anim_fade_in</item>
+        <item name="android:activityOpenExitAnimation">@anim/anim_fade_out</item>
+        <item name="android:activityCloseEnterAnimation">@anim/anim_fade_in</item>
+        <item name="android:activityCloseExitAnimation">@anim/anim_fade_out</item>
     </style>
 
     <style name="AppTheme.Floating" parent="AppTheme">
@@ -269,20 +263,6 @@
         <item name="android:windowTranslucentNavigation">true</item>
         <item name="android:windowBackground">@color/transparent</item>
         <item name="android:statusBarColor">@color/transparent</item>
-    </style>
-
-    <style name="Animation" parent="@android:style/Animation.Activity" />
-
-    <style name="Animation.Bottom" parent="@style/Animation">
-        <item name="android:windowEnterAnimation">@anim/in_bottom</item>
-        <item name="android:windowExitAnimation">@anim/out_bottom</item>
-    </style>
-
-    <style name="Animation.Fade" parent="@style/Animation">
-        <item name="android:activityOpenEnterAnimation">@anim/anim_fade_in</item>
-        <item name="android:activityOpenExitAnimation">@anim/anim_fade_out</item>
-        <item name="android:activityCloseEnterAnimation">@anim/anim_fade_in</item>
-        <item name="android:activityCloseExitAnimation">@anim/anim_fade_out</item>
     </style>
 
     <style name="AppTheme.Intro" parent="Theme.MaterialComponents.Light.NoActionBar">
@@ -348,12 +328,6 @@
     <style name="PreferenceTheme.SwitchPreference" parent="Preference.SwitchPreference.Material">
         <item name="android:layout">@layout/layout_preference</item>
         <item name="android:widgetLayout">@layout/layout_switch</item>
-    </style>
-
-    <style name="MultiWaveHeader" />
-    <style name="MultiWaveHeader.Wave">
-        <item name="android:layout_width">0dp</item>
-        <item name="android:layout_height">0dp</item>
     </style>
 
     <style name="PreferenceTheme.DialogPreference" parent="Preference.DialogPreference.Material">
@@ -443,6 +417,41 @@
         <item name="android:windowDisablePreview">false</item>
     </style>
 
+    <style name="OverflowMenu" parent="Widget.AppCompat.Light.PopupMenu.Overflow">
+        <item name="android:popupBackground">@drawable/bg_popup</item>
+        <item name="android:dropDownHorizontalOffset">5dip</item>
+        <item name="android:dropDownVerticalOffset">5dip</item>
+        <item name="android:dropDownWidth">wrap_content</item>
+        <item name="android:overlapAnchor">true</item>
+    </style>
+
+    <style name="OverflowMenu.Dark" parent="Widget.AppCompat.PopupMenu.Overflow">
+        <item name="android:popupBackground">@drawable/bg_popup_dark</item>
+    </style>
+
+    <style name="OverflowMenu.Dark.Grey" parent="OverflowMenu.Dark">
+        <item name="android:popupBackground">@drawable/bg_popup_dark_grey</item>
+    </style>
+
+    <style name="OverflowMenu.Dark.Amoled" parent="OverflowMenu.Dark">
+        <item name="android:popupBackground">@drawable/bg_popup_amoled_dark</item>
+    </style>
+
+    <style name="LightTranslucentPopupMenu" parent="Widget.AppCompat.PopupMenu">
+        <item name="android:popupBackground">@drawable/bg_popup</item>
+    </style>
+
+    <style name="DarkTranslucentPopupMenu" parent="Widget.AppCompat.Light.PopupMenu">
+        <item name="android:popupBackground">@drawable/bg_popup_dark</item>
+    </style>
+
+    <style name="TiebaLite.Custom" parent="TiebaLite.White">
+        <item name="colorPrimary">@color/theme_color_toolbar_grey_dark</item>
+        <item name="colorAccent">@color/theme_color_toolbar_grey_dark</item>
+        <item name="android:textCursorDrawable">@null</item>
+        <item name="rippleColor">#1A000000</item>
+    </style>
+
     <style name="TiebaLite.White" parent="AppTheme">
         <item name="colorPrimary">@color/tieba</item>
         <item name="colorToolbar">@color/white</item>
@@ -452,20 +461,48 @@
         <item name="color_toolbar_item_secondary">@color/color_text_secondary</item>
     </style>
 
-    <style name="TiebaLite.Translucent" parent="AppTheme">
+    <style name="TiebaLite.Translucent.Light" parent="AppTheme">
+        <item name="popupMenuStyle">@style/LightTranslucentPopupMenu</item>
+        <item name="android:popupMenuStyle">@style/LightTranslucentPopupMenu</item>
         <item name="colorPrimary">@color/theme_color_primary_tieba</item>
         <item name="colorAccent">@color/theme_color_primary_tieba</item>
         <item name="colorToolbar">@color/transparent</item>
         <item name="colorBg">@color/transparent</item>
         <item name="colorNavBar">@color/transparent</item>
-        <item name="colorToolbarItem">@color/theme_color_toolbar_item_translucent</item>
-        <item name="colorToolbarItemActive">@color/theme_color_toolbar_item_active_translucent</item>
-        <item name="color_toolbar_item_secondary">@color/theme_color_toolbar_item_secondary_translucent</item>
-        <item name="colorText">@color/color_text_translucent</item>
-        <item name="colorTextSecondary">@color/color_text_secondary_translucent</item>
-        <item name="colorUnselected">@color/theme_color_unselected_translucent</item>
-        <item name="colorFloorCard">@color/theme_color_floor_card_translucent</item>
-        <item name="colorCard">@color/theme_color_card_translucent</item>
+        <item name="colorToolbarItem">@color/theme_color_toolbar_item_translucent_light</item>
+        <item name="colorToolbarItemActive">
+            @color/theme_color_toolbar_item_active_translucent_light
+        </item>
+        <item name="color_toolbar_item_secondary">
+            @color/theme_color_toolbar_item_secondary_translucent_light
+        </item>
+        <item name="colorText">@color/color_text_translucent_light</item>
+        <item name="colorTextSecondary">@color/color_text_secondary_translucent_light</item>
+        <item name="colorUnselected">@color/theme_color_unselected_translucent_light</item>
+        <item name="colorFloorCard">@color/theme_color_floor_card_translucent_light</item>
+        <item name="colorCard">@color/theme_color_card_translucent_light</item>
+    </style>
+
+    <style name="TiebaLite.Translucent.Dark" parent="AppTheme.Dark">
+        <item name="popupMenuStyle">@style/DarkTranslucentPopupMenu</item>
+        <item name="android:popupMenuStyle">@style/DarkTranslucentPopupMenu</item>
+        <item name="colorPrimary">@color/theme_color_primary_tieba</item>
+        <item name="colorAccent">@color/theme_color_primary_tieba</item>
+        <item name="colorToolbar">@color/transparent</item>
+        <item name="colorBg">@color/transparent</item>
+        <item name="colorNavBar">@color/transparent</item>
+        <item name="colorToolbarItem">@color/theme_color_toolbar_item_translucent_dark</item>
+        <item name="colorToolbarItemActive">
+            @color/theme_color_toolbar_item_active_translucent_dark
+        </item>
+        <item name="color_toolbar_item_secondary">
+            @color/theme_color_toolbar_item_secondary_translucent_dark
+        </item>
+        <item name="colorText">@color/color_text_translucent_dark</item>
+        <item name="colorTextSecondary">@color/color_text_secondary_translucent_dark</item>
+        <item name="colorUnselected">@color/theme_color_unselected_translucent_dark</item>
+        <item name="colorFloorCard">@color/theme_color_floor_card_translucent_dark</item>
+        <item name="colorCard">@color/theme_color_card_translucent_dark</item>
     </style>
 
     <style name="TiebaLite.Tieba" parent="AppTheme">

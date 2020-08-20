@@ -1,4 +1,4 @@
-package com.huanchengfly.tieba.post.fragments;
+package com.huanchengfly.tieba.post.fragments.preference;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
@@ -9,10 +9,12 @@ import android.os.Bundle;
 import androidx.annotation.CallSuper;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.DialogFragment;
+import androidx.preference.EditTextPreference;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
 
 import com.huanchengfly.tieba.post.components.prefs.TimePickerPreference;
+import com.huanchengfly.tieba.post.fragments.TimePreferenceDialogFragmentCompat;
 
 public abstract class PreferencesFragment extends PreferenceFragmentCompat {
     private Context attachContext;
@@ -51,11 +53,12 @@ public abstract class PreferencesFragment extends PreferenceFragmentCompat {
             Bundle bundle = new Bundle(1);
             bundle.putString("key", preference.getKey());
             dialogFragment.setArguments(bundle);
+        } else if (preference instanceof EditTextPreference) {
+            dialogFragment = EditTextPreferenceDialogFragment.newInstance(preference.getKey());
         }
-
         if (dialogFragment != null) {
             dialogFragment.setTargetFragment(this, 0);
-            dialogFragment.show(getFragmentManager(), "androidx.preference.PreferenceFragment.DIALOG");
+            dialogFragment.show(getParentFragmentManager(), "androidx.preference.PreferenceFragment.DIALOG");
         } else {
             super.onDisplayPreferenceDialog(preference);
         }

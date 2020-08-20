@@ -50,8 +50,14 @@ public class ThemeColorAdapter extends RecyclerView.Adapter<MyViewHolder> {
 
     public void setPalette(Palette palette) {
         mColors = new ArrayList<>();
-        mColors.add(palette.getVibrantColor(Color.BLACK));
-        mColors.add(palette.getMutedColor(Color.BLACK));
+        int[] colors = new int[]{
+                palette.getVibrantColor(Color.TRANSPARENT),
+                palette.getMutedColor(Color.TRANSPARENT),
+                palette.getDominantColor(Color.TRANSPARENT)
+        };
+        for (int color : colors) {
+            if (color != Color.TRANSPARENT) mColors.add(color);
+        }
         for (int color : sColors) {
             mColors.add(color);
         }

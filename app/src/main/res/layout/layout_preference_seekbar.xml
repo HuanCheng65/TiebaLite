@@ -55,7 +55,7 @@
 
         </RelativeLayout>
 
-        <androidx.preference.UnPressableLinearLayout
+        <com.huanchengfly.tieba.post.widgets.UnPressableLinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
@@ -68,14 +68,18 @@
                 style="@style/Widget.AppCompat.SeekBar"
                 app:progressTint="@color/default_color_primary"
                 android:id="@+id/seekbar"
+                android:progressDrawable="@drawable/bg_seekbar_round"
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:layout_height="wrap_content"
+                android:minHeight="16dp"
                 android:paddingStart="@dimen/preference_seekbar_padding_horizontal"
                 android:paddingEnd="@dimen/preference_seekbar_padding_horizontal"
                 android:paddingTop="@dimen/preference_seekbar_padding_vertical"
                 android:paddingBottom="@dimen/preference_seekbar_padding_vertical"
-                android:background="@null"/>
+                android:background="@null"
+                android:thumb="@null"
+                tools:ignore="PrivateResource" />
 
             <com.huanchengfly.tieba.post.widgets.theme.TintTextView
                 android:id="@+id/seekbar_value"
@@ -90,9 +94,10 @@
                 android:ellipsize="marquee"
                 android:fadingEdge="horizontal"
                 app:tintList="@drawable/text_color_secondary_selector"
-                android:scrollbars="none"/>
+                android:scrollbars="none"
+                tools:ignore="PrivateResource" />
 
-        </androidx.preference.UnPressableLinearLayout>
+        </com.huanchengfly.tieba.post.widgets.UnPressableLinearLayout>
     </LinearLayout>
 
 </LinearLayout>

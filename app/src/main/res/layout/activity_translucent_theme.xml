@@ -23,9 +23,9 @@
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             app:toolbarBackgroundTint="@color/transparent"
-            app:itemTint="@color/theme_color_toolbar_item_translucent"
-            app:secondaryItemTint="@color/theme_color_toolbar_item_secondary_translucent"
-            app:activeItemTint="@color/theme_color_toolbar_item_active_translucent"
+            app:itemTint="@color/theme_color_toolbar_item_translucent_light"
+            app:secondaryItemTint="@color/theme_color_toolbar_item_secondary_translucent_light"
+            app:activeItemTint="@color/theme_color_toolbar_item_active_translucent_light"
             app:title="@string/title_dialog_translucent_theme" />
 
     </com.google.android.material.appbar.AppBarLayout>
@@ -40,7 +40,7 @@
             android:layout_marginTop="8dp"
             android:id="@+id/select_pic"
             android:text="@string/title_select_pic"
-            app:buttonTextColor="@color/color_text_translucent"
+            app:buttonTextColor="@color/color_text_translucent_light"
             style="@style/Widget.Button.Dense"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
@@ -52,7 +52,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
             <TextView
-                android:textColor="@color/color_text_translucent"
+                android:textColor="@color/color_text_translucent_light"
                 android:text="@string/title_select_color"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
@@ -60,7 +60,7 @@
             <com.huanchengfly.tieba.post.widgets.theme.TintMaterialButton
                 android:id="@+id/custom_color"
                 android:text="@string/title_custom_color"
-                app:buttonTextColor="@color/color_text_translucent"
+                app:buttonTextColor="@color/color_text_translucent_light"
                 style="@style/Widget.Button.Dense"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
@@ -75,7 +75,7 @@
             android:layout_marginTop="8dp"
             android:textSize="14sp"
             android:text="@string/title_translucent_theme_alpha"
-            android:textColor="@color/color_text_translucent"
+            android:textColor="@color/color_text_translucent_light"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
         <com.huanchengfly.tieba.post.widgets.theme.TintSeekBar
@@ -92,7 +92,7 @@
             android:layout_marginTop="8dp"
             android:textSize="14sp"
             android:text="@string/title_translucent_theme_blur"
-            android:textColor="@color/color_text_translucent"
+            android:textColor="@color/color_text_translucent_light"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
         <com.huanchengfly.tieba.post.widgets.theme.TintSeekBar
@@ -108,7 +108,7 @@
 
         <TextView
             android:layout_marginTop="12dp"
-            android:textColor="@color/color_text_translucent"
+            android:textColor="@color/color_text_translucent_light"
             android:id="@+id/tip"
             android:textSize="14sp"
             android:layout_width="match_parent"

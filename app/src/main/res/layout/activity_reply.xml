@@ -43,25 +43,28 @@
                 app:title="@string/title_reply" />
         </com.google.android.material.appbar.AppBarLayout>
 
-        <com.huanchengfly.tieba.post.widgets.edittext.widget.UndoableEditText
-            android:textSize="14sp"
+        <com.huanchengfly.tieba.post.widgets.theme.TintUndoableEditText
             android:id="@+id/activity_reply_edit_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/transparent"
-            android:importantForAutofill="no"
             android:gravity="top|start"
             android:hint="@string/tip_reply"
+            android:importantForAutofill="no"
             android:inputType="textMultiLine|textImeMultiLine"
             android:lines="5"
             android:padding="12dp"
+            android:textSize="14sp"
             app:layout_constraintBottom_toTopOf="@+id/activity_reply_btn_bar"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/appbar"
+            app:textColor="@color/default_color_text"
+            app:hintTextColor="@color/default_color_text_secondary"
             tools:ignore="UnusedAttribute">
+
             <requestFocus />
-        </com.huanchengfly.tieba.post.widgets.edittext.widget.UndoableEditText>
+        </com.huanchengfly.tieba.post.widgets.theme.TintUndoableEditText>
 
         <LinearLayout
             android:id="@+id/activity_reply_btn_bar"

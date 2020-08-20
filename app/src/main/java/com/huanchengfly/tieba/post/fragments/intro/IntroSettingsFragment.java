@@ -5,7 +5,7 @@ import android.os.Bundle;
 import androidx.annotation.Nullable;
 import androidx.annotation.XmlRes;
 
-import com.huanchengfly.tieba.post.fragments.PreferencesFragment;
+import com.huanchengfly.tieba.post.fragments.preference.PreferencesFragment;
 
 public class IntroSettingsFragment extends PreferencesFragment {
     private String spName;

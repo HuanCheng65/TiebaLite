@@ -13,18 +13,18 @@ import androidx.preference.ListPreference
 import androidx.preference.Preference
 import androidx.preference.SwitchPreference
 import com.google.android.material.snackbar.Snackbar
-import com.huanchengfly.tieba.post.ui.theme.utils.ThemeUtils
-import com.huanchengfly.tieba.post.api.LiteApi.Companion.instance
-import com.huanchengfly.tieba.post.api.interfaces.CommonAPICallback
-import com.huanchengfly.tieba.post.api.models.NewUpdateBean
 import com.huanchengfly.tieba.post.R
 import com.huanchengfly.tieba.post.activities.BlockListActivity
 import com.huanchengfly.tieba.post.activities.LoginActivity
+import com.huanchengfly.tieba.post.api.LiteApi.Companion.instance
+import com.huanchengfly.tieba.post.api.interfaces.CommonAPICallback
+import com.huanchengfly.tieba.post.api.models.NewUpdateBean
 import com.huanchengfly.tieba.post.components.prefs.TimePickerPreference
+import com.huanchengfly.tieba.post.fragments.preference.PreferencesFragment
 import com.huanchengfly.tieba.post.models.database.Account
 import com.huanchengfly.tieba.post.models.database.Block
+import com.huanchengfly.tieba.post.ui.theme.utils.ThemeUtils
 import com.huanchengfly.tieba.post.utils.*
-import com.huanchengfly.tieba.post.utils.GlideCacheUtil
 import com.lapism.searchview.database.SearchHistoryTable
 import java.util.*
 

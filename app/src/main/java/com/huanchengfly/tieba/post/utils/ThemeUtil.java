@@ -7,6 +7,7 @@ import android.content.SharedPreferences;
 import android.content.res.ColorStateList;
 import android.content.res.Resources;
 import android.graphics.Color;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,6 +35,8 @@ import com.huanchengfly.tieba.post.activities.BaseActivity;
 import com.huanchengfly.tieba.post.ui.theme.utils.ThemeUtils;
 import com.huanchengfly.tieba.post.widgets.theme.TintSwipeRefreshLayout;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.io.File;
 
 public class ThemeUtil {
@@ -45,6 +48,8 @@ public class ThemeUtil {
     public static final String SP_SWITCH_REASON = "switch_reason";
 
     public static final String THEME_TRANSLUCENT = "translucent";
+    public static final String THEME_TRANSLUCENT_LIGHT = "translucent_light";
+    public static final String THEME_TRANSLUCENT_DARK = "translucent_dark";
     public static final String THEME_CUSTOM = "custom";
     public static final String THEME_WHITE = "white";
     public static final String THEME_TIEBA = "tieba";
@@ -230,11 +235,22 @@ public class ThemeUtil {
         view.setBackgroundColor(Color.TRANSPARENT);
     }
 
-    public static void setTranslucentThemeBackground(View view, boolean setFitsSystemWindow, BitmapTransformation... transformations) {
+    public static void setTranslucentDialogBackground(View view) {
         if (view == null) {
             return;
         }
         if (!THEME_TRANSLUCENT.equals(ThemeUtil.getTheme(view.getContext()))) {
+            return;
+        }
+        view.setBackgroundTintList(null);
+        view.setBackgroundColor(ThemeUtils.getColorById(view.getContext(), R.color.theme_color_card_grey_dark));
+    }
+
+    public static void setTranslucentThemeBackground(View view, boolean setFitsSystemWindow, boolean useCache, BitmapTransformation... transformations) {
+        if (view == null) {
+            return;
+        }
+        if (!THEME_TRANSLUCENT.equals(ThemeUtil.getTheme(BaseApplication.getInstance()))) {
             if (setFitsSystemWindow) {
                 setAppBarFitsSystemWindow(view, false);
                 view.setFitsSystemWindows(false);
@@ -254,23 +270,29 @@ public class ThemeUtil {
             }
         }
         view.setBackgroundTintList(null);
-        String backgroundFilePath = SharedPreferencesUtil.get(view.getContext(), SharedPreferencesUtil.SP_SETTINGS)
+        String backgroundFilePath = SharedPreferencesUtil.get(BaseApplication.getInstance(), SharedPreferencesUtil.SP_SETTINGS)
                 .getString(SP_TRANSLUCENT_THEME_BACKGROUND_PATH, null);
         if (backgroundFilePath == null) {
             view.setBackgroundColor(Color.BLACK);
             return;
         }
-        if (BaseApplication.getTranslucentBackground() != null && (transformations == null || transformations.length == 0)) {
+        if (useCache &&
+                BaseApplication.getTranslucentBackground() != null &&
+                (!(BaseApplication.getTranslucentBackground() instanceof BitmapDrawable)
+                        || (BaseApplication.getTranslucentBackground() instanceof BitmapDrawable &&
+                        !((BitmapDrawable) BaseApplication.getTranslucentBackground()).getBitmap().isRecycled())) &&
+                (transformations == null || transformations.length == 0)) {
             view.setBackground(BaseApplication.getTranslucentBackground());
             return;
         }
         RequestOptions bgOptions = RequestOptions.centerCropTransform()
+                .optionalFitCenter()
                 .skipMemoryCache(true)
                 .diskCacheStrategy(DiskCacheStrategy.NONE);
         if (transformations != null && transformations.length > 0) {
-            bgOptions = bgOptions.transforms(transformations);
+            bgOptions = bgOptions.transform(transformations);
         }
-        Glide.with(view)
+        Glide.with(BaseApplication.getInstance())
                 .asDrawable()
                 .load(new File(backgroundFilePath))
                 .apply(bgOptions)
@@ -282,7 +304,9 @@ public class ThemeUtil {
 
                     @Override
                     public void onResourceReady(@NonNull Drawable resource, @Nullable Transition<? super Drawable> transition) {
-                        BaseApplication.setTranslucentBackground(resource);
+                        if (useCache && (transformations == null || transformations.length == 0)) {
+                            BaseApplication.setTranslucentBackground(resource);
+                        }
                         getView().setBackground(resource);
                     }
 
@@ -294,16 +318,17 @@ public class ThemeUtil {
     }
 
     public static void setTranslucentThemeBackground(View view) {
-        setTranslucentThemeBackground(view, true);
+        setTranslucentThemeBackground(view, true, true);
     }
 
     @StyleRes
-    public static int getThemeByName(String themeName) {
+    private static int getThemeByName(@NotNull String themeName) {
         switch (themeName.toLowerCase()) {
             case THEME_TRANSLUCENT:
-                return R.style.TiebaLite_Translucent;
-            case THEME_WHITE:
-                return R.style.TiebaLite_White;
+            case THEME_TRANSLUCENT_LIGHT:
+                return R.style.TiebaLite_Translucent_Light;
+            case THEME_TRANSLUCENT_DARK:
+                return R.style.TiebaLite_Translucent_Dark;
             case THEME_TIEBA:
                 return R.style.TiebaLite_Tieba;
             case THEME_BLACK:
@@ -320,6 +345,9 @@ public class ThemeUtil {
                 return R.style.TiebaLite_Dark_Grey;
             case THEME_AMOLED_DARK:
                 return R.style.TiebaLite_Dark_Amoled;
+            case THEME_CUSTOM:
+                return R.style.TiebaLite_Custom;
+            case THEME_WHITE:
             default:
                 return R.style.TiebaLite_White;
         }
