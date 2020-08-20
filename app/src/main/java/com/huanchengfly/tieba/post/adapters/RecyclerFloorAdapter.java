@@ -7,7 +7,6 @@ import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.TextUtils;
 import android.text.format.DateUtils;
-import android.text.method.LinkMovementMethod;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Gravity;
@@ -26,6 +25,7 @@ import com.huanchengfly.tieba.post.api.TiebaApi;
 import com.huanchengfly.tieba.post.api.models.CommonResponse;
 import com.huanchengfly.tieba.post.api.models.SubFloorListBean;
 import com.huanchengfly.tieba.post.api.models.ThreadContentBean;
+import com.huanchengfly.tieba.post.components.LinkMovementClickMethod;
 import com.huanchengfly.tieba.post.components.spans.MyURLSpan;
 import com.huanchengfly.tieba.post.components.spans.MyUserSpan;
 import com.huanchengfly.tieba.post.fragments.ConfirmDialogFragment;
@@ -236,7 +236,7 @@ public class RecyclerFloorAdapter extends CommonBaseAdapter<SubFloorListBean.Pos
 
     private TextView createTextView(int type) {
         TintTextView textView = new TintTextView(mContext);
-        textView.setMovementMethod(LinkMovementMethod.getInstance());
+        textView.setMovementMethod(LinkMovementClickMethod.getInstance());
         textView.setClickable(false);
         textView.setFocusable(false);
         textView.setFocusableInTouchMode(false);
