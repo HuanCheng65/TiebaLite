@@ -359,4 +359,5 @@
     <string name="title_emotion_classic">经典</string>
     <string name="title_emotion_emoji">符号</string>
     <string name="message_update_store_floor">是否更新收藏楼层</string>
+    <string name="tip_thread_store_update">更新到 %1$s 楼</string>
 </resources>
