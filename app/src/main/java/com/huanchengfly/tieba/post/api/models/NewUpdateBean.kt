@@ -3,10 +3,10 @@ package com.huanchengfly.tieba.post.api.models
 import com.google.gson.annotations.SerializedName
 
 class NewUpdateBean {
-    val isSuccess: Boolean? = null
+    val success: Boolean
 
     @SerializedName("has_update")
-    val isHasUpdate: Boolean? = null
+    val isHasUpdate: Boolean
 
     @SerializedName("error_code")
     val errorCode: Int? = null
