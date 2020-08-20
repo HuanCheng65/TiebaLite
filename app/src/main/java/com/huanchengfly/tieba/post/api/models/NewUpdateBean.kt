@@ -3,7 +3,8 @@ package com.huanchengfly.tieba.post.api.models
 import com.google.gson.annotations.SerializedName
 
 class NewUpdateBean {
-    val success: Boolean
+    @SerializedName("success")
+    val isSuccess: Boolean
 
     @SerializedName("has_update")
     val isHasUpdate: Boolean
