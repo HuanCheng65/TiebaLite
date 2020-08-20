@@ -26,6 +26,7 @@ import com.huanchengfly.tieba.post.api.models.CommonResponse;
 import com.huanchengfly.tieba.post.api.models.SubFloorListBean;
 import com.huanchengfly.tieba.post.api.models.ThreadContentBean;
 import com.huanchengfly.tieba.post.components.LinkMovementClickMethod;
+import com.huanchengfly.tieba.post.components.LinkTouchMovementMethod;
 import com.huanchengfly.tieba.post.components.spans.MyURLSpan;
 import com.huanchengfly.tieba.post.components.spans.MyUserSpan;
 import com.huanchengfly.tieba.post.fragments.ConfirmDialogFragment;
@@ -33,6 +34,7 @@ import com.huanchengfly.tieba.post.fragments.MenuDialogFragment;
 import com.huanchengfly.tieba.post.models.PhotoViewBean;
 import com.huanchengfly.tieba.post.models.ReplyInfoBean;
 import com.huanchengfly.tieba.post.utils.AccountUtil;
+import com.huanchengfly.tieba.post.utils.BilibiliUtil;
 import com.huanchengfly.tieba.post.utils.EmotionUtil;
 import com.huanchengfly.tieba.post.utils.ImageUtil;
 import com.huanchengfly.tieba.post.utils.NavigationHelper;
@@ -41,6 +43,7 @@ import com.huanchengfly.tieba.post.utils.ThemeUtil;
 import com.huanchengfly.tieba.post.utils.Util;
 import com.huanchengfly.tieba.post.widgets.MyLinearLayout;
 import com.huanchengfly.tieba.post.widgets.VoicePlayerView;
+import com.huanchengfly.tieba.post.widgets.theme.TintMySpannableTextView;
 import com.huanchengfly.tieba.post.widgets.theme.TintTextView;
 import com.othershe.baseadapter.ViewHolder;
 import com.othershe.baseadapter.base.CommonBaseAdapter;
@@ -235,15 +238,25 @@ public class RecyclerFloorAdapter extends CommonBaseAdapter<SubFloorListBean.Pos
     }
 
     private TextView createTextView(int type) {
-        TintTextView textView = new TintTextView(mContext);
-        textView.setMovementMethod(LinkMovementClickMethod.getInstance());
-        textView.setClickable(false);
+        TextView textView;
+        if (type == TEXT_VIEW_TYPE_CONTENT) {
+            TintMySpannableTextView mySpannableTextView = new TintMySpannableTextView(mContext);
+            mySpannableTextView.setTintResId(R.color.default_color_text);
+            mySpannableTextView.setLinkTouchMovementMethod(LinkTouchMovementMethod.getInstance());
+            textView = mySpannableTextView;
+        } else {
+            TintTextView tintTextView = new TintTextView(mContext);
+            tintTextView.setTintResId(R.color.default_color_text);
+            tintTextView.setMovementMethod(LinkMovementClickMethod.getInstance());
+            textView = tintTextView;
+        }
         textView.setFocusable(false);
-        textView.setFocusableInTouchMode(false);
+        textView.setClickable(false);
+        textView.setLongClickable(false);
         textView.setTextIsSelectable(false);
         textView.setOnClickListener(null);
         textView.setOnLongClickListener(null);
-        textView.setTintResId(R.color.default_color_text);
+        textView.setLetterSpacing(0.02F);
         if (type == TEXT_VIEW_TYPE_CONTENT) {
             textView.setTextSize(16);
         }
@@ -251,7 +264,9 @@ public class RecyclerFloorAdapter extends CommonBaseAdapter<SubFloorListBean.Pos
     }
 
     private void setText(TextView textView, CharSequence content) {
-        textView.setText(StringUtil.getEmotionContent(EmotionUtil.EMOTION_ALL_TYPE, textView, content));
+        content = BilibiliUtil.replaceVideoNumberSpan(mContext, content);
+        content = StringUtil.getEmotionContent(EmotionUtil.EMOTION_ALL_TYPE, textView, content);
+        textView.setText(content);
     }
 
     private LinearLayout.LayoutParams getLayoutParams(ThreadContentBean.ContentBean contentBean) {

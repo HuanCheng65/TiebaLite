@@ -40,6 +40,7 @@ import com.huanchengfly.tieba.post.models.PhotoViewBean;
 import com.huanchengfly.tieba.post.models.ReplyInfoBean;
 import com.huanchengfly.tieba.post.ui.theme.utils.ThemeUtils;
 import com.huanchengfly.tieba.post.utils.AccountUtil;
+import com.huanchengfly.tieba.post.utils.BilibiliUtil;
 import com.huanchengfly.tieba.post.utils.BlockUtil;
 import com.huanchengfly.tieba.post.utils.DisplayUtil;
 import com.huanchengfly.tieba.post.utils.EmotionUtil;
@@ -316,7 +317,7 @@ public class RecyclerThreadAdapter extends MultiBaseAdapter<ThreadContentBean.Po
                     break;
             }
         }
-        textView.setText(StringUtil.getEmotionContent(EmotionUtil.EMOTION_ALL_TYPE, textView, builder));
+        textView.setText(BilibiliUtil.replaceVideoNumberSpan(mContext, StringUtil.getEmotionContent(EmotionUtil.EMOTION_ALL_TYPE, textView, builder)));
         textView.setPadding(DisplayUtil.dp2px(mContext, 8),
                 8,
                 DisplayUtil.dp2px(mContext, 8),
@@ -710,7 +711,9 @@ public class RecyclerThreadAdapter extends MultiBaseAdapter<ThreadContentBean.Po
     }
 
     private void setText(TextView textView, CharSequence content) {
-        textView.setText(StringUtil.getEmotionContent(EmotionUtil.EMOTION_ALL_TYPE, textView, content));
+        content = BilibiliUtil.replaceVideoNumberSpan(mContext, content);
+        content = StringUtil.getEmotionContent(EmotionUtil.EMOTION_ALL_TYPE, textView, content);
+        textView.setText(content);
     }
 
     private LinearLayout.LayoutParams getLayoutParams(ThreadContentBean.ContentBean contentBean, String floor) {
