@@ -34,12 +34,12 @@ import androidx.appcompat.widget.AppCompatDrawableManager;
 
 import com.google.android.material.snackbar.Snackbar;
 import com.gyf.immersionbar.OSUtils;
-import com.huanchengfly.tieba.post.ui.theme.utils.ThemeUtils;
-import com.huanchengfly.tieba.post.R;
 import com.huanchengfly.tieba.post.BundleConfig;
 import com.huanchengfly.tieba.post.IntentConfig;
+import com.huanchengfly.tieba.post.R;
 import com.huanchengfly.tieba.post.components.dialogs.CopyTextDialog;
 import com.huanchengfly.tieba.post.fragments.MenuDialogFragment;
+import com.huanchengfly.tieba.post.ui.theme.utils.ThemeUtils;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -237,71 +237,6 @@ public class Util {
         }
         return greifyColor(color, 0.25f);
     }
-
-    /*
-    @DrawableRes
-    public static int getLevelIconRes(String levelStr) {
-        int drawable = -1;
-        if (levelStr == null) return drawable;
-        switch (levelStr) {
-            case "1":
-                drawable = R.drawable.level_1;
-                break;
-            case "2":
-                drawable = R.drawable.level_2;
-                break;
-            case "3":
-                drawable = R.drawable.level_3;
-                break;
-            case "4":
-                drawable = R.drawable.level_4;
-                break;
-            case "5":
-                drawable = R.drawable.level_5;
-                break;
-            case "6":
-                drawable = R.drawable.level_6;
-                break;
-            case "7":
-                drawable = R.drawable.level_7;
-                break;
-            case "8":
-                drawable = R.drawable.level_8;
-                break;
-            case "9":
-                drawable = R.drawable.level_9;
-                break;
-            case "10":
-                drawable = R.drawable.level_10;
-                break;
-            case "11":
-                drawable = R.drawable.level_11;
-                break;
-            case "12":
-                drawable = R.drawable.level_12;
-                break;
-            case "13":
-                drawable = R.drawable.level_13;
-                break;
-            case "14":
-                drawable = R.drawable.level_14;
-                break;
-            case "15":
-                drawable = R.drawable.level_15;
-                break;
-            case "16":
-                drawable = R.drawable.level_16;
-                break;
-            case "17":
-                drawable = R.drawable.level_17;
-                break;
-            case "18":
-                drawable = R.drawable.level_18;
-                break;
-        }
-        return drawable;
-    }
-    */
 
     public static @ColorInt
     int getColorByAttr(Context context, @AttrRes int attr, @ColorRes int defaultColor) {

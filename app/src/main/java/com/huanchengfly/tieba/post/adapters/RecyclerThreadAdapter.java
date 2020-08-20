@@ -12,19 +12,24 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.*;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
+import android.widget.Toast;
+
 import androidx.annotation.NonNull;
+
 import com.allen.library.SuperTextView;
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.bumptech.glide.request.RequestOptions;
-import com.huanchengfly.tieba.post.ui.theme.utils.ThemeUtils;
+import com.huanchengfly.tieba.post.BaseApplication;
+import com.huanchengfly.tieba.post.R;
+import com.huanchengfly.tieba.post.activities.BaseActivity;
+import com.huanchengfly.tieba.post.activities.ReplyActivity;
 import com.huanchengfly.tieba.post.api.TiebaApi;
 import com.huanchengfly.tieba.post.api.models.CommonResponse;
 import com.huanchengfly.tieba.post.api.models.ThreadContentBean;
-import com.huanchengfly.tieba.post.BaseApplication;
-import com.huanchengfly.tieba.post.R;
-import com.huanchengfly.tieba.post.activities.ReplyActivity;
-import com.huanchengfly.tieba.post.activities.BaseActivity;
 import com.huanchengfly.tieba.post.components.spans.MyImageSpan;
 import com.huanchengfly.tieba.post.components.spans.MyURLSpan;
 import com.huanchengfly.tieba.post.components.spans.MyUserSpan;
@@ -34,20 +39,35 @@ import com.huanchengfly.tieba.post.fragments.FloorFragment;
 import com.huanchengfly.tieba.post.fragments.MenuDialogFragment;
 import com.huanchengfly.tieba.post.models.PhotoViewBean;
 import com.huanchengfly.tieba.post.models.ReplyInfoBean;
-import com.huanchengfly.tieba.post.utils.*;
-import com.huanchengfly.tieba.post.widgets.MyLinearLayout;
+import com.huanchengfly.tieba.post.ui.theme.utils.ThemeUtils;
+import com.huanchengfly.tieba.post.utils.AccountUtil;
+import com.huanchengfly.tieba.post.utils.BlockUtil;
+import com.huanchengfly.tieba.post.utils.DisplayUtil;
+import com.huanchengfly.tieba.post.utils.EmotionUtil;
+import com.huanchengfly.tieba.post.utils.ImageUtil;
+import com.huanchengfly.tieba.post.utils.NavigationHelper;
+import com.huanchengfly.tieba.post.utils.StringUtil;
+import com.huanchengfly.tieba.post.utils.ThemeUtil;
+import com.huanchengfly.tieba.post.utils.Util;
 import com.huanchengfly.tieba.post.widgets.MyImageView;
+import com.huanchengfly.tieba.post.widgets.MyLinearLayout;
 import com.huanchengfly.tieba.post.widgets.VideoPlayerStandard;
 import com.huanchengfly.tieba.post.widgets.VoicePlayerView;
 import com.huanchengfly.tieba.post.widgets.theme.TintTextView;
 import com.othershe.baseadapter.ViewHolder;
 import com.othershe.baseadapter.base.MultiBaseAdapter;
+
 import org.jetbrains.annotations.NotNull;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-
-import java.util.*;
 
 import static com.huanchengfly.tieba.post.activities.PhotoViewActivity.OBJ_TYPE_THREAD_PAGE;
 import static com.huanchengfly.tieba.post.utils.Util.alphaColor;
@@ -300,6 +320,7 @@ public class RecyclerThreadAdapter extends MultiBaseAdapter<ThreadContentBean.Po
                     builder.append(emojiText);
                     break;
                 case "4":
+                case "9":
                     builder.append(contentBean.getText());
                     break;
                 default:
@@ -761,7 +782,8 @@ public class RecyclerThreadAdapter extends MultiBaseAdapter<ThreadContentBean.Po
         List<View> views = new ArrayList<>();
         for (ThreadContentBean.ContentBean contentBean : postListItemBean.getContent()) {
             switch (contentBean.getType()) {
-                case "0": {
+                case "0":
+                case "9": {
                     if (appendTextToLastTextView(views, contentBean.getText())) {
                         TextView textView = createTextView(TEXT_VIEW_TYPE_CONTENT);
                         textView.setLayoutParams(getLayoutParams(contentBean, postListItemBean.getFloor()));

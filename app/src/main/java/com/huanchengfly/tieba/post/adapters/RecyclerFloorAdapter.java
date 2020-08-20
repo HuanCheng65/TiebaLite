@@ -17,33 +17,42 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import com.bumptech.glide.request.RequestOptions;
+import com.huanchengfly.tieba.post.R;
+import com.huanchengfly.tieba.post.activities.BaseActivity;
+import com.huanchengfly.tieba.post.activities.ReplyActivity;
 import com.huanchengfly.tieba.post.api.TiebaApi;
 import com.huanchengfly.tieba.post.api.models.CommonResponse;
 import com.huanchengfly.tieba.post.api.models.SubFloorListBean;
 import com.huanchengfly.tieba.post.api.models.ThreadContentBean;
-import com.huanchengfly.tieba.post.R;
-import com.huanchengfly.tieba.post.activities.ReplyActivity;
-import com.huanchengfly.tieba.post.activities.BaseActivity;
 import com.huanchengfly.tieba.post.components.spans.MyURLSpan;
 import com.huanchengfly.tieba.post.components.spans.MyUserSpan;
 import com.huanchengfly.tieba.post.fragments.ConfirmDialogFragment;
 import com.huanchengfly.tieba.post.fragments.MenuDialogFragment;
 import com.huanchengfly.tieba.post.models.PhotoViewBean;
 import com.huanchengfly.tieba.post.models.ReplyInfoBean;
-import com.huanchengfly.tieba.post.utils.*;
+import com.huanchengfly.tieba.post.utils.AccountUtil;
+import com.huanchengfly.tieba.post.utils.EmotionUtil;
+import com.huanchengfly.tieba.post.utils.ImageUtil;
+import com.huanchengfly.tieba.post.utils.NavigationHelper;
+import com.huanchengfly.tieba.post.utils.StringUtil;
+import com.huanchengfly.tieba.post.utils.ThemeUtil;
+import com.huanchengfly.tieba.post.utils.Util;
 import com.huanchengfly.tieba.post.widgets.MyLinearLayout;
 import com.huanchengfly.tieba.post.widgets.VoicePlayerView;
 import com.huanchengfly.tieba.post.widgets.theme.TintTextView;
 import com.othershe.baseadapter.ViewHolder;
 import com.othershe.baseadapter.base.CommonBaseAdapter;
+
 import org.jetbrains.annotations.NotNull;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class RecyclerFloorAdapter extends CommonBaseAdapter<SubFloorListBean.PostInfo> {
     public static final String TAG = "RecyclerFloorAdapter";
@@ -331,7 +340,8 @@ public class RecyclerFloorAdapter extends CommonBaseAdapter<SubFloorListBean.Pos
         List<View> views = new ArrayList<>();
         for (ThreadContentBean.ContentBean contentBean : postListItemBean.getContent()) {
             switch (contentBean.getType()) {
-                case "0": {
+                case "0":
+                case "9": {
                     if (appendTextToLastTextView(views, contentBean.getText())) {
                         TextView textView = createTextView(TEXT_VIEW_TYPE_CONTENT);
                         textView.setLayoutParams(getLayoutParams(contentBean));
