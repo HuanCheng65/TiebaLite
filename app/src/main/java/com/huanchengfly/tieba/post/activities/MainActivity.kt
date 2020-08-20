@@ -27,16 +27,16 @@ import com.google.android.material.bottomnavigation.BottomNavigationMenuView
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.bottomnavigation.BottomNavigationView.OnNavigationItemReselectedListener
 import com.google.android.material.snackbar.Snackbar
+import com.huanchengfly.tieba.post.BaseApplication
+import com.huanchengfly.tieba.post.R
+import com.huanchengfly.tieba.post.adapters.MainSearchAdapter
+import com.huanchengfly.tieba.post.adapters.ViewPagerAdapter
 import com.huanchengfly.tieba.post.api.Error
 import com.huanchengfly.tieba.post.api.LiteApi.Companion.instance
 import com.huanchengfly.tieba.post.api.interfaces.CommonAPICallback
 import com.huanchengfly.tieba.post.api.interfaces.CommonCallback
 import com.huanchengfly.tieba.post.api.models.ChangelogBean
 import com.huanchengfly.tieba.post.api.models.NewUpdateBean
-import com.huanchengfly.tieba.post.R
-import com.huanchengfly.tieba.post.adapters.MainSearchAdapter
-import com.huanchengfly.tieba.post.adapters.ViewPagerAdapter
-import com.huanchengfly.tieba.post.BaseApplication
 import com.huanchengfly.tieba.post.fragments.ForumListFragment
 import com.huanchengfly.tieba.post.fragments.MessageFragment
 import com.huanchengfly.tieba.post.fragments.MyInfoFragment
@@ -363,7 +363,7 @@ open class MainActivity : BaseActivity(), BottomNavigationView.OnNavigationItemS
                     }
                 }
 
-                override fun onFailure(code: Int, error: String) {}
+                override fun onFailure(code: Int, error: String?) {}
             })
         }
         instance!!.newCheckUpdate(object : CommonAPICallback<NewUpdateBean?> {
@@ -405,7 +405,7 @@ open class MainActivity : BaseActivity(), BottomNavigationView.OnNavigationItemS
                 }
             }
 
-            override fun onFailure(code: Int, error: String) {}
+            override fun onFailure(code: Int, error: String?) {}
         })
     }
 
