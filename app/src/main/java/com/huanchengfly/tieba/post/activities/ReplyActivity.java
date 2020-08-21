@@ -295,9 +295,11 @@ public class ReplyActivity extends BaseActivity implements View.OnClickListener 
                     .append(replyInfoBean.getReplyUser())
                     .append(" :");
         }
-        builder.append(editText.getText().toString())
-                .append("\n")
-                .append(getAppPreferences().getLittleTail());
+        builder.append(editText.getText());
+        if (getAppPreferences().getLittleTail() != null) {
+            builder.append("\n")
+                    .append(getAppPreferences().getLittleTail());
+        }
         return builder.toString();
     }
 
