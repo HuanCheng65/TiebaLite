@@ -3,6 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:backgroundTint="@color/default_color_window_background"
     android:id="@+id/background"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -27,19 +28,12 @@
             app:subtitleTextAppearance="@style/Toolbar.Subtitle" />
     </FrameLayout>
 
-    <androidx.coordinatorlayout.widget.CoordinatorLayout
+    <com.huanchengfly.tieba.post.widgets.MyViewPager
         android:layout_above="@id/navbar"
         android:layout_below="@id/appbar"
+        android:id="@+id/mViewPager"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <com.huanchengfly.tieba.post.widgets.MyViewPager
-            app:layout_behavior="@string/appbar_scrolling_view_behavior"
-            android:id="@+id/mViewPager"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
-
-    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+        android:layout_height="match_parent" />
 
     <com.huanchengfly.tieba.post.widgets.theme.TintBottomNavigationView
         android:id="@+id/navbar"

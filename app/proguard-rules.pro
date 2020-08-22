@@ -246,3 +246,9 @@
 -keep class retrofit2.** { *; }
 -keepattributes Signature
 -keepattributes Exceptions
+
+-keepattributes InnerClasses
+-keep class com.alibaba.android.vlayout.ExposeLinearLayoutManagerEx { *; }
+-keep class androidx.recyclerview.widget.RecyclerView$LayoutParams { *; }
+-keep class androidx.recyclerview.widget.RecyclerView$ViewHolder { *; }
+-keep class androidx.recyclerview.widget.RecyclerView$LayoutManager { *; }

@@ -91,8 +91,8 @@
                     <com.huanchengfly.tieba.post.widgets.theme.TintMaterialButton
                         android:textStyle="bold"
                         app:strokeWidth="1.5dp"
-                        app:buttonStrokeColor="@drawable/toolbar_button_color_selector"
-                        app:buttonTextColor="@drawable/toolbar_button_color_selector"
+                        app:buttonStrokeColor="@color/toolbar_button_color_selector"
+                        app:buttonTextColor="@color/toolbar_button_color_selector"
                         style="@style/Widget.Button.Outlined"
                         android:id="@+id/forum_header_button"
                         android:layout_width="wrap_content"
@@ -115,11 +115,12 @@
                     app:subtitleTextAppearance="@style/Toolbar.Subtitle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
+
                     <com.huanchengfly.tieba.post.widgets.theme.TintMaterialButton
                         android:textStyle="bold"
                         app:strokeWidth="1.5dp"
-                        app:buttonStrokeColor="@drawable/toolbar_button_color_selector"
-                        app:buttonTextColor="@drawable/toolbar_button_color_selector"
+                        app:buttonStrokeColor="@color/toolbar_button_color_selector"
+                        app:buttonTextColor="@color/toolbar_button_color_selector"
                         style="@style/Widget.Button.Outlined.Dense"
                         android:id="@+id/toolbar_btn_right"
                         android:layout_gravity="end"

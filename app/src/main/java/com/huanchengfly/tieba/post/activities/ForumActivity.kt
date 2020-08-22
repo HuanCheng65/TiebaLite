@@ -43,6 +43,7 @@ import com.huanchengfly.tieba.post.api.models.CommonResponse
 import com.huanchengfly.tieba.post.api.models.ForumPageBean
 import com.huanchengfly.tieba.post.api.models.LikeForumResultBean
 import com.huanchengfly.tieba.post.api.models.SignResultBean
+import com.huanchengfly.tieba.post.dpToPx
 import com.huanchengfly.tieba.post.fragments.ForumFragment
 import com.huanchengfly.tieba.post.fragments.ForumFragment.OnRefreshedListener
 import com.huanchengfly.tieba.post.fragments.ForumInfoFragment
@@ -50,7 +51,6 @@ import com.huanchengfly.tieba.post.interfaces.Refreshable
 import com.huanchengfly.tieba.post.interfaces.ScrollTopable
 import com.huanchengfly.tieba.post.models.PhotoViewBean
 import com.huanchengfly.tieba.post.models.database.History
-import com.huanchengfly.tieba.post.toDp
 import com.huanchengfly.tieba.post.ui.theme.utils.ThemeUtils
 import com.huanchengfly.tieba.post.utils.*
 import com.huanchengfly.tieba.post.utils.preload.PreloadUtil
@@ -332,7 +332,7 @@ class ForumActivity : BaseActivity(), View.OnClickListener, OnRefreshedListener 
                 val listPopupWindow = ListPopupWindow(this)
                 PopupUtil.replaceBackground(listPopupWindow)
                 listPopupWindow.anchorView = v
-                val width = v.width + 36.toDp()
+                val width = v.width + 36.dpToPx()
                 listPopupWindow.width = width
                 listPopupWindow.height = ViewGroup.LayoutParams.WRAP_CONTENT
                 val arrayAdapter: ArrayAdapter<*> = ArrayAdapter(this, R.layout.item_list, R.id.item_title, sorts)

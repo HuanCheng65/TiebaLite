@@ -12,7 +12,6 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
-        android:textColorHint="?attr/colorAccent"
         app:boxBackgroundColor="@color/transparent"
         app:boxStrokeColor="@color/default_color_primary"
         app:hintTextColor="@color/default_color_primary"

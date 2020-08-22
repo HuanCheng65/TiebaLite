@@ -94,7 +94,7 @@ class BaseApplication : Application() {
                         iconView.setImageResource(data.icon!!.res)
                         val iconLayoutParams = iconView.layoutParams as FrameLayout.LayoutParams
                         run {
-                            iconLayoutParams.height = 24f.dpToPx()
+                            iconLayoutParams.height = 24f.pxToDp()
                             iconLayoutParams.width = iconLayoutParams.height
                         }
                         iconView.layoutParams = iconLayoutParams
@@ -104,7 +104,7 @@ class BaseApplication : Application() {
                         ImageUtil.load(iconView, ImageUtil.LOAD_TYPE_AVATAR, data.icon!!.url)
                         val avatarLayoutParams = iconView.layoutParams as FrameLayout.LayoutParams
                         run {
-                            avatarLayoutParams.height = 40f.dpToPx()
+                            avatarLayoutParams.height = 40f.pxToDp()
                             avatarLayoutParams.width = avatarLayoutParams.height
                         }
                         iconView.layoutParams = avatarLayoutParams
@@ -313,6 +313,14 @@ class BaseApplication : Application() {
                         context.getColorCompat(resources.getIdentifier("theme_color_background_$theme", "color", packageName))
                     } else context.getColorCompat(R.color.theme_color_background_light)
                 }
+                R.attr.colorWindowBackground -> {
+                    if (ThemeUtil.THEME_TRANSLUCENT == theme) {
+                        return context.getColorCompat(R.color.transparent)
+                    }
+                    return if (ThemeUtil.isNightMode(context)) {
+                        context.getColorCompat(resources.getIdentifier("theme_color_window_background_$theme", "color", packageName))
+                    } else context.getColorCompat(R.color.theme_color_window_background_light)
+                }
                 R.attr.colorUnselected -> {
                     return if (ThemeUtil.THEME_TRANSLUCENT == theme) {
                         context.getColorCompat(R.color.theme_color_unselected_translucent_light)
@@ -403,6 +411,7 @@ class BaseApplication : Application() {
                 R.color.default_color_primary -> return getColorByAttr(context, R.attr.colorPrimary)
                 R.color.default_color_accent -> return getColorByAttr(context, R.attr.colorAccent)
                 R.color.default_color_background -> return getColorByAttr(context, R.attr.colorBg)
+                R.color.default_color_window_background -> return getColorByAttr(context, R.attr.colorWindowBackground)
                 R.color.default_color_toolbar -> return getColorByAttr(context, R.attr.colorToolbar)
                 R.color.default_color_toolbar_item -> return getColorByAttr(context, R.attr.colorToolbarItem)
                 R.color.default_color_toolbar_item_active -> return getColorByAttr(context, R.attr.colorToolbarItemActive)

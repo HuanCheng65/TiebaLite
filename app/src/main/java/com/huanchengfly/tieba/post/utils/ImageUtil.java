@@ -36,9 +36,9 @@ import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.bumptech.glide.request.FutureTarget;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.Target;
+import com.huanchengfly.tieba.post.BaseApplication;
 import com.huanchengfly.tieba.post.R;
 import com.huanchengfly.tieba.post.activities.PhotoViewActivity;
-import com.huanchengfly.tieba.post.BaseApplication;
 import com.huanchengfly.tieba.post.components.transformations.RadiusTransformation;
 import com.huanchengfly.tieba.post.models.PhotoViewBean;
 import com.yanzhenjie.permission.runtime.Permission;
@@ -397,6 +397,10 @@ public class ImageUtil {
 
     public static void load(ImageView imageView, @LoadType int type, String url) {
         load(imageView, type, url, false);
+    }
+
+    public static void clear(ImageView imageView) {
+        Glide.with(imageView).clear(imageView);
     }
 
     private static Drawable getPlaceHolder(Context context, int radius) {

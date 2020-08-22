@@ -37,7 +37,7 @@
                 android:layout_height="wrap_content"
                 android:singleLine="true"
                 android:textStyle="bold"
-                app:tintList="@drawable/text_color_selector"
+                app:tintList="@color/text_color_selector"
                 android:textAppearance="@style/TextAppearance.MaterialSubhead"
                 android:ellipsize="marquee"
                 tools:ignore="PrivateResource" />
@@ -50,7 +50,7 @@
                 android:layout_below="@android:id/title"
                 android:layout_alignStart="@android:id/title"
                 android:textSize="14sp"
-                app:tintList="@drawable/text_color_secondary_selector"
+                app:tintList="@color/text_color_secondary_selector"
                 android:maxLines="10"/>
 
         </RelativeLayout>
@@ -93,7 +93,7 @@
                 android:textAppearance="?android:attr/textAppearanceListItem"
                 android:ellipsize="marquee"
                 android:fadingEdge="horizontal"
-                app:tintList="@drawable/text_color_secondary_selector"
+                app:tintList="@color/text_color_secondary_selector"
                 android:scrollbars="none"
                 tools:ignore="PrivateResource" />
 

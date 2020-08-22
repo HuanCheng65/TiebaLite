@@ -9,6 +9,7 @@
         <attr name="colorTextSecondary" format="color" />
         <attr name="color_text_disabled" format="color" />
         <attr name="colorBg" format="color" />
+        <attr name="colorWindowBackground" format="color" />
         <attr name="colorUnselected" format="color" />
         <attr name="colorNavBar" format="color" />
         <attr name="colorToolbar" format="color" />
@@ -41,6 +42,11 @@
         <attr name="backgroundTint" format="color" />
         <attr name="tint" format="color" />
         <attr name="tintList" format="color" />
+    </declare-styleable>
+
+    <declare-styleable name="TintImageView">
+        <attr name="backgroundTint" />
+        <attr name="tint" />
     </declare-styleable>
 
     <declare-styleable name="TintNavigationView">
@@ -115,6 +121,7 @@
     </declare-styleable>
 
     <declare-styleable name="TintTextInputLayout">
+        <attr name="boxBackgroundColor" />
         <attr name="boxStrokeColor" />
         <attr name="hintTextColor" />
         <attr name="placeholderTextColor" />
@@ -133,5 +140,91 @@
     <declare-styleable name="TintEditText">
         <attr name="textColor" />
         <attr name="android:textColorHint" />
+    </declare-styleable>
+
+    <declare-styleable name="ScrollCollapsingToolbarLayout">
+        <!--  Specifies extra space on the start, top, end and bottom
+              sides of the the expanded title text. Margin values should be positive. -->
+        <attr name="expandedTitleMargin" />
+        <!--  Specifies extra space on the start side of the the expanded title text.
+              Margin values should be positive. -->
+        <attr name="expandedTitleMarginStart" />
+        <!--  Specifies extra space on the top side of the the expanded title text.
+              Margin values should be positive. -->
+        <attr name="expandedTitleMarginTop" />
+        <!--  Specifies extra space on the end side of the the expanded title text.
+              Margin values should be positive. -->
+        <attr name="expandedTitleMarginEnd" />
+        <!--  Specifies extra space on the bottom side of the the expanded title text.
+              Margin values should be positive. -->
+        <attr name="expandedTitleMarginBottom" />
+        <!-- The text appearance of the CollapsingToolbarLayout's title when it is fully
+             'expanded' -->
+        <attr name="expandedTitleTextAppearance" />
+        <!-- The text appearance of the CollapsingToolbarLayouts title when it is fully
+             'collapsed' -->
+        <attr name="collapsedTitleTextAppearance" />
+        <!-- The drawable to use as a scrim on top of the CollapsingToolbarLayouts content when
+             it has been scrolled sufficiently off screen. -->
+        <attr name="contentScrim" />
+        <!-- The drawable to use as a scrim for the status bar content when the
+             CollapsingToolbarLayout has been scrolled sufficiently off screen. Only works on
+             Lollipop when used together with android:fitSystemWindows="true". -->
+        <attr name="statusBarScrim" />
+        <!-- The id of the primary Toolbar child that you wish to use for the purpose of collapsing.
+             This Toolbar descendant view does not need to be a direct child of the layout.
+             If you do not set this, the first direct Toolbar child found will be used. -->
+        <attr name="toolbarId" />
+        <!-- Specifies the amount of visible height in pixels used to define when to trigger a
+             scrim visibility change. -->
+        <attr name="scrimVisibleHeightTrigger" />
+        <!-- Specifies the duration used for scrim visibility animations. -->
+        <attr name="scrimAnimationDuration" />
+
+        <!-- Specifies how the title should be positioned when collapsed. -->
+        <attr name="collapsedTitleGravity" />
+
+        <!-- Specifies how the title should be positioned when expanded. -->
+        <attr name="expandedTitleGravity" />
+
+        <!-- Whether the CollapsingToolbarLayout should draw its own shrinking/growing title. -->
+        <attr name="titleEnabled" />
+        <!-- The title to show when titleEnabled is set to true. -->
+        <attr name="title" />
+        <!-- The maximum number of lines to display in the expanded state. Experimental Feature. -->
+        <attr name="maxLines" />
+    </declare-styleable>
+    <declare-styleable name="ScrollCollapsingToolbarLayout_Layout">
+        <attr name="collapseMode">
+            <!-- The view will act as normal with no collapsing behavior. -->
+            <enum name="none" value="0" />
+            <!-- The view will pin in place. -->
+            <enum name="pin" value="1" />
+            <!-- The view will scroll in a parallax fashion. See the
+                 layout_collapseParallaxMultiplier attribute to change the multiplier. -->
+            <enum name="parallax" value="2" />
+            <enum name="scroll" value="3" />
+        </attr>
+
+        <attr name="collapseParallaxMultiplier" />
+
+        <attr name="collapsedGravity">
+            <flag name="top" value="0x30" />
+            <flag name="bottom" value="0x50" />
+            <flag name="left" value="0x03" />
+            <flag name="right" value="0x05" />
+            <flag name="center_vertical" value="0x10" />
+            <flag name="fill_vertical" value="0x70" />
+            <flag name="center_horizontal" value="0x01" />
+            <flag name="center" value="0x11" />
+            <flag name="start" value="0x00800003" />
+            <flag name="end" value="0x00800005" />
+        </attr>
+
+        <attr name="collapsedMargin" format="dimension" />
+        <attr name="collapsedMarginStart" format="dimension" />
+        <attr name="collapsedMarginTop" format="dimension" />
+        <attr name="collapsedMarginEnd" format="dimension" />
+        <attr name="collapsedMarginBottom" format="dimension" />
     </declare-styleable>
 </resources>

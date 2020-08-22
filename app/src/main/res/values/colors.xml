@@ -48,6 +48,7 @@
     <color name="default_color_toolbar">#FFFFFFFF</color>
     <color name="default_color_toolbar_item">#FF474B54</color>
     <color name="default_color_background">#FFFFFFFF</color>
+    <color name="default_color_window_background">#FFF3F7F9</color>
     <color name="default_color_nav">#FFFFFFFF</color>
     <color name="default_color_unselected">#FF6E7486</color>
     <color name="default_color_toolbar_item_active">#FF4477E0</color>
@@ -104,10 +105,15 @@
     <color name="theme_color_toolbar_item_active_grey_dark">@color/white</color>
     <color name="theme_color_toolbar_item_active_amoled_dark">@color/white</color>
 
-    <color name="theme_color_background_light">@color/white</color>
+    <color name="theme_color_background_light">#FFFFFFFF</color>
     <color name="theme_color_background_dark">#FF131D28</color>
     <color name="theme_color_background_grey_dark">#FF212121</color>
-    <color name="theme_color_background_amoled_dark">@color/black</color>
+    <color name="theme_color_background_amoled_dark">#FF000000</color>
+
+    <color name="theme_color_window_background_light">#FFF3F7F9</color>
+    <color name="theme_color_window_background_dark">#FF131D28</color>
+    <color name="theme_color_window_background_grey_dark">#FF212121</color>
+    <color name="theme_color_window_background_amoled_dark">#FF000000</color>
 
     <color name="theme_color_nav_light">@color/white</color>
     <color name="theme_color_nav_dark">#FF15202B</color>

@@ -18,7 +18,7 @@
         <item name="tabIndicatorFullWidth">false</item>
         <item name="layoutBackground">@color/default_color_background</item>
         <item name="tabTextColor">@color/default_color_text_secondary</item>
-        <item name="tabIconTint">@drawable/selector_tab_icon</item>
+        <item name="tabIconTint">@color/selector_tab_icon</item>
         <item name="tabSelectedTextColor">@color/default_color_primary</item>
         <item name="tabBackground">@color/transparent</item>
         <item name="tabIndicator">@drawable/drawable_tab_indicator</item>
@@ -139,25 +139,27 @@
         <item name="android:windowAnimationStyle">@style/Animation.Bottom</item>
     </style>
 
-    <style name="Toolbar.Title">
-        <item name="android:textSize">18sp</item>
+    <style name="Widget.ScrollCollapsingToolbar" parent="android:Widget">
+        <item name="expandedTitleMargin">32dp</item>
+        <item name="statusBarScrim">?attr/colorPrimaryDark</item>
+    </style>
+
+    <style name="Toolbar.Title" parent="TextAppearance.Widget.AppCompat.Toolbar.Title">
         <item name="android:textStyle">bold</item>
+        <item name="android:textSize">18sp</item>
         <item name="android:textColor">?attr/colorToolbarItem</item>
         <item name="textColor">?attr/colorToolbarItem</item>
     </style>
 
-    <style name="Toolbar.Subtitle">
-        <item name="android:textSize">14sp</item>
-        <item name="android:textStyle">bold</item>
-        <item name="android:textColor">?attr/color_toolbar_item_secondary</item>
-        <item name="textColor">?attr/color_toolbar_item_secondary</item>
+    <style name="Toolbar.Title.Expanded" parent="Toolbar.Title">
+        <item name="android:textSize">32sp</item>
     </style>
 
-    <style name="Toolbar.Title.Expanded">
+    <style name="Toolbar.Subtitle">
         <item name="android:textStyle">bold</item>
-        <item name="android:textSize" tools:ignore="SpUsage">24dp</item>
-        <item name="android:textColor">?attr/colorText</item>
-        <item name="textColor">?attr/colorText</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">?attr/color_toolbar_item_secondary</item>
+        <item name="textColor">?attr/color_toolbar_item_secondary</item>
     </style>
 
     <style name="TextAppearance.ListTitle" parent="Widget.AppCompat.TextView.SpinnerItem">
@@ -374,7 +376,8 @@
         <item name="colorText">@color/color_text</item>
         <item name="colorTextSecondary">@color/color_text_secondary</item>
         <item name="colorDivider">@color/color_divider</item>
-        <item name="colorBg">@color/white</item>
+        <item name="colorBg">@color/theme_color_background_light</item>
+        <item name="colorWindowBackground">@color/theme_color_window_background_light</item>
         <item name="colorUnselected">@color/colorUnselected</item>
         <item name="colorNavBar">@color/white</item>
         <item name="colorFloorCard">@color/colorFloorCard</item>
@@ -403,7 +406,8 @@
         <item name="colorToolbarItemActive">?attr/colorToolbarItem</item>
         <item name="colorText">@color/color_text_night</item>
         <item name="colorTextSecondary">@color/color_text_secondary_night</item>
-        <item name="colorBg">@color/black</item>
+        <item name="colorBg">@color/theme_color_background_dark</item>
+        <item name="colorWindowBackground">@color/theme_color_window_background_dark</item>
         <item name="colorUnselected">#415c68</item>
         <item name="colorFloorCard">#FF1A2A39</item>
         <item name="colorCard">#15202B</item>
@@ -468,6 +472,7 @@
         <item name="colorAccent">@color/theme_color_primary_tieba</item>
         <item name="colorToolbar">@color/transparent</item>
         <item name="colorBg">@color/transparent</item>
+        <item name="colorWindowBackground">@color/transparent</item>
         <item name="colorNavBar">@color/transparent</item>
         <item name="colorToolbarItem">@color/theme_color_toolbar_item_translucent_light</item>
         <item name="colorToolbarItemActive">
@@ -541,7 +546,8 @@
         <item name="colorToolbarItem">#FFE6E7EE</item>
         <item name="colorToolbarItemActive">@color/white</item>
         <item name="color_toolbar_item_secondary">#CCE6E7EE</item>
-        <item name="colorBg">#131D28</item>
+        <item name="colorBg">@color/theme_color_background_dark</item>
+        <item name="colorWindowBackground">@color/theme_color_window_background_dark</item>
         <item name="colorNavBar">#FF15202B</item>
         <item name="colorDivider">#FF10171D</item>
     </style>
@@ -556,6 +562,7 @@
         <item name="colorToolbarItemActive">@color/theme_color_toolbar_item_active_grey_dark</item>
         <item name="color_toolbar_item_secondary">@color/theme_color_toolbar_item_secondary_grey_dark</item>
         <item name="colorBg">@color/theme_color_background_grey_dark</item>
+        <item name="colorWindowBackground">@color/theme_color_window_background_grey_dark</item>
         <item name="colorNavBar">@color/theme_color_nav_grey_dark</item>
         <item name="colorDivider">@color/theme_color_divider_grey_dark</item>
     </style>
@@ -570,7 +577,8 @@
         <item name="color_toolbar_item_secondary">#CCE6E7EE</item>
         <item name="colorFloorCard">#FF151515</item>
         <item name="colorCard">#FF101010</item>
-        <item name="colorBg">@color/black</item>
+        <item name="colorBg">@color/theme_color_background_amoled_dark</item>
+        <item name="colorWindowBackground">@color/theme_color_window_background_amoled_dark</item>
         <item name="colorNavBar">@color/black</item>
         <item name="colorDivider">#FF101010</item>
     </style>

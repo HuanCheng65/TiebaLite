@@ -1,17 +1,111 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".fragments.ForumListFragment">
+
+    <com.huanchengfly.tieba.post.widgets.theme.TintAppBarLayout
+        app:backgroundTint="@color/default_color_toolbar"
+        android:id="@+id/appbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:stateListAnimator="@animator/appbar_elevation">
+
+        <com.huanchengfly.tieba.post.widgets.theme.TintToolbar
+            app:buttonGravity="bottom"
+            android:paddingTop="60dp"
+            app:menu="@menu/menu_main_toolbar"
+            app:navigationIcon="@null"
+            app:popupTheme="?attr/actionOverflowMenuStyle"
+            app:titleTextAppearance="@style/Toolbar.Title.Expanded"
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            app:layout_scrollFlags="scroll"
+            android:layout_height="wrap_content"
+            app:toolbarBackgroundTint="@color/transparent"
+            app:itemTint="@color/default_color_toolbar_item"
+            app:secondaryItemTint="@color/default_color_toolbar_item_secondary"
+            app:activeItemTint="@color/default_color_toolbar_item_active">
+
+            <com.huanchengfly.tieba.post.widgets.theme.TintTextView
+                app:tint="@color/default_color_toolbar_item"
+                android:gravity="center_vertical|start"
+                android:textAppearance="@style/Toolbar.Title.Expanded"
+                android:text="@string/title_main"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+        </com.huanchengfly.tieba.post.widgets.theme.TintToolbar>
+
+        <androidx.constraintlayout.motion.widget.MotionLayout
+            android:id="@+id/search_bar_motion"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layoutDescription="@xml/fragment_main_forum_list_scene">
+
+            <com.huanchengfly.tieba.post.widgets.theme.TintTextInputLayout
+                android:id="@+id/tintTextInputLayout"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="12dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginBottom="8dp"
+                android:hint="@string/hint_search"
+                app:boxBackgroundColor="@color/default_color_divider"
+                app:boxCollapsedPaddingTop="0dp"
+                app:boxCornerRadiusBottomEnd="12dp"
+                app:boxCornerRadiusBottomStart="12dp"
+                app:boxCornerRadiusTopEnd="12dp"
+                app:boxCornerRadiusTopStart="12dp"
+                app:boxStrokeWidth="0dp"
+                app:boxStrokeWidthFocused="0dp"
+                app:hintAnimationEnabled="false"
+                app:hintEnabled="true"
+                app:hintTextColor="@color/default_color_primary"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/btn_oksign"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:placeholderTextColor="@color/default_color_primary"
+                app:startIconDrawable="@drawable/ic_search">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@null"
+                    android:enabled="false" />
+            </com.huanchengfly.tieba.post.widgets.theme.TintTextInputLayout>
+
+            <com.huanchengfly.tieba.post.widgets.theme.TintImageView
+                android:id="@+id/btn_oksign"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_marginEnd="12dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:padding="12dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/ic_oksign"
+                app:tint="@color/default_color_toolbar_item" />
+        </androidx.constraintlayout.motion.widget.MotionLayout>
+
+    </com.huanchengfly.tieba.post.widgets.theme.TintAppBarLayout>
+
     <com.huanchengfly.tieba.post.widgets.theme.TintSwipeRefreshLayout
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
         android:layout_width="match_parent"
         android:id="@+id/refresh"
         android:layout_height="match_parent">
-            <androidx.recyclerview.widget.RecyclerView
-                android:overScrollMode="never"
-                android:id="@+id/forum_list_recycler"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:paddingStart="8dp"
+            android:paddingEnd="8dp"
+            android:paddingBottom="8dp"
+            android:id="@+id/forum_list_recycler"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
     </com.huanchengfly.tieba.post.widgets.theme.TintSwipeRefreshLayout>
-</RelativeLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

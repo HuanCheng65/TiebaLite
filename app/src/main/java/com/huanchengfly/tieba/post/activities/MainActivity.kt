@@ -14,7 +14,6 @@ import android.text.TextUtils
 import android.text.style.ForegroundColorSpan
 import android.text.style.StyleSpan
 import android.util.Log
-import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -22,6 +21,7 @@ import android.widget.FrameLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.viewpager.widget.ViewPager.OnPageChangeListener
+import butterknife.BindView
 import com.google.android.material.bottomnavigation.BottomNavigationItemView
 import com.google.android.material.bottomnavigation.BottomNavigationMenuView
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -37,7 +37,7 @@ import com.huanchengfly.tieba.post.api.interfaces.CommonAPICallback
 import com.huanchengfly.tieba.post.api.interfaces.CommonCallback
 import com.huanchengfly.tieba.post.api.models.ChangelogBean
 import com.huanchengfly.tieba.post.api.models.NewUpdateBean
-import com.huanchengfly.tieba.post.fragments.ForumListFragment
+import com.huanchengfly.tieba.post.fragments.MainForumListFragment
 import com.huanchengfly.tieba.post.fragments.MessageFragment
 import com.huanchengfly.tieba.post.fragments.MyInfoFragment
 import com.huanchengfly.tieba.post.fragments.PersonalizedFeedFragment
@@ -54,20 +54,31 @@ import com.lapism.searchview.Search
 import com.lapism.searchview.widget.SearchView
 
 open class MainActivity : BaseActivity(), BottomNavigationView.OnNavigationItemSelectedListener, MainSearchAdapter.OnSearchItemClickListener, OnNavigationItemReselectedListener {
-    var mAdapter: ViewPagerAdapter? = ViewPagerAdapter(supportFragmentManager)
-    private var mToolbar: TintToolbar? = null
-    private var mViewPager: MyViewPager? = null
-    private var mBottomNavigationView: BottomNavigationView? = null
+    var mAdapter: ViewPagerAdapter = ViewPagerAdapter(supportFragmentManager)
+
+    @BindView(R.id.toolbar)
+    lateinit var mToolbar: TintToolbar
+
+    @BindView(R.id.mViewPager)
+    lateinit var mViewPager: MyViewPager
+
+    @BindView(R.id.navbar)
+    lateinit var mBottomNavigationView: BottomNavigationView
     private var menuView: BottomNavigationMenuView? = null
-    private var mSearchView: SearchView? = null
+
+    @BindView(R.id.toolbar_search_view)
+    lateinit var mSearchView: SearchView
     private var lastTime: Long = 0
-    private var navigationHelper: NavigationHelper? = null
+    private val navigationHelper: NavigationHelper = NavigationHelper.newInstance(this)
     private var hideExplore = false
     private var badgeTextView: TextView? = null
     private val newMessageReceiver: BroadcastReceiver = NewMessageReceiver()
     private val accountSwitchReceiver: BroadcastReceiver = AccountSwitchReceiver()
-    private var appbar: FrameLayout? = null
+
+    @BindView(R.id.appbar)
+    lateinit var appbar: FrameLayout
     private var mSearchAdapter: MainSearchAdapter? = null
+
     public override fun onResume() {
         val reason = ThemeUtil.getSharedPreferences(this).getString(ThemeUtil.SP_SWITCH_REASON, null)
         val followSystemNight = appPreferences.followSystemNight
@@ -84,41 +95,41 @@ open class MainActivity : BaseActivity(), BottomNavigationView.OnNavigationItemS
         refreshSearchView()
         ThemeUtil.setTranslucentThemeBackground(findViewById(R.id.background))
         if (ThemeUtil.THEME_TRANSLUCENT == ThemeUtil.getTheme(this)) {
-            mBottomNavigationView!!.elevation = 0f
+            mBottomNavigationView.elevation = 0f
         } else {
-            mBottomNavigationView!!.elevation = DisplayUtil.dp2px(this, 4f).toFloat()
+            mBottomNavigationView.elevation = DisplayUtil.dp2px(this, 4f).toFloat()
         }
     }
 
     override fun onNavigationItemReselected(item: MenuItem) {
-        val fragment = mAdapter!!.currentFragment
+        val fragment = mAdapter.currentFragment
         if (fragment is Refreshable) {
             (fragment as Refreshable).onRefresh()
         }
     }
 
     fun openSearch() {
-        mSearchView!!.open(null)
+        mSearchView.open(null)
     }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.navbar_home -> {
-                mViewPager!!.setCurrentItem(0, false)
+                mViewPager.setCurrentItem(0, false)
                 return true
             }
             R.id.navbar_explore -> {
                 if (!hideExplore) {
-                    mViewPager!!.setCurrentItem(1, false)
+                    mViewPager.setCurrentItem(1, false)
                 }
                 return true
             }
             R.id.navbar_msg -> {
-                mViewPager!!.setCurrentItem(if (hideExplore) 1 else 2, false)
+                mViewPager.setCurrentItem(if (hideExplore) 1 else 2, false)
                 return true
             }
             R.id.navbar_user -> {
-                mViewPager!!.setCurrentItem(if (hideExplore) 2 else 3, false)
+                mViewPager.setCurrentItem(if (hideExplore) 2 else 3, false)
                 return true
             }
         }
@@ -126,50 +137,30 @@ open class MainActivity : BaseActivity(), BottomNavigationView.OnNavigationItemS
     }
 
     private fun findView() {
-        appbar = findViewById(R.id.appbar) as FrameLayout
-        mToolbar = findViewById(R.id.toolbar) as TintToolbar
-        mSearchView = findViewById(R.id.toolbar_search_view) as SearchView
-        mBottomNavigationView = findViewById(R.id.navbar) as BottomNavigationView
-        menuView = mBottomNavigationView!!.getChildAt(0) as BottomNavigationMenuView
-        mViewPager = findViewById(R.id.mViewPager) as MyViewPager
-        /*
-        int[][] states = new int[2][];
-        states[0] = new int[] { android.R.attr.state_checked };
-        states[1] = new int[] {};
-        int color = Util.getColorByStyle(this, R.styleable.Theme_colorAccent, R.color.colorAccent);
-        mBottomNavigationView.setItemIconTintList(new ColorStateList(states, new int[]{color, getLighterColor(color, 0.2f)}));
-        mBottomNavigationView.setItemTextColor(new ColorStateList(states, new int[]{color, getLighterColor(color, 0.2f)}));
-        mBottomNavigationView.setLabelVisibilityMode(LabelVisibilityMode.LABEL_VISIBILITY_AUTO);
-        */
+        menuView = mBottomNavigationView.getChildAt(0) as BottomNavigationMenuView
     }
 
     protected fun initView() {
         mSearchAdapter = MainSearchAdapter(this)
         mSearchAdapter!!.onSearchItemClickListener = this
-        mSearchView!!.adapter = mSearchAdapter
-        val itemView = menuView!!.getChildAt(if (hideExplore) 1 else 2) as BottomNavigationItemView
-        val badge = LayoutInflater.from(this@MainActivity).inflate(R.layout.layout_badge, menuView, false)
-        itemView.addView(badge)
+        mSearchView.adapter = mSearchAdapter
+        val hideExploreItemView = menuView!!.getChildAt(if (hideExplore) 1 else 2) as BottomNavigationItemView
+        val badge = layoutInflater.inflate(R.layout.layout_badge, hideExploreItemView, true)
         badgeTextView = badge.findViewById(R.id.tv_msg_count)
-        navigationHelper = NavigationHelper.newInstance(this)
         setSupportActionBar(mToolbar)
-        hideExplore = getSharedPreferences("settings", Context.MODE_PRIVATE).getBoolean("hideExplore", false)
         if (hideExplore) {
-            mBottomNavigationView!!.menu.removeItem(R.id.navbar_explore)
+            mBottomNavigationView.menu.removeItem(R.id.navbar_explore)
         }
-        val fragmentHome = ForumListFragment()
-        mAdapter!!.addFragment(fragmentHome)
+        mAdapter.addFragment(MainForumListFragment())
         if (!hideExplore) {
             val personalizedFeedFragment = PersonalizedFeedFragment()
-            mAdapter!!.addFragment(personalizedFeedFragment)
+            mAdapter.addFragment(personalizedFeedFragment)
         }
-        val messageFragment = MessageFragment.newInstance(MessageFragment.TYPE_REPLY_ME)
-        mAdapter!!.addFragment(messageFragment)
-        val fragmentMine = MyInfoFragment()
-        mAdapter!!.addFragment(fragmentMine)
-        mViewPager!!.isCanScroll = false
-        mViewPager!!.adapter = mAdapter
-        mViewPager!!.offscreenPageLimit = mAdapter!!.count
+        mAdapter.addFragment(MessageFragment.newInstance(MessageFragment.TYPE_REPLY_ME))
+        mAdapter.addFragment(MyInfoFragment())
+        mViewPager.isCanScroll = false
+        mViewPager.adapter = mAdapter
+        mViewPager.offscreenPageLimit = mAdapter.count
         refreshSearchView()
     }
 
@@ -183,13 +174,13 @@ open class MainActivity : BaseActivity(), BottomNavigationView.OnNavigationItemS
             return
         }
         mSearchAdapter!!.refreshData()
-        mSearchView!!.theme = if (ThemeUtil.isNightMode(this) || ThemeUtil.THEME_TRANSLUCENT == ThemeUtil.getTheme(this)) Search.Theme.DARK else Search.Theme.LIGHT
+        mSearchView.theme = if (ThemeUtil.isNightMode(this) || ThemeUtil.THEME_TRANSLUCENT == ThemeUtil.getTheme(this)) Search.Theme.DARK else Search.Theme.LIGHT
     }
 
     protected fun initListener() {
-        mBottomNavigationView!!.setOnNavigationItemSelectedListener(this)
-        mBottomNavigationView!!.setOnNavigationItemReselectedListener(this)
-        mSearchView!!.setOnQueryTextListener(object : Search.OnQueryTextListener {
+        mBottomNavigationView.setOnNavigationItemSelectedListener(this)
+        mBottomNavigationView.setOnNavigationItemReselectedListener(this)
+        mSearchView.setOnQueryTextListener(object : Search.OnQueryTextListener {
             override fun onQueryTextChange(newText: CharSequence) {}
             override fun onQueryTextSubmit(key: CharSequence): Boolean {
                 startActivity(Intent(this@MainActivity, SearchActivity::class.java)
@@ -199,15 +190,15 @@ open class MainActivity : BaseActivity(), BottomNavigationView.OnNavigationItemS
                 return true
             }
         })
-        mViewPager!!.addOnPageChangeListener(object : OnPageChangeListener {
+        mViewPager.addOnPageChangeListener(object : OnPageChangeListener {
             override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {}
 
             @SuppressLint("RestrictedApi")
             override fun onPageSelected(position: Int) {
-                val baseFragment = mAdapter!!.getItem(position)
-                appbar!!.visibility = if (baseFragment.hasOwnAppbar()) View.GONE else View.VISIBLE
-                mBottomNavigationView!!.menu.getItem(position).isChecked = true
-                mToolbar!!.title = mBottomNavigationView!!.menu.getItem(position).title
+                val baseFragment = mAdapter.getItem(position)
+                appbar.visibility = if (baseFragment.hasOwnAppbar()) View.GONE else View.VISIBLE
+                mBottomNavigationView.menu.getItem(position).isChecked = true
+                mToolbar.title = mBottomNavigationView.menu.getItem(position).title
                 if (position == (if (hideExplore) 1 else 2)) {
                     badgeTextView!!.visibility = View.GONE
                 }
@@ -215,6 +206,7 @@ open class MainActivity : BaseActivity(), BottomNavigationView.OnNavigationItemS
 
             override fun onPageScrollStateChanged(state: Int) {}
         })
+        appbar.visibility = if (mAdapter.getItem(0).hasOwnAppbar()) View.GONE else View.VISIBLE
     }
 
     @SuppressLint("ApplySharedPref")
@@ -228,11 +220,13 @@ open class MainActivity : BaseActivity(), BottomNavigationView.OnNavigationItemS
         return ThemeUtil.getSharedPreferences(this).getBoolean(SP_SHOULD_SHOW_SNACKBAR, false)
     }
 
+    override fun getLayoutId(): Int = R.layout.activity_main
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setSwipeBackEnable(false)
-        setContentView(R.layout.activity_main)
         ThemeUtil.setTranslucentThemeBackground(findViewById(R.id.background))
+        hideExplore = appPreferences.hideExplore
         findView()
         initView()
         initListener()
@@ -251,7 +245,7 @@ open class MainActivity : BaseActivity(), BottomNavigationView.OnNavigationItemS
             clearSwitchReason()
         }
         if (shouldShowSwitchSnackbar()) {
-            Util.createSnackbar(mViewPager!!, if (ThemeUtil.isNightMode(this)) R.string.snackbar_auto_switch_to_night else R.string.snackbar_auto_switch_from_night, Snackbar.LENGTH_SHORT)
+            Util.createSnackbar(mViewPager, if (ThemeUtil.isNightMode(this)) R.string.snackbar_auto_switch_to_night else R.string.snackbar_auto_switch_from_night, Snackbar.LENGTH_SHORT)
                     .show()
             SharedPreferencesUtil.put(ThemeUtil.getSharedPreferences(this), SP_SHOULD_SHOW_SNACKBAR, false)
         }
@@ -277,7 +271,7 @@ open class MainActivity : BaseActivity(), BottomNavigationView.OnNavigationItemS
                         showDialog(DialogUtil.build(this@MainActivity)
                                 .setTitle(R.string.title_dialog_logged_in_expired)
                                 .setMessage(R.string.message_dialog_logged_in_expired)
-                                .setPositiveButton(R.string.button_ok) { _: DialogInterface?, _: Int -> navigationHelper!!.navigationByData(NavigationHelper.ACTION_LOGIN) }
+                                .setPositiveButton(R.string.button_ok) { _: DialogInterface?, _: Int -> navigationHelper.navigationByData(NavigationHelper.ACTION_LOGIN) }
                                 .setCancelable(false)
                                 .create())
                     }
@@ -287,7 +281,7 @@ open class MainActivity : BaseActivity(), BottomNavigationView.OnNavigationItemS
         if (BaseApplication.isFirstRun) {
             goToActivity<NewIntroActivity>()
         } else if (!AccountUtil.isLoggedIn(this)) {
-            navigationHelper!!.navigationByData(NavigationHelper.ACTION_LOGIN)
+            navigationHelper.navigationByData(NavigationHelper.ACTION_LOGIN)
         }
         /*
         handler.postDelayed(() -> {
@@ -420,7 +414,7 @@ open class MainActivity : BaseActivity(), BottomNavigationView.OnNavigationItemS
                 return true
             }
             R.id.action_search -> {
-                mSearchView!!.open(item)
+                mSearchView.open(item)
                 return true
             }
         }
@@ -428,8 +422,8 @@ open class MainActivity : BaseActivity(), BottomNavigationView.OnNavigationItemS
     }
 
     override fun onBackPressed() {
-        if (mSearchView!!.isOpen) {
-            mSearchView!!.close()
+        if (mSearchView.isOpen) {
+            mSearchView.close()
         } else {
             if (!HandleBackUtil.handleBackPress(this)) {
                 exit()
@@ -448,7 +442,7 @@ open class MainActivity : BaseActivity(), BottomNavigationView.OnNavigationItemS
     }
 
     override fun setTitle(newTitle: String) {
-        mToolbar!!.title = newTitle
+        mToolbar.title = newTitle
     }
 
     override fun onSearchItemClick(position: Int, content: CharSequence) {
@@ -486,7 +480,7 @@ open class MainActivity : BaseActivity(), BottomNavigationView.OnNavigationItemS
                 if (mAdapter == null) {
                     return
                 }
-                val fragments = mAdapter!!.fragments
+                val fragments = mAdapter.fragments
                 for (fragment in fragments) {
                     if (fragment != null) {
                         try {

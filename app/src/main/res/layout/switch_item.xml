@@ -17,7 +17,7 @@
         app:track="@drawable/switch_ios_track"
         android:thumb="@drawable/switch_ios_thumb"
         style="@style/Widget.Switch"
-        app:trackTintList="@drawable/selector_switch_track"
+        app:trackTintList="@color/selector_switch_track"
         app:thumbTint="@color/white"
         app:switchBackgroundTint="@color/transparent"
         android:id="@+id/my_info_night_switch"

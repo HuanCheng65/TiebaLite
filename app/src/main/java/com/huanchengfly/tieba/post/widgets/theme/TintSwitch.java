@@ -7,10 +7,10 @@ import android.util.AttributeSet;
 
 import androidx.appcompat.widget.SwitchCompat;
 
+import com.huanchengfly.tieba.post.R;
 import com.huanchengfly.tieba.post.ui.theme.interfaces.Tintable;
 import com.huanchengfly.tieba.post.ui.theme.utils.ColorStateListUtils;
 import com.huanchengfly.tieba.post.ui.theme.utils.ThemeUtils;
-import com.huanchengfly.tieba.post.R;
 
 public class TintSwitch extends SwitchCompat implements Tintable {
     private int mBackgroundTintResId;
@@ -33,14 +33,14 @@ public class TintSwitch extends SwitchCompat implements Tintable {
         if (attrs == null) {
             mBackgroundTintResId = R.color.transparent;
             mThumbTintResId = R.color.white;
-            mTrackTintListResId = R.drawable.selector_switch_track;
+            mTrackTintListResId = R.color.selector_switch_track;
             applyTintColor();
             return;
         }
         TypedArray array = getContext().obtainStyledAttributes(attrs, R.styleable.TintSwitch, defStyleAttr, 0);
         mBackgroundTintResId = array.getResourceId(R.styleable.TintSwitch_switchBackgroundTint, R.color.transparent);
         mThumbTintResId = array.getResourceId(R.styleable.TintSwitch_thumbTint, R.color.white);
-        mTrackTintListResId = array.getResourceId(R.styleable.TintSwitch_trackTintList, R.drawable.selector_switch_track);
+        mTrackTintListResId = array.getResourceId(R.styleable.TintSwitch_trackTintList, R.color.selector_switch_track);
         array.recycle();
         applyTintColor();
     }
@@ -64,7 +64,7 @@ public class TintSwitch extends SwitchCompat implements Tintable {
             mThumbTintResId = R.color.white;
         }
         if (mTrackTintListResId == 0) {
-            mTrackTintListResId = R.drawable.selector_switch_track;
+            mTrackTintListResId = R.color.selector_switch_track;
         }
     }
 

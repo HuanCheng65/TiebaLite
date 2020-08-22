@@ -7,15 +7,15 @@ import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.GridLayoutManager.SpanSizeLookup
 import androidx.recyclerview.widget.RecyclerView
+import com.huanchengfly.tieba.post.R
+import com.huanchengfly.tieba.post.adapters.DislikeAdapter
 import com.huanchengfly.tieba.post.api.TiebaApi
 import com.huanchengfly.tieba.post.api.models.CommonResponse
 import com.huanchengfly.tieba.post.api.models.PersonalizedBean.ThreadPersonalizedBean
-import com.huanchengfly.tieba.post.R
-import com.huanchengfly.tieba.post.adapters.DislikeAdapter
 import com.huanchengfly.tieba.post.components.dividers.SpacesItemDecoration
+import com.huanchengfly.tieba.post.dpToPx
 import com.huanchengfly.tieba.post.models.DislikeBean
 import com.huanchengfly.tieba.post.utils.AccountUtil
-import com.huanchengfly.tieba.post.toDp
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -42,7 +42,7 @@ class DislikeDialog(
                     }
                 }
             }
-            addItemDecoration(SpacesItemDecoration(4.toDp()))
+            addItemDecoration(SpacesItemDecoration(4.dpToPx()))
             adapter = dislikeAdapter
         }
         submitBtn.setOnClickListener(this)

@@ -9,25 +9,25 @@ import androidx.annotation.ColorRes
 import com.google.gson.Gson
 import com.huanchengfly.tieba.post.utils.MD5Util
 
-fun Float.toDp(): Int =
-        (this * BaseApplication.instance.resources.displayMetrics.density + 0.5f).toInt()
-
-fun Float.toSp(): Int =
-        (this * BaseApplication.instance.resources.displayMetrics.scaledDensity + 0.5f).toInt()
-
 fun Float.dpToPx(): Int =
-        (this / BaseApplication.instance.resources.displayMetrics.density + 0.5f).toInt()
+        (this * BaseApplication.ScreenInfo.DENSITY + 0.5f).toInt()
 
 fun Float.spToPx(): Int =
+        (this * BaseApplication.instance.resources.displayMetrics.scaledDensity + 0.5f).toInt()
+
+fun Float.pxToDp(): Int =
+        (this / BaseApplication.ScreenInfo.DENSITY + 0.5f).toInt()
+
+fun Float.pxToSp(): Int =
         (this / BaseApplication.instance.resources.displayMetrics.scaledDensity + 0.5f).toInt()
-
-fun Int.toDp(): Int = this.toFloat().toDp()
-
-fun Int.toSp(): Int = this.toFloat().toSp()
 
 fun Int.dpToPx(): Int = this.toFloat().dpToPx()
 
 fun Int.spToPx(): Int = this.toFloat().spToPx()
+
+fun Int.pxToDp(): Int = this.toFloat().pxToDp()
+
+fun Int.pxToSp(): Int = this.toFloat().pxToSp()
 
 fun Any.toJson(): String = Gson().toJson(this)
 
