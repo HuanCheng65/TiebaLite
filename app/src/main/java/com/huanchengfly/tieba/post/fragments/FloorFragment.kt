@@ -73,7 +73,7 @@ class FloorFragment : BaseBottomSheetDialogFragment() {
                         dataBean!!.post!!.id,
                         dataBean!!.post!!.floor,
                         dataBean!!.post!!.author.nameShow,
-                        AccountUtil.getLoginInfo(attachContext).nameShow).setPn(pn.toString()).toString()))
+                        AccountUtil.getLoginInfo(attachContext)!!.nameShow).setPn(pn.toString()).toString()))
     }
 
     override fun onStart() {

@@ -22,15 +22,5 @@
             android:title="@string/title_use_webview"
             android:summaryOn="@string/tip_use_webview_on"
             android:summaryOff="@string/tip_use_webview"/>
-
-        <SwitchPreference
-            android:icon="@drawable/ic_today"
-            android:layout="@layout/layout_preference"
-            android:widgetLayout="@layout/layout_switch"
-            android:defaultValue="true"
-            android:key="use_custom_tabs"
-            android:title="@string/title_use_custom_tabs"
-            android:summaryOn="@string/tip_use_custom_tab_on"
-            android:summaryOff="@string/tip_use_custom_tab"/>
     </androidx.preference.PreferenceCategory>
 </androidx.preference.PreferenceScreen>

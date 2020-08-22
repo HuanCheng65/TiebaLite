@@ -9,7 +9,10 @@
             android:layout="@layout/layout_preference"
             android:icon="@drawable/ic_round_format_paint_red"
             android:title="@string/title_select_theme">
-            <intent android:targetPackage="com.huanchengfly.tieba.post" android:targetClass="com.huanchengfly.tieba.post.activities.ThemeActivity" android:action="android.intent.action.VIEW" />
+            <intent
+                android:targetPackage="com.huanchengfly.tieba.post"
+                android:targetClass="com.huanchengfly.tieba.post.activities.ThemeActivity"
+                android:action="android.intent.action.VIEW" />
         </Preference>
 
         <ListPreference
@@ -46,17 +49,18 @@
             android:title="@string/title_hide_explore" />
 
         <SwitchPreference
+            android:icon="@drawable/ic_round_outlet"
             android:defaultValue="false"
             android:key="level_icon_old_style"
             android:title="@string/title_level_old_style" />
 
         <androidx.preference.SeekBarPreference
+            android:icon="@drawable/ic_round_rounded_corner"
             app:min="0"
             android:max="16"
             app:showSeekBarValue="true"
             android:defaultValue="8"
             android:key="radius"
             android:title="@string/title_preference_radius" />
-
     </androidx.preference.PreferenceCategory>
 </androidx.preference.PreferenceScreen>

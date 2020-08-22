@@ -61,7 +61,6 @@ public class ThemeUtil {
     public static final String THEME_GREY_DARK = "grey_dark";
     public static final String THEME_AMOLED_DARK = "amoled_dark";
 
-    public static final String SP_CUSTOM_PRIMARY_COLOR = "custom_primary_color";
     public static final String SP_TRANSLUCENT_PRIMARY_COLOR = "translucent_primary_color";
     public static final String SP_CUSTOM_STATUS_BAR_FONT_DARK = "custom_status_bar_font_dark";
     public static final String SP_CUSTOM_TOOLBAR_PRIMARY_COLOR = "custom_toolbar_primary_color";

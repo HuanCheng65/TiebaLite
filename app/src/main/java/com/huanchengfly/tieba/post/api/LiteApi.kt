@@ -2,13 +2,14 @@ package com.huanchengfly.tieba.post.api
 
 import android.annotation.SuppressLint
 import android.content.Context
+import com.huanchengfly.tieba.post.BaseApplication
 import com.huanchengfly.tieba.post.api.interfaces.CommonAPICallback
 import com.huanchengfly.tieba.post.api.models.ChangelogBean
 import com.huanchengfly.tieba.post.api.models.NewUpdateBean
 import com.huanchengfly.tieba.post.api.models.UpdateInfoBean
-import com.huanchengfly.tieba.post.BaseApplication
 import com.huanchengfly.tieba.post.utils.SharedPreferencesUtil
 import com.huanchengfly.tieba.post.utils.VersionUtil
+import com.huanchengfly.tieba.post.utils.appPreferences
 import com.tsy.sdk.myokhttp.MyOkHttp
 import com.tsy.sdk.myokhttp.response.GsonResponseHandler
 import io.michaelrocks.paranoid.Obfuscate
@@ -18,8 +19,8 @@ import java.lang.ref.WeakReference
 class LiteApi private constructor(context: Context) {
     private val myOkHttp: MyOkHttp = MyOkHttp()
     private val contextWeakReference: WeakReference<Context> = WeakReference(context)
-    val context: Context?
-        get() = contextWeakReference.get()
+    val context: Context
+        get() = contextWeakReference.get()!!
 
     fun changelog(apiCallback: CommonAPICallback<ChangelogBean?>) {
         val builder = myOkHttp.get()
@@ -44,7 +45,7 @@ class LiteApi private constructor(context: Context) {
     }
 
     fun newCheckUpdate(apiCallback: CommonAPICallback<NewUpdateBean?>) {
-        val beta = SharedPreferencesUtil.get(context, SharedPreferencesUtil.SP_SETTINGS).getBoolean("check_beta_update", false)
+        val beta = context.appPreferences.checkBetaUpdate
         myOkHttp.get()
                 .url(Url.CHECK_UPDATE)
                 .addParam("version_code", VersionUtil.getVersionCode(context).toString())

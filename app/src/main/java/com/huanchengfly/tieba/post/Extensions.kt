@@ -49,6 +49,10 @@ fun Context.toastShort(text: String) {
     Toast.makeText(this, text, Toast.LENGTH_SHORT).show()
 }
 
+fun Context.toastShort(resId: Int) {
+    Toast.makeText(this, resId, Toast.LENGTH_SHORT).show()
+}
+
 inline fun <reified T : Activity> Activity.goToActivity(pre: (Intent) -> Intent) {
     startActivity(pre(Intent(this, T::class.java)))
 }

@@ -50,7 +50,6 @@
     </androidx.preference.PreferenceCategory>
 
     <androidx.preference.PreferenceCategory android:title="@string/title_settings_read_habit">
-
         <ListPreference
             android:icon="@drawable/ic_round_photo_size_select_actual"
             android:key="image_load_type"

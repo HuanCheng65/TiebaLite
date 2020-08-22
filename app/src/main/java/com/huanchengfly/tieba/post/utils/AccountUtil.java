@@ -8,15 +8,14 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.huanchengfly.tieba.post.R;
 import com.huanchengfly.tieba.post.api.Error;
 import com.huanchengfly.tieba.post.api.TiebaApi;
 import com.huanchengfly.tieba.post.api.interfaces.CommonCallback;
 import com.huanchengfly.tieba.post.api.retrofit.exception.TiebaException;
-import com.huanchengfly.tieba.post.R;
 import com.huanchengfly.tieba.post.models.MyInfoBean;
 import com.huanchengfly.tieba.post.models.database.Account;
 
-import org.jetbrains.annotations.NotNull;
 import org.litepal.LitePal;
 
 import java.util.List;
@@ -29,8 +28,8 @@ public class AccountUtil {
     public static final String TAG = "AccountUtil";
     public static final String ACTION_SWITCH_ACCOUNT = "com.huanchengfly.tieba.post.action.SWITCH_ACCOUNT";
 
+    @Nullable
     public static Account getLoginInfo(@NonNull Context context) {
-        if (context == null) return null;
         int loginUser = context.getSharedPreferences("accountData", Context.MODE_PRIVATE).getInt("now", -1);
         if (loginUser == -1) {
             return null;
@@ -54,11 +53,11 @@ public class AccountUtil {
         return LitePal.where("bduss = ?", bduss).findFirst(Account.class);
     }
 
-    public static boolean isLoggedIn(Context context) {
+    public static boolean isLoggedIn(@NonNull Context context) {
         return (getLoginInfo(context) != null);
     }
 
-    public static boolean newAccount(Context context, Account account, boolean needSwitch) {
+    public static boolean newAccount(@NonNull Context context, @NonNull Account account, boolean needSwitch) {
         if (account.save()) {
             if (needSwitch) {
                 return switchUser(context, account.getId());
@@ -68,17 +67,12 @@ public class AccountUtil {
         return false;
     }
 
-    public static boolean switchUser(Context context, int id) {
-        context.sendBroadcast(new Intent()
-                .setAction(ACTION_SWITCH_ACCOUNT));
+    public static boolean switchUser(@NonNull Context context, int id) {
+        context.sendBroadcast(new Intent().setAction(ACTION_SWITCH_ACCOUNT));
         return context.getSharedPreferences("accountData", Context.MODE_PRIVATE).edit().putInt("now", id).commit();
     }
 
-    public static void updateUserInfo(Context context, CommonCallback<MyInfoBean> commonCallback) {
-        if (context == null) {
-            commonCallback.onFailure(Error.ERROR_UNKNOWN, "未知错误");
-            return;
-        }
+    public static void updateUserInfo(@NonNull Context context, CommonCallback<MyInfoBean> commonCallback) {
         Account account = getLoginInfo(context);
         if (account == null) {
             commonCallback.onFailure(Error.ERROR_NOT_LOGGED_IN, "未登录");
@@ -105,10 +99,9 @@ public class AccountUtil {
     }
 
     public static void updateUserInfoByBduss(@NonNull Context context, @NonNull String bduss, @Nullable CommonCallback<MyInfoBean> commonCallback) {
-        if (context == null) return;
         TiebaApi.getInstance().myInfo(AccountUtil.getBdussCookie(bduss)).enqueue(new Callback<MyInfoBean>() {
             @Override
-            public void onResponse(@NotNull Call<MyInfoBean> call, @NotNull Response<MyInfoBean> response) {
+            public void onResponse(@NonNull Call<MyInfoBean> call, @NonNull Response<MyInfoBean> response) {
                 MyInfoBean myInfoBean = response.body();
                 if (myInfoBean == null) {
                     if (commonCallback != null)
@@ -149,7 +142,7 @@ public class AccountUtil {
             }
 
             @Override
-            public void onFailure(@NotNull Call<MyInfoBean> call, @NotNull Throwable t) {
+            public void onFailure(@NonNull Call<MyInfoBean> call, @NonNull Throwable t) {
                 if (commonCallback != null) {
                     if (t instanceof TiebaException) {
                         commonCallback.onFailure(((TiebaException) t).getCode(), t.getMessage());
@@ -162,8 +155,7 @@ public class AccountUtil {
     }
 
     @SuppressWarnings("ApplySharedPref")
-    public static void exit(Context context) {
-        if (context == null) return;
+    public static void exit(@NonNull Context context) {
         List<Account> accounts = getAllAccounts();
         Account account = getLoginInfo(context);
         if (account == null) return;

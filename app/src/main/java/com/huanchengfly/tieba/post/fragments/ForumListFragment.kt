@@ -11,6 +11,10 @@ import androidx.recyclerview.widget.GridLayoutManager.SpanSizeLookup
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import butterknife.BindView
+import com.huanchengfly.tieba.post.BaseApplication
+import com.huanchengfly.tieba.post.R
+import com.huanchengfly.tieba.post.activities.ForumActivity
+import com.huanchengfly.tieba.post.adapters.LikeForumListAdapter
 import com.huanchengfly.tieba.post.api.Error
 import com.huanchengfly.tieba.post.api.ForumSortType
 import com.huanchengfly.tieba.post.api.TiebaApi
@@ -18,10 +22,6 @@ import com.huanchengfly.tieba.post.api.models.CommonResponse
 import com.huanchengfly.tieba.post.api.models.ForumRecommend
 import com.huanchengfly.tieba.post.api.retrofit.exception.TiebaException
 import com.huanchengfly.tieba.post.api.retrofit.exception.TiebaLocalException
-import com.huanchengfly.tieba.post.activities.ForumActivity
-import com.huanchengfly.tieba.post.R
-import com.huanchengfly.tieba.post.adapters.LikeForumListAdapter
-import com.huanchengfly.tieba.post.BaseApplication
 import com.huanchengfly.tieba.post.interfaces.OnItemClickListener
 import com.huanchengfly.tieba.post.interfaces.OnItemLongClickListener
 import com.huanchengfly.tieba.post.interfaces.Refreshable
@@ -55,7 +55,7 @@ class ForumListFragment : BaseFragment(), Refreshable {
     override fun onResume() {
         super.onResume()
         gridLayoutManager!!.spanCount = spanCount
-        likeForumListAdapter!!.isSingle = SharedPreferencesUtil.get(attachContext, SharedPreferencesUtil.SP_SETTINGS).getBoolean("listSingle", false)
+        likeForumListAdapter!!.isSingle = appPreferences.listSingle
     }
 
     override fun onAccountSwitch() {
@@ -78,7 +78,7 @@ class ForumListFragment : BaseFragment(), Refreshable {
     }
 
     private val spanCount: Int
-        get() = if (SharedPreferencesUtil.get(attachContext, SharedPreferencesUtil.SP_SETTINGS).getBoolean("listSingle", false)) {
+        get() = if (appPreferences.listSingle) {
             1
         } else {
             2
@@ -96,8 +96,7 @@ class ForumListFragment : BaseFragment(), Refreshable {
     }
 
     private fun getSortType(forumName: String): ForumSortType {
-        val defaultSortType = SharedPreferencesUtil.get(attachContext, SharedPreferencesUtil.SP_SETTINGS)
-                .getString("default_sort_type", ForumSortType.REPLY_TIME.toString())!!.toInt()
+        val defaultSortType = appPreferences.defaultSortType!!.toInt()
         return ForumSortType.valueOf(SharedPreferencesUtil.get(attachContext, SharedPreferencesUtil.SP_SETTINGS)
                 .getInt(forumName + "_sort_type", defaultSortType))
     }
@@ -127,20 +126,22 @@ class ForumListFragment : BaseFragment(), Refreshable {
                 topItem.setTitle(if (already) R.string.menu_top_del else R.string.menu_top)
                 popupMenu.setOnMenuItemClickListener { item: MenuItem ->
                     when (item.itemId) {
-                        R.id.menu_top -> if (!SharedPreferencesUtil.get(attachContext, SharedPreferencesUtil.SP_SETTINGS).getBoolean("show_top_forum_in_normal_list", true)) {
-                            DialogUtil.build(attachContext)
-                                    .setTitle(R.string.title_dialog_show_top_forum)
-                                    .setMessage(R.string.message_dialog_show_top_forum)
-                                    .setNegativeButton(R.string.button_no) { _, _ -> toggleTopForum(likeForum.forumId) }
-                                    .setPositiveButton(R.string.button_yes) { _, _ ->
-                                        SharedPreferencesUtil.get(attachContext, SharedPreferencesUtil.SP_SETTINGS).edit().putBoolean("show_top_forum_in_normal_list", true).commit()
-                                        toggleTopForum(likeForum.forumId)
-                                    }
-                                    .setNeutralButton(R.string.button_cancel, null)
-                                    .create()
-                                    .show()
-                        } else {
-                            toggleTopForum(likeForum.forumId)
+                        R.id.menu_top -> {
+                            if (!appPreferences.showTopForumInNormalList) {
+                                DialogUtil.build(attachContext)
+                                        .setTitle(R.string.title_dialog_show_top_forum)
+                                        .setMessage(R.string.message_dialog_show_top_forum)
+                                        .setNegativeButton(R.string.button_no) { _, _ -> toggleTopForum(likeForum.forumId) }
+                                        .setPositiveButton(R.string.button_yes) { _, _ ->
+                                            SharedPreferencesUtil.get(attachContext, SharedPreferencesUtil.SP_SETTINGS).edit().putBoolean("show_top_forum_in_normal_list", true).commit()
+                                            toggleTopForum(likeForum.forumId)
+                                        }
+                                        .setNeutralButton(R.string.button_cancel, null)
+                                        .create()
+                                        .show()
+                            } else {
+                                toggleTopForum(likeForum.forumId)
+                            }
                         }
                         R.id.menu_copy -> TiebaUtil.copyText(attachContext, likeForum.forumName)
                         R.id.menu_unfollow -> {

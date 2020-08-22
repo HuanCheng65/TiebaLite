@@ -70,8 +70,7 @@ open class MainActivity : BaseActivity(), BottomNavigationView.OnNavigationItemS
     private var mSearchAdapter: MainSearchAdapter? = null
     public override fun onResume() {
         val reason = ThemeUtil.getSharedPreferences(this).getString(ThemeUtil.SP_SWITCH_REASON, null)
-        val followSystemNight = SharedPreferencesUtil.get(this, SharedPreferencesUtil.SP_SETTINGS)
-                .getBoolean("follow_system_night", false) && !TextUtils.equals(reason, ThemeUtil.REASON_MANUALLY)
+        val followSystemNight = appPreferences.followSystemNight
         if (followSystemNight) {
             if (BaseApplication.isSystemNight && !ThemeUtil.isNightMode(this)) {
                 SharedPreferencesUtil.put(ThemeUtil.getSharedPreferences(this), SP_SHOULD_SHOW_SNACKBAR, true)
@@ -369,7 +368,7 @@ open class MainActivity : BaseActivity(), BottomNavigationView.OnNavigationItemS
         instance!!.newCheckUpdate(object : CommonAPICallback<NewUpdateBean?> {
             override fun onSuccess(data: NewUpdateBean?) {
                 if (data != null) {
-                    if (data.isHasUpdate!!) {
+                    if (data.isHasUpdate) {
                         val cancelable = data.result?.isCancelable
                         val ignored = SharedPreferencesUtil.get(this@MainActivity, SharedPreferencesUtil.SP_IGNORE_VERSIONS)
                                 .getBoolean(data.result?.versionName + "_" + (data.result?.versionCode), false)

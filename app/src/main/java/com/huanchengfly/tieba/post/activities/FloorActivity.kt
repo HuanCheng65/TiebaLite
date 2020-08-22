@@ -14,10 +14,10 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import butterknife.BindView
 import butterknife.OnClick
-import com.huanchengfly.tieba.post.api.TiebaApi
-import com.huanchengfly.tieba.post.api.models.SubFloorListBean
 import com.huanchengfly.tieba.post.R
 import com.huanchengfly.tieba.post.adapters.RecyclerFloorAdapter
+import com.huanchengfly.tieba.post.api.TiebaApi
+import com.huanchengfly.tieba.post.api.models.SubFloorListBean
 import com.huanchengfly.tieba.post.components.MyLinearLayoutManager
 import com.huanchengfly.tieba.post.components.dividers.ThreadDivider
 import com.huanchengfly.tieba.post.models.ReplyInfoBean
@@ -156,7 +156,7 @@ class FloorActivity : BaseActivity() {
                                 dataBean!!.post!!.id,
                                 dataBean!!.post!!.floor,
                                 dataBean!!.post!!.author.nameShow,
-                                AccountUtil.getLoginInfo(this).nameShow).setPn(pn.toString()).toString()))
+                                AccountUtil.getLoginInfo(this)!!.nameShow).setPn(pn.toString()).toString()))
     }
 
     private fun refresh() {

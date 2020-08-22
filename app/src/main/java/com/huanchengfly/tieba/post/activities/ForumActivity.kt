@@ -35,15 +35,14 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayout.OnTabSelectedListener
-import com.huanchengfly.tieba.post.ui.theme.utils.ThemeUtils
+import com.huanchengfly.tieba.post.R
+import com.huanchengfly.tieba.post.adapters.FragmentTabViewPagerAdapter
 import com.huanchengfly.tieba.post.api.ForumSortType
 import com.huanchengfly.tieba.post.api.TiebaApi
 import com.huanchengfly.tieba.post.api.models.CommonResponse
 import com.huanchengfly.tieba.post.api.models.ForumPageBean
 import com.huanchengfly.tieba.post.api.models.LikeForumResultBean
 import com.huanchengfly.tieba.post.api.models.SignResultBean
-import com.huanchengfly.tieba.post.R
-import com.huanchengfly.tieba.post.adapters.FragmentTabViewPagerAdapter
 import com.huanchengfly.tieba.post.fragments.ForumFragment
 import com.huanchengfly.tieba.post.fragments.ForumFragment.OnRefreshedListener
 import com.huanchengfly.tieba.post.fragments.ForumInfoFragment
@@ -51,12 +50,13 @@ import com.huanchengfly.tieba.post.interfaces.Refreshable
 import com.huanchengfly.tieba.post.interfaces.ScrollTopable
 import com.huanchengfly.tieba.post.models.PhotoViewBean
 import com.huanchengfly.tieba.post.models.database.History
+import com.huanchengfly.tieba.post.toDp
+import com.huanchengfly.tieba.post.ui.theme.utils.ThemeUtils
 import com.huanchengfly.tieba.post.utils.*
 import com.huanchengfly.tieba.post.utils.preload.PreloadUtil
 import com.huanchengfly.tieba.post.widgets.MyViewPager
 import com.huanchengfly.tieba.post.widgets.theme.TintProgressBar
 import com.huanchengfly.tieba.post.widgets.theme.TintToolbar
-import com.huanchengfly.tieba.post.toDp
 import com.lapism.searchview.widget.SearchView
 import retrofit2.Call
 import retrofit2.Callback
@@ -151,8 +151,7 @@ class ForumActivity : BaseActivity(), View.OnClickListener, OnRefreshedListener 
     }
 
     private fun getSortType(): ForumSortType {
-        val defaultSortType = SharedPreferencesUtil.get(this, SharedPreferencesUtil.SP_SETTINGS)
-                .getString("default_sort_type", ForumSortType.REPLY_TIME.toString())!!.toInt()
+        val defaultSortType = appPreferences.defaultSortType!!.toInt()
         return ForumSortType.valueOf(SharedPreferencesUtil.get(this, SharedPreferencesUtil.SP_SETTINGS)
                 .getInt(forumName + "_sort_type", defaultSortType))
     }

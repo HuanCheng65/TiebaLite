@@ -272,7 +272,7 @@
     <string name="desc_hot_message_list">(每小时更新一次,以实时讨论量排序)</string>
     <string name="toast_photo_saved">图片保存在 %1$s</string>
     <string name="title_settings_default_sort_type">吧默认排序方式</string>
-    <string name="summary_default_sort_type">设置浏览吧是贴子的默认排序方式</string>
+    <string name="summary_default_sort_type">设置浏览吧时贴子的默认排序方式</string>
     <string name="toast_load_failed">加载失败</string>
     <string name="toast_deleted">已删除</string>
     <string name="button_undo">撤销</string>

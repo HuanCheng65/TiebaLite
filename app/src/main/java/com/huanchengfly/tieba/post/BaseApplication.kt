@@ -252,14 +252,12 @@ class BaseApplication : Application() {
             when (attrId) {
                 R.attr.colorPrimary -> {
                     if (ThemeUtil.THEME_CUSTOM == theme) {
-                        val customPrimaryColorStr = SharedPreferencesUtil.get(context, SharedPreferencesUtil.SP_SETTINGS)
-                                .getString(ThemeUtil.SP_CUSTOM_PRIMARY_COLOR, null)
+                        val customPrimaryColorStr = context.appPreferences.customPrimaryColor
                         return if (customPrimaryColorStr != null) {
                             Color.parseColor(customPrimaryColorStr)
                         } else getColorByAttr(context, attrId, ThemeUtil.THEME_WHITE)
                     } else if (ThemeUtil.THEME_TRANSLUCENT == theme) {
-                        val primaryColorStr = SharedPreferencesUtil.get(context, SharedPreferencesUtil.SP_SETTINGS)
-                                .getString(ThemeUtil.SP_TRANSLUCENT_PRIMARY_COLOR, null)
+                        val primaryColorStr = context.appPreferences.translucentPrimaryColor
                         return if (primaryColorStr != null) {
                             Color.parseColor(primaryColorStr)
                         } else getColorByAttr(context, attrId, ThemeUtil.THEME_WHITE)
@@ -278,8 +276,7 @@ class BaseApplication : Application() {
                         return context.getColorCompat(R.color.transparent)
                     }
                     if (ThemeUtil.THEME_CUSTOM == theme) {
-                        val primary = SharedPreferencesUtil.get(context, SharedPreferencesUtil.SP_SETTINGS)
-                                .getBoolean(ThemeUtil.SP_CUSTOM_TOOLBAR_PRIMARY_COLOR, true)
+                        val primary = context.appPreferences.customToolbarPrimaryColor
                         return if (primary) {
                             getColorByAttr(context, R.attr.colorPrimary, theme)
                         } else context.getColorCompat(R.color.white)
