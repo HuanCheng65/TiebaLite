@@ -1,7 +1,6 @@
 package com.huanchengfly.tieba.post.adapters;
 
 import android.content.Context;
-import android.content.Intent;
 import android.text.TextUtils;
 import android.text.format.DateUtils;
 import android.view.View;
@@ -9,17 +8,22 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
 import androidx.cardview.widget.CardView;
 import androidx.gridlayout.widget.GridLayout;
+
 import com.bumptech.glide.Glide;
-import com.huanchengfly.tieba.post.api.models.ForumPageBean;
-import com.huanchengfly.tieba.post.api.models.PersonalizedBean;
-import com.huanchengfly.tieba.post.activities.HotMessageListActivity;
 import com.huanchengfly.tieba.post.BaseApplication;
 import com.huanchengfly.tieba.post.R;
+import com.huanchengfly.tieba.post.api.models.ForumPageBean;
+import com.huanchengfly.tieba.post.api.models.PersonalizedBean;
 import com.huanchengfly.tieba.post.components.dialogs.DislikeDialog;
 import com.huanchengfly.tieba.post.models.PhotoViewBean;
-import com.huanchengfly.tieba.post.utils.*;
+import com.huanchengfly.tieba.post.utils.DisplayUtil;
+import com.huanchengfly.tieba.post.utils.ImageUtil;
+import com.huanchengfly.tieba.post.utils.NavigationHelper;
+import com.huanchengfly.tieba.post.utils.SharedPreferencesUtil;
+import com.huanchengfly.tieba.post.utils.Util;
 import com.huanchengfly.tieba.post.widgets.MarkedImageView;
 import com.huanchengfly.tieba.post.widgets.VideoPlayerStandard;
 import com.othershe.baseadapter.ViewHolder;
@@ -37,21 +41,13 @@ public class PersonalizedFeedAdapter extends MultiBaseAdapter<PersonalizedBean.T
     public static final int TYPE_THREAD_VIDEO = 14;
 
     private NavigationHelper navigationHelper;
-    private PersonalizedBean personalizedBean;
 
     private int refreshPosition;
     private OnRefreshListener onRefreshListener;
 
     public PersonalizedFeedAdapter(Context context) {
-        super(context, null, true);
+        super(context, null, false);
         refreshPosition = -1;
-        setLoadingView(R.layout.layout_footer_loading);
-        setLoadEndView(R.layout.layout_footer_loadend);
-        setLoadFailedView(R.layout.layout_footer_load_failed);
-        View header = Util.inflate(context, R.layout.header_feed);
-        View hotMessage = header.findViewById(R.id.hot_message);
-        hotMessage.setOnClickListener(v -> context.startActivity(new Intent(context, HotMessageListActivity.class)));
-        addHeaderView(header);
         navigationHelper = NavigationHelper.newInstance(context);
     }
 
@@ -73,11 +69,11 @@ public class PersonalizedFeedAdapter extends MultiBaseAdapter<PersonalizedBean.T
     }
 
     private int getMaxWidth() {
-        return BaseApplication.ScreenInfo.EXACT_SCREEN_WIDTH - DisplayUtil.dp2px(mContext, 40);
+        return BaseApplication.ScreenInfo.EXACT_SCREEN_WIDTH - DisplayUtil.dp2px(mContext, 56);
     }
 
     private int getGridHeight() {
-        return (BaseApplication.ScreenInfo.EXACT_SCREEN_WIDTH - DisplayUtil.dp2px(mContext, 70)) / 3;
+        return (BaseApplication.ScreenInfo.EXACT_SCREEN_WIDTH - DisplayUtil.dp2px(mContext, 56)) / 3;
     }
 
     private RelativeLayout.LayoutParams getLayoutParams(RelativeLayout.LayoutParams layoutParams) {
@@ -102,7 +98,6 @@ public class PersonalizedFeedAdapter extends MultiBaseAdapter<PersonalizedBean.T
     }
 
     public void setData(PersonalizedBean personalizedBean) {
-        this.personalizedBean = personalizedBean;
     }
 
     private void load(ForumPageBean.MediaInfoBean mediaInfoBean, ImageView imageView) {
@@ -111,6 +106,10 @@ public class PersonalizedFeedAdapter extends MultiBaseAdapter<PersonalizedBean.T
         if ("3".equals(mediaInfoBean.getType())) {
             ImageUtil.load(imageView, ImageUtil.LOAD_TYPE_NO_RADIUS, url);
         }
+    }
+
+    private String fixNumStr(String numStr) {
+        return TextUtils.isEmpty(numStr) ? "0" : numStr;
     }
 
     @Override
@@ -126,7 +125,8 @@ public class PersonalizedFeedAdapter extends MultiBaseAdapter<PersonalizedBean.T
         } else {
             refreshTip.setVisibility(View.GONE);
         }
-        viewHolder.setText(R.id.forum_item_comment_count_text, threadBean.getReplyNum());
+        viewHolder.setText(R.id.forum_item_comment_count_text, fixNumStr(threadBean.getReplyNum()));
+        viewHolder.setText(R.id.forum_item_agree_count_text, fixNumStr(threadBean.getAgreeNum()));
         viewHolder.setVisibility(R.id.dislike, View.VISIBLE);
         if (threadBean.getThreadPersonalizedBean() == null) {
             viewHolder.setVisibility(R.id.dislike, View.INVISIBLE);
@@ -172,31 +172,53 @@ public class PersonalizedFeedAdapter extends MultiBaseAdapter<PersonalizedBean.T
             map.put("tid", threadBean.getTid());
             navigationHelper.navigationByData(NavigationHelper.ACTION_THREAD, map);
         });
-        if ("1".equals(threadBean.isNoTitle())) {
-            viewHolder.setVisibility(R.id.forum_item_title_holder, View.GONE);
-        } else {
+        String title = "1".equals(threadBean.isNoTitle()) ? null : threadBean.getTitle();
+        String text = (
+                threadBean.getAbstractBeans() != null &&
+                        threadBean.getAbstractBeans().size() > 0 &&
+                        "0".equals(threadBean.getAbstractBeans().get(0).getType()) &&
+                        !TextUtils.isEmpty(threadBean.getAbstractBeans().get(0).getText())
+        ) ? threadBean.getAbstractBeans().get(0).getText() : null;
+        if (title != null && text != null) {
             viewHolder.setVisibility(R.id.forum_item_title_holder, View.VISIBLE);
-            viewHolder.setText(R.id.forum_item_title, threadBean.getTitle());
-        }
-        TextView textView = viewHolder.getView(R.id.forum_item_content_text);
-        if (threadBean.getAbstractBeans().size() > 0 && "0".equals(threadBean.getAbstractBeans().get(0).getType())) {
-            if (TextUtils.isEmpty(threadBean.getAbstractBeans().get(0).getText())) {
-                textView.setText(null);
-                textView.setVisibility(View.GONE);
-            } else {
-                textView.setVisibility(View.VISIBLE);
-                textView.setText(threadBean.getAbstractBeans().get(0).getText());
-            }
+            viewHolder.setText(R.id.forum_item_title, title);
+            viewHolder.setVisibility(R.id.forum_item_content_text, View.VISIBLE);
+            viewHolder.setText(R.id.forum_item_content_text, text);
+        } else if (title == null && text != null) {
+            viewHolder.setVisibility(R.id.forum_item_title_holder, View.VISIBLE);
+            viewHolder.setText(R.id.forum_item_title, text);
+            viewHolder.setVisibility(R.id.forum_item_content_text, View.GONE);
+            viewHolder.setText(R.id.forum_item_content_text, null);
+        } else if (title != null) {
+            viewHolder.setVisibility(R.id.forum_item_title_holder, View.VISIBLE);
+            viewHolder.setText(R.id.forum_item_title, title);
+            viewHolder.setVisibility(R.id.forum_item_content_text, View.GONE);
+            viewHolder.setText(R.id.forum_item_content_text, null);
         } else {
-            textView.setText(null);
-            textView.setVisibility(View.GONE);
+            viewHolder.setVisibility(R.id.forum_item_title_holder, View.GONE);
+            viewHolder.setText(R.id.forum_item_title, null);
+            viewHolder.setVisibility(R.id.forum_item_content_text, View.GONE);
+            viewHolder.setText(R.id.forum_item_content_text, null);
         }
         PersonalizedBean.AuthorBean authorBean = threadBean.getAuthor();
         if (authorBean != null) {
             viewHolder.setOnClickListener(R.id.forum_item_user_avatar, v -> NavigationHelper.toUserSpaceWithAnim(mContext, authorBean.getId(), authorBean.getPortrait(), v));
             viewHolder.setText(R.id.forum_item_user_name, authorBean.getNameShow());
-            viewHolder.setText(R.id.forum_item_user_time, String.valueOf(DateUtils.getRelativeTimeSpanString(Long.valueOf(threadBean.getLastTimeInt()) * 1000L)));
             ImageUtil.load(viewHolder.getView(R.id.forum_item_user_avatar), ImageUtil.LOAD_TYPE_AVATAR, authorBean.getPortrait());
+        }
+        TextView timeTextView = viewHolder.getView(R.id.forum_item_user_time);
+        String relativeTime =
+                DateUtils.getRelativeTimeSpanString(Long.parseLong(threadBean.getLastTimeInt()) * 1000L).toString();
+        if (!TextUtils.isEmpty(threadBean.getForumName())) {
+            timeTextView.setText(
+                    mContext.getString(
+                            R.string.template_two_string,
+                            relativeTime,
+                            mContext.getString(R.string.tip_forum_name, threadBean.getForumName())
+                    )
+            );
+        } else {
+            timeTextView.setText(relativeTime);
         }
         switch (viewType) {
             case TYPE_THREAD_SINGLE_PIC:
@@ -205,7 +227,11 @@ public class PersonalizedFeedAdapter extends MultiBaseAdapter<PersonalizedBean.T
                     imageView.setLayoutParams(getLayoutParams((RelativeLayout.LayoutParams) imageView.getLayoutParams()));
                     setListenerForImageView(threadBean.getMedia(), imageView, 0);
                     ForumPageBean.MediaInfoBean mediaInfoBean = threadBean.getMedia().get(0);
-                    ImageUtil.load(imageView, ImageUtil.LOAD_TYPE_SMALL_PIC, ImageUtil.getUrl(mContext, true, mediaInfoBean.getOriginPic(), mediaInfoBean.getSrcPic()));
+                    ImageUtil.load(
+                            imageView,
+                            ImageUtil.LOAD_TYPE_SMALL_PIC,
+                            ImageUtil.getUrl(mContext, true, mediaInfoBean.getOriginPic(), mediaInfoBean.getSrcPic())
+                    );
                 }
                 break;
             case TYPE_THREAD_MULTI_PIC:
@@ -261,10 +287,6 @@ public class PersonalizedFeedAdapter extends MultiBaseAdapter<PersonalizedBean.T
                 ImageUtil.load(videoPlayerStandard.posterImageView, ImageUtil.LOAD_TYPE_SMALL_PIC, threadBean.getVideoInfo().getThumbnailUrl(), true);
                 break;
         }
-        if (!TextUtils.isEmpty(threadBean.getForumName()))
-            viewHolder.setText(R.id.forum_item_forum_name, mContext.getString(R.string.tip_forum_name, threadBean.getForumName()));
-        else
-            viewHolder.setText(R.id.forum_item_forum_name, "");
     }
 
     @Override

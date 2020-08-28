@@ -166,4 +166,5 @@
     <color name="icon_blue">#FF3373EE</color>
     <color name="icon_purple">#FF8E6DCA</color>
     <color name="black_trans">#50000000</color>
+    <color name="color_tab_layout_background">#EDF2F6</color>
 </resources>

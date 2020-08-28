@@ -24,7 +24,7 @@ public class LoadingDialog extends AlertDialog {
         loadingTipView = contentView.findViewById(R.id.dialog_loading_tip);
         setCancelable(false);
         setView(contentView);
-        setTipText(R.string.tip_loading);
+        setTipText(R.string.text_loading);
     }
 
     public void setTipText(@StringRes int resId) {

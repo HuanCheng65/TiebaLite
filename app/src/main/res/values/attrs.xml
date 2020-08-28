@@ -36,12 +36,17 @@
         <attr name="tabTextColor" format="color" />
         <attr name="tabIconTint" format="color" />
         <attr name="tabSelectedTextColor" format="color" />
+        <attr name="tabIndicatorColor" />
     </declare-styleable>
 
     <declare-styleable name="TintView">
         <attr name="backgroundTint" format="color" />
         <attr name="tint" format="color" />
         <attr name="tintList" format="color" />
+    </declare-styleable>
+
+    <declare-styleable name="TintRecyclerView">
+        <attr name="backgroundTint" />
     </declare-styleable>
 
     <declare-styleable name="TintImageView">
@@ -206,7 +211,7 @@
             <enum name="scroll" value="3" />
         </attr>
 
-        <attr name="collapseParallaxMultiplier" />
+        <attr name="collapseParallaxMultiplier" format="float" />
 
         <attr name="collapsedGravity">
             <flag name="top" value="0x30" />

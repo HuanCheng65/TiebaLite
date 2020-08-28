@@ -7,6 +7,8 @@
     android:layout_height="match_parent"
     tools:context=".fragments.ForumFragment">
     <androidx.recyclerview.widget.RecyclerView
+        android:padding="8dp"
+        android:clipToPadding="false"
         android:id="@+id/recycler_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />

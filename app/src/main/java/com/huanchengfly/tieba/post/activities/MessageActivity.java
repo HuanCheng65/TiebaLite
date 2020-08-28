@@ -32,7 +32,7 @@ public class MessageActivity extends BaseActivity {
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
-            actionBar.setTitle(R.string.title_message);
+            actionBar.setTitle(R.string.title_my_message);
         }
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()

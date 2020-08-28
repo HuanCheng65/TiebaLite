@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.huanchengfly.tieba.post.widgets.theme.TintRelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="?attr/selectableItemBackground"
+    android:foreground="?attr/selectableItemBackground"
+    app:backgroundTint="@color/default_color_card"
     android:paddingStart="@dimen/padding_start_default"
     android:paddingEnd="@dimen/padding_end_default"
     android:padding="12dp">
@@ -72,4 +73,4 @@
                 tools:ignore="SpUsage" />
         </RelativeLayout>
     </RelativeLayout>
-</RelativeLayout>
+</com.huanchengfly.tieba.post.widgets.theme.TintRelativeLayout>

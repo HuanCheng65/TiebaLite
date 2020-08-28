@@ -35,13 +35,25 @@
         <item name="tabSelectedTextColor">@color/default_color_toolbar_item_active</item>
         <item name="tabBackground">@color/transparent</item>
         <item name="tabIndicator">@drawable/drawable_toolbar_tab_indicator</item>
-        <item name="tabIndicatorColor">?attr/colorToolbarItemActive</item>
         <item name="tabUnboundedRipple">false</item>
         <item name="tabRippleColor">?attr/colorControlHighlight</item>
     </style>
 
     <style name="Widget.TabLayout.Toolbar.Fixed" parent="Widget.TabLayout.Toolbar">
+        <item name="paddingStart">6dp</item>
+        <item name="paddingEnd">6dp</item>
+        <item name="tabPaddingStart">6dp</item>
+        <item name="tabPaddingEnd">6dp</item>
+        <item name="tabUnboundedRipple">false</item>
+        <item name="tabRippleColor">@color/transparent</item>
         <item name="tabMode">fixed</item>
+        <item name="tabTextColor">@color/default_color_toolbar_item_secondary</item>
+        <item name="tabSelectedTextColor">@color/default_color_toolbar_item</item>
+        <item name="tabBackground">@color/transparent</item>
+        <item name="tabIndicatorFullWidth">true</item>
+        <item name="tabIndicatorGravity">center</item>
+        <item name="tabIndicator">@drawable/drawable_tab_indicator_new</item>
+        <item name="tabIndicatorColor">@color/default_color_toolbar</item>
     </style>
 
     <style name="Widget" />
@@ -203,6 +215,10 @@
         <item name="android:textColorPrimary">?colorToolbarItem</item>
         <item name="actionMenuTextColor">?colorToolbarItem</item>
         <item name="android:textColorSecondary">?colorToolbarItem</item>
+        <item name="toolbarBackgroundTint">@color/transparent</item>
+        <item name="itemTint">@color/default_color_toolbar_item</item>
+        <item name="secondaryItemTint">@color/default_color_toolbar_item_secondary</item>
+        <item name="activeItemTint">@color/default_color_toolbar_item_active</item>
     </style>
 
     <style name="Toolbar.Dark" parent="Toolbar">
@@ -213,6 +229,10 @@
         <item name="android:colorBackground">@color/theme_color_background_dark</item>
         <item name="android:colorButtonNormal">@color/theme_color_toolbar_item_dark</item>
         <item name="android:colorControlNormal">@color/theme_color_toolbar_item_dark</item>
+        <item name="toolbarBackgroundTint">@color/transparent</item>
+        <item name="itemTint">@color/default_color_toolbar_item</item>
+        <item name="secondaryItemTint">@color/default_color_toolbar_item_secondary</item>
+        <item name="activeItemTint">@color/default_color_toolbar_item_active</item>
     </style>
 
     <style name="Toolbar.Dark.Grey" parent="Toolbar.Dark">
@@ -223,7 +243,7 @@
         <item name="android:colorBackground">@color/theme_color_background_grey_dark</item>
     </style>
 
-    <style name="Toolbar.Dark.Amoled" parent="Toolbar">
+    <style name="Toolbar.Dark.Amoled" parent="Toolbar.Dark">
         <item name="android:popupTheme">@style/OverflowMenu.Dark.Amoled</item>
         <item name="popupTheme">@style/OverflowMenu.Dark.Amoled</item>
         <item name="android:actionOverflowMenuStyle">@style/OverflowMenu.Dark.Amoled</item>

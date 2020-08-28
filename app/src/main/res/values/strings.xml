@@ -33,7 +33,7 @@
     <string name="title_pure_read">沉浸阅读</string>
     <string name="content_avatar">头像</string>
     <string name="tip_login">请先登录</string>
-    <string name="tip_loading">正在加载…</string>
+    <string name="text_loading">正在加载…</string>
     <string name="title_sort">倒序浏览</string>
     <string name="title_see_lz">只看楼主</string>
     <string name="toast_param_error">参数错误</string>
@@ -48,7 +48,7 @@
     <string name="title_reply">回复</string>
     <string name="tip_reply">说点什么</string>
     <string name="title_send">发送</string>
-    <string name="tip_load_end">没有更多了</string>
+    <string name="tip_load_end">最后的斯大林格勒防线</string>
     <string name="title_floor">查看回复</string>
     <string name="tip_floor_more"><![CDATA[查看更多回复 >]]></string>
     <string name="tip_floor_btn">查看回复</string>
@@ -133,7 +133,8 @@
     <string name="tab_forum_1">看贴</string>
     <string name="tab_forum_good">精华</string>
     <string name="tip_good">精</string>
-    <string name="title_message">我的消息</string>
+    <string name="title_my_message">我的消息</string>
+    <string name="title_messages">消息</string>
     <string name="button_no">否</string>
     <string name="button_yes">是</string>
     <string name="title_agreed">已点赞</string>
@@ -360,4 +361,10 @@
     <string name="title_emotion_emoji">符号</string>
     <string name="message_update_store_floor">是否更新收藏楼层</string>
     <string name="tip_thread_store_update">更新到 %1$s 楼</string>
+    <string name="title_switch_list_single">切换至单列</string>
+    <string name="text_load_success">加载成功</string>
+    <string name="text_load_failed">加载失败</string>
+    <string name="text_pull_up_to_load">上拉加载更多</string>
+    <string name="text_release_to_load">释放开始加载</string>
+    <string name="template_two_string">%1$s·%2$s</string>
 </resources>

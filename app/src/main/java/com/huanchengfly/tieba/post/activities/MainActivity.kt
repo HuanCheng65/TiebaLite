@@ -108,8 +108,9 @@ open class MainActivity : BaseActivity(), BottomNavigationView.OnNavigationItemS
         }
     }
 
-    fun openSearch() {
-        mSearchView.open(null)
+    @JvmOverloads
+    fun openSearch(item: MenuItem? = null) {
+        mSearchView.open(item)
     }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {

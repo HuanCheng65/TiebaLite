@@ -1,54 +1,69 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
-    <RelativeLayout
+
+    <com.huanchengfly.tieba.post.widgets.theme.TintMaterialCardView
         android:id="@+id/forum_item"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="?attr/selectableItemBackground"
-        android:padding="16dp">
-
-        <include
-            android:id="@+id/forum_item_user"
-            layout="@layout/layout_forum_thread_user" />
+        app:materialCardBackgroundTint="@color/default_color_card"
+        app:cardCornerRadius="8dp"
+        app:contentPadding="16dp"
+        app:cardElevation="0dp">
 
         <RelativeLayout
-            android:id="@+id/forum_item_content"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/forum_item_user"
-            android:layout_marginTop="8dp">
-            <include
-                android:id="@+id/forum_item_title_holder"
-                layout="@layout/layout_forum_thread_title" />
-            <include
-                android:id="@+id/forum_item_content_text_holder"
-                layout="@layout/layout_forum_thread_content" />
-            <com.huanchengfly.tieba.post.widgets.MarkedImageView
-                android:layout_marginTop="4dp"
-                android:layout_marginBottom="4dp"
-                android:scaleType="centerCrop"
-                android:layout_centerHorizontal="true"
-                android:id="@+id/forum_item_content_pic"
-                android:layout_below="@id/forum_item_content_text_holder"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                tools:ignore="ContentDescription" />
-        </RelativeLayout>
+            android:layout_height="wrap_content">
 
-        <include
-            android:layout_marginTop="8dp"
-            android:layout_below="@id/forum_item_content"
-            android:layout_height="wrap_content"
-            android:layout_width="match_parent"
-            layout="@layout/layout_reply_num" />
-    </RelativeLayout>
+            <include
+                android:id="@+id/forum_item_user"
+                layout="@layout/layout_forum_thread_user" />
+
+            <RelativeLayout
+                android:id="@+id/forum_item_content"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/forum_item_user"
+                android:layout_marginTop="8dp">
+
+                <include
+                    android:id="@+id/forum_item_title_holder"
+                    layout="@layout/layout_forum_thread_title" />
+
+                <com.huanchengfly.tieba.post.widgets.MarkedImageView
+                    android:scaleType="centerCrop"
+                    android:layout_centerHorizontal="true"
+                    android:id="@+id/forum_item_content_pic"
+                    android:layout_below="@id/forum_item_title_holder"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    tools:ignore="ContentDescription" />
+
+                <include
+                    android:layout_below="@id/forum_item_content_pic"
+                    android:layout_height="wrap_content"
+                    android:layout_width="match_parent"
+                    android:id="@+id/forum_item_content_text_holder"
+                    layout="@layout/layout_forum_thread_content" />
+            </RelativeLayout>
+
+            <include
+                android:layout_marginTop="8dp"
+                android:layout_below="@id/forum_item_content"
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                layout="@layout/layout_forum_footer" />
+        </RelativeLayout>
+    </com.huanchengfly.tieba.post.widgets.theme.TintMaterialCardView>
+
     <include
+        layout="@layout/layout_refresh_tip"
         android:id="@+id/feed_refresh_tip"
         android:layout_below="@id/forum_item"
-        layout="@layout/layout_refresh_tip"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp" />
 </RelativeLayout>

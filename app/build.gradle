@@ -93,7 +93,6 @@ android {
         targetCompatibility JavaVersion.VERSION_1_8
         sourceCompatibility JavaVersion.VERSION_1_8
     }
-    buildToolsVersion '28.0.3'
 }
 
 dependencies {
@@ -113,7 +112,7 @@ dependencies {
 
     //AndroidX
     implementation 'androidx.appcompat:appcompat:1.2.0'
-    implementation 'androidx.constraintlayout:constraintlayout:2.0.0-rc1'
+    implementation 'androidx.constraintlayout:constraintlayout:2.0.0'
     implementation 'androidx.preference:preference:1.1.1'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     implementation 'androidx.gridlayout:gridlayout:1.0.0'
@@ -151,6 +150,9 @@ dependencies {
     implementation 'cn.jzvd:jiaozivideoplayer:7.2.3'
     implementation 'com.jrummyapps:colorpicker:2.1.7'
     implementation 'com.scwang.wave:MultiWaveHeader:1.0.0-andx'
+
+    implementation 'com.scwang.smart:refresh-layout-kernel:2.0.1'
+    implementation 'com.scwang.smart:refresh-header-material:2.0.1'
 
     implementation 'com.zhihu.android:matisse:0.5.3-beta3'
     implementation 'com.yanzhenjie:permission:2.0.3'

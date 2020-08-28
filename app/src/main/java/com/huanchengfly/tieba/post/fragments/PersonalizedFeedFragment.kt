@@ -3,41 +3,55 @@ package com.huanchengfly.tieba.post.fragments
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.os.Bundle
+import android.view.MenuItem
 import android.view.View
 import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.widget.Toolbar
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.OnChildAttachStateChangeListener
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import butterknife.BindView
 import cn.jzvd.Jzvd
 import com.bumptech.glide.Glide
+import com.google.android.material.appbar.AppBarLayout
+import com.huanchengfly.tieba.post.R
+import com.huanchengfly.tieba.post.adapters.PersonalizedFeedAdapter
 import com.huanchengfly.tieba.post.api.TiebaApi
 import com.huanchengfly.tieba.post.api.models.PersonalizedBean
 import com.huanchengfly.tieba.post.api.retrofit.exception.TiebaException
-import com.huanchengfly.tieba.post.R
-import com.huanchengfly.tieba.post.adapters.PersonalizedFeedAdapter
 import com.huanchengfly.tieba.post.components.MyLinearLayoutManager
 import com.huanchengfly.tieba.post.components.dividers.FeedDivider
+import com.huanchengfly.tieba.post.dpToPx
 import com.huanchengfly.tieba.post.interfaces.Refreshable
-import com.huanchengfly.tieba.post.utils.AnimUtil
-import com.huanchengfly.tieba.post.utils.BlockUtil
-import com.huanchengfly.tieba.post.utils.ThemeUtil
-import com.huanchengfly.tieba.post.utils.Util
+import com.huanchengfly.tieba.post.utils.*
 import com.huanchengfly.tieba.post.widgets.ShadowLayout
 import com.huanchengfly.tieba.post.widgets.VideoPlayerStandard
+import com.scwang.smart.refresh.header.MaterialHeader
+import com.scwang.smart.refresh.layout.SmartRefreshLayout
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import java.util.*
 
-class PersonalizedFeedFragment : BaseFragment(), PersonalizedFeedAdapter.OnRefreshListener, Refreshable {
+class PersonalizedFeedFragment : BaseFragment(), PersonalizedFeedAdapter.OnRefreshListener, Refreshable, Toolbar.OnMenuItemClickListener {
     private var adapter: PersonalizedFeedAdapter? = null
     private var personalizedBean: PersonalizedBean? = null
     private var page = 1
 
+    @BindView(R.id.toolbar)
+    lateinit var toolbar: Toolbar
+
+    @BindView(R.id.appbar)
+    lateinit var appBar: AppBarLayout
+
+    @BindView(R.id.title)
+    lateinit var titleTextView: TextView
+
     @BindView(R.id.refresh)
-    lateinit var swipeRefreshLayout: SwipeRefreshLayout
+    lateinit var refreshLayout: SmartRefreshLayout
+
+    @BindView(R.id.refresh_header)
+    lateinit var materialHeader: MaterialHeader
 
     @BindView(R.id.recycler_view)
     lateinit var recyclerView: RecyclerView
@@ -48,18 +62,25 @@ class PersonalizedFeedFragment : BaseFragment(), PersonalizedFeedAdapter.OnRefre
     @BindView(R.id.refresh_tip_text)
     lateinit var refreshTipText: TextView
 
-    public override fun getLayoutId(): Int {
-        return R.layout.fragment_personalized_feed
-    }
+    override fun hasOwnAppbar(): Boolean = true
+
+    public override fun getLayoutId(): Int = R.layout.fragment_personalized_feed
 
     override fun onViewCreated(contentView: View, savedInstanceState: Bundle?) {
         super.onViewCreated(contentView, savedInstanceState)
-        swipeRefreshLayout.apply {
-            ThemeUtil.setThemeForSwipeRefreshLayout(this)
-            setOnRefreshListener { onRefresh() }
+        AnimUtil.bindTextSizeAnim(appBar, titleTextView, 32, 18, 56.dpToPx())
+        toolbar.setOnMenuItemClickListener(this)
+        ThemeUtil.setThemeForMaterialHeader(materialHeader)
+        refreshLayout.apply {
+            ThemeUtil.setThemeForSmartRefreshLayout(this)
+            setOnRefreshListener {
+                refresh()
+            }
+            setOnLoadMoreListener {
+                loadMore()
+            }
         }
         adapter = PersonalizedFeedAdapter(attachContext).apply {
-            setOnLoadMoreListener { isReload: Boolean -> loadMore(isReload) }
             onRefreshListener = this@PersonalizedFeedFragment
         }
         recyclerView.apply {
@@ -100,10 +121,9 @@ class PersonalizedFeedFragment : BaseFragment(), PersonalizedFeedAdapter.OnRefre
 
     fun refresh() {
         page = 1
-        swipeRefreshLayout.isRefreshing = true
         TiebaApi.getInstance().personalized(1, page).enqueue(object : Callback<PersonalizedBean> {
             override fun onFailure(call: Call<PersonalizedBean>, t: Throwable) {
-                swipeRefreshLayout.isRefreshing = false
+                refreshLayout.finishRefresh(false)
                 if (t is TiebaException) {
                     Toast.makeText(attachContext, "${t.message}", Toast.LENGTH_SHORT).show()
                 } else {
@@ -129,7 +149,6 @@ class PersonalizedFeedFragment : BaseFragment(), PersonalizedFeedAdapter.OnRefre
                     }
                     setNewData(if (threadBeans.addAll(0, newThreadBeans)) threadBeans else newThreadBeans)
                 }
-                swipeRefreshLayout.isRefreshing = false
                 refreshTipText.text = attachContext.getString(R.string.toast_feed_refresh, newThreadBeans.size)
                 AnimUtil.alphaIn(refreshTip)
                         .setListener(object : AnimatorListenerAdapter() {
@@ -145,18 +164,15 @@ class PersonalizedFeedFragment : BaseFragment(), PersonalizedFeedAdapter.OnRefre
                                 }, 1500)
                             }
                         }).start()
+                refreshLayout.finishRefresh(true)
             }
         })
     }
 
-    fun loadMore(isReload: Boolean) {
-        if (!isReload) {
-            page += 1
-        }
-        TiebaApi.getInstance().personalized(2, page).enqueue(object : Callback<PersonalizedBean> {
+    private fun loadMore() {
+        TiebaApi.getInstance().personalized(2, page + 1).enqueue(object : Callback<PersonalizedBean> {
             override fun onFailure(call: Call<PersonalizedBean>, t: Throwable) {
-                swipeRefreshLayout.isRefreshing = false
-                adapter!!.loadFailed()
+                refreshLayout.finishLoadMore(false)
             }
 
             override fun onResponse(call: Call<PersonalizedBean>, response: Response<PersonalizedBean>) {
@@ -172,27 +188,28 @@ class PersonalizedFeedFragment : BaseFragment(), PersonalizedFeedAdapter.OnRefre
                     setData(personalizedBean)
                     setLoadMoreData(newThreadBeans)
                 }
-                swipeRefreshLayout.isRefreshing = false
+                page += 1
+                refreshLayout.finishLoadMore(true)
             }
         })
     }
 
     override fun onFragmentVisibleChange(isVisible: Boolean) {
         if (isVisible && personalizedBean == null) {
-            refresh()
+            refreshLayout.autoRefresh()
         }
     }
 
     override fun onFragmentFirstVisible() {
         if (personalizedBean == null) {
-            refresh()
+            refreshLayout.autoRefresh()
         }
     }
 
     override fun onRefresh() {
         if (isFragmentVisible) {
-            recyclerView.smoothScrollToPosition(0)
-            refresh()
+            recyclerView.scrollToPosition(0)
+            refreshLayout.autoRefresh()
         } else {
             personalizedBean = null
         }
@@ -200,5 +217,18 @@ class PersonalizedFeedFragment : BaseFragment(), PersonalizedFeedAdapter.OnRefre
 
     override fun onBackPressed(): Boolean {
         return Jzvd.backPress()
+    }
+
+    override fun onMenuItemClick(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.menu_search -> {
+                true
+            }
+            R.id.menu_sign -> {
+                TiebaUtil.initAutoSign(attachContext)
+                true
+            }
+            else -> false
+        }
     }
 }

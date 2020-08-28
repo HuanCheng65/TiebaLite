@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
+<com.huanchengfly.tieba.post.widgets.theme.TintFrameLayout app:backgroundTint="@color/default_color_window_background"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -7,6 +7,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".activities.ForumActivity">
+
     <com.huanchengfly.tieba.post.widgets.theme.TintCoordinatorLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -207,4 +208,4 @@
     <include
         android:id="@+id/loading_view"
         layout="@layout/layout_loading_view" />
-</FrameLayout>
+</com.huanchengfly.tieba.post.widgets.theme.TintFrameLayout>

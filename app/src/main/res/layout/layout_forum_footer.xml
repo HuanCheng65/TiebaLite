@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <LinearLayout
+        android:layout_marginTop="8dp"
+        android:orientation="horizontal"
+        android:layout_centerVertical="true"
+        android:layout_alignParentStart="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:id="@+id/btn_agree"
+            android:orientation="horizontal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <com.huanchengfly.tieba.post.widgets.theme.TintImageView
+                android:layout_gravity="center_vertical"
+                app:tint="@color/default_color_text_secondary"
+                app:srcCompat="@drawable/ic_outline_like"
+                android:layout_width="24dp"
+                android:layout_height="24dp" />
+
+            <com.huanchengfly.tieba.post.widgets.theme.TintTextView
+                android:layout_gravity="center_vertical"
+                tools:text="0"
+                android:layout_marginStart="4dp"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                app:tint="@color/default_color_text_secondary"
+                android:id="@+id/forum_item_agree_count_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/btn_reply"
+            android:layout_marginStart="16dp"
+            android:orientation="horizontal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <com.huanchengfly.tieba.post.widgets.theme.TintImageView
+                android:layout_gravity="center_vertical"
+                app:tint="@color/default_color_text_secondary"
+                app:srcCompat="@drawable/ic_outline_article"
+                android:layout_width="24dp"
+                android:layout_height="24dp" />
+
+            <com.huanchengfly.tieba.post.widgets.theme.TintTextView
+                android:layout_gravity="center_vertical"
+                tools:text="0"
+                android:layout_marginStart="4dp"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                app:tint="@color/default_color_text_secondary"
+                android:id="@+id/forum_item_comment_count_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+
+        <View
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="0dp" />
+
+        <com.huanchengfly.tieba.post.widgets.theme.TintImageView
+            android:id="@+id/dislike"
+            android:visibility="gone"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:layout_gravity="center_vertical"
+            app:srcCompat="@drawable/ic_more_horiz"
+            app:tint="@color/default_color_text_secondary"
+            android:layout_width="24dp"
+            android:layout_height="24dp" />
+    </LinearLayout>
+</RelativeLayout>

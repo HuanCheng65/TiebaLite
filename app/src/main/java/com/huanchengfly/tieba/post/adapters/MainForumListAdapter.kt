@@ -42,6 +42,8 @@ class MainForumListAdapter(
                 viewHolder.itemView.setPaddingRelative(DP_16, DP_12, DP_12, DP_12)
                 if (position == getCount() - 2) {
                     viewHolder.itemView.setBackgroundResource(R.drawable.bg_bottom_left_radius_8dp)
+                } else if (position == getCount() - 1) {
+                    viewHolder.itemView.setBackgroundResource(R.drawable.bg_bottom_radius_8dp)
                 }
             }
             //双列右

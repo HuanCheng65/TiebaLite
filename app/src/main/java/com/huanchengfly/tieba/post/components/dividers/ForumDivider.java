@@ -2,6 +2,7 @@ package com.huanchengfly.tieba.post.components.dividers;
 
 import android.content.Context;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.view.View;
@@ -11,10 +12,10 @@ import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.huanchengfly.tieba.post.ui.theme.interfaces.Tintable;
-import com.huanchengfly.tieba.post.ui.theme.utils.ThemeUtils;
 import com.huanchengfly.tieba.post.R;
 import com.huanchengfly.tieba.post.adapters.ForumAdapter;
+import com.huanchengfly.tieba.post.ui.theme.interfaces.Tintable;
+import com.huanchengfly.tieba.post.ui.theme.utils.ThemeUtils;
 import com.huanchengfly.tieba.post.utils.DisplayUtil;
 
 public class ForumDivider extends RecyclerView.ItemDecoration implements Tintable {
@@ -112,6 +113,6 @@ public class ForumDivider extends RecyclerView.ItemDecoration implements Tintabl
 
     @Override
     public void tint() {
-        mDivider = ThemeUtils.tintDrawable(mDivider, ThemeUtils.getColorByAttr(mContext, R.attr.colorDivider));
+        mDivider = ThemeUtils.tintDrawable(mDivider, Color.TRANSPARENT);
     }
 }

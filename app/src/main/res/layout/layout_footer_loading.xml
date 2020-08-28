@@ -24,7 +24,7 @@
             android:layout_toEndOf="@id/footer_progress"
             android:textSize="14sp"
             android:id="@+id/footer_tip"
-            android:text="@string/tip_loading"
+            android:text="@string/text_loading"
             android:gravity="center"
             android:singleLine="true"
             android:layout_width="wrap_content"

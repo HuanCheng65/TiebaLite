@@ -2,6 +2,7 @@ package com.huanchengfly.tieba.post.components.dividers;
 
 import android.content.Context;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.view.View;
@@ -10,10 +11,10 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.huanchengfly.tieba.post.ui.theme.interfaces.Tintable;
-import com.huanchengfly.tieba.post.ui.theme.utils.ThemeUtils;
 import com.huanchengfly.tieba.post.R;
 import com.huanchengfly.tieba.post.adapters.PersonalizedFeedAdapter;
+import com.huanchengfly.tieba.post.ui.theme.interfaces.Tintable;
+import com.huanchengfly.tieba.post.ui.theme.utils.ThemeUtils;
 import com.huanchengfly.tieba.post.utils.DisplayUtil;
 
 public class FeedDivider extends RecyclerView.ItemDecoration implements Tintable {
@@ -35,15 +36,8 @@ public class FeedDivider extends RecyclerView.ItemDecoration implements Tintable
     @Override
     public void getItemOffsets(@NonNull Rect outRect, @NonNull View view, @NonNull RecyclerView parent, @NonNull RecyclerView.State state) {
         super.getItemOffsets(outRect, view, parent, state);
-        if (parent.getAdapter() != null && parent.getChildLayoutPosition(view) + 1 == parent.getAdapter().getItemCount()) {
-            outRect.set(0, 0, 0, 0);
-        } else if (mOrientation == LinearLayoutManager.VERTICAL) {
-            int adapterPosition = parent.getChildAdapterPosition(view);
-            PersonalizedFeedAdapter adapter = (PersonalizedFeedAdapter) parent.getAdapter();
-            if (adapter == null) {
-                return;
-            }
-            outRect.set(0, 0, 0, adapter.getRefreshPosition() == -1 || (adapter.getRefreshPosition() + 1) != adapterPosition ? mCommonDividerHeight : 0);
+        if (mOrientation == LinearLayoutManager.VERTICAL) {
+            outRect.set(0, 0, 0, mCommonDividerHeight);
         }
     }
 
@@ -79,6 +73,6 @@ public class FeedDivider extends RecyclerView.ItemDecoration implements Tintable
 
     @Override
     public void tint() {
-        mDivider = ThemeUtils.tintDrawable(mDivider, ThemeUtils.getColorByAttr(mContext, R.attr.colorDivider));
+        mDivider = ThemeUtils.tintDrawable(mDivider, Color.TRANSPARENT);
     }
 }

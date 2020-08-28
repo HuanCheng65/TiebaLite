@@ -4,11 +4,12 @@ import android.app.Activity;
 import android.content.Context;
 import android.text.format.DateUtils;
 import android.widget.TextView;
+
 import androidx.annotation.NonNull;
+
 import com.bumptech.glide.request.RequestOptions;
-import com.huanchengfly.tieba.post.api.models.MessageListBean;
 import com.huanchengfly.tieba.post.R;
-import com.huanchengfly.tieba.post.fragments.BaseFragment;
+import com.huanchengfly.tieba.post.api.models.MessageListBean;
 import com.huanchengfly.tieba.post.fragments.MessageFragment;
 import com.huanchengfly.tieba.post.utils.EmotionUtil;
 import com.huanchengfly.tieba.post.utils.ImageUtil;
@@ -27,17 +28,13 @@ public class MessageListAdapter extends CommonBaseAdapter<MessageListBean.Messag
     private RequestOptions avatarRequestOptions;
 
     public MessageListAdapter(@NonNull Context context, int type) {
-        super(context, null, true);
+        super(context, null, false);
         this.type = type;
         this.navigationHelper = NavigationHelper.newInstance(context);
         this.avatarRequestOptions = new RequestOptions()
                 .placeholder(R.drawable.bg_placeholder_circle)
                 .circleCrop()
                 .skipMemoryCache(true);
-    }
-
-    public MessageListAdapter(@NonNull BaseFragment fragment, int type) {
-        this(fragment.getAttachContext(), type);
     }
 
     public void setData(MessageListBean messageListBean) {

@@ -40,16 +40,4 @@
         app:tint="@color/default_color_text_secondary"
         tools:text="刚刚" />
 
-    <com.huanchengfly.tieba.post.widgets.theme.TintImageView
-        android:id="@+id/dislike"
-        android:visibility="gone"
-        android:background="?attr/selectableItemBackgroundBorderless"
-        android:layout_alignParentEnd="true"
-        android:layout_centerVertical="true"
-        app:srcCompat="@drawable/ic_round_close"
-        app:tint="@color/default_color_text_secondary"
-        android:padding="4dp"
-        android:layout_width="24dp"
-        android:layout_height="24dp" />
-
 </RelativeLayout>

@@ -127,13 +127,13 @@ class BaseApplication : Application() {
                                 updatePreviewView(activity, previewView, PreviewInfo()
                                         .setIconRes(R.drawable.ic_round_forum)
                                         .setTitle(activity.getString(R.string.title_forum, getForumName(uri)))
-                                        .setSubtitle(activity.getString(R.string.tip_loading))
+                                        .setSubtitle(activity.getString(R.string.text_loading))
                                         .setUrl(url))
                             } else if (isThreadUrl(uri)) {
                                 updatePreviewView(activity, previewView, PreviewInfo()
                                         .setIconRes(R.drawable.ic_round_mode_comment)
                                         .setTitle(url)
-                                        .setSubtitle(activity.getString(R.string.tip_loading))
+                                        .setSubtitle(activity.getString(R.string.text_loading))
                                         .setUrl(url))
                             }
                             getPreviewInfo(activity, url, object : CommonCallback<PreviewInfo> {

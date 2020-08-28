@@ -34,6 +34,8 @@ import com.huanchengfly.tieba.post.R;
 import com.huanchengfly.tieba.post.activities.BaseActivity;
 import com.huanchengfly.tieba.post.ui.theme.utils.ThemeUtils;
 import com.huanchengfly.tieba.post.widgets.theme.TintSwipeRefreshLayout;
+import com.scwang.smart.refresh.header.MaterialHeader;
+import com.scwang.smart.refresh.layout.SmartRefreshLayout;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -165,6 +167,23 @@ public class ThemeUtil {
         if (resources != null) {
             swipeRefreshLayout.setProgressBackgroundColorSchemeColor(resources.getColor(R.color.color_swipe_refresh_bg));
             swipeRefreshLayout.setColorSchemeColors(ThemeUtils.getColorByAttr(context, R.attr.colorAccent));
+        }
+    }
+
+    public static void setThemeForSmartRefreshLayout(SmartRefreshLayout smartRefreshLayout) {
+        Context context = smartRefreshLayout.getContext();
+        Resources resources = context.getResources();
+        if (resources != null) {
+            smartRefreshLayout.setPrimaryColors(ThemeUtils.getColorByAttr(context, R.attr.colorAccent));
+        }
+    }
+
+    public static void setThemeForMaterialHeader(MaterialHeader materialHeader) {
+        Context context = materialHeader.getContext();
+        Resources resources = context.getResources();
+        if (resources != null) {
+            materialHeader.setProgressBackgroundColorSchemeColor(resources.getColor(R.color.color_swipe_refresh_bg));
+            materialHeader.setColorSchemeColors(ThemeUtils.getColorByAttr(context, R.attr.colorAccent));
         }
     }
 

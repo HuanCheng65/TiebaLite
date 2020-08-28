@@ -8,8 +8,8 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.huanchengfly.tieba.post.ExtensionsKt;
-import com.huanchengfly.tieba.post.api.models.UserPostBean;
 import com.huanchengfly.tieba.post.R;
+import com.huanchengfly.tieba.post.api.models.UserPostBean;
 import com.huanchengfly.tieba.post.utils.ImageUtil;
 import com.huanchengfly.tieba.post.utils.NavigationHelper;
 import com.huanchengfly.tieba.post.utils.StringUtil;
@@ -40,12 +40,6 @@ public class UserPostAdapter extends MultiBaseAdapter<UserPostBean.PostBean> {
                 map.put("tid", postBean.getThreadId());
                 navigationHelper.navigationByData(NavigationHelper.ACTION_THREAD, map);
             });
-            if (!TextUtils.isEmpty(postBean.getForumName())) {
-                viewHolder.setVisibility(R.id.forum_item_forum_name, View.VISIBLE);
-                viewHolder.setText(R.id.forum_item_forum_name, mContext.getString(R.string.tip_from_forum, postBean.getForumName()));
-            } else {
-                viewHolder.setVisibility(R.id.forum_item_forum_name, View.GONE);
-            }
             if ("1".equals(postBean.getIsNoTitle())) {
                 viewHolder.setVisibility(R.id.forum_item_title_holder, View.GONE);
             } else {
@@ -70,7 +64,20 @@ public class UserPostAdapter extends MultiBaseAdapter<UserPostBean.PostBean> {
                 textView.setVisibility(View.GONE);
             }
             viewHolder.setText(R.id.forum_item_user_name, StringUtil.getUsernameString(mContext, postBean.getUserName(), postBean.getNameShow()));
-            viewHolder.setText(R.id.forum_item_user_time, String.valueOf(DateUtils.getRelativeTimeSpanString(Long.valueOf(postBean.getCreateTime()) * 1000L)));
+            TextView timeTextView = viewHolder.getView(R.id.forum_item_user_time);
+            String relativeTime =
+                    DateUtils.getRelativeTimeSpanString(Long.parseLong(postBean.getCreateTime()) * 1000L).toString();
+            if (!TextUtils.isEmpty(postBean.getForumName())) {
+                timeTextView.setText(
+                        mContext.getString(
+                                R.string.template_two_string,
+                                relativeTime,
+                                mContext.getString(R.string.tip_forum_name, postBean.getForumName())
+                        )
+                );
+            } else {
+                timeTextView.setText(relativeTime);
+            }
             ImageUtil.load(viewHolder.getView(R.id.forum_item_user_avatar), ImageUtil.LOAD_TYPE_AVATAR, postBean.getUserPortrait());
         } else if (type == TYPE_REPLY) {
             ImageUtil.load(viewHolder.getView(R.id.message_list_item_user_avatar), ImageUtil.LOAD_TYPE_AVATAR, postBean.getUserPortrait());

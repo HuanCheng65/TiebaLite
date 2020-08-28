@@ -4,15 +4,16 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.ColorStateList;
 import android.content.res.TypedArray;
+import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.widget.RelativeLayout;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.huanchengfly.tieba.post.R;
 import com.huanchengfly.tieba.post.ui.theme.interfaces.Tintable;
 import com.huanchengfly.tieba.post.ui.theme.utils.ThemeUtils;
-import com.huanchengfly.tieba.post.R;
 
 @SuppressLint("CustomViewStyleable")
 public class TintRelativeLayout extends RelativeLayout implements Tintable {
@@ -55,5 +56,11 @@ public class TintRelativeLayout extends RelativeLayout implements Tintable {
                 setBackgroundTintList(ColorStateList.valueOf(ThemeUtils.getColorById(getContext(), mBackgroundTintResId)));
             }
         }
+    }
+
+    @Override
+    public void setBackground(Drawable background) {
+        super.setBackground(background);
+        applyTintColor();
     }
 }
