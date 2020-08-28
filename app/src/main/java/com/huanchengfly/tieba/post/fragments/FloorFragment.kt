@@ -206,12 +206,12 @@ class FloorFragment : BaseBottomSheetDialogFragment() {
         const val PARAM_JUMP = "jump"
         @JvmStatic
         @JvmOverloads
-        fun newInstance(tid: String?, pid: String?, spid: String? = "", jump: Boolean = false): FloorFragment {
+        fun newInstance(tid: String?, pid: String?, spid: String? = null, jump: Boolean = false): FloorFragment {
             val fragment = FloorFragment()
             val bundle = Bundle()
             bundle.putString(PARAM_TID, tid)
             bundle.putString(PARAM_PID, pid)
-            bundle.putString(PARAM_SUB_POST_ID, spid)
+            bundle.putString(PARAM_SUB_POST_ID, spid ?: "")
             bundle.putBoolean(PARAM_JUMP, jump)
             fragment.arguments = bundle
             return fragment
