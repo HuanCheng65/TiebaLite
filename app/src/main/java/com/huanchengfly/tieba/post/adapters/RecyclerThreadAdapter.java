@@ -79,6 +79,7 @@ public class RecyclerThreadAdapter extends MultiBaseAdapter<ThreadContentBean.Po
     public static final int TYPE_THREAD = 1001;
     private static final int TEXT_VIEW_TYPE_CONTENT = 0;
     private static final int TEXT_VIEW_TYPE_FLOOR = 1;
+    public static final int MAX_SUB_POST_SHOW = 3;
     private Map<String, ThreadContentBean.UserInfoBean> userInfoBeanMap;
     private NavigationHelper navigationHelper;
     private LinearLayout.LayoutParams defaultLayoutParams;
@@ -344,14 +345,15 @@ public class RecyclerThreadAdapter extends MultiBaseAdapter<ThreadContentBean.Po
         TextView more = holder.getView(R.id.thread_list_item_content_floor_more);
         MyLinearLayout myLinearLayout = holder.getView(R.id.thread_list_item_content_floor);
         myLinearLayout.removeAllViews();
-        if (bean.getSubPostList().getSubPostList() != null && bean.getSubPostList().getSubPostList().size() > 0) {
+        if (bean.getSubPostNumber() != null && bean.getSubPostList() != null && bean.getSubPostList().getSubPostList() != null && bean.getSubPostList().getSubPostList().size() > 0) {
             holder.setVisibility(R.id.thread_list_item_content_floor_card, View.VISIBLE);
-            int count = Integer.valueOf(bean.getSubPostNumber());
-            List<ThreadContentBean.PostListItemBean> postListItemBeans = bean.getSubPostList().getSubPostList();
-            List<ThreadContentBean.PostListItemBean> subPostList = postListItemBeans;
+            int count = Integer.parseInt(bean.getSubPostNumber());
+            List<ThreadContentBean.PostListItemBean> subPostList = bean.getSubPostList().getSubPostList();
             List<View> views = new ArrayList<>();
-            if (postListItemBeans.size() > 3) {
-                subPostList = subPostList.subList(0, 3);
+            if (subPostList.size() > MAX_SUB_POST_SHOW) {
+                subPostList = subPostList.subList(0, MAX_SUB_POST_SHOW);
+                holder.setVisibility(R.id.thread_list_item_content_floor_more, View.VISIBLE);
+            } else if (subPostList.size() < count) {
                 holder.setVisibility(R.id.thread_list_item_content_floor_more, View.VISIBLE);
             } else {
                 holder.setVisibility(R.id.thread_list_item_content_floor_more, View.GONE);
@@ -360,14 +362,16 @@ public class RecyclerThreadAdapter extends MultiBaseAdapter<ThreadContentBean.Po
             for (ThreadContentBean.PostListItemBean postListItemBean : subPostList) {
                 views.add(getContentView(postListItemBean, bean));
             }
+            myLinearLayout.addViews(views);
             more.setOnClickListener(view -> {
                 try {
-                    if (postListItemBeans.size() < Integer.parseInt(bean.getSubPostNumber())) {
-                        FloorFragment.newInstance(threadBean.getId(), bean.getSubPostList().getPid(), "", true).show(((BaseActivity) mContext).getSupportFragmentManager(), threadBean.getId() + "_Floor");
+                    if (bean.getSubPostList().getSubPostList().size() < count) {
+                        FloorFragment.newInstance(threadBean.getId(), bean.getSubPostList().getPid(), null, true)
+                                .show(((BaseActivity) mContext).getSupportFragmentManager(), threadBean.getId() + "_Floor");
                     } else {
                         myLinearLayout.removeAllViews();
                         List<View> newViews = new ArrayList<>();
-                        for (ThreadContentBean.PostListItemBean postListItemBean : postListItemBeans) {
+                        for (ThreadContentBean.PostListItemBean postListItemBean : bean.getSubPostList().getSubPostList()) {
                             newViews.add(getContentView(postListItemBean, bean));
                         }
                         myLinearLayout.addViews(newViews);
@@ -377,7 +381,6 @@ public class RecyclerThreadAdapter extends MultiBaseAdapter<ThreadContentBean.Po
                     e.printStackTrace();
                 }
             });
-            myLinearLayout.addViews(views);
         } else {
             holder.setVisibility(R.id.thread_list_item_content_floor_card, View.GONE);
         }
