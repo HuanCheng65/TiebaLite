@@ -10,31 +10,34 @@ import com.huanchengfly.tieba.post.fragments.SearchThreadFragment
 import com.huanchengfly.tieba.post.utils.NavigationHelper
 import java.util.*
 
-class SearchThreadAdapter(fragment: SearchThreadFragment) : BaseSingleTypeAdapter<SearchThreadBean.ThreadInfoBean?>(fragment.requireContext()) {
-    private val navigationHelper: NavigationHelper
-    private val order = 0
-    private val filter = 0
-    protected override fun convert(viewHolder: MyViewHolder, threadInfoBean: SearchThreadBean.ThreadInfoBean, position: Int) {
-        viewHolder.setOnClickListener(R.id.item_search_thread) { view: View? ->
-            val map: MutableMap<String, String?> = HashMap()
-            map["tid"] = threadInfoBean.tid
-            map["pid"] = threadInfoBean.pid
-            navigationHelper.navigationByData(NavigationHelper.ACTION_THREAD, map)
-        }
-        viewHolder.setText(R.id.item_search_thread_title, threadInfoBean.title)
-        viewHolder.setText(R.id.item_search_thread_content, threadInfoBean.content)
-        viewHolder.setText(R.id.item_search_thread_user, threadInfoBean.user!!.userName)
-        if (threadInfoBean.forumName == null) {
+class SearchThreadAdapter(fragment: SearchThreadFragment) : BaseSingleTypeAdapter<SearchThreadBean.ThreadInfoBean>(fragment.requireContext()) {
+    override fun convert(viewHolder: MyViewHolder, item: SearchThreadBean.ThreadInfoBean, position: Int) {
+        viewHolder.setText(R.id.item_search_thread_title, item.title)
+        viewHolder.setText(R.id.item_search_thread_content, item.content)
+        viewHolder.setText(R.id.item_search_thread_user, item.user!!.userName)
+        if (item.forumName == null) {
             viewHolder.setText(
                     R.id.item_search_thread_info,
-                    DateUtils.getRelativeTimeSpanString(threadInfoBean.time!!.toLong() * 1000L)
+                    DateUtils.getRelativeTimeSpanString(item.time!!.toLong() * 1000L)
             )
         } else {
             viewHolder.setText(
                     R.id.item_search_thread_info,
-                    threadInfoBean.forumName + " " + DateUtils.getRelativeTimeSpanString(threadInfoBean.time!!.toLong() * 1000L)
+                    item.forumName + " " + DateUtils.getRelativeTimeSpanString(item.time!!.toLong() * 1000L)
             )
         }
+        viewHolder.itemView.setBackgroundResource(
+                if (position == 0 && position + 1 == itemCount) {
+                    R.drawable.bg_radius_8dp_ripple
+                } else if (position == 0) {
+                    R.drawable.bg_top_radius_8dp_ripple
+                } else if (position + 1 == itemCount) {
+                    R.drawable.bg_radius_8dp_ripple
+                } else {
+                    R.drawable.bg_ripple
+                }
+        )
+
     }
 
     override fun getItemLayoutId(): Int {
@@ -42,8 +45,6 @@ class SearchThreadAdapter(fragment: SearchThreadFragment) : BaseSingleTypeAdapte
     }
 
     init {
-        val context = fragment.requireContext()
-        navigationHelper = NavigationHelper.newInstance(context)
         /*
         View headerView = Util.inflate(context, R.layout.layout_search_header);
         if (headerView != null) {

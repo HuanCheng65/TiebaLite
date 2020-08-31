@@ -6,11 +6,10 @@ import android.view.ViewGroup
 import com.alibaba.android.vlayout.LayoutHelper
 import com.huanchengfly.tieba.post.components.MyViewHolder
 
-abstract class BaseMultiTypeDelegateAdapter<Item>(
-        context: Context,
-        layoutHelper: LayoutHelper
-) : BaseDelegateAdapter<Item>(
-        context, layoutHelper
+abstract class BaseMultiTypeAdapter<Item>(
+        context: Context
+) : BaseAdapter<Item>(
+        context
 ) {
     protected abstract fun getItemLayoutId(
             itemType: Int
@@ -28,12 +27,12 @@ abstract class BaseMultiTypeDelegateAdapter<Item>(
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder = MyViewHolder(context, getItemLayoutId(viewType))
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
-        holder.setItemOnClickListener(View.OnClickListener {
+        holder.setItemOnClickListener {
             onItemClickListener?.onClick(holder, getItem(position), position)
-        })
-        holder.setItemOnLongClickListener(View.OnLongClickListener {
+        }
+        holder.setItemOnLongClickListener {
             onItemLongClickListener?.onLongClick(holder, getItem(position), position) ?: false
-        })
+        }
         convert(holder, getItem(position), position, getItemViewType(position))
     }
 

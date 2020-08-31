@@ -6,11 +6,12 @@ import android.view.ViewGroup
 import com.alibaba.android.vlayout.LayoutHelper
 import com.huanchengfly.tieba.post.components.MyViewHolder
 
-abstract class BaseSingleTypeDelegateAdapter<Item>(
+abstract class BaseSingleTypeDelegateAdapter<Item> @JvmOverloads constructor(
         context: Context,
-        layoutHelper: LayoutHelper
+        layoutHelper: LayoutHelper,
+        items: List<Item>? = null
 ) : BaseDelegateAdapter<Item>(
-        context, layoutHelper
+        context, layoutHelper, items
 ) {
     protected abstract fun getItemLayoutId(): Int
 

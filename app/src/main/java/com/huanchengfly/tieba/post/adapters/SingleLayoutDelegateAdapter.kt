@@ -1,4 +1,4 @@
-package com.huanchengfly.tieba.post.adapters.base
+package com.huanchengfly.tieba.post.adapters
 
 import android.content.Context
 import android.view.View
@@ -9,7 +9,7 @@ import com.alibaba.android.vlayout.LayoutHelper
 import com.alibaba.android.vlayout.layout.SingleLayoutHelper
 import com.huanchengfly.tieba.post.components.MyViewHolder
 
-abstract class BaseSingleLayoutAdapter(
+open class SingleLayoutDelegateAdapter(
         val context: Context,
         val itemView: View
 ) : DelegateAdapter.Adapter<MyViewHolder>() {
@@ -32,13 +32,13 @@ abstract class BaseSingleLayoutAdapter(
 
     final override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder = MyViewHolder(itemView)
 
-    final override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
-        convert(holder, itemView)
+    final override fun onBindViewHolder(viewHolder: MyViewHolder, position: Int) {
+        convert(viewHolder, itemView)
     }
 
     final override fun getItemCount(): Int = 1
 
     override fun onCreateLayoutHelper(): LayoutHelper = SingleLayoutHelper()
 
-    abstract fun convert(holder: MyViewHolder, itemView: View)
+    open fun convert(viewHolder: MyViewHolder, itemView: View) {}
 }

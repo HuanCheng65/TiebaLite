@@ -18,7 +18,8 @@ public class HotMessageListAdapter extends CommonBaseAdapter<HotMessageListBean.
         super(context, null, false);
         addHeaderView(Util.inflate(context, R.layout.header_hot_message_list));
         NavigationHelper navigationHelper = NavigationHelper.newInstance(mContext);
-        setOnItemClickListener((viewHolder, hotMessageRetBean, position) -> navigationHelper.navigationByData(NavigationHelper.ACTION_URL, String.format("https://tieba.baidu.com/mo/q/hotMessage?topic_id=%1$s&topic_name=%2$s", hotMessageRetBean.getMulId(), hotMessageRetBean.getMulName())));
+        setOnItemClickListener((viewHolder, hotMessageRetBean, position) ->
+                navigationHelper.navigationByData(NavigationHelper.ACTION_URL, String.format("https://tieba.baidu.com/mo/q/hotMessage?topic_id=%1$s&topic_name=%2$s", hotMessageRetBean.getMulId(), hotMessageRetBean.getMulName())));
     }
 
     @Override

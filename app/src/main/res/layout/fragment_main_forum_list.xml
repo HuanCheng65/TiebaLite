@@ -39,12 +39,11 @@
             app:layoutDescription="@xml/fragment_main_forum_list_scene">
 
             <com.huanchengfly.tieba.post.widgets.theme.TintTextInputLayout
-                android:id="@+id/tintTextInputLayout"
+                android:id="@+id/search_bar"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
-                android:hint="@string/hint_search"
                 android:layout_height="wrap_content"
                 android:layout_width="0dp"
-                app:boxBackgroundColor="@color/default_color_divider"
+                app:boxBackgroundColor="@color/color_toolbar_bar_background"
                 app:boxCollapsedPaddingTop="0dp"
                 app:boxCornerRadiusBottomEnd="8dp"
                 app:boxCornerRadiusBottomStart="8dp"
@@ -52,17 +51,18 @@
                 app:boxCornerRadiusTopStart="8dp"
                 app:boxStrokeWidth="0dp"
                 app:boxStrokeWidthFocused="0dp"
-                app:hintAnimationEnabled="false"
-                app:hintEnabled="true"
+                app:hintEnabled="false"
                 app:hintTextColor="@color/default_color_primary"
                 app:placeholderTextColor="@color/default_color_primary"
                 app:startIconDrawable="@drawable/ic_search">
 
-                <com.google.android.material.textfield.TextInputEditText
+                <com.huanchengfly.tieba.post.widgets.theme.TintTextInputEditText
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@null"
-                    android:enabled="false" />
+                    android:cursorVisible="false"
+                    android:textColorHint="@color/default_color_text_secondary"
+                    android:hint="@string/hint_search" />
             </com.huanchengfly.tieba.post.widgets.theme.TintTextInputLayout>
 
             <com.huanchengfly.tieba.post.widgets.theme.TintImageView
@@ -100,27 +100,8 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
 
-        <com.huanchengfly.tieba.post.widgets.theme.TintRelativeLayout
-            android:layout_marginStart="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginBottom="8dp"
-            android:background="@drawable/bg_radius_8dp"
-            app:backgroundTint="@color/default_color_card"
-            app:layout_srlSpinnerStyle="Translate"
+        <include
             android:id="@+id/footer"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <com.huanchengfly.tieba.post.widgets.theme.TintTextView
-                android:layout_centerHorizontal="true"
-                android:textSize="14sp"
-                android:id="@+id/footer_tip"
-                android:text="@string/tip_load_end"
-                android:gravity="center"
-                android:singleLine="true"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                app:tint="@color/default_color_text_secondary" />
-        </com.huanchengfly.tieba.post.widgets.theme.TintRelativeLayout>
+            layout="@layout/footer_no_more" />
     </com.scwang.smart.refresh.layout.SmartRefreshLayout>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

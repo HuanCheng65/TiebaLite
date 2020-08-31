@@ -4,6 +4,7 @@ package com.huanchengfly.tieba.post.activities
 
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
+import android.content.Context
 import android.content.Intent
 import android.content.res.ColorStateList
 import android.graphics.Bitmap
@@ -47,6 +48,7 @@ import com.huanchengfly.tieba.post.dpToPx
 import com.huanchengfly.tieba.post.fragments.ForumFragment
 import com.huanchengfly.tieba.post.fragments.ForumFragment.OnRefreshedListener
 import com.huanchengfly.tieba.post.fragments.ForumInfoFragment
+import com.huanchengfly.tieba.post.goToActivity
 import com.huanchengfly.tieba.post.interfaces.Refreshable
 import com.huanchengfly.tieba.post.interfaces.ScrollTopable
 import com.huanchengfly.tieba.post.models.PhotoViewBean
@@ -508,5 +510,15 @@ class ForumActivity : BaseActivity(), View.OnClickListener, OnRefreshedListener 
     companion object {
         private const val TAG = "ForumActivity"
         const val EXTRA_FORUM_NAME = "forum_name"
+
+        @JvmStatic
+        fun launch(
+                context: Context,
+                forumName: String
+        ) {
+            context.goToActivity<ForumActivity> {
+                putExtra(EXTRA_FORUM_NAME, forumName)
+            }
+        }
     }
 }

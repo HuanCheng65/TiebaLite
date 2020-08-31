@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.huanchengfly.tieba.post.widgets.theme.TintFrameLayout app:backgroundTint="@color/default_color_window_background"
+<com.huanchengfly.tieba.post.widgets.theme.TintFrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/background"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    app:backgroundTint="@color/default_color_window_background"
     tools:context=".activities.ForumActivity">
 
     <com.huanchengfly.tieba.post.widgets.theme.TintCoordinatorLayout
@@ -13,11 +14,11 @@
         android:layout_height="match_parent">
 
         <com.huanchengfly.tieba.post.widgets.theme.TintAppBarLayout
-            app:backgroundTint="@color/default_color_toolbar"
             android:id="@+id/appbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:stateListAnimator="@animator/appbar_elevation">
+            android:stateListAnimator="@animator/appbar_elevation"
+            app:backgroundTint="@color/default_color_toolbar">
 
             <com.google.android.material.appbar.CollapsingToolbarLayout
                 android:id="@+id/collapsing_toolbar"

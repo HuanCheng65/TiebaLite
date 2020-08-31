@@ -101,12 +101,4 @@ abstract class BaseDelegateAdapter<Item>(
         itemList.clear()
         notifyDataSetChanged()
     }
-
-    interface OnItemClickListener<Item> {
-        fun onClick(viewHolder: MyViewHolder, item: Item, position: Int)
-    }
-
-    interface OnItemLongClickListener<Item> {
-        fun onLongClick(viewHolder: MyViewHolder, item: Item, position: Int): Boolean
-    }
 }

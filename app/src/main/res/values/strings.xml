@@ -6,7 +6,7 @@
     <string name="title_explore">动态</string>
     <string name="title_user">我</string>
     <string name="title_search">搜索</string>
-    <string name="hint_search">进吧、搜贴</string>
+    <string name="hint_search">发现更多</string>
     <string name="hint_search_in_ba">在 %1$s 吧内搜索</string>
     <string name="my_info_history">浏览历史</string>
     <string name="sidebar_exit">退出</string>
@@ -367,4 +367,15 @@
     <string name="text_pull_up_to_load">上拉加载更多</string>
     <string name="text_release_to_load">释放开始加载</string>
     <string name="template_two_string">%1$s·%2$s</string>
+    <string name="title_search_forum">搜吧</string>
+    <string name="title_search_thread">搜贴</string>
+    <string name="title_search_user">搜人</string>
+    <string name="title_search_history">搜索历史</string>
+    <string name="text_no_data">这里什么都没有</string>
+    <string name="title_exact_match">推荐结果</string>
+    <string name="title_fuzzy_match">查询结果</string>
+    <string name="title_filter_only_show_thread">仅看主题贴</string>
+    <string name="title_search_order_new">新贴在前</string>
+    <string name="title_search_order_old">旧贴在前</string>
+    <string name="title_search_order_relevant">相关度</string>
 </resources>

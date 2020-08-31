@@ -34,10 +34,9 @@ object AnimUtil {
 
     @JvmStatic
     fun bindTextSizeAnim(appBar: AppBarLayout, textView: TextView, startSize: Int, endSize: Int, endOffset: Int = 0) {
-        appBar.addOnOffsetChangedListener(OnOffsetChangedListener { appBarLayout: AppBarLayout, verticalOffset: Int ->
+        appBar.addOnOffsetChangedListener(OnOffsetChangedListener { _, verticalOffset ->
             val offset = abs(verticalOffset * 1f)
             if (offset <= endOffset) {
-                val totalScrollRange = appBarLayout.totalScrollRange
                 val percent = offset / endOffset
                 val changeSize = endSize - startSize
                 val size = startSize + percent * changeSize

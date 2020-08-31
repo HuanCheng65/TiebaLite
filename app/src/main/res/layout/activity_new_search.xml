@@ -1,6 +1,93 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.huanchengfly.tieba.post.widgets.theme.TintCoordinatorLayout
-    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:backgroundTint="@color/default_color_window_background">
+    <com.huanchengfly.tieba.post.widgets.theme.TintAppBarLayout
+        android:id="@+id/appbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:stateListAnimator="@animator/appbar_elevation"
+        app:backgroundTint="@color/default_color_toolbar">
+        <com.huanchengfly.tieba.post.widgets.theme.TintTextInputLayout
+            android:id="@+id/search_bar"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            app:boxBackgroundColor="@color/color_toolbar_bar_background"
+            app:boxCollapsedPaddingTop="0dp"
+            app:boxCornerRadiusBottomEnd="8dp"
+            app:boxCornerRadiusBottomStart="8dp"
+            app:boxCornerRadiusTopEnd="8dp"
+            app:boxCornerRadiusTopStart="8dp"
+            app:boxStrokeWidth="0dp"
+            app:boxStrokeWidthFocused="0dp"
+            app:hintEnabled="false"
+            android:layout_marginTop="12dp"
+            android:layout_marginBottom="12dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            app:hintTextColor="@color/default_color_primary"
+            app:placeholderTextColor="@color/default_color_primary"
+            app:startIconDrawable="@drawable/ic_round_arrow_back">
 
+            <com.huanchengfly.tieba.post.widgets.theme.TintTextInputEditText
+                android:imeOptions="actionSearch"
+                android:inputType="text"
+                android:id="@+id/search_edit_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@null"
+                android:hint="@string/hint_search"
+                android:textColorHint="@color/default_color_text_secondary" />
+
+        </com.huanchengfly.tieba.post.widgets.theme.TintTextInputLayout>
+    </com.huanchengfly.tieba.post.widgets.theme.TintAppBarLayout>
+
+    <com.huanchengfly.tieba.post.widgets.theme.TintFrameLayout
+        android:layout_gravity="bottom"
+        android:id="@+id/bottom_app_bar"
+        app:backgroundTint="@color/default_color_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <com.huanchengfly.tieba.post.widgets.theme.TintFrameLayout
+            android:id="@+id/tab_layout_holder"
+            android:layout_marginTop="12dp"
+            android:layout_marginBottom="12dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:background="@drawable/bg_radius_8dp"
+            app:backgroundTint="@color/color_toolbar_bar_background"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <com.huanchengfly.tieba.post.widgets.theme.TintTabLayout
+                android:layout_marginStart="6dp"
+                android:layout_marginEnd="6dp"
+                android:background="@color/transparent"
+                style="@style/Widget.TabLayout.Toolbar.Fixed"
+                android:id="@+id/tab_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+        </com.huanchengfly.tieba.post.widgets.theme.TintFrameLayout>
+    </com.huanchengfly.tieba.post.widgets.theme.TintFrameLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        android:paddingStart="8dp"
+        android:paddingEnd="8dp"
+        android:paddingBottom="8dp"
+        android:clipToPadding="false"
+        android:id="@+id/recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <com.huanchengfly.tieba.post.widgets.MyViewPager
+        android:id="@+id/view_pager"
+        android:layout_marginBottom="72dp"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 </com.huanchengfly.tieba.post.widgets.theme.TintCoordinatorLayout>

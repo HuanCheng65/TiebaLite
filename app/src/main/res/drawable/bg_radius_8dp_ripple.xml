@@ -1,6 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-<shape xmlns:android="http://schemas.android.com/apk/res/android">
-    <corners
-        android:radius="8dp"/>
-    <solid android:color="@color/white"/>
-</shape>
+<ripple xmlns:android="http://schemas.android.com/apk/res/android" android:color="?colorControlHighlight">
+    <item android:drawable="@drawable/bg_radius_8dp" />
+</ripple>

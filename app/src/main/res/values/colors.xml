@@ -23,6 +23,8 @@
     <color name="black">#000</color>
     <color name="tieba">#4477E0</color>
 
+    <color name="color_toolbar_bar_background">#EDF2F6</color>
+
     <color name="color_text">#FF31343C</color>
     <color name="color_text_secondary">#FF545967</color>
     <color name="color_text_disabled">#6131343C</color>
@@ -166,5 +168,4 @@
     <color name="icon_blue">#FF3373EE</color>
     <color name="icon_purple">#FF8E6DCA</color>
     <color name="black_trans">#50000000</color>
-    <color name="color_tab_layout_background">#EDF2F6</color>
 </resources>

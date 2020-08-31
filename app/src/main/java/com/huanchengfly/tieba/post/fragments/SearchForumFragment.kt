@@ -2,55 +2,73 @@ package com.huanchengfly.tieba.post.fragments
 
 import android.os.Bundle
 import android.view.View
-import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import butterknife.BindView
+import com.alibaba.android.vlayout.DelegateAdapter
 import com.alibaba.android.vlayout.VirtualLayoutManager
 import com.huanchengfly.tieba.post.R
+import com.huanchengfly.tieba.post.activities.ForumActivity
+import com.huanchengfly.tieba.post.adapters.HeaderDelegateAdapter
 import com.huanchengfly.tieba.post.adapters.SearchForumAdapter
+import com.huanchengfly.tieba.post.adapters.base.OnItemClickListener
 import com.huanchengfly.tieba.post.api.TiebaApi.getInstance
 import com.huanchengfly.tieba.post.api.models.SearchForumBean
+import com.huanchengfly.tieba.post.components.MyViewHolder
+import com.huanchengfly.tieba.post.dpToPx
 import com.huanchengfly.tieba.post.interfaces.ISearchFragment
+import com.huanchengfly.tieba.post.toastShort
 import com.huanchengfly.tieba.post.utils.ThemeUtil
+import com.scwang.smart.refresh.layout.SmartRefreshLayout
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class SearchForumFragment : BaseFragment(), ISearchFragment {
-    @BindView(R.id.fragment_search_refresh_layout)
-    var refreshLayout: SwipeRefreshLayout? = null
+class SearchForumFragment : BaseFragment(), ISearchFragment, OnItemClickListener<SearchForumBean.ForumInfoBean> {
+    @JvmField
+    @BindView(R.id.fragment_search_refresh)
+    var refreshLayout: SmartRefreshLayout? = null
 
     @BindView(R.id.fragment_search_recycler_view)
-    var recyclerView: RecyclerView? = null
+    lateinit var recyclerView: RecyclerView
+
     private var keyword: String? = null
-    private var mAdapter: SearchForumAdapter? = null
+    private lateinit var layoutManager: VirtualLayoutManager
+    private lateinit var delegateAdapter: DelegateAdapter
+    private lateinit var exactMatchAdapter: SearchForumAdapter
+    private lateinit var fuzzyMatchAdapter: SearchForumAdapter
     private var mData: SearchForumBean.DataBean? = null
+
     override fun setKeyword(
             keyword: String?,
             needRefresh: Boolean
     ) {
         this.keyword = keyword
-        if (mAdapter != null) {
-            if (needRefresh) {
-                refresh()
-            } else {
-                mData = null
-                mAdapter!!.reset()
-            }
+        if (needRefresh) {
+            refreshLayout?.autoRefresh()
+        } else {
+            mData = null
+            delegateAdapter.clear()
         }
     }
 
     override fun onFragmentVisibleChange(isVisible: Boolean) {
         if (mData == null && isVisible) {
-            refresh()
+            refreshLayout?.autoRefresh()
         }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         if (arguments != null) {
-            keyword = arguments!!.getString(ARG_KEYWORD)
+            keyword = requireArguments().getString(ARG_KEYWORD)
+        }
+        layoutManager = VirtualLayoutManager(attachContext)
+        delegateAdapter = DelegateAdapter(layoutManager)
+        exactMatchAdapter = SearchForumAdapter(attachContext).apply {
+            setOnItemClickListener(this@SearchForumFragment)
+        }
+        fuzzyMatchAdapter = SearchForumAdapter(attachContext).apply {
+            setOnItemClickListener(this@SearchForumFragment)
         }
     }
 
@@ -60,44 +78,73 @@ class SearchForumFragment : BaseFragment(), ISearchFragment {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        recyclerView!!.layoutManager = VirtualLayoutManager(attachContext)
-        mAdapter = SearchForumAdapter(attachContext)
-        recyclerView!!.adapter = mAdapter
+        recyclerView.layoutManager = layoutManager
+        recyclerView.adapter = delegateAdapter
         refreshLayout!!.setOnRefreshListener { refresh() }
-        ThemeUtil.setThemeForSwipeRefreshLayout(refreshLayout)
-    }
-
-    private fun setRefreshing(refreshing: Boolean) {
-        if (refreshLayout != null) refreshLayout!!.isRefreshing = refreshing
+        ThemeUtil.setThemeForSmartRefreshLayout(refreshLayout)
     }
 
     private fun refresh() {
         if (keyword == null) {
             return
         }
-        setRefreshing(true)
         getInstance().searchForum(keyword!!).enqueue(object : Callback<SearchForumBean> {
             override fun onResponse(call: Call<SearchForumBean>, response: Response<SearchForumBean>) {
                 mData = response.body()!!.data
+                refreshLayout?.finishRefreshWithNoMoreData()
                 reloadAdapters()
-                setRefreshing(false)
             }
 
             override fun onFailure(call: Call<SearchForumBean>, t: Throwable) {
-                setRefreshing(false)
-                Toast.makeText(attachContext, t.message, Toast.LENGTH_SHORT).show()
+                t.message?.let { attachContext.toastShort(it) }
+                refreshLayout?.finishRefresh(false)
             }
         })
     }
 
-    private fun reloadAdapters() {}
+    private fun reloadAdapters() {
+        delegateAdapter.clear()
+        if (mData != null) {
+            if (mData!!.exactMatch != null) {
+                exactMatchAdapter.setData(listOf(mData!!.exactMatch!!))
+                delegateAdapter.addAdapter(HeaderDelegateAdapter(
+                        attachContext,
+                        R.string.title_exact_match,
+                        R.drawable.ic_round_graphic_eq
+                ).apply {
+                    setBackgroundResource(R.drawable.bg_top_radius_8dp)
+                    topMargin = 8.dpToPx()
+                    startPadding = 16.dpToPx()
+                    endPadding = 16.dpToPx()
+                })
+                delegateAdapter.addAdapter(exactMatchAdapter)
+            }
+            if (!mData!!.fuzzyMatch.isNullOrEmpty()) {
+                fuzzyMatchAdapter.setData(mData!!.fuzzyMatch!!)
+                delegateAdapter.addAdapter(HeaderDelegateAdapter(
+                        attachContext,
+                        R.string.title_fuzzy_match,
+                        R.drawable.ic_infinite
+                ).apply {
+                    setBackgroundResource(R.drawable.bg_top_radius_8dp)
+                    topMargin = 8.dpToPx()
+                    startPadding = 16.dpToPx()
+                    endPadding = 16.dpToPx()
+                })
+                delegateAdapter.addAdapter(fuzzyMatchAdapter)
+            }
+        }
+    }
+
     override fun onFragmentFirstVisible() {
-        refresh()
+        refreshLayout!!.autoRefresh()
     }
 
     companion object {
         const val TAG = "SearchForumFragment"
         const val ARG_KEYWORD = "keyword"
+
+        @JvmStatic
         @JvmOverloads
         fun newInstance(keyword: String? = null): SearchForumFragment {
             val forumFragment = SearchForumFragment()
@@ -106,5 +153,9 @@ class SearchForumFragment : BaseFragment(), ISearchFragment {
             forumFragment.arguments = bundle
             return forumFragment
         }
+    }
+
+    override fun onClick(viewHolder: MyViewHolder, item: SearchForumBean.ForumInfoBean, position: Int) {
+        item.forumName?.let { ForumActivity.launch(attachContext, it) }
     }
 }
