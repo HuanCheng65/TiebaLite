@@ -27,6 +27,7 @@ import com.huanchengfly.tieba.post.utils.QuickPreviewUtil.getForumName
 import com.huanchengfly.tieba.post.utils.QuickPreviewUtil.getPreviewInfo
 import com.huanchengfly.tieba.post.utils.QuickPreviewUtil.isForumUrl
 import com.huanchengfly.tieba.post.utils.QuickPreviewUtil.isThreadUrl
+import com.scwang.smart.refresh.layout.SmartRefreshLayout
 import org.intellij.lang.annotations.RegExp
 import org.litepal.LitePal
 import java.util.*
@@ -170,6 +171,7 @@ class BaseApplication : Application() {
             override fun onActivitySaveInstanceState(activity: Activity, outState: Bundle) {}
             override fun onActivityDestroyed(activity: Activity) {}
         })
+        CrashUtil.CrashHandler.getInstance().init(this)
         //CrashUtil.CrashHandler crashHandler = CrashUtil.CrashHandler.getInstance();
         //crashHandler.init(this);
     }

@@ -39,6 +39,7 @@ import com.huanchengfly.tieba.post.api.retrofit.exception.TiebaException
 import com.huanchengfly.tieba.post.components.MyLinearLayoutManager
 import com.huanchengfly.tieba.post.components.dialogs.EditTextDialog
 import com.huanchengfly.tieba.post.components.dividers.ThreadDivider
+import com.huanchengfly.tieba.post.goToActivity
 import com.huanchengfly.tieba.post.models.ReplyInfoBean
 import com.huanchengfly.tieba.post.models.ThreadHistoryInfoBean
 import com.huanchengfly.tieba.post.models.database.History
@@ -862,8 +863,34 @@ class ThreadActivity : BaseActivity(), View.OnClickListener {
 
     companion object {
         const val ACTION_REPLY_SUCCESS = "com.huanchengfly.tieba.post.action.REPLY_SUCCESS"
+
+        const val EXTRA_THREAD_ID = "tid"
+        const val EXTRA_POST_ID = "pid"
+        const val EXTRA_FROM = "from"
+        const val EXTRA_SEE_LZ = "seeLz"
+        const val EXTRA_MAX_PID = "max_pid"
+
         const val FROM_COLLECT = "collect"
         const val FROM_HISTORY = "history"
         const val FROM_FORUM = "forum"
+
+        @JvmOverloads
+        @JvmStatic
+        fun launch(
+                context: Context,
+                threadId: String,
+                postId: String? = null,
+                seeLz: Boolean = false,
+                from: String? = null,
+                maxPid: String? = null
+        ) {
+            context.goToActivity<ThreadActivity> {
+                putExtra("tid", threadId)
+                putExtra("pid", postId ?: "")
+                putExtra("seeLz", seeLz)
+                putExtra("from", from ?: "")
+                putExtra("max_pid", maxPid ?: "")
+            }
+        }
     }
 }

@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <RelativeLayout
         android:id="@+id/header_root_view"
@@ -21,8 +22,16 @@
             android:id="@+id/title"
             android:textStyle="bold"
             android:layout_marginStart="8dp"
+            android:layout_toStartOf="@id/end_icon"
             android:layout_toEndOf="@id/icon"
             android:layout_alignParentEnd="true"
             android:layout_centerVertical="true" />
+
+        <com.huanchengfly.tieba.post.widgets.theme.TintImageView
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:id="@+id/end_icon"
+            android:layout_centerVertical="true"
+            android:layout_alignParentEnd="true" />
     </RelativeLayout>
 </FrameLayout>

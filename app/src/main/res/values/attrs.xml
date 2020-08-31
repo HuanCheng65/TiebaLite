@@ -147,6 +147,11 @@
         <attr name="android:textColorHint" />
     </declare-styleable>
 
+    <declare-styleable name="TintTextInputEditText">
+        <attr name="textColor" />
+        <attr name="android:textColorHint" />
+    </declare-styleable>
+
     <declare-styleable name="ScrollCollapsingToolbarLayout">
         <!--  Specifies extra space on the start, top, end and bottom
               sides of the the expanded title text. Margin values should be positive. -->

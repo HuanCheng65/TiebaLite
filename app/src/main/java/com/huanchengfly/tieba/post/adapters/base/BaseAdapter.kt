@@ -1,15 +1,15 @@
 package com.huanchengfly.tieba.post.adapters.base
 
 import android.content.Context
+import androidx.recyclerview.widget.RecyclerView
 import com.alibaba.android.vlayout.DelegateAdapter
 import com.alibaba.android.vlayout.LayoutHelper
 import com.huanchengfly.tieba.post.components.MyViewHolder
 
-abstract class BaseDelegateAdapter<Item>(
+abstract class BaseAdapter<Item>(
         val context: Context,
-        val layoutHelper: LayoutHelper,
         items: List<Item>? = null
-) : DelegateAdapter.Adapter<MyViewHolder>() {
+) : RecyclerView.Adapter<MyViewHolder>() {
     private var itemList: MutableList<Item> = (items ?: emptyList()).toMutableList()
 
     var onItemClickListener: OnItemClickListener<Item>? = null
@@ -48,8 +48,6 @@ abstract class BaseDelegateAdapter<Item>(
     }
 
     override fun getItemCount(): Int = getCount()
-
-    override fun onCreateLayoutHelper(): LayoutHelper = layoutHelper
 
     fun getItem(position: Int): Item = itemList[position]
 

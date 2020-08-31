@@ -41,8 +41,12 @@ fun Context.getColorCompat(@ColorRes id: Int): Int {
     }
 }
 
-inline fun <reified T : Activity> Activity.goToActivity() {
+inline fun <reified T : Activity> Context.goToActivity() {
     startActivity(Intent(this, T::class.java))
+}
+
+inline fun <reified T : Activity> Context.goToActivity(pre: Intent.() -> Intent) {
+    startActivity(pre(Intent(this, T::class.java)))
 }
 
 fun Context.toastShort(text: String) {
@@ -51,8 +55,4 @@ fun Context.toastShort(text: String) {
 
 fun Context.toastShort(resId: Int) {
     Toast.makeText(this, resId, Toast.LENGTH_SHORT).show()
-}
-
-inline fun <reified T : Activity> Activity.goToActivity(pre: (Intent) -> Intent) {
-    startActivity(pre(Intent(this, T::class.java)))
 }

@@ -40,12 +40,12 @@
         </com.huanchengfly.tieba.post.widgets.theme.TintToolbar>
 
         <FrameLayout
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="8dp"
+            android:layout_marginTop="12dp"
+            android:layout_marginBottom="12dp"
             android:layout_marginStart="16dp"
             android:layout_marginEnd="16dp"
             android:background="@drawable/bg_radius_8dp"
-            android:backgroundTint="@color/color_tab_layout_background"
+            android:backgroundTint="@color/color_toolbar_bar_background"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
@@ -66,5 +66,5 @@
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         android:id="@+id/fragment_message_vp"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"></com.huanchengfly.tieba.post.widgets.MyViewPager>
+        android:layout_height="match_parent" />
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

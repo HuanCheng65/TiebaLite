@@ -15,12 +15,15 @@ import com.alibaba.android.vlayout.DelegateAdapter
 import com.alibaba.android.vlayout.VirtualLayoutManager
 import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.appbar.AppBarLayout.OnOffsetChangedListener
-import com.huanchengfly.tieba.post.BaseApplication
-import com.huanchengfly.tieba.post.R
+import com.google.android.material.textfield.TextInputLayout
+import com.huanchengfly.tieba.post.*
 import com.huanchengfly.tieba.post.activities.ForumActivity
+import com.huanchengfly.tieba.post.activities.NewSearchActivity
 import com.huanchengfly.tieba.post.adapters.HeaderDelegateAdapter
 import com.huanchengfly.tieba.post.adapters.MainForumListAdapter
 import com.huanchengfly.tieba.post.adapters.base.BaseDelegateAdapter
+import com.huanchengfly.tieba.post.adapters.base.OnItemClickListener
+import com.huanchengfly.tieba.post.adapters.base.OnItemLongClickListener
 import com.huanchengfly.tieba.post.api.Error
 import com.huanchengfly.tieba.post.api.ForumSortType
 import com.huanchengfly.tieba.post.api.TiebaApi
@@ -29,10 +32,8 @@ import com.huanchengfly.tieba.post.api.models.ForumRecommend
 import com.huanchengfly.tieba.post.api.retrofit.exception.TiebaException
 import com.huanchengfly.tieba.post.api.retrofit.exception.TiebaLocalException
 import com.huanchengfly.tieba.post.components.MyViewHolder
-import com.huanchengfly.tieba.post.dpToPx
 import com.huanchengfly.tieba.post.interfaces.Refreshable
 import com.huanchengfly.tieba.post.models.database.TopForum
-import com.huanchengfly.tieba.post.toastShort
 import com.huanchengfly.tieba.post.utils.*
 import com.huanchengfly.tieba.post.utils.preload.PreloadUtil
 import com.huanchengfly.tieba.post.utils.preload.loaders.ForumLoader
@@ -45,8 +46,8 @@ import retrofit2.Response
 import kotlin.math.abs
 
 class MainForumListFragment : BaseFragment(), Refreshable, Toolbar.OnMenuItemClickListener,
-        BaseDelegateAdapter.OnItemClickListener<ForumRecommend.LikeForum>,
-        BaseDelegateAdapter.OnItemLongClickListener<ForumRecommend.LikeForum> {
+        OnItemClickListener<ForumRecommend.LikeForum>,
+        OnItemLongClickListener<ForumRecommend.LikeForum> {
     companion object {
         val MOTION_START_OFFSET = 83f.dpToPx()
     }
@@ -56,6 +57,9 @@ class MainForumListFragment : BaseFragment(), Refreshable, Toolbar.OnMenuItemCli
 
     @BindView(R.id.search_bar_motion)
     lateinit var searchBarMotionLayout: MotionLayout
+
+    @BindView(R.id.search_bar)
+    lateinit var searchBar: TextInputLayout
 
     @BindView(R.id.refresh_header)
     lateinit var refreshLayoutHeader: MaterialHeader
@@ -163,6 +167,12 @@ class MainForumListFragment : BaseFragment(), Refreshable, Toolbar.OnMenuItemCli
         }
         reloadAdapters()
         toolbar.setOnMenuItemClickListener(this)
+        searchBar.editText?.setOnFocusChangeListener { v, hasFocus ->
+            if (hasFocus) {
+                v.clearFocus()
+                attachContext.goToActivity<NewSearchActivity>()
+            }
+        }
         btnOkSign.setOnClickListener {
             TiebaUtil.startSign(attachContext)
         }

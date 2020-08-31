@@ -5,26 +5,29 @@ import android.view.View
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import butterknife.BindView
 import com.huanchengfly.tieba.post.api.SearchThreadFilter
 import com.huanchengfly.tieba.post.api.SearchThreadOrder
 import com.huanchengfly.tieba.post.api.TiebaApi
 import com.huanchengfly.tieba.post.api.models.SearchThreadBean
 import com.huanchengfly.tieba.post.R
+import com.huanchengfly.tieba.post.activities.ThreadActivity
 import com.huanchengfly.tieba.post.adapters.SearchThreadAdapter
 import com.huanchengfly.tieba.post.components.MyLinearLayoutManager
 import com.huanchengfly.tieba.post.components.dividers.CommonDivider
+import com.huanchengfly.tieba.post.interfaces.ISearchFragment
 import com.huanchengfly.tieba.post.interfaces.OnOrderSwitchListener
 import com.huanchengfly.tieba.post.utils.ThemeUtil
+import com.scwang.smart.refresh.layout.SmartRefreshLayout
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class SearchThreadFragment : BaseFragment(), OnOrderSwitchListener {
+class SearchThreadFragment : BaseFragment(), OnOrderSwitchListener, ISearchFragment {
     private var keyword: String? = null
-    @BindView(R.id.fragment_search_refresh_layout)
-    lateinit var refreshLayout: SwipeRefreshLayout
+    @JvmField
+    @BindView(R.id.fragment_search_refresh)
+    var refreshLayout: SmartRefreshLayout? = null
     @BindView(R.id.fragment_search_recycler_view)
     lateinit var recyclerView: RecyclerView
     private var mAdapter: SearchThreadAdapter? = null
@@ -32,19 +35,25 @@ class SearchThreadFragment : BaseFragment(), OnOrderSwitchListener {
     private var filter: SearchThreadFilter = SearchThreadFilter.ONLY_THREAD
     private var mData: SearchThreadBean.DataBean? = null
     private var page = 0
-    fun setKeyword(keyword: String?, refresh: Boolean) {
+
+    override fun setKeyword(
+            keyword: String?,
+            needRefresh: Boolean
+    ) {
         this.keyword = keyword
-        if (refresh) {
-            refresh()
-        } else {
-            mData = null
-            mAdapter!!.reset()
+        if (mAdapter != null) {
+            if (needRefresh) {
+                refreshLayout?.autoRefresh()
+            } else {
+                mData = null
+                mAdapter!!.reset()
+            }
         }
     }
 
     override fun onFragmentVisibleChange(isVisible: Boolean) {
         if (mData == null && isVisible) {
-            refresh()
+            refreshLayout?.autoRefresh()
         }
     }
 
@@ -53,7 +62,7 @@ class SearchThreadFragment : BaseFragment(), OnOrderSwitchListener {
         order = SearchThreadOrder.NEW
         filter = SearchThreadFilter.ONLY_THREAD
         if (arguments != null) {
-            keyword = arguments!!.getString(ARG_KEYWORD)
+            keyword = requireArguments().getString(ARG_KEYWORD)
         }
     }
 
@@ -64,19 +73,18 @@ class SearchThreadFragment : BaseFragment(), OnOrderSwitchListener {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         mAdapter = SearchThreadAdapter(this).apply {
-            setLoadingView(R.layout.layout_footer_loading)
-            setLoadEndView(R.layout.layout_footer_loadend)
-            setLoadFailedView(R.layout.layout_footer_load_failed)
-            setOnLoadMoreListener { isReload: Boolean -> loadMore(isReload) }
+            setOnItemClickListener { _, item, _ ->
+                ThreadActivity.launch(attachContext, item.tid!!, item.pid)
+            }
         }
         recyclerView.apply {
             layoutManager = MyLinearLayoutManager(attachContext)
             adapter = mAdapter
-            addItemDecoration(CommonDivider(attachContext, LinearLayoutManager.VERTICAL, R.drawable.drawable_divider_1dp))
         }
-        refreshLayout.apply {
+        refreshLayout!!.apply {
             setOnRefreshListener { refresh() }
-            ThemeUtil.setThemeForSwipeRefreshLayout(this)
+            setOnLoadMoreListener { loadMore() }
+            ThemeUtil.setThemeForSmartRefreshLayout(this)
         }
     }
 
@@ -85,52 +93,52 @@ class SearchThreadFragment : BaseFragment(), OnOrderSwitchListener {
             return false
         }
         if (mData!!.hasMore == 0) {
-            mAdapter!!.loadEnd()
+            refreshLayout?.setNoMoreData(true)
         }
         return mData!!.hasMore != 0
     }
 
     private fun refresh() {
-        refreshLayout.isRefreshing = true
+        if (keyword == null) {
+            return
+        }
         page = 1
         TiebaApi.getInstance().searchThread(keyword!!, page, order, filter).enqueue(object : Callback<SearchThreadBean> {
             override fun onFailure(call: Call<SearchThreadBean>, t: Throwable) {
-                refreshLayout.isRefreshing = false
                 Toast.makeText(attachContext, t.message, Toast.LENGTH_SHORT).show()
+                refreshLayout?.finishRefresh(false)
             }
 
             override fun onResponse(call: Call<SearchThreadBean>, response: Response<SearchThreadBean>) {
                 val searchThreadBean = response.body()!!
                 mData = searchThreadBean.data
-                mAdapter!!.setNewData(mData!!.postList)
-                refreshLayout.isRefreshing = false
+                mAdapter!!.setData(mData!!.postList)
+                refreshLayout?.finishRefresh(true)
             }
         })
     }
 
-    private fun loadMore(isReload: Boolean) {
+    private fun loadMore() {
         if (hasMore()) {
-            if (!isReload) {
-                page += 1
-            }
-            TiebaApi.getInstance().searchThread(keyword!!, page, order, filter).enqueue(object : Callback<SearchThreadBean> {
+            TiebaApi.getInstance().searchThread(keyword!!, page + 1, order, filter).enqueue(object : Callback<SearchThreadBean> {
                 override fun onFailure(call: Call<SearchThreadBean>, t: Throwable) {
-                    refreshLayout.isRefreshing = false
                     Toast.makeText(attachContext, t.message, Toast.LENGTH_SHORT).show()
+                    refreshLayout?.finishLoadMore(false)
                 }
 
                 override fun onResponse(call: Call<SearchThreadBean>, response: Response<SearchThreadBean>) {
                     val searchThreadBean = response.body()!!
                     mData = searchThreadBean.data
-                    mAdapter!!.setLoadMoreData(mData!!.postList)
-                    refreshLayout.isRefreshing = false
+                    mData!!.postList?.let { mAdapter!!.insert(it) }
+                    page += 1
+                    refreshLayout?.finishLoadMore(true)
                 }
             })
         }
     }
 
     override fun onFragmentFirstVisible() {
-        refresh()
+        refreshLayout!!.autoRefresh()
     }
 
     override fun onSwitch(type: Int, value: Int) {
@@ -144,8 +152,10 @@ class SearchThreadFragment : BaseFragment(), OnOrderSwitchListener {
     companion object {
         const val TAG = "SearchThreadFragment"
         const val ARG_KEYWORD = "keyword"
+
         @JvmStatic
-        fun newInstance(keyword: String?): SearchThreadFragment {
+        @JvmOverloads
+        fun newInstance(keyword: String? = null): SearchThreadFragment {
             val fragment = SearchThreadFragment()
             val bundle = Bundle()
             bundle.putString(ARG_KEYWORD, keyword)

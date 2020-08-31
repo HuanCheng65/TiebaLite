@@ -16,6 +16,7 @@
     <androidx.recyclerview.widget.RecyclerView
         android:paddingStart="8dp"
         android:paddingEnd="8dp"
+        android:paddingBottom="8dp"
         android:layout_marginTop="8dp"
         android:clipToPadding="false"
         android:id="@+id/fragment_message_recycler_view"
