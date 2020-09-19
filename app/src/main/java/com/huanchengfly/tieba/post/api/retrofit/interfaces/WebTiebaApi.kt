@@ -1,15 +1,14 @@
 package com.huanchengfly.tieba.post.api.retrofit.interfaces
 
 import android.text.TextUtils
+import com.huanchengfly.tieba.post.api.Header
 import com.huanchengfly.tieba.post.api.models.*
 import com.huanchengfly.tieba.post.api.models.web.*
-import com.huanchengfly.tieba.post.api.Header
 import com.huanchengfly.tieba.post.models.MyInfoBean
-import io.michaelrocks.paranoid.Obfuscate
 import retrofit2.Call
 import retrofit2.http.*
 
-@Obfuscate
+
 interface WebTiebaApi {
     @Headers(
             "${Header.FORCE_LOGIN}: ${Header.FORCE_LOGIN_TRUE}"

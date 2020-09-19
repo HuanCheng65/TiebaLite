@@ -1,18 +1,17 @@
 package com.huanchengfly.tieba.post.api.retrofit.interfaces
 
 import android.text.TextUtils
-import com.huanchengfly.tieba.post.api.models.*
+import com.huanchengfly.tieba.post.BaseApplication
+import com.huanchengfly.tieba.post.BaseApplication.ScreenInfo
 import com.huanchengfly.tieba.post.api.Header
 import com.huanchengfly.tieba.post.api.getScreenHeight
 import com.huanchengfly.tieba.post.api.getScreenWidth
-import com.huanchengfly.tieba.post.BaseApplication
-import com.huanchengfly.tieba.post.BaseApplication.ScreenInfo
+import com.huanchengfly.tieba.post.api.models.*
 import com.huanchengfly.tieba.post.utils.AccountUtil
-import io.michaelrocks.paranoid.Obfuscate
 import retrofit2.Call
 import retrofit2.http.*
 
-@Obfuscate
+
 interface MiniTiebaApi {
     @POST("/c/f/excellent/personalized")
     @FormUrlEncoded

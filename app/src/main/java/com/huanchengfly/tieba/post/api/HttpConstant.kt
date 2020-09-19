@@ -1,8 +1,6 @@
 package com.huanchengfly.tieba.post.api
 
-import io.michaelrocks.paranoid.Obfuscate
 
-@Obfuscate
 object Method {
     const val GET = "GET"
     const val POST = "POST"
@@ -21,14 +19,14 @@ object Error {
     const val ERROR_UPDATE_NOT_ENABLE = 100
 }
 
-@Obfuscate
+
 object Url {
     const val UPDATE_INFO = "https://huancheng65.github.io/TiebaLite/update_v2.json"
     const val CHECK_UPDATE = "https://tblite.huanchengfly.tk/api/update"
     const val CHANGELOG = "https://tblite.huanchengfly.tk/api/changelog/"
 }
 
-@Obfuscate
+
 object Header {
     const val FORCE_PARAM = "force_param"
     const val FORCE_PARAM_QUERY = "query"
@@ -50,7 +48,7 @@ object Header {
     const val CUID_GID = "cuid_gid"
 }
 
-@Obfuscate
+
 object Param {
     const val BDUSS = "BDUSS"
     const val CLIENT_VERSION = "_client_version"

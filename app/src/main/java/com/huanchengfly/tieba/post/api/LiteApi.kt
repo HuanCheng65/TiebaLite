@@ -12,10 +12,9 @@ import com.huanchengfly.tieba.post.utils.VersionUtil
 import com.huanchengfly.tieba.post.utils.appPreferences
 import com.tsy.sdk.myokhttp.MyOkHttp
 import com.tsy.sdk.myokhttp.response.GsonResponseHandler
-import io.michaelrocks.paranoid.Obfuscate
 import java.lang.ref.WeakReference
 
-@Obfuscate
+
 class LiteApi private constructor(context: Context) {
     private val myOkHttp: MyOkHttp = MyOkHttp()
     private val contextWeakReference: WeakReference<Context> = WeakReference(context)

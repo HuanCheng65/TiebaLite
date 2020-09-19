@@ -2,11 +2,10 @@ package com.huanchengfly.tieba.post.utils
 
 import android.content.Context
 import android.content.SharedPreferences
-import io.michaelrocks.paranoid.Obfuscate
 import kotlin.properties.ReadWriteProperty
 import kotlin.reflect.KProperty
 
-@Obfuscate
+
 open class AppPreferencesUtils(context: Context) {
     private val preferences: SharedPreferences =
             context.getSharedPreferences("settings", Context.MODE_PRIVATE)

@@ -2,6 +2,7 @@ package com.huanchengfly.tieba.post.api.retrofit
 
 import android.os.Build
 import android.webkit.WebSettings
+import com.huanchengfly.tieba.post.BaseApplication
 import com.huanchengfly.tieba.post.api.Header
 import com.huanchengfly.tieba.post.api.Param
 import com.huanchengfly.tieba.post.api.interceptors.SortAndSignInterceptor
@@ -11,17 +12,15 @@ import com.huanchengfly.tieba.post.api.retrofit.interfaces.MiniTiebaApi
 import com.huanchengfly.tieba.post.api.retrofit.interfaces.NewTiebaApi
 import com.huanchengfly.tieba.post.api.retrofit.interfaces.OfficialTiebaApi
 import com.huanchengfly.tieba.post.api.retrofit.interfaces.WebTiebaApi
-import com.huanchengfly.tieba.post.BaseApplication
 import com.huanchengfly.tieba.post.utils.AccountUtil
 import com.huanchengfly.tieba.post.utils.MobileInfoUtil
 import com.huanchengfly.tieba.post.utils.UIDUtil
-import io.michaelrocks.paranoid.Obfuscate
 import okhttp3.ConnectionPool
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 
-@Obfuscate
+
 object RetrofitTiebaApi {
     private val initTime = System.currentTimeMillis()
     private val clientId = "wappc_${initTime}_${Math.round(Math.random() * 1000).toInt()}"
