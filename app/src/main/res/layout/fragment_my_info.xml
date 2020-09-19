@@ -365,10 +365,10 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content">
 
-                        <com.huanchengfly.tieba.post.widgets.theme.TintImageView
+                        <androidx.appcompat.widget.AppCompatImageView
                             android:layout_gravity="center_vertical"
-                            android:src="@drawable/ic_round_info"
-                            app:tint="@color/default_color_accent"
+                            app:srcCompat="@drawable/ic_round_info"
+                            app:tint="#3CA7F1"
                             android:layout_marginEnd="16dp"
                             android:layout_width="24dp"
                             android:layout_height="24dp" />
