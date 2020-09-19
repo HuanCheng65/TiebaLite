@@ -13,16 +13,17 @@ import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayout.OnTabSelectedListener
 import com.huanchengfly.tieba.post.R
-import com.huanchengfly.tieba.post.activities.MainActivity
+import com.huanchengfly.tieba.post.activities.FloorActivity
+import com.huanchengfly.tieba.post.activities.NewSearchActivity
+import com.huanchengfly.tieba.post.activities.ThreadActivity
 import com.huanchengfly.tieba.post.adapters.MessageListAdapter
 import com.huanchengfly.tieba.post.adapters.TabViewPagerAdapter
 import com.huanchengfly.tieba.post.api.TiebaApi.getInstance
 import com.huanchengfly.tieba.post.api.models.MessageListBean
 import com.huanchengfly.tieba.post.api.retrofit.exception.TiebaException
 import com.huanchengfly.tieba.post.components.MyLinearLayoutManager
-import com.huanchengfly.tieba.post.dpToPx
+import com.huanchengfly.tieba.post.goToActivity
 import com.huanchengfly.tieba.post.interfaces.Refreshable
-import com.huanchengfly.tieba.post.utils.AnimUtil.bindTextSizeAnim
 import com.huanchengfly.tieba.post.utils.ThemeUtil
 import com.huanchengfly.tieba.post.utils.Util
 import com.scwang.smart.refresh.header.MaterialHeader
@@ -77,7 +78,6 @@ class MessageFragment : BaseFragment(), Refreshable, OnTabSelectedListener, Tool
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        bindTextSizeAnim(mAppBarLayout!!, mTitleTextView!!, 32, 18, 56.dpToPx())
         mToolbar!!.setOnMenuItemClickListener(this)
         val viewPager: ViewPager = view.findViewById(R.id.fragment_message_vp)
         val viewPagerAdapter = TabViewPagerAdapter()
@@ -100,9 +100,7 @@ class MessageFragment : BaseFragment(), Refreshable, OnTabSelectedListener, Tool
 
     override fun onMenuItemClick(item: MenuItem): Boolean {
         if (item.itemId == R.id.menu_search) {
-            if (attachContext is MainActivity) {
-                (attachContext as MainActivity).openSearch(item)
-            }
+            goToActivity<NewSearchActivity>()
         }
         return false
     }
@@ -171,9 +169,9 @@ class MessageFragment : BaseFragment(), Refreshable, OnTabSelectedListener, Tool
                     dataBean = response.body()
                     if (reload) {
                         adapter.reset()
-                        adapter.setData(dataBean)
+                        dataBean?.let { adapter.setData(it) }
                     } else {
-                        adapter.addData(dataBean)
+                        dataBean?.let { adapter.addData(it) }
                     }
                     if (reload) {
                         mSmartRefreshLayout.finishRefresh(true)
@@ -235,7 +233,15 @@ class MessageFragment : BaseFragment(), Refreshable, OnTabSelectedListener, Tool
                 loadMore()
             }
             recyclerView.layoutManager = MyLinearLayoutManager(context)
-            adapter = MessageListAdapter(context!!, type)
+            adapter = MessageListAdapter(context!!, type).apply {
+                setOnItemClickListener { _, item, _ ->
+                    if (item.isFloor == "1") {
+                        FloorActivity.launch(attachContext, item.threadId!!, subPostId = item.postId)
+                    } else {
+                        ThreadActivity.launch(context, item.threadId!!, item.postId)
+                    }
+                }
+            }
             recyclerView.adapter = adapter
         }
     }
@@ -250,12 +256,12 @@ class MessageFragment : BaseFragment(), Refreshable, OnTabSelectedListener, Tool
         @JvmStatic
         @JvmOverloads
         fun newInstance(type: Int, isFromNotification: Boolean = false): MessageFragment {
-            val fragment = MessageFragment()
-            val bundle = Bundle()
-            bundle.putInt(PARAM_TYPE, type)
-            bundle.putBoolean(PARAM_FROM_NOTIFICATION, isFromNotification)
-            fragment.arguments = bundle
-            return fragment
+            return MessageFragment().apply {
+                arguments = Bundle().apply {
+                    putInt(PARAM_TYPE, type)
+                    putBoolean(PARAM_FROM_NOTIFICATION, isFromNotification)
+                }
+            }
         }
     }
 }

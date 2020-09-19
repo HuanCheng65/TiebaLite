@@ -28,6 +28,10 @@ public class WebViewActivity extends BaseActivity implements OnReceivedTitleList
     private Toolbar toolbar;
     private String mUrl;
 
+    public static void launch(Context context, String url) {
+        context.startActivity(newIntent(context, url));
+    }
+
     public static Intent newIntent(Context context, String url) {
         return new Intent(context, WebViewActivity.class).putExtra(EXTRA_URL, url);
     }

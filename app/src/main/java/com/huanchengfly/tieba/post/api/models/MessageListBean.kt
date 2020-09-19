@@ -20,7 +20,7 @@ class MessageListBean : BaseBean() {
 
     fun getErrorCode() = Integer.valueOf(errorCode!!)
 
-    open inner class UserInfoBean {
+    open class UserInfoBean {
         val id: String? = null
         val name: String? = null
 
@@ -32,7 +32,7 @@ class MessageListBean : BaseBean() {
 
     }
 
-    inner class ReplyerInfoBean : UserInfoBean() {
+    class ReplyerInfoBean : UserInfoBean() {
         @SerializedName("is_friend")
         val isFriend: String? = null
 
@@ -41,7 +41,7 @@ class MessageListBean : BaseBean() {
 
     }
 
-    inner class MessageInfoBean {
+    class MessageInfoBean {
         @SerializedName("is_floor")
         val isFloor: String? = null
         val title: String? = null
@@ -73,7 +73,7 @@ class MessageListBean : BaseBean() {
 
     }
 
-    inner class MessageBean {
+    class MessageBean {
         @SerializedName("replyme")
         val replyMe: String? = null
 
@@ -87,7 +87,7 @@ class MessageListBean : BaseBean() {
 
     }
 
-    inner class PageInfoBean {
+    class PageInfoBean {
         @SerializedName("current_page")
         val currentPage: String? = null
 
@@ -96,6 +96,5 @@ class MessageListBean : BaseBean() {
 
         @SerializedName("has_prev")
         val hasPrev: String? = null
-
     }
 }

@@ -144,16 +144,9 @@ public class ThemeUtil {
     }
 
     public static void setChipTheme(@ColorInt int color, View parent, TextView... textViews) {
-        if (getSharedPreferences(parent.getContext()).getBoolean("level_icon_old_style", false)) {
-            parent.setBackgroundTintList(ColorStateList.valueOf(color));
-            for (TextView textView : textViews) {
-                textView.setTextColor(ThemeUtils.getColorByAttr(parent.getContext(), R.attr.colorBg));
-            }
-        } else {
-            parent.setBackgroundTintList(ColorStateList.valueOf(color).withAlpha(60));
-            for (TextView textView : textViews) {
-                textView.setTextColor(color);
-            }
+        parent.setBackgroundTintList(ColorStateList.valueOf(color));
+        for (TextView textView : textViews) {
+            textView.setTextColor(ThemeUtils.getColorByAttr(parent.getContext(), R.attr.colorBg));
         }
     }
 

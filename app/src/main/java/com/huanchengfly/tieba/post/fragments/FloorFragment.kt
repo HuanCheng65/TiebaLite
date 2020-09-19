@@ -103,7 +103,7 @@ class FloorFragment : BaseBottomSheetDialogFragment() {
         ThemeUtil.setTranslucentThemeBackground(rootView.findViewById(R.id.background),
                 false,
                 false,
-                RadiusTransformation(attachContext,
+                RadiusTransformation(
                         8,
                         RadiusTransformation.CORNER_TOP_LEFT or RadiusTransformation.CORNER_TOP_RIGHT))
         toolbar.apply {

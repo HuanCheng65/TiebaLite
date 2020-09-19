@@ -13,7 +13,7 @@
     <string name="shortcut_oksign">一键签到</string>
     <string name="shortcut_my_collect">我的收藏</string>
     <string name="shortcut_my_message">我的消息</string>
-    <string name="forum_list_title">我关注的贴吧</string>
+    <string name="forum_list_title">关注</string>
     <string name="title_login">登录</string>
     <string name="title_refresh">刷新</string>
     <string name="title_copy_link">复制链接</string>
@@ -124,7 +124,7 @@
     <string name="tip_store_deleted">贴子已被删除</string>
     <string name="content_top">置顶</string>
     <string name="tip_forum_header_liked">LV%1$s %2$s</string>
-    <string name="tip_forum_name">%1$s吧</string>
+    <string name="text_forum_name">%1$s吧</string>
     <string name="toast_sign_success">签到成功， 经验 +%1$s。你是今天第 %2$s 个签到的。</string>
     <string name="button_sign_in">签到</string>
     <string name="button_signed">已签到</string>
@@ -240,7 +240,7 @@
     <string name="button_follow">关注</string>
     <string name="button_unfollow">取消关注</string>
     <string name="error_unknown">未知错误</string>
-    <string name="title_top_forum">置顶的贴吧</string>
+    <string name="title_top_forum">置顶</string>
     <string name="title_use_webview">使用内置浏览器</string>
     <string name="tip_use_webview_on">所有链接都将使用内置浏览器打开</string>
     <string name="tip_use_webview">仅贴吧链接将使用内置浏览器打开</string>
@@ -331,7 +331,7 @@
     <string name="title_forum_managers">吧主</string>
     <string name="tip_night_mode_theme">夜间模式</string>
     <string name="search_clear_all">清除全部历史</string>
-    <string name="fans_num">粉丝: %s</string>
+    <string name="fans_num">%s 粉丝</string>
     <string name="title_dialog_clip_board_tieba_url">是否要打开剪贴板中的链接</string>
     <string name="subtitle_quick_preview_thread">来自%1$s吧，共 %2$s 条回复</string>
     <string name="subtitle_link">网页链接</string>
@@ -374,8 +374,14 @@
     <string name="text_no_data">这里什么都没有</string>
     <string name="title_exact_match">推荐结果</string>
     <string name="title_fuzzy_match">查询结果</string>
-    <string name="title_filter_only_show_thread">仅看主题贴</string>
+    <string name="title_search_filter_only_thread">仅看主题贴</string>
     <string name="title_search_order_new">新贴在前</string>
     <string name="title_search_order_old">旧贴在前</string>
     <string name="title_search_order_relevant">相关度</string>
+    <string name="title_search_order">排序</string>
+    <string name="title_search_filter">过滤</string>
+    <string name="title_search_filter_all">全部</string>
+    <string name="desc_user_avatar">用户 %1</string>
+    <string name="button_edit">编辑</string>
+    <string name="my_info_about">关于</string>
 </resources>

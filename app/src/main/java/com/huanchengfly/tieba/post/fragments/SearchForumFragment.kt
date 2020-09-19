@@ -113,7 +113,7 @@ class SearchForumFragment : BaseFragment(), ISearchFragment, OnItemClickListener
                         R.drawable.ic_round_graphic_eq
                 ).apply {
                     setBackgroundResource(R.drawable.bg_top_radius_8dp)
-                    topMargin = 8.dpToPx()
+                    topMargin = attachContext.resources.getDimensionPixelSize(R.dimen.card_margin)
                     startPadding = 16.dpToPx()
                     endPadding = 16.dpToPx()
                 })
@@ -127,7 +127,7 @@ class SearchForumFragment : BaseFragment(), ISearchFragment, OnItemClickListener
                         R.drawable.ic_infinite
                 ).apply {
                     setBackgroundResource(R.drawable.bg_top_radius_8dp)
-                    topMargin = 8.dpToPx()
+                    topMargin = attachContext.resources.getDimensionPixelSize(R.dimen.card_margin)
                     startPadding = 16.dpToPx()
                     endPadding = 16.dpToPx()
                 })

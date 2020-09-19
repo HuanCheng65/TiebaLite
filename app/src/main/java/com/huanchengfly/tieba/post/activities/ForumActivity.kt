@@ -414,7 +414,7 @@ class ForumActivity : BaseActivity(), View.OnClickListener, OnRefreshedListener 
                 }
             } catch (ignored: Exception) {
             }
-            headerNameTextView.text = getString(R.string.tip_forum_name, mDataBean!!.forum?.name)
+            headerNameTextView.text = getString(R.string.text_forum_name, mDataBean!!.forum?.name)
             if ("1" == mDataBean!!.forum?.isLike) {
                 if ("0" == mDataBean!!.forum?.signInInfo?.userInfo?.isSignIn) {
                     button.setText(R.string.button_sign_in)

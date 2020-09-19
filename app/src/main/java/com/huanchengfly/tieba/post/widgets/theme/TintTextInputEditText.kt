@@ -20,7 +20,7 @@ class TintTextInputEditText @JvmOverloads constructor(
         } else {
             val array = getContext().obtainStyledAttributes(attrs, R.styleable.TintTextInputEditText, defStyleAttr, 0)
             textColorResId = array.getResourceId(R.styleable.TintTextInputEditText_textColor, 0)
-            textColorHintResId = array.getResourceId(R.styleable.TintTextInputEditText_android_textColorHint, 0)
+            textColorHintResId = array.getResourceId(R.styleable.TintTextInputEditText_textColorHint, 0)
             array.recycle()
         }
         tint()

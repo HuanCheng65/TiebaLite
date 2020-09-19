@@ -6,8 +6,8 @@ import android.widget.TextView;
 
 import androidx.core.text.HtmlCompat;
 
-import com.huanchengfly.tieba.post.api.models.SearchPostBean;
 import com.huanchengfly.tieba.post.R;
+import com.huanchengfly.tieba.post.api.models.SearchPostBean;
 import com.huanchengfly.tieba.post.utils.NavigationHelper;
 import com.othershe.baseadapter.ViewHolder;
 import com.othershe.baseadapter.base.CommonBaseAdapter;
@@ -35,11 +35,11 @@ public class SearchPostAdapter extends CommonBaseAdapter<SearchPostBean.ThreadIn
         TextView titleTextView = viewHolder.getView(R.id.item_search_thread_title);
         titleTextView.setText(HtmlCompat.fromHtml(threadInfoBean.getTitle(), HtmlCompat.FROM_HTML_MODE_COMPACT));
         contentTextView.setText(HtmlCompat.fromHtml(threadInfoBean.getContent(), HtmlCompat.FROM_HTML_MODE_COMPACT));
-        viewHolder.setText(R.id.item_search_thread_user, threadInfoBean.getAuthor().getNameShow());
+        viewHolder.setText(R.id.user_name, threadInfoBean.getAuthor().getNameShow());
         if (threadInfoBean.getForumName() == null) {
-            viewHolder.setText(R.id.item_search_thread_info, String.valueOf(DateUtils.getRelativeTimeSpanString(Long.valueOf(threadInfoBean.getTime()) * 1000L)));
+            viewHolder.setText(R.id.user_content, String.valueOf(DateUtils.getRelativeTimeSpanString(Long.valueOf(threadInfoBean.getTime()) * 1000L)));
         } else {
-            viewHolder.setText(R.id.item_search_thread_info, threadInfoBean.getForumName() + " " + DateUtils.getRelativeTimeSpanString(Long.valueOf(threadInfoBean.getTime()) * 1000L));
+            viewHolder.setText(R.id.user_content, threadInfoBean.getForumName() + " " + DateUtils.getRelativeTimeSpanString(Long.valueOf(threadInfoBean.getTime()) * 1000L));
         }
     }
 

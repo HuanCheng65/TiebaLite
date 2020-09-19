@@ -4,7 +4,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:foreground="?selectableItemBackground"
     app:backgroundTint="@color/default_color_card"
     android:paddingStart="@dimen/padding_start_default"
     android:paddingEnd="@dimen/padding_end_default"
@@ -64,48 +63,29 @@
             android:id="@+id/message_list_item_content"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="42dp"
             android:layout_marginEnd="8dp"
+            android:textStyle="bold"
             app:tint="@color/default_color_text"
             android:textSize="16sp"
+            android:maxLines="2"
+            android:ellipsize="end"
             tools:text="消息内容" />
 
-        <com.huanchengfly.tieba.post.widgets.theme.TintFloorMaterialCardView
-            android:foreground="?selectableItemBackground"
-            android:id="@+id/message_list_item_quote_parent"
-            android:background="@drawable/bg_radius_4dp"
+        <com.huanchengfly.tieba.post.widgets.theme.TintTextView
+            android:id="@+id/message_list_item_quote"
             app:backgroundTint="@color/default_color_floor_card"
-            app:strokeWidth="0dp"
-            app:cardElevation="0dp"
+            android:background="@drawable/bg_radius_8dp_ripple"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:maxLines="2"
+            android:ellipsize="end"
+            android:padding="8dp"
+            android:textSize="14sp"
             android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
             android:layout_below="@id/message_list_item_content"
             android:layout_alignStart="@id/message_list_item_content"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-            <com.huanchengfly.tieba.post.widgets.theme.TintTextView
-                android:id="@+id/message_list_item_quote"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:maxLines="1"
-                android:ellipsize="end"
-                android:padding="8dp"
-                android:textSize="14sp"
-                app:tint="@color/default_color_text_secondary"
-                tools:text="原内容" />
-        </com.huanchengfly.tieba.post.widgets.theme.TintFloorMaterialCardView>
-
-        <com.huanchengfly.tieba.post.widgets.theme.TintTextView
-            android:ellipsize="end"
-            android:maxLines="1"
-            android:id="@+id/message_list_item_source"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/message_list_item_quote_parent"
-            android:layout_alignStart="@id/message_list_item_quote_parent"
-            android:layout_marginTop="8dp"
-            android:textSize="12sp"
             app:tint="@color/default_color_text_secondary"
-            tools:text="来源" />
+            tools:text="原内容" />
     </RelativeLayout>
 </com.huanchengfly.tieba.post.widgets.theme.TintRelativeLayout>

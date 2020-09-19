@@ -41,6 +41,7 @@ andResGuard {
                  "R.mipmap.ic_launcher_foreground",
                  "R.mipmap.ic_launcher_round",
                  "R.drawable.ic_*",
+                 "R.drawable.bg*radius*",
                  "R.color.theme_color_*",
                  "R.id.*"]
     compressFilePattern = ["*.png",

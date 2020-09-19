@@ -4,6 +4,7 @@ import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.app.Activity;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -24,10 +25,10 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.widget.Toolbar;
 
 import com.gyf.immersionbar.ImmersionBar;
+import com.huanchengfly.tieba.post.BaseApplication;
+import com.huanchengfly.tieba.post.R;
 import com.huanchengfly.tieba.post.ui.theme.interfaces.ExtraRefreshable;
 import com.huanchengfly.tieba.post.ui.theme.utils.ThemeUtils;
-import com.huanchengfly.tieba.post.R;
-import com.huanchengfly.tieba.post.BaseApplication;
 import com.huanchengfly.tieba.post.utils.AppPreferencesUtils;
 import com.huanchengfly.tieba.post.utils.HandleBackUtil;
 import com.huanchengfly.tieba.post.utils.SharedPreferencesUtil;
@@ -39,10 +40,10 @@ import butterknife.ButterKnife;
 import cn.jzvd.Jzvd;
 import me.imid.swipebacklayout.lib.app.SwipeBackActivity;
 
+import static com.huanchengfly.tieba.post.utils.ColorUtils.getDarkerColor;
 import static com.huanchengfly.tieba.post.utils.ThemeUtil.SP_CUSTOM_TOOLBAR_PRIMARY_COLOR;
 import static com.huanchengfly.tieba.post.utils.ThemeUtil.THEME_CUSTOM;
 import static com.huanchengfly.tieba.post.utils.ThemeUtil.THEME_TRANSLUCENT;
-import static com.huanchengfly.tieba.post.utils.ColorUtils.getDarkerColor;
 
 public abstract class BaseActivity extends SwipeBackActivity implements ExtraRefreshable {
     public static final int NO_LAYOUT = -1;
@@ -229,23 +230,19 @@ public abstract class BaseActivity extends SwipeBackActivity implements ExtraRef
                     .navigationBarColorInt(ThemeUtils.getColorByAttr(this, R.attr.colorNavBar))
                     .navigationBarDarkIcon(ThemeUtil.isNavigationBarFontDark(this))
                     .statusBarDarkFont(ThemeUtil.isStatusBarFontDark(this))
-                    .statusBarColorInt(calcStatusBarColor(ThemeUtils.getColorByAttr(this, R.attr.colorToolbar)))
+                    .statusBarColorInt(calcStatusBarColor(this, ThemeUtils.getColorByAttr(this, R.attr.colorToolbar)))
                     .init();
         }
     }
 
-    protected int calcStatusBarColor() {
-        return calcStatusBarColor(ThemeUtils.getColorByAttr(this, R.attr.colorToolbar));
-    }
-
-    protected int calcStatusBarColor(@ColorInt int originColor) {
+    public static int calcStatusBarColor(Context context, @ColorInt int originColor) {
         boolean darkerStatusBar = true;
-        if (THEME_CUSTOM.equals(ThemeUtil.getTheme(this)) && !SharedPreferencesUtil.get(this, SharedPreferencesUtil.SP_SETTINGS)
+        if (THEME_CUSTOM.equals(ThemeUtil.getTheme(context)) && !SharedPreferencesUtil.get(context, SharedPreferencesUtil.SP_SETTINGS)
                 .getBoolean(SP_CUSTOM_TOOLBAR_PRIMARY_COLOR, true)) {
             darkerStatusBar = false;
-        } else if (ThemeUtil.getTheme(this).equals(ThemeUtil.THEME_WHITE)) {
+        } else if (ThemeUtil.getTheme(context).equals(ThemeUtil.THEME_WHITE)) {
             darkerStatusBar = false;
-        } else if (!SharedPreferencesUtil.get(this, SharedPreferencesUtil.SP_SETTINGS).getBoolean("status_bar_darker", true)) {
+        } else if (!SharedPreferencesUtil.get(context, SharedPreferencesUtil.SP_SETTINGS).getBoolean("status_bar_darker", true)) {
             darkerStatusBar = false;
         }
         return darkerStatusBar ? getDarkerColor(originColor) : originColor;

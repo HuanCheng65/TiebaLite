@@ -45,6 +45,12 @@ class MyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         view.visibility = visibility
     }
 
+    @JvmOverloads
+    fun setVisibility(id: Int, visibility: Boolean, gone: Boolean = true) {
+        val view = getView<View>(id)
+        view.visibility = if (visibility) View.VISIBLE else if (gone) View.GONE else View.INVISIBLE
+    }
+
     fun setText(@IdRes id: Int, @StringRes string: Int) {
         setText(id, mContext.getString(string))
     }

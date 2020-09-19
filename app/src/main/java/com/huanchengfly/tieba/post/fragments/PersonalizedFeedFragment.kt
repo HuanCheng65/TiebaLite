@@ -15,13 +15,14 @@ import cn.jzvd.Jzvd
 import com.bumptech.glide.Glide
 import com.google.android.material.appbar.AppBarLayout
 import com.huanchengfly.tieba.post.R
+import com.huanchengfly.tieba.post.activities.NewSearchActivity
 import com.huanchengfly.tieba.post.adapters.PersonalizedFeedAdapter
 import com.huanchengfly.tieba.post.api.TiebaApi
 import com.huanchengfly.tieba.post.api.models.PersonalizedBean
 import com.huanchengfly.tieba.post.api.retrofit.exception.TiebaException
 import com.huanchengfly.tieba.post.components.MyLinearLayoutManager
 import com.huanchengfly.tieba.post.components.dividers.FeedDivider
-import com.huanchengfly.tieba.post.dpToPx
+import com.huanchengfly.tieba.post.goToActivity
 import com.huanchengfly.tieba.post.interfaces.Refreshable
 import com.huanchengfly.tieba.post.utils.*
 import com.huanchengfly.tieba.post.widgets.ShadowLayout
@@ -68,7 +69,6 @@ class PersonalizedFeedFragment : BaseFragment(), PersonalizedFeedAdapter.OnRefre
 
     override fun onViewCreated(contentView: View, savedInstanceState: Bundle?) {
         super.onViewCreated(contentView, savedInstanceState)
-        AnimUtil.bindTextSizeAnim(appBar, titleTextView, 32, 18, 56.dpToPx())
         toolbar.setOnMenuItemClickListener(this)
         ThemeUtil.setThemeForMaterialHeader(materialHeader)
         refreshLayout.apply {
@@ -222,6 +222,7 @@ class PersonalizedFeedFragment : BaseFragment(), PersonalizedFeedAdapter.OnRefre
     override fun onMenuItemClick(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.menu_search -> {
+                goToActivity<NewSearchActivity>()
                 true
             }
             R.id.menu_sign -> {

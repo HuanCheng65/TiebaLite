@@ -41,7 +41,7 @@
             android:layout_height="wrap_content"
             style="@style/Widget.AppCompat.CompoundButton.CheckBox"
             android:layout_centerVertical="true"
-            app:buttonTint="@drawable/tint_checkbox"
+            app:buttonTint="@color/tint_checkbox"
             app:textColor="@color/default_color_text_secondary"
             android:minHeight="0dp"
             android:text="@string/title_not_ask"

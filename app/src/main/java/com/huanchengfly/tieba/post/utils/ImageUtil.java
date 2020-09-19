@@ -435,13 +435,13 @@ public class ImageUtil {
         }
         switch (type) {
             case LOAD_TYPE_SMALL_PIC:
-                requestBuilder.apply(RequestOptions.bitmapTransform(new RadiusTransformation(imageView.getContext(), radius))
+                requestBuilder.apply(RequestOptions.bitmapTransform(new RadiusTransformation(radius))
                         .placeholder(getPlaceHolder(imageView.getContext(), radius))
                         .skipMemoryCache(true));
                 break;
             case LOAD_TYPE_AVATAR:
-                requestBuilder.apply(RequestOptions.circleCropTransform()
-                        .placeholder(getPlaceHolder(imageView.getContext(), 50))
+                requestBuilder.apply(RequestOptions.bitmapTransform(new RadiusTransformation(6))
+                        .placeholder(getPlaceHolder(imageView.getContext(), 6))
                         .skipMemoryCache(true));
                 break;
             case LOAD_TYPE_NO_RADIUS:

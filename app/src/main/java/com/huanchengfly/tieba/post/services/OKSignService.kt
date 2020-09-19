@@ -11,17 +11,17 @@ import android.os.Build
 import android.os.Handler
 import android.widget.Toast
 import androidx.core.app.NotificationCompat
-import com.huanchengfly.tieba.post.ui.theme.utils.ThemeUtils
+import com.huanchengfly.tieba.post.R
+import com.huanchengfly.tieba.post.activities.LoginActivity
+import com.huanchengfly.tieba.post.activities.MainActivity
 import com.huanchengfly.tieba.post.api.TiebaApi
 import com.huanchengfly.tieba.post.api.interfaces.CommonCallback
 import com.huanchengfly.tieba.post.api.models.ForumRecommend
 import com.huanchengfly.tieba.post.api.models.SignResultBean
 import com.huanchengfly.tieba.post.api.retrofit.exception.TiebaException
-import com.huanchengfly.tieba.post.activities.MainActivity
-import com.huanchengfly.tieba.post.R
-import com.huanchengfly.tieba.post.activities.LoginActivity
 import com.huanchengfly.tieba.post.models.MyInfoBean
 import com.huanchengfly.tieba.post.models.SignDataBean
+import com.huanchengfly.tieba.post.ui.theme.utils.ThemeUtils
 import com.huanchengfly.tieba.post.utils.AccountUtil
 import retrofit2.Call
 import retrofit2.Callback
@@ -125,9 +125,9 @@ class OKSignService : IntentService(TAG) {
                 if (position < signData.size - 1) {
                     position += 1
                     if (signResultBean.userInfo != null) {
-                        updateNotification(getString(R.string.title_signing_progress, position, signData.size), kw + "吧 √ 经验 +" + signResultBean.userInfo.signBonusPoint, position, signData.size, false)
+                        updateNotification(getString(R.string.title_signing_progress, position, signData.size), kw + "吧 ✓ 经验 +" + signResultBean.userInfo.signBonusPoint, position, signData.size, false)
                     } else {
-                        updateNotification(getString(R.string.title_signing_progress, position, signData.size), kw + "吧 √", position, signData.size, false)
+                        updateNotification(getString(R.string.title_signing_progress, position, signData.size), kw + "吧 ✓", position, signData.size, false)
                     }
                     handler.postDelayed({ sign(signData[position]) }, ThreadLocalRandom.current().nextInt(1000, 3500).toLong())
                 } else {

@@ -39,6 +39,12 @@
         <attr name="tabIndicatorColor" />
     </declare-styleable>
 
+    <declare-styleable name="TintMaterialRadioButton">
+        <attr name="backgroundTint" />
+        <attr name="radioButtonTint" format="color" />
+        <attr name="tint" />
+    </declare-styleable>
+
     <declare-styleable name="TintView">
         <attr name="backgroundTint" format="color" />
         <attr name="tint" format="color" />
@@ -149,7 +155,7 @@
 
     <declare-styleable name="TintTextInputEditText">
         <attr name="textColor" />
-        <attr name="android:textColorHint" />
+        <attr name="textColorHint" format="color" />
     </declare-styleable>
 
     <declare-styleable name="ScrollCollapsingToolbarLayout">

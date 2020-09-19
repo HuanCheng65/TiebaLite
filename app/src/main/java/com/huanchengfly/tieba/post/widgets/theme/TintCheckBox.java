@@ -1,16 +1,14 @@
 package com.huanchengfly.tieba.post.widgets.theme;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.res.ColorStateList;
 import android.content.res.TypedArray;
 import android.util.AttributeSet;
 
 import androidx.appcompat.widget.AppCompatCheckBox;
+import androidx.core.widget.CompoundButtonCompat;
 
-import com.huanchengfly.tieba.post.ui.theme.utils.ColorStateListUtils;
-import com.huanchengfly.tieba.post.ui.theme.utils.ThemeUtils;
 import com.huanchengfly.tieba.post.R;
+import com.huanchengfly.tieba.post.ui.theme.utils.ColorStateListUtils;
 
 public class TintCheckBox extends AppCompatCheckBox {
     private int mBackgroundTintResId;
@@ -45,16 +43,15 @@ public class TintCheckBox extends AppCompatCheckBox {
         applyTintColor();
     }
 
-    @SuppressLint("RestrictedApi")
     private void applyTintColor() {
         if (mBackgroundTintResId != 0) {
-            setBackgroundTintList(ColorStateList.valueOf(ThemeUtils.getColorById(getContext(), mBackgroundTintResId)));
+            setBackgroundTintList(ColorStateListUtils.createColorStateList(getContext(), mBackgroundTintResId));
         }
         if (mButtonTintResId != 0) {
-            setSupportButtonTintList(ColorStateListUtils.createColorStateList(getContext(), mButtonTintResId));
+            CompoundButtonCompat.setButtonTintList(this, ColorStateListUtils.createColorStateList(getContext(), mButtonTintResId));
         }
         if (mTextColorResId != 0) {
-            setTextColor(ColorStateList.valueOf(ThemeUtils.getColorById(getContext(), mTextColorResId)));
+            setTextColor(ColorStateListUtils.createColorStateList(getContext(), mTextColorResId));
         }
     }
 }

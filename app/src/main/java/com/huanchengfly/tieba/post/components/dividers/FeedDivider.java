@@ -20,16 +20,14 @@ import com.huanchengfly.tieba.post.utils.DisplayUtil;
 public class FeedDivider extends RecyclerView.ItemDecoration implements Tintable {
     public static final String TAG = "ThreadDivider";
 
-    private Context mContext;
     private Drawable mDivider;
     private int mOrientation;
     private int mCommonDividerHeight;
 
     public FeedDivider(Context context) {
-        mContext = context;
         mOrientation = LinearLayoutManager.VERTICAL;
         mDivider = context.getDrawable(R.drawable.drawable_divider);
-        mCommonDividerHeight = DisplayUtil.dp2px(context, 8);
+        mCommonDividerHeight = DisplayUtil.dp2px(context, 12);
         tint();
     }
 

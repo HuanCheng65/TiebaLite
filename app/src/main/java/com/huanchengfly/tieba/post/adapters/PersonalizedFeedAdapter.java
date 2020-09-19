@@ -214,7 +214,7 @@ public class PersonalizedFeedAdapter extends MultiBaseAdapter<PersonalizedBean.T
                     mContext.getString(
                             R.string.template_two_string,
                             relativeTime,
-                            mContext.getString(R.string.tip_forum_name, threadBean.getForumName())
+                            mContext.getString(R.string.text_forum_name, threadBean.getForumName())
                     )
             );
         } else {

@@ -2,8 +2,6 @@ package com.huanchengfly.tieba.post.adapters.base
 
 import android.content.Context
 import androidx.recyclerview.widget.RecyclerView
-import com.alibaba.android.vlayout.DelegateAdapter
-import com.alibaba.android.vlayout.LayoutHelper
 import com.huanchengfly.tieba.post.components.MyViewHolder
 
 abstract class BaseAdapter<Item>(
@@ -73,26 +71,24 @@ abstract class BaseAdapter<Item>(
 
     open fun insert(items: List<Item>, position: Int) {
         if (position <= itemList.size && position >= 0) {
+            val oldItemCount = itemCount
             itemList.addAll(position, items)
             notifyItemRangeInserted(position, items.size)
-            this.notifyItemRangeChanged(position, itemList.size - position)
+            notifyItemRangeChanged(position, itemList.size - position)
+            notifyItemChanged(oldItemCount - 1)
         }
     }
 
     open fun insert(items: List<Item>) {
-        insert(items, itemList.size)
+        this.insert(items, itemList.size)
     }
 
     open fun insert(data: Item, position: Int) {
-        if (position <= itemList.size && position >= 0) {
-            itemList.add(position, data)
-            notifyItemInserted(position)
-            this.notifyItemRangeChanged(position, itemList.size - position)
-        }
+        this.insert(listOf(data), position)
     }
 
     open fun insert(data: Item) {
-        this.insert(data, itemList.size)
+        this.insert(listOf(data))
     }
 
     open fun reset() {

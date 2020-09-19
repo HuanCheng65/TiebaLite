@@ -7,7 +7,7 @@
 
     <item
         android:id="@+id/navbar_explore"
-        android:icon="@drawable/ic_selector_explore"
+        android:icon="@drawable/ic_selector_toys"
         android:title="@string/title_explore" />
 
     <item

@@ -2,10 +2,13 @@
 <com.huanchengfly.tieba.post.widgets.theme.TintRelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     app:backgroundTint="@color/default_color_floor_card"
-    android:background="@drawable/bg_radius_4dp"
+    android:background="@drawable/bg_radius_50dp_ripple"
     android:padding="6dp"
+    android:paddingStart="12dp"
+    android:paddingEnd="12dp"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content">
+
     <com.huanchengfly.tieba.post.widgets.theme.TintTextView
         android:gravity="center"
         android:ellipsize="end"

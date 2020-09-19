@@ -9,6 +9,7 @@ import android.widget.TextView
 import butterknife.BindView
 import butterknife.ButterKnife
 import com.huanchengfly.tieba.post.R
+import com.huanchengfly.tieba.post.utils.getRadiusDrawable
 import com.scwang.smart.refresh.layout.api.RefreshFooter
 import com.scwang.smart.refresh.layout.api.RefreshLayout
 import com.scwang.smart.refresh.layout.constant.RefreshState
@@ -25,6 +26,9 @@ class LoadMoreFooter @JvmOverloads constructor(
 
     @BindView(R.id.footer_text)
     lateinit var textView: TextView
+
+    @BindView(R.id.footer_view)
+    lateinit var backgroundView: View
 
     override fun onStartAnimator(refreshLayout: RefreshLayout, height: Int, maxDragHeight: Int) {
         super.onStartAnimator(refreshLayout, height, maxDragHeight)
@@ -89,6 +93,8 @@ class LoadMoreFooter @JvmOverloads constructor(
         gravity = Gravity.CENTER
         View.inflate(context, R.layout.footer_load_more, this)
         ButterKnife.bind(this)
+        val radius = resources.getDimension(R.dimen.card_radius)
+        backgroundView.background = getRadiusDrawable(radius, radius, radius, radius)
     }
 
     override fun getView(): View {

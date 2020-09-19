@@ -16,10 +16,11 @@
         <com.huanchengfly.tieba.post.widgets.theme.TintToolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
-            android:layout_height="111dp"
+            android:layout_height="115dp"
+            android:paddingBottom="4dp"
             android:minHeight="?actionBarSize"
             app:buttonGravity="bottom"
-            app:layout_scrollFlags="scroll|enterAlways|enterAlwaysCollapsed"
+            app:layout_scrollFlags="scroll"
             app:menu="@menu/menu_personalized_feed_toolbar"
             app:navigationIcon="@null">
 
@@ -59,9 +60,9 @@
             android:id="@+id/recycler_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:paddingStart="8dp"
-            android:paddingEnd="8dp"
-            android:layout_marginTop="8dp"
+            android:paddingStart="@dimen/card_margin"
+            android:paddingEnd="@dimen/card_margin"
+            android:layout_marginTop="@dimen/card_margin"
             android:clipToPadding="false" />
 
         <com.huanchengfly.tieba.post.components.LoadMoreFooter

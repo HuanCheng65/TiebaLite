@@ -21,10 +21,10 @@
 
             <com.huanchengfly.tieba.post.widgets.theme.TintImageView
                 android:layout_gravity="center_vertical"
-                app:tint="@color/default_color_text_secondary"
+                app:tint="@color/default_color_text_disabled"
                 app:srcCompat="@drawable/ic_outline_like"
-                android:layout_width="24dp"
-                android:layout_height="24dp" />
+                android:layout_width="18dp"
+                android:layout_height="18dp" />
 
             <com.huanchengfly.tieba.post.widgets.theme.TintTextView
                 android:layout_gravity="center_vertical"
@@ -32,7 +32,7 @@
                 android:layout_marginStart="4dp"
                 android:textSize="14sp"
                 android:textStyle="bold"
-                app:tint="@color/default_color_text_secondary"
+                app:tint="@color/default_color_text_disabled"
                 android:id="@+id/forum_item_agree_count_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
@@ -40,17 +40,17 @@
 
         <LinearLayout
             android:id="@+id/btn_reply"
-            android:layout_marginStart="16dp"
+            android:layout_marginStart="24dp"
             android:orientation="horizontal"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
 
             <com.huanchengfly.tieba.post.widgets.theme.TintImageView
                 android:layout_gravity="center_vertical"
-                app:tint="@color/default_color_text_secondary"
+                app:tint="@color/default_color_text_disabled"
                 app:srcCompat="@drawable/ic_outline_article"
-                android:layout_width="24dp"
-                android:layout_height="24dp" />
+                android:layout_width="18dp"
+                android:layout_height="18dp" />
 
             <com.huanchengfly.tieba.post.widgets.theme.TintTextView
                 android:layout_gravity="center_vertical"
@@ -58,7 +58,7 @@
                 android:layout_marginStart="4dp"
                 android:textSize="14sp"
                 android:textStyle="bold"
-                app:tint="@color/default_color_text_secondary"
+                app:tint="@color/default_color_text_disabled"
                 android:id="@+id/forum_item_comment_count_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
@@ -75,8 +75,8 @@
             android:background="?attr/selectableItemBackgroundBorderless"
             android:layout_gravity="center_vertical"
             app:srcCompat="@drawable/ic_more_horiz"
-            app:tint="@color/default_color_text_secondary"
-            android:layout_width="24dp"
-            android:layout_height="24dp" />
+            app:tint="@color/default_color_text_disabled"
+            android:layout_width="18dp"
+            android:layout_height="18dp" />
     </LinearLayout>
 </RelativeLayout>

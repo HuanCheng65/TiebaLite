@@ -14,7 +14,7 @@
         android:visibility="gone"
         android:layout_alignParentStart="true"
         android:layout_centerVertical="true"
-        android:layout_marginEnd="8dp"
+        android:layout_marginEnd="12dp"
         android:id="@+id/forum_list_item_avatar"
         android:layout_width="@dimen/size_forum_list_avatar"
         android:layout_height="@dimen/size_forum_list_avatar" />

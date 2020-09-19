@@ -2,6 +2,7 @@ package com.huanchengfly.tieba.post.api.interfaces.impls
 
 import android.os.Build
 import android.text.TextUtils
+import com.huanchengfly.tieba.post.BaseApplication
 import com.huanchengfly.tieba.post.api.ForumSortType
 import com.huanchengfly.tieba.post.api.SearchThreadFilter
 import com.huanchengfly.tieba.post.api.SearchThreadOrder
@@ -10,14 +11,13 @@ import com.huanchengfly.tieba.post.api.models.*
 import com.huanchengfly.tieba.post.api.models.web.ForumBean
 import com.huanchengfly.tieba.post.api.models.web.HotMessageListBean
 import com.huanchengfly.tieba.post.api.retrofit.RetrofitTiebaApi
-import com.huanchengfly.tieba.post.BaseApplication
 import com.huanchengfly.tieba.post.models.DislikeBean
 import com.huanchengfly.tieba.post.models.MyInfoBean
 import com.huanchengfly.tieba.post.models.PhotoInfoBean
+import com.huanchengfly.tieba.post.toJson
 import com.huanchengfly.tieba.post.utils.AccountUtil
 import com.huanchengfly.tieba.post.utils.ImageUtil
 import retrofit2.Call
-import com.huanchengfly.tieba.post.toJson
 import java.io.FileInputStream
 import java.io.IOException
 import java.net.URLEncoder
@@ -125,6 +125,8 @@ object MixedTiebaApiImpl : ITiebaApi {
     override fun replyMe(page: Int): Call<MessageListBean> = RetrofitTiebaApi.NEW_TIEBA_API.replyMe(page)
 
     override fun atMe(page: Int): Call<MessageListBean> = RetrofitTiebaApi.NEW_TIEBA_API.atMe(page)
+
+    override fun agreeMe(page: Int): Call<MessageListBean> = RetrofitTiebaApi.NEW_TIEBA_API.agreeMe(page)
 
     override fun threadContent(
             threadId: String, page: Int, seeLz: Boolean, reverse: Boolean

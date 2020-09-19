@@ -3,12 +3,11 @@ package com.huanchengfly.tieba.post.adapters;
 import android.content.Context;
 import android.text.TextUtils;
 import android.text.format.DateUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
-import com.huanchengfly.tieba.post.ExtensionsKt;
 import com.huanchengfly.tieba.post.R;
+import com.huanchengfly.tieba.post.activities.ThreadActivity;
 import com.huanchengfly.tieba.post.api.models.UserPostBean;
 import com.huanchengfly.tieba.post.utils.ImageUtil;
 import com.huanchengfly.tieba.post.utils.NavigationHelper;
@@ -72,7 +71,7 @@ public class UserPostAdapter extends MultiBaseAdapter<UserPostBean.PostBean> {
                         mContext.getString(
                                 R.string.template_two_string,
                                 relativeTime,
-                                mContext.getString(R.string.tip_forum_name, postBean.getForumName())
+                                mContext.getString(R.string.text_forum_name, postBean.getForumName())
                         )
                 );
             } else {
@@ -82,21 +81,23 @@ public class UserPostAdapter extends MultiBaseAdapter<UserPostBean.PostBean> {
         } else if (type == TYPE_REPLY) {
             ImageUtil.load(viewHolder.getView(R.id.message_list_item_user_avatar), ImageUtil.LOAD_TYPE_AVATAR, postBean.getUserPortrait());
             viewHolder.setText(R.id.message_list_item_user_name, StringUtil.getUsernameString(mContext, postBean.getUserName(), postBean.getNameShow()));
-            viewHolder.setText(R.id.message_list_item_user_time, String.valueOf(DateUtils.getRelativeTimeSpanString(Long.valueOf(postBean.getCreateTime()) * 1000L)));
+            viewHolder.setText(
+                    R.id.message_list_item_user_time,
+                    mContext.getString(R.string.template_two_string,
+                            String.valueOf(
+                                    DateUtils.getRelativeTimeSpanString(Long.parseLong(postBean.getCreateTime()) * 1000L)
+                            ),
+                            mContext.getString(R.string.text_forum_name, postBean.getForumName())
+                    )
+            );
             TextView contentTextView = viewHolder.getView(R.id.message_list_item_content);
             StringBuilder content = new StringBuilder();
             for (UserPostBean.PostContentBean postContentBean : postBean.getContent().get(0).getPostContent()) {
-                Log.i("UserPostAdapter", "convert: " + ExtensionsKt.toJson(postContentBean));
                 content.append(postContentBean.getText());
             }
             contentTextView.setText(content);
             viewHolder.setText(R.id.message_list_item_quote, postBean.getTitle().replace("回复：", "原贴："));
-            viewHolder.setOnClickListener(R.id.message_list_item_quote_parent, v -> {
-                HashMap<String, String> hashMap = new HashMap<>();
-                hashMap.put("tid", postBean.getThreadId());
-                navigationHelper.navigationByData(NavigationHelper.ACTION_THREAD, hashMap);
-            });
-            viewHolder.setText(R.id.message_list_item_source, mContext.getString(R.string.text_message_list_item_source, postBean.getForumName()));
+            viewHolder.setOnClickListener(R.id.message_list_item_quote, v -> ThreadActivity.launch(mContext, postBean.getThreadId()));
         }
     }
 

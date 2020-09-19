@@ -110,7 +110,7 @@
                 android:layout_height="match_parent" />
 
             <com.huanchengfly.tieba.post.widgets.theme.TintImageView
-                app:tintList="@color/text_color_selector"
+                app:tint="@color/text_color_selector"
                 android:background="?attr/selectableItemBackground"
                 android:id="@+id/activity_reply_edit_undo"
                 style="@style/Widget.MaterialComponents.Button.OutlinedButton.Icon"
@@ -122,7 +122,7 @@
                 android:src="@drawable/ic_outline_undo" />
 
             <com.huanchengfly.tieba.post.widgets.theme.TintImageView
-                app:tintList="@color/text_color_selector"
+                app:tint="@color/text_color_selector"
                 android:background="?attr/selectableItemBackground"
                 android:id="@+id/activity_reply_edit_redo"
                 style="@style/Widget.MaterialComponents.Button.OutlinedButton.Icon"
@@ -134,7 +134,7 @@
                 android:src="@drawable/ic_outline_redo" />
 
             <com.huanchengfly.tieba.post.widgets.theme.TintImageView
-                app:tintList="@color/text_color_selector"
+                app:tint="@color/text_color_selector"
                 android:background="?attr/selectableItemBackground"
                 android:id="@+id/activity_reply_edit_clear"
                 style="@style/Widget.MaterialComponents.Button.OutlinedButton.Icon"

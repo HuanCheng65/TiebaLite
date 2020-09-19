@@ -11,6 +11,7 @@ import com.huanchengfly.tieba.post.dpToPx
 import com.huanchengfly.tieba.post.ui.theme.utils.ThemeUtils
 import com.huanchengfly.tieba.post.utils.ImageUtil
 import com.huanchengfly.tieba.post.utils.ThemeUtil
+import com.huanchengfly.tieba.post.utils.getRadiusDrawable
 
 class MainForumListAdapter(
         context: Context,
@@ -29,28 +30,39 @@ class MainForumListAdapter(
 
     override fun convert(viewHolder: MyViewHolder, item: ForumRecommend.LikeForum, position: Int) {
         viewHolder.itemView.setBackgroundColor(ThemeUtils.getColorByAttr(context, R.attr.colorCard))
+        val cardRadius = context.resources.getDimension(R.dimen.card_radius)
         when {
             //单列
             spanCount == 1 -> {
-                viewHolder.itemView.setPaddingRelative(DP_16, DP_12, DP_16, DP_12)
                 if (position == getCount() - 1) {
-                    viewHolder.itemView.setBackgroundResource(R.drawable.bg_bottom_radius_8dp)
+                    viewHolder.itemView.background = getRadiusDrawable(bottomLeftPx = cardRadius, bottomRightPx = cardRadius)
+                } else {
+                    viewHolder.itemView.background = getRadiusDrawable()
                 }
             }
             //双列左
             position % spanCount == 0 -> {
-                viewHolder.itemView.setPaddingRelative(DP_16, DP_12, DP_12, DP_12)
-                if (position == getCount() - 2) {
-                    viewHolder.itemView.setBackgroundResource(R.drawable.bg_bottom_left_radius_8dp)
-                } else if (position == getCount() - 1) {
-                    viewHolder.itemView.setBackgroundResource(R.drawable.bg_bottom_radius_8dp)
+                when (position) {
+                    //最后一行，左
+                    getCount() - 2 -> {
+                        viewHolder.itemView.background = getRadiusDrawable(bottomLeftPx = cardRadius)
+                    }
+                    //最后一项
+                    getCount() - 1 -> {
+                        viewHolder.itemView.background = getRadiusDrawable(bottomLeftPx = cardRadius, bottomRightPx = cardRadius)
+                    }
+                    //其他
+                    else -> {
+                        viewHolder.itemView.background = getRadiusDrawable()
+                    }
                 }
             }
             //双列右
             else -> {
-                viewHolder.itemView.setPaddingRelative(DP_12, DP_12, DP_16, DP_12)
                 if (position == getCount() - 1) {
-                    viewHolder.itemView.setBackgroundResource(R.drawable.bg_bottom_right_radius_8dp)
+                    viewHolder.itemView.background = getRadiusDrawable(bottomRightPx = cardRadius)
+                } else {
+                    viewHolder.itemView.background = getRadiusDrawable()
                 }
             }
         }
@@ -69,10 +81,5 @@ class MainForumListAdapter(
         viewHolder.setText(R.id.forum_list_item_level, item.levelId)
         viewHolder.setVisibility(R.id.forum_list_item_sign_status, if ("1" == item.isSign) View.VISIBLE else View.GONE)
         viewHolder.getView<View>(R.id.forum_list_item_status).minimumWidth = (if ("1" == item.isSign) 50 else 32).dpToPx()
-    }
-
-    companion object {
-        val DP_16 = 16.dpToPx()
-        val DP_12 = 12.dpToPx()
     }
 }

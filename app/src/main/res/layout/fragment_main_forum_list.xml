@@ -43,7 +43,7 @@
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
                 android:layout_height="wrap_content"
                 android:layout_width="0dp"
-                app:boxBackgroundColor="@color/color_toolbar_bar_background"
+                app:boxBackgroundColor="@color/color_toolbar_bar"
                 app:boxCollapsedPaddingTop="0dp"
                 app:boxCornerRadiusBottomEnd="8dp"
                 app:boxCornerRadiusBottomStart="8dp"
@@ -54,6 +54,7 @@
                 app:hintEnabled="false"
                 app:hintTextColor="@color/default_color_primary"
                 app:placeholderTextColor="@color/default_color_primary"
+                app:startIconTint="@color/color_on_toolbar_bar"
                 app:startIconDrawable="@drawable/ic_search">
 
                 <com.huanchengfly.tieba.post.widgets.theme.TintTextInputEditText
@@ -61,7 +62,7 @@
                     android:layout_height="wrap_content"
                     android:background="@null"
                     android:cursorVisible="false"
-                    android:textColorHint="@color/default_color_text_secondary"
+                    app:textColorHint="@color/color_on_toolbar_bar"
                     android:hint="@string/hint_search" />
             </com.huanchengfly.tieba.post.widgets.theme.TintTextInputLayout>
 
@@ -80,7 +81,6 @@
         app:srlDragRate="0.8"
         app:srlEnableOverScrollBounce="true"
         app:srlEnableOverScrollDrag="true"
-        app:srlEnableAutoLoadMore="false"
         android:id="@+id/refresh"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         android:layout_width="match_parent"
@@ -92,16 +92,16 @@
             android:layout_height="match_parent" />
 
         <androidx.recyclerview.widget.RecyclerView
-            android:paddingStart="8dp"
-            android:paddingEnd="8dp"
-            android:paddingBottom="8dp"
+            android:paddingStart="@dimen/card_margin"
+            android:paddingEnd="@dimen/card_margin"
+            android:paddingBottom="@dimen/card_margin"
             android:clipToPadding="false"
             android:id="@+id/forum_list_recycler"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
 
-        <include
-            android:id="@+id/footer"
-            layout="@layout/footer_no_more" />
+        <com.huanchengfly.tieba.post.components.LoadMoreFooter
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
     </com.scwang.smart.refresh.layout.SmartRefreshLayout>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

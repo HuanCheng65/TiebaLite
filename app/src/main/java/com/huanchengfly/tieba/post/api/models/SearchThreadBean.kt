@@ -10,7 +10,7 @@ class SearchThreadBean {
     val errorMsg: String? = null
     val data: DataBean? = null
 
-    inner class DataBean {
+    class DataBean {
         @SerializedName("has_more")
         val hasMore: Int? = null
 
@@ -19,10 +19,9 @@ class SearchThreadBean {
 
         @SerializedName("post_list")
         val postList: List<ThreadInfoBean>? = null
-
     }
 
-    inner class ThreadInfoBean {
+    class ThreadInfoBean {
         val tid: String? = null
         val pid: String? = null
         val title: String? = null
@@ -36,16 +35,14 @@ class SearchThreadBean {
         val forumName: String? = null
         val user: UserInfoBean? = null
         val type: Int? = null
-
     }
 
-    inner class UserInfoBean {
+    class UserInfoBean {
         @SerializedName("user_name")
         val userName: String? = null
 
         @SerializedName("user_id")
         val userId: String? = null
         val portrait: String? = null
-
     }
 }

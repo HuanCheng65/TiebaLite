@@ -20,6 +20,7 @@ import com.huanchengfly.tieba.post.api.TiebaApi
 import com.huanchengfly.tieba.post.api.models.SubFloorListBean
 import com.huanchengfly.tieba.post.components.MyLinearLayoutManager
 import com.huanchengfly.tieba.post.components.dividers.ThreadDivider
+import com.huanchengfly.tieba.post.goToActivity
 import com.huanchengfly.tieba.post.models.ReplyInfoBean
 import com.huanchengfly.tieba.post.utils.AccountUtil
 import com.huanchengfly.tieba.post.utils.NavigationHelper
@@ -90,10 +91,7 @@ class FloorActivity : BaseActivity() {
         when (item.itemId) {
             R.id.menu_to_thread -> {
                 if (dataBean != null) {
-                    navigationHelper!!.navigationByData(NavigationHelper.ACTION_THREAD, mapOf<String, String>(
-                            "tid" to tid!!,
-                            "pid" to pid!!
-                    ))
+                    ThreadActivity.launch(this, tid!!, pid!!)
                 }
                 return true
             }
@@ -103,9 +101,9 @@ class FloorActivity : BaseActivity() {
 
     private fun initData() {
         val intent = intent
-        tid = intent.getStringExtra("tid")
-        pid = intent.getStringExtra("pid")
-        spid = intent.getStringExtra("spid")
+        tid = intent.getStringExtra(EXTRA_THREAD_ID)
+        pid = intent.getStringExtra(EXTRA_POST_ID)
+        spid = intent.getStringExtra(EXTRA_SUB_POST_ID)
         if (tid != null && (pid != null || spid != null)) {
             hasMore = true
             refresh()
@@ -208,5 +206,27 @@ class FloorActivity : BaseActivity() {
                         pn += 1
                     }
                 })
+    }
+
+    companion object {
+        const val EXTRA_THREAD_ID = "tid"
+        const val EXTRA_POST_ID = "pid"
+        const val EXTRA_SUB_POST_ID = "spid"
+
+        fun launch(
+                context: Context,
+                threadId: String,
+                postId: String? = null,
+                subPostId: String? = null
+        ) {
+            if (postId == null && subPostId == null) {
+                throw IllegalArgumentException()
+            }
+            context.goToActivity<FloorActivity> {
+                putExtra(EXTRA_THREAD_ID, threadId)
+                putExtra(EXTRA_POST_ID, postId)
+                putExtra(EXTRA_SUB_POST_ID, subPostId)
+            }
+        }
     }
 }

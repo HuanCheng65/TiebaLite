@@ -2,16 +2,15 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-        android:visible="false"
-        android:id="@+id/menu_switch_list"
-        android:orderInCategory="1"
-        android:title="@string/title_switch_list_single"
-        android:icon="@drawable/ic_round_view_stream"
-        app:showAsAction="ifRoom" />
-    <item
         android:id="@+id/menu_sign"
-        android:orderInCategory="2"
+        android:orderInCategory="1"
         android:title="@string/title_oksign"
         android:icon="@drawable/ic_round_track_changes"
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/menu_switch_list"
+        android:orderInCategory="2"
+        android:title="@string/title_switch_list_single"
+        android:icon="@drawable/ic_outline_view_agenda"
         app:showAsAction="ifRoom" />
 </menu>

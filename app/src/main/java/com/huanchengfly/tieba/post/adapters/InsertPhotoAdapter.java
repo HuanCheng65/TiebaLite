@@ -20,8 +20,8 @@ import com.huanchengfly.tieba.post.components.MyImageEngine;
 import com.huanchengfly.tieba.post.components.MyViewHolder;
 import com.huanchengfly.tieba.post.components.transformations.RadiusTransformation;
 import com.huanchengfly.tieba.post.models.PhotoInfoBean;
-import com.huanchengfly.tieba.post.utils.ThemeUtil;
 import com.huanchengfly.tieba.post.utils.PermissionUtil;
+import com.huanchengfly.tieba.post.utils.ThemeUtil;
 import com.yanzhenjie.permission.Action;
 import com.yanzhenjie.permission.runtime.Permission;
 import com.zhihu.matisse.Matisse;
@@ -86,7 +86,7 @@ public class InsertPhotoAdapter extends RecyclerView.Adapter<MyViewHolder> {
             ImageView imageView = holder.getView(R.id.image_preview);
             Glide.with(mContext)
                     .load(photoInfoBean.getFileUri())
-                    .apply(RequestOptions.bitmapTransform(new RadiusTransformation(mContext)))
+                    .apply(RequestOptions.bitmapTransform(new RadiusTransformation()))
                     .into(imageView);
         } else if (holder.getItemViewType() == TYPE_INSERT) {
             if (fileList.size() < 10) {

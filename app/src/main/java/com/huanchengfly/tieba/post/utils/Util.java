@@ -235,7 +235,7 @@ public class Util {
                 color = 0xFFFF9C19;
                 break;
         }
-        return greifyColor(color, 0.25f);
+        return greifyColor(color, 0.2f);
     }
 
     public static @ColorInt

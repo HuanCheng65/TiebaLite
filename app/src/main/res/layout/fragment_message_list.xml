@@ -14,10 +14,10 @@
         android:layout_height="match_parent" />
 
     <androidx.recyclerview.widget.RecyclerView
-        android:paddingStart="8dp"
-        android:paddingEnd="8dp"
-        android:paddingBottom="8dp"
-        android:layout_marginTop="8dp"
+        android:paddingStart="@dimen/card_margin"
+        android:paddingEnd="@dimen/card_margin"
+        android:paddingBottom="@dimen/card_margin"
+        android:layout_marginTop="@dimen/card_margin"
         android:clipToPadding="false"
         android:id="@+id/fragment_message_recycler_view"
         android:layout_width="match_parent"

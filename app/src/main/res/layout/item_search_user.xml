@@ -1,46 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.huanchengfly.tieba.post.widgets.theme.TintRelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="?attr/selectableItemBackground"
+    android:padding="16dp"
+    app:backgroundTint="@color/default_color_card"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <RelativeLayout
-        android:background="?attr/selectableItemBackground"
-        android:id="@+id/item_search_forum"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="16dp">
+    <ImageView
+        android:layout_centerVertical="true"
+        android:id="@+id/item_search_user_avatar"
+        android:layout_marginEnd="8dp"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        tools:ignore="ContentDescription" />
 
-        <ImageView
-            android:layout_centerVertical="true"
-            android:id="@+id/item_search_forum_avatar"
-            android:layout_marginEnd="8dp"
-            android:layout_width="48dp"
-            android:layout_height="48dp" />
-
-        <LinearLayout
-            android:layout_centerVertical="true"
-            android:layout_toEndOf="@id/item_search_forum_avatar"
-            android:orientation="vertical"
+    <LinearLayout
+        android:layout_centerVertical="true"
+        android:layout_toEndOf="@id/item_search_user_avatar"
+        android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
             <com.huanchengfly.tieba.post.widgets.theme.TintTextView
                 android:textStyle="bold"
-                android:id="@+id/item_search_forum_title"
+                android:id="@+id/item_search_user_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:tint="@color/default_color_text"
                 android:textSize="18sp"
                 tools:text="Title" />
 
-            <com.huanchengfly.tieba.post.widgets.theme.TintTextView
-                android:id="@+id/item_search_forum_subtitle"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:tint="@color/default_color_text_secondary"
-                android:textSize="13sp"
-                tools:text="Sub Title" />
-        </LinearLayout>
-    </RelativeLayout>
-</FrameLayout>
+        <com.huanchengfly.tieba.post.widgets.theme.TintTextView
+            android:id="@+id/item_search_user_subtitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:tint="@color/default_color_text_secondary"
+            android:textSize="13sp"
+            tools:text="Sub Title" />
+    </LinearLayout>
+</com.huanchengfly.tieba.post.widgets.theme.TintRelativeLayout>

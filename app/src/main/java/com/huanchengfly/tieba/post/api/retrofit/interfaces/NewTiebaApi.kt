@@ -1,10 +1,10 @@
 package com.huanchengfly.tieba.post.api.retrofit.interfaces
 
+import com.huanchengfly.tieba.post.api.Header
 import com.huanchengfly.tieba.post.api.models.CommonResponse
 import com.huanchengfly.tieba.post.api.models.MessageListBean
 import com.huanchengfly.tieba.post.api.models.MsgBean
 import com.huanchengfly.tieba.post.api.models.ThreadStoreBean
-import com.huanchengfly.tieba.post.api.Header
 import io.michaelrocks.paranoid.Obfuscate
 import retrofit2.Call
 import retrofit2.http.Field
@@ -57,6 +57,13 @@ interface NewTiebaApi {
     @POST("/c/u/feed/atme")
     @FormUrlEncoded
     fun atMe(
+            @Field("pn") page: Int = 0
+    ): Call<MessageListBean>
+
+    @Headers("${Header.FORCE_LOGIN}: ${Header.FORCE_LOGIN_TRUE}")
+    @POST("/c/u/feed/agreeme")
+    @FormUrlEncoded
+    fun agreeMe(
             @Field("pn") page: Int = 0
     ): Call<MessageListBean>
 }

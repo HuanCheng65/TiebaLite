@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
     <group
         android:id="@+id/order"
         android:checkableBehavior="single">
@@ -9,6 +8,6 @@
         <item android:title="@string/title_search_order_relevant" />
     </group>
     <group android:checkableBehavior="all">
-        <item android:title="@string/title_filter_only_show_thread" />
+        <item android:title="@string/title_search_filter_only_thread" />
     </group>
 </menu>

@@ -2,22 +2,20 @@ package com.huanchengfly.tieba.post.widgets.theme;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.res.ColorStateList;
 import android.content.res.TypedArray;
 import android.util.AttributeSet;
 
 import androidx.appcompat.widget.AppCompatTextView;
 
+import com.huanchengfly.tieba.post.R;
 import com.huanchengfly.tieba.post.ui.theme.interfaces.Tintable;
 import com.huanchengfly.tieba.post.ui.theme.utils.ColorStateListUtils;
 import com.huanchengfly.tieba.post.ui.theme.utils.ThemeUtils;
-import com.huanchengfly.tieba.post.R;
 
 @SuppressLint("CustomViewStyleable")
 public class TintTextView extends AppCompatTextView implements Tintable {
     private int mBackgroundTintResId;
     private int mTintResId;
-    private int mTintListResId;
 
     public TintTextView(Context context) {
         this(context, null);
@@ -35,14 +33,12 @@ public class TintTextView extends AppCompatTextView implements Tintable {
         if (attrs == null) {
             mBackgroundTintResId = 0;
             mTintResId = 0;
-            mTintListResId = 0;
             applyTintColor();
             return;
         }
         TypedArray array = getContext().obtainStyledAttributes(attrs, R.styleable.TintView, defStyleAttr, 0);
         mBackgroundTintResId = array.getResourceId(R.styleable.TintView_backgroundTint, 0);
         mTintResId = array.getResourceId(R.styleable.TintView_tint, 0);
-        mTintListResId = array.getResourceId(R.styleable.TintView_tintList, 0);
         array.recycle();
         applyTintColor();
     }
@@ -65,10 +61,8 @@ public class TintTextView extends AppCompatTextView implements Tintable {
                 setBackgroundTintList(ColorStateListUtils.createColorStateList(getContext(), mBackgroundTintResId));
             }
         }
-        if (mTintResId != 0 && mTintListResId == 0) {
-            setTextColor(ColorStateList.valueOf(ThemeUtils.getColorById(getContext(), mTintResId)));
-        } else if (mTintListResId != 0) {
-            setTextColor(ColorStateListUtils.createColorStateList(getContext(), mTintListResId));
+        if (mTintResId != 0) {
+            setTextColor(ColorStateListUtils.createColorStateList(getContext(), mTintResId));
         }
     }
 

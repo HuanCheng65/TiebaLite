@@ -1,13 +1,14 @@
 package com.huanchengfly.tieba.post.activities
 
-import android.graphics.Color
+import android.content.Context
 import android.os.Bundle
 import android.view.View
-import android.view.ViewGroup
 import android.view.ViewGroup.LayoutParams.MATCH_PARENT
 import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
+import android.view.animation.LinearInterpolator
 import android.view.inputmethod.EditorInfo
 import android.widget.EditText
+import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.core.widget.TextViewCompat
@@ -37,10 +38,11 @@ import com.huanchengfly.tieba.post.fragments.SearchUserFragment
 import com.huanchengfly.tieba.post.interfaces.ISearchFragment
 import com.huanchengfly.tieba.post.models.database.SearchHistory
 import com.huanchengfly.tieba.post.ui.theme.utils.ColorStateListUtils
+import com.huanchengfly.tieba.post.utils.AnimUtil
 import com.huanchengfly.tieba.post.utils.NavigationHelper
-import com.huanchengfly.tieba.post.utils.PopupUtil
+import com.huanchengfly.tieba.post.utils.anim.animSet
+import com.huanchengfly.tieba.post.utils.getItemBackgroundDrawable
 import com.huanchengfly.tieba.post.widgets.MyViewPager
-import com.scwang.smart.refresh.header.MaterialHeader
 import org.litepal.LitePal
 import retrofit2.Call
 import retrofit2.Callback
@@ -159,7 +161,7 @@ class NewSearchActivity : BaseActivity(), TabLayout.OnTabSelectedListener {
                 backgroundTintList = R.color.default_color_card
                 iconTintList = R.color.default_color_primary
                 titleTextColor = R.color.default_color_primary
-                topMargin = 8.dpToPx()
+                topMargin = resources.getDimensionPixelSize(R.dimen.card_margin)
                 startPadding = 16.dpToPx()
                 endPadding = 16.dpToPx()
                 setOnEndIconClickListener {
@@ -205,7 +207,7 @@ class NewSearchActivity : BaseActivity(), TabLayout.OnTabSelectedListener {
             backgroundTintList = R.color.default_color_card
             iconTintList = R.color.default_color_primary
             titleTextColor = R.color.default_color_primary
-            topMargin = 8.dpToPx()
+            topMargin = resources.getDimensionPixelSize(R.dimen.card_margin)
             startPadding = 16.dpToPx()
             endPadding = 16.dpToPx()
             setOnClickListener {
@@ -315,11 +317,13 @@ class NewSearchActivity : BaseActivity(), TabLayout.OnTabSelectedListener {
                 textView.setTextColor(context.getColorCompat(R.color.red_accent))
             }
             viewHolder.setVisibility(R.id.hot_desc, View.GONE)
-            if (position + 1 >= itemCount) {
-                viewHolder.itemView.setBackgroundResource(R.drawable.bg_bottom_radius_8dp)
-            } else {
-                viewHolder.itemView.setBackgroundColor(Color.WHITE)
-            }
+            viewHolder.itemView.background = getItemBackgroundDrawable(
+                    context,
+                    position,
+                    itemCount,
+                    positionOffset = 1,
+                    radius = context.resources.getDimension(R.dimen.card_radius)
+            )
             viewHolder.itemView.backgroundTintList = ColorStateListUtils.createColorStateList(context, R.color.default_color_card)
         }
 
@@ -338,11 +342,48 @@ class NewSearchActivity : BaseActivity(), TabLayout.OnTabSelectedListener {
         }
     }
 
-    override fun onTabSelected(tab: TabLayout.Tab) {}
+    override fun onTabSelected(tab: TabLayout.Tab) {
+        val fragment = fragmentAdapter.fragments[tab.position]
+        if (fragment is Filterable) {
+            if (tab.customView == null) tab.setCustomView(R.layout.layout_tab_arrow)
+            val arrow = tab.customView!!.findViewById<ImageView>(R.id.arrow)
+            AnimUtil.alphaIn(arrow, 150).withEndAction {
+                arrow.visibility = View.VISIBLE
+            }
+        }
+    }
 
-    override fun onTabUnselected(tab: TabLayout.Tab) {}
+    override fun onTabUnselected(tab: TabLayout.Tab) {
+        val fragment = fragmentAdapter.fragments[tab.position]
+        if (fragment is Filterable) {
+            if (tab.customView == null) tab.setCustomView(R.layout.layout_tab_arrow)
+            val arrow = tab.customView!!.findViewById<ImageView>(R.id.arrow)
+            AnimUtil.alphaOut(arrow, 150).withEndAction {
+                arrow.visibility = View.GONE
+            }
+        }
+    }
 
     override fun onTabReselected(tab: TabLayout.Tab) {
-        toastShort(tab.text.toString())
+        val fragment = fragmentAdapter.fragments[tab.position]
+        if (fragment is Filterable) {
+            val arrow = tab.customView?.findViewById<ImageView>(R.id.arrow)
+            val animSet = animSet {
+                anim {
+                    values = floatArrayOf(0f, 180f)
+                    action = { value -> arrow?.rotation = value as Float }
+                    duration = 150
+                    interpolator = LinearInterpolator()
+                }
+                start()
+            }
+            fragment.openFilter(this, tab.view) {
+                animSet.reverse()
+            }
+        }
+    }
+
+    interface Filterable {
+        fun openFilter(context: Context, view: View, onClose: () -> Unit)
     }
 }

@@ -9,19 +9,27 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import androidx.cardview.widget.CardView;
 import androidx.gridlayout.widget.GridLayout;
 import androidx.recyclerview.widget.RecyclerView;
+
 import com.bumptech.glide.Glide;
-import com.huanchengfly.tieba.post.api.models.ForumPageBean;
 import com.huanchengfly.tieba.post.BaseApplication;
 import com.huanchengfly.tieba.post.R;
 import com.huanchengfly.tieba.post.activities.ThreadActivity;
+import com.huanchengfly.tieba.post.api.models.ForumPageBean;
 import com.huanchengfly.tieba.post.components.MyLinearLayoutManager;
 import com.huanchengfly.tieba.post.components.dividers.SpacesItemDecoration;
 import com.huanchengfly.tieba.post.interfaces.OnSwitchListener;
 import com.huanchengfly.tieba.post.models.PhotoViewBean;
-import com.huanchengfly.tieba.post.utils.*;
+import com.huanchengfly.tieba.post.utils.BlockUtil;
+import com.huanchengfly.tieba.post.utils.DisplayUtil;
+import com.huanchengfly.tieba.post.utils.ImageUtil;
+import com.huanchengfly.tieba.post.utils.NavigationHelper;
+import com.huanchengfly.tieba.post.utils.SharedPreferencesUtil;
+import com.huanchengfly.tieba.post.utils.StringUtil;
+import com.huanchengfly.tieba.post.utils.Util;
 import com.huanchengfly.tieba.post.utils.preload.PreloadUtil;
 import com.huanchengfly.tieba.post.utils.preload.loaders.ThreadContentLoader;
 import com.huanchengfly.tieba.post.widgets.MarkedImageView;
@@ -197,6 +205,7 @@ public class ForumAdapter extends MultiBaseAdapter<ForumPageBean.ThreadBean> {
             return;
         }
         viewHolder.setText(R.id.forum_item_comment_count_text, threadBean.getReplyNum());
+        viewHolder.setText(R.id.forum_item_agree_count_text, threadBean.getAgreeNum());
         if ("1".equals(threadBean.isGood())) {
             viewHolder.setVisibility(R.id.forum_item_good_tip, View.VISIBLE);
         } else {

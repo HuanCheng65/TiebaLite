@@ -253,14 +253,29 @@
         <item name="android:colorControlNormal">@color/theme_color_toolbar_item_dark</item>
     </style>
 
-    <style name="Animation" parent="@android:style/Animation.Activity" />
+    <style name="Animation" parent="@android:style/Animation" />
 
-    <style name="Animation.Bottom" parent="@style/Animation">
+    <style name="Animation.Popup" parent="@android:style/Animation">
+        <item name="android:windowEnterAnimation">@anim/popup_window_enter</item>
+        <item name="android:windowExitAnimation">@anim/popup_window_exit</item>
+    </style>
+
+    <style name="Animation.Popup.BottomStart" parent="@android:style/Animation">
+        <item name="android:windowEnterAnimation">@anim/popup_window_enter_bottom_start</item>
+        <item name="android:windowExitAnimation">@anim/popup_window_exit_bottom_start</item>
+    </style>
+
+    <style name="Animation.Popup.Bottom" parent="@android:style/Animation">
+        <item name="android:windowEnterAnimation">@anim/popup_window_enter_bottom</item>
+        <item name="android:windowExitAnimation">@anim/popup_window_exit_bottom</item>
+    </style>
+
+    <style name="Animation.Bottom" parent="@android:style/Animation.Activity">
         <item name="android:windowEnterAnimation">@anim/in_bottom</item>
         <item name="android:windowExitAnimation">@anim/out_bottom</item>
     </style>
 
-    <style name="Animation.Fade" parent="@style/Animation">
+    <style name="Animation.Fade" parent="@android:style/Animation.Activity">
         <item name="android:activityOpenEnterAnimation">@anim/anim_fade_in</item>
         <item name="android:activityOpenExitAnimation">@anim/anim_fade_out</item>
         <item name="android:activityCloseEnterAnimation">@anim/anim_fade_in</item>
@@ -636,5 +651,10 @@
         <item name="android:windowNoTitle">true</item>
         <item name="android:windowIsTranslucent">true</item>
         <item name="android:windowCloseOnTouchOutside">false</item>
+    </style>
+
+    <style name="RoundedCornerShape">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">50dp</item>
     </style>
 </resources>

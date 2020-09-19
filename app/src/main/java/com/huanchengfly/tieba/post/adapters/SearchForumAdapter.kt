@@ -1,7 +1,6 @@
 package com.huanchengfly.tieba.post.adapters
 
 import android.content.Context
-import android.graphics.Color
 import com.alibaba.android.vlayout.layout.LinearLayoutHelper
 import com.huanchengfly.tieba.post.R
 import com.huanchengfly.tieba.post.adapters.base.BaseMultiTypeDelegateAdapter
@@ -9,8 +8,7 @@ import com.huanchengfly.tieba.post.api.models.SearchForumBean
 import com.huanchengfly.tieba.post.api.models.SearchForumBean.ExactForumInfoBean
 import com.huanchengfly.tieba.post.components.MyViewHolder
 import com.huanchengfly.tieba.post.utils.ImageUtil
-import com.huanchengfly.tieba.post.utils.NavigationHelper
-import java.util.*
+import com.huanchengfly.tieba.post.utils.getItemBackgroundDrawable
 
 class SearchForumAdapter(context: Context?) : BaseMultiTypeDelegateAdapter<SearchForumBean.ForumInfoBean>(context!!, LinearLayoutHelper()) {
     override fun convert(viewHolder: MyViewHolder, item: SearchForumBean.ForumInfoBean, position: Int, viewType: Int) {
@@ -20,11 +18,13 @@ class SearchForumAdapter(context: Context?) : BaseMultiTypeDelegateAdapter<Searc
             val exactForumInfoBean = item as ExactForumInfoBean
             viewHolder.setText(R.id.item_search_forum_subtitle, exactForumInfoBean.slogan)
         }
-        if (position + 1 >= itemCount) {
-            viewHolder.itemView.setBackgroundResource(R.drawable.bg_bottom_radius_8dp_ripple)
-        } else {
-            viewHolder.itemView.setBackgroundResource(R.drawable.bg_ripple)
-        }
+        viewHolder.itemView.background = getItemBackgroundDrawable(
+                context,
+                position,
+                itemCount,
+                positionOffset = 1,
+                radius = context.resources.getDimension(R.dimen.card_radius)
+        )
     }
 
     override fun getItemLayoutId(itemType: Int): Int {

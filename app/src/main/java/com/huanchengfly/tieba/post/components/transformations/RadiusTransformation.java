@@ -1,6 +1,5 @@
 package com.huanchengfly.tieba.post.components.transformations;
 
-import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapShader;
 import android.graphics.Canvas;
@@ -10,7 +9,7 @@ import android.graphics.RectF;
 import com.bumptech.glide.load.engine.bitmap_recycle.BitmapPool;
 import com.bumptech.glide.load.resource.bitmap.BitmapTransformation;
 import com.bumptech.glide.load.resource.bitmap.TransformationUtils;
-import com.huanchengfly.tieba.post.utils.DisplayUtil;
+import com.huanchengfly.tieba.post.ExtensionsKt;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -27,18 +26,17 @@ public class RadiusTransformation extends BitmapTransformation {
     private float radius = 0f;
     private int corners;
 
-
-    public RadiusTransformation(Context context) {
-        this(context, 8);
+    public RadiusTransformation() {
+        this(8);
     }
 
-    public RadiusTransformation(Context context, int dp) {
-        this(context, dp, CORNER_ALL);
+    public RadiusTransformation(int dp) {
+        this(dp, CORNER_ALL);
     }
 
-    public RadiusTransformation(Context context, int dp, int corners) {
+    public RadiusTransformation(int dp, int corners) {
         super();
-        this.radius = DisplayUtil.dp2px(context, dp);
+        this.radius = ExtensionsKt.dpToPxFloat(dp);
         this.corners = corners;
     }
 

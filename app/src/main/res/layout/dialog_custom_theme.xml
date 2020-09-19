@@ -87,7 +87,7 @@
 
     <com.huanchengfly.tieba.post.widgets.theme.TintCheckBox
         style="@style/Widget.AppCompat.CompoundButton.CheckBox"
-        app:buttonTint="@drawable/tint_checkbox"
+        app:buttonTint="@color/tint_checkbox"
         app:textColor="@color/default_color_text_secondary"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -100,7 +100,7 @@
 
     <com.huanchengfly.tieba.post.widgets.theme.TintCheckBox
         style="@style/Widget.AppCompat.CompoundButton.CheckBox"
-        app:buttonTint="@drawable/tint_checkbox"
+        app:buttonTint="@color/tint_checkbox"
         app:textColor="@color/default_color_text_secondary"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

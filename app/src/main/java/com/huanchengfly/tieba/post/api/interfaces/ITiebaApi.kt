@@ -321,6 +321,17 @@ interface ITiebaApi {
     ): Call<MessageListBean>
 
     /**
+     * 赞我的消息列表
+     *
+     * **需登录**
+     *
+     * @param page 分页页码（从 1 开始）
+     */
+    fun agreeMe(
+            page: Int = 1
+    ): Call<MessageListBean>
+
+    /**
      * 贴页面
      *
      * @param threadId 贴 ID

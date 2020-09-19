@@ -21,7 +21,6 @@ import com.huanchengfly.tieba.post.activities.ForumActivity
 import com.huanchengfly.tieba.post.activities.NewSearchActivity
 import com.huanchengfly.tieba.post.adapters.HeaderDelegateAdapter
 import com.huanchengfly.tieba.post.adapters.MainForumListAdapter
-import com.huanchengfly.tieba.post.adapters.base.BaseDelegateAdapter
 import com.huanchengfly.tieba.post.adapters.base.OnItemClickListener
 import com.huanchengfly.tieba.post.adapters.base.OnItemLongClickListener
 import com.huanchengfly.tieba.post.api.Error
@@ -194,9 +193,7 @@ class MainForumListFragment : BaseFragment(), Refreshable, Toolbar.OnMenuItemCli
             ThemeUtil.setThemeForSmartRefreshLayout(this)
             ThemeUtil.setThemeForMaterialHeader(refreshLayoutHeader)
             setOnRefreshListener { refresh() }
-            setOnLoadMoreListener { refreshLayout ->
-                refreshLayout.finishLoadMore(true)
-            }
+            setNoMoreData(true)
         }
     }
 
@@ -220,13 +217,13 @@ class MainForumListFragment : BaseFragment(), Refreshable, Toolbar.OnMenuItemCli
             delegateAdapter.addAdapter(HeaderDelegateAdapter(
                     attachContext,
                     R.string.title_top_forum,
-                    R.drawable.ic_arrow_dropup_circle
+                    R.drawable.ic_round_graphic_eq
             ).apply {
                 setBackgroundResource(R.drawable.bg_top_radius_8dp)
                 backgroundTintList = R.color.default_color_card
                 iconTintList = R.color.default_color_primary
                 titleTextColor = R.color.default_color_primary
-                topMargin = 8.dpToPx()
+                topMargin = attachContext.resources.getDimensionPixelSize(R.dimen.card_margin)
                 startPadding = 16.dpToPx()
                 endPadding = 16.dpToPx()
             })
@@ -242,7 +239,7 @@ class MainForumListFragment : BaseFragment(), Refreshable, Toolbar.OnMenuItemCli
                 backgroundTintList = R.color.default_color_card
                 iconTintList = R.color.default_color_primary
                 titleTextColor = R.color.default_color_primary
-                topMargin = 8.dpToPx()
+                topMargin = attachContext.resources.getDimensionPixelSize(R.dimen.card_margin)
                 startPadding = 16.dpToPx()
                 endPadding = 16.dpToPx()
             })
@@ -256,7 +253,7 @@ class MainForumListFragment : BaseFragment(), Refreshable, Toolbar.OnMenuItemCli
                 .forumRecommend()
                 .enqueue(object : Callback<ForumRecommend> {
                     override fun onFailure(call: Call<ForumRecommend>, t: Throwable) {
-                        mRefreshView.finishRefresh(true)
+                        mRefreshView.finishRefreshWithNoMoreData()
                         t.printStackTrace()
                         if (t is TiebaException) {
                             if (t !is TiebaLocalException || t.code != Error.ERROR_NOT_LOGGED_IN) {
