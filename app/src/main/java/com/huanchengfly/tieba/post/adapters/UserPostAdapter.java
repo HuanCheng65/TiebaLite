@@ -2,7 +2,6 @@ package com.huanchengfly.tieba.post.adapters;
 
 import android.content.Context;
 import android.text.TextUtils;
-import android.text.format.DateUtils;
 import android.view.View;
 import android.widget.TextView;
 
@@ -12,6 +11,7 @@ import com.huanchengfly.tieba.post.api.models.UserPostBean;
 import com.huanchengfly.tieba.post.utils.ImageUtil;
 import com.huanchengfly.tieba.post.utils.NavigationHelper;
 import com.huanchengfly.tieba.post.utils.StringUtil;
+import com.huanchengfly.tieba.post.utils.TimeUtils;
 import com.othershe.baseadapter.ViewHolder;
 import com.othershe.baseadapter.base.MultiBaseAdapter;
 
@@ -64,8 +64,7 @@ public class UserPostAdapter extends MultiBaseAdapter<UserPostBean.PostBean> {
             }
             viewHolder.setText(R.id.forum_item_user_name, StringUtil.getUsernameString(mContext, postBean.getUserName(), postBean.getNameShow()));
             TextView timeTextView = viewHolder.getView(R.id.forum_item_user_time);
-            String relativeTime =
-                    DateUtils.getRelativeTimeSpanString(Long.parseLong(postBean.getCreateTime()) * 1000L).toString();
+            String relativeTime = TimeUtils.getRelativeTimeString(mContext, postBean.getCreateTime());
             if (!TextUtils.isEmpty(postBean.getForumName())) {
                 timeTextView.setText(
                         mContext.getString(
@@ -84,9 +83,7 @@ public class UserPostAdapter extends MultiBaseAdapter<UserPostBean.PostBean> {
             viewHolder.setText(
                     R.id.message_list_item_user_time,
                     mContext.getString(R.string.template_two_string,
-                            String.valueOf(
-                                    DateUtils.getRelativeTimeSpanString(Long.parseLong(postBean.getCreateTime()) * 1000L)
-                            ),
+                            TimeUtils.getRelativeTimeString(mContext, postBean.getCreateTime()),
                             mContext.getString(R.string.text_forum_name, postBean.getForumName())
                     )
             );

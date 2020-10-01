@@ -384,4 +384,11 @@
     <string name="desc_user_avatar">用户 %1</string>
     <string name="button_edit">编辑</string>
     <string name="my_info_about">关于</string>
+    <string name="pattern_date_long">yyyy-MM-dd</string>
+    <string name="pattern_date_short">M月dd日</string>
+    <string name="relative_date_month">%d天前</string>
+    <string name="relative_date_hour">%d小时前</string>
+    <string name="relative_date_minute">%d分钟前</string>
+    <string name="relative_date_second">%d秒前</string>
+    <string name="relative_date_after">刚刚</string>
 </resources>

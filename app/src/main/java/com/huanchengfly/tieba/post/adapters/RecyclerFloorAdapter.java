@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.TextUtils;
-import android.text.format.DateUtils;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Gravity;
@@ -40,6 +39,7 @@ import com.huanchengfly.tieba.post.utils.ImageUtil;
 import com.huanchengfly.tieba.post.utils.NavigationHelper;
 import com.huanchengfly.tieba.post.utils.StringUtil;
 import com.huanchengfly.tieba.post.utils.ThemeUtil;
+import com.huanchengfly.tieba.post.utils.TimeUtils;
 import com.huanchengfly.tieba.post.utils.Util;
 import com.huanchengfly.tieba.post.widgets.MyLinearLayout;
 import com.huanchengfly.tieba.post.widgets.VoicePlayerView;
@@ -201,7 +201,7 @@ public class RecyclerFloorAdapter extends CommonBaseAdapter<SubFloorListBean.Pos
         });
         holder.setOnClickListener(R.id.thread_list_item_reply, view -> showMenu(data, position));
         holder.setText(R.id.thread_list_item_user_name, userInfoBean == null ? "" : StringUtil.getUsernameString(mContext, userInfoBean.getName(), userInfoBean.getNameShow()));
-        holder.setText(R.id.thread_list_item_user_time, String.valueOf(DateUtils.getRelativeTimeSpanString(Long.valueOf(data.getTime()) * 1000L)));
+        holder.setText(R.id.thread_list_item_user_time, TimeUtils.getRelativeTimeString(mContext, data.getTime()));
         if (userInfoBean != null) {
             String levelId = userInfoBean.getLevelId() == null || TextUtils.isEmpty(userInfoBean.getLevelId()) ? "?" : userInfoBean.getLevelId();
             ThemeUtil.setChipThemeByLevel(levelId,

@@ -17,7 +17,7 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingTop="55dp"
+            android:paddingTop="@dimen/space_toolbar_top"
             app:buttonGravity="bottom"
             app:layout_scrollFlags="scroll"
             app:menu="@menu/menu_main_toolbar"

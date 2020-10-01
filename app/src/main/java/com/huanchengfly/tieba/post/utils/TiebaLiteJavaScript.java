@@ -2,7 +2,6 @@ package com.huanchengfly.tieba.post.utils;
 
 import android.content.Context;
 import android.os.Handler;
-import android.text.format.DateUtils;
 import android.util.Log;
 import android.webkit.JavascriptInterface;
 import android.webkit.WebView;
@@ -29,7 +28,7 @@ public class TiebaLiteJavaScript {
 
     @JavascriptInterface
     public String getTimeFromNow(String time) {
-        return String.valueOf(DateUtils.getRelativeTimeSpanString(Long.valueOf(time) * 1000L));
+        return TimeUtils.getRelativeTimeString(context, time);
     }
 
     @JavascriptInterface

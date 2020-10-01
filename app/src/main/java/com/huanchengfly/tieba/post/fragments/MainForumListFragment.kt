@@ -47,7 +47,8 @@ class MainForumListFragment : BaseFragment(), Refreshable, Toolbar.OnMenuItemCli
         OnItemClickListener<ForumRecommend.LikeForum>,
         OnItemLongClickListener<ForumRecommend.LikeForum> {
     companion object {
-        val MOTION_START_OFFSET = 83f.dpToPx()
+        // 50 + 56 / 2 = 83
+        val MOTION_START_OFFSET = 78f.dpToPx()
     }
 
     private var mData: ForumRecommend? = null

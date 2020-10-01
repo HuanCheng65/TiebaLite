@@ -15,7 +15,6 @@ import android.graphics.PorterDuffColorFilter;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
-import android.text.format.DateUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -308,14 +307,6 @@ public class Util {
         int green = Color.green(color);
         int blue = Color.blue(color);
         return Color.argb(alpha, red, green, blue);
-    }
-
-    public static String getTime(String replyTime) {
-        replyTime = fixTimestampStr(replyTime);
-        if (replyTime == null) {
-            return null;
-        }
-        return DateUtils.getRelativeTimeSpanString(Long.valueOf(replyTime)).toString();
     }
 
     public static String fixTimestampStr(String timestampStr) {

@@ -6,7 +6,6 @@ import android.graphics.Bitmap;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.TextUtils;
-import android.text.format.DateUtils;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
@@ -48,6 +47,7 @@ import com.huanchengfly.tieba.post.utils.ImageUtil;
 import com.huanchengfly.tieba.post.utils.NavigationHelper;
 import com.huanchengfly.tieba.post.utils.StringUtil;
 import com.huanchengfly.tieba.post.utils.ThemeUtil;
+import com.huanchengfly.tieba.post.utils.TimeUtils;
 import com.huanchengfly.tieba.post.utils.Util;
 import com.huanchengfly.tieba.post.widgets.MyImageView;
 import com.huanchengfly.tieba.post.widgets.MyLinearLayout;
@@ -561,7 +561,7 @@ public class RecyclerThreadAdapter extends MultiBaseAdapter<ThreadContentBean.Po
             return true;
         });
         holder.setText(R.id.thread_list_item_user_name, userInfoBean == null ? data.getAuthorId() : StringUtil.getUsernameString(mContext, userInfoBean.getName(), userInfoBean.getNameShow()));
-        holder.setText(R.id.thread_list_item_user_time, mContext.getString(R.string.tip_thread_item, data.getFloor(), String.valueOf(DateUtils.getRelativeTimeSpanString(Long.valueOf(data.getTime()) * 1000L))));
+        holder.setText(R.id.thread_list_item_user_time, mContext.getString(R.string.tip_thread_item, data.getFloor(), TimeUtils.getRelativeTimeString(mContext, data.getTime())));
         holder.setText(R.id.thread_list_item_content_title, data.getTitle());
         holder.setOnClickListener(R.id.thread_list_item_reply, view -> showMenu(data, position));
         if ("1".equals(data.getFloor()))

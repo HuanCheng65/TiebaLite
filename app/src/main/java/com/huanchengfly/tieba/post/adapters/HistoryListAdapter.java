@@ -3,7 +3,6 @@ package com.huanchengfly.tieba.post.adapters;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.text.TextUtils;
-import android.text.format.DateUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +14,7 @@ import com.huanchengfly.tieba.post.R;
 import com.huanchengfly.tieba.post.models.database.History;
 import com.huanchengfly.tieba.post.utils.HistoryHelper;
 import com.huanchengfly.tieba.post.utils.ImageUtil;
+import com.huanchengfly.tieba.post.utils.TimeUtils;
 
 import java.util.List;
 
@@ -86,7 +86,7 @@ public class HistoryListAdapter extends BaseAdapter {
         } else {
             viewHolder.avatarView.setVisibility(View.GONE);
         }
-        headerTitle.append(DateUtils.getRelativeTimeSpanString(bean.getTimestamp()));
+        headerTitle.append(TimeUtils.getRelativeTimeString(mContext, bean.getTimestamp()));
         viewHolder.timeTextView.setText(headerTitle.toString());
         return convertView;
     }

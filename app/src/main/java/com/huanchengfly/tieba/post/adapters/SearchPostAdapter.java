@@ -1,7 +1,6 @@
 package com.huanchengfly.tieba.post.adapters;
 
 import android.content.Context;
-import android.text.format.DateUtils;
 import android.widget.TextView;
 
 import androidx.core.text.HtmlCompat;
@@ -9,6 +8,7 @@ import androidx.core.text.HtmlCompat;
 import com.huanchengfly.tieba.post.R;
 import com.huanchengfly.tieba.post.api.models.SearchPostBean;
 import com.huanchengfly.tieba.post.utils.NavigationHelper;
+import com.huanchengfly.tieba.post.utils.TimeUtils;
 import com.othershe.baseadapter.ViewHolder;
 import com.othershe.baseadapter.base.CommonBaseAdapter;
 
@@ -37,9 +37,9 @@ public class SearchPostAdapter extends CommonBaseAdapter<SearchPostBean.ThreadIn
         contentTextView.setText(HtmlCompat.fromHtml(threadInfoBean.getContent(), HtmlCompat.FROM_HTML_MODE_COMPACT));
         viewHolder.setText(R.id.user_name, threadInfoBean.getAuthor().getNameShow());
         if (threadInfoBean.getForumName() == null) {
-            viewHolder.setText(R.id.user_content, String.valueOf(DateUtils.getRelativeTimeSpanString(Long.valueOf(threadInfoBean.getTime()) * 1000L)));
+            viewHolder.setText(R.id.user_content, TimeUtils.getRelativeTimeString(mContext, threadInfoBean.getTime()));
         } else {
-            viewHolder.setText(R.id.user_content, threadInfoBean.getForumName() + " " + DateUtils.getRelativeTimeSpanString(Long.valueOf(threadInfoBean.getTime()) * 1000L));
+            viewHolder.setText(R.id.user_content, mContext.getString(R.string.template_two_string, threadInfoBean.getForumName(), TimeUtils.getRelativeTimeString(mContext, threadInfoBean.getTime())));
         }
     }
 

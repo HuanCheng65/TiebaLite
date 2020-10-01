@@ -16,7 +16,8 @@
         <com.huanchengfly.tieba.post.widgets.theme.TintToolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
-            android:layout_height="115dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/space_toolbar_top"
             android:paddingBottom="4dp"
             android:minHeight="?actionBarSize"
             app:buttonGravity="bottom"
@@ -25,7 +26,6 @@
             app:navigationIcon="@null">
 
             <FrameLayout
-                android:layout_marginTop="55dp"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent">
 

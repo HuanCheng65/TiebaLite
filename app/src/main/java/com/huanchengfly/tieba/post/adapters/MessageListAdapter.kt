@@ -1,7 +1,6 @@
 package com.huanchengfly.tieba.post.adapters
 
 import android.content.Context
-import android.text.format.DateUtils
 import android.widget.TextView
 import com.huanchengfly.tieba.post.R
 import com.huanchengfly.tieba.post.activities.FloorActivity
@@ -53,7 +52,7 @@ class MessageListAdapter(
         viewHolder.setText(R.id.message_list_item_user_name, StringUtil.getUsernameString(context, item.replyer.name, item.replyer.nameShow))
         viewHolder.setText(
                 R.id.message_list_item_user_time,
-                DateUtils.getRelativeTimeSpanString(item.time!!.toLong() * 1000L).toString()
+                TimeUtils.getRelativeTimeString(context, item.time!!)
         )
         val contentTextView = viewHolder.getView<TextView>(R.id.message_list_item_content)
         contentTextView.text = StringUtil.getEmotionContent(EmotionUtil.EMOTION_ALL_TYPE, contentTextView, item.content)

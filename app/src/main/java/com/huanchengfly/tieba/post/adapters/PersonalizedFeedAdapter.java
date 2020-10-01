@@ -2,7 +2,6 @@ package com.huanchengfly.tieba.post.adapters;
 
 import android.content.Context;
 import android.text.TextUtils;
-import android.text.format.DateUtils;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -23,6 +22,7 @@ import com.huanchengfly.tieba.post.utils.DisplayUtil;
 import com.huanchengfly.tieba.post.utils.ImageUtil;
 import com.huanchengfly.tieba.post.utils.NavigationHelper;
 import com.huanchengfly.tieba.post.utils.SharedPreferencesUtil;
+import com.huanchengfly.tieba.post.utils.TimeUtils;
 import com.huanchengfly.tieba.post.utils.Util;
 import com.huanchengfly.tieba.post.widgets.MarkedImageView;
 import com.huanchengfly.tieba.post.widgets.VideoPlayerStandard;
@@ -208,7 +208,7 @@ public class PersonalizedFeedAdapter extends MultiBaseAdapter<PersonalizedBean.T
         }
         TextView timeTextView = viewHolder.getView(R.id.forum_item_user_time);
         String relativeTime =
-                DateUtils.getRelativeTimeSpanString(Long.parseLong(threadBean.getLastTimeInt()) * 1000L).toString();
+                TimeUtils.getRelativeTimeString(mContext, threadBean.getLastTimeInt());
         if (!TextUtils.isEmpty(threadBean.getForumName())) {
             timeTextView.setText(
                     mContext.getString(

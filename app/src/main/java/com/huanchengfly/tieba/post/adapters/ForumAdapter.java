@@ -29,6 +29,7 @@ import com.huanchengfly.tieba.post.utils.ImageUtil;
 import com.huanchengfly.tieba.post.utils.NavigationHelper;
 import com.huanchengfly.tieba.post.utils.SharedPreferencesUtil;
 import com.huanchengfly.tieba.post.utils.StringUtil;
+import com.huanchengfly.tieba.post.utils.TimeUtils;
 import com.huanchengfly.tieba.post.utils.Util;
 import com.huanchengfly.tieba.post.utils.preload.PreloadUtil;
 import com.huanchengfly.tieba.post.utils.preload.loaders.ThreadContentLoader;
@@ -232,7 +233,7 @@ public class ForumAdapter extends MultiBaseAdapter<ForumPageBean.ThreadBean> {
                 NavigationHelper.toUserSpaceWithAnim(mContext, userBean.getId(), userBean.getPortrait(), v);
             });
             viewHolder.setText(R.id.forum_item_user_name, StringUtil.getUsernameString(mContext, userBean.getName(), userBean.getNameShow()));
-            viewHolder.setText(R.id.forum_item_user_time, Util.getTime(threadBean.getLastTimeInt()));
+            viewHolder.setText(R.id.forum_item_user_time, TimeUtils.getRelativeTimeString(mContext, threadBean.getLastTimeInt()));
             ImageUtil.load(viewHolder.getView(R.id.forum_item_user_avatar), ImageUtil.LOAD_TYPE_AVATAR, userBean.getPortrait());
         }
         switch (type) {
