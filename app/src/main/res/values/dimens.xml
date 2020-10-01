@@ -14,7 +14,7 @@
     <dimen name="text_size_hot_title">16sp</dimen>
     <dimen name="text_size_hot_desc">14sp</dimen>
     <dimen name="text_size_refresh_tip">14sp</dimen>
-    <dimen name="size_forum_list_avatar">36dp</dimen>
+    <dimen name="size_forum_list_avatar">42dp</dimen>
     <dimen name="size_avatar">36dp</dimen>
     <dimen name="default_small_pic_radius">8dp</dimen>
     <dimen name="padding_start_default">16dp</dimen>

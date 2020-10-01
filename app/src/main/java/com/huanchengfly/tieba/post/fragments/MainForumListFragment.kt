@@ -15,7 +15,6 @@ import com.alibaba.android.vlayout.DelegateAdapter
 import com.alibaba.android.vlayout.VirtualLayoutManager
 import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.appbar.AppBarLayout.OnOffsetChangedListener
-import com.google.android.material.textfield.TextInputLayout
 import com.huanchengfly.tieba.post.*
 import com.huanchengfly.tieba.post.activities.ForumActivity
 import com.huanchengfly.tieba.post.activities.NewSearchActivity
@@ -58,7 +57,7 @@ class MainForumListFragment : BaseFragment(), Refreshable, Toolbar.OnMenuItemCli
     lateinit var searchBarMotionLayout: MotionLayout
 
     @BindView(R.id.search_bar)
-    lateinit var searchBar: TextInputLayout
+    lateinit var searchBar: View
 
     @BindView(R.id.refresh_header)
     lateinit var refreshLayoutHeader: MaterialHeader
@@ -94,8 +93,12 @@ class MainForumListFragment : BaseFragment(), Refreshable, Toolbar.OnMenuItemCli
 
     override fun onResume() {
         super.onResume()
-        topForumListAdapter.spanCount = spanCount
-        mainForumListAdapter.spanCount = spanCount
+        if (topForumListAdapter.spanCount != spanCount || mainForumListAdapter.spanCount != spanCount) {
+            topForumListAdapter.spanCount = spanCount
+            mainForumListAdapter.spanCount = spanCount
+            mRecyclerView.recycledViewPool.clear()
+            reloadAdapters()
+        }
     }
 
     override fun onAccountSwitch() {
@@ -166,11 +169,8 @@ class MainForumListFragment : BaseFragment(), Refreshable, Toolbar.OnMenuItemCli
         }
         reloadAdapters()
         toolbar.setOnMenuItemClickListener(this)
-        searchBar.editText?.setOnFocusChangeListener { v, hasFocus ->
-            if (hasFocus) {
-                v.clearFocus()
-                attachContext.goToActivity<NewSearchActivity>()
-            }
+        searchBar.setOnClickListener {
+            attachContext.goToActivity<NewSearchActivity>()
         }
         btnOkSign.setOnClickListener {
             TiebaUtil.startSign(attachContext)

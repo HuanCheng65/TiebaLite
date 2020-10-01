@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.huanchengfly.tieba.post.widgets.theme.TintRelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    app:backgroundTint="@color/default_color_card"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:padding="16dp">
@@ -36,4 +34,4 @@
         app:tint="@color/default_color_text_secondary"
         android:textSize="13sp"
         tools:text="Sub Title" />
-</com.huanchengfly.tieba.post.widgets.theme.TintRelativeLayout>
+</RelativeLayout>

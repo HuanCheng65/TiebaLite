@@ -10,7 +10,6 @@
     android:padding="12dp">
 
     <ImageView
-        android:visibility="gone"
         android:layout_alignParentStart="true"
         android:layout_centerVertical="true"
         android:layout_marginEnd="12dp"
@@ -25,11 +24,13 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
+        android:textStyle="bold"
         android:layout_marginEnd="8dp"
         android:layout_toStartOf="@id/forum_list_item_status"
         android:ellipsize="end"
         android:gravity="start|center_vertical"
         android:maxLines="1"
+        android:textSize="16sp"
         app:tint="@color/default_color_text"
         tools:text="Title" />
 
@@ -43,6 +44,7 @@
         android:backgroundTint="#FFFF9800"
         android:minWidth="54dp"
         android:padding="3dp">
+
         <RelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

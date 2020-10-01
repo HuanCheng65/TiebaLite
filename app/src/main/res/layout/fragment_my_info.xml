@@ -162,21 +162,18 @@
 
                 </com.huanchengfly.tieba.post.widgets.theme.TintLinearLayout>
 
-                <com.huanchengfly.tieba.post.widgets.theme.TintLinearLayout
-                    android:paddingTop="10dp"
-                    android:paddingBottom="10dp"
+                <LinearLayout
                     android:layout_marginStart="@dimen/card_margin"
                     android:layout_marginEnd="@dimen/card_margin"
                     android:layout_marginBottom="@dimen/card_margin"
-                    android:background="@drawable/bg_radius_10dp"
-                    app:backgroundTint="@color/default_color_card"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
 
-                    <LinearLayout
+                    <com.huanchengfly.tieba.post.widgets.theme.TintLinearLayout
                         android:id="@+id/my_info_collect"
-                        android:background="?selectableItemBackground"
+                        android:background="@drawable/bg_top_radius_10dp_ripple"
+                        app:backgroundTint="@color/default_color_card"
                         android:paddingStart="24dp"
                         android:paddingEnd="24dp"
                         android:paddingTop="16dp"
@@ -198,11 +195,12 @@
                             android:layout_gravity="center_vertical"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content" />
-                    </LinearLayout>
+                    </com.huanchengfly.tieba.post.widgets.theme.TintLinearLayout>
 
-                    <LinearLayout
+                    <com.huanchengfly.tieba.post.widgets.theme.TintLinearLayout
                         android:id="@+id/my_info_history"
-                        android:background="?selectableItemBackground"
+                        app:backgroundTint="@color/default_color_divider"
+                        android:background="@drawable/bg_ripple"
                         android:paddingStart="24dp"
                         android:paddingEnd="24dp"
                         android:paddingTop="16dp"
@@ -224,11 +222,12 @@
                             android:layout_gravity="center_vertical"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content" />
-                    </LinearLayout>
+                    </com.huanchengfly.tieba.post.widgets.theme.TintLinearLayout>
 
-                    <LinearLayout
+                    <com.huanchengfly.tieba.post.widgets.theme.TintLinearLayout
                         android:id="@+id/my_info_theme"
-                        android:background="?selectableItemBackground"
+                        android:background="@drawable/bg_ripple"
+                        app:backgroundTint="@color/default_color_card"
                         android:paddingStart="24dp"
                         android:paddingEnd="24dp"
                         android:paddingTop="16dp"
@@ -287,11 +286,12 @@
                                 android:layout_toEndOf="@id/my_info_night_tv" />
                         </RelativeLayout>
 
-                    </LinearLayout>
+                    </com.huanchengfly.tieba.post.widgets.theme.TintLinearLayout>
 
-                    <LinearLayout
+                    <com.huanchengfly.tieba.post.widgets.theme.TintLinearLayout
                         android:id="@+id/my_info_service_center"
-                        android:background="?selectableItemBackground"
+                        android:background="@drawable/bg_bottom_radius_10dp_ripple"
+                        app:backgroundTint="@color/default_color_divider"
                         android:paddingStart="24dp"
                         android:paddingEnd="24dp"
                         android:paddingTop="16dp"
@@ -313,24 +313,21 @@
                             android:layout_gravity="center_vertical"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content" />
-                    </LinearLayout>
-                </com.huanchengfly.tieba.post.widgets.theme.TintLinearLayout>
+                    </com.huanchengfly.tieba.post.widgets.theme.TintLinearLayout>
+                </LinearLayout>
 
-                <com.huanchengfly.tieba.post.widgets.theme.TintLinearLayout
-                    android:paddingTop="10dp"
-                    android:paddingBottom="10dp"
+                <LinearLayout
                     android:layout_marginStart="@dimen/card_margin"
                     android:layout_marginEnd="@dimen/card_margin"
                     android:layout_marginBottom="@dimen/card_margin"
-                    android:background="@drawable/bg_radius_10dp"
-                    app:backgroundTint="@color/default_color_card"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
 
-                    <LinearLayout
+                    <com.huanchengfly.tieba.post.widgets.theme.TintLinearLayout
                         android:id="@+id/my_info_settings"
-                        android:background="?selectableItemBackground"
+                        android:background="@drawable/bg_top_radius_10dp_ripple"
+                        app:backgroundTint="@color/default_color_card"
                         android:paddingStart="24dp"
                         android:paddingEnd="24dp"
                         android:paddingTop="16dp"
@@ -352,11 +349,12 @@
                             android:layout_gravity="center_vertical"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content" />
-                    </LinearLayout>
+                    </com.huanchengfly.tieba.post.widgets.theme.TintLinearLayout>
 
-                    <LinearLayout
+                    <com.huanchengfly.tieba.post.widgets.theme.TintLinearLayout
                         android:id="@+id/my_info_about"
-                        android:background="?selectableItemBackground"
+                        app:backgroundTint="@color/default_color_divider"
+                        android:background="@drawable/bg_bottom_radius_10dp_ripple"
                         android:paddingStart="24dp"
                         android:paddingEnd="24dp"
                         android:paddingTop="16dp"
@@ -379,8 +377,8 @@
                             android:layout_gravity="center_vertical"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content" />
-                    </LinearLayout>
-                </com.huanchengfly.tieba.post.widgets.theme.TintLinearLayout>
+                    </com.huanchengfly.tieba.post.widgets.theme.TintLinearLayout>
+                </LinearLayout>
             </LinearLayout>
         </androidx.core.widget.NestedScrollView>
     </com.huanchengfly.tieba.post.widgets.theme.TintSwipeRefreshLayout>

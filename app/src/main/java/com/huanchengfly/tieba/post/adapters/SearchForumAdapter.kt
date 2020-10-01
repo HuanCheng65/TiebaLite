@@ -23,6 +23,7 @@ class SearchForumAdapter(context: Context?) : BaseMultiTypeDelegateAdapter<Searc
                 position,
                 itemCount,
                 positionOffset = 1,
+                colors = intArrayOf(R.color.default_color_card, R.color.default_color_divider),
                 radius = context.resources.getDimension(R.dimen.card_radius)
         )
     }

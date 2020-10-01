@@ -38,33 +38,33 @@
             android:layout_height="wrap_content"
             app:layoutDescription="@xml/fragment_main_forum_list_scene">
 
-            <com.huanchengfly.tieba.post.widgets.theme.TintTextInputLayout
-                android:id="@+id/search_bar"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
-                android:layout_height="wrap_content"
+            <com.huanchengfly.tieba.post.widgets.theme.TintLinearLayout
+                app:backgroundTint="@color/color_toolbar_bar"
+                tools:backgroundTint="@color/color_toolbar_bar"
+                android:padding="12dp"
+                android:background="@drawable/bg_radius_8dp_ripple"
                 android:layout_width="0dp"
-                app:boxBackgroundColor="@color/color_toolbar_bar"
-                app:boxCollapsedPaddingTop="0dp"
-                app:boxCornerRadiusBottomEnd="8dp"
-                app:boxCornerRadiusBottomStart="8dp"
-                app:boxCornerRadiusTopEnd="8dp"
-                app:boxCornerRadiusTopStart="8dp"
-                app:boxStrokeWidth="0dp"
-                app:boxStrokeWidthFocused="0dp"
-                app:hintEnabled="false"
-                app:hintTextColor="@color/default_color_primary"
-                app:placeholderTextColor="@color/default_color_primary"
-                app:startIconTint="@color/color_on_toolbar_bar"
-                app:startIconDrawable="@drawable/ic_search">
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:id="@+id/search_bar">
 
-                <com.huanchengfly.tieba.post.widgets.theme.TintTextInputEditText
-                    android:layout_width="match_parent"
+                <com.huanchengfly.tieba.post.widgets.theme.TintImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    app:srcCompat="@drawable/ic_search"
+                    tools:tint="@color/color_on_toolbar_bar"
+                    app:tint="@color/color_on_toolbar_bar" />
+
+                <com.huanchengfly.tieba.post.widgets.theme.TintTextView
+                    android:layout_marginStart="16dp"
+                    android:textSize="16sp"
+                    tools:textColor="@color/color_on_toolbar_bar"
+                    app:tint="@color/color_on_toolbar_bar"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:background="@null"
-                    android:cursorVisible="false"
-                    app:textColorHint="@color/color_on_toolbar_bar"
-                    android:hint="@string/hint_search" />
-            </com.huanchengfly.tieba.post.widgets.theme.TintTextInputLayout>
+                    android:layout_gravity="center_vertical"
+                    android:text="@string/hint_search" />
+            </com.huanchengfly.tieba.post.widgets.theme.TintLinearLayout>
 
             <com.huanchengfly.tieba.post.widgets.theme.TintImageView
                 android:id="@+id/btn_oksign"

@@ -7,6 +7,7 @@ import android.graphics.drawable.Drawable
 import android.graphics.drawable.GradientDrawable
 import android.graphics.drawable.RippleDrawable
 import com.huanchengfly.tieba.post.R
+import com.huanchengfly.tieba.post.ui.theme.utils.ColorStateListUtils
 
 @JvmOverloads
 fun getItemBackgroundDrawable(
@@ -15,12 +16,13 @@ fun getItemBackgroundDrawable(
         itemCount: Int,
         positionOffset: Int = 0,
         radius: Float = 10f,
+        colors: IntArray = intArrayOf(R.color.default_color_card),
         ripple: Boolean = true
 ): Drawable {
     val realPos = position + positionOffset
     val maxPos = itemCount - 1 + positionOffset
     val shape = GradientDrawable().apply {
-        color = ColorStateList.valueOf(Color.WHITE)
+        color = ColorStateListUtils.createColorStateList(context, colors[realPos % colors.size])
         if (realPos == 0 && realPos == maxPos) {
             cornerRadius = radius
         } else if (realPos == 0) {
@@ -44,8 +46,7 @@ fun getItemBackgroundDrawable(
         }
     }
     return if (ripple) {
-        val rippleColor = ColorStateList.valueOf(Util.getColorByAttr(context, R.attr.colorControlHighlight, R.color.transparent))
-        RippleDrawable(rippleColor, shape, shape)
+        wrapRipple(Util.getColorByAttr(context, R.attr.colorControlHighlight, R.color.transparent), shape)
     } else {
         shape
     }
@@ -55,7 +56,8 @@ fun getRadiusDrawable(
         topLeftPx: Float = 0f,
         topRightPx: Float = 0f,
         bottomLeftPx: Float = 0f,
-        bottomRightPx: Float = 0f
+        bottomRightPx: Float = 0f,
+        ripple: Boolean = false
 ): Drawable {
     return GradientDrawable().apply {
         color = ColorStateList.valueOf(Color.WHITE)
@@ -66,4 +68,8 @@ fun getRadiusDrawable(
                 bottomLeftPx, bottomLeftPx
         )
     }
+}
+
+fun wrapRipple(rippleColor: Int, drawable: Drawable): Drawable {
+    return RippleDrawable(ColorStateList.valueOf(rippleColor), drawable, drawable)
 }

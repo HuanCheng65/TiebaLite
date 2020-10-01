@@ -58,7 +58,7 @@
     <color name="default_color_toolbar_item_active">#FF4477E0</color>
     <color name="default_color_floor_card">#FFF0F3F5</color>
     <color name="default_color_card">#FFFFFFFF</color>
-    <color name="default_color_divider">#FFF0F3F5</color>
+    <color name="default_color_divider">#FFF7FBFE</color>
     <color name="default_color_shadow">#FEE9E9E9</color>
     <color name="default_color_toolbar_item_secondary">#FF545967</color>
     <color name="default_color_swipe_refresh_view_background">#FFFFFFFF</color>
@@ -152,7 +152,7 @@
     <color name="theme_color_swipe_refresh_view_background_grey_dark">#FF252525</color>
     <color name="theme_color_swipe_refresh_view_background_amoled_dark">#FF1C1C1C</color>
 
-    <color name="theme_color_divider_light">@color/color_divider</color>
+    <color name="theme_color_divider_light">#FFF7FBFE</color>
     <color name="theme_color_divider_translucent_light">#10FFFFFF</color>
     <color name="theme_color_divider_translucent_dark">#15000000</color>
     <color name="theme_color_divider_dark">#FF10171D</color>
@@ -164,7 +164,7 @@
 
     <color name="red_accent">#FFC51100</color>
 
-    <color name="color_divider">#FFF0F3F5</color>
+    <color name="color_divider">#FFF7FBFE</color>
 
     <color name="colorSplashBg">#ffffff</color>
     <color name="icon_blue">#FF3373EE</color>
