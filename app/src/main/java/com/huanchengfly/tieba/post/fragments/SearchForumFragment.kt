@@ -134,6 +134,7 @@ class SearchForumFragment : BaseFragment(), ISearchFragment, OnItemClickListener
                 delegateAdapter.addAdapter(fuzzyMatchAdapter)
             }
         }
+        delegateAdapter.notifyDataSetChanged()
     }
 
     override fun onFragmentFirstVisible() {
