@@ -27,10 +27,10 @@
         android:layout_below="@id/item_search_thread_title"
         tools:text="Content"
         android:textSize="14sp"
-        app:tint="@color/default_color_text"
+        app:tint="@color/default_color_text_secondary"
         android:layout_width="match_parent"
         android:layout_marginBottom="4dp"
-        android:maxLines="3"
+        android:maxLines="2"
         android:ellipsize="end"
         android:layout_height="wrap_content" />
 
@@ -39,7 +39,7 @@
         android:layout_below="@id/item_search_thread_content"
         tools:text="幻了个城fly"
         android:textSize="12sp"
-        app:tint="@color/default_color_text_secondary"
+        app:tint="@color/default_color_text_disabled"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 
@@ -52,7 +52,7 @@
         android:layout_below="@id/item_search_thread_content"
         tools:text="minecraft吧 · 刚刚"
         android:textSize="12sp"
-        app:tint="@color/default_color_text_secondary"
+        app:tint="@color/default_color_text_disabled"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 </com.huanchengfly.tieba.post.widgets.theme.TintRelativeLayout>
