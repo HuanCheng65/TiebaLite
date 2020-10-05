@@ -34,13 +34,28 @@ class ForumPageBean : ErrorBean() {
     class ZyqDefineBean : BaseBean() {
         var name: String? = null
         var link: String? = null
-
     }
 
     class ManagerBean : BaseBean() {
         val id: String? = null
         val name: String? = null
+    }
 
+    data class ThemeColors(
+            var day: ThemeColor,
+            var dark: ThemeColor,
+            var night: ThemeColor
+    ) {
+        data class ThemeColor(
+                @SerializedName("common_color")
+                var commonColor: String,
+                @SerializedName("dark_color")
+                var darkColor: String,
+                @SerializedName("font_color")
+                var fontColor: String,
+                @SerializedName("light_color")
+                var lightColor: String,
+        )
     }
 
     class ForumBean : BaseBean() {
@@ -70,6 +85,12 @@ class ForumPageBean : ErrorBean() {
 
         @SerializedName("member_num")
         var memberNum: String? = null
+
+        @SerializedName("thread_num")
+        var threadNum: String? = null
+
+        @SerializedName("theme_color")
+        lateinit var themeColor: ThemeColors
 
         @SerializedName("post_num")
         var postNum: String? = null
