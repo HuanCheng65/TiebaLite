@@ -98,6 +98,9 @@ class ForumActivity : BaseActivity(), View.OnClickListener, OnRefreshedListener,
     @BindView(R.id.header_view_parent)
     lateinit var headerView: View
 
+    @BindView(R.id.forum_header_stat_title)
+    lateinit var statTitleTextView: TextView
+
     @BindView(R.id.forum_header_name)
     lateinit var headerNameTextView: TextView
 
@@ -427,6 +430,7 @@ class ForumActivity : BaseActivity(), View.OnClickListener, OnRefreshedListener,
             ).forEach {
                 it.typeface = Typeface.createFromAsset(assets, "bebas.ttf")
             }
+            //statTitleTextView.typeface = Typeface.createFromAsset(assets, "TiebaStatFont.ttf")
             statMembersTextView.text = getNumStr(mDataBean!!.forum!!.memberNum!!)
             statPostsTextView.text = getNumStr(mDataBean!!.forum!!.postNum!!)
             statThreadsTextView.text = getNumStr(mDataBean!!.forum!!.threadNum!!)

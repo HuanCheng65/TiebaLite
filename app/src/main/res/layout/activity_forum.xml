@@ -161,6 +161,7 @@
                     android:orientation="vertical">
 
                     <TextView
+                        android:id="@+id/forum_header_stat_title"
                         android:layout_marginStart="16dp"
                         android:textStyle="bold"
                         android:textColor="@color/color_text_translucent_light"
