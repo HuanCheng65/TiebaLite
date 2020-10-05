@@ -39,8 +39,9 @@ class ForumTopsAdapter(
     }
 
     override fun convert(viewHolder: MyViewHolder, item: ForumPageBean.ThreadBean, position: Int) {
+        val author = dataBean!!.userList?.firstOrNull { it.id == item.authorId }
         Glide.with(context)
-                .load(dataBean!!.forum!!.avatar)
+                .load(if (author?.portrait == null) dataBean!!.forum!!.avatar else author.portrait!!)
                 .apply(RequestOptions.circleCropTransform())
                 .into(viewHolder.getView(R.id.forum_item_top_avatar))
         viewHolder.setOnClickListener(R.id.forum_item_top) { startActivity(item) }
