@@ -23,7 +23,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
         <com.huanchengfly.tieba.post.widgets.theme.TintMaterialButton
-            style="@style/Widget.Button.Dense"
+            style="@style/Widget.Button"
             android:text="@string/button_submit_dislike"
             android:id="@+id/submit_btn"
             android:layout_alignParentEnd="true"

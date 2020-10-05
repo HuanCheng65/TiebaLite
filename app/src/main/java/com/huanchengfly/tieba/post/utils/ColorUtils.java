@@ -16,6 +16,15 @@ public final class ColorUtils {
         return Color.HSVToColor(hsv);
     }
 
+    public static int getDarkerColor(@ColorInt int color, float i) {
+        float[] hsv = new float[3];
+        Color.colorToHSV(color, hsv); // convert to hsv
+        // make darker
+        hsv[1] = hsv[1] + i; // more saturation
+        hsv[2] = hsv[2] - i; // less brightness
+        return Color.HSVToColor(hsv);
+    }
+
     @ColorInt
     public static int alpha(@ColorInt int color, @IntRange(from = 0, to = 255) int alpha) {
         return Color.argb(alpha, Color.red(color), Color.green(color), Color.blue(color));

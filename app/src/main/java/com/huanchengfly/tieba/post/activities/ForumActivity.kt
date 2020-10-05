@@ -8,6 +8,8 @@ import android.content.Context
 import android.content.Intent
 import android.content.res.ColorStateList
 import android.graphics.Bitmap
+import android.graphics.Color
+import android.graphics.Typeface
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -15,9 +17,10 @@ import android.text.TextUtils
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import android.view.ViewGroup
-import android.widget.*
-import androidx.appcompat.widget.ListPopupWindow
+import android.widget.ImageView
+import android.widget.ProgressBar
+import android.widget.TextView
+import android.widget.Toast
 import androidx.core.content.pm.ShortcutInfoCompat
 import androidx.core.content.pm.ShortcutManagerCompat
 import androidx.core.graphics.drawable.IconCompat
@@ -35,7 +38,6 @@ import com.google.android.material.button.MaterialButton
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.tabs.TabLayout
-import com.google.android.material.tabs.TabLayout.OnTabSelectedListener
 import com.huanchengfly.tieba.post.R
 import com.huanchengfly.tieba.post.adapters.FragmentTabViewPagerAdapter
 import com.huanchengfly.tieba.post.api.ForumSortType
@@ -44,10 +46,8 @@ import com.huanchengfly.tieba.post.api.models.CommonResponse
 import com.huanchengfly.tieba.post.api.models.ForumPageBean
 import com.huanchengfly.tieba.post.api.models.LikeForumResultBean
 import com.huanchengfly.tieba.post.api.models.SignResultBean
-import com.huanchengfly.tieba.post.dpToPx
 import com.huanchengfly.tieba.post.fragments.ForumFragment
 import com.huanchengfly.tieba.post.fragments.ForumFragment.OnRefreshedListener
-import com.huanchengfly.tieba.post.fragments.ForumInfoFragment
 import com.huanchengfly.tieba.post.goToActivity
 import com.huanchengfly.tieba.post.interfaces.Refreshable
 import com.huanchengfly.tieba.post.interfaces.ScrollTopable
@@ -55,6 +55,8 @@ import com.huanchengfly.tieba.post.models.PhotoViewBean
 import com.huanchengfly.tieba.post.models.database.History
 import com.huanchengfly.tieba.post.ui.theme.utils.ThemeUtils
 import com.huanchengfly.tieba.post.utils.*
+import com.huanchengfly.tieba.post.utils.ColorUtils.getDarkerColor
+import com.huanchengfly.tieba.post.utils.ColorUtils.greifyColor
 import com.huanchengfly.tieba.post.utils.preload.PreloadUtil
 import com.huanchengfly.tieba.post.widgets.MyViewPager
 import com.huanchengfly.tieba.post.widgets.theme.TintProgressBar
@@ -63,10 +65,9 @@ import com.lapism.searchview.widget.SearchView
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import java.util.*
 import kotlin.math.abs
 
-class ForumActivity : BaseActivity(), View.OnClickListener, OnRefreshedListener {
+class ForumActivity : BaseActivity(), View.OnClickListener, OnRefreshedListener, TabLayout.OnTabSelectedListener {
     private var mSortType = ForumSortType.REPLY_TIME
     private var forumName: String? = null
     private var firstLoaded = false
@@ -99,6 +100,18 @@ class ForumActivity : BaseActivity(), View.OnClickListener, OnRefreshedListener 
     @BindView(R.id.forum_header_name)
     lateinit var headerNameTextView: TextView
 
+    @BindView(R.id.forum_header_slogan)
+    lateinit var headerSloganTextView: TextView
+
+    @BindView(R.id.forum_header_stat_members)
+    lateinit var statMembersTextView: TextView
+
+    @BindView(R.id.forum_header_stat_posts)
+    lateinit var statPostsTextView: TextView
+
+    @BindView(R.id.forum_header_stat_threads)
+    lateinit var statThreadsTextView: TextView
+
     @BindView(R.id.forum_header_tip)
     lateinit var tipTextView: TextView
 
@@ -117,11 +130,10 @@ class ForumActivity : BaseActivity(), View.OnClickListener, OnRefreshedListener 
     @BindView(R.id.appbar)
     lateinit var appbar: AppBarLayout
 
-    @BindView(R.id.forum_sort_text)
-    lateinit var sortTypeText: TextView
+    @BindView(R.id.collapsing_toolbar)
+    lateinit var collapsingToolbar: CollapsingToolbarLayout
 
-    @BindView(R.id.forum_tab_holder)
-    lateinit var tabHolder: View
+    var toolbarColor: Int = Color.TRANSPARENT
 
     override fun getLayoutId(): Int {
         return R.layout.activity_forum
@@ -130,6 +142,7 @@ class ForumActivity : BaseActivity(), View.OnClickListener, OnRefreshedListener 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         ThemeUtil.setTranslucentThemeBackground(findViewById(R.id.background))
+        toolbarColor = ThemeUtils.getColorById(this, R.color.default_color_toolbar)
         historyHelper = HistoryHelper(this)
         animated = false
         val intent = intent
@@ -190,13 +203,18 @@ class ForumActivity : BaseActivity(), View.OnClickListener, OnRefreshedListener 
     }
 
     private fun initView() {
-        findViewById(R.id.forum_sort).setOnClickListener(this)
-        val collapsingToolbarLayout = findViewById(R.id.collapsing_toolbar) as CollapsingToolbarLayout
-        collapsingToolbarLayout.setContentScrimColor(ThemeUtils.getColorByAttr(this, R.attr.colorToolbar))
-        appbar.addOnOffsetChangedListener(OnOffsetChangedListener { appBarLayout: AppBarLayout, verticalOffset: Int ->
+        appbar.addOnOffsetChangedListener(OnOffsetChangedListener { _, verticalOffset: Int ->
+            val titleVisible = mDataBean != null && forumName != null && abs(verticalOffset) >= headerView.height
+            val percent: Float = if (abs(verticalOffset) <= headerView.height) {
+                abs(verticalOffset.toFloat()) / headerView.height.toFloat()
+            } else {
+                1f
+            }
+            title = if (titleVisible) getString(R.string.title_forum, forumName) else null
+            toolbarEndBtn.visibility = if (titleVisible) View.VISIBLE else View.GONE
+            toolbar.backgroundTintList = ColorStateList.valueOf(Util.changeAlpha(toolbarColor, percent))
             if (animated && ThemeUtil.THEME_TRANSLUCENT == ThemeUtil.getTheme(this)) {
-                val actionBarSize = Util.getDimenByAttr(this, R.attr.actionBarSize, 0)
-                if (abs(verticalOffset) > actionBarSize / 2) {
+                if (abs(verticalOffset) > headerView.height) {
                     AnimUtil.alphaOut(headerView).setListener(object : AnimatorListenerAdapter() {
                         override fun onAnimationEnd(animation: Animator) {
                             headerView.visibility = View.INVISIBLE
@@ -206,17 +224,8 @@ class ForumActivity : BaseActivity(), View.OnClickListener, OnRefreshedListener 
                     AnimUtil.alphaIn(headerView).start()
                 }
             }
-            if (mDataBean != null && mDataBean!!.forum != null && abs(verticalOffset) >= appBarLayout.totalScrollRange) {
-                tabHolder.setBackgroundColor(ThemeUtils.getColorByAttr(this, R.attr.colorBg))
-            } else {
-                tabHolder.setBackgroundResource(R.drawable.bg_round)
-            }
-            val titleVisible = mDataBean != null && forumName != null && abs(verticalOffset) >= headerView.height / 2
-            title = if (titleVisible) getString(R.string.title_forum, forumName) else null
-            toolbarEndBtn.visibility = if (titleVisible) View.VISIBLE else View.GONE
         })
         mAdapter = FragmentTabViewPagerAdapter(supportFragmentManager).apply {
-            addFragment(ForumInfoFragment.newInstance(forumName), getString(R.string.tab_forum_info))
             addFragment(
                     if (PreloadUtil.isPreloading(this@ForumActivity))
                         ForumFragment.newInstance(forumName, false, getSortType(), PreloadUtil.getPreloadId(this@ForumActivity))
@@ -228,24 +237,22 @@ class ForumActivity : BaseActivity(), View.OnClickListener, OnRefreshedListener 
         }
         myViewPager.apply {
             adapter = mAdapter
-            offscreenPageLimit = 2
-            setCurrentItem(1, false)
+            offscreenPageLimit = 1
+            setCurrentItem(0, false)
         }
         headerTabView.apply {
             setupWithViewPager(myViewPager)
-            addOnTabSelectedListener(object : OnTabSelectedListener {
-                override fun onTabSelected(tab: TabLayout.Tab) {}
-                override fun onTabUnselected(tab: TabLayout.Tab) {}
-                override fun onTabReselected(tab: TabLayout.Tab) {
-                    refresh()
-                }
-            })
-            getTabAt(0)!!.setText(null).setIcon(R.drawable.ic_round_info)
+            addOnTabSelectedListener(this@ForumActivity)
+            for (i in 0 until mAdapter!!.fragments.size) {
+                getTabAt(i)!!.setCustomView(R.layout.layout_tab_arrow)
+                val arrow = getTabAt(i)!!.customView!!.findViewById<ImageView>(R.id.arrow)
+                arrow.rotation = 180f
+                arrow.visibility = if (getTabAt(i)!!.isSelected) View.VISIBLE else View.GONE
+            }
         }
         refreshHeaderView()
         fab.hide()
         fab.supportImageTintList = ColorStateList.valueOf(resources.getColor(R.color.white))
-        myViewPager.visibility = View.INVISIBLE
         searchView.setHint(getString(R.string.hint_search_in_ba, forumName))
         setSupportActionBar(toolbar)
         val actionBar = supportActionBar
@@ -326,6 +333,7 @@ class ForumActivity : BaseActivity(), View.OnClickListener, OnRefreshedListener 
 
     override fun onClick(v: View) {
         when (v.id) {
+            /*
             R.id.forum_sort -> {
                 val sorts: MutableList<String> = ArrayList()
                 sorts.add(getString(R.string.title_sort_by_reply))
@@ -346,6 +354,7 @@ class ForumActivity : BaseActivity(), View.OnClickListener, OnRefreshedListener 
                 listPopupWindow.show()
                 v.tag = listPopupWindow
             }
+            */
             R.id.fab -> {
                 if (mDataBean == null) {
                     return
@@ -396,12 +405,31 @@ class ForumActivity : BaseActivity(), View.OnClickListener, OnRefreshedListener 
         }
     }
 
+    private fun getNumStr(num: String): String {
+        val long = num.toLong()
+        if (long > 9999) {
+            val longW = long / 10000L
+            if (longW > 999) {
+                val longKW = longW / 1000L
+                return "${longKW}KW"
+            } else {
+                return "${longW}W"
+            }
+        } else {
+            return num
+        }
+    }
+
     private fun refreshHeaderView() {
-        if (mDataBean != null) {
+        if (mDataBean != null && mDataBean!!.forum != null) {
             headerView.visibility = View.VISIBLE
+            val color = getDarkerColor(greifyColor(Color.parseColor("#${mDataBean!!.forum!!.themeColor.day.commonColor}"), 0.15f), 0.1f)
+            toolbarColor = color
+            appbar.backgroundTintList = ColorStateList.valueOf(color)
+            setCustomToolbarColor(getDarkerColor(color, 0.1f))
             if (avatarView.tag == null) {
-                ImageUtil.load(avatarView, ImageUtil.LOAD_TYPE_AVATAR, mDataBean!!.forum?.avatar)
-                ImageUtil.initImageView(avatarView, PhotoViewBean(mDataBean!!.forum?.avatar, false))
+                ImageUtil.load(avatarView, ImageUtil.LOAD_TYPE_AVATAR, mDataBean!!.forum!!.avatar)
+                ImageUtil.initImageView(avatarView, PhotoViewBean(mDataBean!!.forum!!.avatar, false))
             }
             (progressBar as TintProgressBar?)!!.setProgressBackgroundTintResId(if (ThemeUtils.getColorByAttr(this, R.attr.colorToolbar) == ThemeUtils.getColorByAttr(this, R.attr.colorBg)) R.color.default_color_divider else R.color.default_color_toolbar_item_secondary)
             progressBar.visibility = if ("1" == mDataBean!!.forum?.isLike) View.VISIBLE else View.GONE
@@ -414,6 +442,17 @@ class ForumActivity : BaseActivity(), View.OnClickListener, OnRefreshedListener 
                 }
             } catch (ignored: Exception) {
             }
+            listOf(
+                    statMembersTextView,
+                    statPostsTextView,
+                    statThreadsTextView
+            ).forEach {
+                it.typeface = Typeface.createFromAsset(assets, "bebas.ttf")
+            }
+            statMembersTextView.text = getNumStr(mDataBean!!.forum!!.memberNum!!)
+            statPostsTextView.text = getNumStr(mDataBean!!.forum!!.postNum!!)
+            statThreadsTextView.text = getNumStr(mDataBean!!.forum!!.threadNum!!)
+            headerSloganTextView.text = mDataBean!!.forum!!.slogan
             headerNameTextView.text = getString(R.string.text_forum_name, mDataBean!!.forum?.name)
             if ("1" == mDataBean!!.forum?.isLike) {
                 if ("0" == mDataBean!!.forum?.signInInfo?.userInfo?.isSignIn) {
@@ -435,11 +474,13 @@ class ForumActivity : BaseActivity(), View.OnClickListener, OnRefreshedListener 
                 toolbarEndBtn.isEnabled = true
                 tipTextView.text = mDataBean!!.forum?.slogan
             }
+            /*
             when (mSortType) {
                 ForumSortType.REPLY_TIME -> sortTypeText.setText(R.string.title_sort_by_reply)
                 ForumSortType.SEND_TIME -> sortTypeText.setText(R.string.title_sort_by_send)
                 ForumSortType.ONLY_FOLLOWED -> sortTypeText.setText(R.string.title_sort_by_like_user)
             }
+            */
         } else {
             headerView.visibility = View.INVISIBLE
         }
@@ -482,12 +523,14 @@ class ForumActivity : BaseActivity(), View.OnClickListener, OnRefreshedListener 
     override fun onSuccess(forumPageBean: ForumPageBean) {
         this.mDataBean = forumPageBean
         forumName = forumPageBean.forum?.name
-        loadingView.visibility = View.GONE
         refreshHeaderView()
         if (!animated) {
+            AnimUtil.alphaOut(loadingView).setListener(object : AnimatorListenerAdapter() {
+                override fun onAnimationEnd(animation: Animator?) {
+                    loadingView.visibility = View.GONE
+                }
+            })
             animated = true
-            AnimUtil.alphaIn(myViewPager).start()
-            AnimUtil.alphaIn(tabHolder).start()
             if (fab.isOrWillBeHidden) {
                 fab.show()
             }
@@ -520,5 +563,25 @@ class ForumActivity : BaseActivity(), View.OnClickListener, OnRefreshedListener 
                 putExtra(EXTRA_FORUM_NAME, forumName)
             }
         }
+    }
+
+    override fun onTabSelected(tab: TabLayout.Tab) {
+        if (tab.customView == null) tab.setCustomView(R.layout.layout_tab_arrow)
+        val arrow = tab.customView!!.findViewById<ImageView>(R.id.arrow)
+        AnimUtil.alphaIn(arrow, 150).withEndAction {
+            arrow.visibility = View.VISIBLE
+        }
+    }
+
+    override fun onTabUnselected(tab: TabLayout.Tab) {
+        if (tab.customView == null) tab.setCustomView(R.layout.layout_tab_arrow)
+        val arrow = tab.customView!!.findViewById<ImageView>(R.id.arrow)
+        AnimUtil.alphaOut(arrow, 150).withEndAction {
+            arrow.visibility = View.GONE
+        }
+    }
+
+    override fun onTabReselected(tab: TabLayout.Tab?) {
+        refresh()
     }
 }

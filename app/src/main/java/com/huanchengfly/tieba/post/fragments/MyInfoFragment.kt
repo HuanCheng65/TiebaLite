@@ -10,11 +10,9 @@ import android.widget.CompoundButton
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
-import androidx.core.widget.TextViewCompat
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import butterknife.BindView
 import butterknife.OnClick
-import com.allen.library.SuperTextView
 import com.bumptech.glide.Glide
 import com.gyf.immersionbar.ImmersionBar
 import com.huanchengfly.tieba.post.R
@@ -43,16 +41,16 @@ class MyInfoFragment : BaseFragment(), View.OnClickListener, CompoundButton.OnCh
     lateinit var avatarImageView: ImageView
 
     @BindView(R.id.my_info_grid_follows)
-    lateinit var followsTextView: SuperTextView
+    lateinit var followsTextView: TextView
 
     @BindView(R.id.my_info_grid_fans)
-    lateinit var fansTextView: SuperTextView
+    lateinit var fansTextView: TextView
 
     @BindView(R.id.my_info_grid_forums)
-    lateinit var forumsTextView: SuperTextView
+    lateinit var forumsTextView: TextView
 
     @BindView(R.id.my_info_grid_threads)
-    lateinit var threadsTextView: SuperTextView
+    lateinit var threadsTextView: TextView
 
     @BindView(R.id.my_info_night_switch)
     lateinit var nightSwitch: TintSwitch
@@ -97,10 +95,10 @@ class MyInfoFragment : BaseFragment(), View.OnClickListener, CompoundButton.OnCh
                     override fun onSuccess(myInfoBean: MyInfoBean) {
                         if (myInfoBean.errorCode == 0) {
                             dataBean = myInfoBean
-                            followsTextView.setCenterString(dataBean!!.data.getConcernNum())
-                            fansTextView.setCenterString(dataBean!!.data.getFansNum())
-                            forumsTextView.setCenterString(dataBean!!.data.getLikeForumNum())
-                            threadsTextView.setCenterString(dataBean!!.data.getPostNum())
+                            followsTextView.text = dataBean!!.data.getConcernNum()
+                            fansTextView.text = dataBean!!.data.getFansNum()
+                            forumsTextView.text = dataBean!!.data.getLikeForumNum()
+                            threadsTextView.text = dataBean!!.data.getPostNum()
                             userNameTextView.text = dataBean!!.data.getShowName()
                             if (TextUtils.isEmpty(dataBean!!.data.getIntro())) {
                                 dataBean!!.data.setIntro(attachContext.resources.getString(R.string.tip_no_intro))
@@ -144,13 +142,12 @@ class MyInfoFragment : BaseFragment(), View.OnClickListener, CompoundButton.OnCh
         super.onViewCreated(view, savedInstanceState)
         ThemeUtil.setThemeForSwipeRefreshLayout(mRefreshView)
         listOf(
-                followsTextView.centerTextView,
-                fansTextView.centerTextView,
-                forumsTextView.centerTextView,
-                threadsTextView.centerTextView
+                followsTextView,
+                fansTextView,
+                forumsTextView,
+                threadsTextView
         ).forEach {
             it.typeface = Typeface.createFromAsset(attachContext.assets, "bebas.ttf")
-            TextViewCompat.setTextAppearance(it, R.style.TextAppearance_Bold)
         }
         listOf(
                 R.id.my_info_collect,
@@ -162,21 +159,21 @@ class MyInfoFragment : BaseFragment(), View.OnClickListener, CompoundButton.OnCh
         ).forEach {
             view.findViewById<View>(it).setOnClickListener(this)
         }
-        followsTextView.setOnSuperTextViewClickListener {
+        (followsTextView.parent as View).setOnClickListener {
             WebViewActivity.launch(attachContext, attachContext.resources.getString(R.string.url_user_home, dataBean!!.data.getName(), 2))
         }
-        fansTextView.setOnSuperTextViewClickListener {
+        (fansTextView.parent as View).setOnClickListener {
             WebViewActivity.launch(attachContext, attachContext.resources.getString(R.string.url_user_home, dataBean!!.data.getName(), 3))
         }
-        forumsTextView.setOnSuperTextViewClickListener {
+        (forumsTextView.parent as View).setOnClickListener {
             goToActivity<UserActivity> {
-                putExtra(UserActivity.EXTRA_UID, this@MyInfoFragment.dataBean!!.data.getUid().toString())
+                putExtra(UserActivity.EXTRA_UID, dataBean!!.data.getUid().toString())
                 putExtra(UserActivity.EXTRA_TAB, UserActivity.TAB_LIKE_FORUM)
             }
         }
-        threadsTextView.setOnSuperTextViewClickListener {
+        (threadsTextView.parent as View).setOnClickListener {
             goToActivity<UserActivity> {
-                putExtra(UserActivity.EXTRA_UID, this@MyInfoFragment.dataBean!!.data.getUid().toString())
+                putExtra(UserActivity.EXTRA_UID, dataBean!!.data.getUid().toString())
                 putExtra(UserActivity.EXTRA_TAB, UserActivity.TAB_THREAD)
             }
         }

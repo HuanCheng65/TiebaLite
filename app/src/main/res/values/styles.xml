@@ -40,10 +40,10 @@
     </style>
 
     <style name="Widget.TabLayout.Toolbar.Fixed" parent="Widget.TabLayout.Toolbar">
-        <item name="paddingStart">6dp</item>
-        <item name="paddingEnd">6dp</item>
-        <item name="tabPaddingStart">6dp</item>
-        <item name="tabPaddingEnd">6dp</item>
+        <item name="paddingStart">5dp</item>
+        <item name="paddingEnd">5dp</item>
+        <item name="tabPaddingStart">5dp</item>
+        <item name="tabPaddingEnd">5dp</item>
         <item name="tabUnboundedRipple">false</item>
         <item name="tabRippleColor">@color/transparent</item>
         <item name="tabMode">fixed</item>
@@ -88,12 +88,25 @@
         <item name="android:textStyle">bold</item>
     </style>
 
-    <style name="Widget.Button.Dense" parent="Widget.MaterialComponents.Button.UnelevatedButton">
+    <style name="Widget.Button" parent="Widget.MaterialComponents.Button.UnelevatedButton">
         <item name="android:minWidth">0dp</item>
         <item name="android:minHeight">0dp</item>
         <item name="android:padding">6dp</item>
         <item name="android:paddingStart">16dp</item>
         <item name="android:paddingEnd">16dp</item>
+        <item name="android:elevation">0dp</item>
+        <item name="buttonBackgroundTint">@color/default_color_primary</item>
+        <item name="buttonTextColor">@color/default_color_text_on_primary</item>
+        <item name="cornerRadius">16dp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="Widget.Button.Dense" parent="Widget.MaterialComponents.Button.UnelevatedButton">
+        <item name="android:minWidth">0dp</item>
+        <item name="android:minHeight">0dp</item>
+        <item name="android:padding">4dp</item>
+        <item name="android:paddingStart">8dp</item>
+        <item name="android:paddingEnd">8dp</item>
         <item name="android:elevation">0dp</item>
         <item name="buttonBackgroundTint">@color/default_color_primary</item>
         <item name="buttonTextColor">@color/default_color_text_on_primary</item>
@@ -392,7 +405,7 @@
         <item name="android:letterSpacing">0.01</item>
         <item name="android:overScrollMode">never</item>
         <item name="toolbarStyle">@style/Toolbar</item>
-        <item name="buttonBarPositiveButtonStyle">@style/Widget.Button.Dense</item>
+        <item name="buttonBarPositiveButtonStyle">@style/Widget.Button</item>
         <item name="buttonBarNegativeButtonStyle">@style/Widget.Button.Flat.Dense</item>
         <item name="buttonBarNeutralButtonStyle">@style/Widget.Button.Flat.Dense</item>
         <item name="actionOverflowMenuStyle">@style/OverflowMenu</item>
@@ -424,7 +437,7 @@
     <style name="AppTheme.Dark" parent="Base.AppTheme.Dark">
         <item name="android:overScrollMode">never</item>
         <item name="toolbarStyle">@style/Toolbar.Dark</item>
-        <item name="buttonBarPositiveButtonStyle">@style/Widget.Button.Dense</item>
+        <item name="buttonBarPositiveButtonStyle">@style/Widget.Button</item>
         <item name="buttonBarNegativeButtonStyle">@style/Widget.Button.Flat.Dense</item>
         <item name="buttonBarNeutralButtonStyle">@style/Widget.Button.Flat.Dense</item>
         <item name="actionOverflowMenuStyle">@style/OverflowMenu.Dark</item>

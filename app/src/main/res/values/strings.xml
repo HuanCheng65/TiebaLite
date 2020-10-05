@@ -130,8 +130,8 @@
     <string name="button_signed">已签到</string>
     <string name="button_like">关注</string>
     <string name="toast_like_success">关注成功，你是第 %s 个关注本吧的</string>
-    <string name="tab_forum_1">看贴</string>
-    <string name="tab_forum_good">精华</string>
+    <string name="tab_forum_1">查看贴子</string>
+    <string name="tab_forum_good">吧内精华</string>
     <string name="tip_good">精</string>
     <string name="title_my_message">我的消息</string>
     <string name="title_messages">消息</string>
@@ -391,4 +391,6 @@
     <string name="relative_date_minute">%d分钟前</string>
     <string name="relative_date_second">%d秒前</string>
     <string name="relative_date_after">刚刚</string>
+    <string name="title_forum_stat">贴吧数据</string>
+    <string name="title_forum_tops">置顶贴</string>
 </resources>

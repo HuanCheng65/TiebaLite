@@ -16,11 +16,16 @@
     <dimen name="text_size_hot_desc">14sp</dimen>
     <dimen name="text_size_refresh_tip">14sp</dimen>
     <dimen name="size_forum_list_avatar">42dp</dimen>
-    <dimen name="size_avatar">36dp</dimen>
+    <dimen name="size_avatar_tiny">30dp</dimen>
+    <dimen name="size_avatar_small">36dp</dimen>
+    <dimen name="size_avatar_normal">48dp</dimen>
+    <dimen name="size_avatar_large">60dp</dimen>
     <dimen name="default_small_pic_radius">8dp</dimen>
     <dimen name="padding_start_default">16dp</dimen>
     <dimen name="padding_end_default">16dp</dimen>
 
     <dimen name="card_margin">12dp</dimen>
     <dimen name="card_radius">10dp</dimen>
+
+    <dimen name="stat_text_size">23sp</dimen>
 </resources>

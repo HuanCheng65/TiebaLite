@@ -41,7 +41,7 @@
             android:id="@+id/select_pic"
             android:text="@string/title_select_pic"
             app:buttonTextColor="@color/color_text_translucent_light"
-            style="@style/Widget.Button.Dense"
+            style="@style/Widget.Button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
         <LinearLayout
@@ -61,7 +61,7 @@
                 android:id="@+id/custom_color"
                 android:text="@string/title_custom_color"
                 app:buttonTextColor="@color/color_text_translucent_light"
-                style="@style/Widget.Button.Dense"
+                style="@style/Widget.Button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
 

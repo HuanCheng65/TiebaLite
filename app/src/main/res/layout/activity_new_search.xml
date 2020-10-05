@@ -67,8 +67,8 @@
             android:layout_height="wrap_content">
 
             <com.huanchengfly.tieba.post.widgets.theme.TintTabLayout
-                android:layout_marginStart="6dp"
-                android:layout_marginEnd="6dp"
+                android:layout_marginStart="5dp"
+                android:layout_marginEnd="5dp"
                 android:background="@color/transparent"
                 style="@style/Widget.TabLayout.Toolbar.Fixed"
                 android:id="@+id/tab_layout"

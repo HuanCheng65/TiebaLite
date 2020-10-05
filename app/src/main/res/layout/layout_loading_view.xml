@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.huanchengfly.tieba.post.widgets.theme.TintCoordinatorLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<com.huanchengfly.tieba.post.widgets.theme.TintCoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/loading_view"
+    tools:visibility="gone"
     app:backgroundTint="@color/default_color_background"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
+
     <com.google.android.material.appbar.AppBarLayout
         android:background="@color/transparent"
         android:layout_width="match_parent"

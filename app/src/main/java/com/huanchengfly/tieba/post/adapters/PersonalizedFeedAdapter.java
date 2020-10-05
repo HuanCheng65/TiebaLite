@@ -97,9 +97,6 @@ public class PersonalizedFeedAdapter extends MultiBaseAdapter<PersonalizedBean.T
         ImageUtil.initImageView(imageView, photoViewBeans, position);
     }
 
-    public void setData(PersonalizedBean personalizedBean) {
-    }
-
     private void load(ForumPageBean.MediaInfoBean mediaInfoBean, ImageView imageView) {
         imageView.setVisibility(View.VISIBLE);
         String url = ImageUtil.getUrl(mContext, true, mediaInfoBean.getOriginPic(), mediaInfoBean.getSrcPic());

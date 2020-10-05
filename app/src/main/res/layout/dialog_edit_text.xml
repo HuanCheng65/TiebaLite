@@ -48,7 +48,7 @@
 
     <com.huanchengfly.tieba.post.widgets.theme.TintMaterialButton
         android:id="@+id/dialog_edit_text_submit"
-        style="@style/Widget.Button.Dense"
+        style="@style/Widget.Button"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"

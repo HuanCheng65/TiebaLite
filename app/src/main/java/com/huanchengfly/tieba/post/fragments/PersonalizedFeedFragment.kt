@@ -143,7 +143,6 @@ class PersonalizedFeedFragment : BaseFragment(), PersonalizedFeedAdapter.OnRefre
                 }!!
                 val threadBeans: MutableList<PersonalizedBean.ThreadBean> = ArrayList(adapter!!.allData)
                 adapter!!.apply {
-                    setData(personalizedBean)
                     if (dataCount > 0) {
                         refreshPosition = newThreadBeans.size - 1
                     }
@@ -185,7 +184,6 @@ class PersonalizedFeedFragment : BaseFragment(), PersonalizedFeedAdapter.OnRefre
                     (it.abstractBeans?.size!! > 0 && BlockUtil.needBlock(it.abstractBeans[0].text)) || BlockUtil.needBlock(it.author?.nameShow, it.author?.id)
                 }!!
                 adapter!!.apply {
-                    setData(personalizedBean)
                     setLoadMoreData(newThreadBeans)
                 }
                 page += 1

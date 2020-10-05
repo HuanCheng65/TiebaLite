@@ -50,6 +50,7 @@ public abstract class BaseActivity extends SwipeBackActivity implements ExtraRef
     private TintToolbar mTintToolbar;
     private String oldTheme;
     private boolean activityRunning = true;
+    private int customToolbarColor = -1;
 
     protected int getLayoutId() {
         return NO_LAYOUT;
@@ -219,19 +220,29 @@ public abstract class BaseActivity extends SwipeBackActivity implements ExtraRef
         return animator;
     }
 
+    public void setCustomToolbarColor(int customToolbarColor) {
+        this.customToolbarColor = customToolbarColor;
+        refreshStatusBarColor();
+    }
+
     public void refreshStatusBarColor() {
         if (THEME_TRANSLUCENT.equals(ThemeUtil.getTheme(this))) {
             ImmersionBar.with(this)
                     .transparentBar()
                     .init();
         } else {
-            ImmersionBar.with(this)
+            ImmersionBar immersionBar = ImmersionBar.with(this)
                     .fitsSystemWindowsInt(true, ThemeUtils.getColorByAttr(this, R.attr.colorBg))
                     .navigationBarColorInt(ThemeUtils.getColorByAttr(this, R.attr.colorNavBar))
-                    .navigationBarDarkIcon(ThemeUtil.isNavigationBarFontDark(this))
-                    .statusBarDarkFont(ThemeUtil.isStatusBarFontDark(this))
-                    .statusBarColorInt(calcStatusBarColor(this, ThemeUtils.getColorByAttr(this, R.attr.colorToolbar)))
-                    .init();
+                    .navigationBarDarkIcon(ThemeUtil.isNavigationBarFontDark(this));
+            if (customToolbarColor != -1) {
+                immersionBar.statusBarColorInt(customToolbarColor)
+                        .autoStatusBarDarkModeEnable(true);
+            } else {
+                immersionBar.statusBarColorInt(calcStatusBarColor(this, ThemeUtils.getColorByAttr(this, R.attr.colorToolbar)))
+                        .statusBarDarkFont(ThemeUtil.isStatusBarFontDark(this));
+            }
+            immersionBar.init();
         }
     }
 

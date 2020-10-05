@@ -7,6 +7,12 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 public class MyLinearLayoutManager extends LinearLayoutManager {
+    private boolean mCanVerticalScroll = true;
+
+    public void setCanVerticalScroll(boolean canVerticalScroll) {
+        mCanVerticalScroll = canVerticalScroll;
+    }
+
     public MyLinearLayoutManager(Context context) {
         super(context);
     }
@@ -17,6 +23,15 @@ public class MyLinearLayoutManager extends LinearLayoutManager {
 
     public MyLinearLayoutManager(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
+    }
+
+    @Override
+    public boolean canScrollVertically() {
+        if (!mCanVerticalScroll) {
+            return false;
+        } else {
+            return super.canScrollVertically();
+        }
     }
 
     @Override

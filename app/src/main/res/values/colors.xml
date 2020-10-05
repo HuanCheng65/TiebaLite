@@ -35,7 +35,7 @@
     <color name="color_text_secondary_night">#B3E6E7EE</color>
     <color name="color_text_disabled_night">#80E6E7EE</color>
 
-    <color name="color_text_translucent_light">#DFFFFFFF</color>
+    <color name="color_text_translucent_light">#EFFFFFFF</color>
     <color name="color_text_secondary_translucent_light">#8AFFFFFF</color>
     <color name="color_text_disabled_translucent_light">#61FFFFFF</color>
 

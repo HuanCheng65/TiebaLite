@@ -24,6 +24,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
             <RelativeLayout
+                android:id="@+id/header_update_tip"
+                android:animateLayoutChanges="true"
                 android:background="?attr/selectableItemBackground"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
@@ -96,7 +98,7 @@
                     android:text="@string/button_next_time" />
 
                 <com.huanchengfly.tieba.post.widgets.theme.TintMaterialButton
-                    style="@style/Widget.Button.Dense"
+                    style="@style/Widget.Button"
                     android:id="@+id/header_update_tip_button_download"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"

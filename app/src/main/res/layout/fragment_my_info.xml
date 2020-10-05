@@ -76,7 +76,7 @@
                         </RelativeLayout>
 
                         <com.huanchengfly.tieba.post.widgets.theme.TintMaterialButton
-                            style="@style/Widget.Button.Dense"
+                            style="@style/Widget.Button"
                             android:text="@string/button_edit"
                             android:id="@+id/my_info_edit_btn"
                             android:layout_alignParentEnd="true"
@@ -86,80 +86,132 @@
 
                     </com.huanchengfly.tieba.post.widgets.theme.TintRelativeLayout>
 
-                    <androidx.gridlayout.widget.GridLayout
-                        android:id="@+id/my_info_grid"
+                    <LinearLayout
+                        android:animateLayoutChanges="true"
                         android:layout_width="match_parent"
-                        android:layout_height="@dimen/my_info_total_height"
-                        app:columnCount="4"
-                        android:layout_marginTop="8dp"
-                        app:orientation="vertical"
-                        app:rowCount="1">
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
 
-                        <com.huanchengfly.tieba.post.widgets.theme.TintSuperTextView
-                            android:id="@+id/my_info_grid_follows"
+                        <LinearLayout
+                            android:animateLayoutChanges="true"
+                            android:paddingTop="16dp"
+                            android:paddingBottom="8dp"
+                            android:background="@drawable/bg_ripple"
+                            android:orientation="vertical"
+                            android:layout_width="0dp"
+                            android:layout_weight="1"
+                            android:layout_height="match_parent">
+
+                            <com.huanchengfly.tieba.post.widgets.theme.TintTextView
+                                android:layout_gravity="center"
+                                tools:text="999"
+                                android:textStyle="bold"
+                                android:textSize="@dimen/stat_text_size"
+                                android:id="@+id/my_info_grid_follows"
+                                app:tint="@color/default_color_text"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content" />
+
+                            <com.huanchengfly.tieba.post.widgets.theme.TintTextView
+                                android:layout_marginTop="8dp"
+                                android:layout_gravity="center_horizontal"
+                                android:text="关注"
+                                android:textSize="14sp"
+                                app:tint="@color/default_color_text_secondary"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:animateLayoutChanges="true"
+                            android:paddingTop="16dp"
+                            android:paddingBottom="8dp"
+                            android:background="@drawable/bg_ripple"
                             android:layout_width="0dp"
                             android:layout_height="match_parent"
-                            app:layout_column="0"
-                            app:layout_columnSpan="1"
-                            app:layout_columnWeight="1"
-                            app:centerBottomTextColor="@color/default_color_text_secondary"
-                            app:centerTextColor="@color/default_color_text"
-                            app:sCenterBottomTextSize="14sp"
-                            app:sCenterBottomTextString="关注"
-                            app:sCenterTextSize="21sp"
-                            app:sDividerLineType="none"
-                            app:sBackgroundDrawableRes="?attr/selectableItemBackground"
-                            tools:sCenterTextString="999" />
+                            android:layout_weight="1"
+                            android:orientation="vertical">
 
-                        <com.huanchengfly.tieba.post.widgets.theme.TintSuperTextView
-                            android:id="@+id/my_info_grid_fans"
+                            <com.huanchengfly.tieba.post.widgets.theme.TintTextView
+                                android:id="@+id/my_info_grid_fans"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center_horizontal"
+                                android:textSize="@dimen/stat_text_size"
+                                android:textStyle="bold"
+                                app:tint="@color/default_color_text"
+                                tools:text="999" />
+
+                            <com.huanchengfly.tieba.post.widgets.theme.TintTextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center_horizontal"
+                                android:layout_marginTop="8dp"
+                                android:text="粉丝"
+                                android:textSize="14sp"
+                                app:tint="@color/default_color_text_secondary" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:animateLayoutChanges="true"
+                            android:paddingTop="16dp"
+                            android:paddingBottom="8dp"
+                            android:background="@drawable/bg_ripple"
+                            android:orientation="vertical"
+                            android:layout_width="0dp"
+                            android:layout_weight="1"
+                            android:layout_height="match_parent">
+
+                            <com.huanchengfly.tieba.post.widgets.theme.TintTextView
+                                android:layout_gravity="center_horizontal"
+                                tools:text="999"
+                                android:textStyle="bold"
+                                android:textSize="@dimen/stat_text_size"
+                                android:id="@+id/my_info_grid_forums"
+                                app:tint="@color/default_color_text"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content" />
+
+                            <com.huanchengfly.tieba.post.widgets.theme.TintTextView
+                                android:layout_marginTop="8dp"
+                                android:layout_gravity="center_horizontal"
+                                android:text="关注吧"
+                                android:textSize="14sp"
+                                app:tint="@color/default_color_text_secondary"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:animateLayoutChanges="true"
+                            android:paddingTop="16dp"
+                            android:paddingBottom="8dp"
                             android:layout_width="0dp"
                             android:layout_height="match_parent"
-                            app:layout_column="0"
-                            app:layout_columnSpan="1"
-                            app:layout_columnWeight="1"
-                            app:centerBottomTextColor="@color/default_color_text_secondary"
-                            app:centerTextColor="@color/default_color_text"
-                            app:sCenterBottomTextSize="14sp"
-                            app:sCenterBottomTextString="粉丝"
-                            app:sCenterTextSize="21sp"
-                            app:sDividerLineType="none"
-                            app:sBackgroundDrawableRes="?attr/selectableItemBackground"
-                            tools:sCenterTextString="999" />
+                            android:layout_weight="1"
+                            android:background="@drawable/bg_ripple"
+                            android:orientation="vertical">
 
-                        <com.huanchengfly.tieba.post.widgets.theme.TintSuperTextView
-                            android:id="@+id/my_info_grid_forums"
-                            android:layout_width="0dp"
-                            android:layout_height="match_parent"
-                            app:layout_column="0"
-                            app:layout_columnSpan="1"
-                            app:layout_columnWeight="1"
-                            app:centerBottomTextColor="@color/default_color_text_secondary"
-                            app:centerTextColor="@color/default_color_text"
-                            app:sCenterBottomTextSize="14sp"
-                            app:sCenterBottomTextString="关注的吧"
-                            app:sCenterTextSize="21sp"
-                            app:sDividerLineType="none"
-                            app:sBackgroundDrawableRes="?attr/selectableItemBackground"
-                            tools:sCenterTextString="999" />
+                            <com.huanchengfly.tieba.post.widgets.theme.TintTextView
+                                android:id="@+id/my_info_grid_threads"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center_horizontal"
+                                android:textSize="@dimen/stat_text_size"
+                                android:textStyle="bold"
+                                app:tint="@color/default_color_text"
+                                tools:text="999" />
 
-                        <com.huanchengfly.tieba.post.widgets.theme.TintSuperTextView
-                            android:id="@+id/my_info_grid_threads"
-                            android:layout_width="0dp"
-                            android:layout_height="match_parent"
-                            app:layout_column="0"
-                            app:layout_columnSpan="1"
-                            app:layout_columnWeight="1"
-                            app:centerBottomTextColor="@color/default_color_text_secondary"
-                            app:centerTextColor="@color/default_color_text"
-                            app:sCenterBottomTextSize="14sp"
-                            app:sCenterBottomTextString="贴子"
-                            app:sCenterTextSize="21sp"
-                            app:sDividerLineType="none"
-                            app:sBackgroundDrawableRes="?attr/selectableItemBackground"
-                            tools:sCenterTextString="999" />
-                    </androidx.gridlayout.widget.GridLayout>
-
+                            <com.huanchengfly.tieba.post.widgets.theme.TintTextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center_horizontal"
+                                android:layout_marginTop="8dp"
+                                android:text="贴子"
+                                android:textSize="14sp"
+                                app:tint="@color/default_color_text_secondary" />
+                        </LinearLayout>
+                    </LinearLayout>
                 </com.huanchengfly.tieba.post.widgets.theme.TintLinearLayout>
 
                 <LinearLayout

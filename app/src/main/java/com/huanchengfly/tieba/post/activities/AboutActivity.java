@@ -1,9 +1,11 @@
 package com.huanchengfly.tieba.post.activities;
 
+import android.animation.LayoutTransition;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -11,20 +13,15 @@ import android.widget.TextView;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.widget.Toolbar;
 
-import com.huanchengfly.tieba.post.ui.about.AboutPage;
-import com.huanchengfly.tieba.post.ui.theme.utils.ThemeUtils;
+import com.huanchengfly.tieba.post.R;
 import com.huanchengfly.tieba.post.api.LiteApi;
 import com.huanchengfly.tieba.post.api.interfaces.CommonAPICallback;
 import com.huanchengfly.tieba.post.api.models.NewUpdateBean;
-import com.huanchengfly.tieba.post.R;
+import com.huanchengfly.tieba.post.ui.about.AboutPage;
+import com.huanchengfly.tieba.post.ui.theme.utils.ThemeUtils;
 import com.huanchengfly.tieba.post.utils.NavigationHelper;
 import com.huanchengfly.tieba.post.utils.ThemeUtil;
 import com.huanchengfly.tieba.post.utils.VersionUtil;
-
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.OnClick;
-import butterknife.Unbinder;
 
 public class AboutActivity extends BaseActivity implements View.OnClickListener {
     public static final int STATE_ERROR = 0;
@@ -53,6 +50,11 @@ public class AboutActivity extends BaseActivity implements View.OnClickListener 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         RelativeLayout mainView = (RelativeLayout) findViewById(R.id.main);
         View headerView = View.inflate(this, R.layout.header_about, null);
+        ((ViewGroup) headerView).setLayoutTransition(new LayoutTransition());
+        ((ViewGroup) headerView).getLayoutTransition().enableTransitionType(LayoutTransition.CHANGING);
+        ViewGroup tip = headerView.findViewById(R.id.header_update_tip);
+        tip.setLayoutTransition(new LayoutTransition());
+        tip.getLayoutTransition().enableTransitionType(LayoutTransition.CHANGING);
         updateTip = headerView.findViewById(R.id.header_update_tip_shadow);
         updateTipHeaderTv = headerView.findViewById(R.id.header_update_tip_header_title);
         updateTipTitleTv = headerView.findViewById(R.id.header_update_tip_title);

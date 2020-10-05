@@ -13,13 +13,12 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <com.huanchengfly.tieba.post.widgets.theme.TintImageView
-            android:id="@+id/forum_item_top_icon"
+            android:id="@+id/forum_item_top_avatar"
             android:layout_centerVertical="true"
-            app:tint="@color/default_color_primary"
-            app:srcCompat="@drawable/ic_arrow_dropup_circle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="@dimen/size_avatar_tiny"
+            android:layout_height="@dimen/size_avatar_tiny"
             android:contentDescription="@string/content_top" />
+
         <com.huanchengfly.tieba.post.widgets.theme.TintTextView
             android:textStyle="bold"
             android:textSize="14sp"
@@ -29,8 +28,8 @@
             android:ellipsize="end"
             tools:text="Title"
             android:layout_centerVertical="true"
-            android:layout_marginStart="12dp"
-            android:layout_toEndOf="@id/forum_item_top_icon"
+            android:layout_marginStart="8dp"
+            android:layout_toEndOf="@id/forum_item_top_avatar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
     </RelativeLayout>

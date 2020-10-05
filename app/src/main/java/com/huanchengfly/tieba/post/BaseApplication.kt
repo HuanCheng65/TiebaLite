@@ -170,7 +170,7 @@ class BaseApplication : Application() {
             override fun onActivitySaveInstanceState(activity: Activity, outState: Bundle) {}
             override fun onActivityDestroyed(activity: Activity) {}
         })
-        //CrashUtil.CrashHandler.getInstance().init(this)
+        CrashUtil.CrashHandler.getInstance().init(this)
     }
 
     /**

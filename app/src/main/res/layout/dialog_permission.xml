@@ -62,7 +62,7 @@
             <com.huanchengfly.tieba.post.widgets.theme.TintMaterialButton
                 android:id="@+id/permission_actions_allow"
                 android:text="@string/button_allow"
-                style="@style/Widget.Button.Dense"
+                style="@style/Widget.Button"
                 android:layout_alignParentEnd="true"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />

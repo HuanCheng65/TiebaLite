@@ -20,6 +20,10 @@ class MyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         return itemView.findViewById(id)
     }
 
+    fun <T : View> getViewOrNull(@IdRes id: Int): T? {
+        return itemView.findViewById(id)
+    }
+
     fun setItemOnClickListener(listener: View.OnClickListener?) {
         itemView.setOnClickListener(listener)
     }

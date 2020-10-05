@@ -4,12 +4,8 @@
     android:layout_height="match_parent">
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/forum_good_classify"
+        android:nestedScrollingEnabled="false"
+        android:overScrollMode="never"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
-
-    <include
-        android:id="@+id/forum_divider_2"
-        android:layout_width="match_parent"
-        android:layout_height="8dp"
-        layout="@layout/layout_divider" />
 </LinearLayout>
