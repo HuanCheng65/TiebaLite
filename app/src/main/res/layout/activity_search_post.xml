@@ -6,35 +6,76 @@
     android:id="@+id/background"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/transparent"
+    app:backgroundTint="@color/default_color_window_background"
     tools:context=".activities.SearchPostActivity">
 
-    <com.google.android.material.appbar.AppBarLayout
+    <com.huanchengfly.tieba.post.widgets.theme.TintAppBarLayout
         android:id="@+id/appbar"
-        android:background="@color/transparent"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:stateListAnimator="@animator/appbar_elevation">
-        <com.lapism.searchview.widget.SearchView
-            style="@style/Widget.SearchBar.Flat"
-            app:search_version_margins="toolbar"
-            app:search_version="toolbar"
-            app:search_hint="@string/hint_search"
-            android:id="@+id/toolbar_search_view"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-    </com.google.android.material.appbar.AppBarLayout>
+        android:stateListAnimator="@animator/appbar_elevation"
+        app:backgroundTint="@color/default_color_toolbar">
 
-    <com.huanchengfly.tieba.post.widgets.theme.TintSwipeRefreshLayout
+        <com.huanchengfly.tieba.post.widgets.theme.TintTextInputLayout
+            android:id="@+id/search_bar"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            app:boxBackgroundColor="@color/color_toolbar_bar"
+            app:boxCollapsedPaddingTop="0dp"
+            app:boxCornerRadiusBottomEnd="8dp"
+            app:boxCornerRadiusBottomStart="8dp"
+            app:boxCornerRadiusTopEnd="8dp"
+            app:boxCornerRadiusTopStart="8dp"
+            app:boxStrokeWidth="0dp"
+            app:boxStrokeWidthFocused="0dp"
+            app:hintEnabled="false"
+            android:layout_marginTop="12dp"
+            android:layout_marginBottom="12dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            app:hintTextColor="@color/default_color_primary"
+            app:placeholderTextColor="@color/default_color_primary"
+            app:startIconDrawable="@drawable/ic_round_arrow_back">
+
+            <com.huanchengfly.tieba.post.widgets.theme.TintTextInputEditText
+                android:imeOptions="actionSearch"
+                android:inputType="text"
+                android:id="@+id/search_edit_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@null"
+                android:hint="@string/hint_search"
+                android:textColorHint="@color/default_color_text_secondary" />
+
+        </com.huanchengfly.tieba.post.widgets.theme.TintTextInputLayout>
+    </com.huanchengfly.tieba.post.widgets.theme.TintAppBarLayout>
+
+    <com.scwang.smart.refresh.layout.SmartRefreshLayout
+        app:srlDragRate="0.8"
+        app:srlEnableOverScrollBounce="true"
+        app:srlEnableOverScrollDrag="true"
         android:id="@+id/search_post_refresh_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/transparent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/search_post_recycler_view"
-            android:background="@color/transparent"
+
+        <com.huanchengfly.tieba.post.widgets.theme.TintMaterialHeader
+            android:id="@+id/refresh_header"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
-    </com.huanchengfly.tieba.post.widgets.theme.TintSwipeRefreshLayout>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:paddingTop="@dimen/card_margin"
+            android:paddingStart="@dimen/card_margin"
+            android:paddingEnd="@dimen/card_margin"
+            android:clipToPadding="false"
+            android:id="@+id/search_post_recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <com.huanchengfly.tieba.post.components.LoadMoreFooter
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </com.scwang.smart.refresh.layout.SmartRefreshLayout>
 </com.huanchengfly.tieba.post.widgets.theme.TintCoordinatorLayout>

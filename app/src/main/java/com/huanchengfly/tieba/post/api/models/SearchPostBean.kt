@@ -45,7 +45,6 @@ class SearchPostBean {
         @SerializedName("fname")
         val forumName: String? = null
         val author: AuthorBean? = null
-
     }
 
     class AuthorBean {
@@ -53,6 +52,5 @@ class SearchPostBean {
 
         @SerializedName("name_show")
         val nameShow: String? = null
-
     }
 }

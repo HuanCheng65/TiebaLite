@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.huanchengfly.tieba.post.widgets.theme.TintRelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="16dp"
+    android:id="@+id/item_search_thread"
+    android:orientation="vertical"
+    android:background="@drawable/bg_radius_8dp_ripple"
+    app:backgroundTint="@color/default_color_card">
+
+    <com.huanchengfly.tieba.post.widgets.theme.TintTextView
+        android:id="@+id/item_search_thread_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:tint="@color/default_color_text"
+        android:textSize="16sp"
+        android:layout_marginBottom="4dp"
+        android:maxLines="1"
+        android:ellipsize="end"
+        android:textStyle="bold"
+        tools:text="Title" />
+
+    <com.huanchengfly.tieba.post.widgets.theme.TintTextView
+        android:id="@+id/item_search_thread_content"
+        android:layout_below="@id/item_search_thread_title"
+        tools:text="Content"
+        android:textSize="14sp"
+        app:tint="@color/default_color_text"
+        android:layout_width="match_parent"
+        android:layout_marginBottom="4dp"
+        android:maxLines="3"
+        android:ellipsize="end"
+        android:layout_height="wrap_content" />
+
+    <com.huanchengfly.tieba.post.widgets.theme.TintTextView
+        android:id="@+id/item_search_thread_user"
+        android:layout_below="@id/item_search_thread_content"
+        tools:text="幻了个城fly"
+        android:textSize="12sp"
+        app:tint="@color/default_color_text_secondary"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <com.huanchengfly.tieba.post.widgets.theme.TintTextView
+        android:layout_alignWithParentIfMissing="true"
+        android:layout_toEndOf="@id/item_search_thread_user"
+        android:layout_alignParentEnd="true"
+        android:gravity="end"
+        android:id="@+id/item_search_thread_info"
+        android:layout_below="@id/item_search_thread_content"
+        tools:text="minecraft吧 · 刚刚"
+        android:textSize="12sp"
+        app:tint="@color/default_color_text_secondary"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+</com.huanchengfly.tieba.post.widgets.theme.TintRelativeLayout>

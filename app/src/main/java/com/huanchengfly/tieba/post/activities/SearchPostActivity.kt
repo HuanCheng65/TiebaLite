@@ -1,139 +1,131 @@
-package com.huanchengfly.tieba.post.activities;
+package com.huanchengfly.tieba.post.activities
 
-import android.content.Intent;
-import android.graphics.Color;
-import android.os.Bundle;
-import android.view.ViewGroup;
+import android.graphics.Color
+import android.os.Bundle
+import android.view.ViewGroup
+import android.view.inputmethod.EditorInfo
+import android.widget.EditText
+import androidx.recyclerview.widget.RecyclerView
+import butterknife.BindView
+import com.google.android.material.textfield.TextInputLayout
+import com.huanchengfly.tieba.post.R
+import com.huanchengfly.tieba.post.adapters.SearchPostAdapter
+import com.huanchengfly.tieba.post.api.TiebaApi.getInstance
+import com.huanchengfly.tieba.post.api.models.SearchPostBean
+import com.huanchengfly.tieba.post.components.MyLinearLayoutManager
+import com.huanchengfly.tieba.post.components.dividers.SpacesItemDecoration
+import com.huanchengfly.tieba.post.dpToPx
+import com.huanchengfly.tieba.post.utils.ThemeUtil
+import com.huanchengfly.tieba.post.utils.Util
+import com.scwang.smart.refresh.layout.SmartRefreshLayout
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+class SearchPostActivity : BaseActivity() {
+    @BindView(R.id.search_post_refresh_layout)
+    lateinit var refreshLayout: SmartRefreshLayout
 
-import com.huanchengfly.tieba.post.api.TiebaApi;
-import com.huanchengfly.tieba.post.api.models.SearchPostBean;
-import com.huanchengfly.tieba.post.R;
-import com.huanchengfly.tieba.post.adapters.SearchPostAdapter;
-import com.huanchengfly.tieba.post.components.MyLinearLayoutManager;
-import com.huanchengfly.tieba.post.components.dividers.RecycleViewDivider;
-import com.huanchengfly.tieba.post.utils.ThemeUtil;
-import com.huanchengfly.tieba.post.utils.Util;
-import com.lapism.searchview.Search;
-import com.lapism.searchview.widget.SearchView;
+    @BindView(R.id.search_post_recycler_view)
+    lateinit var recyclerView: RecyclerView
 
-import org.jetbrains.annotations.NotNull;
+    @BindView(R.id.search_bar)
+    lateinit var searchBar: TextInputLayout
 
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
+    @BindView(R.id.search_edit_text)
+    lateinit var editText: EditText
 
-public class SearchPostActivity extends BaseActivity implements Search.OnQueryTextListener {
-    public static final String TAG = SearchPostActivity.class.getSimpleName();
-    public static final String PARAM_FORUM = "forum_name";
-    public static final String PARAM_KEYWORD = "keyword";
-    private SwipeRefreshLayout refreshLayout;
-    private RecyclerView recyclerView;
-    private SearchPostAdapter searchPostAdapter;
-    private String forumName;
-    private String keyword;
-    private int page;
-    private SearchView searchView;
+    lateinit var searchPostAdapter: SearchPostAdapter
+    private var forumName: String? = null
+    private var keyword: String? = null
+        set(value) {
+            field = value
+            if (value != null) refreshLayout.autoRefresh()
+        }
+    private var page = 1
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_search_post);
-        ThemeUtil.setTranslucentThemeBackground(findViewById(R.id.background));
-        Util.setStatusBarTransparent(this);
-        getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-        getWindow().getDecorView().setBackgroundColor(Color.TRANSPARENT);
-        getWindow().setBackgroundDrawableResource(R.drawable.bg_trans);
-        Intent intent = getIntent();
-        forumName = intent.getStringExtra(PARAM_FORUM);
+    override fun getLayoutId(): Int = R.layout.activity_search_post
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        ThemeUtil.setTranslucentThemeBackground(findViewById(R.id.background))
+        Util.setStatusBarTransparent(this)
+        window.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
+        window.decorView.setBackgroundColor(Color.TRANSPARENT)
+        window.setBackgroundDrawableResource(R.drawable.bg_trans)
+        val intent = intent
+        forumName = intent.getStringExtra(PARAM_FORUM)
         if (forumName == null) {
-            finish();
+            finish()
         }
-        findView();
-        initView();
-        keyword = intent.getStringExtra(PARAM_KEYWORD);
+        initView()
+        keyword = intent.getStringExtra(PARAM_KEYWORD)
         if (keyword != null) {
-            searchView.setText(keyword);
-            refresh();
+            editText.setText(keyword)
         }
     }
 
-    private void findView() {
-        searchView = (SearchView) findViewById(R.id.toolbar_search_view);
-        refreshLayout = (SwipeRefreshLayout) findViewById(R.id.search_post_refresh_layout);
-        recyclerView = (RecyclerView) findViewById(R.id.search_post_recycler_view);
-    }
-
-    private void initView() {
-        ThemeUtil.setThemeForSwipeRefreshLayout(refreshLayout);
-        searchPostAdapter = new SearchPostAdapter(this);
-        searchPostAdapter.setLoadingView(R.layout.layout_footer_loading);
-        searchPostAdapter.setLoadEndView(R.layout.layout_footer_loadend);
-        searchPostAdapter.setLoadFailedView(R.layout.layout_footer_load_failed);
-        searchPostAdapter.setOnLoadMoreListener(this::loadMore);
-        recyclerView.setLayoutManager(new MyLinearLayoutManager(this));
-        recyclerView.addItemDecoration(new RecycleViewDivider(this, LinearLayoutManager.VERTICAL, R.drawable.drawable_divider_8dp));
-        recyclerView.setAdapter(searchPostAdapter);
-        refreshLayout.setOnRefreshListener(this::refresh);
-        searchView.setHint(getString(R.string.hint_search_in_ba, forumName));
-        searchView.setOnQueryTextListener(this);
-        searchView.setOnLogoClickListener(this::finish);
-    }
-
-    public void refresh() {
-        refreshLayout.setRefreshing(true);
-        page = 1;
-        TiebaApi.getInstance().searchPost(keyword, forumName, false, page, 30).enqueue(new Callback<SearchPostBean>() {
-            @Override
-            public void onResponse(@NotNull Call<SearchPostBean> call, @NotNull Response<SearchPostBean> response) {
-                SearchPostBean data = response.body();
-                if (!"1".equals(data.getPage().getHasMore())) {
-                    searchPostAdapter.loadEnd();
-                }
-                searchPostAdapter.setNewData(data.getPostList());
-                refreshLayout.setRefreshing(false);
-            }
-
-            @Override
-            public void onFailure(@NotNull Call<SearchPostBean> call, @NotNull Throwable t) {
-                searchPostAdapter.loadFailed();
-                refreshLayout.setRefreshing(false);
-            }
-        });
-    }
-
-    public void loadMore(boolean isReload) {
-        if (!isReload) {
-            page += 1;
+    private fun initView() {
+        refreshLayout.apply {
+            ThemeUtil.setThemeForSmartRefreshLayout(this)
+            setOnLoadMoreListener { loadMore() }
+            setOnRefreshListener { refresh() }
         }
-        TiebaApi.getInstance().searchPost(keyword, forumName, false, page, 30).enqueue(new Callback<SearchPostBean>() {
-            @Override
-            public void onResponse(@NotNull Call<SearchPostBean> call, @NotNull Response<SearchPostBean> response) {
-                SearchPostBean data = response.body();
-                if (!"1".equals(data.getPage().getHasMore())) {
-                    searchPostAdapter.loadEnd();
-                }
-                searchPostAdapter.setLoadMoreData(data.getPostList());
+        searchPostAdapter = SearchPostAdapter(this)
+        searchPostAdapter.setOnItemClickListener { _, item, _ ->
+            ThreadActivity.launch(this, item.tid!!, item.pid)
+        }
+        recyclerView.apply {
+            layoutManager = MyLinearLayoutManager(this@SearchPostActivity)
+            addItemDecoration(SpacesItemDecoration(0, 0, 0, 8.dpToPx()))
+            adapter = searchPostAdapter
+        }
+        searchBar.setStartIconOnClickListener { finish() }
+        editText.setOnEditorActionListener { v, actionId, _ ->
+            if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                keyword = v.text.toString()
+                return@setOnEditorActionListener true
             }
-
-            @Override
-            public void onFailure(@NotNull Call<SearchPostBean> call, @NotNull Throwable t) {
-                searchPostAdapter.loadFailed();
-            }
-        });
+            return@setOnEditorActionListener false
+        }
+        editText.hint = getString(R.string.hint_search_in_ba, forumName)
     }
 
-    @Override
-    public boolean onQueryTextSubmit(CharSequence query) {
-        keyword = query.toString();
-        refresh();
-        return true;
+    fun refresh() {
+        page = 1
+        getInstance().searchPost(keyword!!, forumName!!, false, page, 30).enqueue(object : Callback<SearchPostBean> {
+            override fun onResponse(call: Call<SearchPostBean>, response: Response<SearchPostBean>) {
+                val data = response.body()
+                searchPostAdapter.setData(data!!.postList)
+                refreshLayout.finishRefresh()
+                refreshLayout.setNoMoreData("1" != data.page!!.hasMore)
+            }
+
+            override fun onFailure(call: Call<SearchPostBean?>, t: Throwable) {
+                refreshLayout.finishRefresh(false)
+            }
+        })
     }
 
-    @Override
-    public void onQueryTextChange(CharSequence newText) {
+    private fun loadMore() {
+        getInstance().searchPost(keyword!!, forumName!!, false, page + 1, 30).enqueue(object : Callback<SearchPostBean> {
+            override fun onResponse(call: Call<SearchPostBean>, response: Response<SearchPostBean>) {
+                val data = response.body()
+                page += 1
+                data!!.postList?.let { searchPostAdapter.insert(it) }
+                refreshLayout.finishLoadMore()
+                refreshLayout.setNoMoreData("1" != data.page!!.hasMore)
+            }
+
+            override fun onFailure(call: Call<SearchPostBean?>, t: Throwable) {
+                refreshLayout.finishLoadMore(false)
+            }
+        })
+    }
+
+    companion object {
+        val TAG = SearchPostActivity::class.java.simpleName
+        const val PARAM_FORUM = "forum_name"
+        const val PARAM_KEYWORD = "keyword"
     }
 }
