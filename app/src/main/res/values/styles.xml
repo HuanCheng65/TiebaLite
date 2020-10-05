@@ -58,24 +58,6 @@
 
     <style name="Widget" />
 
-    <style name="Widget.SearchBar">
-        <item name="search_logo">arrow</item>
-        <item name="search_shape">classic</item>
-        <item name="search_version_margins">menu_item</item>
-        <item name="search_version">menu_item</item>
-        <item name="search_logo_color">@color/default_color_text</item>
-        <item name="search_mic_color">@color/default_color_text</item>
-        <item name="search_clear_color">@color/default_color_text</item>
-        <item name="search_menu_color">@color/default_color_text</item>
-        <item name="search_text_color">@color/default_color_text</item>
-        <item name="search_background_color">@color/default_color_background</item>
-        <item name="search_hint_color">@color/default_color_text_secondary</item>
-    </style>
-
-    <style name="Widget.SearchBar.Flat" parent="Widget.SearchBar">
-        <item name="search_shadow">false</item>
-    </style>
-
     <style name="Widget.Button.Flat.Dense" parent="Widget.MaterialComponents.Button.TextButton">
         <item name="android:minWidth">0dp</item>
         <item name="android:minHeight">0dp</item>
@@ -144,11 +126,6 @@
 
     <style name="Widget.TabLayout.Fixed" parent="Widget.TabLayout">
         <item name="tabMode">fixed</item>
-    </style>
-
-    <style name="Widget.SearchView" parent="Widget.AppCompat.SearchView">
-        <item name="searchHintIcon">@null</item>
-        <item name="searchIcon">@null</item>
     </style>
 
     <style name="BottomSheetDialogStyle" parent="Theme.Design.BottomSheetDialog">
@@ -411,7 +388,6 @@
         <item name="actionOverflowMenuStyle">@style/OverflowMenu</item>
         <item name="dialogCornerRadius">@dimen/radius</item>
         <item name="alertDialogStyle">@style/AlertDialog</item>
-        <item name="searchViewStyle">@style/Widget.SearchView</item>
         <item name="preferenceTheme">@style/PreferenceTheme</item>
         <item name="android:listSeparatorTextViewStyle">@style/TextAppearance.ListTitle</item>
         <item name="android:colorPrimary">@color/colorPrimary</item>
@@ -443,7 +419,6 @@
         <item name="actionOverflowMenuStyle">@style/OverflowMenu.Dark</item>
         <item name="dialogCornerRadius">8dp</item>
         <item name="alertDialogStyle">@style/AlertDialog.Dark</item>
-        <item name="searchViewStyle">@style/Widget.SearchView</item>
         <item name="preferenceTheme">@style/PreferenceTheme</item>
         <item name="android:listSeparatorTextViewStyle">@style/TextAppearance.ListTitle</item>
         <item name="android:colorPrimary">?attr/colorPrimary</item>

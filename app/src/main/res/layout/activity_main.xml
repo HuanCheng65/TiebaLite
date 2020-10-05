@@ -47,12 +47,4 @@
         app:labelVisibilityMode="unlabeled"
         app:menu="@menu/navbar_main" />
 
-    <com.lapism.searchview.widget.SearchView
-        style="@style/Widget.SearchBar"
-        android:layout_alignParentTop="true"
-        app:search_hint="@string/hint_search"
-        android:id="@+id/toolbar_search_view"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-
 </com.huanchengfly.tieba.post.widgets.theme.TintRelativeLayout>

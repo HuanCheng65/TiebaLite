@@ -66,7 +66,6 @@ import com.huanchengfly.tieba.post.utils.preload.PreloadUtil
 import com.huanchengfly.tieba.post.widgets.MyViewPager
 import com.huanchengfly.tieba.post.widgets.theme.TintProgressBar
 import com.huanchengfly.tieba.post.widgets.theme.TintToolbar
-import com.lapism.searchview.widget.SearchView
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -89,9 +88,6 @@ class ForumActivity : BaseActivity(), View.OnClickListener, OnRefreshedListener,
     @BindView(R.id.fab)
     lateinit var fab: FloatingActionButton
     private var historyHelper: HistoryHelper? = null
-
-    @BindView(R.id.toolbar_search_view)
-    lateinit var searchView: SearchView
 
     @BindView(R.id.loading_view)
     lateinit var loadingView: View
@@ -258,7 +254,6 @@ class ForumActivity : BaseActivity(), View.OnClickListener, OnRefreshedListener,
         refreshHeaderView()
         fab.hide()
         fab.supportImageTintList = ColorStateList.valueOf(resources.getColor(R.color.white))
-        searchView.setHint(getString(R.string.hint_search_in_ba, forumName))
         setSupportActionBar(toolbar)
         val actionBar = supportActionBar
         actionBar?.setDisplayHomeAsUpEnabled(true)
@@ -498,14 +493,10 @@ class ForumActivity : BaseActivity(), View.OnClickListener, OnRefreshedListener,
     }
 
     override fun onBackPressed() {
-        if (searchView.isOpen) {
-            searchView.close()
-        } else {
-            if (Jzvd.backPress()) {
-                return
-            }
-            super.onBackPressed()
+        if (Jzvd.backPress()) {
+            return
         }
+        super.onBackPressed()
     }
 
     override fun onSuccess(forumPageBean: ForumPageBean) {

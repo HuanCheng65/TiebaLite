@@ -216,11 +216,6 @@
             android:title="@string/title_clear_cache" />
 
         <Preference
-            android:icon="@drawable/ic_round_how_to_vote"
-            android:key="clear_search_history"
-            android:title="@string/title_clear_search_history" />
-
-        <Preference
             android:key="about"
             android:icon="@drawable/ic_round_info"
             android:title="@string/title_about">

@@ -332,13 +332,6 @@
         app:backgroundTint="@color/default_color_primary"
         app:borderWidth="0dp" />
 
-    <com.huanchengfly.tieba.post.widgets.theme.TintSearchView
-        style="@style/Widget.SearchBar"
-        android:layout_gravity="top"
-        android:id="@+id/toolbar_search_view"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-
     <include
         android:id="@+id/loading_view"
         layout="@layout/layout_loading_view" />

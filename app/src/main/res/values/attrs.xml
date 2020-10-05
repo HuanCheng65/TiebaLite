@@ -125,12 +125,6 @@
         <attr name="textColor" format="color" />
     </declare-styleable>
 
-    <declare-styleable name="TintSearchView">
-        <attr name="searchBackground" format="color" />
-        <attr name="searchItemColor" format="color" />
-        <attr name="hintColor" format="color" />
-    </declare-styleable>
-
     <declare-styleable name="TintTextInputLayout">
         <attr name="boxBackgroundColor" />
         <attr name="boxStrokeColor" />

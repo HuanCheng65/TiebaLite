@@ -1,7 +1,6 @@
 package com.huanchengfly.tieba.post.activities
 
 import android.annotation.SuppressLint
-import android.app.Activity
 import android.app.job.JobInfo
 import android.app.job.JobScheduler
 import android.content.*
@@ -29,7 +28,6 @@ import com.google.android.material.bottomnavigation.BottomNavigationView.OnNavig
 import com.google.android.material.snackbar.Snackbar
 import com.huanchengfly.tieba.post.BaseApplication
 import com.huanchengfly.tieba.post.R
-import com.huanchengfly.tieba.post.adapters.MainSearchAdapter
 import com.huanchengfly.tieba.post.adapters.ViewPagerAdapter
 import com.huanchengfly.tieba.post.api.Error
 import com.huanchengfly.tieba.post.api.LiteApi.Companion.instance
@@ -45,15 +43,12 @@ import com.huanchengfly.tieba.post.getColorCompat
 import com.huanchengfly.tieba.post.goToActivity
 import com.huanchengfly.tieba.post.interfaces.Refreshable
 import com.huanchengfly.tieba.post.models.MyInfoBean
-import com.huanchengfly.tieba.post.models.database.SearchHistory
 import com.huanchengfly.tieba.post.services.NotifyJobService
 import com.huanchengfly.tieba.post.utils.*
 import com.huanchengfly.tieba.post.widgets.MyViewPager
 import com.huanchengfly.tieba.post.widgets.theme.TintToolbar
-import com.lapism.searchview.Search
-import com.lapism.searchview.widget.SearchView
 
-open class MainActivity : BaseActivity(), BottomNavigationView.OnNavigationItemSelectedListener, MainSearchAdapter.OnSearchItemClickListener, OnNavigationItemReselectedListener {
+open class MainActivity : BaseActivity(), BottomNavigationView.OnNavigationItemSelectedListener, OnNavigationItemReselectedListener {
     var mAdapter: ViewPagerAdapter = ViewPagerAdapter(supportFragmentManager)
 
     @BindView(R.id.toolbar)
@@ -66,8 +61,6 @@ open class MainActivity : BaseActivity(), BottomNavigationView.OnNavigationItemS
     lateinit var mBottomNavigationView: BottomNavigationView
     private var menuView: BottomNavigationMenuView? = null
 
-    @BindView(R.id.toolbar_search_view)
-    lateinit var mSearchView: SearchView
     private var lastTime: Long = 0
     private val navigationHelper: NavigationHelper = NavigationHelper.newInstance(this)
     private var hideExplore = false
@@ -77,7 +70,6 @@ open class MainActivity : BaseActivity(), BottomNavigationView.OnNavigationItemS
 
     @BindView(R.id.appbar)
     lateinit var appbar: FrameLayout
-    private var mSearchAdapter: MainSearchAdapter? = null
 
     public override fun onResume() {
         val reason = ThemeUtil.getSharedPreferences(this).getString(ThemeUtil.SP_SWITCH_REASON, null)
@@ -92,7 +84,6 @@ open class MainActivity : BaseActivity(), BottomNavigationView.OnNavigationItemS
             }
         }
         super.onResume()
-        refreshSearchView()
         ThemeUtil.setTranslucentThemeBackground(findViewById(R.id.background))
         if (ThemeUtil.THEME_TRANSLUCENT == ThemeUtil.getTheme(this)) {
             mBottomNavigationView.elevation = 0f
@@ -106,11 +97,6 @@ open class MainActivity : BaseActivity(), BottomNavigationView.OnNavigationItemS
         if (fragment is Refreshable) {
             (fragment as Refreshable).onRefresh()
         }
-    }
-
-    @JvmOverloads
-    fun openSearch(item: MenuItem? = null) {
-        mSearchView.open(item)
     }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
@@ -142,9 +128,6 @@ open class MainActivity : BaseActivity(), BottomNavigationView.OnNavigationItemS
     }
 
     protected fun initView() {
-        mSearchAdapter = MainSearchAdapter(this)
-        mSearchAdapter!!.onSearchItemClickListener = this
-        mSearchView.adapter = mSearchAdapter
         val hideExploreItemView = menuView!!.getChildAt(if (hideExplore) 1 else 2) as BottomNavigationItemView
         val badge = layoutInflater.inflate(R.layout.layout_badge, hideExploreItemView, true)
         badgeTextView = badge.findViewById(R.id.tv_msg_count)
@@ -162,35 +145,11 @@ open class MainActivity : BaseActivity(), BottomNavigationView.OnNavigationItemS
         mViewPager.isCanScroll = false
         mViewPager.adapter = mAdapter
         mViewPager.offscreenPageLimit = mAdapter.count
-        refreshSearchView()
-    }
-
-    override fun refreshGlobal(activity: Activity) {
-        super.refreshGlobal(activity)
-        refreshSearchView()
-    }
-
-    private fun refreshSearchView() {
-        if (mSearchView == null) {
-            return
-        }
-        mSearchAdapter!!.refreshData()
-        mSearchView.theme = if (ThemeUtil.isNightMode(this) || ThemeUtil.THEME_TRANSLUCENT == ThemeUtil.getTheme(this)) Search.Theme.DARK else Search.Theme.LIGHT
     }
 
     protected fun initListener() {
         mBottomNavigationView.setOnNavigationItemSelectedListener(this)
         mBottomNavigationView.setOnNavigationItemReselectedListener(this)
-        mSearchView.setOnQueryTextListener(object : Search.OnQueryTextListener {
-            override fun onQueryTextChange(newText: CharSequence) {}
-            override fun onQueryTextSubmit(key: CharSequence): Boolean {
-                startActivity(Intent(this@MainActivity, SearchActivity::class.java)
-                        .putExtra(SearchActivity.EXTRA_KEYWORD, key.toString()))
-                SearchHistory(key.toString())
-                        .saveOrUpdate("content = ?", key.toString())
-                return true
-            }
-        })
         mViewPager.addOnPageChangeListener(object : OnPageChangeListener {
             override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {}
 
@@ -414,21 +373,13 @@ open class MainActivity : BaseActivity(), BottomNavigationView.OnNavigationItemS
                 TiebaUtil.startSign(this@MainActivity)
                 return true
             }
-            R.id.action_search -> {
-                mSearchView.open(item)
-                return true
-            }
         }
         return super.onOptionsItemSelected(item)
     }
 
     override fun onBackPressed() {
-        if (mSearchView.isOpen) {
-            mSearchView.close()
-        } else {
-            if (!HandleBackUtil.handleBackPress(this)) {
-                exit()
-            }
+        if (!HandleBackUtil.handleBackPress(this)) {
+            exit()
         }
     }
 
@@ -444,14 +395,6 @@ open class MainActivity : BaseActivity(), BottomNavigationView.OnNavigationItemS
 
     override fun setTitle(newTitle: String) {
         mToolbar.title = newTitle
-    }
-
-    override fun onSearchItemClick(position: Int, content: CharSequence) {
-        startActivity(Intent(this@MainActivity, SearchActivity::class.java)
-                .putExtra(SearchActivity.EXTRA_KEYWORD, content.toString()))
-        SearchHistory(content.toString())
-                .saveOrUpdate("content = ?", content.toString())
-        refreshSearchView()
     }
 
     private inner class NewMessageReceiver : BroadcastReceiver() {
