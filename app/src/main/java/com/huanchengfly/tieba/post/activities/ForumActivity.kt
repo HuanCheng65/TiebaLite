@@ -17,10 +17,13 @@ import android.text.TextUtils
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.view.ViewGroup
+import android.view.animation.LinearInterpolator
 import android.widget.ImageView
 import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.widget.ListPopupWindow
 import androidx.core.content.pm.ShortcutInfoCompat
 import androidx.core.content.pm.ShortcutManagerCompat
 import androidx.core.graphics.drawable.IconCompat
@@ -40,6 +43,7 @@ import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.tabs.TabLayout
 import com.huanchengfly.tieba.post.R
 import com.huanchengfly.tieba.post.adapters.FragmentTabViewPagerAdapter
+import com.huanchengfly.tieba.post.adapters.SingleChooseAdapter
 import com.huanchengfly.tieba.post.api.ForumSortType
 import com.huanchengfly.tieba.post.api.TiebaApi
 import com.huanchengfly.tieba.post.api.models.CommonResponse
@@ -57,6 +61,7 @@ import com.huanchengfly.tieba.post.ui.theme.utils.ThemeUtils
 import com.huanchengfly.tieba.post.utils.*
 import com.huanchengfly.tieba.post.utils.ColorUtils.getDarkerColor
 import com.huanchengfly.tieba.post.utils.ColorUtils.greifyColor
+import com.huanchengfly.tieba.post.utils.anim.animSet
 import com.huanchengfly.tieba.post.utils.preload.PreloadUtil
 import com.huanchengfly.tieba.post.widgets.MyViewPager
 import com.huanchengfly.tieba.post.widgets.theme.TintProgressBar
@@ -333,28 +338,6 @@ class ForumActivity : BaseActivity(), View.OnClickListener, OnRefreshedListener,
 
     override fun onClick(v: View) {
         when (v.id) {
-            /*
-            R.id.forum_sort -> {
-                val sorts: MutableList<String> = ArrayList()
-                sorts.add(getString(R.string.title_sort_by_reply))
-                sorts.add(getString(R.string.title_sort_by_send))
-                sorts.add(getString(R.string.title_sort_by_like_user))
-                val listPopupWindow = ListPopupWindow(this)
-                PopupUtil.replaceBackground(listPopupWindow)
-                listPopupWindow.anchorView = v
-                val width = v.width + 36.dpToPx()
-                listPopupWindow.width = width
-                listPopupWindow.height = ViewGroup.LayoutParams.WRAP_CONTENT
-                val arrayAdapter: ArrayAdapter<*> = ArrayAdapter(this, R.layout.item_list, R.id.item_title, sorts)
-                listPopupWindow.setAdapter(arrayAdapter)
-                listPopupWindow.setOnItemClickListener { _, _, position: Int, _ ->
-                    listPopupWindow.dismiss()
-                    setSortType(ForumSortType.valueOf(position))
-                }
-                listPopupWindow.show()
-                v.tag = listPopupWindow
-            }
-            */
             R.id.fab -> {
                 if (mDataBean == null) {
                     return
@@ -452,7 +435,12 @@ class ForumActivity : BaseActivity(), View.OnClickListener, OnRefreshedListener,
             statMembersTextView.text = getNumStr(mDataBean!!.forum!!.memberNum!!)
             statPostsTextView.text = getNumStr(mDataBean!!.forum!!.postNum!!)
             statThreadsTextView.text = getNumStr(mDataBean!!.forum!!.threadNum!!)
-            headerSloganTextView.text = mDataBean!!.forum!!.slogan
+            if (mDataBean!!.forum!!.slogan.isNullOrEmpty()) {
+                (headerSloganTextView.parent as View).visibility = View.GONE
+            } else {
+                (headerSloganTextView.parent as View).visibility = View.VISIBLE
+                headerSloganTextView.text = mDataBean!!.forum!!.slogan
+            }
             headerNameTextView.text = getString(R.string.text_forum_name, mDataBean!!.forum?.name)
             if ("1" == mDataBean!!.forum?.isLike) {
                 if ("0" == mDataBean!!.forum?.signInInfo?.userInfo?.isSignIn) {
@@ -582,6 +570,48 @@ class ForumActivity : BaseActivity(), View.OnClickListener, OnRefreshedListener,
     }
 
     override fun onTabReselected(tab: TabLayout.Tab?) {
-        refresh()
+        val view = tab!!.view
+        if (view.tag == null) {
+            val arrow = tab.customView?.findViewById<ImageView>(R.id.arrow)
+            val animSet = animSet {
+                anim {
+                    values = floatArrayOf(180f, 0f)
+                    action = { value -> arrow?.rotation = value as Float }
+                    duration = 150
+                    interpolator = LinearInterpolator()
+                }
+                start()
+            }
+            val listPopupWindow = ListPopupWindow(this)
+            PopupUtil.replaceBackground(listPopupWindow)
+            listPopupWindow.anchorView = view
+            listPopupWindow.width = ViewGroup.LayoutParams.WRAP_CONTENT
+            listPopupWindow.height = ViewGroup.LayoutParams.WRAP_CONTENT
+            val index = when (getSortType()) {
+                ForumSortType.REPLY_TIME -> 0
+                ForumSortType.SEND_TIME -> 1
+                ForumSortType.ONLY_FOLLOWED -> 2
+            }
+            val adapter = SingleChooseAdapter(
+                    this,
+                    listOf(
+                            getString(R.string.title_sort_by_reply),
+                            getString(R.string.title_sort_by_send),
+                            getString(R.string.title_sort_by_like_user)),
+                    index
+            )
+            listPopupWindow.isModal = true
+            listPopupWindow.setAdapter(adapter)
+            listPopupWindow.setOnItemClickListener { _, _, position: Int, _ ->
+                listPopupWindow.dismiss()
+                setSortType(ForumSortType.valueOf(position))
+            }
+            listPopupWindow.setOnDismissListener {
+                animSet.reverse()
+                view.tag = null
+            }
+            listPopupWindow.show()
+            view.tag = listPopupWindow
+        }
     }
 }
