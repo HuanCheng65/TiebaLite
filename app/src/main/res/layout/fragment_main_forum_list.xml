@@ -56,6 +56,7 @@
                     app:tint="@color/color_on_toolbar_bar" />
 
                 <com.huanchengfly.tieba.post.widgets.theme.TintTextView
+                    android:textStyle="bold"
                     android:layout_marginStart="16dp"
                     android:textSize="16sp"
                     tools:textColor="@color/color_on_toolbar_bar"

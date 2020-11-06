@@ -393,4 +393,5 @@
     <string name="relative_date_after">刚刚</string>
     <string name="title_forum_stat">贴吧数据</string>
     <string name="title_forum_tops">置顶贴</string>
+    <string name="text_unliked">未关注</string>
 </resources>

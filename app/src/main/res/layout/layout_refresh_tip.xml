@@ -7,7 +7,7 @@
     android:id="@+id/feed_refresh_tip"
     android:clickable="true"
     android:focusable="true"
-    android:background="@drawable/bg_radius_8dp"
+    android:background="@drawable/bg_radius_8dp_ripple"
     app:backgroundTint="@color/default_color_card"
     android:paddingStart="12dp"
     android:paddingEnd="12dp"

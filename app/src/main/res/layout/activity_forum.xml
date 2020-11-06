@@ -47,14 +47,18 @@
                         app:layout_constraintTop_toTopOf="parent" />
 
                     <com.huanchengfly.tieba.post.widgets.theme.TintTextView
+                        android:gravity="top"
                         android:id="@+id/forum_header_name"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="16dp"
+                        android:layout_marginEnd="16dp"
                         android:ellipsize="end"
                         android:maxLines="1"
                         android:textSize="20sp"
                         android:textStyle="bold"
+                        app:layout_constraintEnd_toStartOf="@+id/forum_header_button"
+                        app:layout_constraintHorizontal_bias="0.0"
                         app:layout_constraintStart_toEndOf="@+id/forum_header_avatar"
                         app:layout_constraintTop_toTopOf="@+id/forum_header_avatar"
                         app:tint="@color/color_text_translucent_light"
@@ -74,8 +78,8 @@
                         app:layout_constraintEnd_toStartOf="@+id/forum_header_button"
                         app:layout_constraintStart_toStartOf="@+id/forum_header_name"
                         app:layout_constraintTop_toBottomOf="@+id/forum_header_name"
-                        app:progressTint="@color/color_text_translucent_light"
                         app:progressBackgroundTint="@color/color_text_disabled_translucent_light"
+                        app:progressTint="@color/color_text_translucent_light"
                         tools:max="100"
                         tools:progress="50" />
 
@@ -93,16 +97,17 @@
                         tools:text="LV9 大水逼" />
 
                     <com.huanchengfly.tieba.post.widgets.theme.TintMaterialButton
-                        style="@style/Widget.Button"
-                        app:cornerRadius="8dp"
-                        app:buttonBackgroundTint="@color/selector_forum_header_button_color"
-                        app:buttonTextColor="@color/selector_forum_header_button_text_color"
                         android:id="@+id/forum_header_button"
+                        style="@style/Widget.Button"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginEnd="8dp"
+                        android:minWidth="72dp"
                         android:enabled="true"
                         android:textStyle="bold"
-                        android:layout_marginEnd="8dp"
+                        app:buttonBackgroundTint="@color/selector_forum_header_button_color"
+                        app:buttonTextColor="@color/selector_forum_header_button_text_color"
+                        app:cornerRadius="8dp"
                         app:layout_constraintBottom_toBottomOf="@+id/forum_header_progress"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toTopOf="@+id/forum_header_progress" />
@@ -151,7 +156,7 @@
                 <LinearLayout
                     android:layout_marginStart="16dp"
                     android:layout_marginEnd="16dp"
-                    android:layout_marginBottom="16dp"
+                    android:layout_marginBottom="24dp"
                     android:paddingTop="16dp"
                     android:paddingBottom="8dp"
                     android:backgroundTint="@color/theme_color_card_translucent_dark"

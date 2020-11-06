@@ -64,7 +64,6 @@ import com.huanchengfly.tieba.post.utils.ColorUtils.greifyColor
 import com.huanchengfly.tieba.post.utils.anim.animSet
 import com.huanchengfly.tieba.post.utils.preload.PreloadUtil
 import com.huanchengfly.tieba.post.widgets.MyViewPager
-import com.huanchengfly.tieba.post.widgets.theme.TintProgressBar
 import com.huanchengfly.tieba.post.widgets.theme.TintToolbar
 import retrofit2.Call
 import retrofit2.Callback
@@ -407,19 +406,21 @@ class ForumActivity : BaseActivity(), View.OnClickListener, OnRefreshedListener,
             val color = getDarkerColor(greifyColor(Color.parseColor("#${mDataBean!!.forum!!.themeColor.day.commonColor}"), 0.15f), 0.1f)
             toolbarColor = color
             appbar.backgroundTintList = ColorStateList.valueOf(color)
-            setCustomToolbarColor(getDarkerColor(color, 0.1f))
+            setCustomStatusColor(color)
             if (avatarView.tag == null) {
                 ImageUtil.load(avatarView, ImageUtil.LOAD_TYPE_AVATAR, mDataBean!!.forum!!.avatar)
                 ImageUtil.initImageView(avatarView, PhotoViewBean(mDataBean!!.forum!!.avatar, false))
             }
-            (progressBar as TintProgressBar?)!!.setProgressBackgroundTintResId(if (ThemeUtils.getColorByAttr(this, R.attr.colorToolbar) == ThemeUtils.getColorByAttr(this, R.attr.colorBg)) R.color.default_color_divider else R.color.default_color_toolbar_item_secondary)
-            progressBar.visibility = if ("1" == mDataBean!!.forum?.isLike) View.VISIBLE else View.GONE
             try {
-                progressBar.max = Integer.valueOf(mDataBean!!.forum?.levelUpScore!!)
+                progressBar.max = mDataBean!!.forum?.levelUpScore!!.toInt()
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                    progressBar.setProgress(Integer.valueOf(mDataBean!!.forum?.curScore!!), true)
+                    progressBar.setProgress(mDataBean!!.forum?.curScore!!.toInt(), true)
                 } else {
-                    progressBar.progress = Integer.valueOf(mDataBean!!.forum?.curScore!!)
+                    if ("1" == mDataBean!!.forum?.isLike) {
+                        progressBar.progress = mDataBean!!.forum?.curScore!!.toInt()
+                    } else {
+                        progressBar.progress = 0
+                    }
                 }
             } catch (ignored: Exception) {
             }
@@ -459,7 +460,7 @@ class ForumActivity : BaseActivity(), View.OnClickListener, OnRefreshedListener,
                 button.isEnabled = true
                 toolbarEndBtn.setText(R.string.button_like)
                 toolbarEndBtn.isEnabled = true
-                tipTextView.text = mDataBean!!.forum?.slogan
+                tipTextView.text = getString(R.string.tip_forum_header_liked, "??", getString(R.string.text_unliked))
             }
             /*
             when (mSortType) {

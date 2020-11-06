@@ -46,9 +46,6 @@ class MyInfoFragment : BaseFragment(), View.OnClickListener, CompoundButton.OnCh
     @BindView(R.id.my_info_grid_fans)
     lateinit var fansTextView: TextView
 
-    @BindView(R.id.my_info_grid_forums)
-    lateinit var forumsTextView: TextView
-
     @BindView(R.id.my_info_grid_threads)
     lateinit var threadsTextView: TextView
 
@@ -97,7 +94,6 @@ class MyInfoFragment : BaseFragment(), View.OnClickListener, CompoundButton.OnCh
                             dataBean = myInfoBean
                             followsTextView.text = dataBean!!.data.getConcernNum()
                             fansTextView.text = dataBean!!.data.getFansNum()
-                            forumsTextView.text = dataBean!!.data.getLikeForumNum()
                             threadsTextView.text = dataBean!!.data.getPostNum()
                             userNameTextView.text = dataBean!!.data.getShowName()
                             if (TextUtils.isEmpty(dataBean!!.data.getIntro())) {
@@ -106,7 +102,7 @@ class MyInfoFragment : BaseFragment(), View.OnClickListener, CompoundButton.OnCh
                             contentTextView.text = dataBean!!.data.getIntro()
                             if (Util.canLoadGlide(attachContext)) {
                                 Glide.with(attachContext).clear(avatarImageView)
-                                ImageUtil.load(avatarImageView, ImageUtil.LOAD_TYPE_AVATAR, dataBean!!.data.getAvatarUrl())
+                                ImageUtil.load(avatarImageView, ImageUtil.LOAD_TYPE_ALWAYS_ROUND, dataBean!!.data.getAvatarUrl())
                             }
                             mRefreshView.isRefreshing = false
                         }
@@ -144,7 +140,6 @@ class MyInfoFragment : BaseFragment(), View.OnClickListener, CompoundButton.OnCh
         listOf(
                 followsTextView,
                 fansTextView,
-                forumsTextView,
                 threadsTextView
         ).forEach {
             it.typeface = Typeface.createFromAsset(attachContext.assets, "bebas.ttf")
@@ -164,12 +159,6 @@ class MyInfoFragment : BaseFragment(), View.OnClickListener, CompoundButton.OnCh
         }
         (fansTextView.parent as View).setOnClickListener {
             WebViewActivity.launch(attachContext, attachContext.resources.getString(R.string.url_user_home, dataBean!!.data.getName(), 3))
-        }
-        (forumsTextView.parent as View).setOnClickListener {
-            goToActivity<UserActivity> {
-                putExtra(UserActivity.EXTRA_UID, dataBean!!.data.getUid().toString())
-                putExtra(UserActivity.EXTRA_TAB, UserActivity.TAB_LIKE_FORUM)
-            }
         }
         (threadsTextView.parent as View).setOnClickListener {
             goToActivity<UserActivity> {
@@ -200,11 +189,6 @@ class MyInfoFragment : BaseFragment(), View.OnClickListener, CompoundButton.OnCh
         } else {
             attachContext.startActivity(Intent(attachContext, LoginActivity::class.java))
         }
-    }
-
-    @OnClick(R.id.my_info_edit_btn)
-    fun onEditBtnClicked(view: View) {
-        WebViewActivity.launch(attachContext, getString(R.string.url_edit_info))
     }
 
     override fun onResume() {

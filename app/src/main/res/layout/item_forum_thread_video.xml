@@ -32,7 +32,7 @@
                     layout="@layout/layout_forum_thread_title" />
 
                 <com.huanchengfly.tieba.post.widgets.VideoPlayerStandard
-                    android:layout_marginTop="8dp"
+                    android:layout_marginTop="@dimen/forum_card_inner_gap"
                     android:id="@+id/forum_item_content_video"
                     android:layout_below="@+id/forum_item_title_holder"
                     android:layout_width="match_parent"
@@ -47,7 +47,7 @@
             </RelativeLayout>
 
             <include
-                android:layout_marginTop="4dp"
+                android:layout_marginTop="@dimen/forum_card_inner_gap"
                 android:layout_below="@id/forum_item_content"
                 android:layout_height="wrap_content"
                 android:layout_width="match_parent"
@@ -61,5 +61,5 @@
         android:layout_below="@id/forum_item"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp" />
+        android:layout_marginTop="12dp" />
 </RelativeLayout>

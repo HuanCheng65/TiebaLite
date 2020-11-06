@@ -37,6 +37,7 @@ import com.bumptech.glide.request.FutureTarget;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.Target;
 import com.huanchengfly.tieba.post.BaseApplication;
+import com.huanchengfly.tieba.post.ExtensionsKt;
 import com.huanchengfly.tieba.post.R;
 import com.huanchengfly.tieba.post.activities.PhotoViewActivity;
 import com.huanchengfly.tieba.post.components.transformations.RadiusTransformation;
@@ -81,6 +82,7 @@ public class ImageUtil {
     public static final int LOAD_TYPE_SMALL_PIC = 0;
     public static final int LOAD_TYPE_AVATAR = 1;
     public static final int LOAD_TYPE_NO_RADIUS = 2;
+    public static final int LOAD_TYPE_ALWAYS_ROUND = 3;
     public static final String TAG = "ImageUtil";
 
     public static File compressImage(Bitmap bitmap, File output, int maxSize) {
@@ -449,6 +451,12 @@ public class ImageUtil {
                         .placeholder(getPlaceHolder(imageView.getContext(), 0))
                         .skipMemoryCache(true));
                 break;
+            case LOAD_TYPE_ALWAYS_ROUND:
+                requestBuilder.apply(new RequestOptions()
+                        .circleCrop()
+                        .placeholder(getPlaceHolder(imageView.getContext(), ExtensionsKt.dpToPx(100)))
+                        .skipMemoryCache(true));
+                break;
         }
         requestBuilder.transition(DrawableTransitionOptions.withCrossFade())
                 .into(imageView);
@@ -535,7 +543,7 @@ public class ImageUtil {
         void onGetUri(Uri uri);
     }
 
-    @IntDef({LOAD_TYPE_SMALL_PIC, LOAD_TYPE_AVATAR, LOAD_TYPE_NO_RADIUS})
+    @IntDef({LOAD_TYPE_SMALL_PIC, LOAD_TYPE_AVATAR, LOAD_TYPE_NO_RADIUS, LOAD_TYPE_ALWAYS_ROUND})
     @Retention(RetentionPolicy.SOURCE)
     public @interface LoadType {
     }

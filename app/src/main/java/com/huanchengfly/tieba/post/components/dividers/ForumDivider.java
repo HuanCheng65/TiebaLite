@@ -30,7 +30,7 @@ public class ForumDivider extends RecyclerView.ItemDecoration implements Tintabl
         }
         mOrientation = orientation;
         mDivider = ContextCompat.getDrawable(context, R.drawable.drawable_divider);
-        mDividerHeight = DisplayUtil.dp2px(context, 8);
+        mDividerHeight = DisplayUtil.dp2px(context, 12);
         tint();
     }
 

@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/forum_item_title_holder"
-    android:layout_marginTop="8dp"
+    android:layout_marginTop="@dimen/forum_card_inner_gap"
     android:layout_height="wrap_content">
     <com.huanchengfly.tieba.post.widgets.theme.TintTextView
         android:id="@+id/forum_item_good_tip"

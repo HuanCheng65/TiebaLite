@@ -33,7 +33,7 @@
                     layout="@layout/layout_forum_thread_title" />
 
                 <com.huanchengfly.tieba.post.widgets.MarkedImageView
-                    android:layout_marginTop="8dp"
+                    android:layout_marginTop="@dimen/forum_card_inner_gap"
                     android:scaleType="centerCrop"
                     android:layout_centerHorizontal="true"
                     android:id="@+id/forum_item_content_pic"
@@ -51,7 +51,7 @@
             </RelativeLayout>
 
             <include
-                android:layout_marginTop="4dp"
+                android:layout_marginTop="@dimen/forum_card_inner_gap"
                 android:layout_below="@id/forum_item_content"
                 android:layout_height="wrap_content"
                 android:layout_width="match_parent"
@@ -65,5 +65,5 @@
         android:layout_below="@id/forum_item"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp" />
+        android:layout_marginTop="12dp" />
 </RelativeLayout>

@@ -6,7 +6,7 @@
     <dimen name="my_info_total_height">80dp</dimen>
     <dimen name="app_bar_elevation">0dp</dimen>
     <dimen name="spacing_medium">2dp</dimen>
-    <dimen name="space_toolbar_top">50dp</dimen>
+    <dimen name="space_toolbar_top">45dp</dimen>
 
     <dimen name="text_size_user_name">14sp</dimen>
     <dimen name="text_size_user_small">12sp</dimen>
@@ -19,13 +19,15 @@
     <dimen name="size_avatar_tiny">30dp</dimen>
     <dimen name="size_avatar_small">36dp</dimen>
     <dimen name="size_avatar_normal">48dp</dimen>
-    <dimen name="size_avatar_large">60dp</dimen>
+    <dimen name="size_avatar_large">56dp</dimen>
     <dimen name="default_small_pic_radius">8dp</dimen>
     <dimen name="padding_start_default">16dp</dimen>
     <dimen name="padding_end_default">16dp</dimen>
 
     <dimen name="card_margin">12dp</dimen>
     <dimen name="card_radius">10dp</dimen>
+
+    <dimen name="forum_card_inner_gap">8dp</dimen>
 
     <dimen name="stat_text_size">23sp</dimen>
 </resources>

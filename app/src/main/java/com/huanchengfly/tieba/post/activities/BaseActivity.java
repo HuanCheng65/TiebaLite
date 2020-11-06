@@ -50,7 +50,7 @@ public abstract class BaseActivity extends SwipeBackActivity implements ExtraRef
     private TintToolbar mTintToolbar;
     private String oldTheme;
     private boolean activityRunning = true;
-    private int customToolbarColor = -1;
+    private int customStatusColor = -1;
 
     protected int getLayoutId() {
         return NO_LAYOUT;
@@ -220,8 +220,8 @@ public abstract class BaseActivity extends SwipeBackActivity implements ExtraRef
         return animator;
     }
 
-    public void setCustomToolbarColor(int customToolbarColor) {
-        this.customToolbarColor = customToolbarColor;
+    public void setCustomStatusColor(int customStatusColor) {
+        this.customStatusColor = customStatusColor;
         refreshStatusBarColor();
     }
 
@@ -235,8 +235,8 @@ public abstract class BaseActivity extends SwipeBackActivity implements ExtraRef
                     .fitsSystemWindowsInt(true, ThemeUtils.getColorByAttr(this, R.attr.colorBg))
                     .navigationBarColorInt(ThemeUtils.getColorByAttr(this, R.attr.colorNavBar))
                     .navigationBarDarkIcon(ThemeUtil.isNavigationBarFontDark(this));
-            if (customToolbarColor != -1) {
-                immersionBar.statusBarColorInt(customToolbarColor)
+            if (customStatusColor != -1) {
+                immersionBar.statusBarColorInt(customStatusColor)
                         .autoStatusBarDarkModeEnable(true);
             } else {
                 immersionBar.statusBarColorInt(calcStatusBarColor(this, ThemeUtils.getColorByAttr(this, R.attr.colorToolbar)))

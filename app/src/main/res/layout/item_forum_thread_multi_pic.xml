@@ -35,7 +35,7 @@
                 <androidx.cardview.widget.CardView
                     android:id="@+id/forum_item_content_pics_card"
                     android:layout_below="@id/forum_item_title_holder"
-                    android:layout_marginTop="8dp"
+                    android:layout_marginTop="@dimen/forum_card_inner_gap"
                     app:cardElevation="0dp"
                     app:cardPreventCornerOverlap="false"
                     app:cardUseCompatPadding="false"
@@ -129,7 +129,7 @@
             </RelativeLayout>
 
             <include
-                android:layout_marginTop="4dp"
+                android:layout_marginTop="@dimen/forum_card_inner_gap"
                 android:layout_below="@id/forum_item_content"
                 android:layout_height="wrap_content"
                 android:layout_width="match_parent"
@@ -143,5 +143,5 @@
         android:layout_below="@id/forum_item"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp" />
+        android:layout_marginTop="12dp" />
 </RelativeLayout>

@@ -81,6 +81,7 @@
         <item name="buttonTextColor">@color/default_color_text_on_primary</item>
         <item name="cornerRadius">16dp</item>
         <item name="android:textStyle">bold</item>
+        <item name="android:gravity">center</item>
     </style>
 
     <style name="Widget.Button.Dense" parent="Widget.MaterialComponents.Button.UnelevatedButton">

@@ -8,8 +8,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <com.huanchengfly.tieba.post.widgets.theme.TintTextView
-        android:layout_marginTop="8dp"
-        android:textSize="16sp"
+        android:layout_marginTop="@dimen/forum_card_inner_gap"
+        android:textSize="15sp"
         android:letterSpacing="0.02"
         android:lineSpacingMultiplier="1.2"
         android:lineSpacingExtra="0.5dp"
