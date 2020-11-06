@@ -34,8 +34,9 @@
             android:layout_marginBottom="12dp"
             android:layout_marginStart="16dp"
             android:layout_marginEnd="16dp"
-            app:hintTextColor="@color/default_color_primary"
-            app:placeholderTextColor="@color/default_color_primary"
+            app:startIconTint="@color/color_on_toolbar_bar"
+            app:hintTextColor="@color/color_on_toolbar_bar"
+            app:placeholderTextColor="@color/color_on_toolbar_bar"
             app:startIconDrawable="@drawable/ic_round_arrow_back">
 
             <com.huanchengfly.tieba.post.widgets.theme.TintTextInputEditText
@@ -46,7 +47,8 @@
                 android:layout_height="wrap_content"
                 android:background="@null"
                 android:hint="@string/hint_search"
-                android:textColorHint="@color/default_color_text_secondary" />
+                android:textStyle="bold"
+                android:textColorHint="@color/color_on_toolbar_bar" />
 
         </com.huanchengfly.tieba.post.widgets.theme.TintTextInputLayout>
     </com.huanchengfly.tieba.post.widgets.theme.TintAppBarLayout>
