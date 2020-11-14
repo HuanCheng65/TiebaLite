@@ -3,23 +3,24 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto">
+
     <com.huanchengfly.tieba.post.widgets.theme.TintView
-        app:backgroundTint="@color/default_color_divider"
         android:layout_marginTop="16dp"
         android:visibility="gone"
         android:id="@+id/item_about_divider"
         android:layout_width="match_parent"
         android:layout_height="8dp" />
 
-    <RelativeLayout
+    <com.huanchengfly.tieba.post.widgets.theme.TintRelativeLayout
+        app:backgroundTint="@color/default_color_card"
         android:layout_below="@id/item_about_divider"
-        android:background="?attr/selectableItemBackground"
         android:id="@+id/item_about_root"
         android:padding="12dp"
         android:paddingStart="16dp"
         android:paddingEnd="16dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
+
         <RelativeLayout
             android:minHeight="24dp"
             android:layout_centerVertical="true"
@@ -57,5 +58,5 @@
                 android:layout_alignStart="@id/item_about_title"
                 android:layout_marginTop="4dp" />
         </RelativeLayout>
-    </RelativeLayout>
+    </com.huanchengfly.tieba.post.widgets.theme.TintRelativeLayout>
 </RelativeLayout>

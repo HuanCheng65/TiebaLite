@@ -6,6 +6,7 @@ import android.graphics.Color
 import android.graphics.drawable.Drawable
 import android.graphics.drawable.GradientDrawable
 import android.graphics.drawable.RippleDrawable
+import com.huanchengfly.tieba.post.BaseApplication
 import com.huanchengfly.tieba.post.R
 import com.huanchengfly.tieba.post.ui.theme.utils.ColorStateListUtils
 
@@ -59,7 +60,7 @@ fun getRadiusDrawable(
         bottomRightPx: Float = 0f,
         ripple: Boolean = false
 ): Drawable {
-    return GradientDrawable().apply {
+    val drawable = GradientDrawable().apply {
         color = ColorStateList.valueOf(Color.WHITE)
         cornerRadii = floatArrayOf(
                 topLeftPx, topLeftPx,
@@ -68,6 +69,9 @@ fun getRadiusDrawable(
                 bottomLeftPx, bottomLeftPx
         )
     }
+    return if (ripple)
+        wrapRipple(Util.getColorByAttr(BaseApplication.instance, R.attr.colorControlHighlight, R.color.transparent), drawable)
+    else drawable
 }
 
 fun wrapRipple(rippleColor: Int, drawable: Drawable): Drawable {

@@ -5,108 +5,121 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <com.huanchengfly.tieba.post.widgets.ShadowLayout
-        android:id="@+id/header_update_tip_shadow"
+    <com.huanchengfly.tieba.post.widgets.theme.TintMaterialCardView
         android:visibility="gone"
-        android:layout_marginStart="6dp"
-        android:layout_marginEnd="6dp"
-        app:shadow_layout_color="?attr/shadow_color"
-        app:shadow_layout_blur="8dp"
-        app:shadow_layout_radius="8dp"
-        app:shadow_layout_offsetY="4dp"
+        app:cardElevation="0dp"
+        app:cardCornerRadius="8dp"
+        app:contentPadding="16dp"
+        app:strokeWidth="0dp"
+        tools:paddingStart="@dimen/card_margin"
+        tools:paddingEnd="@dimen/card_margin"
+        android:layout_marginTop="@dimen/card_margin"
+        android:id="@+id/header_update_tip_card"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <com.huanchengfly.tieba.post.widgets.theme.TintMaterialCardView
-            app:cardElevation="0dp"
-            app:cardCornerRadius="8dp"
-            app:contentPadding="16dp"
-            app:strokeWidth="0dp"
+        android:layout_height="wrap_content"
+        tools:visibility="visible">
+
+        <RelativeLayout
+            android:id="@+id/header_update_tip"
+            android:animateLayoutChanges="true"
+            android:background="?attr/selectableItemBackground"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
+
             <RelativeLayout
-                android:id="@+id/header_update_tip"
-                android:animateLayoutChanges="true"
-                android:background="?attr/selectableItemBackground"
+                android:id="@+id/header_update_tip_header"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <com.huanchengfly.tieba.post.widgets.theme.TintImageView
+                    app:tint="@color/default_color_primary"
+                    android:layout_centerVertical="true"
+                    app:srcCompat="@drawable/ic_ribbon"
+                    android:id="@+id/header_update_tip_icon"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    tools:ignore="ContentDescription" />
+
+                <com.huanchengfly.tieba.post.widgets.theme.TintTextView
+                    app:tint="@color/default_color_primary"
+                    tools:text="更新 · 正式版"
+                    android:id="@+id/header_update_tip_header_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_toEndOf="@id/header_update_tip_icon"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+            </RelativeLayout>
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_marginTop="16dp"
+                android:id="@+id/header_update_tip_content_holder"
+                android:layout_below="@id/header_update_tip_header"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
                 <RelativeLayout
-                    android:id="@+id/header_update_tip_header"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
 
-                    <com.huanchengfly.tieba.post.widgets.theme.TintImageView
-                        app:tint="@color/default_color_primary"
+                    <com.huanchengfly.tieba.post.widgets.theme.TintProgressBar
+                        style="@style/Widget.AppCompat.ProgressBar"
+                        android:id="@+id/header_update_tip_progress"
+                        android:visibility="gone"
                         android:layout_centerVertical="true"
-                        app:srcCompat="@drawable/ic_ribbon"
-                        android:id="@+id/header_update_tip_icon"
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
-                        tools:ignore="ContentDescription" />
-
-                    <com.huanchengfly.tieba.post.widgets.theme.TintTextView
-                        app:tint="@color/default_color_primary"
-                        tools:text="更新 · 正式版"
-                        android:id="@+id/header_update_tip_header_title"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
-                        android:layout_marginStart="8dp"
                         android:layout_marginEnd="8dp"
-                        android:layout_toEndOf="@id/header_update_tip_icon"
-                        android:textSize="14sp"
-                        android:textStyle="bold" />
-                </RelativeLayout>
+                        android:layout_width="24dp"
+                        android:layout_height="24dp" />
 
-                <LinearLayout
-                    android:orientation="vertical"
-                    android:layout_marginTop="16dp"
-                    android:id="@+id/header_update_tip_content_holder"
-                    android:layout_below="@id/header_update_tip_header"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
                     <com.huanchengfly.tieba.post.widgets.theme.TintTextView
+                        android:layout_centerVertical="true"
+                        android:layout_toEndOf="@id/header_update_tip_progress"
                         android:ellipsize="end"
                         android:maxLines="1"
                         android:textSize="16sp"
-                        tools:text="发现新版 3.6.0.1"
+                        tools:text="发现新版 4.0.0"
                         app:tint="@color/default_color_text"
                         android:textStyle="bold"
                         android:id="@+id/header_update_tip_title"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content" />
-                    <com.huanchengfly.tieba.post.widgets.theme.TintTextView
-                        android:lineSpacingMultiplier="1.2"
-                        android:layout_marginTop="4dp"
-                        android:textSize="14sp"
-                        tools:text="这里是更新内容"
-                        app:tint="@color/default_color_text_secondary"
-                        android:id="@+id/header_update_tip_content"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content" />
-                </LinearLayout>
+                </RelativeLayout>
 
-                <com.huanchengfly.tieba.post.widgets.theme.TintMaterialButton
-                    style="@style/Widget.Button.Flat.Dense"
-                    android:id="@+id/header_update_tip_button_dismiss"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/header_update_tip_content_holder"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginEnd="8dp"
-                    android:layout_toStartOf="@id/header_update_tip_button_download"
-                    android:text="@string/button_next_time" />
+                <com.huanchengfly.tieba.post.widgets.theme.TintTextView
+                    android:lineSpacingMultiplier="1.2"
+                    android:layout_marginTop="4dp"
+                    android:textSize="14sp"
+                    tools:text="这里是更新内容"
+                    app:tint="@color/default_color_text_secondary"
+                    android:id="@+id/header_update_tip_content"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
 
-                <com.huanchengfly.tieba.post.widgets.theme.TintMaterialButton
-                    style="@style/Widget.Button"
-                    android:id="@+id/header_update_tip_button_download"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/header_update_tip_content_holder"
-                    android:layout_alignParentEnd="true"
-                    android:layout_marginTop="8dp"
-                    android:text="@string/button_go_to_download" />
-            </RelativeLayout>
-        </com.huanchengfly.tieba.post.widgets.theme.TintMaterialCardView>
-    </com.huanchengfly.tieba.post.widgets.ShadowLayout>
+            <com.huanchengfly.tieba.post.widgets.theme.TintMaterialButton
+                style="@style/Widget.Button.Flat.Dense"
+                android:id="@+id/header_update_tip_button_dismiss"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/header_update_tip_content_holder"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_toStartOf="@id/header_update_tip_button_download"
+                android:text="@string/button_next_time" />
+
+            <com.huanchengfly.tieba.post.widgets.theme.TintMaterialButton
+                style="@style/Widget.Button"
+                android:id="@+id/header_update_tip_button_download"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/header_update_tip_content_holder"
+                android:layout_alignParentEnd="true"
+                android:layout_marginTop="8dp"
+                android:text="@string/button_go_to_download" />
+        </RelativeLayout>
+    </com.huanchengfly.tieba.post.widgets.theme.TintMaterialCardView>
 </RelativeLayout>

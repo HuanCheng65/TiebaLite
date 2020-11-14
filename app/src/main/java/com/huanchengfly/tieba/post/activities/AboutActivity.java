@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -27,10 +28,12 @@ public class AboutActivity extends BaseActivity implements View.OnClickListener 
     public static final int STATE_ERROR = 0;
     public static final int STATE_NO_UPDATE = 1;
     public static final int STATE_UPDATE = 2;
+    public static final int STATE_LOADING = 3;
     private View updateTip;
     private TextView updateTipHeaderTv;
     private TextView updateTipTitleTv;
     private TextView updateTipContentTv;
+    private ProgressBar updateTipProgress;
     private Button dismissBtn;
     private Button downloadBtn;
 
@@ -51,14 +54,11 @@ public class AboutActivity extends BaseActivity implements View.OnClickListener 
         RelativeLayout mainView = (RelativeLayout) findViewById(R.id.main);
         View headerView = View.inflate(this, R.layout.header_about, null);
         ((ViewGroup) headerView).setLayoutTransition(new LayoutTransition());
-        ((ViewGroup) headerView).getLayoutTransition().enableTransitionType(LayoutTransition.CHANGING);
-        ViewGroup tip = headerView.findViewById(R.id.header_update_tip);
-        tip.setLayoutTransition(new LayoutTransition());
-        tip.getLayoutTransition().enableTransitionType(LayoutTransition.CHANGING);
-        updateTip = headerView.findViewById(R.id.header_update_tip_shadow);
+        updateTip = headerView.findViewById(R.id.header_update_tip_card);
         updateTipHeaderTv = headerView.findViewById(R.id.header_update_tip_header_title);
         updateTipTitleTv = headerView.findViewById(R.id.header_update_tip_title);
         updateTipContentTv = headerView.findViewById(R.id.header_update_tip_content);
+        updateTipProgress = headerView.findViewById(R.id.header_update_tip_progress);
         dismissBtn = headerView.findViewById(R.id.header_update_tip_button_dismiss);
         downloadBtn = headerView.findViewById(R.id.header_update_tip_button_download);
         navigationHelper = NavigationHelper.newInstance(this);
@@ -153,6 +153,8 @@ public class AboutActivity extends BaseActivity implements View.OnClickListener 
     */
 
     private void checkUpdate() {
+        updateState = STATE_LOADING;
+        refreshUpdateTip();
         LiteApi.getInstance().newCheckUpdate(new CommonAPICallback<NewUpdateBean>() {
             @Override
             public void onSuccess(NewUpdateBean data) {
@@ -180,7 +182,10 @@ public class AboutActivity extends BaseActivity implements View.OnClickListener 
             case STATE_NO_UPDATE:
                 downloadBtn.setText(R.string.button_check_update);
                 updateTip.setVisibility(View.VISIBLE);
+                downloadBtn.setVisibility(View.VISIBLE);
                 dismissBtn.setVisibility(View.GONE);
+                updateTipProgress.setVisibility(View.GONE);
+                updateTipContentTv.setVisibility(View.VISIBLE);
                 updateTipHeaderTv.setText(getString(R.string.update_tip_no_header));
                 updateTipTitleTv.setText(getString(R.string.update_tip_no_title));
                 updateTipContentTv.setText(getString(R.string.update_tip_no_content));
@@ -189,6 +194,9 @@ public class AboutActivity extends BaseActivity implements View.OnClickListener 
                 if (resultBean != null) {
                     downloadBtn.setText(R.string.button_go_to_download);
                     updateTip.setVisibility(View.VISIBLE);
+                    downloadBtn.setVisibility(View.VISIBLE);
+                    updateTipProgress.setVisibility(View.GONE);
+                    updateTipContentTv.setVisibility(View.VISIBLE);
                     boolean cancelable = resultBean.isCancelable();
                     updateTipHeaderTv.setText(getString(R.string.update_tip_header, resultBean.getVersionType() == 0 ? getString(R.string.tip_release_version) : getString(R.string.tip_version_beta)));
                     updateTipTitleTv.setText(getString(R.string.update_tip_title, resultBean.getVersionName(), String.valueOf(resultBean.getVersionCode())));
@@ -201,6 +209,16 @@ public class AboutActivity extends BaseActivity implements View.OnClickListener 
                     dismissBtn.setVisibility(cancelable ? View.VISIBLE : View.GONE);
                     break;
                 }
+            case STATE_LOADING:
+                updateTip.setVisibility(View.VISIBLE);
+                downloadBtn.setVisibility(View.GONE);
+                dismissBtn.setVisibility(View.GONE);
+                updateTipContentTv.setVisibility(View.GONE);
+                updateTipProgress.setVisibility(View.VISIBLE);
+                updateTipHeaderTv.setText(getString(R.string.update_tip_no_header));
+                updateTipTitleTv.setText(getString(R.string.update_tip_loading));
+                updateTipContentTv.setText(null);
+                break;
             default:
                 updateTip.setVisibility(View.GONE);
                 break;
@@ -211,13 +229,11 @@ public class AboutActivity extends BaseActivity implements View.OnClickListener 
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.header_update_tip_button_download:
-                if (resultBean == null) {
-                    if (updateState != STATE_NO_UPDATE) {
-                        checkUpdate();
-                    }
-                    return;
+                if (updateState != STATE_UPDATE) {
+                    checkUpdate();
+                } else {
+                    VersionUtil.showDownloadDialog(this, resultBean);
                 }
-                VersionUtil.showDownloadDialog(this, resultBean);
                 break;
             case R.id.header_update_tip_button_dismiss:
                 resultBean = null;

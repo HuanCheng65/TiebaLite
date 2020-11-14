@@ -192,7 +192,7 @@
     <string name="tip_from_forum">%1$s吧</string>
     <string name="title_dialog_download">选择下载方式</string>
     <string name="tip_from_history">您上次阅读到第 %1$s 楼</string>
-    <string name="update_tip_no_title">贴吧 Lite 当前已是最新版本</string>
+    <string name="update_tip_no_title">当前已是最新版本</string>
     <string name="update_tip_no_header">更新</string>
     <string name="button_check_update">检查更新</string>
     <string name="tip_oksign_running">一键签到服务正在运行中</string>
@@ -201,7 +201,7 @@
     <string name="summary_auto_sign_on">自动签到已开启</string>
     <string name="summary_auto_sign_time">当前设置为 %1$s</string>
     <string name="tip_auto_sign">提示：请您允许贴吧 Lite 的自启动，否则可能无法正常唤醒签到。</string>
-    <string name="update_tip_no_content">点击下方按钮重新检查更新</string>
+    <string name="update_tip_no_content">点击查看完整更新日志</string>
     <string name="title_forum">%1$s吧</string>
     <string name="menu_edit_info">编辑资料</string>
     <string name="url_edit_info">https://tieba.baidu.com/mo/q/myinfo?</string>
@@ -398,4 +398,5 @@
     <string name="title_oksign_finish">签到完成</string>
     <string name="title_oksign_fail">签到失败</string>
     <string name="text_login_first">请先登录</string>
+    <string name="update_tip_loading">正在检查更新</string>
 </resources>
