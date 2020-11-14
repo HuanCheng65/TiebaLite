@@ -49,6 +49,7 @@
                             tools:srcCompat="@tools:sample/avatars" />
 
                         <RelativeLayout
+                            android:animateLayoutChanges="true"
                             android:id="@+id/my_info_user"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
