@@ -40,9 +40,9 @@
 
                         <ImageView
                             android:id="@+id/my_info_avatar"
-                            android:layout_width="@dimen/size_avatar_normal"
-                            android:layout_height="@dimen/size_avatar_normal"
-                            android:layout_alignParentEnd="true"
+                            android:layout_width="@dimen/size_avatar_large"
+                            android:layout_height="@dimen/size_avatar_large"
+                            android:layout_alignParentStart="true"
                             android:layout_centerVertical="true"
                             android:contentDescription="@string/content_avatar"
                             android:scaleType="centerInside"
@@ -52,17 +52,16 @@
                             android:id="@+id/my_info_user"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginEnd="16dp"
+                            android:layout_marginStart="16dp"
                             android:layout_centerVertical="true"
-                            android:layout_alignParentStart="true"
-                            android:layout_toStartOf="@id/my_info_avatar">
+                            android:layout_toEndOf="@id/my_info_avatar">
 
                             <com.huanchengfly.tieba.post.widgets.theme.TintTextView
                                 android:id="@+id/my_info_username"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 tools:text="Title"
-                                android:textSize="32sp"
+                                android:textSize="22sp"
                                 android:textStyle="bold"
                                 tools:textColor="@color/default_color_text"
                                 app:tint="@color/default_color_text" />
