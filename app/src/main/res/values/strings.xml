@@ -13,6 +13,7 @@
     <string name="shortcut_oksign">一键签到</string>
     <string name="shortcut_my_collect">我的收藏</string>
     <string name="shortcut_my_message">我的消息</string>
+    <string name="shortcut_search">搜索</string>
     <string name="forum_list_title">关注</string>
     <string name="title_login">登录</string>
     <string name="title_refresh">刷新</string>

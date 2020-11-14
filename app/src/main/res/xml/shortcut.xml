@@ -3,7 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     tools:ignore="UnusedAttribute">
     <shortcut
-        android:icon="@drawable/ic_shortcut_oksign"
+        android:icon="@mipmap/ic_shortcut_oksign"
         android:shortcutId="oksign"
         android:shortcutLongLabel="@string/shortcut_oksign"
         android:shortcutShortLabel="@string/shortcut_oksign">
@@ -13,7 +13,7 @@
             android:targetPackage="com.huanchengfly.tieba.post" />
     </shortcut>
     <shortcut
-        android:icon="@drawable/ic_shortcut_collect"
+        android:icon="@mipmap/ic_shortcut_my_collect"
         android:shortcutId="my_collect"
         android:shortcutLongLabel="@string/shortcut_my_collect"
         android:shortcutShortLabel="@string/shortcut_my_collect">
@@ -23,13 +23,23 @@
             android:targetPackage="com.huanchengfly.tieba.post" />
     </shortcut>
     <shortcut
-        android:icon="@drawable/ic_shortcut_message"
+        android:icon="@mipmap/ic_shortcut_my_message"
         android:shortcutId="my_message"
         android:shortcutLongLabel="@string/shortcut_my_message"
         android:shortcutShortLabel="@string/shortcut_my_message">
         <intent
             android:action="android.intent.action.VIEW"
             android:targetClass="com.huanchengfly.tieba.post.activities.MessageActivity"
+            android:targetPackage="com.huanchengfly.tieba.post" />
+    </shortcut>
+    <shortcut
+        android:icon="@mipmap/ic_shortcut_search"
+        android:shortcutId="search"
+        android:shortcutLongLabel="@string/shortcut_search"
+        android:shortcutShortLabel="@string/shortcut_search">
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:targetClass="com.huanchengfly.tieba.post.activities.NewSearchActivity"
             android:targetPackage="com.huanchengfly.tieba.post" />
     </shortcut>
 </shortcuts>
