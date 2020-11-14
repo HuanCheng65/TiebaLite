@@ -394,4 +394,7 @@
     <string name="title_forum_stat">贴吧数据</string>
     <string name="title_forum_tops">置顶贴</string>
     <string name="text_unliked">未关注</string>
+    <string name="title_oksign_finish">签到完成</string>
+    <string name="title_oksign_fail">签到失败</string>
+    <string name="text_login_first">请先登录</string>
 </resources>
