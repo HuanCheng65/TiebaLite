@@ -114,6 +114,7 @@ class NewSearchActivity : BaseActivity(), TabLayout.OnTabSelectedListener {
         recyclerView.adapter = delegateAdapter
         editText.setOnEditorActionListener { v, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                KeyboardUtil.hideKeyboard(v)
                 keyword = v.text.toString()
                 return@setOnEditorActionListener true
             }
