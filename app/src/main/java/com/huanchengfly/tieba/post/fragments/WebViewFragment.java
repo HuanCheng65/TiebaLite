@@ -39,6 +39,7 @@ import com.huanchengfly.tieba.post.interfaces.OnReceivedTitleListener;
 import com.huanchengfly.tieba.post.interfaces.WebViewListener;
 import com.huanchengfly.tieba.post.models.PermissionBean;
 import com.huanchengfly.tieba.post.utils.AccountUtil;
+import com.huanchengfly.tieba.post.utils.AssetUtil;
 import com.huanchengfly.tieba.post.utils.DialogUtil;
 import com.huanchengfly.tieba.post.utils.FileUtil;
 import com.huanchengfly.tieba.post.utils.HistoryHelper;
@@ -46,7 +47,6 @@ import com.huanchengfly.tieba.post.utils.NavigationHelper;
 import com.huanchengfly.tieba.post.utils.ThemeUtil;
 import com.huanchengfly.tieba.post.utils.TiebaLiteJavaScript;
 import com.huanchengfly.tieba.post.utils.Util;
-import com.huanchengfly.tieba.post.utils.AssetUtil;
 import com.yanzhenjie.permission.AndPermission;
 import com.yanzhenjie.permission.runtime.Permission;
 
@@ -59,7 +59,7 @@ import static com.huanchengfly.tieba.post.utils.FileUtil.FILE_TYPE_DOWNLOAD;
 //TODO: 代码太烂，需要重写
 public class WebViewFragment extends BaseFragment implements DownloadListener {
     public static final String TAG = WebViewFragment.class.getSimpleName();
-    private static final String DEFAULT_TITLE = "贴吧 Lite";
+    private static final String DEFAULT_TITLE = "";
     private final static int FILE_CHOOSER_RESULT_CODE = 1;
     private String mUrl;
     private String mTitle;

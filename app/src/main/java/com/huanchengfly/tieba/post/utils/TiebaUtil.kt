@@ -8,9 +8,16 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import com.huanchengfly.tieba.post.R
+import com.huanchengfly.tieba.post.activities.WebViewActivity
+import com.huanchengfly.tieba.post.api.TiebaApi
+import com.huanchengfly.tieba.post.api.models.CheckReportBean
+import com.huanchengfly.tieba.post.components.dialogs.LoadingDialog
 import com.huanchengfly.tieba.post.receivers.AutoSignAlarm
 import com.huanchengfly.tieba.post.services.OKSignService
 import com.huanchengfly.tieba.post.toastShort
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 import java.util.*
 
 object TiebaUtil {
@@ -65,5 +72,23 @@ object TiebaUtil {
             type = "text/plain"
             putExtra(Intent.EXTRA_TEXT, "${if (title != null) "「$title」\n" else ""}$text\n（分享自贴吧 Lite）")
         })
+    }
+
+    @JvmStatic
+    fun reportPost(context: Context, postId: String) {
+        val dialog = LoadingDialog(context).apply { show() }
+        TiebaApi.getInstance()
+                .checkReportPost(postId)
+                .enqueue(object : Callback<CheckReportBean> {
+                    override fun onResponse(call: Call<CheckReportBean>, response: Response<CheckReportBean>) {
+                        dialog.dismiss()
+                        WebViewActivity.launch(context, response.body()!!.data.url)
+                    }
+
+                    override fun onFailure(call: Call<CheckReportBean>, t: Throwable) {
+                        dialog.dismiss()
+                        context.toastShort(R.string.toast_load_failed)
+                    }
+                })
     }
 }

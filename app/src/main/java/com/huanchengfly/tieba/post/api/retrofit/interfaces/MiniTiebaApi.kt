@@ -227,4 +227,13 @@ interface MiniTiebaApi {
             @retrofit2.http.Header(Header.USER_AGENT) user_agent: String = "bdtb for Android $client_version",
             @Query("cuid_gid") cuid_gid: String = ""
     ): Call<SearchUserBean>
+
+    @Headers("${Header.FORCE_LOGIN}: ${Header.FORCE_LOGIN_TRUE}")
+    @POST("/c/f/ueg/checkjubao")
+    @FormUrlEncoded
+    fun checkReport(
+            @Field("category") category: String,
+            @FieldMap reportParam: Map<String, String>,
+            @Field("stoken") stoken: String? = AccountUtil.getLoginInfo(BaseApplication.instance)?.getsToken()
+    ): Call<CheckReportBean>
 }

@@ -1,9 +1,11 @@
 package com.huanchengfly.tieba.post
 
+import android.animation.LayoutTransition
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Build
+import android.view.ViewGroup
 import android.widget.Toast
 import androidx.annotation.ColorRes
 import androidx.fragment.app.Fragment
@@ -65,6 +67,11 @@ fun Context.toastShort(text: String) {
     Toast.makeText(this, text, Toast.LENGTH_SHORT).show()
 }
 
-fun Context.toastShort(resId: Int) {
-    Toast.makeText(this, resId, Toast.LENGTH_SHORT).show()
+fun Context.toastShort(resId: Int, vararg args: Any) {
+    Toast.makeText(this, getString(resId, *args), Toast.LENGTH_SHORT).show()
+}
+
+fun ViewGroup.enableChangingLayoutTransition() {
+    this.layoutTransition = LayoutTransition()
+    this.layoutTransition.enableTransitionType(LayoutTransition.CHANGING)
 }

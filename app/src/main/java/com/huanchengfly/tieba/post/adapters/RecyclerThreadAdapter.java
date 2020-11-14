@@ -47,6 +47,7 @@ import com.huanchengfly.tieba.post.utils.ImageUtil;
 import com.huanchengfly.tieba.post.utils.NavigationHelper;
 import com.huanchengfly.tieba.post.utils.StringUtil;
 import com.huanchengfly.tieba.post.utils.ThemeUtil;
+import com.huanchengfly.tieba.post.utils.TiebaUtil;
 import com.huanchengfly.tieba.post.utils.TimeUtils;
 import com.huanchengfly.tieba.post.utils.Util;
 import com.huanchengfly.tieba.post.widgets.MyImageView;
@@ -412,9 +413,6 @@ public class RecyclerThreadAdapter extends MultiBaseAdapter<ThreadContentBean.Po
                             mContext.startActivity(new Intent(mContext, ReplyActivity.class)
                                     .putExtra("data", replyData));
                             return true;
-                        case R.id.menu_report:
-                            navigationHelper.navigationByData(NavigationHelper.ACTION_URL, mContext.getString(R.string.url_post_report, dataBean.getForum().getId(), dataBean.getThread().getId(), subPostListItemBean.getId()));
-                            return true;
                         case R.id.menu_copy:
                             StringBuilder stringBuilder = new StringBuilder();
                             for (ThreadContentBean.ContentBean contentBean : subPostListItemBean.getContent()) {
@@ -463,6 +461,7 @@ public class RecyclerThreadAdapter extends MultiBaseAdapter<ThreadContentBean.Po
                     return false;
                 })
                 .setInitMenuCallback(menu -> {
+                    menu.findItem(R.id.menu_report).setVisible(false);
                     if (TextUtils.equals(AccountUtil.getUid(mContext), subPostListItemBean.getAuthorId())) {
                         menu.findItem(R.id.menu_delete).setVisible(true);
                     }
@@ -487,7 +486,7 @@ public class RecyclerThreadAdapter extends MultiBaseAdapter<ThreadContentBean.Po
                                             dataBean.getUser().getNameShow()).setPn(dataBean.getPage().getOffset()).toString()));
                             return true;
                         case R.id.menu_report:
-                            navigationHelper.navigationByData(NavigationHelper.ACTION_URL, mContext.getString(R.string.url_post_report, dataBean.getForum().getId(), dataBean.getThread().getId(), postListItemBean.getId()));
+                            TiebaUtil.reportPost(mContext, postListItemBean.getId());
                             return true;
                         case R.id.menu_copy:
                             StringBuilder stringBuilder = new StringBuilder();

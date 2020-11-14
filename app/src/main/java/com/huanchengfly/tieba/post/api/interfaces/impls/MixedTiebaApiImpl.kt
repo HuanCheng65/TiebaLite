@@ -231,4 +231,12 @@ object MixedTiebaApiImpl : ITiebaApi {
             forumName: String, page: Int, goodClassifyId: String?, sortType: ForumSortType, pageSize: Int
     ): Call<ForumBean> =
             RetrofitTiebaApi.WEB_TIEBA_API.frs(forumName, (page - 1) * pageSize, sortType.value, goodClassifyId)
+
+    override fun checkReportPost(postId: String): Call<CheckReportBean> =
+            RetrofitTiebaApi.MINI_TIEBA_API.checkReport(
+                    category = "1",
+                    reportParam = mapOf(
+                            "pid" to postId
+                    )
+            )
 }

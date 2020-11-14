@@ -482,11 +482,9 @@ class ThreadActivity : BaseActivity(), View.OnClickListener {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
-            R.id.menu_report -> navigationHelper!!.navigationByData(NavigationHelper.ACTION_URL,
-                    getString(R.string.url_post_report,
-                            dataBean!!.forum?.id,
-                            dataBean!!.thread?.threadId,
-                            dataBean!!.thread?.postId))
+            R.id.menu_report -> {
+                if (dataBean != null) TiebaUtil.reportPost(this, dataBean?.thread?.postId!!)
+            }
             R.id.menu_share -> TiebaUtil.shareText(this, url, if (dataBean == null) null else dataBean!!.thread?.title)
             R.id.menu_jump_page -> {
                 val dialog = EditTextDialog(this)

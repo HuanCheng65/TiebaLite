@@ -6,6 +6,7 @@ import android.graphics.Typeface
 import android.os.Bundle
 import android.text.TextUtils
 import android.view.View
+import android.view.ViewGroup
 import android.widget.CompoundButton
 import android.widget.ImageView
 import android.widget.TextView
@@ -18,6 +19,7 @@ import com.gyf.immersionbar.ImmersionBar
 import com.huanchengfly.tieba.post.R
 import com.huanchengfly.tieba.post.activities.*
 import com.huanchengfly.tieba.post.api.interfaces.CommonCallback
+import com.huanchengfly.tieba.post.enableChangingLayoutTransition
 import com.huanchengfly.tieba.post.goToActivity
 import com.huanchengfly.tieba.post.interfaces.Refreshable
 import com.huanchengfly.tieba.post.models.MyInfoBean
@@ -143,6 +145,7 @@ class MyInfoFragment : BaseFragment(), View.OnClickListener, CompoundButton.OnCh
                 threadsTextView
         ).forEach {
             it.typeface = Typeface.createFromAsset(attachContext.assets, "bebas.ttf")
+            (it.parent as ViewGroup).enableChangingLayoutTransition()
         }
         listOf(
                 R.id.my_info_collect,
@@ -154,6 +157,7 @@ class MyInfoFragment : BaseFragment(), View.OnClickListener, CompoundButton.OnCh
         ).forEach {
             view.findViewById<View>(it).setOnClickListener(this)
         }
+        view.findViewById<ViewGroup>(R.id.my_info_user).enableChangingLayoutTransition()
         (followsTextView.parent as View).setOnClickListener {
             WebViewActivity.launch(attachContext, attachContext.resources.getString(R.string.url_user_home, dataBean!!.data.getName(), 2))
         }

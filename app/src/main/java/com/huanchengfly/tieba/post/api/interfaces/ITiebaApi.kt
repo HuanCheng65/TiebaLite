@@ -552,4 +552,13 @@ interface ITiebaApi {
             sortType: ForumSortType = ForumSortType.REPLY_TIME,
             pageSize: Int = 30
     ): Call<ForumBean>
+
+    /**
+     * 获取举报贴子/回贴页面 URL
+     *
+     * @param postId PID
+     */
+    fun checkReportPost(
+            postId: String
+    ): Call<CheckReportBean>
 }

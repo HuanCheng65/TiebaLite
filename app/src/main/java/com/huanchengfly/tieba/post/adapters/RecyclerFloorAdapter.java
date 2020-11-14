@@ -39,6 +39,7 @@ import com.huanchengfly.tieba.post.utils.ImageUtil;
 import com.huanchengfly.tieba.post.utils.NavigationHelper;
 import com.huanchengfly.tieba.post.utils.StringUtil;
 import com.huanchengfly.tieba.post.utils.ThemeUtil;
+import com.huanchengfly.tieba.post.utils.TiebaUtil;
 import com.huanchengfly.tieba.post.utils.TimeUtils;
 import com.huanchengfly.tieba.post.utils.Util;
 import com.huanchengfly.tieba.post.widgets.MyLinearLayout;
@@ -131,7 +132,7 @@ public class RecyclerFloorAdapter extends CommonBaseAdapter<SubFloorListBean.Pos
                                     .putExtra("data", replyData));
                             return true;
                         case R.id.menu_report:
-                            navigationHelper.navigationByData(NavigationHelper.ACTION_URL, mContext.getString(R.string.url_post_report, dataBean.getForum().getId(), dataBean.getThread().getId(), postInfo.getId()));
+                            TiebaUtil.reportPost(mContext, postInfo.getId());
                             return true;
                         case R.id.menu_copy:
                             StringBuilder stringBuilder = new StringBuilder();
