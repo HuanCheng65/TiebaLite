@@ -39,8 +39,8 @@
             app:layoutDescription="@xml/fragment_main_forum_list_scene">
 
             <com.huanchengfly.tieba.post.widgets.theme.TintLinearLayout
-                app:backgroundTint="@color/color_toolbar_bar"
-                tools:backgroundTint="@color/color_toolbar_bar"
+                app:backgroundTint="@color/default_color_toolbar_bar"
+                tools:backgroundTint="@color/default_color_toolbar_bar"
                 android:padding="12dp"
                 android:background="@drawable/bg_radius_8dp_ripple"
                 android:layout_width="0dp"
@@ -52,15 +52,15 @@
                     android:layout_width="24dp"
                     android:layout_height="24dp"
                     app:srcCompat="@drawable/ic_search"
-                    tools:tint="@color/color_on_toolbar_bar"
-                    app:tint="@color/color_on_toolbar_bar" />
+                    tools:tint="@color/default_color_on_toolbar_bar"
+                    app:tint="@color/default_color_on_toolbar_bar" />
 
                 <com.huanchengfly.tieba.post.widgets.theme.TintTextView
                     android:textStyle="bold"
                     android:layout_marginStart="16dp"
                     android:textSize="16sp"
-                    tools:textColor="@color/color_on_toolbar_bar"
-                    app:tint="@color/color_on_toolbar_bar"
+                    tools:textColor="@color/default_color_on_toolbar_bar"
+                    app:tint="@color/default_color_on_toolbar_bar"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"

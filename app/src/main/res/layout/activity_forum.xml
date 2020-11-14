@@ -296,13 +296,13 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <FrameLayout
+            <com.huanchengfly.tieba.post.widgets.theme.TintFrameLayout
                 android:layout_marginTop="12dp"
                 android:layout_marginBottom="12dp"
                 android:layout_marginStart="16dp"
                 android:layout_marginEnd="16dp"
                 android:background="@drawable/bg_radius_8dp"
-                android:backgroundTint="@color/color_toolbar_bar"
+                app:backgroundTint="@color/default_color_toolbar_bar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
@@ -314,7 +314,7 @@
                     android:id="@+id/forum_tab"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
-            </FrameLayout>
+            </com.huanchengfly.tieba.post.widgets.theme.TintFrameLayout>
         </com.huanchengfly.tieba.post.widgets.theme.TintFrameLayout>
     </com.huanchengfly.tieba.post.widgets.theme.TintAppBarLayout>
 

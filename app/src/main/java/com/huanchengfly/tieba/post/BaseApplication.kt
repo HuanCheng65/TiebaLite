@@ -397,6 +397,20 @@ class BaseApplication : Application() {
                         context.getColorCompat(resources.getIdentifier("theme_color_swipe_refresh_view_background_$theme", "color", packageName))
                     } else context.getColorCompat(R.color.theme_color_swipe_refresh_view_background_light)
                 }
+                R.attr.colorToolbarBar -> {
+                    return if (ThemeUtil.isNightMode(context)) {
+                        context.getColorCompat(R.color.theme_color_toolbar_bar_dark)
+                    } else {
+                        context.getColorCompat(R.color.theme_color_toolbar_bar_light)
+                    }
+                }
+                R.attr.colorOnToolbarBar -> {
+                    return if (ThemeUtil.isNightMode(context)) {
+                        context.getColorCompat(R.color.theme_color_on_toolbar_bar_dark)
+                    } else {
+                        context.getColorCompat(R.color.theme_color_on_toolbar_bar_light)
+                    }
+                }
             }
             return Util.getColorByAttr(context, attrId, R.color.transparent)
         }
@@ -415,6 +429,8 @@ class BaseApplication : Application() {
                 R.color.default_color_toolbar_item -> return getColorByAttr(context, R.attr.colorToolbarItem)
                 R.color.default_color_toolbar_item_active -> return getColorByAttr(context, R.attr.colorToolbarItemActive)
                 R.color.default_color_toolbar_item_secondary -> return getColorByAttr(context, R.attr.color_toolbar_item_secondary)
+                R.color.default_color_toolbar_bar -> return getColorByAttr(context, R.attr.colorToolbarBar)
+                R.color.default_color_on_toolbar_bar -> return getColorByAttr(context, R.attr.colorOnToolbarBar)
                 R.color.default_color_card -> return getColorByAttr(context, R.attr.colorCard)
                 R.color.default_color_floor_card -> return getColorByAttr(context, R.attr.colorFloorCard)
                 R.color.default_color_nav -> return getColorByAttr(context, R.attr.colorNavBar)

@@ -3,7 +3,12 @@
     <declare-styleable name="Theme">
         <attr name="colorPrimary" format="color" />
         <attr name="colorAccent" format="color" />
+        <attr name="colorToolbar" format="color" />
         <attr name="colorToolbarItem" format="color" />
+        <attr name="color_toolbar_item_secondary" format="color" />
+        <attr name="colorToolbarItemActive" format="color" />
+        <attr name="colorToolbarBar" format="color" />
+        <attr name="colorOnToolbarBar" format="color" />
         <attr name="colorText" format="color" />
         <attr name="colorTextOnPrimary" format="color" />
         <attr name="colorTextSecondary" format="color" />
@@ -12,13 +17,10 @@
         <attr name="colorWindowBackground" format="color" />
         <attr name="colorUnselected" format="color" />
         <attr name="colorNavBar" format="color" />
-        <attr name="colorToolbar" format="color" />
-        <attr name="colorToolbarItemActive" format="color" />
         <attr name="colorFloorCard" format="color" />
         <attr name="colorCard" format="color" />
         <attr name="colorDivider" format="color" />
         <attr name="shadow_color" format="color" />
-        <attr name="color_toolbar_item_secondary" format="color" />
         <attr name="color_swipe_refresh_layout_background" format="color" />
     </declare-styleable>
 
