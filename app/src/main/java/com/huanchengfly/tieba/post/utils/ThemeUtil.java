@@ -32,6 +32,7 @@ import com.google.android.material.appbar.AppBarLayout;
 import com.huanchengfly.tieba.post.BaseApplication;
 import com.huanchengfly.tieba.post.R;
 import com.huanchengfly.tieba.post.activities.BaseActivity;
+import com.huanchengfly.tieba.post.interfaces.BackgroundTintable;
 import com.huanchengfly.tieba.post.ui.theme.utils.ThemeUtils;
 import com.huanchengfly.tieba.post.widgets.theme.TintSwipeRefreshLayout;
 import com.scwang.smart.refresh.header.MaterialHeader;
@@ -281,6 +282,9 @@ public class ThemeUtil {
             }
         }
         view.setBackgroundTintList(null);
+        if (view instanceof BackgroundTintable) {
+            ((BackgroundTintable) view).setBackgroundTintResId(0);
+        }
         String backgroundFilePath = SharedPreferencesUtil.get(BaseApplication.getInstance(), SharedPreferencesUtil.SP_SETTINGS)
                 .getString(SP_TRANSLUCENT_THEME_BACKGROUND_PATH, null);
         if (backgroundFilePath == null) {
@@ -329,7 +333,7 @@ public class ThemeUtil {
     }
 
     public static void setTranslucentThemeBackground(View view) {
-        setTranslucentThemeBackground(view, true, true);
+        setTranslucentThemeBackground(view, true, false);
     }
 
     @StyleRes

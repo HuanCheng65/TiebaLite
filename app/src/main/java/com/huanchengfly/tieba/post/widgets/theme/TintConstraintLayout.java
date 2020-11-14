@@ -10,12 +10,13 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
+import com.huanchengfly.tieba.post.R;
+import com.huanchengfly.tieba.post.interfaces.BackgroundTintable;
 import com.huanchengfly.tieba.post.ui.theme.interfaces.Tintable;
 import com.huanchengfly.tieba.post.ui.theme.utils.ThemeUtils;
-import com.huanchengfly.tieba.post.R;
 
 @SuppressLint("CustomViewStyleable")
-public class TintConstraintLayout extends ConstraintLayout implements Tintable {
+public class TintConstraintLayout extends ConstraintLayout implements Tintable, BackgroundTintable {
     private int mBackgroundTintResId;
 
     public TintConstraintLayout(@NonNull Context context) {
@@ -57,10 +58,12 @@ public class TintConstraintLayout extends ConstraintLayout implements Tintable {
         }
     }
 
+    @Override
     public int getBackgroundTintResId() {
         return mBackgroundTintResId;
     }
 
+    @Override
     public void setBackgroundTintResId(int backgroundTintResId) {
         mBackgroundTintResId = backgroundTintResId;
         tint();

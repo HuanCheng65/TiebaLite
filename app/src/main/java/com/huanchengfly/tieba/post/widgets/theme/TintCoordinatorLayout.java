@@ -10,12 +10,13 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
 
+import com.huanchengfly.tieba.post.R;
+import com.huanchengfly.tieba.post.interfaces.BackgroundTintable;
 import com.huanchengfly.tieba.post.ui.theme.interfaces.Tintable;
 import com.huanchengfly.tieba.post.ui.theme.utils.ThemeUtils;
-import com.huanchengfly.tieba.post.R;
 
 @SuppressLint("CustomViewStyleable")
-public class TintCoordinatorLayout extends CoordinatorLayout implements Tintable {
+public class TintCoordinatorLayout extends CoordinatorLayout implements Tintable, BackgroundTintable {
     private int mBackgroundTintResId;
 
     public TintCoordinatorLayout(@NonNull Context context) {
@@ -55,5 +56,16 @@ public class TintCoordinatorLayout extends CoordinatorLayout implements Tintable
                 setBackgroundTintList(ColorStateList.valueOf(ThemeUtils.getColorById(getContext(), mBackgroundTintResId)));
             }
         }
+    }
+
+    @Override
+    public void setBackgroundTintResId(int resId) {
+        mBackgroundTintResId = resId;
+        tint();
+    }
+
+    @Override
+    public int getBackgroundTintResId() {
+        return mBackgroundTintResId;
     }
 }

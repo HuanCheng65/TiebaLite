@@ -10,12 +10,13 @@ import android.widget.LinearLayout;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.huanchengfly.tieba.post.R;
+import com.huanchengfly.tieba.post.interfaces.BackgroundTintable;
 import com.huanchengfly.tieba.post.ui.theme.interfaces.Tintable;
 import com.huanchengfly.tieba.post.ui.theme.utils.ThemeUtils;
-import com.huanchengfly.tieba.post.R;
 
 @SuppressLint("CustomViewStyleable")
-public class TintLinearLayout extends LinearLayout implements Tintable {
+public class TintLinearLayout extends LinearLayout implements Tintable, BackgroundTintable {
     private int mBackgroundTintResId;
 
     public TintLinearLayout(@NonNull Context context) {
@@ -55,5 +56,16 @@ public class TintLinearLayout extends LinearLayout implements Tintable {
                 setBackgroundTintList(ColorStateList.valueOf(ThemeUtils.getColorById(getContext(), mBackgroundTintResId)));
             }
         }
+    }
+
+    @Override
+    public void setBackgroundTintResId(int resId) {
+        mBackgroundTintResId = resId;
+        tint();
+    }
+
+    @Override
+    public int getBackgroundTintResId() {
+        return mBackgroundTintResId;
     }
 }

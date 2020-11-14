@@ -12,11 +12,12 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.huanchengfly.tieba.post.R;
+import com.huanchengfly.tieba.post.interfaces.BackgroundTintable;
 import com.huanchengfly.tieba.post.ui.theme.interfaces.Tintable;
 import com.huanchengfly.tieba.post.ui.theme.utils.ThemeUtils;
 
 @SuppressLint("CustomViewStyleable")
-public class TintRelativeLayout extends RelativeLayout implements Tintable {
+public class TintRelativeLayout extends RelativeLayout implements Tintable, BackgroundTintable {
     private int mBackgroundTintResId;
 
     public TintRelativeLayout(@NonNull Context context) {
@@ -62,5 +63,16 @@ public class TintRelativeLayout extends RelativeLayout implements Tintable {
     public void setBackground(Drawable background) {
         super.setBackground(background);
         applyTintColor();
+    }
+
+    @Override
+    public void setBackgroundTintResId(int resId) {
+        mBackgroundTintResId = resId;
+        tint();
+    }
+
+    @Override
+    public int getBackgroundTintResId() {
+        return mBackgroundTintResId;
     }
 }
