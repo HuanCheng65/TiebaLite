@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager.widget.ViewPager
 import butterknife.BindView
 import com.google.android.material.appbar.AppBarLayout
+import com.google.android.material.appbar.AppBarLayout.LayoutParams.SCROLL_FLAG_NO_SCROLL
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayout.OnTabSelectedListener
 import com.huanchengfly.tieba.post.R
@@ -52,7 +53,7 @@ class MessageFragment : BaseFragment(), Refreshable, OnTabSelectedListener, Tool
     private var atMe: MessageListHelper? = null
     var type = 0
         private set
-    private var isFromNotification = false
+    private var isFromMain = false
     public override fun onFragmentVisibleChange(isVisible: Boolean) {
         if (isVisible) {
             refreshIfNeed()
@@ -68,7 +69,7 @@ class MessageFragment : BaseFragment(), Refreshable, OnTabSelectedListener, Tool
         val args = arguments
         if (args != null) {
             type = args.getInt(PARAM_TYPE, TYPE_REPLY_ME)
-            isFromNotification = args.getBoolean(PARAM_FROM_NOTIFICATION, false)
+            isFromMain = args.getBoolean(PARAM_FROM_MAIN, false)
         }
     }
 
@@ -78,7 +79,11 @@ class MessageFragment : BaseFragment(), Refreshable, OnTabSelectedListener, Tool
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        mToolbar!!.setOnMenuItemClickListener(this)
+        if (!isFromMain) {
+            mToolbar?.visibility = View.GONE
+            (mToolbar?.layoutParams as AppBarLayout.LayoutParams?)?.scrollFlags = SCROLL_FLAG_NO_SCROLL
+        }
+        mToolbar?.setOnMenuItemClickListener(this)
         val viewPager: ViewPager = view.findViewById(R.id.fragment_message_vp)
         val viewPagerAdapter = TabViewPagerAdapter()
         replyMe = MessageListHelper(attachContext, TYPE_REPLY_ME)
@@ -89,7 +94,7 @@ class MessageFragment : BaseFragment(), Refreshable, OnTabSelectedListener, Tool
         tabLayout!!.setupWithViewPager(viewPager)
         tabLayout!!.addOnTabSelectedListener(this)
         viewPager.setCurrentItem(type, false)
-        if (isFromNotification) {
+        if (!isFromMain) {
             refreshIfNeed()
         }
     }
@@ -251,15 +256,15 @@ class MessageFragment : BaseFragment(), Refreshable, OnTabSelectedListener, Tool
         const val TYPE_AT_ME = 1
         val TAG = MessageFragment::class.java.simpleName
         private const val PARAM_TYPE = "type"
-        const val PARAM_FROM_NOTIFICATION = "from_notification"
+        const val PARAM_FROM_MAIN = "from_main"
 
         @JvmStatic
         @JvmOverloads
-        fun newInstance(type: Int, isFromNotification: Boolean = false): MessageFragment {
+        fun newInstance(type: Int, fromMain: Boolean = false): MessageFragment {
             return MessageFragment().apply {
                 arguments = Bundle().apply {
                     putInt(PARAM_TYPE, type)
-                    putBoolean(PARAM_FROM_NOTIFICATION, isFromNotification)
+                    putBoolean(PARAM_FROM_MAIN, fromMain)
                 }
             }
         }

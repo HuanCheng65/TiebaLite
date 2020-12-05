@@ -140,7 +140,7 @@ open class MainActivity : BaseActivity(), BottomNavigationView.OnNavigationItemS
             val personalizedFeedFragment = PersonalizedFeedFragment()
             mAdapter.addFragment(personalizedFeedFragment)
         }
-        mAdapter.addFragment(MessageFragment.newInstance(MessageFragment.TYPE_REPLY_ME))
+        mAdapter.addFragment(MessageFragment.newInstance(MessageFragment.TYPE_REPLY_ME, true))
         mAdapter.addFragment(MyInfoFragment())
         mViewPager.isCanScroll = false
         mViewPager.adapter = mAdapter
@@ -194,8 +194,7 @@ open class MainActivity : BaseActivity(), BottomNavigationView.OnNavigationItemS
             showDialog(DialogUtil.build(this)
                     .setTitle(R.string.title_dialog_notice)
                     .setMessage(R.string.message_dialog_notice)
-                    .setPositiveButton(R.string.button_sure_default) { _: DialogInterface?,
-                                                                       _: Int ->
+                    .setPositiveButton(R.string.button_sure_default) { _, _ ->
                         SharedPreferencesUtil.put(this, SharedPreferencesUtil.SP_APP_DATA, "notice_dialog", true)
                     }
                     .setCancelable(false)
