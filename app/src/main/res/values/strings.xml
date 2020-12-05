@@ -209,6 +209,7 @@
     <string name="button_denied">禁止</string>
     <string name="title_not_ask">不再询问</string>
     <string name="title_ask_permission">要允许 %1$s 访问您的%2$s吗？</string>
+    <string name="title_ask_permission_clipboard_copy">要允许 %1$s 写入您的剪贴板吗？</string>
     <string name="title_start_app_permission">要允许 %1$s 打开您的%2$s吗？</string>
     <string name="name_multiapp">应用</string>
     <string name="settings_status_bar_darker">状态栏遮罩</string>
@@ -399,4 +400,11 @@
     <string name="title_oksign_fail">签到失败</string>
     <string name="text_login_first">请先登录</string>
     <string name="update_tip_loading">正在检查更新</string>
+    <string name="title_thread_post_recommend">建议您使用其他途径发贴</string>
+    <string name="message_thread_post_recommend">继续使用本软件发贴可能会出现发贴失败、发贴被隐藏甚至封号等异常情况，建议您使用官方客户端或 PC 网页版发贴</string>
+    <string name="button_official_client_post">使用官方客户端发贴</string>
+    <string name="toast_start_failed">启动失败</string>
+    <string name="button_pc_web_post">使用 PC 网页版发贴</string>
+    <string name="button_lite_post">继续使用本软件发贴</string>
+    <string name="permission_name_clipboard_copy">写入剪贴板</string>
 </resources>

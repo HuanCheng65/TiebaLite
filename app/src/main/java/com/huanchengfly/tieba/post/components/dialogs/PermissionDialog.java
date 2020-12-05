@@ -132,5 +132,6 @@ public class PermissionDialog extends AlertDialog implements View.OnClickListene
     public static class CustomPermission {
         public static final int PERMISSION_LOCATION = 0;
         public static final int PERMISSION_START_APP = 1;
+        public static final int PERMISSION_CLIPBOARD_COPY = 2;
     }
 }

@@ -70,6 +70,7 @@ public class WebViewFragment extends BaseFragment implements DownloadListener {
     private String tbliteJs;
     private String nightJs;
     private String aNightJs;
+    private String clipboardGuardJs;
     private WebView mWebView;
     private NavigationHelper navigationHelper;
     private ValueCallback<Uri> uploadMessage;
@@ -190,6 +191,7 @@ public class WebViewFragment extends BaseFragment implements DownloadListener {
         tbliteJs = AssetUtil.getStringFromAsset(getAttachContext(), "tblite.js");
         nightJs = AssetUtil.getStringFromAsset(getAttachContext(), "night.js");
         aNightJs = AssetUtil.getStringFromAsset(getAttachContext(), "anight.js");
+        clipboardGuardJs = AssetUtil.getStringFromAsset(getAttachContext(), "ClipboardGuard.js");
     }
 
     @Override
@@ -264,6 +266,7 @@ public class WebViewFragment extends BaseFragment implements DownloadListener {
 
     private void injectJavaScript() {
         if (mWebView == null) return;
+        mWebView.evaluateJavascript(clipboardGuardJs, null);
         String nowTheme = ThemeUtil.getTheme(getAttachContext());
         String url = mWebView.getUrl();
         if (url == null || nowTheme == null) {
@@ -415,12 +418,27 @@ public class WebViewFragment extends BaseFragment implements DownloadListener {
         }
 
         public boolean onJsConfirm(WebView view, String url, String message, final JsResult result) {
-            DialogUtil.build(view.getContext())
-                    .setTitle("Confirm")
-                    .setMessage(message)
-                    .setPositiveButton(android.R.string.ok, (dialog, which) -> result.confirm())
-                    .setNegativeButton(android.R.string.cancel, (dialog, which) -> result.cancel())
-                    .create().show();
+            if ("ClipboardGuardCopyRequest".equalsIgnoreCase(message)) {
+                Uri uri = Uri.parse(mWebView.getUrl());
+                if (uri != null && uri.getHost() != null) {
+                    new PermissionDialog(getAttachContext(),
+                            new PermissionBean(PermissionDialog.CustomPermission.PERMISSION_CLIPBOARD_COPY,
+                                    uri.getHost(),
+                                    getAttachContext().getString(R.string.title_ask_permission_clipboard_copy, uri.getHost()),
+                                    R.drawable.ic_round_file_copy))
+                            .setOnGrantedCallback(isForever -> result.confirm())
+                            .setOnDeniedCallback(isForever -> result.cancel())
+                            .show();
+                }
+            } else {
+                DialogUtil.build(view.getContext())
+                        .setTitle("Confirm")
+                        .setMessage(message)
+                        .setPositiveButton(android.R.string.ok, (dialog, which) -> result.confirm())
+                        .setNegativeButton(android.R.string.cancel, (dialog, which) -> result.cancel())
+                        .create()
+                        .show();
+            }
             return true;
         }
 
