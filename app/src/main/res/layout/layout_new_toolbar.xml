@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <com.huanchengfly.tieba.post.widgets.theme.TintCollapsingToolbarLayout
+        android:id="@+id/collapsing_toolbar"
+        app:textColor="@color/default_color_toolbar_item"
+        app:expandedTitleTextAppearance="@style/Toolbar.Title.Expanded"
+        app:collapsedTitleTextAppearance="@style/Toolbar.Title"
+        app:expandedTitleMarginStart="16dp"
+        app:expandedTitleMarginBottom="16dp"
+        app:layout_scrollFlags="scroll|exitUntilCollapsed"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fitsSystemWindows="true">
+
+        <View
+            android:layout_marginTop="?actionBarSize"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/space_toolbar_top"
+            android:layout_marginBottom="4dp" />
+
+        <com.huanchengfly.tieba.post.widgets.theme.TintToolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            app:layout_collapseMode="pin" />
+    </com.huanchengfly.tieba.post.widgets.theme.TintCollapsingToolbarLayout>
+</merge>

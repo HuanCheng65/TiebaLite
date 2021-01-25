@@ -407,4 +407,10 @@
     <string name="button_pc_web_post">使用 PC 网页版发贴</string>
     <string name="button_lite_post">继续使用本软件发贴</string>
     <string name="permission_name_clipboard_copy">写入剪贴板</string>
+    <string name="title_history_thread_user">%1$s的贴子</string>
+    <string name="title_history_today">今天早些时候</string>
+    <string name="title_history_before">昨天或更早</string>
+    <string name="text_badge_history_forum">贴吧</string>
+    <string name="title_history_thread">贴子记录</string>
+    <string name="title_history_forum">经过贴吧</string>
 </resources>

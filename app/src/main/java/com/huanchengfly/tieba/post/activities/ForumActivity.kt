@@ -86,7 +86,6 @@ class ForumActivity : BaseActivity(), View.OnClickListener, OnRefreshedListener,
 
     @BindView(R.id.fab)
     lateinit var fab: FloatingActionButton
-    private var historyHelper: HistoryHelper? = null
 
     @BindView(R.id.loading_view)
     lateinit var loadingView: View
@@ -146,7 +145,6 @@ class ForumActivity : BaseActivity(), View.OnClickListener, OnRefreshedListener,
         super.onCreate(savedInstanceState)
         ThemeUtil.setTranslucentThemeBackground(findViewById(R.id.background))
         toolbarColor = ThemeUtils.getColorById(this, R.color.default_color_toolbar)
-        historyHelper = HistoryHelper(this)
         animated = false
         val intent = intent
         val title: String
@@ -521,11 +519,11 @@ class ForumActivity : BaseActivity(), View.OnClickListener, OnRefreshedListener,
         }
         if (firstLoaded) {
             firstLoaded = false
-            historyHelper!!.writeHistory(History()
+            HistoryUtil.writeHistory(History()
                     .setTitle(getString(R.string.title_forum, forumName))
                     .setTimestamp(System.currentTimeMillis())
                     .setAvatar(forumPageBean.forum?.avatar)
-                    .setType(HistoryHelper.TYPE_BA)
+                    .setType(HistoryUtil.TYPE_FORUM)
                     .setData(forumName))
         }
     }

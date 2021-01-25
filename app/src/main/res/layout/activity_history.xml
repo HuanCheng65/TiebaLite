@@ -5,16 +5,14 @@
     android:id="@+id/background"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    app:backgroundTint="@color/default_color_window_background"
     tools:context=".activities.HistoryActivity">
 
-    <include
-        layout="@layout/layout_appbar" />
+    <include layout="@layout/layout_new_appbar_with_tab" />
 
-    <ListView
-        android:id="@+id/history_list"
+    <com.huanchengfly.tieba.post.widgets.MyViewPager
+        android:id="@+id/view_pager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:divider="@drawable/drawable_divider_1dp"
-        android:dividerHeight="1dp"
         app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 </com.huanchengfly.tieba.post.widgets.theme.TintCoordinatorLayout>

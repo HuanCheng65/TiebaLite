@@ -81,6 +81,14 @@
         <attr name="activeItemTint" format="color" />
     </declare-styleable>
 
+    <declare-styleable name="MyToolbar">
+        <attr name="navigationButtonGravity">
+            <flag name="center_vertical" value="0x10" />
+            <flag name="top" value="0x30" />
+            <flag name="bottom" value="0x50" />
+        </attr>
+    </declare-styleable>
+
     <declare-styleable name="TintSwitch">
         <attr name="switchBackgroundTint" format="color" />
         <attr name="thumbTint" format="color" />
@@ -152,6 +160,10 @@
     <declare-styleable name="TintTextInputEditText">
         <attr name="textColor" />
         <attr name="textColorHint" format="color" />
+    </declare-styleable>
+
+    <declare-styleable name="TintCollapsingToolbarLayout">
+        <attr name="textColor" />
     </declare-styleable>
 
     <declare-styleable name="ScrollCollapsingToolbarLayout">

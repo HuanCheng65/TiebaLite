@@ -70,11 +70,9 @@
         <meta-data
             android:name="notch.config"
             android:value="portrait|landscape" />
-
         <meta-data
             android:name="EasyGoClient"
             android:value="true" />
-
         <meta-data
             android:name="use_miui_font"
             android:value="true" />
@@ -123,6 +121,7 @@
 
         <activity
             android:name=".activities.HistoryActivity"
+            android:label="@string/title_history"
             android:configChanges="screenSize|screenLayout|orientation|smallestScreenSize|keyboardHidden"
             android:windowSoftInputMode="adjustResize" />
         <activity android:name=".activities.OKSignActivity">
@@ -199,6 +198,7 @@
             android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".activities.UserCollectActivity"
+            android:label="@string/title_my_collect"
             android:configChanges="screenSize|screenLayout|orientation|smallestScreenSize|keyboardHidden"
             android:windowSoftInputMode="adjustResize" />
         <activity
@@ -219,26 +219,23 @@
             android:name=".activities.ThemeActivity"
             android:configChanges="screenSize|screenLayout|orientation|smallestScreenSize|keyboardHidden"
             android:windowSoftInputMode="adjustResize" />
-
         <activity
             android:name=".activities.SearchPostActivity"
             android:configChanges="screenSize|screenLayout|orientation|smallestScreenSize|keyboardHidden"
             android:theme="@style/AppTheme.Floating"
             android:windowSoftInputMode="adjustResize" />
-
         <activity
             android:name=".activities.NewIntroActivity"
             android:configChanges="screenSize|screenLayout|orientation|smallestScreenSize|keyboardHidden"
             android:theme="@style/AppTheme.Intro"
             android:windowSoftInputMode="adjustResize" />
         <activity android:name=".activities.TranslucentThemeActivity" />
-
         <activity
             android:name="com.yalantis.ucrop.UCropActivity"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
-
-        <activity android:name=".activities.NewSearchActivity"
+        <activity
+            android:name=".activities.NewSearchActivity"
             android:configChanges="screenSize|screenLayout|orientation|smallestScreenSize|keyboardHidden"
             android:windowSoftInputMode="adjustResize" />
 

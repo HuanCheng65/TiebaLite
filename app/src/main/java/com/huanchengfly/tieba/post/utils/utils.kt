@@ -8,6 +8,7 @@ import android.graphics.drawable.GradientDrawable
 import android.graphics.drawable.RippleDrawable
 import com.huanchengfly.tieba.post.BaseApplication
 import com.huanchengfly.tieba.post.R
+import com.huanchengfly.tieba.post.dpToPxFloat
 import com.huanchengfly.tieba.post.ui.theme.utils.ColorStateListUtils
 
 @JvmOverloads
@@ -16,7 +17,7 @@ fun getItemBackgroundDrawable(
         position: Int,
         itemCount: Int,
         positionOffset: Int = 0,
-        radius: Float = 10f,
+        radius: Float = 8f.dpToPxFloat(),
         colors: IntArray = intArrayOf(R.color.default_color_card),
         ripple: Boolean = true
 ): Drawable {

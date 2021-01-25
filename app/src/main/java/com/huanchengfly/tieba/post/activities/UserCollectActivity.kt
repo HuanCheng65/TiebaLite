@@ -1,25 +1,27 @@
-package com.huanchengfly.tieba.post.activities;
+package com.huanchengfly.tieba.post.activities
 
-import android.os.Bundle;
+import android.os.Bundle
+import androidx.appcompat.widget.Toolbar
+import butterknife.BindView
+import com.google.android.material.appbar.CollapsingToolbarLayout
+import com.huanchengfly.tieba.post.R
+import com.huanchengfly.tieba.post.utils.ThemeUtil
 
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.widget.Toolbar;
+class UserCollectActivity : BaseActivity() {
+    @BindView(R.id.toolbar)
+    lateinit var toolbar: Toolbar
 
-import com.huanchengfly.tieba.post.R;
-import com.huanchengfly.tieba.post.utils.ThemeUtil;
+    @BindView(R.id.collapsing_toolbar)
+    lateinit var collapsingToolbar: CollapsingToolbarLayout
 
-public class UserCollectActivity extends BaseActivity {
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_user_collect);
-        ThemeUtil.setTranslucentThemeBackground(findViewById(R.id.background));
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) {
-            actionBar.setDisplayHomeAsUpEnabled(true);
-            actionBar.setTitle(R.string.title_my_collect);
-        }
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        ThemeUtil.setTranslucentThemeBackground(findViewById(R.id.background))
+        setSupportActionBar(toolbar)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.title = title
+        collapsingToolbar.title = title
     }
+
+    override fun getLayoutId(): Int = R.layout.activity_user_collect
 }

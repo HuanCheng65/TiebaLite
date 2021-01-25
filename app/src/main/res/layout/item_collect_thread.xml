@@ -1,64 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:padding="16dp"
-    android:background="?attr/selectableItemBackground"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="@dimen/card_margin">
 
     <RelativeLayout
-        android:id="@+id/collect_item_header"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <com.huanchengfly.tieba.post.widgets.theme.TintImageView
-            app:tint="@color/default_color_primary"
-            android:layout_centerVertical="true"
-            app:srcCompat="@drawable/ic_inbox"
-            android:id="@+id/collect_item_icon"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            tools:ignore="ContentDescription" />
-
-        <com.huanchengfly.tieba.post.widgets.theme.TintTextView
-            android:textStyle="bold"
-            app:tint="@color/default_color_primary"
-            tools:text="收藏"
-            android:id="@+id/collect_item_header_title"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_marginStart="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_toEndOf="@id/collect_item_icon"
-            android:textSize="14sp" />
-    </RelativeLayout>
-
-    <RelativeLayout
-        android:layout_marginTop="16dp"
-        android:layout_below="@id/collect_item_header"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
         <ImageView
-            android:layout_marginEnd="12dp"
+            android:layout_marginEnd="8dp"
+            android:layout_centerVertical="true"
             tools:src="@drawable/bg_placeholder_circle"
             android:id="@+id/collect_item_avatar"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
+            android:layout_width="@dimen/size_avatar_small"
+            android:layout_height="@dimen/size_avatar_small"
             tools:ignore="ContentDescription" />
+
         <com.huanchengfly.tieba.post.widgets.theme.TintTextView
             android:ellipsize="end"
-            android:maxLines="2"
-            android:textSize="16sp"
-            tools:text="Title"
+            android:maxLines="1"
+            android:textSize="14sp"
+            android:id="@+id/collect_item_header_title"
+            tools:text="User"
+            app:tint="@color/default_color_text_secondary"
+            android:textStyle="bold"
             android:layout_centerVertical="true"
             android:layout_alignWithParentIfMissing="true"
             android:layout_toEndOf="@id/collect_item_avatar"
-            app:tint="@color/default_color_text"
-            android:textStyle="bold"
-            android:id="@+id/collect_item_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
     </RelativeLayout>
-</RelativeLayout>
+
+    <com.huanchengfly.tieba.post.widgets.theme.TintTextView
+        android:layout_marginTop="8dp"
+        android:ellipsize="end"
+        android:maxLines="2"
+        android:textSize="16sp"
+        tools:text="Title"
+        android:textStyle="bold"
+        app:tint="@color/default_color_text"
+        android:id="@+id/collect_item_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+</LinearLayout>

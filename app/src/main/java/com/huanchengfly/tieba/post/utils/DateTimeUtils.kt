@@ -2,10 +2,11 @@ package com.huanchengfly.tieba.post.utils
 
 import android.content.Context
 import com.huanchengfly.tieba.post.R
+import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.util.*
 
-object TimeUtils {
+object DateTimeUtils {
     @JvmStatic
     fun getRelativeTimeString(
             context: Context,
@@ -48,6 +49,19 @@ object TimeUtils {
         } else {
             calendar.format(context.getString(R.string.relative_date_after))
         }
+    }
+
+    private fun Calendar.clearTime() {
+        set(Calendar.HOUR_OF_DAY, 0)
+        set(Calendar.MINUTE, 0)
+        set(Calendar.SECOND, 0)
+    }
+
+    @JvmStatic
+    fun isToday(timestamp: Long): Boolean {
+        val date = DateFormat.getDateInstance().format(timestamp)
+        val todayDate = DateFormat.getDateInstance().format(System.currentTimeMillis())
+        return date == todayDate
     }
 
     private fun Calendar.format(pattern: String): String {

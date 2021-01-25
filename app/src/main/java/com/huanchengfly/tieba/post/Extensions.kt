@@ -4,12 +4,14 @@ import android.animation.LayoutTransition
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.content.res.ColorStateList
 import android.os.Build
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.annotation.ColorRes
 import androidx.fragment.app.Fragment
 import com.google.gson.Gson
+import com.huanchengfly.tieba.post.utils.GsonUtil
 import com.huanchengfly.tieba.post.utils.MD5Util
 
 fun Float.dpToPx(): Int =
@@ -35,6 +37,8 @@ fun Int.pxToDp(): Int = this.toFloat().pxToDp()
 
 fun Int.pxToSp(): Int = this.toFloat().pxToSp()
 
+inline fun <reified Data> String.fromJson() = GsonUtil.getGson().fromJson<Data>(this, Data::class.java)
+
 fun Any.toJson(): String = Gson().toJson(this)
 
 fun String.toMD5(): String = MD5Util.toMd5(this)
@@ -44,6 +48,14 @@ fun Context.getColorCompat(@ColorRes id: Int): Int {
         resources.getColor(id, theme)
     } else {
         resources.getColor(id)
+    }
+}
+
+fun Context.getColorStateListCompat(id: Int): ColorStateList {
+    return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+        resources.getColorStateList(id, theme)
+    } else {
+        resources.getColorStateList(id)
     }
 }
 

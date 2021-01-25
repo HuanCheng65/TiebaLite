@@ -30,4 +30,7 @@
     <dimen name="forum_card_inner_gap">8dp</dimen>
 
     <dimen name="stat_text_size">23sp</dimen>
+    <dimen name="app_bar_height">106dp</dimen>
+    <dimen name="fab_margin">16dp</dimen>
+    <dimen name="text_margin">16dp</dimen>
 </resources>
