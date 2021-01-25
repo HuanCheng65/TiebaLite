@@ -76,7 +76,7 @@ class HistoryFragment : BaseFragment(), OnItemClickListener<History>, Refreshabl
                 delegateAdapter.addAdapter(HeaderDelegateAdapter(
                         attachContext,
                         R.string.title_history_today,
-                        startIconResId = R.drawable.ic_round_watch_later_blue,
+                        startIconResId = R.drawable.ic_date_range,
                         sticky = HeaderDelegateAdapter.STICKY_START
                 ).apply {
                     setBackgroundResource(R.drawable.bg_top_radius_8dp)
@@ -93,7 +93,7 @@ class HistoryFragment : BaseFragment(), OnItemClickListener<History>, Refreshabl
                 delegateAdapter.addAdapter(HeaderDelegateAdapter(
                         attachContext,
                         R.string.title_history_before,
-                        startIconResId = R.drawable.ic_round_watch_later_blue,
+                        startIconResId = R.drawable.ic_date_range,
                         sticky = HeaderDelegateAdapter.STICKY_START
                 ).apply {
                     setBackgroundResource(R.drawable.bg_top_radius_8dp)
