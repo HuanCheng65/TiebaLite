@@ -19,9 +19,9 @@ import com.huanchengfly.tieba.post.R;
 import com.huanchengfly.tieba.post.adapters.BlockListAdapter;
 import com.huanchengfly.tieba.post.components.dialogs.EditTextDialog;
 import com.huanchengfly.tieba.post.models.database.Block;
+import com.huanchengfly.tieba.post.utils.GsonUtil;
 import com.huanchengfly.tieba.post.utils.ThemeUtil;
 import com.huanchengfly.tieba.post.utils.Util;
-import com.huanchengfly.tieba.post.utils.GsonUtil;
 
 public class BlockListActivity extends BaseActivity {
     private Toolbar toolbar;

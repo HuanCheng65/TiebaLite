@@ -1,7 +1,7 @@
 package com.huanchengfly.tieba.post.api.retrofit.interceptors
 
-import com.huanchengfly.tieba.post.api.Header
 import com.huanchengfly.tieba.post.BaseApplication
+import com.huanchengfly.tieba.post.api.Header
 import com.huanchengfly.tieba.post.utils.AccountUtil
 import okhttp3.Interceptor
 import okhttp3.Response

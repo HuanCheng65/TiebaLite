@@ -59,7 +59,6 @@ class ThreadActivity : BaseActivity(), View.OnClickListener {
     private var dataBean: ThreadContentBean? = null
     @BindView(R.id.thread_refresh_view)
     lateinit var refreshLayout: SwipeRefreshLayout
-    private var historyHelper: HistoryHelper? = null
     @BindView(R.id.thread_bottom_bar_agree_btn)
     lateinit var agreeBtn: ImageView
     @BindView(R.id.thread_bottom_bar_agree_num)
@@ -84,7 +83,7 @@ class ThreadActivity : BaseActivity(), View.OnClickListener {
         override fun onReceive(context: Context, intent: Intent) {
             val action = intent.action
             if (action != null && action == ACTION_REPLY_SUCCESS) {
-                val pid = intent.getStringExtra("pid")
+                val pid = intent.getStringExtra(EXTRA_POST_ID)
                 if (pid != null) refreshByPid(pid) else refresh(false)
             }
         }
@@ -164,7 +163,6 @@ class ThreadActivity : BaseActivity(), View.OnClickListener {
         val agreeBtnHolder = findViewById(R.id.thread_bottom_bar_agree) as RelativeLayout
         agreeBtnHolder.setOnClickListener(this)
         toolbar.setOnClickListener(this)
-        historyHelper = HistoryHelper(this)
         mLayoutManager = MyLinearLayoutManager(this)
         mAdapter = RecyclerThreadAdapter(this).apply {
             setOnLoadMoreListener { isReload: Boolean ->
@@ -236,12 +234,12 @@ class ThreadActivity : BaseActivity(), View.OnClickListener {
         val from: String?
         var maxPid: String? = ""
         if (intent.getStringExtra("url") == null) {
-            tid = intent.getStringExtra("tid")
-            pid = intent.getStringExtra("pid")
-            seeLz = if (intent.getBooleanExtra("seeLz", false)) "1" else "0"
-            from = intent.getStringExtra("from")
+            tid = intent.getStringExtra(EXTRA_THREAD_ID)
+            pid = intent.getStringExtra(EXTRA_POST_ID)
+            seeLz = if (intent.getBooleanExtra(EXTRA_SEE_LZ, false)) "1" else "0"
+            from = intent.getStringExtra(EXTRA_FROM)
             if ("collect" == from) {
-                maxPid = intent.getStringExtra("max_pid")
+                maxPid = intent.getStringExtra(EXTRA_MAX_PID)
             }
         } else {
             val uri = Uri.parse(intent.getStringExtra("url"))
@@ -681,12 +679,12 @@ class ThreadActivity : BaseActivity(), View.OnClickListener {
                     .setData(tid)
                     .setExtras(extras)
                     .setTitle(dataBean!!.thread?.title)
-                    .setType(HistoryHelper.TYPE_THREAD)
+                    .setType(HistoryUtil.TYPE_THREAD)
             if (dataBean!!.thread?.author != null) {
                 history.avatar = dataBean!!.thread?.author?.portrait
                 history.username = dataBean!!.thread?.author?.nameShow
             }
-            historyHelper!!.writeHistory(history)
+            HistoryUtil.writeHistory(history)
         }
         super.finish()
     }
@@ -878,16 +876,16 @@ class ThreadActivity : BaseActivity(), View.OnClickListener {
                 context: Context,
                 threadId: String,
                 postId: String? = null,
-                seeLz: Boolean = false,
+                seeLz: Boolean? = null,
                 from: String? = null,
                 maxPid: String? = null
         ) {
             context.goToActivity<ThreadActivity> {
-                putExtra("tid", threadId)
-                putExtra("pid", postId ?: "")
-                putExtra("seeLz", seeLz)
-                putExtra("from", from ?: "")
-                putExtra("max_pid", maxPid ?: "")
+                putExtra(EXTRA_THREAD_ID, threadId)
+                putExtra(EXTRA_POST_ID, postId ?: "")
+                putExtra(EXTRA_SEE_LZ, seeLz ?: false)
+                putExtra(EXTRA_FROM, from ?: "")
+                putExtra(EXTRA_MAX_PID, maxPid ?: "")
             }
         }
     }

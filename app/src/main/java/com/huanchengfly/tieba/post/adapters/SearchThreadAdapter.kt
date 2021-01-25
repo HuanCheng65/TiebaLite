@@ -6,8 +6,8 @@ import com.huanchengfly.tieba.post.adapters.base.BaseSingleTypeDelegateAdapter
 import com.huanchengfly.tieba.post.api.models.SearchThreadBean
 import com.huanchengfly.tieba.post.components.MyViewHolder
 import com.huanchengfly.tieba.post.fragments.SearchThreadFragment
+import com.huanchengfly.tieba.post.utils.DateTimeUtils
 import com.huanchengfly.tieba.post.utils.ImageUtil
-import com.huanchengfly.tieba.post.utils.TimeUtils
 import com.huanchengfly.tieba.post.utils.getItemBackgroundDrawable
 
 class SearchThreadAdapter(
@@ -25,14 +25,14 @@ class SearchThreadAdapter(
         if (item.forumName == null) {
             viewHolder.setText(
                     R.id.user_content,
-                    TimeUtils.getRelativeTimeString(context, item.time!!)
+                    DateTimeUtils.getRelativeTimeString(context, item.time!!)
             )
         } else {
             viewHolder.setText(
                     R.id.user_content,
                     context.getString(
                             R.string.template_two_string,
-                            TimeUtils.getRelativeTimeString(context, item.time!!),
+                            DateTimeUtils.getRelativeTimeString(context, item.time!!),
                             context.getString(R.string.text_forum_name, item.forumName)
                     )
             )

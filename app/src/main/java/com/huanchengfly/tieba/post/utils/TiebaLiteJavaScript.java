@@ -28,7 +28,7 @@ public class TiebaLiteJavaScript {
 
     @JavascriptInterface
     public String getTimeFromNow(String time) {
-        return TimeUtils.getRelativeTimeString(context, time);
+        return DateTimeUtils.getRelativeTimeString(context, time);
     }
 
     @JavascriptInterface

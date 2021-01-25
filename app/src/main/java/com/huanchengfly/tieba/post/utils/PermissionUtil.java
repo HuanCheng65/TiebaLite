@@ -9,7 +9,6 @@ import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
 
 import com.huanchengfly.tieba.post.R;
-import com.huanchengfly.tieba.post.utils.DialogUtil;
 import com.yanzhenjie.permission.Action;
 import com.yanzhenjie.permission.AndPermission;
 

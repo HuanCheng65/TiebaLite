@@ -34,13 +34,13 @@ import com.huanchengfly.tieba.post.models.PhotoViewBean;
 import com.huanchengfly.tieba.post.models.ReplyInfoBean;
 import com.huanchengfly.tieba.post.utils.AccountUtil;
 import com.huanchengfly.tieba.post.utils.BilibiliUtil;
+import com.huanchengfly.tieba.post.utils.DateTimeUtils;
 import com.huanchengfly.tieba.post.utils.EmotionUtil;
 import com.huanchengfly.tieba.post.utils.ImageUtil;
 import com.huanchengfly.tieba.post.utils.NavigationHelper;
 import com.huanchengfly.tieba.post.utils.StringUtil;
 import com.huanchengfly.tieba.post.utils.ThemeUtil;
 import com.huanchengfly.tieba.post.utils.TiebaUtil;
-import com.huanchengfly.tieba.post.utils.TimeUtils;
 import com.huanchengfly.tieba.post.utils.Util;
 import com.huanchengfly.tieba.post.widgets.MyLinearLayout;
 import com.huanchengfly.tieba.post.widgets.VoicePlayerView;
@@ -202,7 +202,7 @@ public class RecyclerFloorAdapter extends CommonBaseAdapter<SubFloorListBean.Pos
         });
         holder.setOnClickListener(R.id.thread_list_item_reply, view -> showMenu(data, position));
         holder.setText(R.id.thread_list_item_user_name, userInfoBean == null ? "" : StringUtil.getUsernameString(mContext, userInfoBean.getName(), userInfoBean.getNameShow()));
-        holder.setText(R.id.thread_list_item_user_time, TimeUtils.getRelativeTimeString(mContext, data.getTime()));
+        holder.setText(R.id.thread_list_item_user_time, DateTimeUtils.getRelativeTimeString(mContext, data.getTime()));
         if (userInfoBean != null) {
             String levelId = userInfoBean.getLevelId() == null || TextUtils.isEmpty(userInfoBean.getLevelId()) ? "?" : userInfoBean.getLevelId();
             ThemeUtil.setChipThemeByLevel(levelId,

@@ -8,10 +8,10 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.huanchengfly.tieba.post.ui.theme.utils.ThemeUtils;
-import com.huanchengfly.tieba.post.api.models.PersonalizedBean;
 import com.huanchengfly.tieba.post.R;
+import com.huanchengfly.tieba.post.api.models.PersonalizedBean;
 import com.huanchengfly.tieba.post.components.MyViewHolder;
+import com.huanchengfly.tieba.post.ui.theme.utils.ThemeUtils;
 import com.huanchengfly.tieba.post.utils.ThemeUtil;
 
 import java.util.ArrayList;

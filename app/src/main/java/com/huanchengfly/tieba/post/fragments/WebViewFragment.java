@@ -42,7 +42,6 @@ import com.huanchengfly.tieba.post.utils.AccountUtil;
 import com.huanchengfly.tieba.post.utils.AssetUtil;
 import com.huanchengfly.tieba.post.utils.DialogUtil;
 import com.huanchengfly.tieba.post.utils.FileUtil;
-import com.huanchengfly.tieba.post.utils.HistoryHelper;
 import com.huanchengfly.tieba.post.utils.NavigationHelper;
 import com.huanchengfly.tieba.post.utils.ThemeUtil;
 import com.huanchengfly.tieba.post.utils.TiebaLiteJavaScript;
@@ -197,7 +196,6 @@ public class WebViewFragment extends BaseFragment implements DownloadListener {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        HistoryHelper helper = new HistoryHelper(getAttachContext());
         initData();
         Bundle bundle = getArguments();
         navigationHelper = NavigationHelper.newInstance(getAttachContext());

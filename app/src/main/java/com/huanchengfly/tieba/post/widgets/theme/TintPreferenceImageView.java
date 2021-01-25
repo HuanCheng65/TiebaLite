@@ -8,9 +8,9 @@ import android.util.AttributeSet;
 
 import androidx.preference.internal.PreferenceImageView;
 
+import com.huanchengfly.tieba.post.R;
 import com.huanchengfly.tieba.post.ui.theme.interfaces.Tintable;
 import com.huanchengfly.tieba.post.ui.theme.utils.ThemeUtils;
-import com.huanchengfly.tieba.post.R;
 
 @SuppressLint("RestrictedApi")
 public class TintPreferenceImageView extends PreferenceImageView implements Tintable {

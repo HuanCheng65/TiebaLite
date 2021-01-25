@@ -2,9 +2,9 @@ package com.huanchengfly.tieba.post.api.caster;
 
 import android.webkit.URLUtil;
 
+import com.huanchengfly.tieba.post.BaseApplication;
 import com.huanchengfly.tieba.post.api.models.ForumPageBean;
 import com.huanchengfly.tieba.post.api.models.web.ForumBean;
-import com.huanchengfly.tieba.post.BaseApplication;
 
 import java.util.ArrayList;
 import java.util.List;

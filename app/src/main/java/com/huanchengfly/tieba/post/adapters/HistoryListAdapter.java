@@ -12,9 +12,9 @@ import android.widget.TextView;
 
 import com.huanchengfly.tieba.post.R;
 import com.huanchengfly.tieba.post.models.database.History;
-import com.huanchengfly.tieba.post.utils.HistoryHelper;
+import com.huanchengfly.tieba.post.utils.DateTimeUtils;
+import com.huanchengfly.tieba.post.utils.HistoryUtil;
 import com.huanchengfly.tieba.post.utils.ImageUtil;
-import com.huanchengfly.tieba.post.utils.TimeUtils;
 
 import java.util.List;
 
@@ -50,10 +50,9 @@ public class HistoryListAdapter extends BaseAdapter {
         ViewHolder viewHolder;
         if (convertView == null) {
             viewHolder = new ViewHolder();
-            convertView = mInflater.inflate(R.layout.item_history, null);
+            convertView = mInflater.inflate(R.layout.item_history_thread, null);
             viewHolder.titleTextView = convertView.findViewById(R.id.history_item_title);
             viewHolder.timeTextView = convertView.findViewById(R.id.history_item_header_title);
-            viewHolder.iconView = convertView.findViewById(R.id.history_item_icon);
             viewHolder.avatarView = convertView.findViewById(R.id.history_item_avatar);
             convertView.setTag(viewHolder);
         } else {
@@ -63,21 +62,15 @@ public class HistoryListAdapter extends BaseAdapter {
         StringBuilder headerTitle = new StringBuilder();
         viewHolder.titleTextView.setText(bean.getTitle());
         switch (bean.getType()) {
-            case HistoryHelper.TYPE_BA:
-                headerTitle.append("贴吧 · ");
-                viewHolder.iconView.setImageResource(R.drawable.ic_infinite);
+            case HistoryUtil.TYPE_FORUM:
+                headerTitle.append("贴吧");
                 break;
-            case HistoryHelper.TYPE_THREAD:
+            case HistoryUtil.TYPE_THREAD:
                 if (!TextUtils.isEmpty(bean.getUsername())) {
                     headerTitle.append(bean.getUsername());
                     headerTitle.append(" 的");
                 }
-                headerTitle.append("贴子 · ");
-                viewHolder.iconView.setImageResource(R.drawable.ic_inbox);
-                break;
-            default:
-                headerTitle.append("网页 · ");
-                viewHolder.iconView.setImageResource(R.drawable.ic_cisco_webex);
+                headerTitle.append("贴子");
                 break;
         }
         if (!TextUtils.isEmpty(bean.getAvatar())) {
@@ -86,7 +79,7 @@ public class HistoryListAdapter extends BaseAdapter {
         } else {
             viewHolder.avatarView.setVisibility(View.GONE);
         }
-        headerTitle.append(TimeUtils.getRelativeTimeString(mContext, bean.getTimestamp()));
+        headerTitle.append(DateTimeUtils.getRelativeTimeString(mContext, bean.getTimestamp()));
         viewHolder.timeTextView.setText(headerTitle.toString());
         return convertView;
     }
@@ -95,6 +88,5 @@ public class HistoryListAdapter extends BaseAdapter {
         TextView titleTextView;
         ImageView avatarView;
         TextView timeTextView;
-        ImageView iconView;
     }
 }

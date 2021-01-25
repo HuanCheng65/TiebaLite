@@ -17,8 +17,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.snackbar.Snackbar;
-import com.huanchengfly.tieba.post.ui.about.adapter.AboutPageAdapter;
 import com.huanchengfly.tieba.post.R;
+import com.huanchengfly.tieba.post.ui.about.adapter.AboutPageAdapter;
 import com.huanchengfly.tieba.post.utils.Util;
 
 import java.util.ArrayList;

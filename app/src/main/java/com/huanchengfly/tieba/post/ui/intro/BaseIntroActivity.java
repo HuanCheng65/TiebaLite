@@ -8,10 +8,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager.widget.ViewPager;
 
 import com.google.android.material.button.MaterialButton;
+import com.huanchengfly.tieba.post.R;
 import com.huanchengfly.tieba.post.ui.intro.adapters.ViewPagerAdapter;
 import com.huanchengfly.tieba.post.ui.intro.fragments.BaseIntroFragment;
 import com.huanchengfly.tieba.post.ui.intro.widgets.MyViewPager;
-import com.huanchengfly.tieba.post.R;
 
 public abstract class BaseIntroActivity extends AppCompatActivity implements View.OnClickListener, ViewPager.OnPageChangeListener {
     public static final String TAG = BaseIntroActivity.class.getSimpleName();

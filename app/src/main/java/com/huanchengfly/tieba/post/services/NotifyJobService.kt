@@ -12,12 +12,12 @@ import android.content.Intent
 import android.os.Build
 import android.util.Log
 import androidx.core.app.NotificationCompat
-import com.huanchengfly.tieba.post.ui.theme.utils.ThemeUtils
-import com.huanchengfly.tieba.post.api.TiebaApi
-import com.huanchengfly.tieba.post.api.models.MsgBean
 import com.huanchengfly.tieba.post.R
 import com.huanchengfly.tieba.post.activities.MessageActivity
+import com.huanchengfly.tieba.post.api.TiebaApi
+import com.huanchengfly.tieba.post.api.models.MsgBean
 import com.huanchengfly.tieba.post.fragments.MessageFragment
+import com.huanchengfly.tieba.post.ui.theme.utils.ThemeUtils
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response

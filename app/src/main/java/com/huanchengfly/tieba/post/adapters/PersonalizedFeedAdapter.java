@@ -18,11 +18,11 @@ import com.huanchengfly.tieba.post.api.models.ForumPageBean;
 import com.huanchengfly.tieba.post.api.models.PersonalizedBean;
 import com.huanchengfly.tieba.post.components.dialogs.DislikeDialog;
 import com.huanchengfly.tieba.post.models.PhotoViewBean;
+import com.huanchengfly.tieba.post.utils.DateTimeUtils;
 import com.huanchengfly.tieba.post.utils.DisplayUtil;
 import com.huanchengfly.tieba.post.utils.ImageUtil;
 import com.huanchengfly.tieba.post.utils.NavigationHelper;
 import com.huanchengfly.tieba.post.utils.SharedPreferencesUtil;
-import com.huanchengfly.tieba.post.utils.TimeUtils;
 import com.huanchengfly.tieba.post.utils.Util;
 import com.huanchengfly.tieba.post.widgets.MarkedImageView;
 import com.huanchengfly.tieba.post.widgets.VideoPlayerStandard;
@@ -205,7 +205,7 @@ public class PersonalizedFeedAdapter extends MultiBaseAdapter<PersonalizedBean.T
         }
         TextView timeTextView = viewHolder.getView(R.id.forum_item_user_time);
         String relativeTime =
-                TimeUtils.getRelativeTimeString(mContext, threadBean.getLastTimeInt());
+                DateTimeUtils.getRelativeTimeString(mContext, threadBean.getLastTimeInt());
         if (!TextUtils.isEmpty(threadBean.getForumName())) {
             timeTextView.setText(
                     mContext.getString(

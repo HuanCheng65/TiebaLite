@@ -3,15 +3,15 @@ package com.huanchengfly.tieba.post.activities;
 import android.content.Intent;
 import android.os.Build;
 
-import com.huanchengfly.tieba.post.ui.intro.BaseIntroActivity;
-import com.huanchengfly.tieba.post.ui.intro.fragments.AppIntroFragment;
-import com.huanchengfly.tieba.post.ui.theme.utils.ThemeUtils;
 import com.huanchengfly.tieba.post.R;
 import com.huanchengfly.tieba.post.fragments.intro.CustomSettingsFragment;
 import com.huanchengfly.tieba.post.fragments.intro.ExploreFragment;
 import com.huanchengfly.tieba.post.fragments.intro.HabitSettingsFragment;
 import com.huanchengfly.tieba.post.fragments.intro.OtherSettingsFragment;
 import com.huanchengfly.tieba.post.fragments.intro.PermissionFragment;
+import com.huanchengfly.tieba.post.ui.intro.BaseIntroActivity;
+import com.huanchengfly.tieba.post.ui.intro.fragments.AppIntroFragment;
+import com.huanchengfly.tieba.post.ui.theme.utils.ThemeUtils;
 import com.huanchengfly.tieba.post.utils.AccountUtil;
 import com.huanchengfly.tieba.post.utils.SharedPreferencesUtil;
 

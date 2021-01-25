@@ -6,8 +6,8 @@ import android.widget.TextView;
 
 import androidx.core.widget.TextViewCompat;
 
-import com.huanchengfly.tieba.post.api.models.web.HotMessageListBean;
 import com.huanchengfly.tieba.post.R;
+import com.huanchengfly.tieba.post.api.models.web.HotMessageListBean;
 import com.huanchengfly.tieba.post.utils.NavigationHelper;
 import com.huanchengfly.tieba.post.utils.Util;
 import com.othershe.baseadapter.ViewHolder;

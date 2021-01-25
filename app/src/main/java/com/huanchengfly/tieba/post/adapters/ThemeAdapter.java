@@ -13,16 +13,16 @@ import androidx.annotation.ColorInt;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.huanchengfly.tieba.post.ui.theme.interfaces.ExtraRefreshable;
-import com.huanchengfly.tieba.post.ui.theme.utils.ThemeUtils;
+import com.huanchengfly.tieba.post.BaseApplication;
 import com.huanchengfly.tieba.post.R;
 import com.huanchengfly.tieba.post.activities.TranslucentThemeActivity;
-import com.huanchengfly.tieba.post.BaseApplication;
 import com.huanchengfly.tieba.post.components.MyViewHolder;
 import com.huanchengfly.tieba.post.components.dialogs.CustomThemeDialog;
 import com.huanchengfly.tieba.post.interfaces.OnItemClickListener;
-import com.huanchengfly.tieba.post.utils.ThemeUtil;
+import com.huanchengfly.tieba.post.ui.theme.interfaces.ExtraRefreshable;
+import com.huanchengfly.tieba.post.ui.theme.utils.ThemeUtils;
 import com.huanchengfly.tieba.post.utils.ColorUtils;
+import com.huanchengfly.tieba.post.utils.ThemeUtil;
 
 import java.util.Arrays;
 import java.util.List;

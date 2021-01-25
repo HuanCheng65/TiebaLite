@@ -13,12 +13,12 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import com.huanchengfly.tieba.post.api.TiebaApi;
-import com.huanchengfly.tieba.post.api.models.UserPostBean;
-import com.huanchengfly.tieba.post.activities.FloorActivity;
 import com.huanchengfly.tieba.post.R;
+import com.huanchengfly.tieba.post.activities.FloorActivity;
 import com.huanchengfly.tieba.post.activities.ThreadActivity;
 import com.huanchengfly.tieba.post.adapters.UserPostAdapter;
+import com.huanchengfly.tieba.post.api.TiebaApi;
+import com.huanchengfly.tieba.post.api.models.UserPostBean;
 import com.huanchengfly.tieba.post.components.MyLinearLayoutManager;
 import com.huanchengfly.tieba.post.components.dividers.CommonDivider;
 import com.huanchengfly.tieba.post.utils.ThemeUtil;

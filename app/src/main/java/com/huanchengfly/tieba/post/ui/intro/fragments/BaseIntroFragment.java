@@ -12,8 +12,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.huanchengfly.tieba.post.ui.intro.BaseIntroActivity;
 import com.huanchengfly.tieba.post.R;
+import com.huanchengfly.tieba.post.ui.intro.BaseIntroActivity;
 
 public abstract class BaseIntroFragment extends BaseFragment {
     private static final int NO_CUSTOM_LAYOUT = -1;

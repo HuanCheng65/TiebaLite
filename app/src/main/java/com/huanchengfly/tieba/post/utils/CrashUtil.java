@@ -13,8 +13,8 @@ import android.text.TextUtils;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.huanchengfly.tieba.post.activities.MainActivity;
 import com.huanchengfly.tieba.post.BaseApplication;
+import com.huanchengfly.tieba.post.activities.MainActivity;
 
 public class CrashUtil {
     public static final String TAG = "CrashUtil";

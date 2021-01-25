@@ -67,6 +67,9 @@ class ThreadContentBean : BaseBean() {
 
         @SerializedName("thread_info")
         val threadInfo: ThreadInfoBean? = null
+
+        @SerializedName("origin_thread_info")
+        val originThreadInfo: OriginThreadInfo? = null
         val author: UserInfoBean? = null
 
         @SerializedName("reply_num")
@@ -148,6 +151,11 @@ class ThreadContentBean : BaseBean() {
         @SerializedName("has_prev")
         val hasPrev: String? = null
 
+    }
+
+    class OriginThreadInfo {
+        val title: String? = null
+        val content: List<ContentBean>? = null
     }
 
     class PostListItemBean {

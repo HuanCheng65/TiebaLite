@@ -4,8 +4,8 @@ import android.content.Context;
 import android.text.TextUtils;
 import android.view.View;
 
-import com.huanchengfly.tieba.post.api.models.UserLikeForumBean;
 import com.huanchengfly.tieba.post.R;
+import com.huanchengfly.tieba.post.api.models.UserLikeForumBean;
 import com.huanchengfly.tieba.post.utils.ImageUtil;
 import com.othershe.baseadapter.ViewHolder;
 import com.othershe.baseadapter.base.CommonBaseAdapter;

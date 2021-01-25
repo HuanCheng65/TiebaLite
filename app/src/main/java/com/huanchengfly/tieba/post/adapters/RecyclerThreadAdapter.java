@@ -41,6 +41,7 @@ import com.huanchengfly.tieba.post.ui.theme.utils.ThemeUtils;
 import com.huanchengfly.tieba.post.utils.AccountUtil;
 import com.huanchengfly.tieba.post.utils.BilibiliUtil;
 import com.huanchengfly.tieba.post.utils.BlockUtil;
+import com.huanchengfly.tieba.post.utils.DateTimeUtils;
 import com.huanchengfly.tieba.post.utils.DisplayUtil;
 import com.huanchengfly.tieba.post.utils.EmotionUtil;
 import com.huanchengfly.tieba.post.utils.ImageUtil;
@@ -48,7 +49,6 @@ import com.huanchengfly.tieba.post.utils.NavigationHelper;
 import com.huanchengfly.tieba.post.utils.StringUtil;
 import com.huanchengfly.tieba.post.utils.ThemeUtil;
 import com.huanchengfly.tieba.post.utils.TiebaUtil;
-import com.huanchengfly.tieba.post.utils.TimeUtils;
 import com.huanchengfly.tieba.post.utils.Util;
 import com.huanchengfly.tieba.post.widgets.MyImageView;
 import com.huanchengfly.tieba.post.widgets.MyLinearLayout;
@@ -560,7 +560,7 @@ public class RecyclerThreadAdapter extends MultiBaseAdapter<ThreadContentBean.Po
             return true;
         });
         holder.setText(R.id.thread_list_item_user_name, userInfoBean == null ? data.getAuthorId() : StringUtil.getUsernameString(mContext, userInfoBean.getName(), userInfoBean.getNameShow()));
-        holder.setText(R.id.thread_list_item_user_time, mContext.getString(R.string.tip_thread_item, data.getFloor(), TimeUtils.getRelativeTimeString(mContext, data.getTime())));
+        holder.setText(R.id.thread_list_item_user_time, mContext.getString(R.string.tip_thread_item, data.getFloor(), DateTimeUtils.getRelativeTimeString(mContext, data.getTime())));
         holder.setText(R.id.thread_list_item_content_title, data.getTitle());
         holder.setOnClickListener(R.id.thread_list_item_reply, view -> showMenu(data, position));
         if ("1".equals(data.getFloor()))

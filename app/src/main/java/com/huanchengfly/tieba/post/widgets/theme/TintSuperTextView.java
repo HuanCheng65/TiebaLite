@@ -7,10 +7,10 @@ import android.util.AttributeSet;
 import android.util.Log;
 
 import com.allen.library.SuperTextView;
+import com.huanchengfly.tieba.post.R;
 import com.huanchengfly.tieba.post.ui.theme.interfaces.Tintable;
 import com.huanchengfly.tieba.post.ui.theme.utils.ColorStateListUtils;
 import com.huanchengfly.tieba.post.ui.theme.utils.ThemeUtils;
-import com.huanchengfly.tieba.post.R;
 
 public class TintSuperTextView extends SuperTextView implements Tintable {
     public static final String TAG = "TintSuperTextView";

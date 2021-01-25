@@ -10,10 +10,10 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.google.android.material.appbar.AppBarLayout;
+import com.huanchengfly.tieba.post.R;
+import com.huanchengfly.tieba.post.adapters.HotMessageListAdapter;
 import com.huanchengfly.tieba.post.api.TiebaApi;
 import com.huanchengfly.tieba.post.api.models.web.HotMessageListBean;
-import com.huanchengfly.tieba.post.adapters.HotMessageListAdapter;
-import com.huanchengfly.tieba.post.R;
 import com.huanchengfly.tieba.post.components.MyLinearLayoutManager;
 import com.huanchengfly.tieba.post.components.dividers.CommonDivider;
 import com.huanchengfly.tieba.post.utils.DisplayUtil;

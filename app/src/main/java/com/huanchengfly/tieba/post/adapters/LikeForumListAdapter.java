@@ -11,8 +11,8 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-import com.huanchengfly.tieba.post.api.models.ForumRecommend;
 import com.huanchengfly.tieba.post.R;
+import com.huanchengfly.tieba.post.api.models.ForumRecommend;
 import com.huanchengfly.tieba.post.components.MyLinearLayoutManager;
 import com.huanchengfly.tieba.post.components.MyViewHolder;
 import com.huanchengfly.tieba.post.components.dividers.HorizontalSpacesDecoration;

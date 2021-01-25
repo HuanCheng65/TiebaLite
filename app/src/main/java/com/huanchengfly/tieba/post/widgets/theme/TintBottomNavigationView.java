@@ -7,10 +7,10 @@ import android.content.res.TypedArray;
 import android.util.AttributeSet;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.huanchengfly.tieba.post.R;
 import com.huanchengfly.tieba.post.ui.theme.interfaces.Tintable;
 import com.huanchengfly.tieba.post.ui.theme.utils.ColorStateListUtils;
 import com.huanchengfly.tieba.post.ui.theme.utils.ThemeUtils;
-import com.huanchengfly.tieba.post.R;
 
 public class TintBottomNavigationView extends BottomNavigationView implements Tintable {
     private int mBackgroundTintResId;

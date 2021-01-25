@@ -1,9 +1,7 @@
 package com.huanchengfly.tieba.post.adapters.base
 
 import android.content.Context
-import android.view.View
 import android.view.ViewGroup
-import com.alibaba.android.vlayout.LayoutHelper
 import com.huanchengfly.tieba.post.components.MyViewHolder
 
 abstract class BaseSingleTypeAdapter<Item>(

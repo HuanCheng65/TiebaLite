@@ -1,7 +1,7 @@
 package com.huanchengfly.tieba.post.api.models
 
-import com.huanchengfly.tieba.post.models.BaseBean
 import com.google.gson.annotations.SerializedName
+import com.huanchengfly.tieba.post.models.BaseBean
 
 class AgreeBean : BaseBean() {
     @SerializedName("error_code")

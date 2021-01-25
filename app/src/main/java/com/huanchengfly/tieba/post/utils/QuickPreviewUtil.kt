@@ -4,12 +4,12 @@ import android.content.Context
 import android.net.Uri
 import android.text.TextUtils
 import androidx.annotation.DrawableRes
+import com.huanchengfly.tieba.post.R
 import com.huanchengfly.tieba.post.api.TiebaApi
 import com.huanchengfly.tieba.post.api.interfaces.CommonCallback
 import com.huanchengfly.tieba.post.api.models.ForumPageBean
 import com.huanchengfly.tieba.post.api.models.ThreadContentBean
 import com.huanchengfly.tieba.post.api.retrofit.exception.TiebaException
-import com.huanchengfly.tieba.post.R
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response

@@ -23,12 +23,12 @@ import com.huanchengfly.tieba.post.api.models.ForumPageBean;
 import com.huanchengfly.tieba.post.components.MyViewHolder;
 import com.huanchengfly.tieba.post.models.PhotoViewBean;
 import com.huanchengfly.tieba.post.utils.BlockUtil;
+import com.huanchengfly.tieba.post.utils.DateTimeUtils;
 import com.huanchengfly.tieba.post.utils.DisplayUtil;
 import com.huanchengfly.tieba.post.utils.ImageUtil;
 import com.huanchengfly.tieba.post.utils.NavigationHelper;
 import com.huanchengfly.tieba.post.utils.SharedPreferencesUtil;
 import com.huanchengfly.tieba.post.utils.StringUtil;
-import com.huanchengfly.tieba.post.utils.TimeUtils;
 import com.huanchengfly.tieba.post.utils.Util;
 import com.huanchengfly.tieba.post.utils.preload.PreloadUtil;
 import com.huanchengfly.tieba.post.utils.preload.loaders.ThreadContentLoader;
@@ -209,7 +209,7 @@ public class NewForumAdapter extends BaseMultiTypeDelegateAdapter<ForumPageBean.
                 NavigationHelper.toUserSpaceWithAnim(getContext(), userBean.getId(), userBean.getPortrait(), v);
             });
             viewHolder.setText(R.id.forum_item_user_name, StringUtil.getUsernameString(getContext(), userBean.getName(), userBean.getNameShow()));
-            viewHolder.setText(R.id.forum_item_user_time, TimeUtils.getRelativeTimeString(getContext(), threadBean.getLastTimeInt()));
+            viewHolder.setText(R.id.forum_item_user_time, DateTimeUtils.getRelativeTimeString(getContext(), threadBean.getLastTimeInt()));
             ImageUtil.load(viewHolder.getView(R.id.forum_item_user_avatar), ImageUtil.LOAD_TYPE_AVATAR, userBean.getPortrait());
         }
         switch (type) {

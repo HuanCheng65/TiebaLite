@@ -16,16 +16,16 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.browser.customtabs.CustomTabsIntent;
 
-import com.huanchengfly.tieba.post.ui.theme.utils.ThemeUtils;
+import com.huanchengfly.tieba.post.R;
 import com.huanchengfly.tieba.post.activities.FloorActivity;
 import com.huanchengfly.tieba.post.activities.ForumActivity;
-import com.huanchengfly.tieba.post.R;
-import com.huanchengfly.tieba.post.activities.ThreadActivity;
-import com.huanchengfly.tieba.post.activities.WebViewActivity;
 import com.huanchengfly.tieba.post.activities.LoginActivity;
+import com.huanchengfly.tieba.post.activities.ThreadActivity;
 import com.huanchengfly.tieba.post.activities.UserActivity;
+import com.huanchengfly.tieba.post.activities.WebViewActivity;
 import com.huanchengfly.tieba.post.components.dialogs.PermissionDialog;
 import com.huanchengfly.tieba.post.models.PermissionBean;
+import com.huanchengfly.tieba.post.ui.theme.utils.ThemeUtils;
 
 import java.net.URISyntaxException;
 import java.util.List;

@@ -5,8 +5,8 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 
-import com.huanchengfly.tieba.post.api.models.NewUpdateBean;
 import com.huanchengfly.tieba.post.R;
+import com.huanchengfly.tieba.post.api.models.NewUpdateBean;
 
 import java.util.ArrayList;
 import java.util.List;
