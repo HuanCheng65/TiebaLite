@@ -102,6 +102,18 @@
             android:key="loadPictureWhenScroll"
             android:title="@string/title_load_picture_when_scroll" />
 
+        <SwitchPreference
+            android:icon="@drawable/ic_round_view_carousel_white"
+            android:defaultValue="false"
+            android:key="homePageScroll"
+            android:title="@string/title_home_page_scroll" />
+
+        <SwitchPreference
+            android:icon="@drawable/ic_round_whatshot"
+            android:defaultValue="true"
+            android:key="showHotMessageList"
+            android:title="@string/title_show_hot_message_list" />
+
         <Preference
             android:enabled="false"
             android:layout="@layout/layout_preference_bottom" />

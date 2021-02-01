@@ -32,6 +32,8 @@ open class AppPreferencesUtils(context: Context) {
 
     var hideExplore by SharedPreferenceDelegates.boolean(defaultValue = false)
 
+    var homePageScroll by SharedPreferenceDelegates.boolean(defaultValue = false)
+
     var imageLoadType by SharedPreferenceDelegates.string(key = "image_load_type", defaultValue = "0")
 
     var listSingle by SharedPreferenceDelegates.boolean(defaultValue = false)
@@ -47,6 +49,8 @@ open class AppPreferencesUtils(context: Context) {
     var signDay by SharedPreferenceDelegates.int(defaultValue = -1, key = "sign_day")
 
     var showBothUsernameAndNickname by SharedPreferenceDelegates.boolean(defaultValue = false, key = "show_both_username_and_nickname")
+
+    var showHotMessageList by SharedPreferenceDelegates.boolean(defaultValue = true)
 
     var showShortcutInThread by SharedPreferenceDelegates.boolean(defaultValue = true)
 

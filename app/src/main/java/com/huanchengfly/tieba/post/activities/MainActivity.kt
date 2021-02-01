@@ -142,7 +142,7 @@ open class MainActivity : BaseActivity(), BottomNavigationView.OnNavigationItemS
         }
         mAdapter.addFragment(MessageFragment.newInstance(MessageFragment.TYPE_REPLY_ME, true))
         mAdapter.addFragment(MyInfoFragment())
-        mViewPager.isCanScroll = false
+        mViewPager.isCanScroll = appPreferences.homePageScroll
         mViewPager.adapter = mAdapter
         mViewPager.offscreenPageLimit = mAdapter.count
     }
