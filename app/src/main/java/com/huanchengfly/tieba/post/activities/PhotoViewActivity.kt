@@ -170,9 +170,7 @@ class PhotoViewActivity : BaseActivity(), OnChangeBottomBarVisibilityListener, T
         }
     }
 
-    override fun isNeedImmersionBar(): Boolean {
-        return false
-    }
+    override val isNeedImmersionBar: Boolean = false
 
     override fun finish() {
         super.finish()

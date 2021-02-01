@@ -19,8 +19,8 @@
 
         <ImageView
             android:id="@+id/message_list_item_user_avatar"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
+            android:layout_width="@dimen/size_avatar_small"
+            android:layout_height="@dimen/size_avatar_small"
             android:layout_marginEnd="4dp"
             android:contentDescription="@string/tip_avatar"
             android:layout_centerVertical="true"

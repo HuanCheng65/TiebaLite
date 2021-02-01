@@ -109,7 +109,7 @@ public class ReplyActivity extends BaseActivity implements View.OnClickListener 
     }
 
     @Override
-    protected int getLayoutId() {
+    public int getLayoutId() {
         return R.layout.activity_reply;
     }
 

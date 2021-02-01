@@ -169,6 +169,10 @@
         <item name="paddingStart">0dp</item>
     </style>
 
+    <style name="TextAppearance.Normal">
+        <item name="android:textStyle">normal</item>
+    </style>
+
     <style name="TextAppearance.Bold">
         <item name="android:textStyle">bold</item>
     </style>
@@ -405,7 +409,7 @@
         <item name="colorWindowBackground">@color/theme_color_window_background_light</item>
         <item name="colorUnselected">@color/colorUnselected</item>
         <item name="colorNavBar">@color/white</item>
-        <item name="colorFloorCard">@color/colorFloorCard</item>
+        <item name="colorFloorCard">@color/default_color_floor_card</item>
         <item name="colorCard">@color/white</item>
         <item name="shadow_color">@color/color_shadow</item>
         <item name="color_toolbar_item_secondary">@color/white</item>

@@ -200,7 +200,6 @@ public class RecyclerFloorAdapter extends CommonBaseAdapter<SubFloorListBean.Pos
             showMenu(data, position);
             return true;
         });
-        holder.setOnClickListener(R.id.thread_list_item_reply, view -> showMenu(data, position));
         holder.setText(R.id.thread_list_item_user_name, userInfoBean == null ? "" : StringUtil.getUsernameString(mContext, userInfoBean.getName(), userInfoBean.getNameShow()));
         holder.setText(R.id.thread_list_item_user_time, DateTimeUtils.getRelativeTimeString(mContext, data.getTime()));
         if (userInfoBean != null) {
@@ -215,7 +214,6 @@ public class RecyclerFloorAdapter extends CommonBaseAdapter<SubFloorListBean.Pos
             });
             ImageUtil.load(holder.getView(R.id.thread_list_item_user_avatar), ImageUtil.LOAD_TYPE_AVATAR, userInfoBean.getPortrait());
         }
-        holder.setVisibility(R.id.thread_list_item_content_title, View.GONE);
         initContentView(holder, data);
     }
 

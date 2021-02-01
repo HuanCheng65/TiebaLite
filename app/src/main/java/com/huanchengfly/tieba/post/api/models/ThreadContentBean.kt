@@ -81,6 +81,9 @@ class ThreadContentBean : BaseBean() {
         @SerializedName("agree_num")
         val agreeNum: String? = null
 
+        @SerializedName("create_time")
+        val createTime: String? = null
+
         @SerializedName("post_id")
         val postId: String? = null
 
@@ -164,6 +167,7 @@ class ThreadContentBean : BaseBean() {
         val floor: String? = null
         val time: String? = null
         val content: List<ContentBean>? = null
+        val agree: AgreeBean? = null
 
         @SerializedName("author_id")
         val authorId: String? = null
@@ -182,7 +186,7 @@ class ThreadContentBean : BaseBean() {
         val pid: String? = null
 
         @SerializedName("sub_post_list")
-        val subPostList: List<PostListItemBean>? = null
+        val subPostList: MutableList<PostListItemBean>? = null
 
     }
 

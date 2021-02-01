@@ -42,7 +42,7 @@ public class AboutActivity extends BaseActivity implements View.OnClickListener 
     private NavigationHelper navigationHelper;
 
     @Override
-    protected int getLayoutId() {
+    public int getLayoutId() {
         return R.layout.activity_about;
     }
 

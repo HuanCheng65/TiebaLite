@@ -26,6 +26,9 @@
         android:layout_height="match_parent" />
 
     <com.huanchengfly.tieba.post.components.LoadMoreFooter
+        android:layout_marginStart="@dimen/card_margin"
+        android:layout_marginEnd="@dimen/card_margin"
+        android:layout_marginBottom="@dimen/card_margin"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 

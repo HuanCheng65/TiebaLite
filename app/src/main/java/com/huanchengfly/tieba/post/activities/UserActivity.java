@@ -72,7 +72,7 @@ public class UserActivity extends BaseActivity {
     private int tab;
 
     @Override
-    protected int getLayoutId() {
+    public int getLayoutId() {
         return R.layout.activity_user;
     }
 

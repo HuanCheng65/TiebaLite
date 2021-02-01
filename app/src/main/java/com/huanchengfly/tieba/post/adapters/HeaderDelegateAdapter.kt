@@ -192,7 +192,7 @@ class HeaderDelegateAdapter @JvmOverloads constructor(
         rootView.backgroundTintList = ColorStateListUtils.createColorStateList(context, backgroundTintList)
         holder.getView<TintImageView>(R.id.icon).setTintListResId(iconTintList)
         holder.getView<TintImageView>(R.id.end_icon).setTintListResId(iconTintList)
-        holder.getView<TintTextView>(R.id.title).setTintResId(titleTextColor)
+        holder.getView<TintTextView>(R.id.title).tintResId = titleTextColor
         holder.setImageDrawable(R.id.icon, startIconDrawable)
         holder.setVisibility(R.id.icon, if (startIconDrawable == null) View.GONE else View.VISIBLE)
         holder.setImageDrawable(R.id.end_icon, endIconDrawable)

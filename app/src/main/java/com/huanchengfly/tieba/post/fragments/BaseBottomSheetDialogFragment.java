@@ -81,7 +81,7 @@ public abstract class BaseBottomSheetDialogFragment extends BottomSheetDialogFra
         Dialog dialog = getDialog();
         if (dialog != null) {
             View bottomSheet = dialog.findViewById(R.id.design_bottom_sheet);
-            bottomSheet.getLayoutParams().height = ViewGroup.LayoutParams.MATCH_PARENT;
+            bottomSheet.getLayoutParams().height = ViewGroup.LayoutParams.WRAP_CONTENT;
         }
         final View view = getView();
         if (view != null) {

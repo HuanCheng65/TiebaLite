@@ -9,7 +9,6 @@
     <color name="transparent">#00000000</color>
     <color name="color_place_holder">#FFF0F0F0</color>
     <color name="color_place_holder_night">#99000000</color>
-    <color name="colorFloorCard">#FFF0F3F5</color>
     <color name="color_shadow">#FEE9E9E9</color>
 
     <color name="t">#00BFA5</color>
@@ -52,11 +51,13 @@
     <color name="default_color_toolbar_item_active">#FF4477E0</color>
     <color name="default_color_toolbar_bar">#E6F2F7FB</color>
     <color name="default_color_on_toolbar_bar">#6654585B</color>
+    <color name="default_color_nav_bar_surface">#FFF3F7F9</color>
+    <color name="default_color_on_nav_bar_surface">#FF8D9194</color>
     <color name="default_color_background">#FFFFFFFF</color>
     <color name="default_color_window_background">#FFF3F7F9</color>
     <color name="default_color_nav">#FFFFFFFF</color>
     <color name="default_color_unselected">#FF6E7486</color>
-    <color name="default_color_floor_card">#FFF0F3F5</color>
+    <color name="default_color_floor_card">#FFF3F7F9</color>
     <color name="default_color_card">#FFFFFFFF</color>
     <color name="default_color_divider">#FFF7FBFE</color>
     <color name="default_color_shadow">#FEE9E9E9</color>
@@ -114,6 +115,12 @@
     <color name="theme_color_on_toolbar_bar_light">#6654585B</color>
     <color name="theme_color_on_toolbar_bar_dark">#FF8C96A0</color>
 
+    <color name="theme_color_nav_bar_surface_light">#FFF3F7F9</color>
+    <color name="theme_color_nav_bar_surface_dark">#A110161C</color>
+
+    <color name="theme_color_on_nav_bar_surface_light">#FF8D9194</color>
+    <color name="theme_color_on_nav_bar_surface_dark">#FF8C96A0</color>
+
     <color name="theme_color_background_light">#FFFFFFFF</color>
     <color name="theme_color_background_dark">#FF131D28</color>
     <color name="theme_color_background_grey_dark">#FF212121</color>
@@ -136,7 +143,7 @@
     <color name="theme_color_unselected_grey_dark">#FF5C5C5C</color>
     <color name="theme_color_unselected_amoled_dark">#FF415C68</color>
 
-    <color name="theme_color_floor_card_light">@color/colorFloorCard</color>
+    <color name="theme_color_floor_card_light">#FFF3F7F9</color>
     <color name="theme_color_floor_card_translucent_light">#15FFFFFF</color>
     <color name="theme_color_floor_card_translucent_dark">#2A000000</color>
     <color name="theme_color_floor_card_dark">#FF1A2A39</color>

@@ -29,6 +29,8 @@ class HistoryActivity : BaseActivity() {
     @BindView(R.id.tab_layout)
     lateinit var tabLayout: TabLayout
 
+    var loaded = false
+
     private val viewPagerAdapter by lazy { FragmentTabViewPagerAdapter(supportFragmentManager) }
 
     override fun getLayoutId(): Int = R.layout.activity_history
@@ -45,6 +47,12 @@ class HistoryActivity : BaseActivity() {
         viewPagerAdapter.addFragment(HistoryFragment.newInstance(HistoryUtil.TYPE_FORUM), getString(R.string.title_history_forum))
         viewPager.adapter = viewPagerAdapter
         tabLayout.setupWithViewPager(viewPager)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        if (loaded) refreshData()
+        loaded = true
     }
 
     private fun refreshData() {

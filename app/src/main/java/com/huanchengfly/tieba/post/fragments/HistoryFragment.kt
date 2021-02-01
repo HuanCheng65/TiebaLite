@@ -53,16 +53,17 @@ class HistoryFragment : BaseFragment(), OnItemClickListener<History>, Refreshabl
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         todayHistoryAdapter.setOnItemClickListener(this)
+        beforeHistoryAdapter.setOnItemClickListener(this)
         recyclerView.layoutManager = virtualLayoutManager
         recyclerView.adapter = delegateAdapter
         refresh()
     }
 
     private fun refresh() {
-        HistoryUtil.getAllAsync(type).listen {
+        HistoryUtil.getAllAsync(type).listen { list ->
             val today = mutableListOf<History>()
             val before = mutableListOf<History>()
-            it.forEach {
+            list.forEach {
                 if (DateTimeUtils.isToday(it.timestamp)) {
                     today.add(it)
                 } else {
@@ -106,6 +107,7 @@ class HistoryFragment : BaseFragment(), OnItemClickListener<History>, Refreshabl
                 })
                 delegateAdapter.addAdapter(beforeHistoryAdapter)
             }
+            delegateAdapter.notifyDataSetChanged()
         }
     }
 

@@ -12,7 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.huanchengfly.tieba.post.R;
 import com.huanchengfly.tieba.post.adapters.RecyclerFloorAdapter;
-import com.huanchengfly.tieba.post.adapters.RecyclerThreadAdapter;
+import com.huanchengfly.tieba.post.adapters.ThreadReplyAdapter;
 import com.huanchengfly.tieba.post.ui.theme.interfaces.Tintable;
 import com.huanchengfly.tieba.post.ui.theme.utils.ThemeUtils;
 import com.huanchengfly.tieba.post.utils.DisplayUtil;
@@ -40,7 +40,7 @@ public class ThreadDivider extends RecyclerView.ItemDecoration implements Tintab
         if (adapter instanceof RecyclerFloorAdapter) {
             return position == 0;
         }
-        return (type == 200000 || type == RecyclerThreadAdapter.TYPE_THREAD);
+        return (type == 200000 || type == ThreadReplyAdapter.TYPE_THREAD);
     }
 
     @Override
@@ -82,11 +82,11 @@ public class ThreadDivider extends RecyclerView.ItemDecoration implements Tintab
                     } else {
                         int leftInner;
                         int nextType = adapter.getItemViewType(adapterPosition + 1);
-                        if (adapter instanceof RecyclerThreadAdapter) {
+                        if (adapter instanceof ThreadReplyAdapter) {
                             if (nextType == 100002) {
                                 leftInner = 0;
                             } else {
-                                leftInner = DisplayUtil.dp2px(mContext, ((RecyclerThreadAdapter) adapter).isImmersive() ? 16 : 50);
+                                leftInner = DisplayUtil.dp2px(mContext, ((ThreadReplyAdapter) adapter).isPureRead() ? 16 : 50);
                             }
                         } else {
                             if (nextType == 100002) {

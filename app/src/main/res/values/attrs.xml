@@ -9,6 +9,8 @@
         <attr name="colorToolbarItemActive" format="color" />
         <attr name="colorToolbarBar" format="color" />
         <attr name="colorOnToolbarBar" format="color" />
+        <attr name="colorNavBarSurface" format="color" />
+        <attr name="colorOnNavBarSurface" format="color" />
         <attr name="colorText" format="color" />
         <attr name="colorTextOnPrimary" format="color" />
         <attr name="colorTextSecondary" format="color" />
@@ -45,6 +47,16 @@
         <attr name="backgroundTint" />
         <attr name="radioButtonTint" format="color" />
         <attr name="tint" />
+    </declare-styleable>
+
+    <declare-styleable name="LoadMoreFooter">
+        <attr name="backgroundTint" />
+        <attr name="radius" format="dimension" />
+        <attr name="footerSpinnerStyle" format="enum">
+            <enum name="scale" value="0" />
+            <enum name="translate" value="1" />
+            <enum name="fixedBehind" value="2" />
+        </attr>
     </declare-styleable>
 
     <declare-styleable name="TintView">

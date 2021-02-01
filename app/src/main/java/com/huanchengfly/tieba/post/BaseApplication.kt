@@ -411,6 +411,20 @@ class BaseApplication : Application() {
                         context.getColorCompat(R.color.theme_color_on_toolbar_bar_light)
                     }
                 }
+                R.attr.colorNavBarSurface -> {
+                    return if (ThemeUtil.isNightMode(context)) {
+                        context.getColorCompat(R.color.theme_color_nav_bar_surface_dark)
+                    } else {
+                        context.getColorCompat(R.color.theme_color_nav_bar_surface_light)
+                    }
+                }
+                R.attr.colorOnNavBarSurface -> {
+                    return if (ThemeUtil.isNightMode(context)) {
+                        context.getColorCompat(R.color.theme_color_on_nav_bar_surface_dark)
+                    } else {
+                        context.getColorCompat(R.color.theme_color_on_nav_bar_surface_light)
+                    }
+                }
             }
             return Util.getColorByAttr(context, attrId, R.color.transparent)
         }
@@ -431,6 +445,8 @@ class BaseApplication : Application() {
                 R.color.default_color_toolbar_item_secondary -> return getColorByAttr(context, R.attr.color_toolbar_item_secondary)
                 R.color.default_color_toolbar_bar -> return getColorByAttr(context, R.attr.colorToolbarBar)
                 R.color.default_color_on_toolbar_bar -> return getColorByAttr(context, R.attr.colorOnToolbarBar)
+                R.color.default_color_nav_bar_surface -> return getColorByAttr(context, R.attr.colorNavBarSurface)
+                R.color.default_color_on_nav_bar_surface -> return getColorByAttr(context, R.attr.colorOnNavBarSurface)
                 R.color.default_color_card -> return getColorByAttr(context, R.attr.colorCard)
                 R.color.default_color_floor_card -> return getColorByAttr(context, R.attr.colorFloorCard)
                 R.color.default_color_nav -> return getColorByAttr(context, R.attr.colorNavBar)

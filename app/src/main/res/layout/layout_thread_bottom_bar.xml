@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.huanchengfly.tieba.post.widgets.theme.TintLinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="horizontal"
+    android:layout_gravity="bottom"
+    android:elevation="4dp"
+    app:backgroundTint="@color/default_color_nav"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/thread_bottom_bar_height">
+
+    <com.huanchengfly.tieba.post.widgets.theme.TintRelativeLayout
+        android:layout_marginBottom="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginStart="8dp"
+        android:id="@+id/thread_reply_bar"
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:background="@drawable/bg_radius_8dp_ripple"
+        app:backgroundTint="@color/default_color_nav_bar_surface"
+        android:layout_height="match_parent"
+        android:paddingStart="8dp"
+        android:paddingEnd="8dp">
+
+        <com.huanchengfly.tieba.post.widgets.theme.TintImageView
+            android:id="@+id/thread_reply_bar_icon"
+            android:layout_width="22dp"
+            android:layout_height="22dp"
+            android:layout_centerVertical="true"
+            app:tint="@color/default_color_on_nav_bar_surface"
+            app:srcCompat="@drawable/ic_insert_emoticon"
+            tools:ignore="ContentDescription" />
+
+        <com.huanchengfly.tieba.post.widgets.theme.TintTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_centerVertical="true"
+            android:text="@string/tip_thread_reply"
+            android:textStyle="bold"
+            app:tint="@color/default_color_on_nav_bar_surface"
+            android:layout_toEndOf="@id/thread_reply_bar_icon" />
+    </com.huanchengfly.tieba.post.widgets.theme.TintRelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/thread_bottom_bar_agree"
+        android:layout_marginStart="8dp"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:background="?attr/selectableItemBackground">
+
+        <com.huanchengfly.tieba.post.widgets.theme.TintImageView
+            android:id="@+id/thread_bottom_bar_agree_btn"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="8dp"
+            android:background="@color/transparent"
+            android:contentDescription="@string/title_agree"
+            app:srcCompat="@drawable/ic_outline_like"
+            app:tint="@color/default_color_text" />
+
+        <com.huanchengfly.tieba.post.widgets.theme.TintTextView
+            android:id="@+id/thread_bottom_bar_agree_num"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@id/thread_bottom_bar_agree_btn"
+            android:layout_toEndOf="@id/thread_bottom_bar_agree_btn"
+            android:layout_marginEnd="8dp"
+            android:textSize="10sp"
+            android:textStyle="bold"
+            app:tint="@color/default_color_text_secondary"
+            tools:ignore="HardcodedText,SmallSp"
+            tools:text="666" />
+    </RelativeLayout>
+
+    <com.huanchengfly.tieba.post.widgets.theme.TintImageView
+        android:id="@+id/thread_bottom_bar_more_btn"
+        android:paddingStart="8dp"
+        android:paddingEnd="8dp"
+        app:srcCompat="@drawable/ic_more_horiz"
+        android:layout_width="40dp"
+        android:layout_height="match_parent"
+        android:background="?attr/selectableItemBackground" />
+</com.huanchengfly.tieba.post.widgets.theme.TintLinearLayout>

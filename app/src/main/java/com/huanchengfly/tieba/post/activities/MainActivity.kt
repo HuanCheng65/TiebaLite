@@ -392,7 +392,7 @@ open class MainActivity : BaseActivity(), BottomNavigationView.OnNavigationItemS
         }
     }
 
-    override fun setTitle(newTitle: String) {
+    override fun setTitle(newTitle: String?) {
         mToolbar.title = newTitle
     }
 

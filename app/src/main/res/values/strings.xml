@@ -413,4 +413,12 @@
     <string name="text_badge_history_forum">贴吧</string>
     <string name="title_history_thread">贴子记录</string>
     <string name="title_history_forum">经过贴吧</string>
+    <string name="tip_thread_item_thread">发布于 %1$s</string>
+    <string name="title_all_reply">全部</string>
+    <string name="title_thread_header">回复 %1$s</string>
+    <string name="btn_agree_post">%1$s 赞</string>
+    <string name="btn_agree_post_default">赞</string>
+    <string name="btn_reply_post">%1$s 回复</string>
+    <string name="btn_reply_post_default">回复</string>
+    <string name="title_home_page_scroll">首页滑动切换页面</string>
 </resources>

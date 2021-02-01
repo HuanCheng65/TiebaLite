@@ -9,6 +9,8 @@ import android.widget.TextView
 import butterknife.BindView
 import butterknife.ButterKnife
 import com.huanchengfly.tieba.post.R
+import com.huanchengfly.tieba.post.getColorStateListCompat
+import com.huanchengfly.tieba.post.ui.theme.utils.ColorStateListUtils
 import com.huanchengfly.tieba.post.utils.getRadiusDrawable
 import com.scwang.smart.refresh.layout.api.RefreshFooter
 import com.scwang.smart.refresh.layout.api.RefreshLayout
@@ -19,7 +21,18 @@ import com.scwang.smart.refresh.layout.simple.SimpleComponent
 class LoadMoreFooter @JvmOverloads constructor(
         context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
 ) : SimpleComponent(context, attrs, defStyleAttr), RefreshFooter {
-    protected var noMoreData = false
+    private var noMoreData = false
+    private var backgroundTintRes: Int = 0
+        set(value) {
+            field = value
+            invalidateBackground()
+        }
+    private var radius: Float = 0f
+        set(value) {
+            field = value
+            invalidateBackground()
+        }
+    private val spinnerStyle: SpinnerStyle
 
     @BindView(R.id.footer_progress)
     lateinit var progress: ProgressBar
@@ -93,8 +106,33 @@ class LoadMoreFooter @JvmOverloads constructor(
         gravity = Gravity.CENTER
         View.inflate(context, R.layout.footer_load_more, this)
         ButterKnife.bind(this)
-        val radius = resources.getDimension(R.dimen.card_radius)
+        if (attrs != null) {
+            val array = getContext().obtainStyledAttributes(attrs, R.styleable.LoadMoreFooter, defStyleAttr, 0)
+            radius = array.getDimension(R.styleable.LoadMoreFooter_radius, resources.getDimension(R.dimen.card_radius))
+            backgroundTintRes = array.getResourceId(R.styleable.LoadMoreFooter_backgroundTint, 0)
+            spinnerStyle = when (array.getInteger(R.styleable.LoadMoreFooter_footerSpinnerStyle, 1)) {
+                0 -> SpinnerStyle.Scale
+                2 -> SpinnerStyle.FixedBehind
+                else -> SpinnerStyle.Translate
+            }
+            array.recycle()
+        } else {
+            spinnerStyle = SpinnerStyle.Translate
+        }
+        invalidateBackground()
+    }
+
+    private fun invalidateBackground() {
         backgroundView.background = getRadiusDrawable(radius, radius, radius, radius)
+        backgroundView.backgroundTintList = if (backgroundTintRes != 0) {
+            if (isInEditMode) {
+                context.getColorStateListCompat(backgroundTintRes)
+            } else {
+                ColorStateListUtils.createColorStateList(context, backgroundTintRes)
+            }
+        } else {
+            null
+        }
     }
 
     override fun getView(): View {
@@ -102,6 +140,6 @@ class LoadMoreFooter @JvmOverloads constructor(
     }
 
     override fun getSpinnerStyle(): SpinnerStyle {
-        return SpinnerStyle.Translate
+        return spinnerStyle
     }
 }

@@ -11,24 +11,26 @@ import android.net.Uri
 import android.os.Bundle
 import android.text.InputType
 import android.text.TextUtils
-import android.view.Menu
+import android.util.Log
 import android.view.MenuItem
 import android.view.View
 import android.widget.ImageView
-import android.widget.RelativeLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.widget.Toolbar
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.OnChildAttachStateChangeListener
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import butterknife.BindView
 import cn.jzvd.Jzvd
+import com.alibaba.android.vlayout.DelegateAdapter
+import com.alibaba.android.vlayout.VirtualLayoutManager
 import com.billy.android.preloader.PreLoader
 import com.bumptech.glide.Glide
 import com.google.android.material.snackbar.Snackbar
 import com.huanchengfly.tieba.post.R
-import com.huanchengfly.tieba.post.adapters.RecyclerThreadAdapter
+import com.huanchengfly.tieba.post.adapters.ThreadHeaderAdapter
+import com.huanchengfly.tieba.post.adapters.ThreadMainPostAdapter
+import com.huanchengfly.tieba.post.adapters.ThreadReplyAdapter
 import com.huanchengfly.tieba.post.api.TiebaApi
 import com.huanchengfly.tieba.post.api.interfaces.CommonAPICallback
 import com.huanchengfly.tieba.post.api.models.AgreeBean
@@ -36,49 +38,67 @@ import com.huanchengfly.tieba.post.api.models.CommonResponse
 import com.huanchengfly.tieba.post.api.models.ThreadContentBean
 import com.huanchengfly.tieba.post.api.models.ThreadContentBean.PostListItemBean
 import com.huanchengfly.tieba.post.api.retrofit.exception.TiebaException
-import com.huanchengfly.tieba.post.components.MyLinearLayoutManager
+import com.huanchengfly.tieba.post.components.FillVirtualLayoutManager
 import com.huanchengfly.tieba.post.components.dialogs.EditTextDialog
-import com.huanchengfly.tieba.post.components.dividers.ThreadDivider
+import com.huanchengfly.tieba.post.fragments.ThreadMenuFragment
 import com.huanchengfly.tieba.post.goToActivity
 import com.huanchengfly.tieba.post.models.ReplyInfoBean
 import com.huanchengfly.tieba.post.models.ThreadHistoryInfoBean
 import com.huanchengfly.tieba.post.models.database.History
+import com.huanchengfly.tieba.post.toastShort
 import com.huanchengfly.tieba.post.ui.theme.utils.ThemeUtils
 import com.huanchengfly.tieba.post.utils.*
 import com.huanchengfly.tieba.post.utils.preload.PreloadUtil
 import com.huanchengfly.tieba.post.utils.preload.loaders.ThreadContentLoader
 import com.huanchengfly.tieba.post.widgets.VideoPlayerStandard
+import com.scwang.smart.refresh.layout.SmartRefreshLayout
 import me.imid.swipebacklayout.lib.SwipeBackLayout.SwipeListener
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class ThreadActivity : BaseActivity(), View.OnClickListener {
+@SuppressLint("NonConstantResourceId")
+class ThreadActivity : BaseActivity(), View.OnClickListener, ThreadMenuFragment.OnActionsListener {
     @BindView(R.id.toolbar)
     lateinit var toolbar: Toolbar
-    private var dataBean: ThreadContentBean? = null
+
     @BindView(R.id.thread_refresh_view)
-    lateinit var refreshLayout: SwipeRefreshLayout
+    lateinit var refreshLayout: SmartRefreshLayout
+
     @BindView(R.id.thread_bottom_bar_agree_btn)
     lateinit var agreeBtn: ImageView
+
+    @BindView(R.id.thread_bottom_bar_more_btn)
+    lateinit var moreBtn: ImageView
+
     @BindView(R.id.thread_bottom_bar_agree_num)
     lateinit var agreeNumTextView: TextView
-    private var agreeNum = 0
+
     @BindView(R.id.thread_recycler_view)
     lateinit var recyclerView: RecyclerView
-    lateinit var mAdapter: RecyclerThreadAdapter
-    lateinit var mLayoutManager: MyLinearLayoutManager
-    private var tid: String? = ""
-    private var pid = ""
+
+    private val virtualLayoutManager: VirtualLayoutManager = FillVirtualLayoutManager(this)
+    private val delegateAdapter: DelegateAdapter = DelegateAdapter(virtualLayoutManager)
+    private val replyAdapter: ThreadReplyAdapter = ThreadReplyAdapter(this)
+    private val threadMainPostAdapter: ThreadMainPostAdapter = ThreadMainPostAdapter(this)
+    private val threadHeaderAdapter: ThreadHeaderAdapter = ThreadHeaderAdapter(this)
+
+    private var threadId: String? = null
+    private var postId = ""
     private var from = ""
-    private var maxPid: String? = ""
-    private var tip = false
+    private var maxPostId: String? = null
     private var seeLz = false
     private var sort = false
+    private var tip = false
+
+    private var dataBean: ThreadContentBean? = null
+
     private var collect = false
     private var agree = false
+    private var agreeNum = 0
     private var page = 0
     private var totalPage = 0
+
     private val replyReceiver: BroadcastReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
             val action = intent.action
@@ -88,10 +108,10 @@ class ThreadActivity : BaseActivity(), View.OnClickListener {
             }
         }
     }
-    private var navigationHelper: NavigationHelper? = null
+
     public override fun onSaveInstanceState(outState: Bundle) {
-        outState.putString("tid", tid)
-        outState.putString("pid", pid)
+        outState.putString("tid", threadId)
+        outState.putString("pid", postId)
         outState.putString("from", from)
         outState.putBoolean("seeLz", seeLz)
         outState.putBoolean("tip", tip)
@@ -102,8 +122,8 @@ class ThreadActivity : BaseActivity(), View.OnClickListener {
 
     public override fun onRestoreInstanceState(outState: Bundle) {
         super.onRestoreInstanceState(outState)
-        tid = outState.getString("tid", tid)
-        pid = outState.getString("pid", pid)
+        threadId = outState.getString("tid", threadId)
+        postId = outState.getString("pid", postId)
         from = outState.getString("from", from)
         seeLz = outState.getBoolean("seeLz", seeLz)
         tip = outState.getBoolean("tip", tip)
@@ -120,7 +140,7 @@ class ThreadActivity : BaseActivity(), View.OnClickListener {
                 return true
             }
             val child = recyclerView.getChildAt(0)
-            if (recyclerView.getChildViewHolder(child).itemViewType == RecyclerThreadAdapter.TYPE_REPLY) {
+            if (recyclerView.getChildViewHolder(child).itemViewType == ThreadReplyAdapter.TYPE_REPLY) {
                 return true
             }
             val title = child.findViewById<View>(R.id.thread_list_item_content_title)
@@ -144,40 +164,31 @@ class ThreadActivity : BaseActivity(), View.OnClickListener {
     @SuppressLint("ClickableViewAccessibility")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        navigationHelper = NavigationHelper.newInstance(this)
+        ThemeUtil.setTranslucentThemeBackground(findViewById(R.id.background))
         swipeBackLayout.addSwipeListener(object : SwipeListener {
             override fun onScrollStateChange(state: Int, scrollPercent: Float) {}
+            override fun onScrollOverThreshold() {}
             override fun onEdgeTouch(edgeFlag: Int) {
                 exit()
             }
-
-            override fun onScrollOverThreshold() {}
         })
-        ThemeUtil.setTranslucentThemeBackground(findViewById(R.id.background))
         refreshLayout.apply {
-            isNestedScrollingEnabled = true
-            setOnRefreshListener { refresh() }
-            ThemeUtil.setThemeForSwipeRefreshLayout(this)
-        }
-        val replyBar = findViewById(R.id.thread_reply_bar) as RelativeLayout
-        val agreeBtnHolder = findViewById(R.id.thread_bottom_bar_agree) as RelativeLayout
-        agreeBtnHolder.setOnClickListener(this)
-        toolbar.setOnClickListener(this)
-        mLayoutManager = MyLinearLayoutManager(this)
-        mAdapter = RecyclerThreadAdapter(this).apply {
-            setOnLoadMoreListener { isReload: Boolean ->
-                if (isReload) {
-                    refresh(false)
+            ThemeUtil.setThemeForSmartRefreshLayout(this)
+            refreshLayout.setOnRefreshListener {
+                if (dataBean == null) {
+                    loadFirstData()
                 } else {
-                    loadMore()
+                    refresh()
                 }
+            }
+            refreshLayout.setOnLoadMoreListener {
+                loadMore()
             }
         }
         recyclerView.apply {
-            setOnTouchListener { _, _ -> refreshLayout.isRefreshing }
-            addItemDecoration(ThreadDivider(this@ThreadActivity))
-            layoutManager = mLayoutManager
-            adapter = mAdapter
+            //setOnTouchListener { _, _ -> refreshLayout.isRefreshing }
+            layoutManager = virtualLayoutManager
+            adapter = delegateAdapter
             if (!appPreferences.loadPictureWhenScroll) {
                 addOnScrollListener(object : RecyclerView.OnScrollListener() {
                     override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
@@ -220,44 +231,42 @@ class ThreadActivity : BaseActivity(), View.OnClickListener {
                 }
             })
         }
-        replyBar.setOnClickListener(this)
         setSupportActionBar(toolbar)
-        val actionBar = supportActionBar
-        if (actionBar != null) {
-            actionBar.title = null
-            actionBar.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.title = null
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        findViewById(R.id.thread_bottom_bar_agree).setOnClickListener(this)
+        findViewById(R.id.thread_reply_bar).setOnClickListener(this)
+        moreBtn.setOnClickListener(this)
+        toolbar.setOnClickListener(this)
+        threadHeaderAdapter.setOnToggleSeeLzListener {
+            seeLz = it
+            refreshLayout.autoRefresh()
         }
-        val intent = intent
-        var tid: String? = ""
-        val seeLz: String
-        val pid: String?
-        val from: String?
-        var maxPid: String? = ""
         if (intent.getStringExtra("url") == null) {
-            tid = intent.getStringExtra(EXTRA_THREAD_ID)
-            pid = intent.getStringExtra(EXTRA_POST_ID)
-            seeLz = if (intent.getBooleanExtra(EXTRA_SEE_LZ, false)) "1" else "0"
-            from = intent.getStringExtra(EXTRA_FROM)
-            if ("collect" == from) {
-                maxPid = intent.getStringExtra(EXTRA_MAX_PID)
-            }
+            threadId = intent.getStringExtra(EXTRA_THREAD_ID)
+            postId = intent.getStringExtra(EXTRA_POST_ID) ?: ""
+            seeLz = intent.getBooleanExtra(EXTRA_SEE_LZ, false)
+            from = intent.getStringExtra(EXTRA_FROM) ?: FROM_NONE
+            maxPostId = intent.getStringExtra(EXTRA_MAX_PID)
         } else {
             val uri = Uri.parse(intent.getStringExtra("url"))
-            if (uri.path!!.startsWith("/p/")) tid = uri.path!!.split("/p/").toTypedArray()[1] else if ((uri.path == "/mo/q/m") or (uri.path == "/f")) tid = uri.getQueryParameter("kz")
-            seeLz = uri.getQueryParameter("see_lz") ?: "0"
-            pid = uri.getQueryParameter("sc")
-            from = ""
+            threadId = if (uri.path!!.startsWith("/p/")) {
+                uri.path!!.split("/p/").toTypedArray()[1]
+            } else if (uri.path == "/mo/q/m" || uri.path == "/f") {
+                uri.getQueryParameter("kz")
+            } else {
+                null
+            }
+            postId = uri.getQueryParameter("sc") ?: ""
+            seeLz = uri.getQueryParameter("see_lz") ?: "0" == "1"
+            from = FROM_NONE
+            maxPostId = null
         }
-        this.tid = tid
-        this.seeLz = seeLz == "1"
-        this.pid = pid ?: ""
-        this.from = from ?: ""
-        this.maxPid = maxPid ?: ""
-        if (!TextUtils.isEmpty(this.tid)) {
-            mAdapter.isShowForum = FROM_FORUM != from
-            loadFirstData()
+        if (!threadId.isNullOrBlank()) {
+            refreshLayout.autoRefresh()
+            threadMainPostAdapter.showForum = (FROM_FORUM != from)
         } else {
-            Toast.makeText(this, R.string.toast_param_error, Toast.LENGTH_SHORT).show()
+            toastShort(R.string.toast_param_error)
             finish()
         }
         refreshTitle()
@@ -265,24 +274,26 @@ class ThreadActivity : BaseActivity(), View.OnClickListener {
 
     fun hasMore(): Boolean {
         if (dataBean!!.page?.hasMore != "1") {
-            mAdapter.loadEnd()
+            refreshLayout.setNoMoreData(true)
             return false
         }
+        refreshLayout.setNoMoreData(false)
         return true
     }
 
     private fun loadMoreSuccess(threadContentBean: ThreadContentBean) {
+        refreshLayout.finishLoadMore()
         dataBean = threadContentBean
-        page = Integer.valueOf(threadContentBean.page?.currentPage!!)
-        totalPage = Integer.valueOf(threadContentBean.page.totalPage!!)
-        mAdapter.addData(dataBean!!)
+        page = threadContentBean.page?.currentPage!!.toInt()
+        totalPage = threadContentBean.page.totalPage!!.toInt()
+        replyAdapter.addData(dataBean!!)
         hasMore()
         invalidateOptionsMenu()
         preload()
     }
 
-    fun loadMore() {
-        mAdapter.isSeeLz = seeLz
+    private fun loadMore() {
+        replyAdapter.setSeeLz(seeLz)
         if (hasMore()) {
             var page = page
             if (sort) {
@@ -299,9 +310,9 @@ class ThreadActivity : BaseActivity(), View.OnClickListener {
                 }
                 return
             }
-            TiebaApi.getInstance().threadContent(tid!!, page, seeLz, sort).enqueue(object : Callback<ThreadContentBean> {
+            TiebaApi.getInstance().threadContent(threadId!!, page, seeLz, sort).enqueue(object : Callback<ThreadContentBean> {
                 override fun onFailure(call: Call<ThreadContentBean>, t: Throwable) {
-                    mAdapter.loadFailed()
+                    refreshLayout.finishLoadMore(false)
                 }
 
                 override fun onResponse(call: Call<ThreadContentBean>, response: Response<ThreadContentBean>) {
@@ -316,7 +327,7 @@ class ThreadActivity : BaseActivity(), View.OnClickListener {
     private fun preload() {
         PreLoader.destroy(preloadId)
         if (hasMore() && !sort) {
-            preloadId = PreLoader.preLoad(ThreadContentLoader(tid!!, page + 1, seeLz))
+            preloadId = PreLoader.preLoad(ThreadContentLoader(threadId!!, page + 1, seeLz))
         }
     }
 
@@ -324,8 +335,6 @@ class ThreadActivity : BaseActivity(), View.OnClickListener {
         dataBean = threadContentBean
         page = Integer.valueOf(threadContentBean.page?.currentPage!!)
         totalPage = Integer.valueOf(threadContentBean.page.totalPage!!)
-        mAdapter.reset()
-        mAdapter.setData(threadContentBean)
         title = threadContentBean.thread?.title
         collect = threadContentBean.thread != null && "0" != threadContentBean.thread.collectStatus
         agree = threadContentBean.thread?.agree != null && "0" != threadContentBean.thread.agree.hasAgree
@@ -333,26 +342,43 @@ class ThreadActivity : BaseActivity(), View.OnClickListener {
         agreeNum = Integer.valueOf(if (TextUtils.isEmpty(threadContentBean.thread?.agreeNum)) "0" else threadContentBean.thread?.agreeNum!!)
         invalidateOptionsMenu()
         hasMore()
-        refreshLayout.isRefreshing = false
+        refreshLayout.finishRefresh(true)
         refreshTitle()
         preload()
+        refreshAdapter()
+    }
+
+    private fun refreshAdapter() {
+        delegateAdapter.clear()
+        threadMainPostAdapter.dataBean = dataBean
+        delegateAdapter.addAdapter(threadMainPostAdapter)
+        if (!dataBean?.postList?.filter {
+                    it.floor != "1"
+                }.isNullOrEmpty()) {
+            threadHeaderAdapter.title = getString(R.string.title_thread_header, dataBean?.thread?.replyNum)
+            threadHeaderAdapter.seeLz = seeLz
+            delegateAdapter.addAdapter(threadHeaderAdapter)
+            replyAdapter.reset()
+            replyAdapter.setData(dataBean!!)
+            delegateAdapter.addAdapter(replyAdapter)
+        }
+        delegateAdapter.notifyDataSetChanged()
     }
 
     @JvmOverloads
     fun refresh(reset: Boolean = true) {
-        mAdapter.isSeeLz = seeLz
-        refreshLayout.isRefreshing = true
+        replyAdapter.setSeeLz(seeLz)
         if (reset) {
             recyclerView.scrollToPosition(0)
             page = if (sort) totalPage else 1
         }
-        TiebaApi.getInstance().threadContent(tid!!, page, seeLz, sort).enqueue(object : Callback<ThreadContentBean> {
+        TiebaApi.getInstance().threadContent(threadId!!, page, seeLz, sort).enqueue(object : Callback<ThreadContentBean> {
             override fun onFailure(call: Call<ThreadContentBean>, t: Throwable) {
+                refreshLayout.finishRefresh(false)
                 if (t !is TiebaException) {
-                    Util.showNetworkErrorSnackbar(recyclerView) { refresh() }
+                    Util.showNetworkErrorSnackbar(recyclerView) { refreshLayout.autoRefresh() }
                 } else {
                     Toast.makeText(this@ThreadActivity, t.message, Toast.LENGTH_SHORT).show()
-                    refreshLayout.isRefreshing = false
                 }
             }
 
@@ -364,9 +390,9 @@ class ThreadActivity : BaseActivity(), View.OnClickListener {
 
     override fun onStart() {
         super.onStart()
-        val filter = IntentFilter()
-        filter.addAction(ACTION_REPLY_SUCCESS)
-        registerReceiver(replyReceiver, filter)
+        registerReceiver(replyReceiver, IntentFilter().apply {
+            addAction(ACTION_REPLY_SUCCESS)
+        })
     }
 
     override fun onStop() {
@@ -375,67 +401,95 @@ class ThreadActivity : BaseActivity(), View.OnClickListener {
     }
 
     fun refresh(pid: String) {
-        mAdapter.isSeeLz = seeLz
-        refreshLayout.isRefreshing = true
-        TiebaApi.getInstance().threadContent(tid!!, page, seeLz, sort).enqueue(object : Callback<ThreadContentBean> {
+        replyAdapter.setSeeLz(seeLz)
+        threadMainPostAdapter.seeLz = seeLz
+        TiebaApi.getInstance().threadContent(threadId!!, page, seeLz, sort).enqueue(object : Callback<ThreadContentBean> {
             override fun onFailure(call: Call<ThreadContentBean>, t: Throwable) {
                 if (t !is TiebaException) {
-                    Util.showNetworkErrorSnackbar(recyclerView) { refresh() }
+                    Util.showNetworkErrorSnackbar(recyclerView) { refreshLayout.autoRefresh() }
                 } else {
-                    Toast.makeText(this@ThreadActivity, t.message, Toast.LENGTH_SHORT).show()
-                    refreshLayout.isRefreshing = false
+                    t.message?.let { toastShort(it) }
                 }
             }
 
             override fun onResponse(call: Call<ThreadContentBean>, response: Response<ThreadContentBean>) {
                 val threadContentBean = response.body()!!
                 refreshSuccess(threadContentBean)
-                val postListItemBean = mAdapter.allData.firstOrNull { it.id == pid }
+                val postListItemBean = getItemByPid(pid)
                 if (postListItemBean != null) {
-                    if (!tip) when {
-                        FROM_COLLECT == from && maxPid != null -> {
-                            tip = true
-                            if (pid != maxPid) {
-                                Util.createSnackbar(recyclerView, getString(R.string.tip_collect, postListItemBean.floor), Snackbar.LENGTH_LONG)
-                                        .setAction(R.string.button_load_new) { refreshByPid(maxPid!!) }
+                    if (!tip) {
+                        when {
+                            FROM_COLLECT == from && maxPostId != null -> {
+                                tip = true
+                                if (pid != maxPostId) {
+                                    Util.createSnackbar(recyclerView, getString(R.string.tip_collect, postListItemBean.floor), Snackbar.LENGTH_LONG)
+                                            .setAction(R.string.button_load_new) { refreshByPid(maxPostId!!) }
+                                            .show()
+                                }
+                            }
+                            FROM_HISTORY == from && "1" != postListItemBean.floor -> {
+                                tip = true
+                                Util.createSnackbar(recyclerView, getString(R.string.tip_from_history, postListItemBean.floor), Snackbar.LENGTH_LONG)
+                                        .setAction(R.string.button_load_top) {
+                                            if (page <= 1) {
+                                                recyclerView.scrollToPosition(0)
+                                            } else {
+                                                refreshLayout.autoRefresh()
+                                            }
+                                        }
                                         .show()
                             }
                         }
-                        FROM_HISTORY == from && "1" != postListItemBean.floor -> {
-                            tip = true
-                            Util.createSnackbar(recyclerView, getString(R.string.tip_from_history, postListItemBean.floor), Snackbar.LENGTH_LONG)
-                                    .setAction(R.string.button_load_top) {
-                                        if (page <= 1) {
-                                            recyclerView.scrollToPosition(0)
-                                        } else {
-                                            refresh()
-                                        }
-                                    }
-                                    .show()
-                        }
                     }
-                    if (pid != threadContentBean.postList?.get(0)?.id) {
-                        val position = mAdapter.allData.indexOf(postListItemBean)
-                        if (position >= 0) mLayoutManager.scrollToPositionWithOffset(position, 0)
+                    if (pid != threadMainPostAdapter.threadBean.postId) {
+                        val position = getItemPositionByPid(pid)
+                        //TODO: 历史记录自动滚动
+                        Log.i("ThreadActivity", "${getAdapterPositionByItemPosition(position)}")
+                        if (position >= 0) virtualLayoutManager.scrollToPositionWithOffset(getAdapterPositionByItemPosition(position), 0)
                     }
                 }
             }
         })
     }
 
+    fun getItemByPid(pid: String): PostListItemBean? {
+        val threadPostId = threadMainPostAdapter.threadBean.postId
+        return if (threadPostId == pid) {
+            threadMainPostAdapter.threadPostBean
+        } else {
+            replyAdapter.getItemList().firstOrNull { it.id == pid }
+        }
+    }
+
+    fun getItemByPosition(itemPosition: Int): PostListItemBean? {
+        return if (itemPosition == 0) {
+            threadMainPostAdapter.threadPostBean
+        } else {
+            replyAdapter.getItem(itemPosition - 1)
+        }
+    }
+
+    fun getItemPositionByPid(pid: String): Int {
+        val threadPostId = threadMainPostAdapter.threadBean.postId
+        return if (threadPostId == pid) {
+            0
+        } else {
+            replyAdapter.getItemList().indexOfFirst { it.id == pid } + 1
+        }
+    }
+
     val url: String
-        get() = "https://tieba.baidu.com/p/$tid?see_lz=${if (seeLz) "1" else "0"}"
+        get() = "https://tieba.baidu.com/p/$threadId?see_lz=${if (seeLz) "1" else "0"}"
 
     private fun refreshByPid(pid: String) {
-        mAdapter.isSeeLz = seeLz
-        refreshLayout.isRefreshing = true
-        TiebaApi.getInstance().threadContent(tid!!, pid, seeLz, sort).enqueue(object : Callback<ThreadContentBean> {
+        replyAdapter.setSeeLz(seeLz)
+        threadMainPostAdapter.seeLz = seeLz
+        TiebaApi.getInstance().threadContent(threadId!!, pid, seeLz, sort).enqueue(object : Callback<ThreadContentBean> {
             override fun onFailure(call: Call<ThreadContentBean>, t: Throwable) {
                 if (t is TiebaException) {
                     Toast.makeText(this@ThreadActivity, t.message, Toast.LENGTH_SHORT).show()
-                    refreshLayout.isRefreshing = false
                 } else {
-                    Util.showNetworkErrorSnackbar(recyclerView) { refresh() }
+                    Util.showNetworkErrorSnackbar(recyclerView) { refreshLayout.autoRefresh() }
                 }
             }
 
@@ -451,9 +505,8 @@ class ThreadActivity : BaseActivity(), View.OnClickListener {
     }
 
     private fun loadFirstData() {
-        if (TextUtils.isEmpty(pid)) {
+        if (TextUtils.isEmpty(postId)) {
             if (PreloadUtil.isPreloading(this)) {
-                refreshLayout.isRefreshing = true
                 val preloadId = PreloadUtil.getPreloadId(this)
                 PreLoader.listenData(preloadId) { threadContentBean: ThreadContentBean? ->
                     if (threadContentBean == null) {
@@ -465,139 +518,68 @@ class ThreadActivity : BaseActivity(), View.OnClickListener {
                 }
             } else refresh()
         } else {
-            refreshByPid(pid)
+            refreshByPid(postId)
         }
     }
 
-    override fun setTitle(newTitle: String) {
+    override fun setTitle(newTitle: String?) {
         toolbar.title = newTitle
     }
 
     private fun isLz(postListItemBean: PostListItemBean?): Boolean {
-        return dataBean!!.thread != null && dataBean!!.thread?.author != null && postListItemBean != null &&
-                TextUtils.equals(dataBean!!.thread?.author?.id, postListItemBean.authorId)
+        return TextUtils.equals(dataBean?.thread?.author?.id, postListItemBean?.authorId)
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            R.id.menu_report -> {
-                if (dataBean != null) TiebaUtil.reportPost(this, dataBean?.thread?.postId!!)
-            }
-            R.id.menu_share -> TiebaUtil.shareText(this, url, if (dataBean == null) null else dataBean!!.thread?.title)
-            R.id.menu_jump_page -> {
-                val dialog = EditTextDialog(this)
-                        .setInputType(InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_VARIATION_NORMAL)
-                        .setHelperText(String.format(getString(R.string.tip_jump_page), page, totalPage))
-                        .setOnSubmitListener { page: String? ->
-                            val pn = Integer.valueOf(page!!)
-                            if (pn in 1..totalPage) {
-                                this.page = pn
-                                refresh(false)
-                            } else {
-                                Toast.makeText(this@ThreadActivity, R.string.toast_jump_page_too_big, Toast.LENGTH_SHORT).show()
-                            }
-                        }
-                dialog.setTitle(R.string.title_jump_page)
-                dialog.show()
-            }
-            R.id.menu_see_lz -> {
-                seeLz = !seeLz
-                mAdapter.isSeeLz = seeLz
-                val postListItemBean = firstVisibleItem
-                if (postListItemBean == null || !isLz(postListItemBean)) {
-                    refresh()
-                } else {
-                    refreshByPid(postListItemBean.id!!)
-                }
-            }
-            R.id.menu_sort -> {
-                sort = !sort
-                refresh()
-            }
-            R.id.menu_pure_read -> if (!mAdapter.isImmersive) {
-                mAdapter.isImmersive = true
-                if (!seeLz) {
-                    seeLz = true
-                    mAdapter.isSeeLz = seeLz
-                    refresh()
-                }
-            } else {
-                mAdapter.isImmersive = false
-            }
-            R.id.menu_delete -> TiebaApi.getInstance().delThread(dataBean!!.forum?.id!!, dataBean!!.forum?.name!!, dataBean!!.thread?.id!!, dataBean!!.anti?.tbs!!).enqueue(object : Callback<CommonResponse> {
-                override fun onFailure(call: Call<CommonResponse>, t: Throwable) {
-                    Toast.makeText(this@ThreadActivity, getString(R.string.toast_delete_error, t.message), Toast.LENGTH_SHORT).show()
-                }
-
-                override fun onResponse(call: Call<CommonResponse>, response: Response<CommonResponse>) {
-                    Toast.makeText(this@ThreadActivity, R.string.toast_delete_thread_success, Toast.LENGTH_SHORT).show()
-                    finish()
-                }
-
-            })
-            R.id.menu_collect -> {
-                if (dataBean != null) {
-                    if (collect) {
-                        TiebaApi.getInstance().removeStore(tid!!, dataBean!!.anti?.tbs!!).enqueue(object : Callback<CommonResponse> {
-                            override fun onFailure(call: Call<CommonResponse>, t: Throwable) {
-                                Toast.makeText(this@ThreadActivity, getString(R.string.toast_collect_remove_error, t.message), Toast.LENGTH_SHORT).show()
-                            }
-
-                            override fun onResponse(call: Call<CommonResponse>, response: Response<CommonResponse>) {
-                                Toast.makeText(this@ThreadActivity, R.string.toast_collect_remove_success, Toast.LENGTH_SHORT).show()
-                                collect = !collect
-                                invalidateOptionsMenu()
-                            }
-
-                        })
-                    } else {
-                        collect(object : CommonAPICallback<CommonResponse> {
-                            override fun onSuccess(data: CommonResponse) {
-                                Toast.makeText(this@ThreadActivity, R.string.toast_collect_add_success, Toast.LENGTH_SHORT).show()
-                                collect = !collect
-                                invalidateOptionsMenu()
-                            }
-
-                            override fun onFailure(code: Int, error: String) {
-                                Toast.makeText(this@ThreadActivity, getString(R.string.toast_collect_add_error) + " " + error, Toast.LENGTH_SHORT).show()
-                            }
-                        }, false)
-                    }
-                }
-                return true
-            }
+    private fun getItemPositionByAdapterPosition(adapterPosition: Int): Int {
+        return when {
+            adapterPosition > 1 -> adapterPosition - 1
+            else -> adapterPosition
         }
-        return super.onOptionsItemSelected(item)
+    }
+
+    private fun getAdapterPositionByItemPosition(itemPosition: Int): Int {
+        return when {
+            itemPosition > 0 -> itemPosition + 1
+            else -> itemPosition
+        }
     }
 
     private val firstVisibleItemPosition: Int
         get() {
             if (dataBean == null) return 0
-            var position = mLayoutManager.findFirstVisibleItemPosition() - 1
-            position = if (position < 0) 0 else if (position < mAdapter.dataCount) position else mAdapter.dataCount - 1
-            return position
+            return getItemPositionByAdapterPosition(virtualLayoutManager.findFirstVisibleItemPosition())
         }
 
     private val firstVisibleItem: PostListItemBean?
         get() {
             if (dataBean == null) return null
-            var position = mLayoutManager.findFirstVisibleItemPosition() - 1
-            position = if (position < 0) 0 else if (position < mAdapter.dataCount) position else mAdapter.dataCount - 1
-            return mAdapter.getData(position)
+            val position = firstVisibleItemPosition
+            return if (position < 0) {
+                null
+            } else if (position == 0) {
+                threadMainPostAdapter.threadPostBean ?: replyAdapter.getItem(position)
+            } else {
+                replyAdapter.getItem(position - 1)
+            }
         }
 
     private val lastVisibleItem: PostListItemBean?
         get() {
             if (dataBean == null) return null
-            var position = mLayoutManager.findLastVisibleItemPosition() - 1
-            position = if (position < 0) 0 else if (position < mAdapter.dataCount) position else mAdapter.dataCount - 1
-            return mAdapter.getData(position)
+            val position = getItemPositionByAdapterPosition(virtualLayoutManager.findLastVisibleItemPosition())
+            return if (position < 0) {
+                null
+            } else if (position == 0) {
+                threadMainPostAdapter.threadPostBean ?: replyAdapter.getItem(position)
+            } else {
+                replyAdapter.getItem(position - 1)
+            }
         }
 
     private fun collect(commonAPICallback: CommonAPICallback<CommonResponse>?, update: Boolean) {
-        if (dataBean == null || tid == null) return
+        if (dataBean == null || threadId == null) return
         val postListItemBean = firstVisibleItem ?: return
-        TiebaApi.getInstance().addStore(tid!!, postListItemBean.id!!, tbs = dataBean!!.anti?.tbs!!).enqueue(object : Callback<CommonResponse> {
+        TiebaApi.getInstance().addStore(threadId!!, postListItemBean.id!!, tbs = dataBean!!.anti?.tbs!!).enqueue(object : Callback<CommonResponse> {
             override fun onFailure(call: Call<CommonResponse>, t: Throwable) {
                 if (t is TiebaException) {
                     commonAPICallback?.onFailure(t.code, t.message)
@@ -614,57 +596,6 @@ class ThreadActivity : BaseActivity(), View.OnClickListener {
         if (!update) Util.miuiFav(this, getString(R.string.title_miui_fav, dataBean!!.thread?.title), url)
     }
 
-    override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        menuInflater.inflate(R.menu.menu_tie_toolbar, menu)
-        return super.onCreateOptionsMenu(menu)
-    }
-
-    override fun onPrepareOptionsMenu(menu: Menu): Boolean {
-        val itemSeeLz = menu.findItem(R.id.menu_see_lz)
-        val itemSort = menu.findItem(R.id.menu_sort)
-        val itemCollect = menu.findItem(R.id.menu_collect)
-        val itemPure = menu.findItem(R.id.menu_pure_read)
-        val itemDelete = menu.findItem(R.id.menu_delete)
-        if (seeLz) {
-            itemSeeLz.setIcon(R.drawable.ic_round_account_circle)
-            itemSeeLz.setTitle(R.string.title_see_lz_on)
-            itemSeeLz.isChecked = true
-        } else {
-            itemSeeLz.setIcon(R.drawable.ic_outline_account_circle)
-            itemSeeLz.setTitle(R.string.title_see_lz)
-            itemSeeLz.isChecked = false
-        }
-        mAdapter.isSeeLz = seeLz
-        if (sort) {
-            itemSort.setTitle(R.string.title_sort_on)
-        } else {
-            itemSort.setTitle(R.string.title_sort)
-        }
-        if (collect) {
-            itemCollect.title = getString(R.string.title_collect_on)
-        } else {
-            itemCollect.title = getString(R.string.title_collect)
-        }
-        if (agree) {
-            agreeBtn.setImageResource(R.drawable.ic_twotone_like)
-            agreeBtn.imageTintList = ColorStateList.valueOf(ThemeUtils.getColorByAttr(this, R.attr.colorAccent))
-            agreeNumTextView.setTextColor(ColorStateList.valueOf(ThemeUtils.getColorByAttr(this, R.attr.colorAccent)))
-            agreeBtn.contentDescription = getString(R.string.title_agreed)
-        } else {
-            agreeBtn.setImageResource(R.drawable.ic_outline_like)
-            agreeBtn.imageTintList = ColorStateList.valueOf(ThemeUtil.getTextColor(this))
-            agreeNumTextView.setTextColor(ColorStateList.valueOf(ThemeUtil.getTextColor(this)))
-            agreeBtn.contentDescription = getString(R.string.title_agree)
-        }
-        if (mAdapter.isImmersive) {
-            itemPure.setTitle(R.string.title_pure_read_on)
-        } else {
-            itemPure.setTitle(R.string.title_pure_read)
-        }
-        itemDelete.isVisible = dataBean != null && TextUtils.equals(dataBean!!.user?.id, dataBean!!.thread?.author?.id)
-        return super.onPrepareOptionsMenu(menu)
-    }
-
     override fun finish() {
         if (dataBean != null && dataBean!!.thread != null) {
             val postListItemBean = lastVisibleItem
@@ -676,7 +607,7 @@ class ThreadActivity : BaseActivity(), View.OnClickListener {
                         .toString()
             }
             val history = History()
-                    .setData(tid)
+                    .setData(threadId)
                     .setExtras(extras)
                     .setTitle(dataBean!!.thread?.title)
                     .setType(HistoryUtil.TYPE_THREAD)
@@ -738,6 +669,17 @@ class ThreadActivity : BaseActivity(), View.OnClickListener {
                                 dataBean!!.user?.nameShow).setPn(dataBean!!.page?.offset).toString()))
             }
             R.id.toolbar -> recyclerView.scrollToPosition(0)
+            R.id.thread_bottom_bar_more_btn -> {
+                ThreadMenuFragment(
+                        seeLz,
+                        collect,
+                        replyAdapter.isPureRead,
+                        sort
+                ).apply {
+                    setOnActionsListener(this@ThreadActivity)
+                    show(supportFragmentManager, "Menu")
+                }
+            }
             R.id.thread_bottom_bar_agree -> if (dataBean != null && dataBean!!.thread != null) {
                 if (!agree) {
                     agree = true
@@ -869,6 +811,7 @@ class ThreadActivity : BaseActivity(), View.OnClickListener {
         const val FROM_COLLECT = "collect"
         const val FROM_HISTORY = "history"
         const val FROM_FORUM = "forum"
+        const val FROM_NONE = "none"
 
         @JvmOverloads
         @JvmStatic
@@ -888,5 +831,114 @@ class ThreadActivity : BaseActivity(), View.OnClickListener {
                 putExtra(EXTRA_MAX_PID, maxPid ?: "")
             }
         }
+    }
+
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            //TODO: 菜单增加删除功能
+            R.id.menu_delete -> TiebaApi.getInstance().delThread(dataBean!!.forum?.id!!, dataBean!!.forum?.name!!, dataBean!!.thread?.id!!, dataBean!!.anti?.tbs!!).enqueue(object : Callback<CommonResponse> {
+                override fun onFailure(call: Call<CommonResponse>, t: Throwable) {
+                    Toast.makeText(this@ThreadActivity, getString(R.string.toast_delete_error, t.message), Toast.LENGTH_SHORT).show()
+                }
+
+                override fun onResponse(call: Call<CommonResponse>, response: Response<CommonResponse>) {
+                    Toast.makeText(this@ThreadActivity, R.string.toast_delete_thread_success, Toast.LENGTH_SHORT).show()
+                    finish()
+                }
+
+            })
+        }
+        return super.onOptionsItemSelected(item)
+    }
+
+    override fun onToggleSeeLz(seeLz: Boolean) {
+        this.seeLz = seeLz
+        replyAdapter.setSeeLz(seeLz)
+        threadMainPostAdapter.seeLz = seeLz
+        val postListItemBean = firstVisibleItem
+        if (postListItemBean == null || !isLz(postListItemBean)) {
+            refreshLayout.autoRefresh()
+        } else {
+            refreshByPid(postListItemBean.id!!)
+        }
+    }
+
+    override fun onToggleCollect(collect: Boolean) {
+        if (dataBean != null) {
+            if (collect) {
+                TiebaApi.getInstance().removeStore(threadId!!, dataBean!!.anti?.tbs!!).enqueue(object : Callback<CommonResponse> {
+                    override fun onFailure(call: Call<CommonResponse>, t: Throwable) {
+                        Toast.makeText(this@ThreadActivity, getString(R.string.toast_collect_remove_error, t.message), Toast.LENGTH_SHORT).show()
+                    }
+
+                    override fun onResponse(call: Call<CommonResponse>, response: Response<CommonResponse>) {
+                        Toast.makeText(this@ThreadActivity, R.string.toast_collect_remove_success, Toast.LENGTH_SHORT).show()
+                        this@ThreadActivity.collect = collect
+                        invalidateOptionsMenu()
+                    }
+
+                })
+            } else {
+                collect(object : CommonAPICallback<CommonResponse> {
+                    override fun onSuccess(data: CommonResponse) {
+                        Toast.makeText(this@ThreadActivity, R.string.toast_collect_add_success, Toast.LENGTH_SHORT).show()
+                        this@ThreadActivity.collect = collect
+                        invalidateOptionsMenu()
+                    }
+
+                    override fun onFailure(code: Int, error: String) {
+                        Toast.makeText(this@ThreadActivity, getString(R.string.toast_collect_add_error) + " " + error, Toast.LENGTH_SHORT).show()
+                    }
+                }, false)
+            }
+        }
+    }
+
+    override fun onTogglePureRead(pureRead: Boolean) {
+        replyAdapter.isPureRead = pureRead
+        threadMainPostAdapter.pureRead = pureRead
+        if (pureRead) {
+            if (!seeLz) {
+                seeLz = true
+                replyAdapter.setSeeLz(seeLz)
+                threadMainPostAdapter.seeLz = seeLz
+                refreshLayout.autoRefresh()
+            }
+        }
+    }
+
+    override fun onToggleSort(sort: Boolean) {
+        this.sort = sort
+        refreshLayout.autoRefresh()
+    }
+
+    override fun onReport() {
+        if (dataBean != null) TiebaUtil.reportPost(this, dataBean?.thread?.postId!!)
+    }
+
+    override fun onJumpPage() {
+        val dialog = EditTextDialog(this)
+                .setInputType(InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_VARIATION_NORMAL)
+                .setHelperText(String.format(getString(R.string.tip_jump_page), page, totalPage))
+                .setOnSubmitListener { page: String? ->
+                    val pn = Integer.valueOf(page!!)
+                    if (pn in 1..totalPage) {
+                        this.page = pn
+                        refresh(false)
+                    } else {
+                        Toast.makeText(this@ThreadActivity, R.string.toast_jump_page_too_big, Toast.LENGTH_SHORT).show()
+                    }
+                }
+        dialog.setTitle(R.string.title_jump_page)
+        dialog.show()
+    }
+
+    override fun onCopyLink() {
+        TiebaUtil.copyText(this, url)
+    }
+
+    override fun onShare() {
+        TiebaUtil.shareText(this, url, if (dataBean == null) null else dataBean!!.thread?.title)
     }
 }

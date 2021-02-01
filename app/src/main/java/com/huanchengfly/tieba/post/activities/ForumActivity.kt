@@ -263,7 +263,7 @@ class ForumActivity : BaseActivity(), View.OnClickListener, OnRefreshedListener,
         fab.setOnClickListener(this)
     }
 
-    override fun setTitle(newTitle: String) {
+    override fun setTitle(newTitle: String?) {
         toolbar.title = newTitle
     }
 
