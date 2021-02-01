@@ -110,9 +110,9 @@
 
         <SwitchPreference
             android:icon="@drawable/ic_round_whatshot"
-            android:defaultValue="true"
-            android:key="showHotMessageList"
-            android:title="@string/title_show_hot_message_list" />
+            android:defaultValue="false"
+            android:key="hideHotMessageList"
+            android:title="@string/title_hide_hot_message_list" />
 
         <Preference
             android:enabled="false"

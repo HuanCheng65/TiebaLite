@@ -181,6 +181,9 @@ class NewSearchActivity : BaseActivity(), TabLayout.OnTabSelectedListener {
     }
 
     private fun loadHotTopic() {
+        if (appPreferences.hideHotMessageList) {
+            return
+        }
         if (hotMessageListBean != null) {
             addHotTopicAdapters(hotMessageListBean!!)
         } else {

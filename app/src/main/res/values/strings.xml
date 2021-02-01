@@ -421,5 +421,5 @@
     <string name="btn_reply_post">%1$s 回复</string>
     <string name="btn_reply_post_default">回复</string>
     <string name="title_home_page_scroll">首页滑动切换页面</string>
-    <string name="title_show_hot_message_list">搜索页面显示贴吧话题</string>
+    <string name="title_hide_hot_message_list">隐藏贴吧话题</string>
 </resources>
