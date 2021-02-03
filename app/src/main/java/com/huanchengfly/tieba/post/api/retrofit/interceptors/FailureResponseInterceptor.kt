@@ -36,7 +36,7 @@ object FailureResponseInterceptor : Interceptor {
             inputStreamReader.close()
         }
 
-        if (jsonObject.errorCode != null && jsonObject.errorCode != 0) {
+        if (jsonObject?.errorCode != null && jsonObject.errorCode != 0) {
             throw TiebaApiException(jsonObject)
         }
         return response

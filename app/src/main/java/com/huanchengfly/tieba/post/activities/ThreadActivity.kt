@@ -273,7 +273,7 @@ class ThreadActivity : BaseActivity(), View.OnClickListener, ThreadMenuFragment.
     }
 
     fun hasMore(): Boolean {
-        if (dataBean!!.page?.hasMore != "1") {
+        if (dataBean?.page?.hasMore != "1") {
             refreshLayout.setNoMoreData(true)
             return false
         }
