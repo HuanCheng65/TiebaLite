@@ -866,7 +866,7 @@ class ThreadActivity : BaseActivity(), View.OnClickListener, ThreadMenuFragment.
 
     override fun onToggleCollect(collect: Boolean) {
         if (dataBean != null) {
-            if (collect) {
+            if (!collect) {
                 TiebaApi.getInstance().removeStore(threadId!!, dataBean!!.anti?.tbs!!).enqueue(object : Callback<CommonResponse> {
                     override fun onFailure(call: Call<CommonResponse>, t: Throwable) {
                         Toast.makeText(this@ThreadActivity, getString(R.string.toast_collect_remove_error, t.message), Toast.LENGTH_SHORT).show()
