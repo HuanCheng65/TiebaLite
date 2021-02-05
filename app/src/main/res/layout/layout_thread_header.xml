@@ -15,7 +15,8 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:background="@drawable/bg_top_radius_16dp_ripple"
-        android:padding="16dp">
+        android:padding="16dp"
+        app:backgroundTint="@color/default_color_card">
 
         <com.huanchengfly.tieba.post.widgets.theme.TintTextView
             android:id="@+id/thread_header_title"

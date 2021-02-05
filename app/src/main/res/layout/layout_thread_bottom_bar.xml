@@ -79,6 +79,7 @@
         android:paddingStart="8dp"
         android:paddingEnd="8dp"
         app:srcCompat="@drawable/ic_more_horiz"
+        app:tint="@color/default_color_text"
         android:layout_width="40dp"
         android:layout_height="match_parent"
         android:background="?attr/selectableItemBackground" />
