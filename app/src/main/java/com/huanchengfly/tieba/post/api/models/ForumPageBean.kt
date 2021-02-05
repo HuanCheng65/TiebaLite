@@ -90,7 +90,7 @@ class ForumPageBean : ErrorBean() {
         var threadNum: String? = null
 
         @SerializedName("theme_color")
-        lateinit var themeColor: ThemeColors
+        var themeColor: ThemeColors? = null
 
         @SerializedName("post_num")
         var postNum: String? = null

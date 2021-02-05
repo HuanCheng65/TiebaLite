@@ -32,10 +32,18 @@ class SearchForumFragment : BaseFragment(), ISearchFragment, OnItemClickListener
     lateinit var recyclerView: RecyclerView
 
     private var keyword: String? = null
-    private lateinit var layoutManager: VirtualLayoutManager
-    private lateinit var delegateAdapter: DelegateAdapter
-    private lateinit var exactMatchAdapter: SearchForumAdapter
-    private lateinit var fuzzyMatchAdapter: SearchForumAdapter
+    private val layoutManager: VirtualLayoutManager by lazy { VirtualLayoutManager(attachContext) }
+    private val delegateAdapter: DelegateAdapter by lazy { DelegateAdapter(layoutManager) }
+    private val exactMatchAdapter: SearchForumAdapter by lazy {
+        SearchForumAdapter(attachContext).apply {
+            setOnItemClickListener(this@SearchForumFragment)
+        }
+    }
+    private val fuzzyMatchAdapter: SearchForumAdapter by lazy {
+        SearchForumAdapter(attachContext).apply {
+            setOnItemClickListener(this@SearchForumFragment)
+        }
+    }
     private var mData: SearchForumBean.DataBean? = null
 
     override fun setKeyword(
@@ -61,14 +69,6 @@ class SearchForumFragment : BaseFragment(), ISearchFragment, OnItemClickListener
         super.onCreate(savedInstanceState)
         if (arguments != null) {
             keyword = requireArguments().getString(ARG_KEYWORD)
-        }
-        layoutManager = VirtualLayoutManager(attachContext)
-        delegateAdapter = DelegateAdapter(layoutManager)
-        exactMatchAdapter = SearchForumAdapter(attachContext).apply {
-            setOnItemClickListener(this@SearchForumFragment)
-        }
-        fuzzyMatchAdapter = SearchForumAdapter(attachContext).apply {
-            setOnItemClickListener(this@SearchForumFragment)
         }
     }
 

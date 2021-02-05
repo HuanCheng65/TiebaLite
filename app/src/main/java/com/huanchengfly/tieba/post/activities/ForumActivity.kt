@@ -401,7 +401,7 @@ class ForumActivity : BaseActivity(), View.OnClickListener, OnRefreshedListener,
     private fun refreshHeaderView() {
         if (mDataBean != null && mDataBean!!.forum != null) {
             headerView.visibility = View.VISIBLE
-            val color = getDarkerColor(greifyColor(Color.parseColor("#${mDataBean!!.forum!!.themeColor.day.commonColor}"), 0.15f), 0.1f)
+            val color = getDarkerColor(greifyColor(Color.parseColor("#${mDataBean?.forum?.themeColor?.day?.commonColor ?: ThemeUtils.getColorById(this, R.color.default_color_primary)}"), 0.15f), 0.1f)
             toolbarColor = color
             appbar.backgroundTintList = ColorStateList.valueOf(color)
             setCustomStatusColor(color)

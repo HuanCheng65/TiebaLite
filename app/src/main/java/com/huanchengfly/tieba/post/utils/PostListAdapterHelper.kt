@@ -65,12 +65,18 @@ class PostListAdapterHelper(
         if (postListItemBeans != null) {
             for (postListItemBean in postListItemBeans) {
                 val photoViewBeans: MutableList<PhotoViewBean> = ArrayList()
-                for (contentBean in postListItemBean.content!!) {
+                if (postListItemBean.content.isNullOrEmpty() || postListItemBean.floor == null) {
+                    continue
+                }
+                for (contentBean in postListItemBean.content) {
                     if (contentBean.type == "3") {
+                        if (contentBean.originSrc == null) {
+                            continue
+                        }
                         val url = ImageUtil.getUrl(
                                 context,
                                 true,
-                                contentBean.originSrc!!,
+                                contentBean.originSrc,
                                 contentBean.bigCdnSrc,
                                 contentBean.cdnSrcActive,
                                 contentBean.cdnSrc
@@ -78,8 +84,18 @@ class PostListAdapterHelper(
                         if (url.isNullOrEmpty()) {
                             continue
                         }
-                        photoViewBeans.add(PhotoViewBean(url,
-                                ImageUtil.getNonNullString(contentBean.originSrc, contentBean.bigCdnSrc, contentBean.cdnSrcActive, contentBean.cdnSrc), "1" == contentBean.isLongPic))
+                        photoViewBeans.add(
+                                PhotoViewBean(
+                                        url,
+                                        ImageUtil.getNonNullString(
+                                                contentBean.originSrc,
+                                                contentBean.bigCdnSrc,
+                                                contentBean.cdnSrcActive,
+                                                contentBean.cdnSrc
+                                        ),
+                                        "1" == contentBean.isLongPic
+                                )
+                        )
                     }
                 }
                 photoViewBeansMap[Integer.valueOf(postListItemBean.floor!!)] = photoViewBeans
