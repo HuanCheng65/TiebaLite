@@ -171,6 +171,9 @@ public class ReplyActivity extends BaseActivity implements View.OnClickListener 
                 .findFirst(Draft.class);
         if (draft != null) {
             content = draft.getContent();
+            if (!TextUtils.isEmpty(content)) {
+                sendItem.setEnabled(true);
+            }
         }
     }
 
