@@ -1,4 +1,4 @@
-@file:Suppress("DEPRECATION")
+@file:Suppress("DEPRECATION", "NonConstantResourceId")
 
 package com.huanchengfly.tieba.post.activities
 
