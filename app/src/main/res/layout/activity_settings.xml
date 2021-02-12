@@ -6,6 +6,7 @@
     android:id="@+id/background"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    app:backgroundTint="@color/default_color_window_background"
     tools:context=".activities.SettingsActivity">
 
     <include
