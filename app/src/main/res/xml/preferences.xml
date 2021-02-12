@@ -153,12 +153,6 @@
             android:key="hideExplore"
             android:title="@string/title_hide_explore" />
 
-        <SwitchPreference
-            android:icon="@drawable/ic_round_outlet"
-            android:defaultValue="false"
-            android:key="level_icon_old_style"
-            android:title="@string/title_level_old_style" />
-
         <androidx.preference.SeekBarPreference
             android:icon="@drawable/ic_round_rounded_corner"
             app:min="0"
@@ -173,7 +167,15 @@
             android:layout="@layout/layout_preference_bottom" />
     </androidx.preference.PreferenceCategory>
 
-    <androidx.preference.PreferenceCategory android:title="@string/title_auto_sign">
+    <androidx.preference.PreferenceCategory android:title="@string/title_sign_preference">
+        <SwitchPreference
+            android:icon="@drawable/ic_round_speed"
+            android:summaryOn="@string/summary_oksign_slow_mode_on"
+            android:summaryOff="@string/summary_oksign_slow_mode"
+            android:defaultValue="true"
+            android:key="oksign_slow_mode"
+            android:title="@string/title_oksign_slow_mode" />
+
         <SwitchPreference
             android:icon="@drawable/ic_round_offline_pin_blue"
             android:summaryOn="@string/summary_auto_sign_on"

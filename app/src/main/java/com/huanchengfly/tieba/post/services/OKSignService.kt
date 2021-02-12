@@ -25,6 +25,7 @@ import com.huanchengfly.tieba.post.models.MyInfoBean
 import com.huanchengfly.tieba.post.models.SignDataBean
 import com.huanchengfly.tieba.post.ui.theme.utils.ThemeUtils
 import com.huanchengfly.tieba.post.utils.AccountUtil
+import com.huanchengfly.tieba.post.utils.appPreferences
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -159,7 +160,12 @@ class OKSignService : IntentService(TAG) {
                 }
                 if (position < signData.size - 1) {
                     position += 1
-                    handler.postDelayed({ sign(signData[position]) }, ThreadLocalRandom.current().nextInt(1000, 3500).toLong())
+                    val delay = if (appPreferences.oksignSlowMode) {
+                        ThreadLocalRandom.current().nextInt(3500, 8000).toLong()
+                    } else {
+                        2000
+                    }
+                    handler.postDelayed({ sign(signData[position]) }, delay)
                 } else {
                     okSignProgressListener?.onFinish(false, successCount, signData.size)
                     updateNotification(getString(R.string.title_oksign_finish), getString(R.string.text_oksign_done, signData.size), Intent(this@OKSignService, MainActivity::class.java))

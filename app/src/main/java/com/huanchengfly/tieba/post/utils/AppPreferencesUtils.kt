@@ -40,11 +40,11 @@ open class AppPreferencesUtils(context: Context) {
 
     var listSingle by SharedPreferenceDelegates.boolean(defaultValue = false)
 
-    var levelIconOldStyle by SharedPreferenceDelegates.boolean(defaultValue = false, key = "level_icon_old_style")
-
     var littleTail by SharedPreferenceDelegates.string(key = "little_tail")
 
     var loadPictureWhenScroll by SharedPreferenceDelegates.boolean(defaultValue = true)
+
+    var oksignSlowMode by SharedPreferenceDelegates.boolean(defaultValue = true, key = "oksign_slow_mode")
 
     var radius by SharedPreferenceDelegates.int(defaultValue = 8)
 

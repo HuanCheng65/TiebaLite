@@ -422,4 +422,8 @@
     <string name="btn_reply_post_default">回复</string>
     <string name="title_home_page_scroll">首页滑动切换页面</string>
     <string name="title_hide_hot_message_list">隐藏贴吧话题</string>
+    <string name="title_sign_preference">一键签到</string>
+    <string name="title_oksign_slow_mode">慢速模式</string>
+    <string name="summary_oksign_slow_mode">开启后，一键签到时签到每个吧的时间间隔将会更长</string>
+    <string name="summary_oksign_slow_mode_on">一键签到时签到每个吧的时间间隔将会更长</string>
 </resources>
