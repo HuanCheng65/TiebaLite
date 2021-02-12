@@ -46,7 +46,7 @@ import com.huanchengfly.tieba.post.services.NotifyJobService
 import com.huanchengfly.tieba.post.utils.*
 import com.huanchengfly.tieba.post.widgets.MyViewPager
 
-open class MainActivity : BaseActivity(), BottomNavigationView.OnNavigationItemSelectedListener, OnNavigationItemReselectedListener {
+class MainActivity : BaseActivity(), BottomNavigationView.OnNavigationItemSelectedListener, OnNavigationItemReselectedListener {
     var mAdapter: ViewPagerAdapter = ViewPagerAdapter(supportFragmentManager)
 
     @BindView(R.id.mViewPager)
@@ -58,10 +58,15 @@ open class MainActivity : BaseActivity(), BottomNavigationView.OnNavigationItemS
 
     private var lastTime: Long = 0
     private val navigationHelper: NavigationHelper = NavigationHelper.newInstance(this)
-    private var hideExplore = false
     private var badgeTextView: TextView? = null
     private val newMessageReceiver: BroadcastReceiver = NewMessageReceiver()
     private val accountSwitchReceiver: BroadcastReceiver = AccountSwitchReceiver()
+
+    private val hideExplore
+        get() = appPreferences.hideExplore
+
+    private val msgNavPosition
+        get() = if (hideExplore) 1 else 2
 
     public override fun onResume() {
         val reason = ThemeUtil.getSharedPreferences(this).getString(ThemeUtil.SP_SWITCH_REASON, null)
@@ -104,11 +109,11 @@ open class MainActivity : BaseActivity(), BottomNavigationView.OnNavigationItemS
                 return true
             }
             R.id.navbar_msg -> {
-                mViewPager.setCurrentItem(if (hideExplore) 1 else 2, false)
+                mViewPager.setCurrentItem(msgNavPosition, false)
                 return true
             }
             R.id.navbar_user -> {
-                mViewPager.setCurrentItem(if (hideExplore) 2 else 3, false)
+                mViewPager.setCurrentItem(msgNavPosition + 1, false)
                 return true
             }
         }
@@ -120,7 +125,7 @@ open class MainActivity : BaseActivity(), BottomNavigationView.OnNavigationItemS
     }
 
     protected fun initView() {
-        val hideExploreItemView = menuView!!.getChildAt(if (hideExplore) 1 else 2) as BottomNavigationItemView
+        val hideExploreItemView = menuView!!.getChildAt(msgNavPosition) as BottomNavigationItemView
         val badge = layoutInflater.inflate(R.layout.layout_badge, hideExploreItemView, true)
         badgeTextView = badge.findViewById(R.id.tv_msg_count)
         if (hideExplore) {
@@ -146,9 +151,8 @@ open class MainActivity : BaseActivity(), BottomNavigationView.OnNavigationItemS
 
             @SuppressLint("RestrictedApi")
             override fun onPageSelected(position: Int) {
-                val baseFragment = mAdapter.getItem(position)
                 mBottomNavigationView.menu.getItem(position).isChecked = true
-                if (position == (if (hideExplore) 1 else 2)) {
+                if (position == msgNavPosition) {
                     badgeTextView!!.visibility = View.GONE
                 }
             }
@@ -174,7 +178,6 @@ open class MainActivity : BaseActivity(), BottomNavigationView.OnNavigationItemS
         super.onCreate(savedInstanceState)
         setSwipeBackEnable(false)
         ThemeUtil.setTranslucentThemeBackground(findViewById(R.id.background))
-        hideExplore = appPreferences.hideExplore
         findView()
         initView()
         initListener()
