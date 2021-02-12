@@ -25,17 +25,17 @@
             android:layout_height="wrap_content">
 
             <LinearLayout
+                android:id="@+id/forum_header"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:layout_marginTop="?attr/actionBarSize">
 
                 <androidx.constraintlayout.widget.ConstraintLayout
-                    android:id="@+id/header_view_parent"
+                    android:id="@+id/forum_info_parent"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="?attr/actionBarSize"
-                    android:padding="16dp"
-                    android:paddingTop="120dp">
+                    android:padding="16dp">
 
                     <ImageView
                         android:id="@+id/forum_header_avatar"
@@ -291,6 +291,7 @@
         </com.google.android.material.appbar.CollapsingToolbarLayout>
 
         <com.huanchengfly.tieba.post.widgets.theme.TintFrameLayout
+            android:id="@+id/forum_tab_background"
             app:backgroundTint="@color/default_color_background"
             android:background="@drawable/bg_top_radius_8dp"
             android:layout_width="match_parent"

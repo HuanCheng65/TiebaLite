@@ -10,6 +10,7 @@ import android.content.res.ColorStateList
 import android.graphics.Bitmap
 import android.graphics.Color
 import android.graphics.Typeface
+import android.graphics.drawable.GradientDrawable
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -93,7 +94,10 @@ class ForumActivity : BaseActivity(), View.OnClickListener, OnRefreshedListener,
     @BindView(R.id.toolbar_btn_right)
     lateinit var toolbarEndBtn: MaterialButton
 
-    @BindView(R.id.header_view_parent)
+    @BindView(R.id.forum_info_parent)
+    lateinit var forumInfoView: View
+
+    @BindView(R.id.forum_header)
     lateinit var headerView: View
 
     @BindView(R.id.forum_header_stat_title)
@@ -126,6 +130,9 @@ class ForumActivity : BaseActivity(), View.OnClickListener, OnRefreshedListener,
     @BindView(R.id.forum_tab)
     lateinit var headerTabView: TabLayout
 
+    @BindView(R.id.forum_tab_background)
+    lateinit var headerTabBackground: View
+
     @BindView(R.id.forum_header_progress)
     lateinit var progressBar: ProgressBar
 
@@ -135,7 +142,14 @@ class ForumActivity : BaseActivity(), View.OnClickListener, OnRefreshedListener,
     @BindView(R.id.collapsing_toolbar)
     lateinit var collapsingToolbar: CollapsingToolbarLayout
 
-    var toolbarColor: Int = Color.TRANSPARENT
+    var toolbarColor: Int = -1
+    var customToolbarColorEnable = true
+        set(value) {
+            if (field != value) {
+                setCustomStatusColor(if (value) toolbarColor else -1)
+            }
+            field = value
+        }
 
     override fun getLayoutId(): Int {
         return R.layout.activity_forum
@@ -204,10 +218,32 @@ class ForumActivity : BaseActivity(), View.OnClickListener, OnRefreshedListener,
     }
 
     private fun initView() {
-        appbar.addOnOffsetChangedListener(OnOffsetChangedListener { _, verticalOffset: Int ->
-            val titleVisible = mDataBean != null && forumName != null && abs(verticalOffset) >= headerView.height
-            val percent: Float = if (abs(verticalOffset) <= headerView.height) {
-                abs(verticalOffset.toFloat()) / headerView.height.toFloat()
+        appbar.addOnOffsetChangedListener(OnOffsetChangedListener { _, verticalOffset ->
+            val toolbarScrollOffset = 0 - (verticalOffset + headerView.height)
+            if (toolbarScrollOffset >= 0) {
+                val toolbarScrollPercent = toolbarScrollOffset.toFloat() / toolbar.height
+                var radius = resources.getDimensionPixelSize(R.dimen.radius).toFloat()
+                radius -= radius * toolbarScrollPercent
+                if (headerTabBackground.background is GradientDrawable) {
+                    (headerTabBackground.background as GradientDrawable).cornerRadii = floatArrayOf(
+                            radius, radius,
+                            radius, radius,
+                            0f, 0f,
+                            0f, 0f
+                    )
+                } else {
+                    headerTabBackground.background = getRadiusDrawable(
+                            topLeftPx = radius,
+                            topRightPx = radius
+                    )
+                }
+                customToolbarColorEnable = toolbarScrollPercent < 1f
+            } else {
+                customToolbarColorEnable = true
+            }
+            val titleVisible = mDataBean != null && forumName != null && abs(verticalOffset) >= forumInfoView.height
+            val percent: Float = if (abs(verticalOffset) <= forumInfoView.height) {
+                abs(verticalOffset.toFloat()) / forumInfoView.height.toFloat()
             } else {
                 1f
             }
@@ -215,14 +251,14 @@ class ForumActivity : BaseActivity(), View.OnClickListener, OnRefreshedListener,
             toolbarEndBtn.visibility = if (titleVisible) View.VISIBLE else View.GONE
             toolbar.backgroundTintList = ColorStateList.valueOf(Util.changeAlpha(toolbarColor, percent))
             if (animated && ThemeUtil.THEME_TRANSLUCENT == ThemeUtil.getTheme(this)) {
-                if (abs(verticalOffset) > headerView.height) {
-                    AnimUtil.alphaOut(headerView).setListener(object : AnimatorListenerAdapter() {
+                if (abs(verticalOffset) > forumInfoView.height) {
+                    AnimUtil.alphaOut(forumInfoView).setListener(object : AnimatorListenerAdapter() {
                         override fun onAnimationEnd(animation: Animator) {
-                            headerView.visibility = View.INVISIBLE
+                            forumInfoView.visibility = View.INVISIBLE
                         }
                     }).start()
                 } else {
-                    AnimUtil.alphaIn(headerView).start()
+                    AnimUtil.alphaIn(forumInfoView).start()
                 }
             }
         })
@@ -400,7 +436,7 @@ class ForumActivity : BaseActivity(), View.OnClickListener, OnRefreshedListener,
 
     private fun refreshHeaderView() {
         if (mDataBean != null && mDataBean!!.forum != null) {
-            headerView.visibility = View.VISIBLE
+            forumInfoView.visibility = View.VISIBLE
             try {
                 val color = getDarkerColor(greifyColor(Color.parseColor("#${mDataBean?.forum?.themeColor?.day?.commonColor ?: ThemeUtils.getColorById(this, R.color.default_color_primary)}"), 0.15f), 0.1f)
                 toolbarColor = color
@@ -472,7 +508,7 @@ class ForumActivity : BaseActivity(), View.OnClickListener, OnRefreshedListener,
             }
             */
         } else {
-            headerView.visibility = View.INVISIBLE
+            forumInfoView.visibility = View.INVISIBLE
         }
     }
 
