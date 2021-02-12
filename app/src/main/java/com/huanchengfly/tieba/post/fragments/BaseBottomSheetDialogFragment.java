@@ -75,13 +75,17 @@ public abstract class BaseBottomSheetDialogFragment extends BottomSheetDialogFra
         return statusBarHeight;
     }
 
+    protected boolean isFullScreen() {
+        return false;
+    }
+
     @Override
     public void onStart() {
         super.onStart();
         Dialog dialog = getDialog();
         if (dialog != null) {
             View bottomSheet = dialog.findViewById(R.id.design_bottom_sheet);
-            bottomSheet.getLayoutParams().height = ViewGroup.LayoutParams.WRAP_CONTENT;
+            bottomSheet.getLayoutParams().height = isFullScreen() ? ViewGroup.LayoutParams.MATCH_PARENT : ViewGroup.LayoutParams.WRAP_CONTENT;
         }
         final View view = getView();
         if (view != null) {

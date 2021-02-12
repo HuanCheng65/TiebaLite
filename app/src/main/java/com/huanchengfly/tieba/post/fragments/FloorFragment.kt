@@ -76,6 +76,10 @@ class FloorFragment : BaseBottomSheetDialogFragment() {
                         AccountUtil.getLoginInfo(attachContext)!!.nameShow).setPn(pn.toString()).toString()))
     }
 
+    override fun isFullScreen(): Boolean {
+        return true
+    }
+
     override fun onStart() {
         super.onStart()
         val filter = IntentFilter()

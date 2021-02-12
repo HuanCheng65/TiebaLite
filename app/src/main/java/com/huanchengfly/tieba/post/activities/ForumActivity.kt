@@ -401,10 +401,14 @@ class ForumActivity : BaseActivity(), View.OnClickListener, OnRefreshedListener,
     private fun refreshHeaderView() {
         if (mDataBean != null && mDataBean!!.forum != null) {
             headerView.visibility = View.VISIBLE
-            val color = getDarkerColor(greifyColor(Color.parseColor("#${mDataBean?.forum?.themeColor?.day?.commonColor ?: ThemeUtils.getColorById(this, R.color.default_color_primary)}"), 0.15f), 0.1f)
-            toolbarColor = color
-            appbar.backgroundTintList = ColorStateList.valueOf(color)
-            setCustomStatusColor(color)
+            try {
+                val color = getDarkerColor(greifyColor(Color.parseColor("#${mDataBean?.forum?.themeColor?.day?.commonColor ?: ThemeUtils.getColorById(this, R.color.default_color_primary)}"), 0.15f), 0.1f)
+                toolbarColor = color
+                appbar.backgroundTintList = ColorStateList.valueOf(color)
+                setCustomStatusColor(color)
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
             if (avatarView.tag == null) {
                 ImageUtil.load(avatarView, ImageUtil.LOAD_TYPE_AVATAR, mDataBean!!.forum!!.avatar)
                 ImageUtil.initImageView(avatarView, PhotoViewBean(mDataBean!!.forum!!.avatar, false))
