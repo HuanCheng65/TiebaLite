@@ -1,39 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.huanchengfly.tieba.post.widgets.theme.TintRelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<com.huanchengfly.tieba.post.widgets.theme.TintLinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     app:backgroundTint="@color/default_color_window_background"
     android:id="@+id/background"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context=".activities.MainActivity">
 
-    <FrameLayout
-        android:id="@+id/appbar"
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <com.huanchengfly.tieba.post.widgets.theme.TintToolbar
-            app:popupTheme="?attr/actionOverflowMenuStyle"
-            app:navigationIcon="@null"
-            app:toolbarBackgroundTint="@color/default_color_toolbar"
-            app:itemTint="@color/default_color_toolbar_item"
-            app:secondaryItemTint="@color/default_color_toolbar_item_secondary"
-            app:activeItemTint="@color/default_color_toolbar_item_active"
-            android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            app:title="@string/title_main"
-            app:titleTextAppearance="@style/Toolbar.Title"
-            app:subtitleTextAppearance="@style/Toolbar.Subtitle" />
-    </FrameLayout>
+        android:layout_height="0dp"
+        android:layout_weight="1">
 
-    <com.huanchengfly.tieba.post.widgets.MyViewPager
-        android:layout_above="@id/navbar"
-        android:layout_below="@id/appbar"
-        android:id="@+id/mViewPager"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        <com.huanchengfly.tieba.post.widgets.MyViewPager
+            android:layout_above="@id/navbar"
+            android:layout_below="@id/appbar"
+            android:id="@+id/mViewPager"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
     <com.huanchengfly.tieba.post.widgets.theme.TintBottomNavigationView
         android:id="@+id/navbar"
@@ -47,4 +34,4 @@
         app:labelVisibilityMode="unlabeled"
         app:menu="@menu/navbar_main" />
 
-</com.huanchengfly.tieba.post.widgets.theme.TintRelativeLayout>
+</com.huanchengfly.tieba.post.widgets.theme.TintLinearLayout>

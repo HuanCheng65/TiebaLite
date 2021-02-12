@@ -16,7 +16,6 @@ import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import android.widget.FrameLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.viewpager.widget.ViewPager.OnPageChangeListener
@@ -46,13 +45,9 @@ import com.huanchengfly.tieba.post.models.MyInfoBean
 import com.huanchengfly.tieba.post.services.NotifyJobService
 import com.huanchengfly.tieba.post.utils.*
 import com.huanchengfly.tieba.post.widgets.MyViewPager
-import com.huanchengfly.tieba.post.widgets.theme.TintToolbar
 
 open class MainActivity : BaseActivity(), BottomNavigationView.OnNavigationItemSelectedListener, OnNavigationItemReselectedListener {
     var mAdapter: ViewPagerAdapter = ViewPagerAdapter(supportFragmentManager)
-
-    @BindView(R.id.toolbar)
-    lateinit var mToolbar: TintToolbar
 
     @BindView(R.id.mViewPager)
     lateinit var mViewPager: MyViewPager
@@ -67,9 +62,6 @@ open class MainActivity : BaseActivity(), BottomNavigationView.OnNavigationItemS
     private var badgeTextView: TextView? = null
     private val newMessageReceiver: BroadcastReceiver = NewMessageReceiver()
     private val accountSwitchReceiver: BroadcastReceiver = AccountSwitchReceiver()
-
-    @BindView(R.id.appbar)
-    lateinit var appbar: FrameLayout
 
     public override fun onResume() {
         val reason = ThemeUtil.getSharedPreferences(this).getString(ThemeUtil.SP_SWITCH_REASON, null)
@@ -131,7 +123,6 @@ open class MainActivity : BaseActivity(), BottomNavigationView.OnNavigationItemS
         val hideExploreItemView = menuView!!.getChildAt(if (hideExplore) 1 else 2) as BottomNavigationItemView
         val badge = layoutInflater.inflate(R.layout.layout_badge, hideExploreItemView, true)
         badgeTextView = badge.findViewById(R.id.tv_msg_count)
-        setSupportActionBar(mToolbar)
         if (hideExplore) {
             mBottomNavigationView.menu.removeItem(R.id.navbar_explore)
         }
@@ -156,9 +147,7 @@ open class MainActivity : BaseActivity(), BottomNavigationView.OnNavigationItemS
             @SuppressLint("RestrictedApi")
             override fun onPageSelected(position: Int) {
                 val baseFragment = mAdapter.getItem(position)
-                appbar.visibility = if (baseFragment.hasOwnAppbar()) View.GONE else View.VISIBLE
                 mBottomNavigationView.menu.getItem(position).isChecked = true
-                mToolbar.title = mBottomNavigationView.menu.getItem(position).title
                 if (position == (if (hideExplore) 1 else 2)) {
                     badgeTextView!!.visibility = View.GONE
                 }
@@ -166,7 +155,6 @@ open class MainActivity : BaseActivity(), BottomNavigationView.OnNavigationItemS
 
             override fun onPageScrollStateChanged(state: Int) {}
         })
-        appbar.visibility = if (mAdapter.getItem(0).hasOwnAppbar()) View.GONE else View.VISIBLE
     }
 
     @SuppressLint("ApplySharedPref")
@@ -390,10 +378,6 @@ open class MainActivity : BaseActivity(), BottomNavigationView.OnNavigationItemS
             lastTime = System.currentTimeMillis()
             Toast.makeText(this, R.string.toast_double_key_exit, Toast.LENGTH_SHORT).show()
         }
-    }
-
-    override fun setTitle(newTitle: String?) {
-        mToolbar.title = newTitle
     }
 
     private inner class NewMessageReceiver : BroadcastReceiver() {
