@@ -170,12 +170,28 @@ class SettingsFragment : PreferencesFragment() {
         initListPreference("dark_theme", "dark")
         aboutPreference!!.summary = getString(R.string.tip_about, VersionUtil.getVersionName(attachContext))
         refresh()
+        /*
+        try {
+            val preferenceGroupClazz = PreferenceGroup::class.java
+            val preferencesField = preferenceGroupClazz.getDeclaredField("mPreferences")
+            preferencesField.isAccessible = true
+            val preferencesList = preferencesField.get(preferenceScreen) as List<Preference>
+            attachContext.toastShort("${preferencesList.size}")
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+        */
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        setDivider(ThemeUtils.tintDrawable(ContextCompat.getDrawable(attachContext, R.drawable.drawable_divider_8dp), ThemeUtils.getColorByAttr(attachContext, R.attr.colorDivider)))
-        setDividerHeight(DisplayUtil.dp2px(attachContext, 8f))
+        setDivider(
+                ThemeUtils.tintDrawable(
+                        ContextCompat.getDrawable(attachContext, R.drawable.drawable_divider_8dp),
+                        ThemeUtils.getColorById(attachContext, R.color.default_color_window_background)
+                )
+        )
+        setDividerHeight(0)
     }
 
     private fun initSwitchPreference(key: String, defValue: Boolean = false) {

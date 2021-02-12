@@ -1,18 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.huanchengfly.tieba.post.widgets.theme.TintLinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:minHeight="15dp"
     android:gravity="center_vertical"
-    android:paddingStart="?android:attr/listPreferredItemPaddingStart"
-    android:paddingEnd="?android:attr/listPreferredItemPaddingEnd"
+    android:layout_marginStart="@dimen/card_margin"
+    android:layout_marginEnd="@dimen/card_margin"
     android:clipToPadding="false"
-    android:baselineAligned="false">
+    android:baselineAligned="false"
+    android:background="@drawable/bg_bottom_radius_10dp"
+    app:backgroundTint="@color/default_color_card">
 
-    <include
-        layout="@layout/layout_preference_icon" />
+    <include layout="@layout/layout_preference_icon" />
 
     <RelativeLayout
         android:layout_width="0dp"
@@ -25,7 +26,7 @@
             android:layout_height="wrap_content"
             android:singleLine="true"
             android:textStyle="bold"
-            app:tintList="@color/text_color_selector"
+            app:tint="@color/text_color_selector"
             android:textAppearance="@style/TextAppearance.MaterialSubhead"
             android:ellipsize="marquee"
             tools:ignore="PrivateResource" />
@@ -53,4 +54,4 @@
         android:orientation="vertical"
         tools:ignore="RtlSymmetry" />
 
-</LinearLayout>
+</com.huanchengfly.tieba.post.widgets.theme.TintLinearLayout>

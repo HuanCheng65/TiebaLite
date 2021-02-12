@@ -2,7 +2,6 @@
 <androidx.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <androidx.preference.PreferenceCategory
-        android:layout="@layout/layout_preference_category_first"
         android:title="@string/title_account">
         <ListPreference
             android:icon="@drawable/ic_round_account_circle"

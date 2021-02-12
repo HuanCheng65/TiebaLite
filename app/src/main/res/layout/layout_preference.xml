@@ -1,20 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.huanchengfly.tieba.post.widgets.theme.TintLinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:minHeight="?android:attr/listPreferredItemHeightSmall"
     android:gravity="center_vertical"
     android:paddingStart="?android:attr/listPreferredItemPaddingStart"
     android:paddingEnd="?android:attr/listPreferredItemPaddingEnd"
-    android:background="?android:attr/selectableItemBackground"
+    android:layout_marginStart="@dimen/card_margin"
+    android:layout_marginEnd="@dimen/card_margin"
+    android:background="@drawable/bg_ripple"
     android:clipToPadding="false"
     android:focusable="true"
-    android:baselineAligned="false">
+    android:baselineAligned="false"
+    app:backgroundTint="@color/default_color_card">
 
-    <include
-        layout="@layout/layout_preference_icon" />
+    <include layout="@layout/layout_preference_icon" />
 
     <RelativeLayout
         android:layout_width="0dp"
@@ -29,7 +31,7 @@
             android:layout_height="wrap_content"
             android:singleLine="true"
             android:textStyle="bold"
-            app:tintList="@color/text_color_selector"
+            app:tint="@color/text_color_selector"
             android:textAppearance="@style/TextAppearance.MaterialSubhead"
             android:ellipsize="marquee"
             tools:ignore="PrivateResource" />
@@ -42,7 +44,7 @@
             android:layout_below="@android:id/title"
             android:layout_alignStart="@android:id/title"
             android:textSize="14sp"
-            app:tintList="@color/text_color_secondary_selector"
+            app:tint="@color/text_color_secondary_selector"
             android:maxLines="10"/>
 
     </RelativeLayout>
@@ -56,4 +58,4 @@
         android:orientation="vertical"
         tools:ignore="RtlSymmetry" />
 
-</LinearLayout>
+</com.huanchengfly.tieba.post.widgets.theme.TintLinearLayout>
