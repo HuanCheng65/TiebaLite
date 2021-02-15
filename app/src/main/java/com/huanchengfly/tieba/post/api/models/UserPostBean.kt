@@ -1,218 +1,153 @@
-package com.huanchengfly.tieba.post.api.models;
+package com.huanchengfly.tieba.post.api.models
 
-import com.google.gson.annotations.JsonAdapter;
-import com.google.gson.annotations.SerializedName;
-import com.huanchengfly.tieba.post.api.adapters.PortraitAdapter;
-import com.huanchengfly.tieba.post.api.adapters.UserPostContentAdapter;
-import com.huanchengfly.tieba.post.models.BaseBean;
+import com.google.gson.annotations.JsonAdapter
+import com.google.gson.annotations.SerializedName
+import com.huanchengfly.tieba.post.api.adapters.PortraitAdapter
+import com.huanchengfly.tieba.post.api.adapters.UserPostContentAdapter
+import com.huanchengfly.tieba.post.models.BaseBean
+import java.util.*
 
-import java.util.ArrayList;
-import java.util.List;
-
-public class UserPostBean extends BaseBean {
+class UserPostBean : BaseBean() {
     @SerializedName("error_code")
-    private String errorCode;
+    val errorCode: String? = null
+
     @SerializedName("error_msg")
-    private String errorMsg;
+    val errorMsg: String? = null
+
     @SerializedName("hide_post")
-    private String hidePost;
+    val hidePost: String? = null
+
     @SerializedName("post_list")
-    private List<PostBean> postList;
+    val postList: List<PostBean>? = null
 
-    public String getErrorCode() {
-        return errorCode;
+    class AgreeBean {
+        @SerializedName("agree_num")
+        val agreeNum: String? = null
+
+        @SerializedName("disagree_num")
+        val disagreeNum: String? = null
+
+        @SerializedName("diff_agree_num")
+        val diffAgreeNum: String? = null
+
+        @SerializedName("has_agree")
+        val hasAgree: String? = null
+
     }
 
-    public String getErrorMsg() {
-        return errorMsg;
-    }
+    class PostBean {
+        val agree: AgreeBean? = null
 
-    public String getHidePost() {
-        return hidePost;
-    }
-
-    public List<PostBean> getPostList() {
-        return postList;
-    }
-
-    public static class PostBean {
         @SerializedName("forum_id")
-        private String forumId;
+        val forumId: String? = null
+
         @SerializedName("thread_id")
-        private String threadId;
+        val threadId: String? = null
+
         @SerializedName("post_id")
-        private String postId;
+        val postId: String? = null
+
         @SerializedName("is_thread")
-        private String isThread;
+        val isThread: String? = null
+
         @SerializedName("create_time")
-        private String createTime;
+        val createTime: String? = null
+
         @SerializedName("is_ntitle")
-        private String isNoTitle;
+        val isNoTitle: String? = null
+
         @SerializedName("forum_name")
-        private String forumName;
-        private String title;
+        val forumName: String? = null
+        val title: String? = null
+
         @SerializedName("user_name")
-        private String userName;
+        val userName: String? = null
+
         @SerializedName("is_post_deleted")
-        private String isPostDeleted;
+        val isPostDeleted: String? = null
+
         @SerializedName("reply_num")
-        private String replyNum;
+        val replyNum: String? = null
+
         @SerializedName("freq_num")
-        private String freqNum;
+        val freqNum: String? = null
+
         @SerializedName("user_id")
-        private String userId;
+        val userId: String? = null
+
         @SerializedName("name_show")
-        private String nameShow;
-        @JsonAdapter(PortraitAdapter.class)
+        val nameShow: String? = null
+
+        @JsonAdapter(PortraitAdapter::class)
         @SerializedName("user_portrait")
-        private String userPortrait;
+        val userPortrait: String? = null
+
         @SerializedName("post_type")
-        private String postType;
-        @JsonAdapter(UserPostContentAdapter.class)
-        private List<ContentBean> content;
+        val postType: String? = null
+
+        @JsonAdapter(UserPostContentAdapter::class)
+        val content: List<ContentBean>? = null
+
         @SerializedName("abstract")
-        private List<PostContentBean> abstracts;
-
-        public List<PostContentBean> getAbstracts() {
-            return abstracts;
-        }
-
-        public String getPostType() {
-            return postType;
-        }
-
-        public String getIsNoTitle() {
-            return isNoTitle;
-        }
-
-        public List<ContentBean> getContent() {
-            return content;
-        }
-
-        public String getForumId() {
-            return forumId;
-        }
-
-        public String getThreadId() {
-            return threadId;
-        }
-
-        public String getPostId() {
-            return postId;
-        }
-
-        public String getIsThread() {
-            return isThread;
-        }
-
-        public String getCreateTime() {
-            return createTime;
-        }
-
-        public String getForumName() {
-            return forumName;
-        }
-
-        public String getTitle() {
-            return title;
-        }
-
-        public String getUserName() {
-            return userName;
-        }
-
-        public String getIsPostDeleted() {
-            return isPostDeleted;
-        }
-
-        public String getReplyNum() {
-            return replyNum;
-        }
-
-        public String getFreqNum() {
-            return freqNum;
-        }
-
-        public String getUserId() {
-            return userId;
-        }
-
-        public String getNameShow() {
-            return nameShow;
-        }
-
-        public String getUserPortrait() {
-            return userPortrait;
-        }
+        val abstracts: List<PostContentBean>? = null
     }
 
-    public static class ContentBean {
+    class ContentBean {
         @SerializedName("post_content")
-        private List<PostContentBean> postContent;
+        var postContent: List<PostContentBean>? = null
+            private set
+
         @SerializedName("create_time")
-        private String createTime;
+        var createTime: String? = null
+            private set
+
         @SerializedName("post_id")
-        private String postId;
+        var postId: String? = null
+            private set
 
-        public static ContentBean createContentBean(String content) {
-            List<PostContentBean> list = new ArrayList<>();
-            list.add(new PostContentBean()
-                    .setType("0")
-                    .setText(content));
-            return new ContentBean()
-                    .setPostContent(list)
-                    .setCreateTime(null)
-                    .setPostId(null);
+        fun setCreateTime(createTime: String?): ContentBean {
+            this.createTime = createTime
+            return this
         }
 
-        public String getCreateTime() {
-            return createTime;
+        fun setPostId(postId: String?): ContentBean {
+            this.postId = postId
+            return this
         }
 
-        public ContentBean setCreateTime(String createTime) {
-            this.createTime = createTime;
-            return this;
+        fun setPostContent(postContent: List<PostContentBean>?): ContentBean {
+            this.postContent = postContent
+            return this
         }
 
-        public String getPostId() {
-            return postId;
-        }
-
-        public ContentBean setPostId(String postId) {
-            this.postId = postId;
-            return this;
-        }
-
-        public List<PostContentBean> getPostContent() {
-            return postContent;
-        }
-
-        public ContentBean setPostContent(List<PostContentBean> postContent) {
-            this.postContent = postContent;
-            return this;
+        companion object {
+            fun createContentBean(content: String?): ContentBean {
+                val list: MutableList<PostContentBean> = ArrayList()
+                list.add(PostContentBean()
+                        .setType("0")
+                        .setText(content))
+                return ContentBean()
+                        .setPostContent(list)
+                        .setCreateTime(null)
+                        .setPostId(null)
+            }
         }
     }
 
-    public static class PostContentBean {
-        private String type;
-        private String text;
+    class PostContentBean {
+        var type: String? = null
+            private set
+        var text: String? = null
+            private set
 
-        public String getType() {
-            return type;
+        fun setType(type: String?): PostContentBean {
+            this.type = type
+            return this
         }
 
-        public PostContentBean setType(String type) {
-            this.type = type;
-            return this;
-        }
-
-        public String getText() {
-            return text;
-        }
-
-        public PostContentBean setText(String text) {
-            this.text = text;
-            return this;
+        fun setText(text: String?): PostContentBean {
+            this.text = text
+            return this
         }
     }
 }

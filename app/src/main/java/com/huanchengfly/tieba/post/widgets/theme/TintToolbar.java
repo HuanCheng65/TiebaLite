@@ -39,7 +39,7 @@ public class TintToolbar extends Toolbar implements Tintable {
             return;
         }
         if (attrs == null) {
-            mBackgroundTintResId = R.color.default_color_toolbar;
+            mBackgroundTintResId = 0;
             mItemTintResId = R.color.default_color_toolbar_item;
             mSecondaryItemTintResId = R.color.default_color_toolbar_item_secondary;
             mActiveItemTintResId = R.color.default_color_toolbar_item_active;
@@ -47,7 +47,7 @@ public class TintToolbar extends Toolbar implements Tintable {
             return;
         }
         TypedArray array = getContext().obtainStyledAttributes(attrs, R.styleable.TintToolbar, defStyleAttr, 0);
-        mBackgroundTintResId = array.getResourceId(R.styleable.TintToolbar_toolbarBackgroundTint, R.color.default_color_toolbar);
+        mBackgroundTintResId = array.getResourceId(R.styleable.TintToolbar_toolbarBackgroundTint, 0);
         mItemTintResId = array.getResourceId(R.styleable.TintToolbar_itemTint, R.color.default_color_toolbar_item);
         mSecondaryItemTintResId = array.getResourceId(R.styleable.TintToolbar_secondaryItemTint, R.color.default_color_toolbar_item_secondary);
         mActiveItemTintResId = array.getResourceId(R.styleable.TintToolbar_activeItemTint, R.color.default_color_toolbar_item_active);
@@ -74,9 +74,6 @@ public class TintToolbar extends Toolbar implements Tintable {
     }
 
     private void fixColor() {
-        if (mBackgroundTintResId == 0) {
-            mBackgroundTintResId = R.color.default_color_toolbar;
-        }
         if (mItemTintResId == 0) {
             mItemTintResId = R.color.default_color_toolbar_item;
         }
@@ -89,10 +86,12 @@ public class TintToolbar extends Toolbar implements Tintable {
     }
 
     private void tintBackground() {
-        if (getBackground() == null) {
-            setBackgroundColor(ThemeUtils.getColorById(getContext(), mBackgroundTintResId));
-        } else {
-            setBackgroundTintList(ColorStateList.valueOf(ThemeUtils.getColorById(getContext(), mBackgroundTintResId)));
+        if (mBackgroundTintResId != 0) {
+            if (getBackground() == null) {
+                setBackgroundColor(ThemeUtils.getColorById(getContext(), mBackgroundTintResId));
+            } else {
+                setBackgroundTintList(ColorStateList.valueOf(ThemeUtils.getColorById(getContext(), mBackgroundTintResId)));
+            }
         }
     }
 

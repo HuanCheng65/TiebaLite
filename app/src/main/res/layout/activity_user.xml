@@ -1,115 +1,179 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/background"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".activities.UserActivity">
-    <com.huanchengfly.tieba.post.widgets.theme.TintCoordinatorLayout
+    <com.huanchengfly.tieba.post.widgets.theme.TintCoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/background"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-        <com.huanchengfly.tieba.post.widgets.theme.TintAppBarLayout
+        android:layout_height="match_parent"
+        app:backgroundTint="@color/default_color_window_background"
+        tools:context=".activities.UserActivity">
+
+        <com.google.android.material.appbar.AppBarLayout
             android:id="@+id/appbar"
-            app:backgroundTint="@color/default_color_toolbar"
+            android:background="@color/transparent"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:stateListAnimator="@animator/appbar_elevation">
+
             <com.google.android.material.appbar.CollapsingToolbarLayout
-                android:fitsSystemWindows="true"
+                android:id="@+id/collapsing_toolbar"
                 app:layout_scrollFlags="scroll|exitUntilCollapsed"
                 app:titleEnabled="false"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
-                <LinearLayout
-                    android:orientation="vertical"
+
+                <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
-                    <RelativeLayout
-                        android:padding="24dp"
-                        android:layout_marginTop="?attr/actionBarSize"
+
+                    <ImageView
+                        android:id="@+id/user_center_background"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
-                        <com.huanchengfly.tieba.post.widgets.MyImageView
-                            android:transitionName="avatar"
-                            android:layout_centerVertical="true"
-                            android:id="@+id/user_center_avatar"
-                            android:layout_width="64dp"
-                            android:layout_height="64dp" />
+                        android:layout_height="0dp"
+                        android:scaleType="centerCrop"
+                        android:src="@drawable/user_header"
+                        android:layout_alignParentTop="true"
+                        android:layout_alignParentStart="true"
+                        android:layout_alignParentEnd="true"
+                        android:layout_alignBottom="@id/user_center_header" />
+
+                    <LinearLayout
+                        android:id="@+id/user_center_header"
+                        android:orientation="vertical"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingStart="16dp"
+                        android:paddingEnd="16dp"
+                        android:layout_marginTop="?actionBarSize">
+
+                        <View
+                            tools:minHeight="@android:dimen/status_bar_height"
+                            android:id="@+id/fake_status_bar"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content" />
+
                         <RelativeLayout
-                            android:layout_centerVertical="true"
-                            android:layout_marginStart="16dp"
-                            android:layout_toEndOf="@id/user_center_avatar"
-                            android:layout_toStartOf="@id/user_center_action_btn"
-                            android:layout_marginEnd="16dp"
+                            android:layout_marginTop="56dp"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content">
-                            <com.huanchengfly.tieba.post.widgets.theme.TintTextView
-                                android:textSize="18sp"
+
+                            <com.huanchengfly.tieba.post.widgets.MyImageView
+                                android:id="@+id/user_center_avatar"
+                                android:layout_width="72dp"
+                                android:layout_height="72dp"
+                                android:layout_alignParentStart="true"
+                                android:layout_centerVertical="true"
+                                android:transitionName="avatar" />
+
+                            <com.huanchengfly.tieba.post.widgets.theme.TintMaterialButton
+                                android:layout_alignParentEnd="true"
+                                android:id="@+id/user_center_action_btn"
+                                android:minHeight="32dp"
+                                android:minWidth="0dp"
+                                android:paddingTop="10dp"
+                                android:paddingBottom="10dp"
+                                android:paddingStart="24dp"
+                                android:paddingEnd="24dp"
+                                app:backgroundTint="@color/user_center_action_btn_color"
+                                app:cornerRadius="100dp"
+                                app:buttonTextColor="@color/white"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
                                 android:textStyle="bold"
-                                app:tint="@color/default_color_toolbar_item"
-                                android:id="@+id/title_view"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content" />
-                            <com.huanchengfly.tieba.post.widgets.theme.TintTextView
-                                android:layout_marginTop="8dp"
-                                android:layout_alignStart="@id/title_view"
-                                android:layout_below="@id/title_view"
-                                android:textSize="14sp"
-                                android:textStyle="bold"
-                                app:tint="@color/default_color_toolbar_item_secondary"
-                                android:id="@+id/user_center_stat"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content" />
+                                android:layout_centerVertical="true"
+                                tools:text="编辑资料"
+                                tools:ignore="RelativeOverlap" />
                         </RelativeLayout>
 
-                        <com.huanchengfly.tieba.post.widgets.theme.TintMaterialButton
-                            android:textStyle="bold"
-                            app:strokeWidth="1.5dp"
-                            style="@style/Widget.Button.Outlined"
-                            android:id="@+id/user_center_action_btn"
-                            android:layout_width="wrap_content"
+                        <com.huanchengfly.tieba.post.widgets.theme.TintTextView
+                            android:layout_marginTop="24dp"
+                            android:id="@+id/title_view"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_alignParentEnd="true"
-                            android:layout_centerVertical="true"
-                            android:text="关注" />
-                    </RelativeLayout>
-                    <com.huanchengfly.tieba.post.widgets.theme.TintView
-                        android:visibility="gone"
-                        android:id="@+id/user_center_divider"
-                        app:backgroundTint="@color/default_color_divider"
+                            android:textSize="16sp"
+                            android:textStyle="bold"
+                            app:tint="@color/color_text_translucent_light" />
+
+                        <com.huanchengfly.tieba.post.widgets.theme.TintTextView
+                            android:id="@+id/user_center_slogan"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="16dp"
+                            android:textSize="12sp"
+                            app:tint="@color/color_text_secondary_translucent_light" />
+
+                        <com.huanchengfly.tieba.post.widgets.theme.TintTextView
+                            android:id="@+id/user_center_stat"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="16dp"
+                            android:layout_marginBottom="34dp"
+                            android:textSize="14sp"
+                            android:textStyle="bold"
+                            app:tint="@color/color_text_translucent_light" />
+                    </LinearLayout>
+
+                    <View
+                        tools:visibility="gone"
+                        android:id="@+id/user_center_header_mask"
                         android:layout_width="match_parent"
-                        android:layout_height="8dp" />
-                </LinearLayout>
+                        android:layout_height="0dp"
+                        android:alpha="0"
+                        android:background="@color/user_center_header_mask"
+                        android:layout_alignParentTop="true"
+                        android:layout_alignParentStart="true"
+                        android:layout_alignParentEnd="true"
+                        android:layout_alignBottom="@id/user_center_header" />
+                </RelativeLayout>
+
                 <com.huanchengfly.tieba.post.widgets.theme.TintToolbar
                     app:layout_collapseMode="pin"
-                    app:popupTheme="?attr/actionOverflowMenuStyle"
-                    app:toolbarBackgroundTint="@color/default_color_toolbar"
-                    app:itemTint="@color/default_color_toolbar_item"
-                    app:secondaryItemTint="@color/default_color_toolbar_item_secondary"
-                    app:activeItemTint="@color/default_color_toolbar_item_active"
-                    app:titleTextAppearance="@style/Toolbar.Title"
-                    app:subtitleTextAppearance="@style/Toolbar.Subtitle"
+                    app:itemTint="@color/theme_color_toolbar_item_translucent_light"
+                    app:secondaryItemTint="@color/theme_color_toolbar_item_secondary_translucent_light"
+                    app:activeItemTint="@color/theme_color_toolbar_item_active_translucent_light"
+                    android:layout_marginBottom="10dp"
                     android:id="@+id/toolbar"
                     android:layout_width="match_parent"
-                    android:layout_height="?attr/actionBarSize" />
+                    android:layout_height="wrap_content" />
             </com.google.android.material.appbar.CollapsingToolbarLayout>
-            <com.huanchengfly.tieba.post.widgets.theme.TintTabLayout
-                android:id="@+id/user_center_tab"
-                style="@style/Widget.TabLayout.Fixed"
-                android:background="@drawable/bg_round"
+
+            <com.huanchengfly.tieba.post.widgets.theme.TintFrameLayout
+                android:id="@+id/user_center_tab_container"
+                android:layout_marginTop="-10dp"
+                app:backgroundTint="@color/default_color_toolbar"
+                android:background="@drawable/bg_top_radius_10dp"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-        </com.huanchengfly.tieba.post.widgets.theme.TintAppBarLayout>
+                android:layout_height="wrap_content">
+
+                <com.huanchengfly.tieba.post.widgets.theme.TintFrameLayout
+                    android:layout_marginTop="12dp"
+                    android:layout_marginBottom="12dp"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginEnd="16dp"
+                    android:background="@drawable/bg_radius_8dp"
+                    app:backgroundTint="@color/default_color_toolbar_bar"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <com.huanchengfly.tieba.post.widgets.theme.TintTabLayout
+                        android:layout_marginStart="5dp"
+                        android:layout_marginEnd="5dp"
+                        style="@style/Widget.TabLayout.Toolbar.Fixed"
+                        android:id="@+id/user_center_tab"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
+                </com.huanchengfly.tieba.post.widgets.theme.TintFrameLayout>
+            </com.huanchengfly.tieba.post.widgets.theme.TintFrameLayout>
+        </com.google.android.material.appbar.AppBarLayout>
+
         <androidx.viewpager.widget.ViewPager
+            android:overScrollMode="ifContentScrolls"
             android:id="@+id/user_center_vp"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:layout_behavior="@string/appbar_scrolling_view_behavior" />
-    </com.huanchengfly.tieba.post.widgets.theme.TintCoordinatorLayout>
 
-    <include
-        android:id="@+id/loading_view"
-        layout="@layout/layout_loading_view" />
-</FrameLayout>
+        <include
+            android:id="@+id/loading_view"
+            layout="@layout/layout_loading_view" />
+    </com.huanchengfly.tieba.post.widgets.theme.TintCoordinatorLayout>

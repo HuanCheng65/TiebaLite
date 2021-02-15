@@ -42,6 +42,7 @@ abstract class BaseActivity : SwipeBackActivity(), ExtraRefreshable {
     var isActivityRunning = true
         private set
     private var customStatusColor = -1
+    private var statusBarTinted = false
 
     val appPreferences: AppPreferencesUtils
         get() = AppPreferencesUtils(this)
@@ -200,18 +201,21 @@ abstract class BaseActivity : SwipeBackActivity(), ExtraRefreshable {
                     .transparentBar()
                     .init()
         } else {
-            val immersionBar = ImmersionBar.with(this)
-                    .fitsSystemWindowsInt(true, ThemeUtils.getColorByAttr(this, R.attr.colorBg))
-                    .navigationBarColorInt(ThemeUtils.getColorByAttr(this, R.attr.colorNavBar))
-                    .navigationBarDarkIcon(ThemeUtil.isNavigationBarFontDark(this))
-            if (customStatusColor != -1) {
-                immersionBar.statusBarColorInt(customStatusColor)
-                        .autoStatusBarDarkModeEnable(true)
-            } else {
-                immersionBar.statusBarColorInt(calcStatusBarColor(this, ThemeUtils.getColorByAttr(this, R.attr.colorToolbar)))
-                        .statusBarDarkFont(ThemeUtil.isStatusBarFontDark(this))
-            }
-            immersionBar.init()
+            ImmersionBar.with(this).apply {
+                if (customStatusColor != -1) {
+                    statusBarColorInt(customStatusColor)
+                    autoStatusBarDarkModeEnable(true)
+                } else {
+                    statusBarColorInt(calcStatusBarColor(this@BaseActivity, ThemeUtils.getColorByAttr(this@BaseActivity, R.attr.colorToolbar)))
+                    statusBarDarkFont(ThemeUtil.isStatusBarFontDark(this@BaseActivity))
+                }
+                fitsSystemWindowsInt(true, ThemeUtils.getColorByAttr(this@BaseActivity, R.attr.colorBg))
+                navigationBarColorInt(ThemeUtils.getColorByAttr(this@BaseActivity, R.attr.colorNavBar))
+                navigationBarDarkIcon(ThemeUtil.isNavigationBarFontDark(this@BaseActivity))
+            }.init()
+        }
+        if (!statusBarTinted) {
+            statusBarTinted = true
         }
     }
 

@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     app:backgroundTint="@color/default_color_card"
+    android:background="@drawable/bg_radius_10dp"
     android:paddingStart="@dimen/padding_start_default"
     android:paddingEnd="@dimen/padding_end_default"
     android:paddingTop="12dp"

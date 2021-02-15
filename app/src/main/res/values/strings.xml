@@ -368,7 +368,7 @@
     <string name="text_load_failed">加载失败</string>
     <string name="text_pull_up_to_load">上拉加载更多</string>
     <string name="text_release_to_load">释放开始加载</string>
-    <string name="template_two_string">%1$s·%2$s</string>
+    <string name="template_two_string">%1$s · %2$s</string>
     <string name="title_search_forum">搜吧</string>
     <string name="title_search_thread">搜贴</string>
     <string name="title_search_user">搜人</string>
@@ -426,4 +426,5 @@
     <string name="title_oksign_slow_mode">慢速模式</string>
     <string name="summary_oksign_slow_mode">开启后，一键签到时签到每个吧的时间间隔将会更长</string>
     <string name="summary_oksign_slow_mode_on">一键签到时签到每个吧的时间间隔将会更长</string>
+    <string name="title_user_threads">全部贴子(%1$s)</string>
 </resources>

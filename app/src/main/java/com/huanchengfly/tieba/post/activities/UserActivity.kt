@@ -1,240 +1,244 @@
-package com.huanchengfly.tieba.post.activities;
+@file:SuppressLint("NonConstantResourceId")
 
-import android.content.res.ColorStateList;
-import android.graphics.Color;
-import android.os.Bundle;
-import android.text.TextUtils;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.View;
-import android.widget.ImageView;
-import android.widget.TextView;
-import android.widget.Toast;
+package com.huanchengfly.tieba.post.activities
 
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.widget.Toolbar;
-import androidx.viewpager.widget.ViewPager;
+import android.annotation.SuppressLint
+import android.os.Bundle
+import android.text.TextUtils
+import android.view.Menu
+import android.view.MenuItem
+import android.view.View
+import android.widget.ImageView
+import android.widget.TextView
+import android.widget.Toast
+import androidx.viewpager.widget.ViewPager
+import butterknife.BindView
+import butterknife.OnClick
+import com.google.android.material.appbar.AppBarLayout
+import com.google.android.material.appbar.AppBarLayout.OnOffsetChangedListener
+import com.google.android.material.appbar.CollapsingToolbarLayout
+import com.google.android.material.tabs.TabLayout
+import com.huanchengfly.tieba.post.R
+import com.huanchengfly.tieba.post.adapters.FragmentTabViewPagerAdapter
+import com.huanchengfly.tieba.post.api.TiebaApi.getInstance
+import com.huanchengfly.tieba.post.api.models.CommonResponse
+import com.huanchengfly.tieba.post.api.models.ProfileBean
+import com.huanchengfly.tieba.post.fragments.UserLikeForumFragment
+import com.huanchengfly.tieba.post.fragments.UserPostFragment
+import com.huanchengfly.tieba.post.models.PhotoViewBean
+import com.huanchengfly.tieba.post.models.database.Block
+import com.huanchengfly.tieba.post.utils.AccountUtil
+import com.huanchengfly.tieba.post.utils.ImageUtil
+import com.huanchengfly.tieba.post.utils.StatusBarUtil
+import com.huanchengfly.tieba.post.utils.ThemeUtil
+import com.huanchengfly.tieba.post.widgets.theme.TintMaterialButton
+import com.huanchengfly.tieba.post.widgets.theme.TintToolbar
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+import kotlin.math.abs
 
-import com.google.android.material.appbar.AppBarLayout;
-import com.google.android.material.tabs.TabLayout;
-import com.huanchengfly.tieba.post.R;
-import com.huanchengfly.tieba.post.adapters.FragmentTabViewPagerAdapter;
-import com.huanchengfly.tieba.post.api.TiebaApi;
-import com.huanchengfly.tieba.post.api.models.CommonResponse;
-import com.huanchengfly.tieba.post.api.models.ProfileBean;
-import com.huanchengfly.tieba.post.fragments.UserLikeForumFragment;
-import com.huanchengfly.tieba.post.fragments.UserPostFragment;
-import com.huanchengfly.tieba.post.models.PhotoViewBean;
-import com.huanchengfly.tieba.post.models.database.Account;
-import com.huanchengfly.tieba.post.models.database.Block;
-import com.huanchengfly.tieba.post.ui.theme.utils.ThemeUtils;
-import com.huanchengfly.tieba.post.utils.AccountUtil;
-import com.huanchengfly.tieba.post.utils.ImageUtil;
-import com.huanchengfly.tieba.post.utils.ThemeUtil;
-import com.huanchengfly.tieba.post.widgets.theme.TintMaterialButton;
 
-import org.jetbrains.annotations.NotNull;
-
-import butterknife.BindView;
-import butterknife.OnClick;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-
-import static com.huanchengfly.tieba.post.utils.Util.changeAlpha;
-
-public class UserActivity extends BaseActivity {
-    public static final String TAG = "UserActivity";
-    public static final String EXTRA_UID = "uid";
-    public static final String EXTRA_TAB = "tab";
-    public static final String EXTRA_AVATAR = "avatar";
-
-    public static final int TAB_THREAD = 0;
-    public static final int TAB_REPLY = 1;
-    public static final int TAB_LIKE_FORUM = 2;
-
+class UserActivity : BaseActivity() {
     @BindView(R.id.toolbar)
-    Toolbar toolbar;
+    lateinit var toolbar: TintToolbar
+
+    @BindView(R.id.appbar)
+    lateinit var appbar: AppBarLayout
+
     @BindView(R.id.user_center_avatar)
-    ImageView avatarView;
+    lateinit var avatarView: ImageView
+
     @BindView(R.id.title_view)
-    TextView titleView;
+    lateinit var titleView: TextView
+
+    @BindView(R.id.user_center_slogan)
+    lateinit var sloganView: TextView
+
     @BindView(R.id.user_center_stat)
-    TextView statView;
+    lateinit var statView: TextView
+
     @BindView(R.id.user_center_action_btn)
-    TintMaterialButton actionBtn;
+    lateinit var actionBtn: TintMaterialButton
+
     @BindView(R.id.loading_view)
-    View loadingView;
+    lateinit var loadingView: View
 
-    private ProfileBean profileBean;
+    @BindView(R.id.fake_status_bar)
+    lateinit var fakeStatusBarView: View
 
-    private String uid;
-    private int tab;
+    @BindView(R.id.user_center_header)
+    lateinit var headerView: View
 
-    @Override
-    public int getLayoutId() {
-        return R.layout.activity_user;
+    @BindView(R.id.user_center_header_mask)
+    lateinit var headerMaskView: View
+
+    private var profileBean: ProfileBean? = null
+    private var uid: String? = null
+    private var tab = 0
+
+    override fun getLayoutId(): Int {
+        return R.layout.activity_user
     }
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        ThemeUtil.setTranslucentThemeBackground(findViewById(R.id.background));
-        uid = getIntent().getStringExtra(EXTRA_UID);
-        tab = getIntent().getIntExtra(EXTRA_TAB, TAB_THREAD);
-        String avatar = getIntent().getStringExtra(EXTRA_AVATAR);
+    override val isNeedImmersionBar: Boolean
+        get() = false
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        StatusBarUtil.transparentStatusBar(this)
+        (toolbar.layoutParams as CollapsingToolbarLayout.LayoutParams).topMargin = StatusBarUtil.getStatusBarHeight(this)
+        fakeStatusBarView.minimumHeight = StatusBarUtil.getStatusBarHeight(this)
+        ThemeUtil.setTranslucentThemeBackground(findViewById(R.id.background))
+        uid = intent.getStringExtra(EXTRA_UID)
+        tab = intent.getIntExtra(EXTRA_TAB, TAB_THREAD)
+        val avatar = intent.getStringExtra(EXTRA_AVATAR)
         if (uid == null) {
-            finish();
-            return;
+            finish()
+            return
         }
-        FragmentTabViewPagerAdapter adapter = new FragmentTabViewPagerAdapter(getSupportFragmentManager());
-        ViewPager viewPager = (ViewPager) findViewById(R.id.user_center_vp);
-        TabLayout tabLayout = (TabLayout) findViewById(R.id.user_center_tab);
-        AppBarLayout appBarLayout = (AppBarLayout) findViewById(R.id.appbar);
-        actionBtn.setVisibility(View.GONE);
+        val adapter = FragmentTabViewPagerAdapter(supportFragmentManager)
+        val viewPager = findViewById(R.id.user_center_vp) as ViewPager
+        val tabLayout = findViewById(R.id.user_center_tab) as TabLayout
+        actionBtn.visibility = View.GONE
         if (!TextUtils.isEmpty(avatar)) {
-            loadingView.setVisibility(View.GONE);
-            ImageUtil.load(avatarView, ImageUtil.LOAD_TYPE_AVATAR, avatar);
-            ImageUtil.initImageView(avatarView, new PhotoViewBean(avatar));
+            loadingView.visibility = View.GONE
+            ImageUtil.load(avatarView, ImageUtil.LOAD_TYPE_ALWAYS_ROUND, avatar)
+            ImageUtil.initImageView(avatarView, PhotoViewBean(avatar))
         }
-        appBarLayout.addOnOffsetChangedListener((appBarLayout1, verticalOffset) -> {
-            toolbar.setBackgroundColor(changeAlpha(ThemeUtils.getColorByAttr(this, R.attr.colorToolbar), Math.abs(verticalOffset * 1.0f) / appBarLayout1.getTotalScrollRange()));
-            if (profileBean != null && profileBean.getUser() != null && Math.abs(verticalOffset) >= appBarLayout1.getTotalScrollRange()) {
-                toolbar.setTitle(profileBean.getUser().getNameShow());
+        appbar.addOnOffsetChangedListener(OnOffsetChangedListener { appBarLayout: AppBarLayout, verticalOffset: Int ->
+            val percent = abs(verticalOffset * 1.0f) / appBarLayout.totalScrollRange
+            headerView.alpha = 1f - percent
+            headerMaskView.alpha = percent
+            if (profileBean != null && profileBean!!.user != null && abs(verticalOffset) >= appBarLayout.totalScrollRange) {
+                toolbar.title = profileBean!!.user!!.nameShow
             } else {
-                toolbar.setTitle(null);
+                toolbar.title = null
             }
-        });
-        setSupportActionBar(toolbar);
-        ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) {
-            actionBar.setDisplayHomeAsUpEnabled(true);
-        }
-        viewPager.setAdapter(adapter);
-        viewPager.setOffscreenPageLimit(3);
-        tabLayout.setupWithViewPager(viewPager);
-        TiebaApi.getInstance().profile(uid).enqueue(new Callback<ProfileBean>() {
-            @Override
-            public void onResponse(@NotNull Call<ProfileBean> call, @NotNull Response<ProfileBean> response) {
-                ProfileBean data = response.body();
-                actionBtn.setVisibility(View.VISIBLE);
-                loadingView.setVisibility(View.GONE);
-                View dividerView = findViewById(R.id.user_center_divider);
-                if (ThemeUtils.getColorByAttr(UserActivity.this, R.attr.colorBg) == ThemeUtils.getColorByAttr(UserActivity.this, R.attr.colorToolbar)) {
-                    dividerView.setVisibility(View.VISIBLE);
-                }
-                if (ThemeUtils.getColorByAttr(UserActivity.this, R.attr.colorToolbar) == ThemeUtils.getColorByAttr(UserActivity.this, R.attr.colorAccent)) {
-                    actionBtn.setTextColor(ColorStateList.valueOf(Color.WHITE));
-                    actionBtn.setStrokeColor(ColorStateList.valueOf(Color.WHITE));
-                }
-                profileBean = data;
-                refreshHeader();
-                adapter.clear();
-                adapter.addFragment(UserPostFragment.newInstance(uid, true), "贴子 " + data.getUser().getThreadNum());
-                adapter.addFragment(UserPostFragment.newInstance(uid, false), "回复 " + data.getUser().getRepostNum());
-                adapter.addFragment(UserLikeForumFragment.newInstance(uid), "关注吧 " + data.getUser().getMyLikeNum());
-                viewPager.setCurrentItem(tab, false);
+        })
+        viewPager.adapter = adapter
+        viewPager.offscreenPageLimit = 3
+        tabLayout.setupWithViewPager(viewPager)
+        setSupportActionBar(toolbar)
+        val actionBar = supportActionBar
+        actionBar?.setDisplayHomeAsUpEnabled(true)
+        getInstance().profile(uid!!).enqueue(object : Callback<ProfileBean?> {
+            override fun onResponse(call: Call<ProfileBean?>, response: Response<ProfileBean?>) {
+                val data = response.body()
+                actionBtn.visibility = View.VISIBLE
+                loadingView.visibility = View.GONE
+                profileBean = data
+                refreshHeader()
+                adapter.clear()
+                adapter.addFragment(UserPostFragment.newInstance(uid, true), "贴子 " + data!!.user!!.threadNum)
+                adapter.addFragment(UserPostFragment.newInstance(uid, false), "回复 " + data.user!!.repostNum)
+                adapter.addFragment(UserLikeForumFragment.newInstance(uid), "关注吧 " + data.user.myLikeNum)
+                viewPager.setCurrentItem(tab, false)
             }
 
-            @Override
-            public void onFailure(@NotNull Call<ProfileBean> call, @NotNull Throwable t) {
-            }
-        });
+            override fun onFailure(call: Call<ProfileBean?>, t: Throwable) {}
+        })
     }
 
-    public void refreshHeader() {
-        titleView.setText(profileBean.getUser().getNameShow());
-        statView.setText(getString(R.string.tip_stat, profileBean.getUser().getConcernNum(), profileBean.getUser().getFansNum()));
-        if (avatarView.getTag() == null) {
-            ImageUtil.load(avatarView, ImageUtil.LOAD_TYPE_AVATAR, "http://tb.himg.baidu.com/sys/portrait/item/" + profileBean.getUser().getPortrait());
-            ImageUtil.initImageView(avatarView, new PhotoViewBean("http://tb.himg.baidu.com/sys/portrait/item/" + profileBean.getUser().getPortrait()));
+    fun refreshHeader() {
+        titleView.text = profileBean!!.user!!.nameShow
+        sloganView.text = profileBean!!.user!!.intro
+        statView.text = getString(R.string.tip_stat, profileBean!!.user!!.concernNum, profileBean!!.user!!.fansNum)
+        if (avatarView.tag == null) {
+            ImageUtil.load(avatarView, ImageUtil.LOAD_TYPE_ALWAYS_ROUND, "http://tb.himg.baidu.com/sys/portrait/item/" + profileBean!!.user!!.portrait)
+            ImageUtil.initImageView(avatarView, PhotoViewBean("http://tb.himg.baidu.com/sys/portrait/item/" + profileBean!!.user!!.portrait))
         }
-        if (TextUtils.equals(AccountUtil.getUid(this), profileBean.getUser().getId())) {
-            actionBtn.setText(R.string.menu_edit_info);
+        if (TextUtils.equals(AccountUtil.getUid(this), profileBean!!.user!!.id)) {
+            actionBtn.setText(R.string.menu_edit_info)
         } else {
-            if ("1".equals(profileBean.getUser().getHasConcerned())) {
-                actionBtn.setText(R.string.button_unfollow);
+            if ("1" == profileBean!!.user!!.hasConcerned) {
+                actionBtn.setText(R.string.button_unfollow)
             } else {
-                actionBtn.setText(R.string.button_follow);
+                actionBtn.setText(R.string.button_follow)
             }
         }
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_user_space, menu);
-        Account account = AccountUtil.getLoginInfo(this);
-        if (account != null && TextUtils.equals(account.getUid(), uid)) {
-            menu.findItem(R.id.menu_block).setVisible(false);
-            menu.findItem(R.id.menu_edit_info).setVisible(true);
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        menuInflater.inflate(R.menu.menu_user_space, menu)
+        val account = AccountUtil.getLoginInfo(this)
+        if (account != null && TextUtils.equals(account.uid, uid)) {
+            menu.findItem(R.id.menu_block).isVisible = false
+            menu.findItem(R.id.menu_edit_info).isVisible = true
         } else {
-            menu.findItem(R.id.menu_block).setVisible(true);
-            menu.findItem(R.id.menu_edit_info).setVisible(false);
+            menu.findItem(R.id.menu_block).isVisible = true
+            menu.findItem(R.id.menu_edit_info).isVisible = false
         }
-        return super.onCreateOptionsMenu(menu);
+        return super.onCreateOptionsMenu(menu)
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.menu_block_black:
-            case R.id.menu_block_white:
-                int category = item.getItemId() == R.id.menu_block_black ? Block.CATEGORY_BLACK_LIST : Block.CATEGORY_WHITE_LIST;
-                new Block()
-                        .setUid(profileBean.getUser().getId())
-                        .setUsername(profileBean.getUser().getName())
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.menu_block_black, R.id.menu_block_white -> {
+                val category = if (item.itemId == R.id.menu_block_black) Block.CATEGORY_BLACK_LIST else Block.CATEGORY_WHITE_LIST
+                Block()
+                        .setUid(profileBean!!.user!!.id)
+                        .setUsername(profileBean!!.user!!.name)
                         .setType(Block.TYPE_USER)
                         .setCategory(category)
                         .saveAsync()
-                        .listen(success -> {
+                        .listen { success: Boolean ->
                             if (success) {
-                                Toast.makeText(this, R.string.toast_add_success, Toast.LENGTH_SHORT).show();
+                                Toast.makeText(this, R.string.toast_add_success, Toast.LENGTH_SHORT).show()
                             }
-                        });
-                return true;
-            case R.id.menu_edit_info:
-                startActivity(WebViewActivity.newIntent(this, getString(R.string.url_edit_info)));
-                return true;
+                        }
+                return true
+            }
+            R.id.menu_edit_info -> {
+                startActivity(WebViewActivity.newIntent(this, getString(R.string.url_edit_info)))
+                return true
+            }
         }
-        return super.onOptionsItemSelected(item);
+        return super.onOptionsItemSelected(item)
     }
 
     @OnClick(R.id.user_center_action_btn)
-    public void onActionBtnClick(View view) {
-        if (TextUtils.equals(profileBean.getUser().getId(), AccountUtil.getUid(this))) {
-            startActivity(WebViewActivity.newIntent(this, getString(R.string.url_edit_info)));
-            return;
+    fun onActionBtnClick(view: View?) {
+        if (TextUtils.equals(profileBean!!.user!!.id, AccountUtil.getUid(this))) {
+            startActivity(WebViewActivity.newIntent(this, getString(R.string.url_edit_info)))
+            return
         }
-        if ("1".equals(profileBean.getUser().getHasConcerned())) {
-            TiebaApi.getInstance().unfollow(profileBean.getUser().getPortrait(), AccountUtil.getLoginInfo(this).getTbs()).enqueue(new Callback<CommonResponse>() {
-                @Override
-                public void onResponse(@NotNull Call<CommonResponse> call, @NotNull Response<CommonResponse> response) {
-                    CommonResponse data = response.body();
-                    Toast.makeText(UserActivity.this, data.getErrorMsg(), Toast.LENGTH_SHORT).show();
-                    profileBean.getUser().setHasConcerned("0");
-                    refreshHeader();
+        if ("1" == profileBean!!.user!!.hasConcerned) {
+            getInstance().unfollow(profileBean!!.user!!.portrait!!, AccountUtil.getLoginInfo(this)!!.tbs).enqueue(object : Callback<CommonResponse?> {
+                override fun onResponse(call: Call<CommonResponse?>, response: Response<CommonResponse?>) {
+                    val data = response.body()
+                    Toast.makeText(this@UserActivity, data!!.errorMsg, Toast.LENGTH_SHORT).show()
+                    profileBean!!.user!!.setHasConcerned("0")
+                    refreshHeader()
                 }
 
-                @Override
-                public void onFailure(@NotNull Call<CommonResponse> call, @NotNull Throwable t) {
-                    Toast.makeText(UserActivity.this, t.getMessage(), Toast.LENGTH_SHORT).show();
+                override fun onFailure(call: Call<CommonResponse?>, t: Throwable) {
+                    Toast.makeText(this@UserActivity, t.message, Toast.LENGTH_SHORT).show()
                 }
-            });
+            })
         } else {
-            TiebaApi.getInstance().follow(profileBean.getUser().getPortrait(), AccountUtil.getLoginInfo(this).getTbs()).enqueue(new Callback<CommonResponse>() {
-                @Override
-                public void onResponse(@NotNull Call<CommonResponse> call, @NotNull Response<CommonResponse> response) {
-                    CommonResponse data = response.body();
-                    Toast.makeText(UserActivity.this, data.getErrorMsg(), Toast.LENGTH_SHORT).show();
-                    profileBean.getUser().setHasConcerned("1");
-                    refreshHeader();
+            getInstance().follow(profileBean!!.user!!.portrait!!, AccountUtil.getLoginInfo(this)!!.tbs).enqueue(object : Callback<CommonResponse?> {
+                override fun onResponse(call: Call<CommonResponse?>, response: Response<CommonResponse?>) {
+                    val data = response.body()
+                    Toast.makeText(this@UserActivity, data!!.errorMsg, Toast.LENGTH_SHORT).show()
+                    profileBean!!.user!!.setHasConcerned("1")
+                    refreshHeader()
                 }
 
-                @Override
-                public void onFailure(@NotNull Call<CommonResponse> call, @NotNull Throwable t) {
-                    Toast.makeText(UserActivity.this, t.getMessage(), Toast.LENGTH_SHORT).show();
+                override fun onFailure(call: Call<CommonResponse?>, t: Throwable) {
+                    Toast.makeText(this@UserActivity, t.message, Toast.LENGTH_SHORT).show()
                 }
-            });
+            })
         }
+    }
+
+    companion object {
+        const val TAG = "UserActivity"
+        const val EXTRA_UID = "uid"
+        const val EXTRA_TAB = "tab"
+        const val EXTRA_AVATAR = "avatar"
+        const val TAB_THREAD = 0
+        const val TAB_REPLY = 1
+        const val TAB_LIKE_FORUM = 2
     }
 }

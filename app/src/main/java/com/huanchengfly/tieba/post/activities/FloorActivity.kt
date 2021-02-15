@@ -213,6 +213,8 @@ class FloorActivity : BaseActivity() {
         const val EXTRA_POST_ID = "pid"
         const val EXTRA_SUB_POST_ID = "spid"
 
+        @JvmStatic
+        @JvmOverloads
         fun launch(
                 context: Context,
                 threadId: String,
