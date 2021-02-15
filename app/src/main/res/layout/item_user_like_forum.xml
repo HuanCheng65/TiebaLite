@@ -12,6 +12,7 @@
         app:materialCardBackgroundTint="@color/default_color_card"
         app:contentPadding="16dp"
         app:cardCornerRadius="8dp"
+        app:cardElevation="0dp"
         app:strokeWidth="1dp"
         app:strokeColor="@color/default_color_divider"
         android:layout_width="match_parent"
@@ -24,11 +25,12 @@
                 android:id="@+id/forum_item_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
+
                 <ImageView
                     android:layout_centerVertical="true"
                     android:id="@+id/forum_item_avatar"
-                    android:layout_width="48dp"
-                    android:layout_height="48dp" />
+                    android:layout_width="@dimen/size_avatar_normal"
+                    android:layout_height="@dimen/size_avatar_normal" />
                 <com.huanchengfly.tieba.post.widgets.theme.TintTextView
                     tools:text="Title"
                     android:layout_marginStart="8dp"
