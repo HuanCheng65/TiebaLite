@@ -85,14 +85,38 @@
                                 tools:ignore="RelativeOverlap" />
                         </RelativeLayout>
 
-                        <com.huanchengfly.tieba.post.widgets.theme.TintTextView
+                        <LinearLayout
                             android:layout_marginTop="24dp"
-                            android:id="@+id/title_view"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:textSize="16sp"
-                            android:textStyle="bold"
-                            app:tint="@color/color_text_translucent_light" />
+                            android:orientation="horizontal">
+
+                            <com.huanchengfly.tieba.post.widgets.theme.TintTextView
+                                android:id="@+id/title_view"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textSize="16sp"
+                                android:textStyle="bold"
+                                tools:text="USER"
+                                android:layout_gravity="center_vertical"
+                                app:tint="@color/color_text_translucent_light" />
+
+                            <TextView
+                                android:id="@+id/user_sex"
+                                android:background="@drawable/bg_radius_50dp"
+                                android:backgroundTint="@color/user_center_action_btn_color"
+                                android:textColor="@color/white"
+                                tools:text="♂"
+                                android:textSize="16sp"
+                                android:paddingTop="1dp"
+                                android:paddingBottom="1dp"
+                                android:paddingStart="12dp"
+                                android:paddingEnd="12dp"
+                                android:layout_marginStart="8dp"
+                                android:layout_gravity="center_vertical"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content" />
+                        </LinearLayout>
 
                         <com.huanchengfly.tieba.post.widgets.theme.TintTextView
                             android:id="@+id/user_center_slogan"

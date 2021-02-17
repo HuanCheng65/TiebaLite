@@ -62,6 +62,9 @@ class UserActivity : BaseActivity() {
     @BindView(R.id.user_center_stat_fans)
     lateinit var fansStatTv: TextView
 
+    @BindView(R.id.user_sex)
+    lateinit var sexTv: TextView
+
     @BindView(R.id.user_center_action_btn)
     lateinit var actionBtn: TintMaterialButton
 
@@ -169,6 +172,7 @@ class UserActivity : BaseActivity() {
                 actionBtn.setText(R.string.button_follow)
             }
         }
+        sexTv.text = if (profileBean!!.user!!.sex == "1") "♂" else if (profileBean!!.user!!.sex == "2") "♀" else "?"
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
