@@ -73,6 +73,13 @@ public class ThemeUtil {
     public static final String REASON_TIME = "time";
     public static final String SP_TRANSLUCENT_THEME_BACKGROUND_PATH = "translucent_theme_background_path";
 
+    public static int fixColorForTranslucentTheme(int color) {
+        if (Color.alpha(color) == 0) {
+            return ColorUtils.alpha(color, 255);
+        }
+        return color;
+    }
+
     public static int getTextColor(Context context) {
         return ThemeUtils.getColorByAttr(context, R.attr.colorText);
     }

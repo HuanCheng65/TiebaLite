@@ -102,15 +102,54 @@
                             android:textSize="12sp"
                             app:tint="@color/color_text_secondary_translucent_light" />
 
-                        <com.huanchengfly.tieba.post.widgets.theme.TintTextView
+                        <LinearLayout
                             android:id="@+id/user_center_stat"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
                             android:layout_marginTop="16dp"
                             android:layout_marginBottom="34dp"
-                            android:textSize="14sp"
-                            android:textStyle="bold"
-                            app:tint="@color/color_text_translucent_light" />
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:gravity="bottom">
+
+                            <com.huanchengfly.tieba.post.widgets.theme.TintTextView
+                                android:layout_marginBottom="-1dp"
+                                android:id="@+id/user_center_stat_follow"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textSize="14sp"
+                                android:textStyle="bold"
+                                app:tint="@color/color_text_translucent_light"
+                                tools:text="999" />
+
+                            <com.huanchengfly.tieba.post.widgets.theme.TintTextView
+                                android:layout_marginStart="4dp"
+                                android:text="@string/text_stat_follow"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textSize="14sp"
+                                android:textStyle="bold"
+                                app:tint="@color/color_text_translucent_light" />
+
+                            <com.huanchengfly.tieba.post.widgets.theme.TintTextView
+                                android:layout_marginBottom="-1dp"
+                                android:layout_marginStart="16dp"
+                                android:id="@+id/user_center_stat_fans"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textSize="14sp"
+                                android:textStyle="bold"
+                                app:tint="@color/color_text_translucent_light"
+                                tools:text="999" />
+
+                            <com.huanchengfly.tieba.post.widgets.theme.TintTextView
+                                android:layout_marginStart="4dp"
+                                android:text="@string/text_stat_fans"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textSize="14sp"
+                                android:textStyle="bold"
+                                app:tint="@color/color_text_translucent_light" />
+                        </LinearLayout>
                     </LinearLayout>
 
                     <View

@@ -30,7 +30,7 @@ public abstract class BaseBottomSheetDialogFragment extends BottomSheetDialogFra
     protected BottomSheetDialog dialog;
     Unbinder mUnbinder;
     View rootView;
-    BottomSheetBehavior mBehavior;
+    protected BottomSheetBehavior mBehavior;
     private Context attachContext;
 
     public BaseBottomSheetDialogFragment() {
@@ -117,7 +117,7 @@ public abstract class BaseBottomSheetDialogFragment extends BottomSheetDialogFra
         dismiss();
     }
 
-    void onCreatedBehavior(BottomSheetBehavior behavior) {
+    protected void onCreatedBehavior(BottomSheetBehavior<?> behavior) {
     }
 
     @NonNull

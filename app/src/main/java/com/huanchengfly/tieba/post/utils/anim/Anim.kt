@@ -52,6 +52,7 @@ abstract class Anim {
     var onEnd: ((Animator) -> Unit)? = null
     var onCancel: ((Animator) -> Unit)? = null
     var onStart: ((Animator) -> Unit)? = null
+    var onUpdate: ((Animator) -> Unit)? = null
 
     /**
      * reverse the value of [ValueAnimator]
@@ -64,6 +65,11 @@ abstract class Anim {
     abstract fun toBeginning()
 
     internal fun addListener() {
+        if (animator is ValueAnimator) {
+            (animator as ValueAnimator).addUpdateListener {
+                onUpdate?.invoke(it)
+            }
+        }
         animator.addListener(object : Animator.AnimatorListener {
             override fun onAnimationRepeat(animation: Animator?) {
                 animation?.let { onRepeat?.invoke(it) }

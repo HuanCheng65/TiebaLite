@@ -12,7 +12,6 @@ import android.os.Bundle
 import android.text.InputType
 import android.text.TextUtils
 import android.util.Log
-import android.view.MenuItem
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
@@ -40,7 +39,8 @@ import com.huanchengfly.tieba.post.api.models.ThreadContentBean.PostListItemBean
 import com.huanchengfly.tieba.post.api.retrofit.exception.TiebaException
 import com.huanchengfly.tieba.post.components.FillVirtualLayoutManager
 import com.huanchengfly.tieba.post.components.dialogs.EditTextDialog
-import com.huanchengfly.tieba.post.fragments.ThreadMenuFragment
+import com.huanchengfly.tieba.post.fragments.threadmenu.IThreadMenuFragment
+import com.huanchengfly.tieba.post.fragments.threadmenu.MIUIThreadMenuFragment
 import com.huanchengfly.tieba.post.goToActivity
 import com.huanchengfly.tieba.post.models.ReplyInfoBean
 import com.huanchengfly.tieba.post.models.ThreadHistoryInfoBean
@@ -58,7 +58,7 @@ import retrofit2.Callback
 import retrofit2.Response
 
 @SuppressLint("NonConstantResourceId")
-class ThreadActivity : BaseActivity(), View.OnClickListener, ThreadMenuFragment.OnActionsListener {
+class ThreadActivity : BaseActivity(), View.OnClickListener, IThreadMenuFragment.OnActionsListener {
     @BindView(R.id.toolbar)
     lateinit var toolbar: Toolbar
 
@@ -670,11 +670,12 @@ class ThreadActivity : BaseActivity(), View.OnClickListener, ThreadMenuFragment.
             }
             R.id.toolbar -> recyclerView.scrollToPosition(0)
             R.id.thread_bottom_bar_more_btn -> {
-                ThreadMenuFragment(
+                MIUIThreadMenuFragment(
                         seeLz,
                         collect,
                         replyAdapter.isPureRead,
-                        sort
+                        sort,
+                        canDelete()
                 ).apply {
                     setOnActionsListener(this@ThreadActivity)
                     show(supportFragmentManager, "Menu")
@@ -833,23 +834,24 @@ class ThreadActivity : BaseActivity(), View.OnClickListener, ThreadMenuFragment.
         }
     }
 
+    private fun canDelete(): Boolean {
+        return dataBean?.thread?.author?.id == AccountUtil.getUid(this)
+    }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            //TODO: 菜单增加删除功能
-            R.id.menu_delete -> TiebaApi.getInstance().delThread(dataBean!!.forum?.id!!, dataBean!!.forum?.name!!, dataBean!!.thread?.id!!, dataBean!!.anti?.tbs!!).enqueue(object : Callback<CommonResponse> {
-                override fun onFailure(call: Call<CommonResponse>, t: Throwable) {
-                    Toast.makeText(this@ThreadActivity, getString(R.string.toast_delete_error, t.message), Toast.LENGTH_SHORT).show()
-                }
-
-                override fun onResponse(call: Call<CommonResponse>, response: Response<CommonResponse>) {
-                    Toast.makeText(this@ThreadActivity, R.string.toast_delete_thread_success, Toast.LENGTH_SHORT).show()
-                    finish()
-                }
-
-            })
+    override fun onDelete() {
+        if (dataBean == null || !canDelete()) {
+            return
         }
-        return super.onOptionsItemSelected(item)
+        TiebaApi.getInstance().delThread(dataBean!!.forum?.id!!, dataBean!!.forum?.name!!, dataBean!!.thread?.id!!, dataBean!!.anti?.tbs!!).enqueue(object : Callback<CommonResponse> {
+            override fun onFailure(call: Call<CommonResponse>, t: Throwable) {
+                Toast.makeText(this@ThreadActivity, getString(R.string.toast_delete_error, t.message), Toast.LENGTH_SHORT).show()
+            }
+
+            override fun onResponse(call: Call<CommonResponse>, response: Response<CommonResponse>) {
+                Toast.makeText(this@ThreadActivity, R.string.toast_delete_thread_success, Toast.LENGTH_SHORT).show()
+                finish()
+            }
+        })
     }
 
     override fun onToggleSeeLz(seeLz: Boolean) {

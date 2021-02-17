@@ -427,4 +427,11 @@
     <string name="summary_oksign_slow_mode">开启后，一键签到时签到每个吧的时间间隔将会更长</string>
     <string name="summary_oksign_slow_mode_on">一键签到时签到每个吧的时间间隔将会更长</string>
     <string name="title_user_threads">全部贴子(%1$s)</string>
+    <string name="btn_close">关闭</string>
+    <string name="title_off">关闭</string>
+    <string name="title_uncollected">未收藏</string>
+    <string name="title_on">开启</string>
+    <string name="title_collected">已收藏</string>
+    <string name="text_stat_follow">关注</string>
+    <string name="text_stat_fans">粉丝</string>
 </resources>

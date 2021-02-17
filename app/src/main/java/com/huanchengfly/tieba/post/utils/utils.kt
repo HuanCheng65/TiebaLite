@@ -75,6 +75,13 @@ fun getRadiusDrawable(
     else drawable
 }
 
+fun getRadiusDrawable(
+        radiusPx: Float = 0f,
+        ripple: Boolean = false
+): Drawable {
+    return getRadiusDrawable(radiusPx, radiusPx, radiusPx, radiusPx, ripple)
+}
+
 fun wrapRipple(rippleColor: Int, drawable: Drawable): Drawable {
     return RippleDrawable(ColorStateList.valueOf(rippleColor), drawable, drawable)
 }

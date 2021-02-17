@@ -1,0 +1,371 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.huanchengfly.tieba.post.widgets.theme.TintFrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/bg_top_radius_8dp"
+    app:backgroundTint="@color/default_color_window_background"
+    tools:backgroundTint="@color/default_color_window_background">
+
+    <LinearLayout
+        android:id="@+id/thread_menu"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/thread_bottom_bar_height"
+        android:orientation="vertical">
+
+        <com.huanchengfly.tieba.post.widgets.theme.TintView
+            android:layout_width="64dp"
+            android:layout_height="4dp"
+            android:background="@drawable/bg_radius_50dp"
+            app:backgroundTint="@color/default_color_on_toolbar_bar"
+            android:layout_margin="8dp"
+            android:layout_gravity="center_horizontal" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="16dp">
+
+            <com.huanchengfly.tieba.post.widgets.theme.TintLinearLayout
+                android:id="@+id/thread_menu_see_lz"
+                android:background="@drawable/bg_radius_10dp"
+                app:backgroundTint="@color/default_color_card"
+                android:layout_marginEnd="8dp"
+                android:orientation="vertical"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:padding="16dp"
+                android:layout_height="wrap_content">
+
+                <com.huanchengfly.tieba.post.widgets.theme.TintImageView
+                    android:id="@+id/thread_menu_see_lz_icon"
+                    app:srcCompat="@drawable/ic_outline_account_circle"
+                    app:tint="@color/default_color_accent"
+                    android:layout_gravity="start|center_vertical"
+                    android:paddingLeft="-4dp"
+                    android:layout_width="36dp"
+                    android:layout_height="36dp" />
+
+                <com.huanchengfly.tieba.post.widgets.theme.TintTextView
+                    android:id="@+id/thread_menu_see_lz_text"
+                    android:layout_marginTop="8dp"
+                    android:text="@string/title_see_lz"
+                    android:textStyle="bold"
+                    android:textSize="17sp"
+                    app:tint="@color/default_color_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+                <com.huanchengfly.tieba.post.widgets.theme.TintTextView
+                    android:id="@+id/thread_menu_see_lz_status"
+                    android:layout_marginTop="4dp"
+                    android:text="@string/title_off"
+                    android:textSize="14sp"
+                    app:tint="@color/default_color_text_secondary"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+            </com.huanchengfly.tieba.post.widgets.theme.TintLinearLayout>
+
+            <com.huanchengfly.tieba.post.widgets.theme.TintLinearLayout
+                android:id="@+id/thread_menu_collect"
+                android:background="@drawable/bg_radius_10dp"
+                app:backgroundTint="@color/default_color_card"
+                android:layout_marginStart="8dp"
+                android:orientation="vertical"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:padding="16dp"
+                android:layout_height="wrap_content">
+
+                <com.huanchengfly.tieba.post.widgets.theme.TintImageView
+                    android:id="@+id/thread_menu_collect_icon"
+                    app:srcCompat="@drawable/ic_round_star_outline"
+                    app:tint="@color/default_color_accent"
+                    android:paddingStart="-8dp"
+                    android:layout_width="36dp"
+                    android:layout_height="36dp" />
+
+                <com.huanchengfly.tieba.post.widgets.theme.TintTextView
+                    android:id="@+id/thread_menu_collect_text"
+                    android:layout_marginTop="8dp"
+                    android:text="@string/title_collect"
+                    android:textStyle="bold"
+                    android:textSize="17sp"
+                    app:tint="@color/default_color_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+                <com.huanchengfly.tieba.post.widgets.theme.TintTextView
+                    android:id="@+id/thread_menu_collect_status"
+                    android:layout_marginTop="4dp"
+                    android:text="@string/title_uncollected"
+                    android:textSize="14sp"
+                    app:tint="@color/default_color_text_secondary"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+            </com.huanchengfly.tieba.post.widgets.theme.TintLinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
+            android:paddingBottom="16dp">
+
+            <com.huanchengfly.tieba.post.widgets.theme.TintLinearLayout
+                android:id="@+id/thread_menu_pure_read"
+                android:background="@drawable/bg_radius_10dp"
+                app:backgroundTint="@color/default_color_card"
+                android:layout_marginEnd="8dp"
+                android:orientation="vertical"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:padding="16dp"
+                android:layout_height="wrap_content">
+
+                <com.huanchengfly.tieba.post.widgets.theme.TintImageView
+                    android:id="@+id/thread_menu_pure_read_icon"
+                    app:srcCompat="@drawable/ic_outline_chrome_reader_mode"
+                    app:tint="@color/default_color_accent"
+                    android:layout_width="36dp"
+                    android:layout_height="36dp" />
+
+                <com.huanchengfly.tieba.post.widgets.theme.TintTextView
+                    android:id="@+id/thread_menu_pure_read_text"
+                    android:layout_marginTop="8dp"
+                    android:text="@string/title_pure_read"
+                    android:textStyle="bold"
+                    android:textSize="17sp"
+                    app:tint="@color/default_color_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+                <com.huanchengfly.tieba.post.widgets.theme.TintTextView
+                    android:id="@+id/thread_menu_pure_read_status"
+                    android:layout_marginTop="4dp"
+                    android:text="@string/title_off"
+                    android:textSize="14sp"
+                    app:tint="@color/default_color_text_secondary"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+            </com.huanchengfly.tieba.post.widgets.theme.TintLinearLayout>
+
+            <com.huanchengfly.tieba.post.widgets.theme.TintLinearLayout
+                android:id="@+id/thread_menu_sort"
+                android:background="@drawable/bg_radius_10dp"
+                app:backgroundTint="@color/default_color_card"
+                android:layout_marginStart="8dp"
+                android:orientation="vertical"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:padding="16dp"
+                android:layout_height="wrap_content">
+
+                <com.huanchengfly.tieba.post.widgets.theme.TintImageView
+                    android:id="@+id/thread_menu_sort_icon"
+                    app:srcCompat="@drawable/ic_round_airplay"
+                    app:tint="@color/default_color_accent"
+                    android:layout_width="36dp"
+                    android:layout_height="36dp" />
+
+                <com.huanchengfly.tieba.post.widgets.theme.TintTextView
+                    android:id="@+id/thread_menu_sort_text"
+                    android:layout_marginTop="8dp"
+                    android:text="@string/title_sort"
+                    android:textStyle="bold"
+                    android:textSize="17sp"
+                    app:tint="@color/default_color_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+                <com.huanchengfly.tieba.post.widgets.theme.TintTextView
+                    android:id="@+id/thread_menu_sort_status"
+                    android:layout_marginTop="4dp"
+                    android:text="@string/title_off"
+                    android:textSize="14sp"
+                    app:tint="@color/default_color_text_secondary"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+            </com.huanchengfly.tieba.post.widgets.theme.TintLinearLayout>
+        </LinearLayout>
+
+        <com.huanchengfly.tieba.post.widgets.theme.TintLinearLayout
+            android:background="@drawable/bg_radius_8dp"
+            app:backgroundTint="@color/default_color_card"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="16dp"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:id="@+id/thread_menu_report"
+                android:background="?selectableItemBackground"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:paddingTop="12dp"
+                android:paddingBottom="12dp"
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <com.huanchengfly.tieba.post.widgets.theme.TintImageView
+                    android:layout_gravity="center_vertical"
+                    app:srcCompat="@drawable/ic_round_verified_user"
+                    app:tint="@color/default_color_text_secondary"
+                    android:layout_marginEnd="16dp"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp" />
+
+                <com.huanchengfly.tieba.post.widgets.theme.TintTextView
+                    android:text="@string/title_report"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    app:tint="@color/default_color_text_secondary"
+                    android:layout_gravity="center_vertical"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/thread_menu_jump_page"
+                android:background="?selectableItemBackground"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:paddingTop="12dp"
+                android:paddingBottom="12dp"
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <com.huanchengfly.tieba.post.widgets.theme.TintImageView
+                    android:layout_gravity="center_vertical"
+                    app:srcCompat="@drawable/ic_round_live_tv"
+                    app:tint="@color/default_color_text_secondary"
+                    android:layout_marginEnd="16dp"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp" />
+
+                <com.huanchengfly.tieba.post.widgets.theme.TintTextView
+                    android:text="@string/title_jump_page"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    app:tint="@color/default_color_text_secondary"
+                    android:layout_gravity="center_vertical"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/thread_menu_copy_link"
+                android:background="?selectableItemBackground"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:paddingTop="12dp"
+                android:paddingBottom="12dp"
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <com.huanchengfly.tieba.post.widgets.theme.TintImageView
+                    android:layout_gravity="center_vertical"
+                    app:srcCompat="@drawable/ic_link"
+                    app:tint="@color/default_color_text_secondary"
+                    android:layout_marginEnd="16dp"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp" />
+
+                <com.huanchengfly.tieba.post.widgets.theme.TintTextView
+                    android:text="@string/title_copy_link"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    app:tint="@color/default_color_text_secondary"
+                    android:layout_gravity="center_vertical"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/thread_menu_share"
+                android:background="?selectableItemBackground"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:paddingTop="12dp"
+                android:paddingBottom="12dp"
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <com.huanchengfly.tieba.post.widgets.theme.TintImageView
+                    android:layout_gravity="center_vertical"
+                    app:srcCompat="@drawable/ic_round_share_white"
+                    app:tint="@color/default_color_text_secondary"
+                    android:layout_marginEnd="16dp"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp" />
+
+                <com.huanchengfly.tieba.post.widgets.theme.TintTextView
+                    android:text="@string/title_share"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    app:tint="@color/default_color_text_secondary"
+                    android:layout_gravity="center_vertical"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/thread_menu_delete"
+                android:background="?selectableItemBackground"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:paddingTop="12dp"
+                android:paddingBottom="12dp"
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <com.huanchengfly.tieba.post.widgets.theme.TintImageView
+                    android:layout_gravity="center_vertical"
+                    app:srcCompat="@drawable/ic_round_delete"
+                    app:tint="@color/default_color_text_secondary"
+                    android:layout_marginEnd="16dp"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp" />
+
+                <com.huanchengfly.tieba.post.widgets.theme.TintTextView
+                    android:text="@string/title_delete"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    app:tint="@color/default_color_text_secondary"
+                    android:layout_gravity="center_vertical"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+        </com.huanchengfly.tieba.post.widgets.theme.TintLinearLayout>
+    </LinearLayout>
+
+    <com.huanchengfly.tieba.post.widgets.theme.TintMaterialButton
+        android:height="@dimen/thread_bottom_bar_height"
+        android:id="@+id/thread_menu_close"
+        app:buttonTextColor="@color/default_color_text"
+        android:textStyle="bold"
+        android:textSize="16sp"
+        app:backgroundTint="@color/default_color_card"
+        style="@style/Widget.MaterialComponents.Button.TextButton"
+        android:insetTop="0dp"
+        android:insetBottom="0dp"
+        android:layout_gravity="bottom"
+        android:gravity="center"
+        android:text="@string/btn_close"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+</com.huanchengfly.tieba.post.widgets.theme.TintFrameLayout>
