@@ -359,7 +359,7 @@
         app:buttonTextColor="@color/default_color_text"
         android:textStyle="bold"
         android:textSize="16sp"
-        app:backgroundTint="@color/default_color_card"
+        app:buttonBackgroundTint="@color/default_color_card"
         style="@style/Widget.MaterialComponents.Button.TextButton"
         android:insetTop="0dp"
         android:insetBottom="0dp"
