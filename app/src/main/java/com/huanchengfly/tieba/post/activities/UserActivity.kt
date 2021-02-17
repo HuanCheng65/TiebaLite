@@ -3,6 +3,7 @@
 package com.huanchengfly.tieba.post.activities
 
 import android.annotation.SuppressLint
+import android.graphics.Typeface
 import android.os.Bundle
 import android.text.TextUtils
 import android.view.Menu
@@ -55,8 +56,11 @@ class UserActivity : BaseActivity() {
     @BindView(R.id.user_center_slogan)
     lateinit var sloganView: TextView
 
-    @BindView(R.id.user_center_stat)
-    lateinit var statView: TextView
+    @BindView(R.id.user_center_stat_follow)
+    lateinit var followStatTv: TextView
+
+    @BindView(R.id.user_center_stat_fans)
+    lateinit var fansStatTv: TextView
 
     @BindView(R.id.user_center_action_btn)
     lateinit var actionBtn: TintMaterialButton
@@ -138,12 +142,20 @@ class UserActivity : BaseActivity() {
 
             override fun onFailure(call: Call<ProfileBean?>, t: Throwable) {}
         })
+        listOf(
+                followStatTv,
+                fansStatTv
+        ).forEach {
+            it.typeface = Typeface.createFromAsset(assets, "bebas.ttf")
+        }
     }
 
     fun refreshHeader() {
         titleView.text = profileBean!!.user!!.nameShow
         sloganView.text = profileBean!!.user!!.intro
-        statView.text = getString(R.string.tip_stat, profileBean!!.user!!.concernNum, profileBean!!.user!!.fansNum)
+        followStatTv.text = "${profileBean!!.user!!.concernNum}"
+        fansStatTv.text = "${profileBean!!.user!!.fansNum}"
+        //getString(R.string.tip_stat, profileBean!!.user!!.concernNum, profileBean!!.user!!.fansNum)
         if (avatarView.tag == null) {
             ImageUtil.load(avatarView, ImageUtil.LOAD_TYPE_ALWAYS_ROUND, "http://tb.himg.baidu.com/sys/portrait/item/" + profileBean!!.user!!.portrait)
             ImageUtil.initImageView(avatarView, PhotoViewBean("http://tb.himg.baidu.com/sys/portrait/item/" + profileBean!!.user!!.portrait))
