@@ -43,8 +43,9 @@ class ForumFragment : BaseFragment(), Refreshable, OnSwitchListener, ScrollTopab
     @BindView(R.id.recycler_view)
     lateinit var mRecyclerView: RecyclerView
 
+    @JvmField
     @BindView(R.id.refresh)
-    private var mRefreshLayout: SmartRefreshLayout? = null
+    var mRefreshLayout: SmartRefreshLayout? = null
 
     private val virtualLayoutManager: VirtualLayoutManager by lazy { VirtualLayoutManager(attachContext) }
     private val delegateAdapter: DelegateAdapter by lazy { DelegateAdapter(virtualLayoutManager) }
