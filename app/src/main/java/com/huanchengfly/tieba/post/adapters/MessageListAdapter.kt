@@ -71,7 +71,7 @@ class MessageListAdapter(
                 }
         )
         textView.setOnClickListener {
-            if ("1" == item.isFloor) {
+            if ("1" == item.isFloor && item.quotePid != null) {
                 FloorActivity.launch(context, item.threadId!!, postId = item.quotePid)
             } else {
                 ThreadActivity.launch(context, item.threadId!!)

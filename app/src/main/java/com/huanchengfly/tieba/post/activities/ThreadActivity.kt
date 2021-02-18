@@ -554,12 +554,17 @@ class ThreadActivity : BaseActivity(), View.OnClickListener, IThreadMenuFragment
         get() {
             if (dataBean == null) return null
             val position = firstVisibleItemPosition
-            return if (position < 0) {
-                null
-            } else if (position == 0) {
-                threadMainPostAdapter.threadPostBean ?: replyAdapter.getItem(position)
-            } else {
-                replyAdapter.getItem(position - 1)
+            return when {
+                position < 0 -> {
+                    null
+                }
+                position == 0 -> {
+                    threadMainPostAdapter.threadPostBean ?: replyAdapter.getItem(position)
+                }
+                replyAdapter.itemCount > 0 -> {
+                    replyAdapter.getItem(position - 1)
+                }
+                else -> null
             }
         }
 
@@ -567,12 +572,17 @@ class ThreadActivity : BaseActivity(), View.OnClickListener, IThreadMenuFragment
         get() {
             if (dataBean == null) return null
             val position = getItemPositionByAdapterPosition(virtualLayoutManager.findLastVisibleItemPosition())
-            return if (position < 0) {
-                null
-            } else if (position == 0) {
-                threadMainPostAdapter.threadPostBean ?: replyAdapter.getItem(position)
-            } else {
-                replyAdapter.getItem(position - 1)
+            return when {
+                position < 0 -> {
+                    null
+                }
+                position == 0 -> {
+                    threadMainPostAdapter.threadPostBean ?: replyAdapter.getItem(position)
+                }
+                replyAdapter.itemCount > 0 -> {
+                    replyAdapter.getItem(position - 1)
+                }
+                else -> null
             }
         }
 

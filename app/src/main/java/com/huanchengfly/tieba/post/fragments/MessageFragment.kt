@@ -172,23 +172,19 @@ class MessageFragment : BaseFragment(), Refreshable, OnTabSelectedListener, Tool
             val messageListBeanCallback: Callback<MessageListBean> = object : Callback<MessageListBean> {
                 override fun onResponse(call: Call<MessageListBean?>, response: Response<MessageListBean?>) {
                     dataBean = response.body()
+                    if (dataBean == null) {
+                        return
+                    }
                     if (reload) {
                         adapter.reset()
                         dataBean?.let { adapter.setData(it) }
+                        recyclerView.scrollToPosition(0)
                     } else {
                         dataBean?.let { adapter.addData(it) }
                     }
-                    if (reload) {
-                        mSmartRefreshLayout.finishRefresh(true)
-                        if (dataBean!!.page!!.hasMore != "1") {
-                            mSmartRefreshLayout.finishRefreshWithNoMoreData()
-                        }
-                        recyclerView.scrollToPosition(0)
-                    } else {
-                        mSmartRefreshLayout.finishLoadMore(true)
-                        if (dataBean!!.page!!.hasMore != "1") {
-                            mSmartRefreshLayout.finishLoadMoreWithNoMoreData()
-                        }
+                    mSmartRefreshLayout.finishRefresh(true)
+                    if (dataBean?.page?.hasMore != "1") {
+                        mSmartRefreshLayout.finishRefreshWithNoMoreData()
                     }
                 }
 

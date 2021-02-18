@@ -44,10 +44,10 @@ class ForumFragment : BaseFragment(), Refreshable, OnSwitchListener, ScrollTopab
     lateinit var mRecyclerView: RecyclerView
 
     @BindView(R.id.refresh)
-    lateinit var mRefreshLayout: SmartRefreshLayout
+    private var mRefreshLayout: SmartRefreshLayout? = null
 
-    private lateinit var delegateAdapter: DelegateAdapter
-    private lateinit var virtualLayoutManager: VirtualLayoutManager
+    private val virtualLayoutManager: VirtualLayoutManager by lazy { VirtualLayoutManager(attachContext) }
+    private val delegateAdapter: DelegateAdapter by lazy { DelegateAdapter(virtualLayoutManager) }
     private lateinit var forumAdapter: NewForumAdapter
     private lateinit var forumTopsLayoutAdapter: ForumTopsLayoutAdapter
     private lateinit var goodClassifyLayoutAdapter: GoodClassifyLayoutAdapter
@@ -56,13 +56,13 @@ class ForumFragment : BaseFragment(), Refreshable, OnSwitchListener, ScrollTopab
         if (preload) {
             PreLoader.listenData<ForumPageBean>(preloadId, DataHolder())
         } else if (mDataBean == null) {
-            mRefreshLayout.autoRefresh()
+            mRefreshLayout?.autoRefresh()
         }
     }
 
     override fun onFragmentVisibleChange(isVisible: Boolean) {
         if (isVisible && mDataBean == null) {
-            mRefreshLayout.autoRefresh()
+            mRefreshLayout?.autoRefresh()
         }
     }
 
@@ -108,8 +108,6 @@ class ForumFragment : BaseFragment(), Refreshable, OnSwitchListener, ScrollTopab
         if (isGood) {
             classifyId = DEFAULT_CLASSIFY_ID
         }
-        virtualLayoutManager = VirtualLayoutManager(attachContext)
-        delegateAdapter = DelegateAdapter(virtualLayoutManager)
         forumAdapter = NewForumAdapter(attachContext).apply {
             setHasStableIds(true)
         }
@@ -143,8 +141,8 @@ class ForumFragment : BaseFragment(), Refreshable, OnSwitchListener, ScrollTopab
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        mRefreshLayout.setOnRefreshListener { refresh() }
-        mRefreshLayout.setOnLoadMoreListener { loadMore() }
+        mRefreshLayout!!.setOnRefreshListener { refresh() }
+        mRefreshLayout!!.setOnLoadMoreListener { loadMore() }
         mRecyclerView.apply {
             layoutManager = virtualLayoutManager
             adapter = delegateAdapter
@@ -172,23 +170,23 @@ class ForumFragment : BaseFragment(), Refreshable, OnSwitchListener, ScrollTopab
     private fun loadMore() {
         TiebaApi.getInstance().forumPage(forumName!!, page + 1, sortType, classifyId).enqueue(object : Callback<ForumPageBean> {
             override fun onFailure(call: Call<ForumPageBean>, t: Throwable) {
-                mRefreshLayout.finishLoadMore(false)
+                mRefreshLayout?.finishLoadMore(false)
             }
 
             override fun onResponse(call: Call<ForumPageBean>, response: Response<ForumPageBean>) {
                 page += 1
                 val forumPageBean = response.body()!!
-                mRefreshLayout.finishLoadMore()
+                mRefreshLayout?.finishLoadMore()
                 mDataBean = forumPageBean
                 pageSize = forumPageBean.page?.pageSize?.toInt()!!
                 forumAdapter.addData(forumPageBean)
-                mRefreshLayout.setNoMoreData(mDataBean!!.page?.hasMore == "0")
+                mRefreshLayout?.setNoMoreData(mDataBean!!.page?.hasMore == "0")
             }
         })
     }
 
     fun refresh() {
-        mRecyclerView.scrollToPosition(0)
+        scrollToTop()
         delegateAdapter.clear()
         delegateAdapter.notifyDataSetChanged()
         page = 1
@@ -203,10 +201,10 @@ class ForumFragment : BaseFragment(), Refreshable, OnSwitchListener, ScrollTopab
                         (attachContext as OnRefreshedListener).onFailure(errorCode, t.message)
                     }
                 }
-                mRefreshLayout.finishRefresh(false)
+                mRefreshLayout?.finishRefresh(false)
                 if (errorCode == -1) {
                     Util.showNetworkErrorSnackbar(mRecyclerView) {
-                        mRefreshLayout.autoRefresh()
+                        mRefreshLayout?.autoRefresh()
                     }
                     return
                 }
@@ -220,29 +218,29 @@ class ForumFragment : BaseFragment(), Refreshable, OnSwitchListener, ScrollTopab
                         (attachContext as OnRefreshedListener).onSuccess(forumPageBean)
                     }
                 }
-                mRefreshLayout.finishRefresh()
+                mRefreshLayout?.finishRefresh()
                 mDataBean = forumPageBean
                 pageSize = forumPageBean.page?.pageSize?.toInt()!!
                 forumAdapter.setData(forumPageBean)
-                mRefreshLayout.setNoMoreData(mDataBean!!.page?.hasMore == "0")
+                mRefreshLayout?.setNoMoreData(mDataBean!!.page?.hasMore == "0")
                 reloadAdapters()
             }
         })
     }
 
     override fun onRefresh() {
-        mRefreshLayout.autoRefresh()
+        mRefreshLayout?.autoRefresh()
     }
 
     override fun onSwitch(which: Int) {
         if (isGood && mDataBean != null) {
             classifyId = mDataBean!!.forum?.goodClassify?.get(which)?.classId!!
-            mRefreshLayout.autoRefresh()
+            mRefreshLayout?.autoRefresh()
         }
     }
 
     override fun scrollToTop() {
-        mRecyclerView.layoutManager!!.scrollToPosition(0)
+        virtualLayoutManager.scrollToPosition(0)
     }
 
     interface OnRefreshedListener {
@@ -253,7 +251,7 @@ class ForumFragment : BaseFragment(), Refreshable, OnSwitchListener, ScrollTopab
     internal inner class DataHolder : DataListener<ForumPageBean?> {
         override fun onDataArrived(forumPageBean: ForumPageBean?) {
             if (forumPageBean == null) {
-                mRefreshLayout.autoRefresh()
+                mRefreshLayout?.autoRefresh()
                 return
             }
             if (!isGood) {
@@ -261,11 +259,11 @@ class ForumFragment : BaseFragment(), Refreshable, OnSwitchListener, ScrollTopab
                     (attachContext as OnRefreshedListener).onSuccess(forumPageBean)
                 }
             }
-            mRefreshLayout.finishRefresh()
+            mRefreshLayout?.finishRefresh()
             mDataBean = forumPageBean
             pageSize = forumPageBean.page?.pageSize?.toInt()!!
             forumAdapter.setData(forumPageBean)
-            mRefreshLayout.setNoMoreData(mDataBean!!.page?.hasMore == "0")
+            mRefreshLayout?.setNoMoreData(mDataBean!!.page?.hasMore == "0")
             reloadAdapters()
         }
     }

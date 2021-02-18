@@ -6,6 +6,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.res.ColorStateList
 import android.os.Build
+import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.annotation.ColorRes
@@ -86,4 +87,8 @@ fun Context.toastShort(resId: Int, vararg args: Any) {
 fun ViewGroup.enableChangingLayoutTransition() {
     this.layoutTransition = LayoutTransition()
     this.layoutTransition.enableTransitionType(LayoutTransition.CHANGING)
+}
+
+fun View.getLocationInWindow(): IntArray {
+    return IntArray(2).apply { getLocationInWindow(this) }
 }

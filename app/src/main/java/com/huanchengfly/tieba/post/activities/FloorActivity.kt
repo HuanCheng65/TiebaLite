@@ -158,6 +158,9 @@ class FloorActivity : BaseActivity() {
     }
 
     private fun refresh() {
+        if (tid == null) {
+            return
+        }
         refreshLayout.isRefreshing = true
         TiebaApi.getInstance()
                 .floor(tid!!, pn, pid, spid)

@@ -191,6 +191,9 @@ class UserActivity : BaseActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.menu_block_black, R.id.menu_block_white -> {
+                if (profileBean == null || profileBean!!.user == null) {
+                    return true
+                }
                 val category = if (item.itemId == R.id.menu_block_black) Block.CATEGORY_BLACK_LIST else Block.CATEGORY_WHITE_LIST
                 Block()
                         .setUid(profileBean!!.user!!.id)

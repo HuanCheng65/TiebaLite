@@ -171,9 +171,6 @@ public class ReplyActivity extends BaseActivity implements View.OnClickListener 
                 .findFirst(Draft.class);
         if (draft != null) {
             content = draft.getContent();
-            if (!TextUtils.isEmpty(content)) {
-                sendItem.setEnabled(true);
-            }
         }
     }
 
@@ -399,10 +396,10 @@ public class ReplyActivity extends BaseActivity implements View.OnClickListener 
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
+    public boolean onCreateOptionsMenu(@NotNull Menu menu) {
         getMenuInflater().inflate(R.menu.menu_reply_toolbar, menu);
         sendItem = menu.findItem(R.id.menu_send);
-        sendItem.setEnabled(false);
+        sendItem.setEnabled(!TextUtils.isEmpty(content));
         return super.onCreateOptionsMenu(menu);
     }
 

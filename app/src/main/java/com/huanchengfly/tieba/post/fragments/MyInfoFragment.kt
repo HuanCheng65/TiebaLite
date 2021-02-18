@@ -159,14 +159,23 @@ class MyInfoFragment : BaseFragment(), View.OnClickListener, CompoundButton.OnCh
         }
         view.findViewById<ViewGroup>(R.id.my_info_user).enableChangingLayoutTransition()
         (followsTextView.parent as View).setOnClickListener {
+            if (dataBean == null || dataBean!!.data == null) {
+                return@setOnClickListener
+            }
             WebViewActivity.launch(attachContext, attachContext.resources.getString(R.string.url_user_home, dataBean!!.data.getName(), 2))
         }
         (fansTextView.parent as View).setOnClickListener {
+            if (dataBean == null || dataBean!!.data == null) {
+                return@setOnClickListener
+            }
             WebViewActivity.launch(attachContext, attachContext.resources.getString(R.string.url_user_home, dataBean!!.data.getName(), 3))
         }
         (threadsTextView.parent as View).setOnClickListener {
+            if (dataBean == null || dataBean!!.data == null) {
+                return@setOnClickListener
+            }
             goToActivity<UserActivity> {
-                putExtra(UserActivity.EXTRA_UID, dataBean!!.data.getUid().toString())
+                putExtra(UserActivity.EXTRA_UID, "${dataBean!!.data.getUid()}")
                 putExtra(UserActivity.EXTRA_TAB, UserActivity.TAB_THREAD)
             }
         }

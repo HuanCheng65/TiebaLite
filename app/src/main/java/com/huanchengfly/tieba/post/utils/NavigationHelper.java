@@ -171,8 +171,11 @@ public final class NavigationHelper {
     }
 
     private boolean navigationByUrl(String url, @NonNull String oldUrl) {
-        Uri uri = Uri.parse(url),
-                oldUri = Uri.parse(oldUrl);
+        if (url == null || oldUrl == null) {
+            return false;
+        }
+        Uri uri = Uri.parse(url);
+        Uri oldUri = Uri.parse(oldUrl);
         String host = uri.getHost(),
                 path = uri.getPath(),
                 oldHost = oldUri.getHost(),
