@@ -95,6 +95,10 @@ class ThreadActivity : BaseActivity(), View.OnClickListener, IThreadMenuFragment
 
     private var collect = false
     private var agree = false
+        set(value) {
+            field = value
+            invalidateAgreeStatus()
+        }
     private var agreeNum = 0
     private var page = 0
     private var totalPage = 0
@@ -695,38 +699,32 @@ class ThreadActivity : BaseActivity(), View.OnClickListener, IThreadMenuFragment
                 if (!agree) {
                     agree = true
                     agreeNum += 1
-                    invalidateAgreeStatus()
                     TiebaApi.getInstance().agree(dataBean!!.thread?.threadInfo?.threadId!!, dataBean!!.thread?.threadInfo?.firstPostId!!).enqueue(object : Callback<AgreeBean> {
                         override fun onFailure(call: Call<AgreeBean>, t: Throwable) {
                             agree = false
                             agreeNum -= 1
                             Toast.makeText(this@ThreadActivity, getString(R.string.toast_agree_failed, t.message), Toast.LENGTH_SHORT).show()
-                            invalidateAgreeStatus()
                         }
 
                         override fun onResponse(call: Call<AgreeBean>, response: Response<AgreeBean>) {
                             if (!agree) {
                                 agree = true
-                                invalidateAgreeStatus()
                             }
                         }
                     })
                 } else {
                     agree = false
                     agreeNum -= 1
-                    invalidateAgreeStatus()
                     TiebaApi.getInstance().disagree(dataBean!!.thread?.threadInfo?.threadId!!, dataBean!!.thread?.threadInfo?.firstPostId!!).enqueue(object : Callback<AgreeBean> {
                         override fun onFailure(call: Call<AgreeBean>, t: Throwable) {
                             agree = true
                             agreeNum += 1
-                            invalidateAgreeStatus()
                             Toast.makeText(this@ThreadActivity, getString(R.string.toast_unagree_failed, t.message), Toast.LENGTH_SHORT).show()
                         }
 
                         override fun onResponse(call: Call<AgreeBean>, response: Response<AgreeBean>) {
                             if (agree) {
                                 agree = false
-                                invalidateAgreeStatus()
                             }
                         }
                     })
