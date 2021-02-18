@@ -100,6 +100,10 @@ class ThreadActivity : BaseActivity(), View.OnClickListener, IThreadMenuFragment
             invalidateAgreeStatus()
         }
     private var agreeNum = 0
+        set(value) {
+            field = value
+            agreeNumTextView.text = "$value"
+        }
     private var page = 0
     private var totalPage = 0
 
@@ -342,7 +346,6 @@ class ThreadActivity : BaseActivity(), View.OnClickListener, IThreadMenuFragment
         title = threadContentBean.thread?.title
         collect = threadContentBean.thread != null && "0" != threadContentBean.thread.collectStatus
         agree = threadContentBean.thread?.agree != null && "0" != threadContentBean.thread.agree.hasAgree
-        agreeNumTextView.text = threadContentBean.thread?.agreeNum
         agreeNum = Integer.valueOf(if (TextUtils.isEmpty(threadContentBean.thread?.agreeNum)) "0" else threadContentBean.thread?.agreeNum!!)
         invalidateOptionsMenu()
         hasMore()
@@ -746,11 +749,6 @@ class ThreadActivity : BaseActivity(), View.OnClickListener, IThreadMenuFragment
                         agreeNumTextView.setTextColor(color)
                         super.onAnimationEnd(animation)
                     }
-
-                    override fun onAnimationStart(animation: Animator) {
-                        agreeNumTextView.text = agreeNum.toString()
-                        super.onAnimationStart(animation)
-                    }
                 })
                 agreeBtnAnimator.addListener(object : AnimatorListenerAdapter() {
                     override fun onAnimationEnd(animation: Animator) {
@@ -771,11 +769,6 @@ class ThreadActivity : BaseActivity(), View.OnClickListener, IThreadMenuFragment
                     override fun onAnimationEnd(animation: Animator) {
                         agreeNumTextView.setTextColor(ThemeUtil.getTextColor(this@ThreadActivity))
                         super.onAnimationEnd(animation)
-                    }
-
-                    override fun onAnimationStart(animation: Animator) {
-                        agreeNumTextView.text = agreeNum.toString()
-                        super.onAnimationStart(animation)
                     }
                 })
                 agreeBtnAnimator.addListener(object : AnimatorListenerAdapter() {
