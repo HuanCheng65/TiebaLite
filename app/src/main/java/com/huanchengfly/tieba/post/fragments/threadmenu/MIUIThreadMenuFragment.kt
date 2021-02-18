@@ -6,6 +6,7 @@ import butterknife.BindView
 import butterknife.OnClick
 import com.google.android.material.button.MaterialButton
 import com.huanchengfly.tieba.post.R
+import com.huanchengfly.tieba.post.dpToPx
 import com.huanchengfly.tieba.post.dpToPxFloat
 import com.huanchengfly.tieba.post.ui.animation.addMaskAnimation
 import com.huanchengfly.tieba.post.ui.animation.addZoomAnimation
@@ -74,6 +75,9 @@ class MIUIThreadMenuFragment(
 
     @BindView(R.id.thread_menu)
     lateinit var menuView: View
+
+    @BindView(R.id.thread_menu_jump_page)
+    lateinit var jumpPageItem: View
 
     @BindView(R.id.thread_menu_close)
     lateinit var closeBtn: MaterialButton
@@ -158,7 +162,7 @@ class MIUIThreadMenuFragment(
             View.GONE
         }
         menuView.post {
-            mBehavior.setPeekHeight(menuView.height + closeBtn.height, false)
+            mBehavior.setPeekHeight(((4 + 8 * 2 + 16 * 3 + 8).dpToPx() + seeLzItem.height * 2 + jumpPageItem.height * 2.5f).toInt(), false)
         }
     }
 
