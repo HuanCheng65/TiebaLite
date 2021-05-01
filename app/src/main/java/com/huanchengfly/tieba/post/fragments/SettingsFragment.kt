@@ -164,7 +164,7 @@ class SettingsFragment : PreferencesFragment() {
         val useCustomTabs = findPreference<SwitchPreference>("use_custom_tabs")
         useCustomTabs!!.isEnabled = !preferenceManager.sharedPreferences.getBoolean("use_webview", true)
         findPreference<Preference>("use_webview")!!.onPreferenceChangeListener = Preference.OnPreferenceChangeListener { _: Preference?, newValue: Any? ->
-            useCustomTabs.isEnabled != newValue as Boolean
+            useCustomTabs.isEnabled = !(newValue as Boolean)
             true
         }
         initListPreference("dark_theme", "dark")
