@@ -25,13 +25,18 @@
         android:title="@string/title_unfollow"
         app:showAsAction="never" />
     <item
-        android:id="@+id/menu_refresh"
+        android:id="@+id/menu_forum_info"
         android:orderInCategory="4"
+        android:title="@string/title_forum_info"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/menu_refresh"
+        android:orderInCategory="5"
         android:title="@string/title_refresh"
         app:showAsAction="never" />
     <item
         android:id="@+id/menu_exit"
-        android:orderInCategory="5"
+        android:orderInCategory="6"
         android:title="@string/sidebar_exit"
         app:showAsAction="never" />
 </menu>

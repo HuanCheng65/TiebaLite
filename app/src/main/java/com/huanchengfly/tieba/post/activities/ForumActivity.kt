@@ -308,6 +308,9 @@ class ForumActivity : BaseActivity(), View.OnClickListener, OnRefreshedListener,
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
+            R.id.menu_forum_info -> {
+                ForumInfoActivity.launch(this, forumName ?: "")
+            }
             R.id.menu_unfollow -> {
                 if (mDataBean != null) {
                     DialogUtil.build(this@ForumActivity)

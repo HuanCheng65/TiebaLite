@@ -445,4 +445,5 @@
     <string name="text_please_wait">请稍候……</string>
     <string name="title_fetching_forum_list">正在获取吧列表</string>
     <string name="text_oksign_no_signable">没有可签到的吧</string>
+    <string name="title_forum_info">关于本吧</string>
 </resources>

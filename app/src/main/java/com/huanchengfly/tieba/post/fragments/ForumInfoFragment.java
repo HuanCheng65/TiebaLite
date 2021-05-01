@@ -67,10 +67,12 @@ public class ForumInfoFragment extends BaseFragment implements Refreshable, Scro
     View mManagersView;
     @BindView(R.id.friend_forums_view)
     RecyclerView friendForumsRecyclerView;
+    @BindView(R.id.refresh)
+    SwipeRefreshLayout mRefreshLayout;
+
     private String forumName;
     private ForumPageBean mDataBean;
     private View content;
-    private SwipeRefreshLayout mRefreshLayout;
 
     public ForumInfoFragment() {
     }
@@ -114,7 +116,6 @@ public class ForumInfoFragment extends BaseFragment implements Refreshable, Scro
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        mRefreshLayout = (SwipeRefreshLayout) view;
         ThemeUtil.setThemeForSwipeRefreshLayout(mRefreshLayout);
         mRefreshLayout.setOnRefreshListener(this::refresh);
         content = view.findViewById(R.id.content);

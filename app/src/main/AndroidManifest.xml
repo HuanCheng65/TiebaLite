@@ -230,7 +230,15 @@
             android:configChanges="screenSize|screenLayout|orientation|smallestScreenSize|keyboardHidden"
             android:theme="@style/AppTheme.Intro"
             android:windowSoftInputMode="adjustResize" />
-        <activity android:name=".activities.TranslucentThemeActivity" />
+        <activity
+            android:name=".activities.TranslucentThemeActivity"
+            android:configChanges="screenSize|screenLayout|orientation|smallestScreenSize|keyboardHidden"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".activities.ForumInfoActivity"
+            android:label="@string/title_forum_info"
+            android:configChanges="screenSize|screenLayout|orientation|smallestScreenSize|keyboardHidden"
+            android:windowSoftInputMode="adjustResize" />
         <activity
             android:name="com.yalantis.ucrop.UCropActivity"
             android:screenOrientation="portrait"

@@ -8,4 +8,5 @@
     android:stateListAnimator="@animator/appbar_elevation">
 
     <include layout="@layout/layout_new_toolbar" />
+
 </com.huanchengfly.tieba.post.widgets.theme.TintAppBarLayout>
