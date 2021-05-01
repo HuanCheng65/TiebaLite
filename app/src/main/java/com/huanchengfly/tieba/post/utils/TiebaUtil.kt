@@ -33,7 +33,16 @@ object TiebaUtil {
     fun initAutoSign(context: Context) {
         val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
         val autoSign = context.appPreferences.autoSign
-        val pendingIntent = PendingIntent.getBroadcast(context, 0, Intent(context, AutoSignAlarm::class.java), 0)
+        val pendingIntent = PendingIntent.getBroadcast(
+                context,
+                0,
+                Intent(context, AutoSignAlarm::class.java),
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    PendingIntent.FLAG_IMMUTABLE
+                } else {
+                    0
+                }
+        )
         if (autoSign) {
             val autoSignTimeStr = context.appPreferences.autoSignTime!!
             val time = autoSignTimeStr.split(":".toRegex()).toTypedArray()

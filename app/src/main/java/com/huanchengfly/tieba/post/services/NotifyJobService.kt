@@ -1,6 +1,5 @@
 package com.huanchengfly.tieba.post.services
 
-import android.annotation.SuppressLint
 import android.app.NotificationChannel
 import android.app.NotificationChannelGroup
 import android.app.NotificationManager
@@ -94,7 +93,6 @@ class NotifyJobService : JobService() {
         return true
     }
 
-    @SuppressLint("WrongConstant")
     private fun updateNotification(text: String, id: Int, channel: String, channelName: String, intent: Intent) {
         val notification = NotificationCompat.Builder(this, channel)
                 .setSubText(channelName)
@@ -104,7 +102,18 @@ class NotifyJobService : JobService() {
                 .setWhen(System.currentTimeMillis())
                 .setAutoCancel(true)
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-                .setContentIntent(PendingIntent.getActivity(this, 0, intent, Intent.FLAG_ACTIVITY_NEW_TASK))
+                .setContentIntent(
+                        PendingIntent.getActivity(
+                                this,
+                                0,
+                                intent,
+                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                                    PendingIntent.FLAG_IMMUTABLE
+                                } else {
+                                    0
+                                }
+                        )
+                )
                 .setColor(ThemeUtils.getColorByAttr(this, R.attr.colorPrimary))
                 .build()
         notificationManager!!.notify(id, notification)

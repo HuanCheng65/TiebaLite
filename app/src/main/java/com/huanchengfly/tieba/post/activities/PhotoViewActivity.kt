@@ -9,6 +9,7 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
+import android.os.Looper
 import android.view.MenuItem
 import android.view.View
 import android.widget.TextView
@@ -278,7 +279,7 @@ class PhotoViewActivity : BaseActivity(), OnChangeBottomBarVisibilityListener, T
         const val DEFAULT_HIDE_DELAY = 3000
         const val OBJ_TYPE_THREAD_PAGE = "pb"
         const val OBJ_TYPE_FORUM_PAGE = "frs"
-        private val handler = Handler()
+        private val handler = Handler(Looper.getMainLooper())
 
         @JvmStatic
         fun launch(context: Context, photoViewBean: PhotoViewBean) {

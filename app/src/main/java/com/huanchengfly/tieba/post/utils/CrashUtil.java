@@ -111,8 +111,11 @@ public class CrashUtil {
         AlarmManager mAlarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         if (mAlarmManager != null) {
             PendingIntent restartIntent = PendingIntent.getActivity(
-                    context.getApplicationContext(), 0, intent,
-                    Intent.FLAG_ACTIVITY_NEW_TASK);
+                    context.getApplicationContext(),
+                    0,
+                    intent,
+                    0
+            );
             mAlarmManager.set(AlarmManager.RTC, System.currentTimeMillis() + 1000,
                     restartIntent);
         }

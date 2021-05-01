@@ -134,7 +134,7 @@ class ThreadMainPostAdapter(
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
         refreshForumView(dataBean?.forum, holder.getView(R.id.forum_bar))
-        holder.itemView.setOnLongClickListener { view ->
+        holder.itemView.setOnLongClickListener {
             showMenu()
             true
         }

@@ -5,6 +5,7 @@ import android.app.PendingIntent
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import android.os.Build
 import com.huanchengfly.tieba.post.utils.TiebaUtil
 import com.huanchengfly.tieba.post.utils.Util
 import com.huanchengfly.tieba.post.utils.appPreferences
@@ -27,7 +28,12 @@ class BootCompleteSignReceiver : BroadcastReceiver() {
                     val time = Util.time2Calendar(autoSignTimeStr).apply {
                         add(Calendar.DAY_OF_MONTH, 1)
                     }.timeInMillis
-                    val pendingIntent = PendingIntent.getBroadcast(context, 0, Intent(context, AutoSignAlarm::class.java), 0)
+                    val pendingIntent = PendingIntent.getBroadcast(context, 0, Intent(context, AutoSignAlarm::class.java),
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                                PendingIntent.FLAG_IMMUTABLE
+                            } else {
+                                0
+                            })
                     alarmManager.setInexactRepeating(AlarmManager.RTC, time, AlarmManager.INTERVAL_DAY, pendingIntent)
                 }
             }

@@ -7,6 +7,7 @@ import android.content.*
 import android.graphics.Typeface
 import android.os.Bundle
 import android.os.Handler
+import android.os.Looper
 import android.text.SpannableStringBuilder
 import android.text.Spanned
 import android.text.TextUtils
@@ -214,8 +215,9 @@ class MainActivity : BaseActivity(), BottomNavigationView.OnNavigationItemSelect
                         .setCancelable(false)
                         .create())
             }
-            AccountUtil.updateUserInfo(this, object : CommonCallback<MyInfoBean?> {
-                override fun onSuccess(data: MyInfoBean?) {}
+            AccountUtil.updateUserInfo(this, object : CommonCallback<MyInfoBean> {
+                override fun onSuccess(data: MyInfoBean) {}
+
                 override fun onFailure(code: Int, error: String) {
                     if (code == Error.ERROR_LOGGED_IN_EXPIRED) {
                         showDialog(DialogUtil.build(this@MainActivity)
@@ -407,9 +409,6 @@ class MainActivity : BaseActivity(), BottomNavigationView.OnNavigationItemSelect
         override fun onReceive(context: Context, intent: Intent) {
             val action = intent.action
             if (action != null && action == AccountUtil.ACTION_SWITCH_ACCOUNT) {
-                if (mAdapter == null) {
-                    return
-                }
                 val fragments = mAdapter.fragments
                 for (fragment in fragments) {
                     if (fragment != null) {
@@ -427,6 +426,6 @@ class MainActivity : BaseActivity(), BottomNavigationView.OnNavigationItemSelect
     companion object {
         const val TAG = "MainActivity"
         const val SP_SHOULD_SHOW_SNACKBAR = "should_show_snackbar"
-        private val handler = Handler()
+        private val handler = Handler(Looper.getMainLooper())
     }
 }

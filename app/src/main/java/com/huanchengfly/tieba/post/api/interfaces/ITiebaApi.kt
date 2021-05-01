@@ -6,9 +6,11 @@ import com.huanchengfly.tieba.post.api.SearchThreadOrder
 import com.huanchengfly.tieba.post.api.models.*
 import com.huanchengfly.tieba.post.api.models.web.ForumBean
 import com.huanchengfly.tieba.post.api.models.web.HotMessageListBean
+import com.huanchengfly.tieba.post.api.retrofit.ApiResult
 import com.huanchengfly.tieba.post.models.DislikeBean
 import com.huanchengfly.tieba.post.models.MyInfoBean
 import com.huanchengfly.tieba.post.models.PhotoInfoBean
+import kotlinx.coroutines.Deferred
 import retrofit2.Call
 
 interface ITiebaApi {
@@ -55,6 +57,13 @@ interface ITiebaApi {
      * **需登录**
      */
     fun forumRecommend(): Call<ForumRecommend>
+
+    /**
+     * 关注吧列表
+     *
+     * **需登录**
+     */
+    fun forumRecommendAsync(): Deferred<ApiResult<ForumRecommend>>
 
     /**
      * 吧页面
@@ -180,10 +189,10 @@ interface ITiebaApi {
      * @param forumName 吧名
      * @param tbs tbs
      */
-    fun sign(
+    fun signAsync(
             forumName: String,
             tbs: String
-    ): Call<SignResultBean>
+    ): Deferred<ApiResult<SignResultBean>>
 
     /**
      * 删除自己的贴子
@@ -410,6 +419,15 @@ interface ITiebaApi {
     fun myInfo(
             cookie: String
     ): Call<MyInfoBean>
+
+    /**
+     * 登录用户信息
+     *
+     * @param cookie 登录 Cookie 信息
+     */
+    fun myInfoAsync(
+            cookie: String
+    ): Deferred<ApiResult<MyInfoBean>>
 
     /**
      * 搜索吧

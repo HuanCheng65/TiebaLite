@@ -4,7 +4,9 @@ import android.text.TextUtils
 import com.huanchengfly.tieba.post.api.Header
 import com.huanchengfly.tieba.post.api.models.*
 import com.huanchengfly.tieba.post.api.models.web.*
+import com.huanchengfly.tieba.post.api.retrofit.ApiResult
 import com.huanchengfly.tieba.post.models.MyInfoBean
+import kotlinx.coroutines.Deferred
 import retrofit2.Call
 import retrofit2.http.*
 
@@ -80,6 +82,14 @@ interface WebTiebaApi {
     fun myInfo(
             @retrofit2.http.Header("cookie") cookie: String
     ): Call<MyInfoBean>
+
+    @Headers(
+            "${Header.ADD_COOKIE}: ${Header.ADD_COOKIE_FALSE}"
+    )
+    @GET("/mo/q/newmoindex?need_user=1")
+    fun myInfoAsync(
+            @retrofit2.http.Header("cookie") cookie: String
+    ): Deferred<ApiResult<MyInfoBean>>
 
     @GET("/mo/q/search/forum")
     fun searchForum(

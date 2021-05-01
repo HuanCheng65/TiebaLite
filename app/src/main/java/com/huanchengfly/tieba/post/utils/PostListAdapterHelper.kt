@@ -98,7 +98,7 @@ class PostListAdapterHelper(
                         )
                     }
                 }
-                photoViewBeansMap[Integer.valueOf(postListItemBean.floor!!)] = photoViewBeans
+                photoViewBeansMap[Integer.valueOf(postListItemBean.floor)] = photoViewBeans
             }
         }
     }

@@ -25,7 +25,7 @@ class GoodClassifyAdapter(context: Context) : BaseSingleTypeAdapter<GoodClassify
     override fun convert(viewHolder: MyViewHolder, item: GoodClassifyBean, position: Int) {
         val textView = viewHolder.getView<TextView>(R.id.classify_text)
         val view = viewHolder.getView<View>(R.id.classify_item)
-        view.setOnClickListener { v: View? ->
+        view.setOnClickListener {
             setSelectedId(item.classId!!)
             notifyDataSetChanged()
             if (onSwitchListener != null) {

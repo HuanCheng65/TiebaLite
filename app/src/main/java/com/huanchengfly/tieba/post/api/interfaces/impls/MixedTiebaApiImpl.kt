@@ -10,6 +10,7 @@ import com.huanchengfly.tieba.post.api.interfaces.ITiebaApi
 import com.huanchengfly.tieba.post.api.models.*
 import com.huanchengfly.tieba.post.api.models.web.ForumBean
 import com.huanchengfly.tieba.post.api.models.web.HotMessageListBean
+import com.huanchengfly.tieba.post.api.retrofit.ApiResult
 import com.huanchengfly.tieba.post.api.retrofit.RetrofitTiebaApi
 import com.huanchengfly.tieba.post.models.DislikeBean
 import com.huanchengfly.tieba.post.models.MyInfoBean
@@ -17,6 +18,7 @@ import com.huanchengfly.tieba.post.models.PhotoInfoBean
 import com.huanchengfly.tieba.post.toJson
 import com.huanchengfly.tieba.post.utils.AccountUtil
 import com.huanchengfly.tieba.post.utils.ImageUtil
+import kotlinx.coroutines.Deferred
 import retrofit2.Call
 import java.io.FileInputStream
 import java.io.IOException
@@ -35,6 +37,8 @@ object MixedTiebaApiImpl : ITiebaApi {
                           postId: String): Call<AgreeBean> = RetrofitTiebaApi.MINI_TIEBA_API.disagree(postId, threadId)
 
     override fun forumRecommend(): Call<ForumRecommend> = RetrofitTiebaApi.MINI_TIEBA_API.forumRecommend()
+
+    override fun forumRecommendAsync(): Deferred<ApiResult<ForumRecommend>> = RetrofitTiebaApi.MINI_TIEBA_API.forumRecommendAsync()
 
     override fun forumPage(
             forumName: String, page: Int, sortType: ForumSortType, goodClassifyId: String?
@@ -75,7 +79,7 @@ object MixedTiebaApiImpl : ITiebaApi {
             forumId: String, forumName: String, tbs: String
     ): Call<LikeForumResultBean> = RetrofitTiebaApi.MINI_TIEBA_API.likeForum(forumId, forumName, tbs)
 
-    override fun sign(forumName: String, tbs: String): Call<SignResultBean> = RetrofitTiebaApi.MINI_TIEBA_API.sign(forumName, tbs)
+    override fun signAsync(forumName: String, tbs: String): Deferred<ApiResult<SignResultBean>> = RetrofitTiebaApi.MINI_TIEBA_API.signAsync(forumName, tbs)
 
     override fun delThread(
             forumId: String,
@@ -152,6 +156,8 @@ object MixedTiebaApiImpl : ITiebaApi {
     override fun hotMessageList(): Call<HotMessageListBean> = RetrofitTiebaApi.WEB_TIEBA_API.hotMessageList()
 
     override fun myInfo(cookie: String): Call<MyInfoBean> = RetrofitTiebaApi.WEB_TIEBA_API.myInfo(cookie)
+
+    override fun myInfoAsync(cookie: String): Deferred<ApiResult<MyInfoBean>> = RetrofitTiebaApi.WEB_TIEBA_API.myInfoAsync(cookie)
 
     override fun searchForum(keyword: String): Call<SearchForumBean> = RetrofitTiebaApi.WEB_TIEBA_API.searchForum(keyword)
 

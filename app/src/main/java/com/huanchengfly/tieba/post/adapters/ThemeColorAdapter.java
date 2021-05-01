@@ -26,7 +26,7 @@ public class ThemeColorAdapter extends RecyclerView.Adapter<MyViewHolder> {
             Color.parseColor("#FF000000"),
             Color.parseColor("#FF512DA8")
     };
-    private WeakReference<Context> mContextWeakReference;
+    private final WeakReference<Context> mContextWeakReference;
     private List<Integer> mColors;
     private OnItemClickListener<Integer> mOnItemClickListener;
     private int mSelectedColor;

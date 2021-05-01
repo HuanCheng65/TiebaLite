@@ -4,7 +4,7 @@ import com.google.gson.annotations.SerializedName;
 import com.huanchengfly.tieba.post.api.models.web.WebBaseBean;
 
 public class MyInfoBean extends WebBaseBean<MyInfoBean.MyInfoDataBean> {
-    public class MyInfoDataBean {
+    public static class MyInfoDataBean {
         @SerializedName("itb_tbs")
         public String itbTbs;
         public String tbs;

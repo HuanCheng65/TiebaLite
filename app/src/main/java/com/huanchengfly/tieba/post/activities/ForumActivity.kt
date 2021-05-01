@@ -50,7 +50,8 @@ import com.huanchengfly.tieba.post.api.TiebaApi
 import com.huanchengfly.tieba.post.api.models.CommonResponse
 import com.huanchengfly.tieba.post.api.models.ForumPageBean
 import com.huanchengfly.tieba.post.api.models.LikeForumResultBean
-import com.huanchengfly.tieba.post.api.models.SignResultBean
+import com.huanchengfly.tieba.post.api.retrofit.doIfFailure
+import com.huanchengfly.tieba.post.api.retrofit.doIfSuccess
 import com.huanchengfly.tieba.post.fragments.ForumFragment
 import com.huanchengfly.tieba.post.fragments.ForumFragment.OnRefreshedListener
 import com.huanchengfly.tieba.post.goToActivity
@@ -66,6 +67,8 @@ import com.huanchengfly.tieba.post.utils.anim.animSet
 import com.huanchengfly.tieba.post.utils.preload.PreloadUtil
 import com.huanchengfly.tieba.post.widgets.MyViewPager
 import com.huanchengfly.tieba.post.widgets.theme.TintToolbar
+import kotlinx.coroutines.Dispatchers.IO
+import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -385,35 +388,45 @@ class ForumActivity : BaseActivity(), View.OnClickListener, OnRefreshedListener,
             R.id.forum_header_button, R.id.toolbar_btn_right -> if (mDataBean != null) {
                 if ("1" == mDataBean!!.forum?.isLike) {
                     if ("0" == mDataBean!!.forum?.signInInfo?.userInfo?.isSignIn) {
-                        TiebaApi.getInstance().sign(mDataBean!!.forum?.name!!, mDataBean!!.anti?.tbs!!).enqueue(object : Callback<SignResultBean> {
-                            override fun onFailure(call: Call<SignResultBean>, t: Throwable) {
-                                Util.createSnackbar(myViewPager, getString(R.string.toast_sign_failed, t.message), Snackbar.LENGTH_SHORT).show()
-                            }
+                        launch(IO + job) {
+                            TiebaApi.getInstance()
+                                    .signAsync(mDataBean!!.forum?.name!!, mDataBean!!.anti?.tbs!!)
+                                    .doIfSuccess {
+                                        if (it.userInfo != null) {
+                                            mDataBean!!.forum?.signInInfo?.userInfo?.isSignIn = "1"
+                                            Util.createSnackbar(
+                                                    myViewPager,
+                                                    getString(
+                                                            R.string.toast_sign_success,
+                                                            it.userInfo.signBonusPoint,
+                                                            it.userInfo.userSignRank
+                                                    ),
+                                                    Snackbar.LENGTH_SHORT
+                                            ).show()
+                                            refreshHeaderView()
+                                            refreshForumInfo()
+                                        }
+                                    }
+                                    .doIfFailure {
+                                        Util.createSnackbar(myViewPager, getString(R.string.toast_sign_failed, it.message), Snackbar.LENGTH_SHORT).show()
+                                    }
+                        }
+                    }
+                } else {
+                    TiebaApi.getInstance()
+                            .likeForum(mDataBean!!.forum?.id!!, mDataBean!!.forum?.name!!, mDataBean!!.anti?.tbs!!)
+                            .enqueue(object : Callback<LikeForumResultBean> {
+                                override fun onFailure(call: Call<LikeForumResultBean>, t: Throwable) {
+                                    Toast.makeText(this@ForumActivity, getString(R.string.toast_like_failed, t.message), Toast.LENGTH_SHORT).show()
+                                }
 
-                            override fun onResponse(call: Call<SignResultBean>, response: Response<SignResultBean>) {
-                                val signResultBean = response.body()!!
-                                if (signResultBean.userInfo != null) {
-                                    mDataBean!!.forum?.signInInfo?.userInfo?.isSignIn = "1"
-                                    Util.createSnackbar(myViewPager, getString(R.string.toast_sign_success, signResultBean.userInfo.signBonusPoint, signResultBean.userInfo.userSignRank), Snackbar.LENGTH_SHORT).show()
+                                override fun onResponse(call: Call<LikeForumResultBean>, response: Response<LikeForumResultBean>) {
+                                    mDataBean!!.forum?.isLike = "1"
+                                    Toast.makeText(this@ForumActivity, getString(R.string.toast_like_success, response.body()!!.info?.memberSum), Toast.LENGTH_SHORT).show()
                                     refreshHeaderView()
                                     refreshForumInfo()
                                 }
-                            }
-                        })
-                    }
-                } else {
-                    TiebaApi.getInstance().likeForum(mDataBean!!.forum?.id!!, mDataBean!!.forum?.name!!, mDataBean!!.anti?.tbs!!).enqueue(object : Callback<LikeForumResultBean> {
-                        override fun onFailure(call: Call<LikeForumResultBean>, t: Throwable) {
-                            Toast.makeText(this@ForumActivity, getString(R.string.toast_like_failed, t.message), Toast.LENGTH_SHORT).show()
-                        }
-
-                        override fun onResponse(call: Call<LikeForumResultBean>, response: Response<LikeForumResultBean>) {
-                            mDataBean!!.forum?.isLike = "1"
-                            Toast.makeText(this@ForumActivity, getString(R.string.toast_like_success, response.body()!!.info?.memberSum), Toast.LENGTH_SHORT).show()
-                            refreshHeaderView()
-                            refreshForumInfo()
-                        }
-                    })
+                            })
                 }
             }
         }

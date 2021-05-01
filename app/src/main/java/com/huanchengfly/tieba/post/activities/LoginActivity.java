@@ -66,7 +66,7 @@ public class LoginActivity extends BaseActivity implements WebViewListener {
                 if (url.startsWith("https://tieba.baidu.com/index/tbwise/") || url.startsWith("https://tiebac.baidu.com/index/tbwise/")) {
                     Snackbar snackbar = Util.createSnackbar(view, "请稍后…", Snackbar.LENGTH_INDEFINITE);
                     snackbar.show();
-                    AccountUtil.updateUserInfoByBduss(this, bduss, new CommonCallback<MyInfoBean>() {
+                    AccountUtil.updateUserInfoByBduss(bduss, new CommonCallback<MyInfoBean>() {
                         @Override
                         public void onSuccess(MyInfoBean data) {
                             Account account = AccountUtil.getLoginInfo(LoginActivity.this);

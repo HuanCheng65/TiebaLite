@@ -7,7 +7,9 @@ import com.huanchengfly.tieba.post.api.Header
 import com.huanchengfly.tieba.post.api.getScreenHeight
 import com.huanchengfly.tieba.post.api.getScreenWidth
 import com.huanchengfly.tieba.post.api.models.*
+import com.huanchengfly.tieba.post.api.retrofit.ApiResult
 import com.huanchengfly.tieba.post.utils.AccountUtil
+import kotlinx.coroutines.Deferred
 import retrofit2.Call
 import retrofit2.http.*
 
@@ -80,6 +82,15 @@ interface MiniTiebaApi {
             @Field("recommend") recommend: String = "0",
             @Field("topic") topic: String = "0"
     ): Call<ForumRecommend>
+
+    @Headers("${Header.FORCE_LOGIN}: ${Header.FORCE_LOGIN_TRUE}")
+    @POST("/c/f/forum/forumrecommend")
+    @FormUrlEncoded
+    fun forumRecommendAsync(
+            @Field("like_forum") like_forum: String = "1",
+            @Field("recommend") recommend: String = "0",
+            @Field("topic") topic: String = "0"
+    ): Deferred<ApiResult<ForumRecommend>>
 
     @POST("/c/f/frs/page")
     @FormUrlEncoded
@@ -176,10 +187,10 @@ interface MiniTiebaApi {
     @Headers("${Header.FORCE_LOGIN}: ${Header.FORCE_LOGIN_TRUE}")
     @POST("/c/c/forum/sign")
     @FormUrlEncoded
-    fun sign(
+    fun signAsync(
             @Field("kw") forumName: String,
             @Field("tbs") tbs: String
-    ): Call<SignResultBean>
+    ): Deferred<ApiResult<SignResultBean>>
 
     @Headers("${Header.FORCE_LOGIN}: ${Header.FORCE_LOGIN_TRUE}")
     @POST("/c/c/bawu/delthread")

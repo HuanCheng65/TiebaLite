@@ -36,7 +36,7 @@ class SettingsFragment : PreferencesFragment() {
 
     private fun refresh() {
         loginInfo = AccountUtil.getLoginInfo(attachContext)
-        val accounts = AccountUtil.getAllAccounts()
+        val accounts = AccountUtil.allAccounts
         val usernameList: MutableList<String> = ArrayList()
         val idList: MutableList<String> = ArrayList()
         for (account in accounts) {

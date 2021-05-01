@@ -32,10 +32,17 @@ import com.huanchengfly.tieba.post.ui.theme.utils.ThemeUtils
 import com.huanchengfly.tieba.post.utils.*
 import com.huanchengfly.tieba.post.widgets.VoicePlayerView
 import com.huanchengfly.tieba.post.widgets.theme.TintToolbar
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import me.imid.swipebacklayout.lib.app.SwipeBackActivity
-import kotlin.properties.ReadOnlyProperty
+import kotlin.coroutines.CoroutineContext
 
-abstract class BaseActivity : SwipeBackActivity(), ExtraRefreshable {
+abstract class BaseActivity : SwipeBackActivity(), ExtraRefreshable, CoroutineScope {
+    val job = Job()
+    override val coroutineContext: CoroutineContext
+        get() = Dispatchers.Main + job
+
     private var mTintToolbar: TintToolbar? = null
     private var oldTheme: String? = null
 
@@ -111,6 +118,7 @@ abstract class BaseActivity : SwipeBackActivity(), ExtraRefreshable {
     override fun onDestroy() {
         super.onDestroy()
         instance.removeActivity(this)
+        job.cancel()
     }
 
     fun exitApplication() {
@@ -276,22 +284,6 @@ abstract class BaseActivity : SwipeBackActivity(), ExtraRefreshable {
                 darkerStatusBar = false
             }
             return if (darkerStatusBar) ColorUtils.getDarkerColor(originColor) else originColor
-        }
-    }
-
-    protected object IntentExtraDelegates {
-        fun int(
-                defaultValue: Int = 0,
-                key: String? = null
-        ) = ReadOnlyProperty<BaseActivity, Int> { thisRef, property ->
-            thisRef.intent.getIntExtra(key ?: property.name, defaultValue)
-        }
-
-        fun string(
-                defaultValue: String? = null,
-                key: String? = null
-        ) = ReadOnlyProperty<BaseActivity, String?> { thisRef, property ->
-            thisRef.intent.getStringExtra(key ?: property.name) ?: defaultValue
         }
     }
 }

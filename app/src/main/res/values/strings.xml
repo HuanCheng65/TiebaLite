@@ -292,7 +292,7 @@
     <string name="title_image_load_type_all_no">始终无图</string>
     <string name="title_settings_image_load_type">图片加载设置</string>
     <string name="tip_touch_to_view">轻按以查看</string>
-    <string name="title_signing_progress">正在签到中 (%1$d/%2$d)</string>
+    <string name="title_signing_progress">%1$s正在签到中 (%2$d/%3$d)</string>
     <string name="text_oksign_done">共签到 %1$d 个吧</string>
     <string name="toast_open_error">打开失败，您可能没有安装对应 App</string>
     <string name="summary_copy_bduss">请勿泄露，否则可能会导致您的账号被盗用</string>
@@ -438,4 +438,11 @@
     <string name="text_custom_title_style">Title</string>
     <string name="title_custom_font_size">字体大小</string>
     <string name="text_custom_font_size">永a</string>
+    <string name="text_singing_progress">%1$s吧 ✓</string>
+    <string name="text_singing_progress_exp">%1$s吧 ✓ 经验 +%2$s</string>
+    <string name="title_start_sign">即将开始签到</string>
+    <string name="toast_oksign_start">签到已开始，可在通知栏查看进度</string>
+    <string name="text_please_wait">请稍候……</string>
+    <string name="title_fetching_forum_list">正在获取吧列表</string>
+    <string name="text_oksign_no_signable">没有可签到的吧</string>
 </resources>

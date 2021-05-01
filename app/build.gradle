@@ -1,7 +1,5 @@
 apply plugin: 'com.android.application'
-apply plugin: 'AndResGuard'
 apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 
 buildscript {
@@ -29,33 +27,6 @@ if (isPerVersion) {
     applicationVersionName = applicationVersionName + ".${applicationProperties["preReleaseName"]}-${applicationProperties["preReleaseVer"]}"
 }
 
-andResGuard {
-    mappingFile = null
-    use7zip = true
-    useSign = true
-    keepRoot = false
-    mergeDuplicatedRes = true
-    whiteList = ["R.mipmap.ic_launcher",
-                 "R.mipmap.ic_launcher_foreground",
-                 "R.mipmap.ic_launcher_round",
-                 "R.drawable.ic_*",
-                 "R.drawable.bg*radius*",
-                 "R.color.theme_color_*",
-                 "R.id.*"]
-    compressFilePattern = ["*.png",
-                           "*.jpg",
-                           "*.jpeg",
-                           "*.gif",
-                           "*.webp",
-                           "*.kotlin_metadata",
-                           "resources.arsc"]
-    sevenzip {
-        artifact = 'com.tencent.mm:SevenZip:1.2.10'
-    }
-    finalApkBackupPath = "${project.rootDir}/app/release/${applicationVersionName}(${applicationVersionCode}).apk"
-    digestalg = "SHA-256"
-}
-
 android {
     signingConfigs {
         release {
@@ -66,11 +37,11 @@ android {
             v2SigningEnabled true
         }
     }
-    compileSdkVersion 29
+    compileSdkVersion 30
     defaultConfig {
         applicationId "com.huanchengfly.tieba.post"
         minSdkVersion 21
-        targetSdkVersion 29
+        targetSdkVersion 30
         versionCode applicationVersionCode
         versionName applicationVersionName
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -98,6 +69,8 @@ dependencies {
     implementation 'org.jetbrains:annotations:19.0.0'
 
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
+    api 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.3.2'
+    api 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.3.2'
 
     //Local Files
     implementation fileTree(include: ['*.jar'], dir: 'libs')
@@ -107,6 +80,7 @@ dependencies {
 
     //兼容 Glide
     implementation 'com.android.support:support-annotations:28.0.0'
+    implementation 'androidx.work:work-runtime:2.3.4'
     kapt "com.android.support:support-annotations:28.0.0"
 
     //AndroidX

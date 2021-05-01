@@ -90,7 +90,7 @@ class MyInfoFragment : BaseFragment(), View.OnClickListener, CompoundButton.OnCh
         if (AccountUtil.isLoggedIn(attachContext)) {
             val bduss = AccountUtil.getBduss(attachContext)
             if (bduss != null) {
-                AccountUtil.updateUserInfoByBduss(attachContext, bduss, object : CommonCallback<MyInfoBean> {
+                AccountUtil.updateUserInfoByBduss(bduss, object : CommonCallback<MyInfoBean> {
                     override fun onSuccess(myInfoBean: MyInfoBean) {
                         if (myInfoBean.errorCode == 0) {
                             dataBean = myInfoBean
