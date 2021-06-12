@@ -38,6 +38,8 @@ open class AppPreferencesUtils(context: Context) {
 
     var imageLoadType by SharedPreferenceDelegates.string(key = "image_load_type", defaultValue = "0")
 
+    var listItemsBackgroundIntermixed by SharedPreferenceDelegates.boolean(defaultValue = true)
+
     var listSingle by SharedPreferenceDelegates.boolean(defaultValue = false)
 
     var littleTail by SharedPreferenceDelegates.string(key = "little_tail")

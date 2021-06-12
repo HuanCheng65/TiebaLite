@@ -24,6 +24,7 @@ import com.huanchengfly.tieba.post.goToActivity
 import com.huanchengfly.tieba.post.interfaces.Refreshable
 import com.huanchengfly.tieba.post.models.MyInfoBean
 import com.huanchengfly.tieba.post.ui.theme.interfaces.ExtraRefreshable
+import com.huanchengfly.tieba.post.ui.theme.utils.ColorStateListUtils
 import com.huanchengfly.tieba.post.ui.theme.utils.ThemeUtils
 import com.huanchengfly.tieba.post.utils.*
 import com.huanchengfly.tieba.post.widgets.theme.TintSwitch
@@ -209,6 +210,19 @@ class MyInfoFragment : BaseFragment(), View.OnClickListener, CompoundButton.OnCh
         nightSwitch.setOnCheckedChangeListener(null)
         nightSwitch.isChecked = ThemeUtil.isNightMode(attachContext)
         nightSwitch.setOnCheckedChangeListener(this)
+        listOf(
+                R.id.my_info_history,
+                R.id.my_info_service_center,
+                R.id.my_info_about
+        ).forEach {
+            mRefreshView.findViewById<View>(it).apply {
+                backgroundTintList = if (appPreferences.listItemsBackgroundIntermixed) {
+                    ColorStateListUtils.createColorStateList(attachContext, R.color.default_color_divider)
+                } else {
+                    ColorStateListUtils.createColorStateList(attachContext, R.color.default_color_card)
+                }
+            }
+        }
     }
 
     override fun onClick(v: View) {

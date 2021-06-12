@@ -44,10 +44,14 @@ class MainForumListAdapter(
                             getRadiusDrawable()
                         }
                 )
-                if (position % 2 == 1) {
-                    viewHolder.itemView.backgroundTintList = ColorStateListUtils.createColorStateList(context, R.color.default_color_card)
+                if (context.appPreferences.listItemsBackgroundIntermixed) {
+                    if (position % 2 == 1) {
+                        viewHolder.itemView.backgroundTintList = ColorStateListUtils.createColorStateList(context, R.color.default_color_card)
+                    } else {
+                        viewHolder.itemView.backgroundTintList = ColorStateListUtils.createColorStateList(context, R.color.default_color_divider)
+                    }
                 } else {
-                    viewHolder.itemView.backgroundTintList = ColorStateListUtils.createColorStateList(context, R.color.default_color_divider)
+                    viewHolder.itemView.backgroundTintList = ColorStateListUtils.createColorStateList(context, R.color.default_color_card)
                 }
             }
             //双列左

@@ -9,7 +9,7 @@ import com.huanchengfly.tieba.post.api.models.SearchUserBean
 import com.huanchengfly.tieba.post.components.MyViewHolder
 import com.huanchengfly.tieba.post.utils.ImageUtil
 import com.huanchengfly.tieba.post.utils.StringUtil
-import com.huanchengfly.tieba.post.utils.getItemBackgroundDrawable
+import com.huanchengfly.tieba.post.utils.getIntermixedColorBackground
 
 class SearchUserAdapter(
         context: Context
@@ -26,7 +26,7 @@ class SearchUserAdapter(
         }
         subTitleBuilder.append(context.getString(R.string.fans_num, item.fansNum))
         viewHolder.setText(R.id.item_search_user_subtitle, subTitleBuilder.toString())
-        viewHolder.itemView.background = getItemBackgroundDrawable(
+        viewHolder.itemView.background = getIntermixedColorBackground(
                 context,
                 position,
                 itemCount,

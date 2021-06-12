@@ -141,6 +141,11 @@
             android:summary="@string/tip_status_bar_darker" />
 
         <SwitchPreference
+            android:key="listItemsBackgroundIntermixed"
+            android:defaultValue="true"
+            android:title="@string/settings_list_items_background_intermixed" />
+
+        <SwitchPreference
             android:icon="@drawable/ic_forum_single_blue"
             android:key="listSingle"
             android:defaultValue="false"

@@ -85,3 +85,29 @@ fun getRadiusDrawable(
 fun wrapRipple(rippleColor: Int, drawable: Drawable): Drawable {
     return RippleDrawable(ColorStateList.valueOf(rippleColor), drawable, drawable)
 }
+
+
+@JvmOverloads
+fun getIntermixedColorBackground(
+        context: Context,
+        position: Int,
+        itemCount: Int,
+        positionOffset: Int = 0,
+        radius: Float = 8f.dpToPxFloat(),
+        colors: IntArray = intArrayOf(R.color.default_color_card),
+        ripple: Boolean = true
+): Drawable {
+    return getItemBackgroundDrawable(
+            context,
+            position,
+            itemCount,
+            positionOffset,
+            radius,
+            if (context.appPreferences.listItemsBackgroundIntermixed) {
+                colors
+            } else {
+                intArrayOf(colors[0])
+            },
+            ripple
+    )
+}

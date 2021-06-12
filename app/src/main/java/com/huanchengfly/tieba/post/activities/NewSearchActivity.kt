@@ -41,7 +41,7 @@ import com.huanchengfly.tieba.post.ui.theme.utils.ColorStateListUtils
 import com.huanchengfly.tieba.post.utils.AnimUtil
 import com.huanchengfly.tieba.post.utils.NavigationHelper
 import com.huanchengfly.tieba.post.utils.anim.animSet
-import com.huanchengfly.tieba.post.utils.getItemBackgroundDrawable
+import com.huanchengfly.tieba.post.utils.getIntermixedColorBackground
 import com.huanchengfly.tieba.post.widgets.MyViewPager
 import org.litepal.LitePal
 import retrofit2.Call
@@ -321,7 +321,7 @@ class NewSearchActivity : BaseActivity(), TabLayout.OnTabSelectedListener {
                 textView.setTextColor(context.getColorCompat(R.color.red_accent))
             }
             viewHolder.setVisibility(R.id.hot_desc, View.GONE)
-            viewHolder.itemView.background = getItemBackgroundDrawable(
+            viewHolder.itemView.background = getIntermixedColorBackground(
                     context,
                     position,
                     itemCount,

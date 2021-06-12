@@ -8,7 +8,7 @@ import com.huanchengfly.tieba.post.api.models.SearchForumBean
 import com.huanchengfly.tieba.post.api.models.SearchForumBean.ExactForumInfoBean
 import com.huanchengfly.tieba.post.components.MyViewHolder
 import com.huanchengfly.tieba.post.utils.ImageUtil
-import com.huanchengfly.tieba.post.utils.getItemBackgroundDrawable
+import com.huanchengfly.tieba.post.utils.getIntermixedColorBackground
 
 class SearchForumAdapter(context: Context?) : BaseMultiTypeDelegateAdapter<SearchForumBean.ForumInfoBean>(context!!, LinearLayoutHelper()) {
     override fun convert(viewHolder: MyViewHolder, item: SearchForumBean.ForumInfoBean, position: Int, viewType: Int) {
@@ -18,7 +18,7 @@ class SearchForumAdapter(context: Context?) : BaseMultiTypeDelegateAdapter<Searc
             val exactForumInfoBean = item as ExactForumInfoBean
             viewHolder.setText(R.id.item_search_forum_subtitle, exactForumInfoBean.slogan)
         }
-        viewHolder.itemView.background = getItemBackgroundDrawable(
+        viewHolder.itemView.background = getIntermixedColorBackground(
                 context,
                 position,
                 itemCount,
