@@ -31,7 +31,7 @@ class OKSignService : IntentService(TAG), CoroutineScope, ProgressListener {
 
     override fun onCreate() {
         super.onCreate()
-        updateNotification(getString(R.string.title_fetching_forum_list), getString(R.string.text_please_wait), 0, 100, true)
+        updateNotification(getString(R.string.title_fetching_forum_list), getString(R.string.text_please_wait))
         startForeground(9, buildNotification(getString(R.string.title_oksign), getString(R.string.tip_oksign_running)).build())
     }
 
@@ -64,9 +64,8 @@ class OKSignService : IntentService(TAG), CoroutineScope, ProgressListener {
                         .build())
     }
 
-    private fun updateNotification(title: String, text: String?, progress: Int, max: Int, indeterminate: Boolean) {
+    private fun updateNotification(title: String, text: String?) {
         val notification = buildNotification(title, text)
-                .setProgress(max, progress, indeterminate)
                 .build()
         notification.flags = notification.flags.addFlag(NotificationCompat.FLAG_ONGOING_EVENT)
         manager.notify(1, notification)
@@ -98,7 +97,7 @@ class OKSignService : IntentService(TAG), CoroutineScope, ProgressListener {
     }
 
     override fun onStart(total: Int) {
-        updateNotification(getString(R.string.title_start_sign), null, 0, 100, true)
+        updateNotification(getString(R.string.title_start_sign), null)
         Toast.makeText(this@OKSignService, R.string.toast_oksign_start, Toast.LENGTH_SHORT).show()
     }
 
@@ -114,10 +113,7 @@ class OKSignService : IntentService(TAG), CoroutineScope, ProgressListener {
                 getString(
                         R.string.text_forum_name,
                         signDataBean.forumName
-                ),
-                current,
-                total,
-                false
+                )
         )
     }
 
@@ -132,10 +128,7 @@ class OKSignService : IntentService(TAG), CoroutineScope, ProgressListener {
                 if (signResultBean.userInfo?.signBonusPoint != null)
                     getString(R.string.text_singing_progress_exp, signDataBean.forumName, signResultBean.userInfo.signBonusPoint)
                 else
-                    getString(R.string.text_singing_progress, signDataBean.forumName),
-                current,
-                total,
-                false
+                    getString(R.string.text_singing_progress, signDataBean.forumName)
         )
     }
 
