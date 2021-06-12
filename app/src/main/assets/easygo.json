@@ -49,6 +49,12 @@
         ],
         "transActivities": [
         ],
+        "Activities": [
+          {
+            "name": "com.huanchengfly.tieba.post.MainActivity",
+            "defaultFullScreen": "true"
+          }
+        ],
         "UX": {
           "supportRotationUxCompat": "true",
           "isDraggable": "true"
