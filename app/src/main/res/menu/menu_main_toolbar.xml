@@ -5,7 +5,7 @@
         android:id="@+id/menu_sign"
         android:orderInCategory="1"
         android:title="@string/title_oksign"
-        android:icon="@drawable/ic_round_track_changes"
+        android:icon="@drawable/ic_oksign"
         app:showAsAction="ifRoom" />
     <item
         android:id="@+id/menu_switch_list"

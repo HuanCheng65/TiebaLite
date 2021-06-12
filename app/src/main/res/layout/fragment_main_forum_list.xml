@@ -72,7 +72,7 @@
                 android:layout_width="24dp"
                 android:layout_height="24dp"
                 android:background="?attr/selectableItemBackgroundBorderless"
-                app:srcCompat="@drawable/ic_round_track_changes"
+                app:srcCompat="@drawable/ic_oksign"
                 app:tint="@color/default_color_toolbar_item" />
         </androidx.constraintlayout.motion.widget.MotionLayout>
 
