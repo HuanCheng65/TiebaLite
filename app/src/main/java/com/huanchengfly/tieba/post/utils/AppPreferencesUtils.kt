@@ -30,6 +30,8 @@ open class AppPreferencesUtils(context: Context) {
 
     var followSystemNight by SharedPreferenceDelegates.boolean(defaultValue = true, key = "follow_system_night")
 
+    var forumFabFunction by SharedPreferenceDelegates.string(defaultValue = "post")
+
     var hideExplore by SharedPreferenceDelegates.boolean(defaultValue = false)
 
     var hideHotMessageList by SharedPreferenceDelegates.boolean(defaultValue = false)

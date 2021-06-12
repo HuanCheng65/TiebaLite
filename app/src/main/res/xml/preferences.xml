@@ -113,6 +113,13 @@
             android:key="hideHotMessageList"
             android:title="@string/title_hide_hot_message_list" />
 
+        <ListPreference
+            android:entryValues="@array/forum_fab_function_values"
+            android:entries="@array/forum_fab_function_name_values"
+            android:defaultValue="post"
+            android:key="forumFabFunction"
+            android:title="@string/settings_forum_fab_function" />
+
         <Preference
             android:enabled="false"
             android:layout="@layout/layout_preference_bottom" />

@@ -447,4 +447,8 @@
     <string name="text_oksign_no_signable">没有可签到的吧</string>
     <string name="title_forum_info">关于本吧</string>
     <string name="settings_list_items_background_intermixed">列表背景颜色交错效果</string>
+    <string name="settings_forum_fab_function">吧页面悬浮按钮功能</string>
+    <string name="btn_post">发贴</string>
+    <string name="btn_refresh">刷新</string>
+    <string name="btn_back_to_top">回到顶部</string>
 </resources>

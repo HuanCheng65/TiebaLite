@@ -63,4 +63,16 @@
         <item>grey_dark</item>
         <item>amoled_dark</item>
     </string-array>
+
+    <string-array name="forum_fab_function_values">
+        <item>post</item>
+        <item>refresh</item>
+        <item>back_to_top</item>
+    </string-array>
+
+    <string-array name="forum_fab_function_name_values">
+        <item>@string/btn_post</item>
+        <item>@string/btn_refresh</item>
+        <item>@string/btn_back_to_top</item>
+    </string-array>
 </resources>

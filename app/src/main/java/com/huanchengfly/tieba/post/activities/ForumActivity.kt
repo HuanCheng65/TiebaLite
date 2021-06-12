@@ -291,14 +291,24 @@ class ForumActivity : BaseActivity(), View.OnClickListener, OnRefreshedListener,
             }
         }
         refreshHeaderView()
-        fab.hide()
-        fab.supportImageTintList = ColorStateList.valueOf(resources.getColor(R.color.white))
         setSupportActionBar(toolbar)
         val actionBar = supportActionBar
         actionBar?.setDisplayHomeAsUpEnabled(true)
         button.setOnClickListener(this)
         toolbar.setOnClickListener(this)
         toolbarEndBtn.setOnClickListener(this)
+        fab.hide()
+        fab.supportImageTintList = ColorStateList.valueOf(resources.getColor(R.color.white))
+        fab.setImageResource(when (appPreferences.forumFabFunction) {
+            "refresh" -> R.drawable.ic_round_refresh
+            "back_to_top" -> R.drawable.ic_round_vertical_align_top
+            else -> R.drawable.ic_round_create
+        })
+        fab.contentDescription = getString(when (appPreferences.forumFabFunction) {
+            "refresh" -> R.string.btn_refresh
+            "back_to_top" -> R.string.btn_back_to_top
+            else -> R.string.btn_post
+        })
         fab.setOnClickListener(this)
     }
 
@@ -379,11 +389,25 @@ class ForumActivity : BaseActivity(), View.OnClickListener, OnRefreshedListener,
                 if (mDataBean == null) {
                     return
                 }
-                if ("0" != mDataBean!!.anti?.ifPost) {
-                    NavigationHelper.newInstance(this).navigationByData(NavigationHelper.ACTION_THREAD_POST, forumName)
-                } else {
-                    if (!TextUtils.isEmpty(mDataBean!!.anti?.forbidInfo)) {
-                        Toast.makeText(this, mDataBean!!.anti?.forbidInfo, Toast.LENGTH_SHORT).show()
+                when (appPreferences.forumFabFunction) {
+                    "refresh" -> {
+                        refresh()
+                    }
+                    "back_to_top" -> {
+                        mAdapter?.currentFragment?.apply {
+                            if (this is ScrollTopable) {
+                                scrollToTop()
+                            }
+                        }
+                    }
+                    else -> {
+                        if ("0" != mDataBean!!.anti?.ifPost) {
+                            NavigationHelper.newInstance(this).navigationByData(NavigationHelper.ACTION_THREAD_POST, forumName)
+                        } else {
+                            if (!TextUtils.isEmpty(mDataBean!!.anti?.forbidInfo)) {
+                                Toast.makeText(this, mDataBean!!.anti?.forbidInfo, Toast.LENGTH_SHORT).show()
+                            }
+                        }
                     }
                 }
             }
