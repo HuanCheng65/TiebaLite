@@ -74,7 +74,7 @@ public class ThreadStoreFragment extends BaseFragment {
     }
 
     @Override
-    int getLayoutId() {
+    public int getLayoutId() {
         return R.layout.fragment_thread_store;
     }
 

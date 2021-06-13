@@ -252,6 +252,8 @@ public class ForumBean extends WebBaseBean<ForumBean.ForumDataBean> {
         private String memberNum;
         @SerializedName("post_num")
         private String postNum;
+        @SerializedName("thread_num")
+        private String threadNum;
         private List<ForumPageBean.ManagerBean> managers;
         @SerializedName("good_classify")
         private List<ForumPageBean.GoodClassifyBean> goodClassify;
@@ -275,6 +277,10 @@ public class ForumBean extends WebBaseBean<ForumBean.ForumDataBean> {
 
         public String getPostNum() {
             return postNum;
+        }
+
+        public String getThreadNum() {
+            return threadNum;
         }
 
         public String getId() {

@@ -106,6 +106,7 @@ public class ForumBeanCaster extends ICaster<ForumBean, ForumPageBean> {
             forumBean.setUserLevel(frsForumBean.getUserLevel());
             forumBean.setMemberNum(frsForumBean.getMemberNum());
             forumBean.setPostNum(frsForumBean.getPostNum());
+            forumBean.setThreadNum(frsForumBean.getThreadNum());
             forumBean.setManagers(frsForumBean.getManagers());
             forumBean.setZyqTitle(frsForumBean.getAttrs().getZyqTitle());
             forumBean.setZyqDefine(frsForumBean.getAttrs().getZyqDefine());

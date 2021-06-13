@@ -61,7 +61,7 @@ public class UserLikeForumFragment extends BaseFragment {
     }
 
     @Override
-    int getLayoutId() {
+    public int getLayoutId() {
         return R.layout.fragment_user_like_forum;
     }
 

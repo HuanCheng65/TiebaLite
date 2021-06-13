@@ -69,7 +69,7 @@ public class PhotoViewFragment extends BaseFragment {
     }
 
     @Override
-    int getLayoutId() {
+    public int getLayoutId() {
         return R.layout.fragment_photo_view;
     }
 

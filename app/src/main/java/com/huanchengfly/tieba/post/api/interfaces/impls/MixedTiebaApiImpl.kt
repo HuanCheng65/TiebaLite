@@ -238,6 +238,11 @@ object MixedTiebaApiImpl : ITiebaApi {
     ): Call<ForumBean> =
             RetrofitTiebaApi.WEB_TIEBA_API.frs(forumName, (page - 1) * pageSize, sortType.value, goodClassifyId)
 
+    override fun webForumPageAsync(
+            forumName: String, page: Int, goodClassifyId: String?, sortType: ForumSortType, pageSize: Int
+    ): Deferred<ApiResult<ForumBean>> =
+            RetrofitTiebaApi.WEB_TIEBA_API.frsAsync(forumName, (page - 1) * pageSize, sortType.value, goodClassifyId)
+
     override fun checkReportPost(postId: String): Call<CheckReportBean> =
             RetrofitTiebaApi.MINI_TIEBA_API.checkReport(
                     category = "1",

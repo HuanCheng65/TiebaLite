@@ -462,9 +462,9 @@ class ForumActivity : BaseActivity(), View.OnClickListener, OnRefreshedListener,
     private fun getNumStr(num: String): String {
         val long = num.toLong()
         if (long > 9999) {
-            val longW = long / 10000L
+            val longW = long * 10 / 10000L / 10F
             if (longW > 999) {
-                val longKW = longW / 1000L
+                val longKW = longW.toLong() / 1000L
                 return "${longKW}KW"
             } else {
                 return "${longW}W"

@@ -33,4 +33,6 @@
     <dimen name="app_bar_height">106dp</dimen>
     <dimen name="fab_margin">16dp</dimen>
     <dimen name="text_margin">16dp</dimen>
+    <dimen name="text_size_forum_info_title">16sp</dimen>
+    <dimen name="text_size_forum_info_slogan">14sp</dimen>
 </resources>

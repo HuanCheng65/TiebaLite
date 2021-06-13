@@ -1,254 +1,233 @@
-package com.huanchengfly.tieba.post.fragments;
+package com.huanchengfly.tieba.post.fragments
 
-import android.graphics.Bitmap;
-import android.os.Bundle;
-import android.text.SpannableStringBuilder;
-import android.text.Spanned;
-import android.text.method.LinkMovementMethod;
-import android.view.View;
-import android.widget.TextView;
-import android.widget.Toast;
+import android.graphics.Typeface
+import android.os.Bundle
+import android.view.View
+import android.widget.ImageView
+import android.widget.TextView
+import android.widget.Toast
+import androidx.core.widget.NestedScrollView
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import butterknife.BindView
+import com.huanchengfly.tieba.post.R
+import com.huanchengfly.tieba.post.adapters.ForumManagerAdapter
+import com.huanchengfly.tieba.post.adapters.ZyqFriendForumAdapter
+import com.huanchengfly.tieba.post.adapters.ZyqFriendLinkAdapter
+import com.huanchengfly.tieba.post.api.ForumSortType
+import com.huanchengfly.tieba.post.api.TiebaApi
+import com.huanchengfly.tieba.post.api.caster.ForumBeanCaster
+import com.huanchengfly.tieba.post.api.models.ForumPageBean
+import com.huanchengfly.tieba.post.api.retrofit.doIfFailure
+import com.huanchengfly.tieba.post.api.retrofit.doIfSuccess
+import com.huanchengfly.tieba.post.api.retrofit.exception.getErrorCode
+import com.huanchengfly.tieba.post.api.retrofit.exception.getErrorMessage
+import com.huanchengfly.tieba.post.fragments.ForumFragment.OnRefreshedListener
+import com.huanchengfly.tieba.post.interfaces.Refreshable
+import com.huanchengfly.tieba.post.interfaces.ScrollTopable
+import com.huanchengfly.tieba.post.utils.AnimUtil.alphaIn
+import com.huanchengfly.tieba.post.utils.ImageUtil
+import com.huanchengfly.tieba.post.utils.ThemeUtil
+import com.huanchengfly.tieba.post.utils.Util
+import kotlinx.coroutines.Dispatchers.IO
+import kotlinx.coroutines.launch
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.core.widget.NestedScrollView;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-
-import com.huanchengfly.tieba.post.R;
-import com.huanchengfly.tieba.post.adapters.ZyqFriendAdapter;
-import com.huanchengfly.tieba.post.api.ForumSortType;
-import com.huanchengfly.tieba.post.api.TiebaApi;
-import com.huanchengfly.tieba.post.api.caster.ForumBeanCaster;
-import com.huanchengfly.tieba.post.api.models.ForumPageBean;
-import com.huanchengfly.tieba.post.api.models.web.ForumBean;
-import com.huanchengfly.tieba.post.api.retrofit.exception.TiebaException;
-import com.huanchengfly.tieba.post.components.spans.MyImageSpan;
-import com.huanchengfly.tieba.post.components.spans.MyURLSpan;
-import com.huanchengfly.tieba.post.components.spans.MyUserSpan;
-import com.huanchengfly.tieba.post.interfaces.Refreshable;
-import com.huanchengfly.tieba.post.interfaces.ScrollTopable;
-import com.huanchengfly.tieba.post.ui.theme.utils.ThemeUtils;
-import com.huanchengfly.tieba.post.utils.AnimUtil;
-import com.huanchengfly.tieba.post.utils.DisplayUtil;
-import com.huanchengfly.tieba.post.utils.ThemeUtil;
-import com.huanchengfly.tieba.post.utils.Util;
-
-import org.jetbrains.annotations.NotNull;
-
-import butterknife.BindView;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-
-import static com.huanchengfly.tieba.post.fragments.ForumFragment.PARAM_FORUM_NAME;
-
-public class ForumInfoFragment extends BaseFragment implements Refreshable, ScrollTopable {
+class ForumInfoFragment : BaseFragment(), Refreshable, ScrollTopable {
     @BindView(R.id.title)
-    TextView title;
+    lateinit var title: TextView
+
     @BindView(R.id.slogan)
-    TextView slogan;
-    @BindView(R.id.hot)
-    TextView hot;
+    lateinit var slogan: TextView
+
+    @BindView(R.id.avatar)
+    lateinit var avatar: ImageView
+
     @BindView(R.id.managers)
-    TextView managers;
+    lateinit var managers: RecyclerView
+
     @BindView(R.id.zyqtitle)
-    TextView zyqTitle;
+    lateinit var zyqTitle: TextView
+
     @BindView(R.id.zyqdefine)
-    TextView zyqDefine;
+    lateinit var zyqDefine: RecyclerView
+
     @BindView(R.id.scroll_view)
-    NestedScrollView mScrollView;
+    lateinit var mScrollView: NestedScrollView
+
     @BindView(R.id.friend_links)
-    View mFriendLinksView;
+    lateinit var mFriendLinksView: View
+
     @BindView(R.id.friend_forums)
-    View mFriendForumsView;
+    lateinit var mFriendForumsView: View
+
     @BindView(R.id.managers_view)
-    View mManagersView;
+    lateinit var mManagersView: View
+
     @BindView(R.id.friend_forums_view)
-    RecyclerView friendForumsRecyclerView;
+    lateinit var friendForumsRecyclerView: RecyclerView
+
     @BindView(R.id.refresh)
-    SwipeRefreshLayout mRefreshLayout;
+    lateinit var mRefreshLayout: SwipeRefreshLayout
 
-    private String forumName;
-    private ForumPageBean mDataBean;
-    private View content;
+    @BindView(R.id.content)
+    lateinit var content: View
 
-    public ForumInfoFragment() {
-    }
+    @BindView(R.id.forum_header_stat_members)
+    lateinit var statMembersTextView: TextView
 
-    public static ForumInfoFragment newInstance(String forumName) {
-        Bundle args = new Bundle();
-        args.putString(PARAM_FORUM_NAME, forumName);
-        ForumInfoFragment fragment = new ForumInfoFragment();
-        fragment.setArguments(args);
-        return fragment;
-    }
+    @BindView(R.id.forum_header_stat_posts)
+    lateinit var statPostsTextView: TextView
 
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        Bundle bundle = getArguments();
+    @BindView(R.id.forum_header_stat_threads)
+    lateinit var statThreadsTextView: TextView
+
+    private var forumName: String? = null
+    private var mDataBean: ForumPageBean? = null
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        val bundle = arguments
         if (savedInstanceState == null && bundle != null) {
-            forumName = bundle.getString(PARAM_FORUM_NAME);
+            forumName = bundle.getString(ForumFragment.PARAM_FORUM_NAME)
         }
     }
 
-    @Override
-    public void onSaveInstanceState(@NonNull Bundle outState) {
-        outState.putString(PARAM_FORUM_NAME, forumName);
-        super.onSaveInstanceState(outState);
+    override fun onSaveInstanceState(outState: Bundle) {
+        outState.putString(ForumFragment.PARAM_FORUM_NAME, forumName)
+        super.onSaveInstanceState(outState)
     }
 
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
         if (savedInstanceState != null) {
-            forumName = savedInstanceState.getString(PARAM_FORUM_NAME);
+            forumName = savedInstanceState.getString(ForumFragment.PARAM_FORUM_NAME)
         }
-        super.onActivityCreated(savedInstanceState);
+        super.onActivityCreated(savedInstanceState)
     }
 
-    @Override
-    int getLayoutId() {
-        return R.layout.fragment_forum_info;
+    override fun getLayoutId(): Int {
+        return R.layout.fragment_forum_info
     }
 
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        ThemeUtil.setThemeForSwipeRefreshLayout(mRefreshLayout);
-        mRefreshLayout.setOnRefreshListener(this::refresh);
-        content = view.findViewById(R.id.content);
-        content.setVisibility(View.GONE);
-        managers.setMovementMethod(LinkMovementMethod.getInstance());
-        friendForumsRecyclerView.setLayoutManager(new LinearLayoutManager(getAttachContext()));
-        zyqDefine.setMovementMethod(LinkMovementMethod.getInstance());
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        ThemeUtil.setThemeForSwipeRefreshLayout(mRefreshLayout)
+        mRefreshLayout.setOnRefreshListener { refresh() }
+        content.visibility = View.GONE
+        listOf(
+                managers,
+                friendForumsRecyclerView,
+                zyqDefine
+        ).forEach {
+            it.layoutManager = GridLayoutManager(attachContext, 2)
+        }
+        listOf(
+                statMembersTextView,
+                statPostsTextView,
+                statThreadsTextView
+        ).forEach {
+            it.typeface = Typeface.createFromAsset(attachContext.assets, "bebas.ttf")
+        }
     }
 
-    @Override
-    protected void onFragmentFirstVisible() {
+    override fun onFragmentFirstVisible() {
         if (mDataBean == null) {
-            refresh();
+            refresh()
         }
     }
 
-    @Override
-    protected void onFragmentVisibleChange(boolean isVisible) {
+    override fun onFragmentVisibleChange(isVisible: Boolean) {
         if (isVisible && mDataBean == null) {
-            refresh();
+            refresh()
         }
     }
 
-    private CharSequence getLinkContent(CharSequence name, String link) {
-        String linkIconText = "[链接]";
-        String s = " ";
-        int start = 0;
-        int end = start + s.length() + linkIconText.length() + name.length();
-        SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder();
-        Bitmap bitmap = Util.getBitmapFromVectorDrawable(getAttachContext(), R.drawable.ic_link);
-        int size = DisplayUtil.sp2px(getAttachContext(), 14);
-        int color = ThemeUtils.getColorByAttr(getAttachContext(), R.attr.colorAccent);
-        bitmap = Bitmap.createScaledBitmap(bitmap, size, size, true);
-        bitmap = Util.tintBitmap(bitmap, color);
-        spannableStringBuilder.append(linkIconText, new MyImageSpan(getAttachContext(), bitmap), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-        spannableStringBuilder.append(s);
-        spannableStringBuilder.append(name);
-        spannableStringBuilder.setSpan(new MyURLSpan(getAttachContext(), link), start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-        return spannableStringBuilder;
+    private fun getNumStr(num: String): String {
+        val long = num.toLong()
+        if (long > 9999) {
+            val longW = long * 10 / 10000L / 10F
+            if (longW > 999) {
+                val longKW = longW.toLong() / 1000L
+                return "${longKW}KW"
+            } else {
+                return "${longW}W"
+            }
+        } else {
+            return num
+        }
     }
 
-    private CharSequence getUserContent(CharSequence username, String uid) {
-        String linkIconText = "[用户]";
-        String s = " ";
-        int start = 0;
-        int end = start + s.length() + linkIconText.length() + username.length();
-        SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder();
-        Bitmap bitmap = Util.getBitmapFromVectorDrawable(getAttachContext(), R.drawable.ic_round_account_circle);
-        int size = DisplayUtil.sp2px(getAttachContext(), 14);
-        int color = ThemeUtils.getColorByAttr(getAttachContext(), R.attr.colorAccent);
-        bitmap = Bitmap.createScaledBitmap(bitmap, size, size, true);
-        bitmap = Util.tintBitmap(bitmap, color);
-        spannableStringBuilder.append(linkIconText, new MyImageSpan(getAttachContext(), bitmap), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-        spannableStringBuilder.append(s);
-        spannableStringBuilder.append(username);
-        spannableStringBuilder.setSpan(new MyUserSpan(getAttachContext(), uid), start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-        return spannableStringBuilder;
-    }
-
-    private void refresh() {
-        mRefreshLayout.setRefreshing(true);
-        TiebaApi.getInstance()
-                .webForumPage(forumName, 1, null, ForumSortType.REPLY_TIME, 30)
-                .enqueue(new Callback<ForumBean>() {
-                    @Override
-                    public void onResponse(Call<ForumBean> call, Response<ForumBean> response) {
-                        ForumPageBean data = new ForumBeanCaster().cast(response.body());
-                        if (getAttachContext() instanceof ForumFragment.OnRefreshedListener) {
-                            ((ForumFragment.OnRefreshedListener) getAttachContext()).onSuccess(data);
+    private fun refresh() {
+        mRefreshLayout.isRefreshing = true
+        launch(IO + job) {
+            TiebaApi.getInstance()
+                    .webForumPageAsync(forumName!!, 1, null, ForumSortType.REPLY_TIME, 30)
+                    .doIfSuccess {
+                        val data = ForumBeanCaster().cast(it)
+                        if (attachContext is OnRefreshedListener) {
+                            (attachContext as OnRefreshedListener).onSuccess(data)
                         }
-                        mRefreshLayout.setRefreshing(false);
-                        AnimUtil.alphaIn(content).start();
-                        mDataBean = data;
-                        title.setText(getAttachContext().getString(R.string.title_forum, data.getForum().getName()));
-                        slogan.setText(data.getForum().getSlogan());
-                        hot.setText(getAttachContext().getString(R.string.forum_hot, data.getForum().getMemberNum(), data.getForum().getPostNum()));
-                        if (data.getForum().getZyqDefine() != null && data.getForum().getZyqDefine().size() > 0) {
-                            mFriendLinksView.setVisibility(View.VISIBLE);
-                            zyqTitle.setText(data.getForum().getZyqTitle());
-                            SpannableStringBuilder friendLinkBuilder = new SpannableStringBuilder();
-                            for (ForumPageBean.ZyqDefineBean zyqDefineBean : data.getForum().getZyqDefine()) {
-                                friendLinkBuilder.append(getLinkContent(zyqDefineBean.getName(), zyqDefineBean.getLink()));
-                                if (data.getForum().getZyqDefine().indexOf(zyqDefineBean) < data.getForum().getZyqDefine().size() - 1)
-                                    friendLinkBuilder.append("\n");
-                            }
-                            zyqDefine.setText(friendLinkBuilder);
+                        mRefreshLayout.isRefreshing = false
+                        alphaIn(content).start()
+                        mDataBean = data
+                        ImageUtil.load(avatar, ImageUtil.LOAD_TYPE_AVATAR, data.forum!!.avatar)
+                        title.text = attachContext.getString(R.string.title_forum, data.forum!!.name)
+                        slogan.text = data.forum!!.slogan
+                        statMembersTextView.text = getNumStr(mDataBean!!.forum!!.memberNum!!)
+                        statPostsTextView.text = getNumStr(mDataBean!!.forum!!.postNum!!)
+                        statThreadsTextView.text = getNumStr(mDataBean!!.forum!!.threadNum!!)
+                        if (data.forum!!.zyqDefine != null && data.forum!!.zyqDefine!!.isNotEmpty()) {
+                            mFriendLinksView.visibility = View.VISIBLE
+                            zyqTitle.text = data.forum!!.zyqTitle
+                            zyqDefine.adapter = ZyqFriendLinkAdapter(attachContext, data.forum!!.zyqDefine!!)
                         } else {
-                            mFriendLinksView.setVisibility(View.GONE);
+                            mFriendLinksView.visibility = View.GONE
                         }
-                        if (data.getForum().getZyqFriend() != null && data.getForum().getZyqFriend().size() > 0) {
-                            mFriendForumsView.setVisibility(View.VISIBLE);
-                            friendForumsRecyclerView.setAdapter(new ZyqFriendAdapter(getAttachContext(), data.getForum().getZyqFriend()));
+                        if (data.forum!!.zyqFriend != null && data.forum!!.zyqFriend!!.isNotEmpty()) {
+                            mFriendForumsView.visibility = View.VISIBLE
+                            friendForumsRecyclerView.adapter = ZyqFriendForumAdapter(attachContext, data.forum!!.zyqFriend!!)
                         } else {
-                            mFriendForumsView.setVisibility(View.GONE);
+                            mFriendForumsView.visibility = View.GONE
                         }
-                        if (data.getForum().getManagers() != null && data.getForum().getManagers().size() > 0) {
-                            mManagersView.setVisibility(View.VISIBLE);
-                            SpannableStringBuilder managersBuilder = new SpannableStringBuilder();
-                            for (ForumPageBean.ManagerBean managerBean : data.getForum().getManagers()) {
-                                managersBuilder.append(getUserContent(managerBean.getName(), managerBean.getId()));
-                                if (data.getForum().getManagers().indexOf(managerBean) < data.getForum().getManagers().size() - 1)
-                                    managersBuilder.append("\n");
-                            }
-                            managers.setText(managersBuilder);
+                        if (data.forum!!.managers != null && data.forum!!.managers!!.isNotEmpty()) {
+                            mManagersView.visibility = View.VISIBLE
+                            managers.adapter = ForumManagerAdapter(attachContext, data.forum!!.managers!!)
                         } else {
-                            mManagersView.setVisibility(View.GONE);
+                            mManagersView.visibility = View.GONE
                         }
                     }
-
-                    @Override
-                    public void onFailure(@NotNull Call<ForumBean> call, @NotNull Throwable t) {
-                        int code = t instanceof TiebaException ? ((TiebaException) t).getCode() : -1;
-                        String error = t.getMessage();
-                        if (getAttachContext() instanceof ForumFragment.OnRefreshedListener) {
-                            ((ForumFragment.OnRefreshedListener) getAttachContext()).onFailure(code, error);
+                    .doIfFailure {
+                        val code = it.getErrorCode()
+                        val error = it.getErrorMessage()
+                        if (attachContext is OnRefreshedListener) {
+                            (attachContext as OnRefreshedListener).onFailure(code, error)
                         }
-                        mRefreshLayout.setRefreshing(false);
+                        mRefreshLayout.isRefreshing = false
                         if (code == 0) {
-                            Util.showNetworkErrorSnackbar(content, () -> refresh());
-                            return;
+                            Util.showNetworkErrorSnackbar(content) { refresh() }
+                        } else {
+                            Toast.makeText(attachContext, getString(R.string.toast_error, code, error), Toast.LENGTH_SHORT).show()
                         }
-                        Toast.makeText(getAttachContext(), getString(R.string.toast_error, code, error), Toast.LENGTH_SHORT).show();
                     }
-                });
+        }
+
     }
 
-    @Override
-    public void onRefresh() {
-        refresh();
+    override fun onRefresh() {
+        refresh()
     }
 
-    @Override
-    public void scrollToTop() {
-        mScrollView.scrollTo(0, 0);
+    override fun scrollToTop() {
+        mScrollView.scrollTo(0, 0)
+    }
+
+    companion object {
+        fun newInstance(forumName: String?): ForumInfoFragment {
+            val args = Bundle()
+            args.putString(ForumFragment.PARAM_FORUM_NAME, forumName)
+            val fragment = ForumInfoFragment()
+            fragment.arguments = args
+            return fragment
+        }
     }
 }

@@ -75,6 +75,16 @@ interface WebTiebaApi {
             @Query("fr") fr: String = "newwise"
     ): Call<ForumBean>
 
+    @GET("/f")
+    fun frsAsync(
+            @Query("kw") forumName: String,
+            @Query("pn") pn: Int,
+            @Query("sort_type") sort_type: Int,
+            @Query("cid") cid: String?,
+            @Query("lm") lm: String? = if (!TextUtils.isEmpty(cid)) "4" else null,
+            @Query("fr") fr: String = "newwise"
+    ): Deferred<ApiResult<ForumBean>>
+
     @Headers(
             "${Header.ADD_COOKIE}: ${Header.ADD_COOKIE_FALSE}"
     )

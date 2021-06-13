@@ -572,6 +572,23 @@ interface ITiebaApi {
     ): Call<ForumBean>
 
     /**
+     * 吧页面（web 接口）
+     *
+     * @param forumName 吧名
+     * @param page 分页页码
+     * @param goodClassifyId 精品贴分类 ID
+     * @param sortType 贴排序类型
+     * @param pageSize 每页贴数（默认 30）
+     */
+    fun webForumPageAsync(
+            forumName: String,
+            page: Int,
+            goodClassifyId: String? = null,
+            sortType: ForumSortType = ForumSortType.REPLY_TIME,
+            pageSize: Int = 30
+    ): Deferred<ApiResult<ForumBean>>
+
+    /**
      * 获取举报贴子/回贴页面 URL
      *
      * @param postId PID

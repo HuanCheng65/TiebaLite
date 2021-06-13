@@ -3,6 +3,7 @@
 package com.huanchengfly.tieba.post.activities
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.graphics.Typeface
 import android.os.Bundle
 import android.text.TextUtils
@@ -26,6 +27,7 @@ import com.huanchengfly.tieba.post.api.models.CommonResponse
 import com.huanchengfly.tieba.post.api.models.ProfileBean
 import com.huanchengfly.tieba.post.fragments.UserLikeForumFragment
 import com.huanchengfly.tieba.post.fragments.UserPostFragment
+import com.huanchengfly.tieba.post.goToActivity
 import com.huanchengfly.tieba.post.models.PhotoViewBean
 import com.huanchengfly.tieba.post.models.database.Block
 import com.huanchengfly.tieba.post.utils.AccountUtil
@@ -259,5 +261,11 @@ class UserActivity : BaseActivity() {
         const val TAB_THREAD = 0
         const val TAB_REPLY = 1
         const val TAB_LIKE_FORUM = 2
+
+        fun launch(context: Context, userId: String) {
+            context.goToActivity<UserActivity> {
+                putExtra(EXTRA_UID, userId)
+            }
+        }
     }
 }

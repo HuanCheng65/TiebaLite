@@ -6,6 +6,7 @@ import android.view.View
 import android.view.View.OnLongClickListener
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.annotation.DrawableRes
 import androidx.annotation.IdRes
 import androidx.annotation.LayoutRes
 import androidx.annotation.StringRes
@@ -61,5 +62,9 @@ class MyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
     fun setImageDrawable(@IdRes id: Int, drawable: Drawable?) {
         getView<ImageView>(id).setImageDrawable(drawable)
+    }
+
+    fun setImageResource(@IdRes id: Int, @DrawableRes drawableRes: Int) {
+        getView<ImageView>(id).setImageResource(drawableRes)
     }
 }

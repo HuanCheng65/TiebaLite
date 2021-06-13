@@ -1,87 +1,75 @@
-package com.huanchengfly.tieba.post.fragments;
+package com.huanchengfly.tieba.post.fragments
 
-
-import android.annotation.TargetApi;
-import android.app.Activity;
-import android.content.Context;
-import android.os.Build;
-import android.os.Bundle;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-
-import androidx.annotation.CallSuper;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-
-import com.huanchengfly.tieba.post.interfaces.BackHandledInterface;
-import com.huanchengfly.tieba.post.interfaces.Refreshable;
-import com.huanchengfly.tieba.post.utils.AppPreferencesUtils;
-import com.huanchengfly.tieba.post.utils.HandleBackUtil;
-
-import org.jetbrains.annotations.NotNull;
-
-import butterknife.ButterKnife;
-import butterknife.Unbinder;
+import android.annotation.TargetApi
+import android.app.Activity
+import android.content.Context
+import android.os.Build
+import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import androidx.annotation.CallSuper
+import androidx.fragment.app.Fragment
+import butterknife.ButterKnife
+import butterknife.Unbinder
+import com.huanchengfly.tieba.post.interfaces.BackHandledInterface
+import com.huanchengfly.tieba.post.interfaces.Refreshable
+import com.huanchengfly.tieba.post.utils.AppPreferencesUtils
+import com.huanchengfly.tieba.post.utils.HandleBackUtil
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlin.coroutines.CoroutineContext
 
 /**
- * <p>
+ *
+ *
  * Fragment基类，封装了懒加载的实现
- * <p>
+ *
+ *
  * ViewPager + Fragment 情况下，Fragment 的生命周期因 ViewPager 的缓存机制而失去了具体意义
  * 该抽象类自定义新的回调方法，当 Fragment 可见状态改变时会触发的回调方法，和 Fragment 第一次可见时会回调的方法
  *
- * @see #onFragmentVisibleChange(boolean)
- * @see #onFragmentFirstVisible()
+ * @see .onFragmentVisibleChange
+ * @see .onFragmentFirstVisible
  */
-public abstract class BaseFragment extends Fragment implements BackHandledInterface {
+abstract class BaseFragment : Fragment(), BackHandledInterface, CoroutineScope {
+    val job = Job()
+    override val coroutineContext: CoroutineContext
+        get() = Dispatchers.Main + job
 
-    private static final String TAG = BaseFragment.class.getSimpleName();
-    Unbinder unbinder;
-    private boolean isFragmentVisible;
-    private boolean isReuseView;
-    private boolean isFirstVisible;
-    private View rootView;
-    private Context attachContext;
+    var unbinder: Unbinder? = null
 
-    public boolean isFirstVisible() {
-        return isFirstVisible;
-    }
-
-    protected AppPreferencesUtils getAppPreferences() {
-        return new AppPreferencesUtils(attachContext);
-    }
+    protected var isFragmentVisible = false
+        private set
+    private var isReuseView = false
+    var isFirstVisible = false
+        private set
+    private var rootView: View? = null
+    lateinit var attachContext: Context
+    protected val appPreferences: AppPreferencesUtils
+        get() = AppPreferencesUtils(attachContext)
 
     @TargetApi(23)
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        onAttachToContext(context);
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        onAttachToContext(context)
     }
 
-    @SuppressWarnings("deprecation")
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
+    override fun onAttach(activity: Activity) {
+        super.onAttach(activity)
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
-            onAttachToContext(activity);
+            onAttachToContext(activity)
         }
     }
 
     @CallSuper
-    private void onAttachToContext(Context context) {
-        attachContext = context;
+    private fun onAttachToContext(context: Context) {
+        attachContext = context
     }
 
-    @NonNull
-    public Context getAttachContext() {
-        return attachContext;
-    }
-
-    @Override
-    public boolean onBackPressed() {
-        return HandleBackUtil.handleBackPress(this);
+    override fun onBackPressed(): Boolean {
+        return HandleBackUtil.handleBackPress(this)
     }
 
     //setUserVisibleHint()在Fragment创建时会先被调用一次，传入isVisibleToUser = false
@@ -89,84 +77,78 @@ public abstract class BaseFragment extends Fragment implements BackHandledInterf
     //如果Fragment从可见->不可见，那么setUserVisibleHint()也会被调用，传入isVisibleToUser = false
     //总结：setUserVisibleHint()除了Fragment的可见状态发生变化时会被回调外，在new时也会被回调
     //如果我们需要在Fragment可见与不可见时干点事，用这个的话就会有多余的回调了，那么就需要重新封装一个
-    @Override
-    public void setUserVisibleHint(boolean isVisibleToUser) {
-        super.setUserVisibleHint(isVisibleToUser);
+    override fun setUserVisibleHint(isVisibleToUser: Boolean) {
+        super.setUserVisibleHint(isVisibleToUser)
         //setUserVisibleHint()有可能在fragment的生命周期外被调用
         if (rootView == null) {
-            return;
+            return
         }
         if (isFirstVisible && isVisibleToUser) {
-            onFragmentFirstVisible();
-            isFirstVisible = false;
-            isFragmentVisible = true;
-            return;
+            onFragmentFirstVisible()
+            isFirstVisible = false
+            isFragmentVisible = true
+            return
         }
         if (isVisibleToUser) {
-            onFragmentVisibleChange(true);
-            isFragmentVisible = true;
-            return;
+            onFragmentVisibleChange(true)
+            isFragmentVisible = true
+            return
         }
         if (isFragmentVisible) {
-            isFragmentVisible = false;
-            onFragmentVisibleChange(false);
+            isFragmentVisible = false
+            onFragmentVisibleChange(false)
         }
     }
 
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        initVariable();
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        initVariable()
     }
 
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         //如果setUserVisibleHint()在rootView创建前调用时，那么
         //就等到rootView创建完后才回调onFragmentVisibleChange(true)
         //保证onFragmentVisibleChange()的回调发生在rootView创建完成之后，以便支持ui操作
         if (rootView == null) {
-            rootView = view;
-            if (getUserVisibleHint()) {
+            rootView = view
+            if (userVisibleHint) {
                 if (isFirstVisible) {
-                    onFragmentFirstVisible();
-                    isFirstVisible = false;
-                    isFragmentVisible = true;
-                    return;
+                    onFragmentFirstVisible()
+                    isFirstVisible = false
+                    isFragmentVisible = true
+                    return
                 }
-                onFragmentVisibleChange(true);
-                isFragmentVisible = true;
+                onFragmentVisibleChange(true)
+                isFragmentVisible = true
             }
         }
-        super.onViewCreated(isReuseView ? rootView : view, savedInstanceState);
+        super.onViewCreated((if (isReuseView) rootView else view)!!, savedInstanceState)
     }
 
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
+    override fun onDestroyView() {
+        super.onDestroyView()
     }
 
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        initVariable();
+    override fun onDestroy() {
+        super.onDestroy()
+        initVariable()
     }
 
-    private void initVariable() {
-        isFirstVisible = true;
-        isFragmentVisible = false;
-        rootView = null;
-        isReuseView = true;
+    private fun initVariable() {
+        isFirstVisible = true
+        isFragmentVisible = false
+        rootView = null
+        isReuseView = true
     }
 
-    @NotNull
-    @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View inflate = inflater.inflate(getLayoutId(), container, false);
-        unbinder = ButterKnife.bind(this, inflate);
-        return inflate;
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+        val inflate = inflater.inflate(getLayoutId(), container, false)
+        unbinder = ButterKnife.bind(this, inflate)
+        return inflate
     }
 
-    abstract int getLayoutId();
+
+    abstract fun getLayoutId(): Int
 
     /**
      * 设置是否使用 view 的复用，默认开启
@@ -176,21 +158,21 @@ public abstract class BaseFragment extends Fragment implements BackHandledInterf
      *
      * @param isReuse 是否使用 view 的复用
      */
-    protected void reuseView(boolean isReuse) {
-        isReuseView = isReuse;
+    protected fun reuseView(isReuse: Boolean) {
+        isReuseView = isReuse
     }
 
     /**
      * 去除 setUserVisibleHint() 多余的回调场景，保证只有当 Fragment 可见状态发生变化时才回调
      * 回调时机在view创建完后，所以支持ui操作，解决在setUserVisibleHint()里进行ui操作有可能报null异常的问题
-     * <p>
+     *
+     *
      * 可在该回调方法里进行一些ui显示与隐藏，比如加载框的显示和隐藏
      *
      * @param isVisible true  不可见 -> 可见
-     *                  false 可见  -> 不可见
+     * false 可见  -> 不可见
      */
-    protected void onFragmentVisibleChange(boolean isVisible) {
-    }
+    protected open fun onFragmentVisibleChange(isVisible: Boolean) {}
 
     /**
      * 在 Fragment 首次可见时回调，可在这里进行加载数据，保证只在第一次打开 Fragment 时才会加载数据，
@@ -199,20 +181,18 @@ public abstract class BaseFragment extends Fragment implements BackHandledInterf
      * 然后在该方法内将状态设置为下载状态，接着去执行下载的任务
      * 最后在 onFragmentVisibleChange() 里根据数据下载状态来控制下载进度ui控件的显示与隐藏
      */
-    protected void onFragmentFirstVisible() {
-    }
-
-    protected boolean isFragmentVisible() {
-        return isFragmentVisible;
-    }
-
-    public void onAccountSwitch() {
-        if (this instanceof Refreshable) {
-            ((Refreshable) this).onRefresh();
+    protected open fun onFragmentFirstVisible() {}
+    open fun onAccountSwitch() {
+        if (this is Refreshable) {
+            (this as Refreshable).onRefresh()
         }
     }
 
-    public boolean hasOwnAppbar() {
-        return false;
+    open fun hasOwnAppbar(): Boolean {
+        return false
+    }
+
+    companion object {
+        private val TAG = BaseFragment::class.java.simpleName
     }
 }

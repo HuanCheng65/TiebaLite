@@ -217,7 +217,7 @@ public class WebViewFragment extends BaseFragment implements DownloadListener {
     }
 
     @Override
-    int getLayoutId() {
+    public int getLayoutId() {
         return R.layout.fragment_web_view;
     }
 
