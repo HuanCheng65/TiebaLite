@@ -1,11 +1,15 @@
 package com.huanchengfly.tieba.post.adapters
 
 import android.content.Context
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
 import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
 import android.widget.RelativeLayout
+import androidx.annotation.ColorInt
+import androidx.annotation.ColorRes
 import androidx.annotation.DrawableRes
 import androidx.core.content.ContextCompat
 import com.alibaba.android.vlayout.DelegateAdapter
@@ -68,12 +72,23 @@ class HeaderDelegateAdapter @JvmOverloads constructor(
             notifyDataSetChanged()
         }
 
-    var background: Drawable? = null
+    var viewBackground: Drawable? = null
         set(value) {
             field = value
             notifyDataSetChanged()
         }
-    var backgroundTintList: Int = R.color.default_color_card
+    var viewBackgroundTintList: Int = 0
+        set(value) {
+            field = value
+            notifyDataSetChanged()
+        }
+
+    var headerBackground: Drawable? = null
+        set(value) {
+            field = value
+            notifyDataSetChanged()
+        }
+    var headerBackgroundTintList: Int = R.color.default_color_card
         set(value) {
             field = value
             notifyDataSetChanged()
@@ -150,8 +165,18 @@ class HeaderDelegateAdapter @JvmOverloads constructor(
         })
     }
 
-    fun setBackgroundResource(@DrawableRes resId: Int) {
-        background = ContextCompat.getDrawable(context, resId)
+    fun setHeaderBackgroundResource(@DrawableRes resId: Int) {
+        headerBackground = ContextCompat.getDrawable(context, resId)
+    }
+
+    fun setViewBackgroundColor(@ColorInt color: Int) {
+        viewBackground = ColorDrawable(color)
+        viewBackgroundTintList = 0
+    }
+
+    fun setViewBackgroundColorResource(@ColorRes resId: Int) {
+        viewBackground = ColorDrawable(Color.WHITE)
+        viewBackgroundTintList = resId
     }
 
     constructor(
@@ -188,8 +213,10 @@ class HeaderDelegateAdapter @JvmOverloads constructor(
             this.marginEnd = this@HeaderDelegateAdapter.endMargin
             this.bottomMargin = this@HeaderDelegateAdapter.bottomMargin
         }
-        rootView.background = background
-        rootView.backgroundTintList = ColorStateListUtils.createColorStateList(context, backgroundTintList)
+        rootView.background = headerBackground
+        rootView.backgroundTintList = if (headerBackgroundTintList == 0) null else ColorStateListUtils.createColorStateList(context, headerBackgroundTintList)
+        holder.itemView.background = viewBackground
+        holder.itemView.backgroundTintList = if (viewBackgroundTintList == 0) null else ColorStateListUtils.createColorStateList(context, viewBackgroundTintList)
         holder.getView<TintImageView>(R.id.icon).setTintListResId(iconTintList)
         holder.getView<TintImageView>(R.id.end_icon).setTintListResId(iconTintList)
         holder.getView<TintTextView>(R.id.title).tintResId = titleTextColor

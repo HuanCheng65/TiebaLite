@@ -80,10 +80,11 @@ class HistoryFragment : BaseFragment(), OnItemClickListener<History>, Refreshabl
                         startIconResId = R.drawable.ic_date_range,
                         sticky = HeaderDelegateAdapter.STICKY_START
                 ).apply {
-                    setBackgroundResource(R.drawable.bg_top_radius_8dp)
+                    setHeaderBackgroundResource(R.drawable.bg_top_radius_8dp)
                     iconTintList = R.color.default_color_primary
                     titleTextColor = R.color.default_color_primary
-                    backgroundTintList = R.color.default_color_card
+                    headerBackgroundTintList = R.color.default_color_card
+                    setViewBackgroundColorResource(R.color.default_color_window_background)
                     topMargin = attachContext.resources.getDimensionPixelSize(R.dimen.card_margin)
                     startPadding = 12.dpToPx()
                     endPadding = 12.dpToPx()
@@ -97,10 +98,11 @@ class HistoryFragment : BaseFragment(), OnItemClickListener<History>, Refreshabl
                         startIconResId = R.drawable.ic_date_range,
                         sticky = HeaderDelegateAdapter.STICKY_START
                 ).apply {
-                    setBackgroundResource(R.drawable.bg_top_radius_8dp)
+                    setHeaderBackgroundResource(R.drawable.bg_top_radius_8dp)
                     iconTintList = R.color.default_color_primary
                     titleTextColor = R.color.default_color_primary
-                    backgroundTintList = R.color.default_color_card
+                    headerBackgroundTintList = R.color.default_color_card
+                    setViewBackgroundColorResource(R.color.default_color_window_background)
                     topMargin = attachContext.resources.getDimensionPixelSize(R.dimen.card_margin)
                     startPadding = 12.dpToPx()
                     endPadding = 12.dpToPx()

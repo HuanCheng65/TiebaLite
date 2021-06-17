@@ -99,7 +99,7 @@ class SearchUserFragment : BaseFragment(), ISearchFragment, OnItemClickListener<
                         R.string.title_exact_match,
                         R.drawable.ic_round_graphic_eq
                 ).apply {
-                    setBackgroundResource(R.drawable.bg_top_radius_8dp)
+                    setHeaderBackgroundResource(R.drawable.bg_top_radius_8dp)
                     topMargin = attachContext.resources.getDimensionPixelSize(R.dimen.card_margin)
                     startPadding = 16.dpToPx()
                     endPadding = 16.dpToPx()
@@ -113,7 +113,7 @@ class SearchUserFragment : BaseFragment(), ISearchFragment, OnItemClickListener<
                         R.string.title_fuzzy_match,
                         R.drawable.ic_infinite
                 ).apply {
-                    setBackgroundResource(R.drawable.bg_top_radius_8dp)
+                    setHeaderBackgroundResource(R.drawable.bg_top_radius_8dp)
                     topMargin = attachContext.resources.getDimensionPixelSize(R.dimen.card_margin)
                     startPadding = 16.dpToPx()
                     endPadding = 16.dpToPx()

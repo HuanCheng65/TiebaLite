@@ -110,8 +110,8 @@ class SearchThreadFragment : BaseFragment(), ISearchFragment, NewSearchActivity.
                 attachContext,
                 titleResId = getSearchFilterTitleResId(filter)
         ).apply {
-            setBackgroundResource(R.drawable.bg_top_radius_8dp)
-            backgroundTintList = R.color.default_color_card
+            setHeaderBackgroundResource(R.drawable.bg_top_radius_8dp)
+            headerBackgroundTintList = R.color.default_color_card
             topMargin = attachContext.resources.getDimensionPixelSize(R.dimen.card_margin)
         })
         delegateAdapter.addAdapter(searchThreadAdapter!!.apply {

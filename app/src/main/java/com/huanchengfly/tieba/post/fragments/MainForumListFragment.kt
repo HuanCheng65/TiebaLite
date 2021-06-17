@@ -220,8 +220,8 @@ class MainForumListFragment : BaseFragment(), Refreshable, Toolbar.OnMenuItemCli
                     R.string.title_top_forum,
                     R.drawable.ic_round_graphic_eq
             ).apply {
-                setBackgroundResource(R.drawable.bg_top_radius_8dp)
-                backgroundTintList = R.color.default_color_card
+                setHeaderBackgroundResource(R.drawable.bg_top_radius_8dp)
+                headerBackgroundTintList = R.color.default_color_card
                 iconTintList = R.color.default_color_primary
                 titleTextColor = R.color.default_color_primary
                 topMargin = attachContext.resources.getDimensionPixelSize(R.dimen.card_margin)
@@ -236,8 +236,8 @@ class MainForumListFragment : BaseFragment(), Refreshable, Toolbar.OnMenuItemCli
                     R.string.forum_list_title,
                     R.drawable.ic_infinite
             ).apply {
-                setBackgroundResource(R.drawable.bg_top_radius_8dp)
-                backgroundTintList = R.color.default_color_card
+                setHeaderBackgroundResource(R.drawable.bg_top_radius_8dp)
+                headerBackgroundTintList = R.color.default_color_card
                 iconTintList = R.color.default_color_primary
                 titleTextColor = R.color.default_color_primary
                 topMargin = attachContext.resources.getDimensionPixelSize(R.dimen.card_margin)

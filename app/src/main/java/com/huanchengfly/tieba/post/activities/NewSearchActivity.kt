@@ -158,8 +158,8 @@ class NewSearchActivity : BaseActivity(), TabLayout.OnTabSelectedListener {
                     R.drawable.ic_round_keyboard,
                     if (histories.size > 0) R.drawable.ic_round_delete else NO_ICON
             ).apply {
-                setBackgroundResource(R.drawable.bg_top_radius_8dp)
-                backgroundTintList = R.color.default_color_card
+                setHeaderBackgroundResource(R.drawable.bg_top_radius_8dp)
+                headerBackgroundTintList = R.color.default_color_card
                 iconTintList = R.color.default_color_primary
                 titleTextColor = R.color.default_color_primary
                 topMargin = resources.getDimensionPixelSize(R.dimen.card_margin)
@@ -207,8 +207,8 @@ class NewSearchActivity : BaseActivity(), TabLayout.OnTabSelectedListener {
                 R.drawable.ic_round_polymer,
                 R.drawable.ic_round_chevron_right
         ).apply {
-            setBackgroundResource(R.drawable.bg_top_radius_8dp)
-            backgroundTintList = R.color.default_color_card
+            setHeaderBackgroundResource(R.drawable.bg_top_radius_8dp)
+            headerBackgroundTintList = R.color.default_color_card
             iconTintList = R.color.default_color_primary
             titleTextColor = R.color.default_color_primary
             topMargin = resources.getDimensionPixelSize(R.dimen.card_margin)
