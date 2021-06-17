@@ -48,6 +48,12 @@ public class ThemeAdapter extends RecyclerView.Adapter<MyViewHolder> implements 
         selectedPosition = themeList.indexOf(ThemeUtil.getTheme(mContext));
     }
 
+    public void refresh() {
+        List<String> themeList = Arrays.asList(themes);
+        selectedPosition = themeList.indexOf(ThemeUtil.getTheme(mContext));
+        notifyDataSetChanged();
+    }
+
     public OnItemClickListener<String> getOnItemClickListener() {
         return onItemClickListener;
     }

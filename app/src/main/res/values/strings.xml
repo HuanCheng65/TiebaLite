@@ -451,4 +451,7 @@
     <string name="btn_post">发贴</string>
     <string name="btn_refresh">刷新</string>
     <string name="btn_back_to_top">回到顶部</string>
+    <string name="message_dialog_follow_system_night">您已开启跟随系统夜间模式，手动切换日夜模式需要关闭跟随系统，确定要取消跟随吗？</string>
+    <string name="btn_keep_following">保持跟随</string>
+    <string name="btn_close_following">取消跟随</string>
 </resources>

@@ -48,6 +48,8 @@ open class AppPreferencesUtils(context: Context) {
 
     var loadPictureWhenScroll by SharedPreferenceDelegates.boolean(defaultValue = true)
 
+    var oldTheme by SharedPreferenceDelegates.string(key = "old_theme")
+
     var oksignSlowMode by SharedPreferenceDelegates.boolean(defaultValue = true, key = "oksign_slow_mode")
 
     var radius by SharedPreferenceDelegates.int(defaultValue = 8)
@@ -61,6 +63,8 @@ open class AppPreferencesUtils(context: Context) {
     var showTopForumInNormalList by SharedPreferenceDelegates.boolean(defaultValue = true, key = "show_top_forum_in_normal_list")
 
     var statusBarDarker by SharedPreferenceDelegates.boolean(defaultValue = true, key = "status_bar_darker")
+
+    var theme by SharedPreferenceDelegates.string(defaultValue = ThemeUtil.THEME_WHITE)
 
     var translucentBackgroundAlpha by SharedPreferenceDelegates.int(defaultValue = 255, key = "translucent_background_alpha")
 

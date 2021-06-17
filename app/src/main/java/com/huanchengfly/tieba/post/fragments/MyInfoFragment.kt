@@ -207,9 +207,7 @@ class MyInfoFragment : BaseFragment(), View.OnClickListener, CompoundButton.OnCh
 
     override fun onResume() {
         super.onResume()
-        nightSwitch.setOnCheckedChangeListener(null)
-        nightSwitch.isChecked = ThemeUtil.isNightMode(attachContext)
-        nightSwitch.setOnCheckedChangeListener(this)
+        refreshNightModeStatus()
         listOf(
                 R.id.my_info_history,
                 R.id.my_info_service_center,
@@ -249,11 +247,34 @@ class MyInfoFragment : BaseFragment(), View.OnClickListener, CompoundButton.OnCh
     }
 
     override fun onCheckedChanged(buttonView: CompoundButton, isChecked: Boolean) {
-        if (isChecked) {
+        if (appPreferences.followSystemNight) {
+            DialogUtil.build(attachContext)
+                    .setMessage(R.string.message_dialog_follow_system_night)
+                    .setPositiveButton(R.string.btn_keep_following) { _, _ ->
+                        refreshNightModeStatus()
+                    }
+                    .setNegativeButton(R.string.btn_close_following) { _, _ ->
+                        attachContext.appPreferences.followSystemNight = false
+                        switchNightMode(isChecked)
+                    }
+                    .show()
+        } else {
+            switchNightMode(isChecked)
+        }
+    }
+
+    fun switchNightMode(isNightMode: Boolean) {
+        if (isNightMode) {
             ThemeUtil.switchToNightMode(attachContext as Activity)
         } else {
             ThemeUtil.switchFromNightMode(attachContext as Activity)
         }
+    }
+
+    private fun refreshNightModeStatus() {
+        nightSwitch.setOnCheckedChangeListener(null)
+        nightSwitch.isChecked = ThemeUtil.isNightMode(attachContext)
+        nightSwitch.setOnCheckedChangeListener(this)
     }
 
     override fun onRefresh() {

@@ -1,100 +1,88 @@
-package com.huanchengfly.tieba.post.activities;
+package com.huanchengfly.tieba.post.activities
 
-import android.annotation.SuppressLint;
-import android.content.Intent;
-import android.os.Bundle;
+import android.os.Bundle
+import androidx.appcompat.widget.Toolbar
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.SimpleItemAnimator
+import butterknife.BindView
+import com.huanchengfly.tieba.post.R
+import com.huanchengfly.tieba.post.adapters.ThemeAdapter
+import com.huanchengfly.tieba.post.goToActivity
+import com.huanchengfly.tieba.post.interfaces.OnItemClickListener
+import com.huanchengfly.tieba.post.utils.DialogUtil
+import com.huanchengfly.tieba.post.utils.SharedPreferencesUtil
+import com.huanchengfly.tieba.post.utils.ThemeUtil
 
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.widget.Toolbar;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.recyclerview.widget.SimpleItemAnimator;
+class ThemeActivity : BaseActivity() {
+    @BindView(R.id.theme_list)
+    lateinit var mRecyclerView: RecyclerView
 
-import com.huanchengfly.tieba.post.R;
-import com.huanchengfly.tieba.post.adapters.ThemeAdapter;
-import com.huanchengfly.tieba.post.utils.SharedPreferencesUtil;
-import com.huanchengfly.tieba.post.utils.ThemeUtil;
+    override fun getLayoutId(): Int {
+        return R.layout.activity_theme
+    }
 
-import java.util.Arrays;
-import java.util.List;
-
-import static com.huanchengfly.tieba.post.utils.ThemeUtil.SP_TRANSLUCENT_THEME_BACKGROUND_PATH;
-import static com.huanchengfly.tieba.post.utils.ThemeUtil.THEME_TRANSLUCENT;
-
-public class ThemeActivity extends BaseActivity {
-    public static final String TAG = "ThemeActivity";
-
-    private long lastClickTimestamp = 0;
-    private int clickTimes = 0;
-
-    private RecyclerView mRecyclerView;
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_theme);
-        mRecyclerView = (RecyclerView) findViewById(R.id.theme_list);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        ThemeAdapter themeAdapter = new ThemeAdapter(this);
-        mRecyclerView.setAdapter(themeAdapter);
-        if (mRecyclerView.getItemAnimator() != null) {
-            mRecyclerView.getItemAnimator().setAddDuration(0);
-            mRecyclerView.getItemAnimator().setChangeDuration(0);
-            mRecyclerView.getItemAnimator().setMoveDuration(0);
-            mRecyclerView.getItemAnimator().setRemoveDuration(0);
-            ((SimpleItemAnimator) mRecyclerView.getItemAnimator()).setSupportsChangeAnimations(false);
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        mRecyclerView.layoutManager = LinearLayoutManager(this)
+        val themeAdapter = ThemeAdapter(this)
+        mRecyclerView.adapter = themeAdapter
+        if (mRecyclerView.itemAnimator != null) {
+            mRecyclerView.itemAnimator!!.addDuration = 0
+            mRecyclerView.itemAnimator!!.changeDuration = 0
+            mRecyclerView.itemAnimator!!.moveDuration = 0
+            mRecyclerView.itemAnimator!!.removeDuration = 0
+            (mRecyclerView.itemAnimator as SimpleItemAnimator?)!!.supportsChangeAnimations = false
         }
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        /*
-        toolbar.setOnClickListener(v -> {
-            if (System.currentTimeMillis() - lastClickTimestamp < 2000) {
-                clickTimes += 1;
-            } else {
-                clickTimes = 0;
-            }
-            if (clickTimes >= 7) {
-                clickTimes = 0;
-                startActivity(new Intent(this, TranslucentThemeActivity.class));
-                Toast.makeText(this, "\uD83D\uDC23", Toast.LENGTH_SHORT).show();
-                finish();
-            } else if (clickTimes >= 2) {
-                Toast.makeText(this, "\uD83E\uDD5A", Toast.LENGTH_SHORT).show();
-            }
-            lastClickTimestamp = System.currentTimeMillis();
-        });
-        */
-        setSupportActionBar(toolbar);
-        ActionBar actionBar = getSupportActionBar();
+        val toolbar = findViewById(R.id.toolbar) as Toolbar
+        setSupportActionBar(toolbar)
+        val actionBar = supportActionBar
         if (actionBar != null) {
-            actionBar.setDisplayHomeAsUpEnabled(true);
-            actionBar.setTitle(R.string.title_theme);
+            actionBar.setDisplayHomeAsUpEnabled(true)
+            actionBar.setTitle(R.string.title_theme)
         }
-        List<String> values = Arrays.asList(getResources().getStringArray(R.array.theme_values));
-        themeAdapter.setOnItemClickListener((itemView, str, position, viewType) -> {
-            String backgroundFilePath = SharedPreferencesUtil.get(this, SharedPreferencesUtil.SP_SETTINGS)
-                    .getString(SP_TRANSLUCENT_THEME_BACKGROUND_PATH, null);
-            if (values.get(position).equals(THEME_TRANSLUCENT) && backgroundFilePath == null) {
-                startActivity(new Intent(this, TranslucentThemeActivity.class));
+        val values = listOf(*resources.getStringArray(R.array.theme_values))
+        themeAdapter.onItemClickListener = OnItemClickListener { _, _, position: Int, _ ->
+            val backgroundFilePath = SharedPreferencesUtil.get(this, SharedPreferencesUtil.SP_SETTINGS)
+                    .getString(ThemeUtil.SP_TRANSLUCENT_THEME_BACKGROUND_PATH, null)
+            val theme = values[position]
+            if (theme == ThemeUtil.THEME_TRANSLUCENT && backgroundFilePath == null) {
+                goToActivity<TranslucentThemeActivity>()
             }
-            setTheme(values.get(position));
-        });
-        mRecyclerView.setAdapter(themeAdapter);
-        ThemeUtil.setTranslucentThemeBackground(findViewById(R.id.background));
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        ThemeUtil.setTranslucentThemeBackground(findViewById(R.id.background));
-    }
-
-    @SuppressLint("ApplySharedPref")
-    private void setTheme(String theme) {
-        ThemeUtil.getSharedPreferences(ThemeActivity.this).edit().putString(ThemeUtil.SP_THEME, theme).commit();
-        if (!theme.contains("dark")) {
-            ThemeUtil.getSharedPreferences(ThemeActivity.this).edit().putString(ThemeUtil.SP_OLD_THEME, theme).commit();
+            if (ThemeUtil.isNightMode(theme) != ThemeUtil.isNightMode(appPreferences.theme)) {
+                DialogUtil.build(this)
+                        .setMessage(R.string.message_dialog_follow_system_night)
+                        .setPositiveButton(R.string.btn_keep_following) { _, _ ->
+                            themeAdapter.refresh()
+                        }
+                        .setNegativeButton(R.string.btn_close_following) { _, _ ->
+                            appPreferences.followSystemNight = false
+                            setTheme(theme)
+                        }
+                        .show()
+            } else {
+                setTheme(theme)
+            }
         }
-        refreshUIIfNeed();
-        ThemeUtil.setTranslucentThemeBackground(findViewById(R.id.background));
+        mRecyclerView.adapter = themeAdapter
+        ThemeUtil.setTranslucentThemeBackground(findViewById(R.id.background))
+    }
+
+    override fun onResume() {
+        super.onResume()
+        ThemeUtil.setTranslucentThemeBackground(findViewById(R.id.background))
+    }
+
+    private fun setTheme(theme: String) {
+        appPreferences.theme = theme
+        if (!theme.contains("dark")) {
+            appPreferences.oldTheme = theme
+        }
+        refreshUIIfNeed()
+        ThemeUtil.setTranslucentThemeBackground(findViewById(R.id.background))
+    }
+
+    companion object {
+        const val TAG = "ThemeActivity"
     }
 }

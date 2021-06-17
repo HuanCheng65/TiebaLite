@@ -17,7 +17,6 @@ import android.widget.TextView;
 import androidx.annotation.ColorInt;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.annotation.StringDef;
 import androidx.annotation.StyleRes;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -68,9 +67,6 @@ public class ThemeUtil {
     public static final String SP_CUSTOM_STATUS_BAR_FONT_DARK = "custom_status_bar_font_dark";
     public static final String SP_CUSTOM_TOOLBAR_PRIMARY_COLOR = "custom_toolbar_primary_color";
 
-    public static final String REASON_MANUALLY = "manually";
-    public static final String REASON_FOLLOW_SYSTEM = "follow_system";
-    public static final String REASON_TIME = "time";
     public static final String SP_TRANSLUCENT_THEME_BACKGROUND_PATH = "translucent_theme_background_path";
 
     public static int fixColorForTranslucentTheme(int color) {
@@ -89,11 +85,7 @@ public class ThemeUtil {
     }
 
     public static void switchToNightMode(Activity context) {
-        switchToNightMode(context, REASON_MANUALLY);
-    }
-
-    public static void switchToNightMode(Activity context, @Reason String reason) {
-        switchToNightMode(context, reason, true);
+        switchToNightMode(context, true);
     }
 
     public static void refreshUI(Activity activity) {
@@ -105,10 +97,9 @@ public class ThemeUtil {
     }
 
     @SuppressLint("ApplySharedPref")
-    public static void switchToNightMode(Activity context, @Reason String reason, boolean recreate) {
+    public static void switchToNightMode(Activity context, boolean recreate) {
         getSharedPreferences(context)
                 .edit()
-                .putString(SP_SWITCH_REASON, reason)
                 .putString(SP_OLD_THEME, getTheme(context))
                 .putString(SP_THEME, getSharedPreferences(context).getString(SP_DARK_THEME, THEME_BLUE_DARK))
                 .commit();
@@ -119,28 +110,18 @@ public class ThemeUtil {
 
     @SuppressLint("ApplySharedPref")
     public static void switchFromNightMode(Activity context) {
-        switchFromNightMode(context, REASON_MANUALLY);
+        switchFromNightMode(context, true);
     }
 
     @SuppressLint("ApplySharedPref")
     public static void switchFromNightMode(Activity context, boolean recreate) {
-        switchFromNightMode(context, REASON_MANUALLY, recreate);
-    }
-
-    @SuppressLint("ApplySharedPref")
-    public static void switchFromNightMode(Activity context, @Reason String reason) {
-        switchFromNightMode(context, reason, true);
-    }
-
-    @SuppressLint("ApplySharedPref")
-    public static void switchFromNightMode(Activity context, @Reason String reason, boolean recreate) {
         getSharedPreferences(context)
                 .edit()
-                .putString(SP_SWITCH_REASON, reason)
                 .putString(SP_THEME, getSharedPreferences(context).getString(SP_OLD_THEME, ThemeUtil.THEME_WHITE))
                 .commit();
-        //context.recreate();
-        if (recreate) refreshUI(context);
+        if (recreate) {
+            refreshUI(context);
+        }
     }
 
     public static SharedPreferences getSharedPreferences(Context context) {
@@ -393,9 +374,5 @@ public class ThemeUtil {
             default:
                 return THEME_WHITE;
         }
-    }
-
-    @StringDef({REASON_MANUALLY, REASON_FOLLOW_SYSTEM, REASON_TIME})
-    public @interface Reason {
     }
 }

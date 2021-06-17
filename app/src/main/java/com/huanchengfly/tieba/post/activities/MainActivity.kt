@@ -26,8 +26,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationMenuView
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.bottomnavigation.BottomNavigationView.OnNavigationItemReselectedListener
 import com.google.android.material.snackbar.Snackbar
-import com.huanchengfly.tieba.post.BaseApplication
-import com.huanchengfly.tieba.post.R
+import com.huanchengfly.tieba.post.*
 import com.huanchengfly.tieba.post.adapters.ViewPagerAdapter
 import com.huanchengfly.tieba.post.api.Error
 import com.huanchengfly.tieba.post.api.LiteApi.Companion.instance
@@ -39,15 +38,13 @@ import com.huanchengfly.tieba.post.fragments.MainForumListFragment
 import com.huanchengfly.tieba.post.fragments.MessageFragment
 import com.huanchengfly.tieba.post.fragments.MyInfoFragment
 import com.huanchengfly.tieba.post.fragments.PersonalizedFeedFragment
-import com.huanchengfly.tieba.post.getColorCompat
-import com.huanchengfly.tieba.post.goToActivity
 import com.huanchengfly.tieba.post.interfaces.Refreshable
 import com.huanchengfly.tieba.post.models.MyInfoBean
 import com.huanchengfly.tieba.post.services.NotifyJobService
 import com.huanchengfly.tieba.post.utils.*
 import com.huanchengfly.tieba.post.widgets.MyViewPager
 
-class MainActivity : BaseActivity(), BottomNavigationView.OnNavigationItemSelectedListener, OnNavigationItemReselectedListener {
+open class MainActivity : BaseActivity(), BottomNavigationView.OnNavigationItemSelectedListener, OnNavigationItemReselectedListener {
     var mAdapter: ViewPagerAdapter = ViewPagerAdapter(supportFragmentManager)
 
     @BindView(R.id.mViewPager)
@@ -70,23 +67,12 @@ class MainActivity : BaseActivity(), BottomNavigationView.OnNavigationItemSelect
         get() = if (hideExplore) 1 else 2
 
     public override fun onResume() {
-        val reason = ThemeUtil.getSharedPreferences(this).getString(ThemeUtil.SP_SWITCH_REASON, null)
-        val followSystemNight = appPreferences.followSystemNight
-        if (followSystemNight) {
-            if (BaseApplication.isSystemNight && !ThemeUtil.isNightMode(this)) {
-                SharedPreferencesUtil.put(ThemeUtil.getSharedPreferences(this), SP_SHOULD_SHOW_SNACKBAR, true)
-                ThemeUtil.switchToNightMode(this, ThemeUtil.REASON_FOLLOW_SYSTEM, false)
-            } else if (!BaseApplication.isSystemNight && ThemeUtil.isNightMode(this) && TextUtils.equals(reason, ThemeUtil.REASON_FOLLOW_SYSTEM)) {
-                SharedPreferencesUtil.put(ThemeUtil.getSharedPreferences(this), SP_SHOULD_SHOW_SNACKBAR, true)
-                ThemeUtil.switchFromNightMode(this, ThemeUtil.REASON_FOLLOW_SYSTEM, false)
-            }
-        }
         super.onResume()
         ThemeUtil.setTranslucentThemeBackground(findViewById(R.id.background))
-        if (ThemeUtil.THEME_TRANSLUCENT == ThemeUtil.getTheme(this)) {
-            mBottomNavigationView.elevation = 0f
+        mBottomNavigationView.elevation = if (ThemeUtil.THEME_TRANSLUCENT == ThemeUtil.getTheme(this)) {
+            0f
         } else {
-            mBottomNavigationView.elevation = DisplayUtil.dp2px(this, 4f).toFloat()
+            4f.dpToPxFloat()
         }
     }
 
@@ -162,14 +148,7 @@ class MainActivity : BaseActivity(), BottomNavigationView.OnNavigationItemSelect
         })
     }
 
-    @SuppressLint("ApplySharedPref")
-    protected fun clearSwitchReason() {
-        if (TextUtils.equals(ThemeUtil.getSharedPreferences(this).getString(ThemeUtil.SP_SWITCH_REASON, null), ThemeUtil.REASON_MANUALLY)) {
-            ThemeUtil.getSharedPreferences(this).edit().remove(ThemeUtil.SP_SWITCH_REASON).commit()
-        }
-    }
-
-    protected fun shouldShowSwitchSnackbar(): Boolean {
+    private fun shouldShowSwitchSnackbar(): Boolean {
         return ThemeUtil.getSharedPreferences(this).getBoolean(SP_SHOULD_SHOW_SNACKBAR, false)
     }
 
@@ -191,9 +170,6 @@ class MainActivity : BaseActivity(), BottomNavigationView.OnNavigationItemSelect
                     }
                     .setCancelable(false)
                     .create())
-        }
-        if (savedInstanceState == null) {
-            clearSwitchReason()
         }
         if (shouldShowSwitchSnackbar()) {
             Util.createSnackbar(mViewPager, if (ThemeUtil.isNightMode(this)) R.string.snackbar_auto_switch_to_night else R.string.snackbar_auto_switch_from_night, Snackbar.LENGTH_SHORT)

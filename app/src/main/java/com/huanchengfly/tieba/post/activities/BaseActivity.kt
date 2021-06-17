@@ -51,8 +51,7 @@ abstract class BaseActivity : SwipeBackActivity(), ExtraRefreshable, CoroutineSc
     private var customStatusColor = -1
     private var statusBarTinted = false
 
-    val appPreferences: AppPreferencesUtils
-        get() = AppPreferencesUtils(this)
+    val appPreferences: AppPreferencesUtils by lazy { AppPreferencesUtils(this) }
 
     override fun onPause() {
         super.onPause()
@@ -112,6 +111,15 @@ abstract class BaseActivity : SwipeBackActivity(), ExtraRefreshable, CoroutineSc
     override fun onResume() {
         super.onResume()
         isActivityRunning = true
+        if (appPreferences.followSystemNight) {
+            if (BaseApplication.isSystemNight && !ThemeUtil.isNightMode(this)) {
+                SharedPreferencesUtil.put(ThemeUtil.getSharedPreferences(this), MainActivity.SP_SHOULD_SHOW_SNACKBAR, true)
+                ThemeUtil.switchToNightMode(this, false)
+            } else if (!BaseApplication.isSystemNight && ThemeUtil.isNightMode(this)) {
+                SharedPreferencesUtil.put(ThemeUtil.getSharedPreferences(this), MainActivity.SP_SHOULD_SHOW_SNACKBAR, true)
+                ThemeUtil.switchFromNightMode(this, false)
+            }
+        }
         refreshUIIfNeed()
     }
 
