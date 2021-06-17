@@ -19,7 +19,11 @@ public final class HistoryUtil {
     }
 
     public static void writeHistory(History history) {
-        add(history);
+        writeHistory(history, false);
+    }
+
+    public static void writeHistory(History history, boolean async) {
+        add(history, async);
     }
 
     public static List<History> getAll() {
@@ -49,12 +53,20 @@ public final class HistoryUtil {
         return false;
     }
 
-    private static void add(History history) {
+    private static void add(History history, boolean async) {
         if (update(history)) {
             return;
         }
         history.setCount(1)
-                .setTimestamp(System.currentTimeMillis())
-                .save();
+                .setTimestamp(System.currentTimeMillis());
+        if (async) {
+            history.saveAsync().listen(null);
+        } else {
+            history.save();
+        }
+    }
+
+    private static void add(History history) {
+        add(history, false);
     }
 }

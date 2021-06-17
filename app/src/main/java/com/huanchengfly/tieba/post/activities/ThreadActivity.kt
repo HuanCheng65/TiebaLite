@@ -353,6 +353,7 @@ class ThreadActivity : BaseActivity(), View.OnClickListener, IThreadMenuFragment
         refreshTitle()
         preload()
         refreshAdapter()
+        updateHistory(true)
     }
 
     private fun refreshAdapter() {
@@ -613,7 +614,7 @@ class ThreadActivity : BaseActivity(), View.OnClickListener, IThreadMenuFragment
         if (!update) Util.miuiFav(this, getString(R.string.title_miui_fav, dataBean!!.thread?.title), url)
     }
 
-    override fun finish() {
+    private fun updateHistory(async: Boolean = false) {
         if (dataBean != null && dataBean!!.thread != null) {
             val postListItemBean = lastVisibleItem
             var extras = ""
@@ -632,8 +633,12 @@ class ThreadActivity : BaseActivity(), View.OnClickListener, IThreadMenuFragment
                 history.avatar = dataBean!!.thread?.author?.portrait
                 history.username = dataBean!!.thread?.author?.nameShow
             }
-            HistoryUtil.writeHistory(history)
+            HistoryUtil.writeHistory(history, async)
         }
+    }
+
+    override fun finish() {
+        updateHistory()
         super.finish()
     }
 
