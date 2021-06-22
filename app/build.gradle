@@ -1,9 +1,10 @@
-apply plugin: "com.android.application"
-apply plugin: "AndResGuard"
-apply plugin: "io.michaelrocks.paranoid"
-apply plugin: "kotlin-android"
-apply plugin: "kotlin-android-extensions"
-apply plugin: "kotlin-kapt"
+plugins {
+    id "com.android.application"
+    id "kotlin-android"
+    id "kotlin-kapt"
+    id "AndResGuard"
+    id "io.michaelrocks.paranoid"
+}
 
 def keystoreProperties = new Properties()
 keystoreProperties.load(new FileInputStream(rootProject.file("keystore.properties")))
@@ -56,7 +57,6 @@ android {
         versionCode applicationVersionCode
         versionName applicationVersionName
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-        project.ext.set("archivesBaseName",  "${versionName}(${versionCode})".toString())
     }
     signingConfigs {
         release {
@@ -64,7 +64,8 @@ android {
             keyPassword keystoreProperties["releaseKeyPassword"]
             storeFile file(rootDir.getCanonicalPath() + "/" + keystoreProperties["releaseKeyStore"])
             storePassword keystoreProperties["releaseStorePassword"]
-            v2SigningEnabled true
+            enableV3Signing true
+            enableV4Signing true
         }
     }
     buildTypes {
@@ -72,11 +73,7 @@ android {
             minifyEnabled true
             shrinkResources true
             proguardFiles getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro"
-            debuggable false
-            jniDebuggable false
             signingConfig signingConfigs.release
-            zipAlignEnabled true
-            multiDexEnabled true
         }
     }
 }
