@@ -41,7 +41,7 @@ andResGuard {
                            "*.kotlin_metadata",
                            "resources.arsc"]
     sevenzip {
-        artifact = "com.tencent.mm:SevenZip:1.2.10"
+        artifact = "com.tencent.mm:SevenZip:1.2.21"
     }
     finalApkBackupPath = "${project.rootDir}/app/release/${applicationVersionName}(${applicationVersionCode}).apk"
     digestalg = "SHA-256"
@@ -119,7 +119,7 @@ dependencies {
     implementation "cn.dreamtobe.kpswitch:library:1.6.2"
     implementation "org.litepal.android:kotlin:3.0.0"
     implementation "com.github.SheHuan:RecyclerViewAdapter:1.2.9"
-    implementation "com.lapism:searchview:27.1.1.0.0"
+    implementation "com.lapism:searchview:28.0.0"
     implementation "com.github.lygttpod:SuperTextView:2.4.6"
     implementation "com.davemorrissey.labs:subsampling-scale-image-view:3.10.0"
     implementation "com.bm.photoview:library:2.0.7"
