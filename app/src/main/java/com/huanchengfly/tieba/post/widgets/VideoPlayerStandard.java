@@ -74,18 +74,18 @@ public class VideoPlayerStandard extends JzvdStd {
     }
 
     @Override
-    public void gotoScreenNormal() {
+    public void gotoNormalScreen() {
         try {
-            super.gotoScreenNormal();
+            super.gotoNormalScreen();
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
     @Override
-    public void gotoScreenFullscreen() {
+    public void gotoFullscreen() {
         try {
-            super.gotoScreenFullscreen();
+            super.gotoFullscreen();
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -88,7 +88,6 @@ class TranslucentThemeActivity : BaseActivity(), View.OnClickListener, OnSeekBar
                             uCropOptions.setStatusBarColor(ColorUtils.getDarkerColor(ThemeUtils.getColorByAttr(this@TranslucentThemeActivity, R.attr.colorPrimary)))
                             uCropOptions.setToolbarColor(ThemeUtils.getColorByAttr(this@TranslucentThemeActivity, R.attr.colorPrimary))
                             uCropOptions.setToolbarWidgetColor(ThemeUtils.getColorByAttr(this@TranslucentThemeActivity, R.attr.colorTextOnPrimary))
-                            uCropOptions.setActiveWidgetColor(ThemeUtils.getColorByAttr(this@TranslucentThemeActivity, R.attr.colorAccent))
                             uCropOptions.setActiveControlsWidgetColor(ThemeUtils.getColorByAttr(this@TranslucentThemeActivity, R.attr.colorAccent))
                             uCropOptions.setLogoColor(ThemeUtils.getColorByAttr(this@TranslucentThemeActivity, R.attr.colorPrimary))
                             uCropOptions.setCompressionFormat(Bitmap.CompressFormat.JPEG)
