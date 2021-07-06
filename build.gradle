@@ -8,8 +8,8 @@ buildscript {
         maven { url "https://maven.aliyun.com/repository/public" }
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:4.2.1'
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:1.5.10"
+        classpath 'com.android.tools.build:gradle:4.2.2'
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:1.5.20"
         classpath "com.tencent.mm:AndResGuard-gradle-plugin:1.2.21"
         classpath "io.michaelrocks:paranoid-gradle-plugin:0.3.3"
     }
