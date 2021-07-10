@@ -69,6 +69,9 @@ public class ThemeUtil {
 
     public static final String SP_TRANSLUCENT_THEME_BACKGROUND_PATH = "translucent_theme_background_path";
 
+    public static final int TRANSLUCENT_THEME_LIGHT = 0;
+    public static final int TRANSLUCENT_THEME_DARK = 1;
+
     public static int fixColorForTranslucentTheme(int color) {
         if (Color.alpha(color) == 0) {
             return ColorUtils.alpha(color, 255);
@@ -135,7 +138,7 @@ public class ThemeUtil {
     public static void setChipTheme(@ColorInt int color, View parent, TextView... textViews) {
         parent.setBackgroundTintList(ColorStateList.valueOf(color));
         for (TextView textView : textViews) {
-            textView.setTextColor(ThemeUtils.getColorByAttr(parent.getContext(), R.attr.colorBg));
+            textView.setTextColor(ThemeUtils.getColorByAttr(parent.getContext(), R.attr.colorOnAccent));
         }
     }
 
@@ -177,6 +180,14 @@ public class ThemeUtil {
         return theme.toLowerCase().contains("dark");
     }
 
+    public static boolean isTranslucentTheme(Context context) {
+        return isTranslucentTheme(getTheme(context));
+    }
+
+    public static boolean isTranslucentTheme(String theme) {
+        return theme.equalsIgnoreCase(THEME_TRANSLUCENT) || theme.toLowerCase().contains(THEME_TRANSLUCENT);
+    }
+
     public static boolean isStatusBarFontDark(Context context) {
         boolean isDark = false;
         switch (getTheme(context)) {
@@ -196,15 +207,28 @@ public class ThemeUtil {
     }
 
     public static void setTheme(Activity context) {
-        String nowTheme = getTheme(context);
+        String nowTheme = getThemeTranslucent(context);
         context.setTheme(getThemeByName(nowTheme));
+    }
+
+    public static String getThemeTranslucent(Context context) {
+        String nowTheme = getTheme(context);
+        if (isTranslucentTheme(context)) {
+            int colorTheme = SharedPreferencesUtil.get(SharedPreferencesUtil.SP_SETTINGS).getInt("translucent_background_theme", TRANSLUCENT_THEME_LIGHT);
+            if (colorTheme == TRANSLUCENT_THEME_DARK) {
+                nowTheme = THEME_TRANSLUCENT_DARK;
+            } else {
+                nowTheme = THEME_TRANSLUCENT_LIGHT;
+            }
+        }
+        return nowTheme;
     }
 
     public static void setTranslucentThemeWebViewBackground(WebView webView) {
         if (webView == null) {
             return;
         }
-        if (!THEME_TRANSLUCENT.equals(ThemeUtil.getTheme(webView.getContext()))) {
+        if (!isTranslucentTheme(webView.getContext())) {
             return;
         }
         webView.setBackgroundColor(Color.WHITE);
@@ -228,7 +252,7 @@ public class ThemeUtil {
         if (view == null) {
             return;
         }
-        if (!THEME_TRANSLUCENT.equals(ThemeUtil.getTheme(view.getContext()))) {
+        if (!isTranslucentTheme(view.getContext())) {
             return;
         }
         view.setBackgroundTintList(null);
@@ -239,7 +263,7 @@ public class ThemeUtil {
         if (view == null) {
             return;
         }
-        if (!THEME_TRANSLUCENT.equals(ThemeUtil.getTheme(view.getContext()))) {
+        if (!isTranslucentTheme(view.getContext())) {
             return;
         }
         view.setBackgroundTintList(null);
@@ -250,7 +274,7 @@ public class ThemeUtil {
         if (view == null) {
             return;
         }
-        if (!THEME_TRANSLUCENT.equals(ThemeUtil.getTheme(BaseApplication.getInstance()))) {
+        if (!isTranslucentTheme(view.getContext())) {
             if (setFitsSystemWindow) {
                 setAppBarFitsSystemWindow(view, false);
                 view.setFitsSystemWindows(false);
@@ -360,6 +384,8 @@ public class ThemeUtil {
         String theme = getSharedPreferences(context).getString(SP_THEME, THEME_WHITE);
         switch (theme.toLowerCase()) {
             case THEME_TRANSLUCENT:
+            case THEME_TRANSLUCENT_LIGHT:
+            case THEME_TRANSLUCENT_DARK:
             case THEME_CUSTOM:
             case THEME_WHITE:
             case THEME_TIEBA:

@@ -109,7 +109,7 @@ class LoadMoreFooter @JvmOverloads constructor(
         if (attrs != null) {
             val array = getContext().obtainStyledAttributes(attrs, R.styleable.LoadMoreFooter, defStyleAttr, 0)
             radius = array.getDimension(R.styleable.LoadMoreFooter_radius, resources.getDimension(R.dimen.card_radius))
-            backgroundTintRes = array.getResourceId(R.styleable.LoadMoreFooter_backgroundTint, 0)
+            backgroundTintRes = array.getResourceId(R.styleable.LoadMoreFooter_backgroundTint, R.color.default_color_card)
             spinnerStyle = when (array.getInteger(R.styleable.LoadMoreFooter_footerSpinnerStyle, 1)) {
                 0 -> SpinnerStyle.Scale
                 2 -> SpinnerStyle.FixedBehind

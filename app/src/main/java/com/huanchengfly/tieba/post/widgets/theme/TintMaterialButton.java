@@ -61,4 +61,14 @@ public class TintMaterialButton extends MaterialButton implements Tintable {
             setStrokeColor(ColorStateListUtils.createColorStateList(getContext(), mStrokeColorResId));
         }
     }
+
+    public void setTextColorResId(int textColorResId) {
+        mTextColorResId = textColorResId;
+        applyTintColor();
+    }
+
+    public void setBackgroundTintResId(int backgroundTintResId) {
+        mBackgroundTintResId = backgroundTintResId;
+        applyTintColor();
+    }
 }

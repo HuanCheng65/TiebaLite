@@ -72,14 +72,11 @@ public class ThemeColorAdapter extends RecyclerView.Adapter<MyViewHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
-        holder.setItemOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mSelectedColor = mColors.get(position);
-                notifyDataSetChanged();
-                if (getOnItemClickListener() != null) {
-                    getOnItemClickListener().onClick(holder.itemView, mColors.get(position), position, 0);
-                }
+        holder.setItemOnClickListener(v -> {
+            mSelectedColor = mColors.get(position);
+            notifyDataSetChanged();
+            if (getOnItemClickListener() != null) {
+                getOnItemClickListener().onClick(holder.itemView, mColors.get(position), position, 0);
             }
         });
         View preview = holder.getView(R.id.theme_preview);

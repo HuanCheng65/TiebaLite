@@ -3,6 +3,7 @@
     <declare-styleable name="Theme">
         <attr name="colorPrimary" format="color" />
         <attr name="colorAccent" format="color" />
+        <attr name="colorOnAccent" format="color" />
         <attr name="colorToolbar" format="color" />
         <attr name="colorToolbarItem" format="color" />
         <attr name="color_toolbar_item_secondary" format="color" />

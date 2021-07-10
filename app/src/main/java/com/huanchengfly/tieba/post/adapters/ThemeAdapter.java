@@ -79,8 +79,8 @@ public class ThemeAdapter extends RecyclerView.Adapter<MyViewHolder> implements 
     private int getToolbarColor(String theme) {
         if (ThemeUtil.THEME_WHITE.equals(theme) || ThemeUtil.isNightMode(theme)) {
             return BaseApplication.ThemeDelegate.INSTANCE.getColorByAttr(mContext, R.attr.colorToolbar, theme);
-        } else if (THEME_TRANSLUCENT.equals(theme)) {
-            return ColorUtils.alpha(BaseApplication.ThemeDelegate.INSTANCE.getColorByAttr(mContext, R.attr.colorPrimary, theme), 150);
+        } else if (ThemeUtil.isTranslucentTheme(theme)) {
+            return ColorUtils.alpha(BaseApplication.ThemeDelegate.INSTANCE.getColorByAttr(mContext, R.attr.colorPrimary, ThemeUtil.THEME_TRANSLUCENT_LIGHT), 150);
         }
         return BaseApplication.ThemeDelegate.INSTANCE.getColorByAttr(mContext, R.attr.colorPrimary, theme);
     }

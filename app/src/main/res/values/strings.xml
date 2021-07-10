@@ -348,8 +348,8 @@
     <string name="title_translucent_theme_blur">模糊度</string>
     <string name="btn_finish">完成</string>
     <string name="toast_save_pic_success">设置保存成功</string>
-    <string name="title_select_color">选择主题色</string>
-    <string name="tip_translucent_theme"><![CDATA[<strong>注意：透明主题当前为实验性特性，可能会存在部分界面显示异常问题。</strong><br>开启后打开界面背景短暂变黑是由于正在加载背景图片，属于正常现象。<br>由于需要对图片进行压缩以保证加载速度，建议不要使用尺寸过大图片，否则可能会导致显示效果过差。<br>性能较差机型建议不要使用此功能，否则可能导致图片加载时间过长。<br>虽然您的图片不会以任何形式上传，但我们建议您不要使用含有工口元素的图片。]]></string>
+    <string name="title_select_color">强调色</string>
+    <string name="tip_translucent_theme"><![CDATA[<strong>注意：透明主题当前为实验性特性，可能会存在部分界面显示异常问题。</strong><br>开启后打开界面背景短暂变黑是由于正在加载背景图片，属于正常现象。]]></string>
     <string name="title_custom_color">自定义</string>
     <string name="toast_sign_failed">签到失败 %s</string>
     <string name="toast_like_failed">关注失败 %s</string>
@@ -454,4 +454,7 @@
     <string name="message_dialog_follow_system_night">您已开启跟随系统夜间模式，手动切换日夜模式需要关闭跟随系统，确定要取消跟随吗？</string>
     <string name="btn_keep_following">保持跟随</string>
     <string name="btn_close_following">取消跟随</string>
+    <string name="title_ui_settings">界面设置</string>
+    <string name="dark_color">深色</string>
+    <string name="light_color">浅色</string>
 </resources>

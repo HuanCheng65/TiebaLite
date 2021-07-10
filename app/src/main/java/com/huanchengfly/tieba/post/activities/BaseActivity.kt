@@ -99,7 +99,7 @@ abstract class BaseActivity : SwipeBackActivity(), ExtraRefreshable, CoroutineSc
     fun refreshUIIfNeed() {
         if (TextUtils.equals(oldTheme, ThemeUtil.getTheme(this)) &&
                 ThemeUtil.THEME_CUSTOM != ThemeUtil.getTheme(this) &&
-                ThemeUtil.THEME_TRANSLUCENT != ThemeUtil.getTheme(this)) {
+                !ThemeUtil.isTranslucentTheme(this)) {
             return
         }
         if (recreateIfNeed()) {
@@ -207,12 +207,15 @@ abstract class BaseActivity : SwipeBackActivity(), ExtraRefreshable, CoroutineSc
     }
 
     fun setCustomStatusColor(customStatusColor: Int) {
+        if (ThemeUtil.isTranslucentTheme(this)) {
+            return
+        }
         this.customStatusColor = customStatusColor
         refreshStatusBarColor()
     }
 
     open fun refreshStatusBarColor() {
-        if (ThemeUtil.THEME_TRANSLUCENT == ThemeUtil.getTheme(this)) {
+        if (ThemeUtil.isTranslucentTheme(this)) {
             ImmersionBar.with(this)
                     .transparentBar()
                     .init()
@@ -249,8 +252,8 @@ abstract class BaseActivity : SwipeBackActivity(), ExtraRefreshable, CoroutineSc
             recreate()
             return true
         }
-        if (oldTheme == ThemeUtil.THEME_TRANSLUCENT && ThemeUtil.THEME_TRANSLUCENT != ThemeUtil.getTheme(this) ||
-                ThemeUtil.THEME_TRANSLUCENT == ThemeUtil.getTheme(this) && oldTheme != ThemeUtil.THEME_TRANSLUCENT) {
+        if (oldTheme?.contains(ThemeUtil.THEME_TRANSLUCENT) == true && !ThemeUtil.isTranslucentTheme(this) ||
+                ThemeUtil.isTranslucentTheme(this) && oldTheme?.contains(ThemeUtil.THEME_TRANSLUCENT) == false) {
             recreate()
             return true
         }

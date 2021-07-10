@@ -21,6 +21,7 @@
             app:layout_scrollFlags="scroll|enterAlways|enterAlwaysCollapsed"
             app:titleEnabled="false"
             app:contentScrim="@color/transparent"
+            app:statusBarScrim="@color/transparent"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
@@ -30,6 +31,12 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:layout_marginTop="?attr/actionBarSize">
+
+                <View
+                    android:visibility="gone"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/fake_status_bar" />
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/forum_info_parent"

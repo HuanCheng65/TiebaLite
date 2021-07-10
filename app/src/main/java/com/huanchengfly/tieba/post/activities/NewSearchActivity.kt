@@ -40,6 +40,7 @@ import com.huanchengfly.tieba.post.models.database.SearchHistory
 import com.huanchengfly.tieba.post.ui.theme.utils.ColorStateListUtils
 import com.huanchengfly.tieba.post.utils.AnimUtil
 import com.huanchengfly.tieba.post.utils.NavigationHelper
+import com.huanchengfly.tieba.post.utils.ThemeUtil
 import com.huanchengfly.tieba.post.utils.anim.animSet
 import com.huanchengfly.tieba.post.utils.getIntermixedColorBackground
 import com.huanchengfly.tieba.post.widgets.MyViewPager
@@ -100,6 +101,7 @@ class NewSearchActivity : BaseActivity(), TabLayout.OnTabSelectedListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        ThemeUtil.setTranslucentThemeBackground(findViewById(R.id.background))
         fragmentAdapter.addFragment(SearchForumFragment.newInstance(), getString(R.string.title_search_forum))
         fragmentAdapter.addFragment(SearchThreadFragment.newInstance(), getString(R.string.title_search_thread))
         fragmentAdapter.addFragment(SearchUserFragment.newInstance(), getString(R.string.title_search_user))

@@ -399,6 +399,7 @@
         <item name="android:colorAccent">@color/colorAccent</item>
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="colorOnAccent">@color/theme_color_on_accent_light</item>
         <item name="colorToolbar">?attr/colorPrimary</item>
         <item name="colorToolbarItem">@color/white</item>
         <item name="colorToolbarItemActive">?attr/colorToolbarItem</item>
@@ -430,6 +431,7 @@
         <item name="android:colorAccent">?attr/colorAccent</item>
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="colorOnAccent">@color/theme_color_on_accent_dark</item>
         <item name="colorToolbar">?attr/colorPrimary</item>
         <item name="colorToolbarItemActive">?attr/colorToolbarItem</item>
         <item name="colorText">@color/color_text_night</item>
@@ -498,6 +500,7 @@
         <item name="android:popupMenuStyle">@style/LightTranslucentPopupMenu</item>
         <item name="colorPrimary">@color/theme_color_primary_tieba</item>
         <item name="colorAccent">@color/theme_color_primary_tieba</item>
+        <item name="colorOnAccent">@color/theme_color_on_accent_translucent_light</item>
         <item name="colorToolbar">@color/transparent</item>
         <item name="colorBg">@color/transparent</item>
         <item name="colorWindowBackground">@color/transparent</item>
@@ -521,6 +524,7 @@
         <item name="android:popupMenuStyle">@style/DarkTranslucentPopupMenu</item>
         <item name="colorPrimary">@color/theme_color_primary_tieba</item>
         <item name="colorAccent">@color/theme_color_primary_tieba</item>
+        <item name="colorOnAccent">@color/theme_color_on_accent_translucent_dark</item>
         <item name="colorToolbar">@color/transparent</item>
         <item name="colorBg">@color/transparent</item>
         <item name="colorNavBar">@color/transparent</item>

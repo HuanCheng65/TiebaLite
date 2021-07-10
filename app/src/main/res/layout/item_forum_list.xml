@@ -49,24 +49,24 @@
             android:layout_centerInParent="true"
             tools:ignore="UselessParent">
 
-            <TextView
+            <com.huanchengfly.tieba.post.widgets.theme.TintTextView
                 android:id="@+id/forum_list_item_level"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@color/white"
+                app:tint="@color/default_color_on_accent"
                 android:textSize="10dp"
                 android:textStyle="bold"
                 tools:text="13"
                 tools:ignore="SpUsage" />
 
-            <TextView
+            <com.huanchengfly.tieba.post.widgets.theme.TintTextView
                 android:id="@+id/forum_list_item_sign_status"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="4dp"
                 android:layout_toEndOf="@id/forum_list_item_level"
                 android:text="@string/tip_signed"
-                android:textColor="@color/white"
+                app:tint="@color/default_color_on_accent"
                 android:textSize="10dp"
                 android:textStyle="bold"
                 tools:ignore="SpUsage" />

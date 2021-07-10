@@ -231,6 +231,7 @@
                             android:layout_height="28dp" />
 
                         <com.huanchengfly.tieba.post.widgets.theme.TintTextView
+                            app:tint="@color/default_color_text"
                             android:text="@string/my_info_collect"
                             android:textSize="16sp"
                             android:textStyle="bold"
@@ -259,6 +260,7 @@
                             android:layout_height="28dp" />
 
                         <com.huanchengfly.tieba.post.widgets.theme.TintTextView
+                            app:tint="@color/default_color_text"
                             android:text="@string/my_info_history"
                             android:textSize="16sp"
                             android:textStyle="bold"
@@ -287,6 +289,7 @@
                             android:layout_height="28dp" />
 
                         <com.huanchengfly.tieba.post.widgets.theme.TintTextView
+                            app:tint="@color/default_color_text"
                             android:text="@string/my_info_theme"
                             android:textSize="16sp"
                             android:textStyle="bold"
@@ -352,6 +355,7 @@
                             android:layout_height="28dp" />
 
                         <com.huanchengfly.tieba.post.widgets.theme.TintTextView
+                            app:tint="@color/default_color_text"
                             android:text="@string/my_info_service_center"
                             android:textSize="16sp"
                             android:textStyle="bold"
@@ -389,6 +393,7 @@
                             android:layout_height="28dp" />
 
                         <com.huanchengfly.tieba.post.widgets.theme.TintTextView
+                            app:tint="@color/default_color_text"
                             android:text="@string/my_info_settings"
                             android:textSize="16sp"
                             android:textStyle="bold"
@@ -418,6 +423,7 @@
                             android:layout_height="28dp" />
 
                         <com.huanchengfly.tieba.post.widgets.theme.TintTextView
+                            app:tint="@color/default_color_text"
                             android:text="@string/my_info_about"
                             android:textSize="16sp"
                             android:textStyle="bold"

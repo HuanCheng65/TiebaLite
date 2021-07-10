@@ -9,6 +9,7 @@
         app:collapsedTitleTextAppearance="@style/Toolbar.Title"
         app:expandedTitleMarginStart="16dp"
         app:expandedTitleMarginBottom="16dp"
+        app:statusBarScrim="@color/transparent"
         app:layout_scrollFlags="scroll|exitUntilCollapsed"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

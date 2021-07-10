@@ -111,6 +111,8 @@
 
     <color name="theme_color_toolbar_bar_light">#E6F2F7FB</color>
     <color name="theme_color_toolbar_bar_dark">#A110161C</color>
+    <color name="theme_color_toolbar_bar_translucent_light">#10FFFFFF</color>
+    <color name="theme_color_toolbar_bar_translucent_dark">#20000000</color>
 
     <color name="theme_color_on_toolbar_bar_light">#6654585B</color>
     <color name="theme_color_on_toolbar_bar_dark">#FF8C96A0</color>
@@ -125,6 +127,13 @@
     <color name="theme_color_background_dark">#FF131D28</color>
     <color name="theme_color_background_grey_dark">#FF212121</color>
     <color name="theme_color_background_amoled_dark">#FF000000</color>
+
+    <color name="theme_color_on_accent_light">#FFFFFFFF</color>
+    <color name="theme_color_on_accent_dark">#FF131D28</color>
+    <color name="theme_color_on_accent_grey_dark">#FF212121</color>
+    <color name="theme_color_on_accent_amoled_dark">#FF000000</color>
+    <color name="theme_color_on_accent_translucent_light">#FFFFFFFF</color>
+    <color name="theme_color_on_accent_translucent_dark">#FF212121</color>
 
     <color name="theme_color_window_background_light">#FFF3F7F9</color>
     <color name="theme_color_window_background_dark">#FF10171F</color>
@@ -184,4 +193,5 @@
     <color name="black_trans">#50000000</color>
     <color name="user_center_action_btn_color">#50FFFFFF</color>
     <color name="user_center_header_mask">#90000000</color>
+    <color name="default_color_on_accent">#FFFFFFFF</color>
 </resources>

@@ -69,7 +69,7 @@ open class MainActivity : BaseActivity(), BottomNavigationView.OnNavigationItemS
     public override fun onResume() {
         super.onResume()
         ThemeUtil.setTranslucentThemeBackground(findViewById(R.id.background))
-        mBottomNavigationView.elevation = if (ThemeUtil.THEME_TRANSLUCENT == ThemeUtil.getTheme(this)) {
+        mBottomNavigationView.elevation = if (ThemeUtil.isTranslucentTheme(this)) {
             0f
         } else {
             4f.dpToPxFloat()

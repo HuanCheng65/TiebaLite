@@ -2,6 +2,7 @@ package com.huanchengfly.tieba.post.utils
 
 import android.content.Context
 import android.content.SharedPreferences
+import com.huanchengfly.tieba.post.utils.ThemeUtil.TRANSLUCENT_THEME_LIGHT
 import kotlin.properties.ReadWriteProperty
 import kotlin.reflect.KProperty
 
@@ -69,6 +70,8 @@ open class AppPreferencesUtils(context: Context) {
     var translucentBackgroundAlpha by SharedPreferenceDelegates.int(defaultValue = 255, key = "translucent_background_alpha")
 
     var translucentBackgroundBlur by SharedPreferenceDelegates.int(key = "translucent_background_blur")
+
+    var translucentBackgroundTheme by SharedPreferenceDelegates.int(defaultValue = TRANSLUCENT_THEME_LIGHT, key = "translucent_background_theme")
 
     var translucentThemeBackgroundPath by SharedPreferenceDelegates.string(key = "translucent_theme_background_path")
 

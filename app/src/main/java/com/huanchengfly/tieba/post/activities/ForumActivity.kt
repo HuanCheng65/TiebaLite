@@ -74,6 +74,7 @@ import retrofit2.Callback
 import retrofit2.Response
 import kotlin.math.abs
 
+
 class ForumActivity : BaseActivity(), View.OnClickListener, OnRefreshedListener, TabLayout.OnTabSelectedListener {
     private var mSortType = ForumSortType.REPLY_TIME
     private var forumName: String? = null
@@ -102,6 +103,9 @@ class ForumActivity : BaseActivity(), View.OnClickListener, OnRefreshedListener,
 
     @BindView(R.id.forum_header)
     lateinit var headerView: View
+
+    @BindView(R.id.fake_status_bar)
+    lateinit var fakeStatusBar: View
 
     @BindView(R.id.forum_header_stat_title)
     lateinit var statTitleTextView: TextView
@@ -145,11 +149,12 @@ class ForumActivity : BaseActivity(), View.OnClickListener, OnRefreshedListener,
     @BindView(R.id.collapsing_toolbar)
     lateinit var collapsingToolbar: CollapsingToolbarLayout
 
+    var headerViewHeight: Int = 0
     var toolbarColor: Int = -1
-    var customToolbarColorEnable = true
+    var customToolbarColorEnable = false
         set(value) {
             if (field != value) {
-                setCustomStatusColor(if (value) toolbarColor else -1)
+                if (!ThemeUtil.isTranslucentTheme(this)) setCustomStatusColor(if (value) toolbarColor else -1)
             }
             field = value
         }
@@ -162,6 +167,8 @@ class ForumActivity : BaseActivity(), View.OnClickListener, OnRefreshedListener,
         super.onCreate(savedInstanceState)
         ThemeUtil.setTranslucentThemeBackground(findViewById(R.id.background))
         toolbarColor = ThemeUtils.getColorById(this, R.color.default_color_toolbar)
+        fakeStatusBar.layoutParams.height = StatusBarUtil.getStatusBarHeight(this)
+        headerView.viewTreeObserver.addOnGlobalLayoutListener { headerViewHeight = headerView.height }
         animated = false
         val intent = intent
         val title: String
@@ -240,9 +247,9 @@ class ForumActivity : BaseActivity(), View.OnClickListener, OnRefreshedListener,
                             topRightPx = radius
                     )
                 }
-                customToolbarColorEnable = toolbarScrollPercent < 1f
+                if (!ThemeUtil.isTranslucentTheme(this)) customToolbarColorEnable = toolbarScrollPercent < 1f
             } else {
-                customToolbarColorEnable = true
+                if (!ThemeUtil.isTranslucentTheme(this)) customToolbarColorEnable = true
             }
             val titleVisible = mDataBean != null && forumName != null && abs(verticalOffset) >= forumInfoView.height
             val percent: Float = if (abs(verticalOffset) <= forumInfoView.height) {
@@ -253,16 +260,21 @@ class ForumActivity : BaseActivity(), View.OnClickListener, OnRefreshedListener,
             title = if (titleVisible) getString(R.string.title_forum, forumName) else null
             toolbarEndBtn.visibility = if (titleVisible) View.VISIBLE else View.GONE
             toolbar.backgroundTintList = ColorStateList.valueOf(Util.changeAlpha(toolbarColor, percent))
-            if (animated && ThemeUtil.THEME_TRANSLUCENT == ThemeUtil.getTheme(this)) {
-                if (abs(verticalOffset) > forumInfoView.height) {
-                    AnimUtil.alphaOut(forumInfoView).setListener(object : AnimatorListenerAdapter() {
-                        override fun onAnimationEnd(animation: Animator) {
-                            forumInfoView.visibility = View.INVISIBLE
-                        }
-                    }).start()
+            if (animated && ThemeUtil.isTranslucentTheme(this)) {
+                if (abs(verticalOffset) >= headerViewHeight) {
+                    if (headerView.visibility != View.INVISIBLE) {
+                        AnimUtil.alphaOut(headerView).setListener(object : AnimatorListenerAdapter() {
+                            override fun onAnimationEnd(animation: Animator) {
+                                headerView.visibility = View.INVISIBLE
+                            }
+                        }).start()
+                    }
                 } else {
-                    AnimUtil.alphaIn(forumInfoView).start()
+                    if (headerView.visibility != View.VISIBLE) AnimUtil.alphaIn(headerView).start()
                 }
+            }
+            if (ThemeUtil.isTranslucentTheme(this)) {
+                setCustomStatusColor(-1)
             }
         })
         mAdapter = FragmentTabViewPagerAdapter(supportFragmentManager).apply {
@@ -476,14 +488,19 @@ class ForumActivity : BaseActivity(), View.OnClickListener, OnRefreshedListener,
 
     private fun refreshHeaderView() {
         if (mDataBean != null && mDataBean!!.forum != null) {
-            forumInfoView.visibility = View.VISIBLE
-            try {
-                val color = getDarkerColor(greifyColor(Color.parseColor("#${mDataBean?.forum?.themeColor?.day?.commonColor ?: ThemeUtils.getColorById(this, R.color.default_color_primary)}"), 0.15f), 0.1f)
-                toolbarColor = color
-                appbar.backgroundTintList = ColorStateList.valueOf(color)
-                setCustomStatusColor(color)
-            } catch (e: Exception) {
-                e.printStackTrace()
+            headerView.visibility = View.VISIBLE
+            if (!ThemeUtil.isTranslucentTheme(this)) {
+                try {
+                    val color = getDarkerColor(greifyColor(Color.parseColor("#${mDataBean?.forum?.themeColor?.day?.commonColor ?: ThemeUtils.getColorById(this, R.color.default_color_primary)}"), 0.15f), 0.1f)
+                    toolbarColor = color
+                    appbar.backgroundTintList = ColorStateList.valueOf(color)
+                    setCustomStatusColor(color)
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                }
+                fakeStatusBar.visibility = View.GONE
+            } else {
+                fakeStatusBar.visibility = View.VISIBLE
             }
             if (avatarView.tag == null) {
                 ImageUtil.load(avatarView, ImageUtil.LOAD_TYPE_AVATAR, mDataBean!!.forum!!.avatar)
@@ -548,7 +565,7 @@ class ForumActivity : BaseActivity(), View.OnClickListener, OnRefreshedListener,
             }
             */
         } else {
-            forumInfoView.visibility = View.INVISIBLE
+            headerView.visibility = View.INVISIBLE
         }
     }
 
