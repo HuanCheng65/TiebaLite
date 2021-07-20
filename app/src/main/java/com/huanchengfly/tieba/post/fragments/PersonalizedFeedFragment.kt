@@ -67,8 +67,8 @@ class PersonalizedFeedFragment : BaseFragment(), PersonalizedFeedAdapter.OnRefre
 
     public override fun getLayoutId(): Int = R.layout.fragment_personalized_feed
 
-    override fun onViewCreated(contentView: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(contentView, savedInstanceState)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         toolbar.setOnMenuItemClickListener(this)
         ThemeUtil.setThemeForMaterialHeader(materialHeader)
         refreshLayout.apply {
