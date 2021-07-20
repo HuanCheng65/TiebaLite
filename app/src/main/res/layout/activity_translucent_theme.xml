@@ -52,13 +52,25 @@
         <com.huanchengfly.tieba.post.widgets.theme.TintLinearLayout
             android:background="@drawable/bg_top_radius_10dp"
             app:backgroundTint="@color/theme_color_card_light"
+            app:behavior_peekHeight="120dp"
             app:layout_behavior="@string/bottom_sheet_behavior"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="16dp">
+            android:paddingTop="8dp"
+            android:paddingBottom="16dp"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp">
+
+            <com.huanchengfly.tieba.post.widgets.theme.TintView
+                android:layout_width="64dp"
+                android:layout_height="4dp"
+                android:background="@drawable/bg_radius_50dp"
+                app:backgroundTint="@color/default_color_on_toolbar_bar"
+                android:layout_gravity="center_horizontal" />
 
             <com.huanchengfly.tieba.post.widgets.theme.TintTextView
+                android:layout_marginTop="16dp"
                 app:tint="@color/color_text"
                 android:textSize="14sp"
                 android:textStyle="bold"
@@ -147,7 +159,7 @@
 
                     <FrameLayout
                         android:id="@+id/custom_color"
-                        android:padding="8dp"
+                        android:layout_marginEnd="16dp"
                         android:clipToPadding="false"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content">
@@ -212,6 +224,28 @@
                 app:progressBackgroundTint="@color/default_color_divider"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:id="@+id/recommend_wallpapers">
+
+                <com.huanchengfly.tieba.post.widgets.theme.TintTextView
+                    android:layout_marginTop="16dp"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    android:text="@string/title_translucent_theme_wallpapers"
+                    app:tint="@color/color_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/wallpapers_rv"
+                    android:layout_marginTop="8dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
 
             <com.huanchengfly.tieba.post.widgets.theme.TintTextView
                 android:layout_marginTop="12dp"

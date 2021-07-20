@@ -457,4 +457,5 @@
     <string name="title_ui_settings">界面设置</string>
     <string name="dark_color">深色</string>
     <string name="light_color">浅色</string>
+    <string name="title_translucent_theme_wallpapers">推荐壁纸</string>
 </resources>
