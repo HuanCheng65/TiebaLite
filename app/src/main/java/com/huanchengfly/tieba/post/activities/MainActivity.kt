@@ -4,15 +4,9 @@ import android.annotation.SuppressLint
 import android.app.job.JobInfo
 import android.app.job.JobScheduler
 import android.content.*
-import android.graphics.Typeface
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.text.SpannableStringBuilder
-import android.text.Spanned
-import android.text.TextUtils
-import android.text.style.ForegroundColorSpan
-import android.text.style.StyleSpan
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
@@ -29,11 +23,7 @@ import com.google.android.material.snackbar.Snackbar
 import com.huanchengfly.tieba.post.*
 import com.huanchengfly.tieba.post.adapters.ViewPagerAdapter
 import com.huanchengfly.tieba.post.api.Error
-import com.huanchengfly.tieba.post.api.LiteApi.Companion.instance
-import com.huanchengfly.tieba.post.api.interfaces.CommonAPICallback
 import com.huanchengfly.tieba.post.api.interfaces.CommonCallback
-import com.huanchengfly.tieba.post.api.models.ChangelogBean
-import com.huanchengfly.tieba.post.api.models.NewUpdateBean
 import com.huanchengfly.tieba.post.fragments.MainForumListFragment
 import com.huanchengfly.tieba.post.fragments.MessageFragment
 import com.huanchengfly.tieba.post.fragments.MyInfoFragment
@@ -177,7 +167,6 @@ open class MainActivity : BaseActivity(), BottomNavigationView.OnNavigationItemS
             SharedPreferencesUtil.put(ThemeUtil.getSharedPreferences(this), SP_SHOULD_SHOW_SNACKBAR, false)
         }
         handler.postDelayed({
-            checkUpdate()
             try {
                 TiebaUtil.initAutoSign(this)
             } catch (e: Exception) {
@@ -262,72 +251,6 @@ open class MainActivity : BaseActivity(), BottomNavigationView.OnNavigationItemS
         unregisterReceiver(newMessageReceiver)
         unregisterReceiver(accountSwitchReceiver)
         super.onStop()
-    }
-
-    private fun checkUpdate() {
-        val oldVersion = SharedPreferencesUtil.get(this, SharedPreferencesUtil.SP_APP_DATA).getInt("version", -1)
-        if (oldVersion < VersionUtil.getVersionCode(this)) {
-            instance!!.changelog(object : CommonAPICallback<ChangelogBean?> {
-                override fun onSuccess(data: ChangelogBean?) {
-                    SharedPreferencesUtil.get(this@MainActivity, SharedPreferencesUtil.SP_APP_DATA)
-                            .edit()
-                            .putInt("version", VersionUtil.getVersionCode(this@MainActivity))
-                            .apply()
-                    if (data != null) {
-                        if (!TextUtils.isEmpty(data.result)) {
-                            showDialog(DialogUtil.build(this@MainActivity)
-                                    .setTitle(R.string.title_dialog_changelog)
-                                    .setMessage(data.result)
-                                    .setPositiveButton(R.string.button_ok, null)
-                                    .create())
-                        }
-                    }
-                }
-
-                override fun onFailure(code: Int, error: String?) {}
-            })
-        }
-        instance!!.newCheckUpdate(object : CommonAPICallback<NewUpdateBean?> {
-            override fun onSuccess(data: NewUpdateBean?) {
-                if (data != null) {
-                    if (data.isHasUpdate) {
-                        val cancelable = data.result?.isCancelable
-                        val ignored = SharedPreferencesUtil.get(this@MainActivity, SharedPreferencesUtil.SP_IGNORE_VERSIONS)
-                                .getBoolean(data.result?.versionName + "_" + (data.result?.versionCode), false)
-                        if (ignored && cancelable!!) {
-                            return
-                        }
-                        val builder = SpannableStringBuilder()
-                        if (data.result?.versionType == 1) {
-                            val betaTip = getString(R.string.tip_beta_version)
-                            builder.append(betaTip, ForegroundColorSpan(getColorCompat(R.color.red)), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
-                            builder.setSpan(StyleSpan(Typeface.BOLD), 0, betaTip.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
-                        }
-                        for (content in data.result?.updateContent!!) {
-                            builder.append(content)
-                            builder.append("\n")
-                        }
-                        val dialogBuilder = DialogUtil.build(this@MainActivity)
-                                .setTitle(getString(R.string.title_dialog_update, data.result.versionName))
-                                .setMessage(builder)
-                                .setPositiveButton(R.string.button_go_to_download) { _: DialogInterface?, _: Int -> VersionUtil.showDownloadDialog(this@MainActivity, data.result) }
-                                .setCancelable(cancelable!!)
-                        if (cancelable) {
-                            dialogBuilder.setNegativeButton(R.string.button_next_time, null)
-                            dialogBuilder.setNeutralButton(R.string.button_ignore_this_version) { _: DialogInterface?, _: Int ->
-                                SharedPreferencesUtil.get(this@MainActivity, SharedPreferencesUtil.SP_IGNORE_VERSIONS)
-                                        .edit()
-                                        .putBoolean(data.result.versionName + "_" + data.result.versionCode, true)
-                                        .apply()
-                            }
-                        }
-                        showDialog(dialogBuilder.create())
-                    }
-                }
-            }
-
-            override fun onFailure(code: Int, error: String?) {}
-        })
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {

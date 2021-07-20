@@ -1,15 +1,7 @@
-apply plugin: 'com.android.application'
-apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-kapt'
-
-buildscript {
-    repositories {
-        jcenter()
-        google()
-    }
-    dependencies {
-        classpath 'com.tencent.mm:AndResGuard-gradle-plugin:1.2.18'
-    }
+plugins {
+    id "com.android.application"
+    id "kotlin-android"
+    id "kotlin-kapt"
 }
 
 def keystoreProperties = new Properties()
@@ -26,18 +18,11 @@ if (SHA1 != null) {
 if (isPerVersion) {
     applicationVersionName = applicationVersionName + ".${applicationProperties["preReleaseName"]}-${applicationProperties["preReleaseVer"]}"
 }
+project.ext.set("archivesBaseName",  "${applicationVersionName}(${applicationVersionCode})".toString())
 
 android {
-    signingConfigs {
-        release {
-            keyAlias keystoreProperties['releaseKeyAlias']
-            keyPassword keystoreProperties['releaseKeyPassword']
-            storeFile file(rootDir.getCanonicalPath() + '/' + keystoreProperties['releaseKeyStore'])
-            storePassword keystoreProperties['releaseStorePassword']
-            v2SigningEnabled true
-        }
-    }
     compileSdkVersion 30
+    buildToolsVersion "30.0.3"
     defaultConfig {
         applicationId "com.huanchengfly.tieba.post"
         minSdkVersion 21
@@ -45,13 +30,23 @@ android {
         versionCode applicationVersionCode
         versionName applicationVersionName
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-        project.ext.set("archivesBaseName",  "${versionName}(${versionCode})".toString())
+    }
+    signingConfigs {
+        release {
+            keyAlias keystoreProperties["releaseKeyAlias"]
+            keyPassword keystoreProperties["releaseKeyPassword"]
+            storeFile file(rootDir.getCanonicalPath() + "/" + keystoreProperties["releaseKeyStore"])
+            storePassword keystoreProperties["releaseStorePassword"]
+            v2SigningEnabled true
+            enableV3Signing true
+            enableV4Signing true
+        }
     }
     buildTypes {
         release {
             minifyEnabled true
             shrinkResources true
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            proguardFiles getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro"
             debuggable false
             jniDebuggable false
             signingConfig signingConfigs.release
@@ -66,80 +61,78 @@ android {
 }
 
 dependencies {
-    implementation 'org.jetbrains:annotations:19.0.0'
+    implementation "org.jetbrains:annotations:19.0.0"
 
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
-    api 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.3.2'
-    api 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.3.2'
+    api "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.3.2"
+    api "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.3.2"
 
     //Local Files
-    implementation fileTree(include: ['*.jar'], dir: 'libs')
+    implementation fileTree(include: ["*.jar"], dir: "libs")
 
     //滑动返回
-    implementation 'me.imid.swipebacklayout.lib:library:1.1.0'
+    implementation "me.imid.swipebacklayout.lib:library:1.3.0"
 
     //兼容 Glide
-    implementation 'com.android.support:support-annotations:28.0.0'
-    implementation 'androidx.work:work-runtime:2.3.4'
+    implementation "com.android.support:support-annotations:28.0.0"
+    implementation "androidx.work:work-runtime:2.3.4"
     kapt "com.android.support:support-annotations:28.0.0"
 
     //AndroidX
-    implementation 'androidx.appcompat:appcompat:1.2.0'
-    implementation 'androidx.constraintlayout:constraintlayout:2.0.0'
-    implementation 'androidx.preference:preference:1.1.1'
-    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
-    implementation 'androidx.gridlayout:gridlayout:1.0.0'
-    implementation 'androidx.browser:browser:1.2.0'
-    implementation 'androidx.viewpager2:viewpager2:1.0.0'
+    implementation "androidx.appcompat:appcompat:1.3.0"
+    implementation "androidx.core:core-ktx:1.6.0"
+    implementation "androidx.annotation:annotation:1.2.0"
+    implementation "androidx.constraintlayout:constraintlayout:2.0.4"
+    implementation "androidx.preference:preference-ktx:1.1.1"
+    implementation "androidx.gridlayout:gridlayout:1.0.0"
+    implementation "androidx.browser:browser:1.3.0"
+    implementation "androidx.viewpager2:viewpager2:1.0.0"
+    implementation "androidx.palette:palette-ktx:1.0.0"
 
     //Test
-    testImplementation 'junit:junit:4.13'
-    androidTestImplementation 'androidx.test:core:1.2.0'
-    androidTestImplementation 'androidx.test.ext:junit:1.1.1'
-    androidTestImplementation 'androidx.test:rules:1.2.0'
-    androidTestImplementation 'androidx.test:runner:1.2.0'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
+    testImplementation "junit:junit:4.13.2"
+    androidTestImplementation "androidx.test:core:1.4.0"
+    androidTestImplementation "androidx.test.ext:junit:1.1.3"
+    androidTestImplementation "androidx.test:rules:1.4.0"
+    androidTestImplementation "androidx.test:runner:1.4.0"
+    androidTestImplementation "androidx.test.espresso:espresso-core:3.4.0"
 
     //Glide
-    implementation 'com.github.bumptech.glide:glide:4.11.0'
-    kapt 'com.github.bumptech.glide:compiler:4.11.0'
-    implementation 'com.github.bumptech.glide:okhttp3-integration:4.11.0'
+    implementation "com.github.bumptech.glide:glide:$glide_version"
+    kapt "com.github.bumptech.glide:compiler:$glide_version"
+    implementation "com.github.bumptech.glide:okhttp3-integration:$glide_version"
 
-    implementation 'com.google.android.material:material:1.3.0-alpha02'
+    implementation "com.google.android.material:material:1.4.0"
 
-    implementation 'com.squareup.okhttp3:okhttp:4.5.0'
-    implementation 'com.squareup.retrofit2:retrofit:2.8.1'
-    implementation 'com.squareup.retrofit2:converter-gson:2.8.1'
-    implementation 'com.tsy:myokhttp:1.1.4'
+    implementation "com.squareup.okhttp3:okhttp:4.9.1"
+    implementation "com.squareup.retrofit2:retrofit:$retrofit_version"
+    implementation "com.squareup.retrofit2:converter-gson:$retrofit_version"
 
-    implementation 'com.google.code.gson:gson:2.8.6'
-    implementation 'cn.dreamtobe.kpswitch:library:1.6.2'
-    implementation 'org.litepal.android:kotlin:3.0.0'
-    implementation 'com.github.SheHuan:RecyclerViewAdapter:1.2.6'
-    implementation 'com.github.lygttpod:SuperTextView:2.1.8'
-    implementation 'com.davemorrissey.labs:subsampling-scale-image-view:3.10.0'
-    implementation 'com.bm.photoview:library:1.4.1'
-    implementation 'cn.jzvd:jiaozivideoplayer:7.2.3'
-    implementation 'com.jrummyapps:colorpicker:2.1.7'
-    implementation 'com.scwang.wave:MultiWaveHeader:1.0.0-andx'
+    implementation "com.google.code.gson:gson:2.8.7"
+    implementation "cn.dreamtobe.kpswitch:library:1.6.2"
+    implementation "org.litepal.android:kotlin:3.0.0"
+    implementation "com.github.SheHuan:RecyclerViewAdapter:1.2.9"
+    implementation "com.davemorrissey.labs:subsampling-scale-image-view:3.10.0"
+    implementation "com.bm.photoview:library:2.0.7"
+    implementation "cn.jzvd:jiaozivideoplayer:7.7.0"
+    implementation "com.jrummyapps:colorpicker:2.1.7"
 
-    implementation 'com.scwang.smart:refresh-layout-kernel:2.0.1'
-    implementation 'com.scwang.smart:refresh-header-material:2.0.1'
+    implementation "com.scwang.smart:refresh-layout-kernel:2.0.1"
+    implementation "com.scwang.smart:refresh-header-material:2.0.1"
 
-    implementation 'com.zhihu.android:matisse:0.5.3-beta3'
-    implementation 'com.yanzhenjie:permission:2.0.3'
-    implementation 'com.gyf.immersionbar:immersionbar:3.0.0-beta02'
-    api 'com.flurry.android:analytics:12.2.0'
-    implementation 'androidx.palette:palette:1.0.0'
+    implementation "com.zhihu.android:matisse:0.5.3-beta3"
+    implementation "com.yanzhenjie:permission:2.0.3"
+    implementation "com.gyf.immersionbar:immersionbar:3.0.0"
+    api "com.flurry.android:analytics:12.13.0"
 
-    implementation 'com.github.yalantis:ucrop:2.2.4'
+    implementation "com.github.yalantis:ucrop:2.2.7"
 
-    implementation 'com.billy.android:pre-loader:2.1.0'
+    implementation "com.billy.android:pre-loader:2.1.0"
 
-    implementation 'com.jakewharton:butterknife:10.2.1'
-    kapt 'com.jakewharton:butterknife-compiler:10.2.1'
+    implementation "com.jakewharton:butterknife:10.2.3"
+    kapt "com.jakewharton:butterknife-compiler:10.2.3"
 
-    implementation ('com.alibaba.android:vlayout:1.2.8@aar') {
+    implementation ("com.alibaba.android:vlayout:1.2.8@aar") {
         transitive = true
     }
 }

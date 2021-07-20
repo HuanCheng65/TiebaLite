@@ -113,22 +113,6 @@
         <attr name="strokeColor" format="color" />
     </declare-styleable>
 
-    <declare-styleable name="TintSuperTextView">
-        <attr name="superTextViewBackgroundTint" format="color" />
-        <attr name="leftTextColor" format="color" />
-        <attr name="leftTopTextColor" format="color" />
-        <attr name="leftBottomTextColor" format="color" />
-        <attr name="centerTextColor" format="color" />
-        <attr name="centerTopTextColor" format="color" />
-        <attr name="centerBottomTextColor" format="color" />
-        <attr name="rightTextColor" format="color" />
-        <attr name="rightTopTextColor" format="color" />
-        <attr name="rightBottomTextColor" format="color" />
-        <attr name="dividerLineColor" format="color" />
-        <attr name="leftIconTint" format="color" />
-        <attr name="rightIconTint" format="color" />
-    </declare-styleable>
-
     <declare-styleable name="TintSeekbar">
         <attr name="seekbarBackgroundTint" format="color" />
         <attr name="progressTint" format="color" />

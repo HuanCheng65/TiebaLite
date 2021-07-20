@@ -1,102 +1,26 @@
 package com.huanchengfly.tieba.post.api
 
-import android.annotation.SuppressLint
-import android.content.Context
-import com.huanchengfly.tieba.post.BaseApplication
-import com.huanchengfly.tieba.post.api.interfaces.CommonAPICallback
-import com.huanchengfly.tieba.post.api.models.ChangelogBean
-import com.huanchengfly.tieba.post.api.models.NewUpdateBean
-import com.huanchengfly.tieba.post.api.models.UpdateInfoBean
-import com.huanchengfly.tieba.post.utils.SharedPreferencesUtil
-import com.huanchengfly.tieba.post.utils.VersionUtil
-import com.huanchengfly.tieba.post.utils.appPreferences
-import com.tsy.sdk.myokhttp.MyOkHttp
-import com.tsy.sdk.myokhttp.response.GsonResponseHandler
-import java.lang.ref.WeakReference
+import com.huanchengfly.tieba.post.api.retrofit.NullOnEmptyConverterFactory
+import com.huanchengfly.tieba.post.api.retrofit.adapter.DeferredCallAdapterFactory
+import com.huanchengfly.tieba.post.api.retrofit.converter.gson.GsonConverterFactory
+import com.huanchengfly.tieba.post.api.retrofit.interfaces.LiteApiInterface
+import okhttp3.ConnectionPool
+import okhttp3.OkHttpClient
+import retrofit2.Retrofit
 
+object LiteApi {
+    private val connectionPool = ConnectionPool()
 
-class LiteApi private constructor(context: Context) {
-    private val myOkHttp: MyOkHttp = MyOkHttp()
-    private val contextWeakReference: WeakReference<Context> = WeakReference(context)
-    val context: Context
-        get() = contextWeakReference.get()!!
-
-    fun changelog(apiCallback: CommonAPICallback<ChangelogBean?>) {
-        val builder = myOkHttp.get()
-                .url(Url.CHANGELOG + VersionUtil.getVersionCode(context))
-        val oldVersion = SharedPreferencesUtil.get(context, SharedPreferencesUtil.SP_APP_DATA).getInt("version", -1)
-        if (oldVersion != -1) {
-            builder.addParam("update_from", oldVersion.toString())
-        }
-        builder.enqueue(object : GsonResponseHandler<ChangelogBean>() {
-            override fun onFailure(statusCode: Int, error_msg: String) {
-                apiCallback.onFailure(statusCode, error_msg)
-            }
-
-            override fun onSuccess(statusCode: Int, response: ChangelogBean) {
-                if (response.isSuccess) {
-                    apiCallback.onSuccess(response)
-                } else {
-                    apiCallback.onFailure(response.errorCode, response.errorMsg)
-                }
-            }
-        })
+    val instance: LiteApiInterface by lazy {
+        Retrofit.Builder()
+            .baseUrl("https://github.com/")
+            .addCallAdapterFactory(DeferredCallAdapterFactory())
+            .addConverterFactory(NullOnEmptyConverterFactory())
+            .addConverterFactory(GsonConverterFactory.create())
+            .client(OkHttpClient.Builder().apply {
+                connectionPool(connectionPool)
+            }.build())
+            .build()
+            .create(LiteApiInterface::class.java)
     }
-
-    fun newCheckUpdate(apiCallback: CommonAPICallback<NewUpdateBean?>) {
-        val beta = context.appPreferences.checkBetaUpdate
-        myOkHttp.get()
-                .url(Url.CHECK_UPDATE)
-                .addParam("version_code", VersionUtil.getVersionCode(context).toString())
-                .addParam("beta", beta.toString())
-                .addParam("lang", getLanguage())
-                .enqueue(object : GsonResponseHandler<NewUpdateBean>() {
-                    override fun onFailure(statusCode: Int, error_msg: String) {
-                        apiCallback.onFailure(statusCode, error_msg)
-                    }
-
-                    override fun onSuccess(statusCode: Int, response: NewUpdateBean) {
-                        if (response.isSuccess == true) {
-                            apiCallback.onSuccess(response)
-                        } else {
-                            response.errorCode?.let { apiCallback.onFailure(it, response.errorMsg) }
-                        }
-                    }
-                })
-    }
-
-    fun updateInfo(apiCallback: CommonAPICallback<UpdateInfoBean?>) {
-        myOkHttp.get()
-                .url(Url.UPDATE_INFO)
-                .enqueue(object : GsonResponseHandler<UpdateInfoBean?>() {
-                    override fun onFailure(statusCode: Int, error_msg: String) {
-                        apiCallback.onFailure(statusCode, error_msg)
-                    }
-
-                    override fun onSuccess(statusCode: Int, response: UpdateInfoBean?) {
-                        apiCallback.onSuccess(response)
-                    }
-                })
-    }
-
-    companion object {
-        const val TAG = "LiteApi"
-        @JvmStatic
-        @get:Synchronized
-        @SuppressLint("StaticFieldLeak")
-        var instance: LiteApi? = null
-            get() {
-                if (field == null) {
-                    synchronized(LiteApi::class.java) {
-                        if (field == null) {
-                            field = LiteApi(BaseApplication.instance)
-                        }
-                    }
-                }
-                return field
-            }
-            private set
-
-    }
-
 }

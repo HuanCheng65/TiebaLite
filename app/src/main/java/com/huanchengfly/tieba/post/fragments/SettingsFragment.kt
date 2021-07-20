@@ -16,9 +16,6 @@ import com.google.android.material.snackbar.Snackbar
 import com.huanchengfly.tieba.post.R
 import com.huanchengfly.tieba.post.activities.BlockListActivity
 import com.huanchengfly.tieba.post.activities.LoginActivity
-import com.huanchengfly.tieba.post.api.LiteApi.Companion.instance
-import com.huanchengfly.tieba.post.api.interfaces.CommonAPICallback
-import com.huanchengfly.tieba.post.api.models.NewUpdateBean
 import com.huanchengfly.tieba.post.components.prefs.TimePickerPreference
 import com.huanchengfly.tieba.post.fragments.preference.PreferencesFragment
 import com.huanchengfly.tieba.post.models.database.Account
@@ -150,17 +147,6 @@ class SettingsFragment : PreferencesFragment() {
             true
         }
         val aboutPreference = findPreference<Preference>("about")
-        instance!!.newCheckUpdate(object : CommonAPICallback<NewUpdateBean?> {
-            override fun onSuccess(data: NewUpdateBean?) {
-                if (data != null) {
-                    if (data.isHasUpdate == true) {
-                        aboutPreference!!.summary = attachContext.getString(R.string.tip_new_version, data.result?.versionName)
-                    }
-                }
-            }
-
-            override fun onFailure(code: Int, error: String) {}
-        })
         val useCustomTabs = findPreference<SwitchPreference>("use_custom_tabs")
         useCustomTabs!!.isEnabled = !preferenceManager.sharedPreferences.getBoolean("use_webview", true)
         findPreference<Preference>("use_webview")!!.onPreferenceChangeListener = Preference.OnPreferenceChangeListener { _: Preference?, newValue: Any? ->

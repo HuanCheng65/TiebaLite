@@ -5,7 +5,7 @@ jobs:
     working_directory: ~/code
 
     docker:
-      - image: circleci/android:api-29-ndk
+      - image: circleci/android:api-30-ndk
 
     environment:
       JVM_OPTS: -Xmx4G
