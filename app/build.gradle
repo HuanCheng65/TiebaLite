@@ -7,7 +7,10 @@ plugins {
 }
 
 def keystoreProperties = new Properties()
-keystoreProperties.load(new FileInputStream(rootProject.file("keystore.properties")))
+try {
+    keystoreProperties.load(new FileInputStream(rootProject.file("keystore.properties")))
+} catch (Exception ignored) {
+}
 def applicationProperties = new Properties()
 applicationProperties.load(new FileInputStream(rootProject.file("application.properties")))
 def SHA1 = System.getenv("CIRCLE_SHA1")
