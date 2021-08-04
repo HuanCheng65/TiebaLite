@@ -11,10 +11,11 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.view.*
+import android.widget.LinearLayout
 import android.widget.SeekBar
 import android.widget.SeekBar.OnSeekBarChangeListener
-import android.widget.TextView
 import androidx.annotation.ColorInt
+import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.content.ContextCompat
 import androidx.core.text.HtmlCompat
 import androidx.palette.graphics.Palette
@@ -26,6 +27,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.gyf.immersionbar.ImmersionBar
 import com.huanchengfly.tieba.post.*
 import com.huanchengfly.tieba.post.BaseApplication.Companion.translucentBackground
@@ -81,8 +83,17 @@ class TranslucentThemeActivity : BaseActivity(), View.OnClickListener, OnSeekBar
     @BindView(R.id.button_back)
     lateinit var backBtn: View
 
+    @BindView(R.id.bottom_sheet)
+    lateinit var bottomSheet: LinearLayout
+
     @BindView(R.id.button_finish)
     lateinit var finishBtn: View
+
+    @BindView(R.id.mask)
+    lateinit var maskView: View
+
+    @BindView(R.id.experimental_tip)
+    lateinit var experimentalTipView: View
 
     @BindView(R.id.color_theme)
     lateinit var colorTheme: ViewGroup
@@ -230,11 +241,20 @@ class TranslucentThemeActivity : BaseActivity(), View.OnClickListener, OnSeekBar
     @SuppressLint("ApplySharedPref", "ClickableViewAccessibility")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        (findViewById(R.id.tip) as TextView).apply {
-            text = HtmlCompat.fromHtml(getString(R.string.tip_translucent_theme), HtmlCompat.FROM_HTML_MODE_LEGACY)
+        experimentalTipView.setOnClickListener {
+            showDialog {
+                setTitle(R.string.title_translucent_theme_experimental_feature)
+                setMessage(
+                    HtmlCompat.fromHtml(
+                        getString(R.string.tip_translucent_theme),
+                        HtmlCompat.FROM_HTML_MODE_LEGACY
+                    )
+                )
+                setNegativeButton(R.string.btn_close, null)
+            }
         }
         listOf(
-                findViewById(R.id.custom_color),
+            findViewById(R.id.custom_color),
             findViewById(R.id.select_pic),
             darkColorBtn,
             lightColorBtn,
@@ -267,7 +287,7 @@ class TranslucentThemeActivity : BaseActivity(), View.OnClickListener, OnSeekBar
                 ThemeUtils.refreshUI(this)
             }
         (findViewById(R.id.select_color_recycler_view) as RecyclerView).apply {
-            addItemDecoration(HorizontalSpacesDecoration(0, 0, 16.dpToPx(), 16.dpToPx(), false))
+            addItemDecoration(HorizontalSpacesDecoration(0, 0, 12.dpToPx(), 12.dpToPx(), false))
             layoutManager = MyLinearLayoutManager(
                 this@TranslucentThemeActivity,
                 MyLinearLayoutManager.HORIZONTAL,
@@ -292,6 +312,25 @@ class TranslucentThemeActivity : BaseActivity(), View.OnClickListener, OnSeekBar
             mUri = Uri.fromFile(file)
             invalidateFinishBtn()
         }
+        val bottomSheetBehavior =
+            (bottomSheet.layoutParams as CoordinatorLayout.LayoutParams).behavior as BottomSheetBehavior
+        bottomSheetBehavior.addBottomSheetCallback(object :
+            BottomSheetBehavior.BottomSheetCallback() {
+            override fun onStateChanged(bottomSheet: View, newState: Int) {}
+
+            override fun onSlide(bottomSheet: View, slideOffset: Float) {
+                maskView.alpha = slideOffset
+                maskView.visibility = if (slideOffset < 0.01f) {
+                    View.GONE
+                } else {
+                    View.VISIBLE
+                }
+            }
+
+        })
+        maskView.setOnClickListener {
+            bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
+        }
         refreshBackground()
         refreshTheme()
         fetchWallpapers()
@@ -308,7 +347,6 @@ class TranslucentThemeActivity : BaseActivity(), View.OnClickListener, OnSeekBar
         }
     }
 
-    @SuppressLint("ApplySharedPref")
     override fun onColorSelected(dialogId: Int, color: Int) {
         appPreferences.translucentPrimaryColor = toString(color)
         ThemeUtils.refreshUI(this)
@@ -316,7 +354,6 @@ class TranslucentThemeActivity : BaseActivity(), View.OnClickListener, OnSeekBar
 
     override fun onDialogDismissed(dialogId: Int) {}
 
-    @SuppressLint("ApplySharedPref")
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.select_color -> return true
@@ -351,7 +388,7 @@ class TranslucentThemeActivity : BaseActivity(), View.OnClickListener, OnSeekBar
                 })
     }
 
-    fun invalidateFinishBtn() {
+    private fun invalidateFinishBtn() {
         if (mUri != null) {
             finishBtn.visibility = View.VISIBLE
         } else {

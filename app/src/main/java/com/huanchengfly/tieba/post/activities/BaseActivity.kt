@@ -20,6 +20,7 @@ import android.widget.TextView
 import androidx.annotation.CallSuper
 import androidx.annotation.ColorInt
 import androidx.annotation.Keep
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.Toolbar
 import butterknife.ButterKnife
 import cn.jzvd.Jzvd
@@ -65,6 +66,16 @@ abstract class BaseActivity : SwipeBackActivity(), ExtraRefreshable, CoroutineSc
             return true
         }
         return false
+    }
+
+    fun showDialog(builder: AlertDialog.Builder.() -> Unit): AlertDialog {
+        val dialog = AlertDialog.Builder(this)
+            .apply(builder)
+            .create()
+        if (isActivityRunning) {
+            dialog.show()
+        }
+        return dialog
     }
 
     override fun onStop() {

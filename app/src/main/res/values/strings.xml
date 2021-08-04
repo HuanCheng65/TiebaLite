@@ -458,4 +458,5 @@
     <string name="dark_color">深色</string>
     <string name="light_color">浅色</string>
     <string name="title_translucent_theme_wallpapers">推荐壁纸</string>
+    <string name="title_translucent_theme_experimental_feature">透明主题当前仍为实验性特性</string>
 </resources>

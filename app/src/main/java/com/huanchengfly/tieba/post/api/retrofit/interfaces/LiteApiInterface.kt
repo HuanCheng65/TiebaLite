@@ -5,6 +5,6 @@ import kotlinx.coroutines.Deferred
 import retrofit2.http.GET
 
 interface LiteApiInterface {
-    @GET("https://raw.githubusercontent.com/HuanCheng65/huancheng65.github.io/master/TiebaLite/wallpapers.json")
+    @GET("https://huancheng65.github.io/TiebaLite/wallpapers.json")
     fun wallpapersAsync(): Deferred<ApiResult<List<String>>>
 }
