@@ -44,6 +44,7 @@ class TintTextView @JvmOverloads constructor(context: Context?, attrs: Attribute
         }
     }
 
+
     override fun tint() {
         applyTintColor()
     }

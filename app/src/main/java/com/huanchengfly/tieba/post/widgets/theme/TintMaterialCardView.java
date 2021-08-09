@@ -67,15 +67,7 @@ public class TintMaterialCardView extends MaterialCardView implements Tintable {
             Method method = Class.forName("com.google.android.material.card.MaterialCardViewHelper").getDeclaredMethod("setCardBackgroundColor", ColorStateList.class);
             method.setAccessible(true);
             method.invoke(field.get(this), ColorStateList.valueOf(bg));
-        } catch (NoSuchFieldException e) {
-            e.printStackTrace();
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        } catch (NoSuchMethodException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (InvocationTargetException e) {
+        } catch (NoSuchFieldException | ClassNotFoundException | NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
             e.printStackTrace();
         }
         setStrokeColor(ThemeUtils.getColorById(getContext(), R.color.default_color_divider));

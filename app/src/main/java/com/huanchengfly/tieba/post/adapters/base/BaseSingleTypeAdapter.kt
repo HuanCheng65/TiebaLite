@@ -13,7 +13,8 @@ abstract class BaseSingleTypeAdapter<Item>(
 ) {
     protected abstract fun getItemLayoutId(): Int
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder = MyViewHolder(context, getItemLayoutId())
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder =
+        MyViewHolder(context, getItemLayoutId(), parent)
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
         holder.setItemOnClickListener {

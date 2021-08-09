@@ -247,6 +247,11 @@
             android:name=".activities.NewSearchActivity"
             android:configChanges="screenSize|screenLayout|orientation|smallestScreenSize|keyboardHidden"
             android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".activities.AppThemeActivity"
+            android:configChanges="screenSize|screenLayout|orientation|smallestScreenSize|keyboardHidden"
+            android:windowSoftInputMode="adjustResize"
+            android:label="@string/title_theme_settings" />
 
         <receiver android:name=".receivers.AutoSignAlarm" />
 

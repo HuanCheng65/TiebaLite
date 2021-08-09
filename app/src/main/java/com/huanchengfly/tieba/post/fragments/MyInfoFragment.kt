@@ -229,7 +229,7 @@ class MyInfoFragment : BaseFragment(), View.OnClickListener, CompoundButton.OnCh
                 goToActivity<UserCollectActivity>()
             }
             R.id.my_info_theme -> {
-                goToActivity<ThemeActivity>()
+                goToActivity<AppThemeActivity>()
             }
             R.id.my_info_history -> {
                 goToActivity<HistoryActivity>()

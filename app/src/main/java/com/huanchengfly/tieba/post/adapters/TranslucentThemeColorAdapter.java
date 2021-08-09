@@ -18,7 +18,7 @@ import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ThemeColorAdapter extends RecyclerView.Adapter<MyViewHolder> {
+public class TranslucentThemeColorAdapter extends RecyclerView.Adapter<MyViewHolder> {
     private static final int[] sColors = new int[]{
             Color.parseColor("#FF4477E0"),
             Color.parseColor("#FFFF9A9E"),
@@ -31,7 +31,7 @@ public class ThemeColorAdapter extends RecyclerView.Adapter<MyViewHolder> {
     private OnItemClickListener<Integer> mOnItemClickListener;
     private int mSelectedColor;
 
-    public ThemeColorAdapter(Context context) {
+    public TranslucentThemeColorAdapter(Context context) {
         mContextWeakReference = new WeakReference<>(context);
     }
 

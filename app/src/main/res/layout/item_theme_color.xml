@@ -8,11 +8,32 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content">
 
-    <View
+    <com.google.android.material.card.MaterialCardView
         android:id="@+id/theme_preview"
-        android:background="@drawable/bg_radius_10dp"
+        app:cardCornerRadius="10dp"
+        app:cardBackgroundColor="@color/transparent"
+        app:strokeWidth="2dp"
+        app:cardElevation="0dp"
         android:layout_width="48dp"
-        android:layout_height="48dp" />
+        android:layout_height="48dp">
+
+        <FrameLayout
+            android:background="@color/white"
+            android:id="@+id/theme_preview_bg"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <com.huanchengfly.tieba.post.widgets.theme.TintImageView
+                android:background="@drawable/bg_radius_10dp"
+                android:backgroundTint="@color/black_trans"
+                app:tint="@color/white"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:padding="16dp"
+                android:id="@+id/theme_icon"
+                android:visibility="gone" />
+        </FrameLayout>
+    </com.google.android.material.card.MaterialCardView>
 
     <RelativeLayout
         android:visibility="gone"

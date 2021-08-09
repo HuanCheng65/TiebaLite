@@ -14,6 +14,8 @@ class HorizontalSpacesDecoration @JvmOverloads constructor(
 ) : ItemDecoration() {
     constructor(space: Int) : this(space, space, space, space)
 
+    constructor(space: Int, spaceOnEdge: Boolean) : this(space, space, space, space, spaceOnEdge)
+
     override fun getItemOffsets(
         outRect: Rect, view: View,
         parent: RecyclerView, state: RecyclerView.State

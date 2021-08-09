@@ -47,8 +47,8 @@ class PressAnimator(
 }
 
 fun buildPressAnimator(
-        targetView: View,
-        builder: PressAnimator.Builder.() -> Unit
+    targetView: View,
+    builder: PressAnimator.Builder.() -> Unit
 ): PressAnimator {
     return PressAnimator.Builder(targetView).apply(builder).build()
 }

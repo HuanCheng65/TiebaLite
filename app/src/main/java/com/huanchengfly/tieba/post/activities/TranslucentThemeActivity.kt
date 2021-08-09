@@ -31,7 +31,7 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.gyf.immersionbar.ImmersionBar
 import com.huanchengfly.tieba.post.*
 import com.huanchengfly.tieba.post.BaseApplication.Companion.translucentBackground
-import com.huanchengfly.tieba.post.adapters.ThemeColorAdapter
+import com.huanchengfly.tieba.post.adapters.TranslucentThemeColorAdapter
 import com.huanchengfly.tieba.post.adapters.WallpaperAdapter
 import com.huanchengfly.tieba.post.api.LiteApi
 import com.huanchengfly.tieba.post.api.retrofit.doIfSuccess
@@ -105,7 +105,11 @@ class TranslucentThemeActivity : BaseActivity(), View.OnClickListener, OnSeekBar
         }
     private val wallpaperAdapter: WallpaperAdapter by lazy { WallpaperAdapter(this) }
 
-    private val themeColorAdapter: ThemeColorAdapter by lazy { ThemeColorAdapter(this) }
+    private val mTranslucentThemeColorAdapter: TranslucentThemeColorAdapter by lazy {
+        TranslucentThemeColorAdapter(
+            this
+        )
+    }
 
     private fun launchUCrop(sourceUri: Uri) {
         mProgress.visibility = View.VISIBLE
@@ -219,7 +223,7 @@ class TranslucentThemeActivity : BaseActivity(), View.OnClickListener, OnSeekBar
                         val bitmap = ImageUtil.drawableToBitmap(resource)
                         findViewById(R.id.background).background = BitmapDrawable(resources, bitmap)
                         mPalette = Palette.from(bitmap).generate()
-                        themeColorAdapter.setPalette(mPalette)
+                        mTranslucentThemeColorAdapter.setPalette(mPalette)
                         mSelectColor.visibility = View.VISIBLE
                         mProgress.visibility = View.GONE
                     }
@@ -281,7 +285,7 @@ class TranslucentThemeActivity : BaseActivity(), View.OnClickListener, OnSeekBar
         recommendWallpapersRv.adapter = wallpaperAdapter
         recommendWallpapersRv.layoutManager =
             LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
-        themeColorAdapter.onItemClickListener =
+        mTranslucentThemeColorAdapter.onItemClickListener =
             OnItemClickListener { _: View?, themeColor: Int, _: Int, _: Int ->
                 appPreferences.translucentPrimaryColor = toString(themeColor)
                 ThemeUtils.refreshUI(this)
@@ -293,7 +297,7 @@ class TranslucentThemeActivity : BaseActivity(), View.OnClickListener, OnSeekBar
                 MyLinearLayoutManager.HORIZONTAL,
                 false
             )
-            adapter = themeColorAdapter
+            adapter = mTranslucentThemeColorAdapter
         }
         alpha = appPreferences.translucentBackgroundAlpha
         blur = appPreferences.translucentBackgroundBlur

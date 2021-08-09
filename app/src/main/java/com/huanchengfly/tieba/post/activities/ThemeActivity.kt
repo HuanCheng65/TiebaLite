@@ -11,7 +11,6 @@ import com.huanchengfly.tieba.post.adapters.ThemeAdapter
 import com.huanchengfly.tieba.post.goToActivity
 import com.huanchengfly.tieba.post.interfaces.OnItemClickListener
 import com.huanchengfly.tieba.post.utils.DialogUtil
-import com.huanchengfly.tieba.post.utils.SharedPreferencesUtil
 import com.huanchengfly.tieba.post.utils.ThemeUtil
 
 class ThemeActivity : BaseActivity() {
@@ -43,8 +42,7 @@ class ThemeActivity : BaseActivity() {
         }
         val values = listOf(*resources.getStringArray(R.array.theme_values))
         themeAdapter.onItemClickListener = OnItemClickListener { _, _, position: Int, _ ->
-            val backgroundFilePath = SharedPreferencesUtil.get(this, SharedPreferencesUtil.SP_SETTINGS)
-                    .getString(ThemeUtil.SP_TRANSLUCENT_THEME_BACKGROUND_PATH, null)
+            val backgroundFilePath = appPreferences.translucentThemeBackgroundPath
             val theme = values[position]
             if (theme == ThemeUtil.THEME_TRANSLUCENT && backgroundFilePath == null) {
                 goToActivity<TranslucentThemeActivity>()

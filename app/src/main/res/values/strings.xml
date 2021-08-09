@@ -115,6 +115,7 @@
     <string name="my_info_theme">主题选择</string>
     <string name="my_info_night">夜间</string>
     <string name="title_theme">主题选择</string>
+    <string name="title_theme_settings">主题设置</string>
     <string name="title_unfollow">取消关注</string>
     <string name="tip_no_intro">这个人很懒，什么都没有写</string>
     <string name="url_user_home"><![CDATA[https://tieba.baidu.com/home/main?un=%1$s&tab=%2$d]]></string>
@@ -459,4 +460,9 @@
     <string name="light_color">浅色</string>
     <string name="title_translucent_theme_wallpapers">推荐壁纸</string>
     <string name="title_translucent_theme_experimental_feature">透明主题当前仍为实验性特性</string>
+    <string name="bubble_want_small_title">我不想要顶栏的大标题怎么办？</string>
+    <string name="bubble_want_colored_toolbar">默认情况下顶栏不能跟随主题变化颜色，我想让顶栏变色怎么办？</string>
+    <string name="bubble_not_completed">功能未完成开发，敬请期待</string>
+    <string name="title_theme_translucent">透明主题</string>
+    <string name="title_theme_custom">自定义</string>
 </resources>

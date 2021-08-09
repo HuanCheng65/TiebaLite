@@ -42,4 +42,9 @@ public class MyLinearLayoutManager extends LinearLayoutManager {
             e.printStackTrace();
         }
     }
+
+    @Override
+    public RecyclerView.LayoutParams generateLayoutParams(Context c, AttributeSet attrs) {
+        return super.generateLayoutParams(c, attrs);
+    }
 }

@@ -3,13 +3,11 @@ package com.huanchengfly.tieba.post.adapters;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.ColorStateList;
-import android.graphics.Color;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import androidx.annotation.ColorInt;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -67,13 +65,6 @@ public class ThemeAdapter extends RecyclerView.Adapter<MyViewHolder> implements 
     @Override
     public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         return new MyViewHolder(mContext, R.layout.item_theme);
-    }
-
-    private int alphaColor(@ColorInt int origin) {
-        int r = Color.red(origin);
-        int g = Color.green(origin);
-        int b = Color.blue(origin);
-        return Color.argb(254, r, g, b);
     }
 
     private int getToolbarColor(String theme) {
