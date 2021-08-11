@@ -252,3 +252,5 @@
 -keep class androidx.recyclerview.widget.RecyclerView$LayoutParams { *; }
 -keep class androidx.recyclerview.widget.RecyclerView$ViewHolder { *; }
 -keep class androidx.recyclerview.widget.RecyclerView$LayoutManager { *; }
+
+-keep class com.huanchengfly.tieba.post.plugins.** { *; }

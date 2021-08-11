@@ -465,4 +465,5 @@
     <string name="bubble_not_completed">功能未完成开发，敬请期待</string>
     <string name="title_theme_translucent">透明主题</string>
     <string name="title_theme_custom">自定义</string>
+    <string name="plugin_comment_lookup_menu">查询发言</string>
 </resources>

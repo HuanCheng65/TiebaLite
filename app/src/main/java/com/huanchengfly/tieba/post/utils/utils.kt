@@ -1,15 +1,22 @@
 package com.huanchengfly.tieba.post.utils
 
+import android.content.ActivityNotFoundException
 import android.content.Context
+import android.content.Intent
 import android.content.res.ColorStateList
 import android.graphics.Color
 import android.graphics.drawable.Drawable
 import android.graphics.drawable.GradientDrawable
 import android.graphics.drawable.RippleDrawable
+import android.net.Uri
+import androidx.browser.customtabs.CustomTabColorSchemeParams
+import androidx.browser.customtabs.CustomTabsIntent
 import com.huanchengfly.tieba.post.BaseApplication
 import com.huanchengfly.tieba.post.R
+import com.huanchengfly.tieba.post.activities.WebViewActivity
 import com.huanchengfly.tieba.post.dpToPxFloat
 import com.huanchengfly.tieba.post.ui.theme.utils.ColorStateListUtils
+import com.huanchengfly.tieba.post.ui.theme.utils.ThemeUtils
 
 @JvmOverloads
 fun getItemBackgroundDrawable(
@@ -101,13 +108,54 @@ fun getIntermixedColorBackground(
             context,
             position,
             itemCount,
-            positionOffset,
-            radius,
-            if (context.appPreferences.listItemsBackgroundIntermixed) {
-                colors
-            } else {
-                intArrayOf(colors[0])
-            },
-            ripple
+        positionOffset,
+        radius,
+        if (context.appPreferences.listItemsBackgroundIntermixed) {
+            colors
+        } else {
+            intArrayOf(colors[0])
+        },
+        ripple
     )
+}
+
+fun launchUrl(context: Context, url: String) {
+    val uri = Uri.parse(url)
+    val host = uri.host
+    val path = uri.path
+    val scheme = uri.scheme
+    if (host == null || scheme == null || path == null) {
+        return
+    }
+    if (!path.contains("android_asset")) {
+        val isTiebaLink =
+            host.contains("tieba.baidu.com") || host.contains("wappass.baidu.com") || host.contains(
+                "ufosdk.baidu.com"
+            ) || host.contains("m.help.baidu.com")
+        if (isTiebaLink || context.appPreferences.useWebView) {
+            WebViewActivity.launch(context, url)
+        } else {
+            if (context.appPreferences.useCustomTabs) {
+                val intentBuilder = CustomTabsIntent.Builder()
+                    .setShowTitle(true)
+                    .setDefaultColorSchemeParams(
+                        CustomTabColorSchemeParams.Builder()
+                            .setToolbarColor(
+                                ThemeUtils.getColorByAttr(
+                                    context,
+                                    R.attr.colorToolbar
+                                )
+                            )
+                            .build()
+                    )
+                try {
+                    intentBuilder.build().launchUrl(context, uri)
+                } catch (e: ActivityNotFoundException) {
+                    context.startActivity(Intent(Intent.ACTION_VIEW, uri))
+                }
+            } else {
+                context.startActivity(Intent(Intent.ACTION_VIEW, uri))
+            }
+        }
+    }
 }

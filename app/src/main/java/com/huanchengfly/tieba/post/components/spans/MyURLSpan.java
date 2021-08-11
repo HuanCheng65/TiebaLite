@@ -11,6 +11,7 @@ import androidx.annotation.NonNull;
 import com.huanchengfly.tieba.post.R;
 import com.huanchengfly.tieba.post.ui.theme.utils.ThemeUtils;
 import com.huanchengfly.tieba.post.utils.NavigationHelper;
+import com.huanchengfly.tieba.post.utils.UtilsKt;
 
 public class MyURLSpan extends ClickableSpan {
     public String url;
@@ -34,6 +35,6 @@ public class MyURLSpan extends ClickableSpan {
 
     @Override
     public void onClick(@NonNull View view) {
-        navigationHelper.navigationByData(NavigationHelper.ACTION_URL, this.url);
+        UtilsKt.launchUrl(context, url);
     }
 }

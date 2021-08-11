@@ -19,6 +19,8 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatDelegate
 import com.flurry.android.FlurryAgent
 import com.huanchengfly.tieba.post.api.interfaces.CommonCallback
+import com.huanchengfly.tieba.post.plugins.PluginManager
+import com.huanchengfly.tieba.post.plugins.interfaces.IApp
 import com.huanchengfly.tieba.post.ui.theme.interfaces.ThemeSwitcher
 import com.huanchengfly.tieba.post.ui.theme.utils.ThemeUtils
 import com.huanchengfly.tieba.post.utils.*
@@ -32,13 +34,14 @@ import org.litepal.LitePal
 import java.util.*
 import java.util.regex.Pattern
 
-class BaseApplication : Application() {
+class BaseApplication : Application(), IApp {
     private val mActivityList: MutableList<Activity> = mutableListOf()
 
     override fun onCreate() {
         instance = this
         super.onCreate()
         ThemeUtils.init(ThemeDelegate)
+        PluginManager.init(this)
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
         LitePal.initialize(this)
         FlurryAgent.Builder()
@@ -441,13 +444,33 @@ class BaseApplication : Application() {
                 R.color.default_color_shadow -> return getColorByAttr(context, R.attr.shadow_color)
                 R.color.default_color_unselected -> return getColorByAttr(context, R.attr.colorUnselected)
                 R.color.default_color_text -> return getColorByAttr(context, R.attr.colorText)
-                R.color.default_color_text_on_primary -> return getColorByAttr(context, R.attr.colorTextOnPrimary)
-                R.color.default_color_text_secondary -> return getColorByAttr(context, R.attr.colorTextSecondary)
-                R.color.default_color_text_disabled -> return getColorByAttr(context, R.attr.color_text_disabled)
+                R.color.default_color_text_on_primary -> return getColorByAttr(
+                    context,
+                    R.attr.colorTextOnPrimary
+                )
+                R.color.default_color_text_secondary -> return getColorByAttr(
+                    context,
+                    R.attr.colorTextSecondary
+                )
+                R.color.default_color_text_disabled -> return getColorByAttr(
+                    context,
+                    R.attr.color_text_disabled
+                )
                 R.color.default_color_divider -> return getColorByAttr(context, R.attr.colorDivider)
-                R.color.default_color_swipe_refresh_view_background -> return getColorByAttr(context, R.attr.color_swipe_refresh_layout_background)
+                R.color.default_color_swipe_refresh_view_background -> return getColorByAttr(
+                    context,
+                    R.attr.color_swipe_refresh_layout_background
+                )
             }
             return context.getColorCompat(colorId)
         }
+    }
+
+    override fun getAppContext(): Context {
+        return this
+    }
+
+    override fun launchUrl(url: String) {
+        launchUrl(this, url)
     }
 }
