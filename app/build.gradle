@@ -133,7 +133,7 @@ dependencies {
     implementation "com.zhihu.android:matisse:0.5.3-beta3"
     implementation "com.yanzhenjie:permission:2.0.3"
     implementation "com.gyf.immersionbar:immersionbar:3.0.0"
-    implementation "com.flurry.android:analytics:12.13.0"
+    implementation "com.flurry.android:analytics:13.0.0"
     implementation "androidx.palette:palette-ktx:1.0.0"
 
     implementation "com.github.yalantis:ucrop:2.2.7"
