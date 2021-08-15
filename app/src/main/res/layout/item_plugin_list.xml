@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.huanchengfly.tieba.post.widgets.theme.TintLinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:background="@drawable/bg_radius_10dp"
+    app:backgroundTint="@color/default_color_card">
+
+    <LinearLayout
+        android:gravity="center_vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <com.huanchengfly.tieba.post.widgets.theme.TintTextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/plugin_name"
+                app:tint="@color/default_color_text"
+                android:textStyle="bold"
+                android:textSize="16sp"
+                android:singleLine="true"
+                tools:text="插件名称" />
+
+            <com.huanchengfly.tieba.post.widgets.theme.TintTextView
+                android:layout_marginTop="4dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/plugin_info"
+                app:tint="@color/default_color_text_secondary"
+                android:textSize="14sp"
+                android:singleLine="true"
+                tools:text="v1.0 · 作者 huanchengfly" />
+
+        </LinearLayout>
+
+        <com.huanchengfly.tieba.post.widgets.theme.TintSwitch
+            style="@style/Widget.Switch"
+            android:minHeight="0dp"
+            android:id="@+id/plugin_status"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+
+    <com.huanchengfly.tieba.post.widgets.theme.TintTextView
+        android:layout_marginTop="16dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/plugin_desc"
+        app:tint="@color/default_color_text_secondary"
+        android:textSize="14sp"
+        tools:text="这是一个示例插件" />
+
+</com.huanchengfly.tieba.post.widgets.theme.TintLinearLayout>

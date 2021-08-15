@@ -30,6 +30,11 @@ object PluginManager {
         get() = SharedPreferencesUtil.get(SP_PLUGINS)
 
     init {
+        reloadPluginMenu()
+    }
+
+    private fun reloadPluginMenu() {
+        registeredPluginMenuItems.clear()
         listOf(
             MENU_USER_ACTIVITY,
             MENU_NONE
@@ -56,7 +61,6 @@ object PluginManager {
     }
 
     fun <Data> performPluginMenuClick(
-        context: Context,
         menuId: String,
         itemId: Int,
         data: Data
@@ -67,7 +71,7 @@ object PluginManager {
             return false
         }
         return try {
-            (item as PluginMenuItem<Data>).callback!!.onClick(context, data)
+            (item as PluginMenuItem<Data>).callback!!.onClick(data)
             true
         } catch (e: Exception) {
             false
@@ -132,10 +136,11 @@ object PluginManager {
             destroyPlugin(it)
         }
         pluginInstances.clear()
+        reloadPluginMenu()
         reloadPluginManifests()
         pluginManifests.forEach {
             try {
-                if (!it.pluginCreated && preferences.getBoolean("${it.id}_enabled", true)) {
+                if (!it.pluginCreated && preferences.getBoolean("${it.id}_enabled", false)) {
                     val pluginInstance = createPlugin(it)
                     if (pluginInstance != null) {
                         pluginInstances.add(pluginInstance)
@@ -163,7 +168,7 @@ class PluginMenuItem<Data>(
     val callback: ClickCallback<Data>? = null
 ) {
     interface ClickCallback<Data> {
-        fun onClick(context: Context, data: Data)
+        fun onClick(data: Data)
     }
 
     override fun equals(other: Any?): Boolean {

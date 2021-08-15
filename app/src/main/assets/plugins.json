@@ -4,6 +4,7 @@
       "id": "CommentLookup",
       "name": "发言查询",
       "desc": "使用第三方工具箱查询用户过往发言",
+      "author": "huanchengfly",
       "version": "1.0",
       "main_class": "com.huanchengfly.tieba.post.plugins.PluginCommentLookup"
     }

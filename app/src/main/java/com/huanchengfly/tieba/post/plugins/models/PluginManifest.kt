@@ -7,6 +7,7 @@ data class PluginManifest(
     val name: String,
     val desc: String,
     val version: String,
+    val author: String,
     @SerializedName("main_class")
     val mainClass: String
 )

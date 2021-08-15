@@ -219,7 +219,6 @@ class UserActivity : BaseActivity() {
             }
         }
         return if (PluginManager.performPluginMenuClick(
-                this,
                 PluginManager.MENU_USER_ACTIVITY,
                 item.itemId,
                 profileBean

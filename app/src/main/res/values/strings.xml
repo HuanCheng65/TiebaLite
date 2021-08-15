@@ -466,4 +466,6 @@
     <string name="title_theme_translucent">透明主题</string>
     <string name="title_theme_custom">自定义</string>
     <string name="plugin_comment_lookup_menu">查询发言</string>
+    <string name="title_plugin_manage">附加功能管理</string>
+    <string name="template_plugin_info">v%1$s · 作者 %2$s</string>
 </resources>

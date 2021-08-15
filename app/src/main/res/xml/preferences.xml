@@ -121,6 +121,16 @@
             android:title="@string/settings_forum_fab_function" />
 
         <Preference
+            android:icon="@drawable/ic_round_extension"
+            android:key="plugin_manage"
+            android:title="@string/title_plugin_manage">
+            <intent
+                android:targetPackage="com.huanchengfly.tieba.post"
+                android:targetClass="com.huanchengfly.tieba.post.activities.PluginManageActivity"
+                android:action="android.intent.action.VIEW" />
+        </Preference>
+
+        <Preference
             android:enabled="false"
             android:layout="@layout/layout_preference_bottom" />
     </androidx.preference.PreferenceCategory>

@@ -173,7 +173,7 @@ class BaseApplication : Application(), IApp {
             override fun onActivitySaveInstanceState(activity: Activity, outState: Bundle) {}
             override fun onActivityDestroyed(activity: Activity) {}
         })
-        CrashUtil.CrashHandler.getInstance().init(this)
+        if (BuildConfig.DEBUG) CrashUtil.CrashHandler.getInstance().init(this)
         PluginManager.init(this)
     }
 
@@ -472,6 +472,6 @@ class BaseApplication : Application(), IApp {
     }
 
     override fun launchUrl(url: String) {
-        launchUrl(this, url)
+        launchUrl(mActivityList.lastOrNull() ?: this, url)
     }
 }

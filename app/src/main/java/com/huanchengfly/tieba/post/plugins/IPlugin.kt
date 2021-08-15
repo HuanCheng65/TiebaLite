@@ -33,11 +33,11 @@ inline fun <reified Data> IPlugin.registerMenuItem(
 inline fun <reified Data> IPlugin.registerMenuItem(
     id: String,
     title: String,
-    crossinline callback: (Context, Data) -> Unit
+    crossinline callback: (Data) -> Unit
 ) {
     registerMenuItem(id, title, object : ClickCallback<Data> {
-        override fun onClick(context: Context, data: Data) {
-            callback.invoke(context, data)
+        override fun onClick(data: Data) {
+            callback.invoke(data)
         }
     })
 }

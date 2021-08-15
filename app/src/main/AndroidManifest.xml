@@ -39,17 +39,27 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:largeHeap="true"
-        android:usesCleartextTraffic="true"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
+        android:usesCleartextTraffic="true"
         tools:ignore="UnusedAttribute">
-        <activity android:name=".activities.HotMessageListActivity" />
+        <activity
+            android:name=".activities.PluginManageActivity"
+            android:configChanges="screenSize|screenLayout|orientation|smallestScreenSize|keyboardHidden"
+            android:windowSoftInputMode="adjustResize"
+            android:label="@string/title_plugin_manage" />
+
+        <activity
+            android:name=".activities.HotMessageListActivity"
+            android:configChanges="screenSize|screenLayout|orientation|smallestScreenSize|keyboardHidden"
+            android:windowSoftInputMode="adjustResize" />
+
         <activity
             android:name=".activities.PhotoViewActivity"
             android:configChanges="screenSize|screenLayout|orientation|smallestScreenSize|keyboardHidden"
-            android:theme="@style/AppTheme.PhotoView"
-            android:windowSoftInputMode="adjustResize" />
+            android:windowSoftInputMode="adjustResize"
+            android:theme="@style/AppTheme.PhotoView" />
 
         <receiver
             android:name=".receivers.BootCompleteSignReceiver"
@@ -122,8 +132,8 @@
 
         <activity
             android:name=".activities.HistoryActivity"
-            android:label="@string/title_history"
             android:configChanges="screenSize|screenLayout|orientation|smallestScreenSize|keyboardHidden"
+            android:label="@string/title_history"
             android:windowSoftInputMode="adjustResize" />
         <activity android:name=".activities.OKSignActivity">
             <intent-filter>
@@ -199,8 +209,8 @@
             android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".activities.UserCollectActivity"
-            android:label="@string/title_my_collect"
             android:configChanges="screenSize|screenLayout|orientation|smallestScreenSize|keyboardHidden"
+            android:label="@string/title_my_collect"
             android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".activities.MessageActivity"
@@ -236,8 +246,8 @@
             android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".activities.ForumInfoActivity"
-            android:label="@string/title_forum_info"
             android:configChanges="screenSize|screenLayout|orientation|smallestScreenSize|keyboardHidden"
+            android:label="@string/title_forum_info"
             android:windowSoftInputMode="adjustResize" />
         <activity
             android:name="com.yalantis.ucrop.UCropActivity"
@@ -250,8 +260,8 @@
         <activity
             android:name=".activities.AppThemeActivity"
             android:configChanges="screenSize|screenLayout|orientation|smallestScreenSize|keyboardHidden"
-            android:windowSoftInputMode="adjustResize"
-            android:label="@string/title_theme_settings" />
+            android:label="@string/title_theme_settings"
+            android:windowSoftInputMode="adjustResize" />
 
         <receiver android:name=".receivers.AutoSignAlarm" />
 
