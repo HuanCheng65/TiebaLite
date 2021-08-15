@@ -30,6 +30,7 @@ import com.huanchengfly.tieba.post.fragments.UserPostFragment
 import com.huanchengfly.tieba.post.goToActivity
 import com.huanchengfly.tieba.post.models.PhotoViewBean
 import com.huanchengfly.tieba.post.models.database.Block
+import com.huanchengfly.tieba.post.plugins.PluginManager
 import com.huanchengfly.tieba.post.utils.AccountUtil
 import com.huanchengfly.tieba.post.utils.ImageUtil
 import com.huanchengfly.tieba.post.utils.StatusBarUtil
@@ -187,6 +188,7 @@ class UserActivity : BaseActivity() {
             menu.findItem(R.id.menu_block).isVisible = true
             menu.findItem(R.id.menu_edit_info).isVisible = false
         }
+        PluginManager.initPluginMenu(menu, PluginManager.MENU_USER_ACTIVITY)
         return super.onCreateOptionsMenu(menu)
     }
 
@@ -205,7 +207,8 @@ class UserActivity : BaseActivity() {
                         .saveAsync()
                         .listen { success: Boolean ->
                             if (success) {
-                                Toast.makeText(this, R.string.toast_add_success, Toast.LENGTH_SHORT).show()
+                                Toast.makeText(this, R.string.toast_add_success, Toast.LENGTH_SHORT)
+                                    .show()
                             }
                         }
                 return true
@@ -215,7 +218,17 @@ class UserActivity : BaseActivity() {
                 return true
             }
         }
-        return super.onOptionsItemSelected(item)
+        return if (PluginManager.performPluginMenuClick(
+                this,
+                PluginManager.MENU_USER_ACTIVITY,
+                item.itemId,
+                profileBean
+            )
+        ) {
+            true
+        } else {
+            super.onOptionsItemSelected(item)
+        }
     }
 
     @OnClick(R.id.user_center_action_btn)

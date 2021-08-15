@@ -2,9 +2,11 @@ package com.huanchengfly.tieba.post.plugins
 
 import android.content.Context
 import android.content.SharedPreferences
+import android.view.Menu
 import com.huanchengfly.tieba.post.api.models.ProfileBean
 import com.huanchengfly.tieba.post.fromJson
 import com.huanchengfly.tieba.post.plugins.interfaces.IApp
+import com.huanchengfly.tieba.post.plugins.models.BuiltInPlugins
 import com.huanchengfly.tieba.post.plugins.models.PluginManifest
 import com.huanchengfly.tieba.post.utils.AssetUtil
 import com.huanchengfly.tieba.post.utils.SharedPreferencesUtil
@@ -19,7 +21,7 @@ object PluginManager {
     val pluginManifests: MutableList<PluginManifest> = mutableListOf()
     val pluginInstances: MutableList<IPlugin> = mutableListOf()
 
-    val registeredPluginMenuItems: MutableMap<String, MutableMap<String, PluginMenuItem<*>>> =
+    val registeredPluginMenuItems: MutableMap<String, MutableMap<Int, PluginMenuItem<*>>> =
         mutableMapOf()
 
     val context: Context
@@ -37,13 +39,39 @@ object PluginManager {
     }
 
     fun <Data> registerMenuItem(pluginInstance: IPlugin, menuItem: PluginMenuItem<Data>) {
-        registeredPluginMenuItems[menuItem.menuId]!!["${pluginInstance.manifest.id}_${menuItem.id}"] =
+        registeredPluginMenuItems[menuItem.menuId]!!["${pluginInstance.manifest.id}_${menuItem.id}".hashCode()] =
             menuItem
     }
 
     fun init(app: IApp) {
         appInstance = app
         reloadPlugins()
+    }
+
+    fun initPluginMenu(menu: Menu, menuId: String) {
+        val menuItems = registeredPluginMenuItems[menuId]!!
+        menuItems.forEach {
+            menu.add(0, it.key, 0, it.value.title)
+        }
+    }
+
+    fun <Data> performPluginMenuClick(
+        context: Context,
+        menuId: String,
+        itemId: Int,
+        data: Data
+    ): Boolean {
+        val menuItems = registeredPluginMenuItems[menuId]!!
+        val item = menuItems[itemId]
+        if (item?.callback == null) {
+            return false
+        }
+        return try {
+            (item as PluginMenuItem<Data>).callback!!.onClick(context, data)
+            true
+        } catch (e: Exception) {
+            false
+        }
     }
 
     fun enablePlugin(id: String) {
@@ -94,7 +122,7 @@ object PluginManager {
     fun reloadPluginManifests() {
         pluginManifests.clear()
         pluginManifests.addAll(
-            AssetUtil.getStringFromAsset(context, "plugins.json").fromJson<List<PluginManifest>>()
+            AssetUtil.getStringFromAsset(context, "plugins.json").fromJson<BuiltInPlugins>().plugins
         )
     }
 
@@ -107,7 +135,7 @@ object PluginManager {
         reloadPluginManifests()
         pluginManifests.forEach {
             try {
-                if (it.pluginCreated && preferences.getBoolean("${it.id}_enabled", true)) {
+                if (!it.pluginCreated && preferences.getBoolean("${it.id}_enabled", true)) {
                     val pluginInstance = createPlugin(it)
                     if (pluginInstance != null) {
                         pluginInstances.add(pluginInstance)
@@ -135,7 +163,7 @@ class PluginMenuItem<Data>(
     val callback: ClickCallback<Data>? = null
 ) {
     interface ClickCallback<Data> {
-        fun onClick(data: Data)
+        fun onClick(context: Context, data: Data)
     }
 
     override fun equals(other: Any?): Boolean {

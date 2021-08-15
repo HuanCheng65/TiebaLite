@@ -11,7 +11,6 @@ import android.graphics.Color
 import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Bundle
-import android.text.TextUtils
 import android.view.View
 import android.widget.FrameLayout
 import android.widget.ImageView
@@ -41,26 +40,25 @@ class BaseApplication : Application(), IApp {
         instance = this
         super.onCreate()
         ThemeUtils.init(ThemeDelegate)
-        PluginManager.init(this)
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
         LitePal.initialize(this)
         FlurryAgent.Builder()
                 .withCaptureUncaughtExceptions(true)
                 .build(this, "ZMRX6W76WNF95ZHT857X")
         registerActivityLifecycleCallbacks(object : ActivityLifecycleCallbacks {
-            private var clipBoardHash: String? = null
+            private var clipBoardHash: Int = 0
             private fun updateClipBoardHashCode() {
                 clipBoardHash = getClipBoardHash()
             }
 
-            private fun getClipBoardHash(): String? {
+            private fun getClipBoardHash(): Int {
                 val cm = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
                 val data = cm.primaryClip
                 if (data != null) {
                     val item = data.getItemAt(0)
-                    return item.toString().toMD5()
+                    return item.hashCode()
                 }
-                return null
+                return 0
             }
 
             private val clipBoard: String
@@ -117,8 +115,9 @@ class BaseApplication : Application(), IApp {
             }
 
             override fun onActivityResumed(activity: Activity) {
-                if (!TextUtils.equals(clipBoardHash, getClipBoardHash())) {
-                    @RegExp val regex = "((http|https)://)(([a-zA-Z0-9._-]+\\.[a-zA-Z]{2,6})|([0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}))(:[0-9]{1,4})*(/[a-zA-Z0-9&%_./-~-]*)?"
+                if (clipBoardHash != getClipBoardHash()) {
+                    @RegExp val regex =
+                        "((http|https)://)(([a-zA-Z0-9._-]+\\.[a-zA-Z]{2,6})|([0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}))(:[0-9]{1,4})*(/[a-zA-Z0-9&%_./-~-]*)?"
                     val pattern = Pattern.compile(regex)
                     val matcher = pattern.matcher(clipBoard)
                     if (matcher.find()) {
@@ -127,7 +126,8 @@ class BaseApplication : Application(), IApp {
                         if (isTiebaDomain(uri.host)) {
                             val previewView = Util.inflate(activity, R.layout.preview_url)
                             if (isForumUrl(uri)) {
-                                updatePreviewView(activity, previewView, PreviewInfo()
+                                updatePreviewView(
+                                    activity, previewView, PreviewInfo()
                                         .setIconRes(R.drawable.ic_round_forum)
                                         .setTitle(activity.getString(R.string.title_forum, getForumName(uri)))
                                         .setSubtitle(activity.getString(R.string.text_loading))
@@ -174,6 +174,7 @@ class BaseApplication : Application(), IApp {
             override fun onActivityDestroyed(activity: Activity) {}
         })
         CrashUtil.CrashHandler.getInstance().init(this)
+        PluginManager.init(this)
     }
 
     /**
