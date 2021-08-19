@@ -130,6 +130,7 @@
             android:windowSoftInputMode="adjustResize" />
 
         <service
+            android:process=":oksign"
             android:name=".services.OKSignService"
             android:exported="false" />
 
@@ -138,7 +139,11 @@
             android:configChanges="screenSize|screenLayout|orientation|smallestScreenSize|keyboardHidden"
             android:label="@string/title_history"
             android:windowSoftInputMode="adjustResize" />
-        <activity android:name=".activities.OKSignActivity">
+
+        <activity
+            android:name=".activities.OKSignActivity"
+            android:excludeFromRecents="true"
+            android:exported="true">
             <intent-filter>
                 <action android:name="com.huanchengfly.tieba.post.action.OKSIGN" />
             </intent-filter>
