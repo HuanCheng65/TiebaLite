@@ -9,16 +9,16 @@ import java.util.*
 object DateTimeUtils {
     @JvmStatic
     fun getRelativeTimeString(
-            context: Context,
-            timestampString: String
+        context: Context,
+        timestampString: String
     ): String {
         return getRelativeTimeString(context, fixTimestamp(timestampString))
     }
 
     @JvmStatic
     fun getRelativeTimeString(
-            context: Context,
-            timestamp: Long
+        context: Context,
+        timestamp: Long
     ): String {
         val calendar = Calendar.getInstance().apply {
             timeInMillis = fixTimestamp(timestamp)
@@ -30,15 +30,27 @@ object DateTimeUtils {
                     if (calendar.get(Calendar.DAY_OF_MONTH) == currentCalendar.get(Calendar.DAY_OF_MONTH)) {
                         if (calendar.get(Calendar.HOUR_OF_DAY) == currentCalendar.get(Calendar.HOUR_OF_DAY)) {
                             if (calendar.get(Calendar.MINUTE) == currentCalendar.get(Calendar.MINUTE)) {
-                                context.getString(R.string.relative_date_second, currentCalendar.get(Calendar.SECOND) - calendar.get(Calendar.SECOND))
+                                context.getString(
+                                    R.string.relative_date_second,
+                                    currentCalendar.get(Calendar.SECOND) - calendar.get(Calendar.SECOND)
+                                )
                             } else {
-                                context.getString(R.string.relative_date_minute, currentCalendar.get(Calendar.MINUTE) - calendar.get(Calendar.MINUTE))
+                                context.getString(
+                                    R.string.relative_date_minute,
+                                    currentCalendar.get(Calendar.MINUTE) - calendar.get(Calendar.MINUTE)
+                                )
                             }
                         } else {
-                            context.getString(R.string.relative_date_hour, currentCalendar.get(Calendar.HOUR_OF_DAY) - calendar.get(Calendar.HOUR_OF_DAY))
+                            context.getString(
+                                R.string.relative_date_hour,
+                                currentCalendar.get(Calendar.HOUR_OF_DAY) - calendar.get(Calendar.HOUR_OF_DAY)
+                            )
                         }
                     } else {
-                        context.getString(R.string.relative_date_month, currentCalendar.get(Calendar.DAY_OF_MONTH) - calendar.get(Calendar.DAY_OF_MONTH))
+                        context.getString(
+                            R.string.relative_date_month,
+                            currentCalendar.get(Calendar.DAY_OF_MONTH) - calendar.get(Calendar.DAY_OF_MONTH)
+                        )
                     }
                 } else {
                     calendar.format(context.getString(R.string.pattern_date_short))

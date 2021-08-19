@@ -1,99 +1,106 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
     <androidx.cardview.widget.CardView
-        app:cardElevation="0dp"
-        app:contentPadding="8dp"
-        app:cardBackgroundColor="@color/transparent"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        app:cardBackgroundColor="@color/transparent"
+        app:cardElevation="0dp"
+        app:contentPadding="8dp">
+
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
+
             <ImageView
-                android:layout_alignParentStart="true"
                 android:id="@+id/permission_icon_storage"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_alignParentStart="true"
                 android:layout_centerVertical="true"
                 android:src="@drawable/ic_round_sd_storage"
-                android:tint="@color/default_color_accent"
-                android:layout_width="30dp"
-                android:layout_height="30dp" />
+                android:tint="@color/default_color_accent" />
 
             <TextView
+                android:id="@+id/permission_title_storage"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:layout_marginBottom="4dp"
+                android:layout_toEndOf="@+id/permission_icon_storage"
                 android:text="@string/permission_name_storage"
                 android:textColor="@color/default_color_text"
-                android:id="@+id/permission_title_storage"
-                android:layout_toEndOf="@+id/permission_icon_storage"
-                android:textStyle="bold"
                 android:textSize="15sp"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:textStyle="bold" />
 
             <TextView
+                android:id="@+id/permission_subtitle_storage"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/permission_title_storage"
                 android:layout_alignStart="@id/permission_title_storage"
-                android:textSize="13sp"
+                android:layout_toEndOf="@+id/permission_icon_storage"
                 android:text="@string/tip_permission_storage"
                 android:textColor="@color/default_color_text_secondary"
-                android:id="@+id/permission_subtitle_storage"
-                android:layout_below="@id/permission_title_storage"
-                android:layout_toEndOf="@+id/permission_icon_storage"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:textSize="13sp" />
         </RelativeLayout>
     </androidx.cardview.widget.CardView>
+
     <androidx.cardview.widget.CardView
-        android:layout_marginTop="16dp"
-        app:cardElevation="0dp"
-        app:contentPadding="8dp"
-        app:cardBackgroundColor="@color/transparent"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        app:cardBackgroundColor="@color/transparent"
+        app:cardElevation="0dp"
+        app:contentPadding="8dp">
+
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
+
             <ImageView
-                android:layout_alignParentStart="true"
                 android:id="@+id/permission_icon_phone"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_alignParentStart="true"
                 android:layout_centerVertical="true"
                 android:src="@drawable/ic_round_phone"
-                android:tint="@color/default_color_accent"
-                android:layout_width="30dp"
-                android:layout_height="30dp" />
+                android:tint="@color/default_color_accent" />
 
             <TextView
+                android:id="@+id/permission_title_phone"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:layout_marginBottom="4dp"
+                android:layout_toEndOf="@+id/permission_icon_phone"
                 android:text="@string/permission_name_phone"
                 android:textColor="@color/default_color_text"
-                android:id="@+id/permission_title_phone"
-                android:layout_toEndOf="@+id/permission_icon_phone"
-                android:textStyle="bold"
                 android:textSize="15sp"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:textStyle="bold" />
 
             <TextView
+                android:id="@+id/permission_subtitle_phone"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/permission_title_phone"
                 android:layout_alignStart="@id/permission_title_phone"
-                android:textSize="13sp"
+                android:layout_toEndOf="@+id/permission_title_phone"
                 android:text="@string/tip_permission_phone"
                 android:textColor="@color/default_color_text_secondary"
-                android:id="@+id/permission_subtitle_phone"
-                android:layout_below="@id/permission_title_phone"
-                android:layout_toEndOf="@+id/permission_title_phone"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:textSize="13sp" />
         </RelativeLayout>
     </androidx.cardview.widget.CardView>
+
     <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:padding="16dp"
-        android:textSize="14sp"
         android:text="@string/tip_ask_permission"
         android:textColor="@color/default_color_text_secondary"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:textSize="14sp" />
 </LinearLayout>

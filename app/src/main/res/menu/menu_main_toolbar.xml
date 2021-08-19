@@ -3,14 +3,14 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/menu_sign"
+        android:icon="@drawable/ic_oksign"
         android:orderInCategory="1"
         android:title="@string/title_oksign"
-        android:icon="@drawable/ic_oksign"
         app:showAsAction="ifRoom" />
     <item
         android:id="@+id/menu_switch_list"
+        android:icon="@drawable/ic_outline_view_agenda"
         android:orderInCategory="2"
         android:title="@string/title_switch_list_single"
-        android:icon="@drawable/ic_outline_view_agenda"
         app:showAsAction="ifRoom" />
 </menu>

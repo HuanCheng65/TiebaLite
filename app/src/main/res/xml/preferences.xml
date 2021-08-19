@@ -1,20 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?><!--suppress AndroidElementNotAllowed -->
 <androidx.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
-    <androidx.preference.PreferenceCategory
-        android:title="@string/title_account">
+    <androidx.preference.PreferenceCategory android:title="@string/title_account">
         <ListPreference
             android:icon="@drawable/ic_round_account_circle"
             android:key="switch_account"
             android:title="@string/title_switch_account" />
         <Preference
             android:icon="@drawable/ic_round_add_circle_green"
-            android:title="@string/title_new_account"
-            android:summary="@string/tip_account_error">
+            android:summary="@string/tip_account_error"
+            android:title="@string/title_new_account">
             <intent
-                android:targetPackage="com.huanchengfly.tieba.post"
+                android:action="android.intent.action.VIEW"
                 android:targetClass="com.huanchengfly.tieba.post.activities.LoginActivity"
-                android:action="android.intent.action.VIEW" />
+                android:targetPackage="com.huanchengfly.tieba.post" />
         </Preference>
         <Preference
             android:icon="@drawable/ic_close_circle_red"
@@ -23,8 +22,8 @@
         <Preference
             android:icon="@drawable/ic_document_green"
             android:key="copy_bduss"
-            android:title="@string/title_copy_bduss"
-            android:summary="@string/summary_copy_bduss" />
+            android:summary="@string/summary_copy_bduss"
+            android:title="@string/title_copy_bduss" />
         <EditTextPreference
             android:icon="@drawable/ic_round_more_blue"
             android:key="little_tail"
@@ -50,75 +49,75 @@
 
     <androidx.preference.PreferenceCategory android:title="@string/title_settings_read_habit">
         <ListPreference
-            android:icon="@drawable/ic_round_photo_size_select_actual"
-            android:key="image_load_type"
+            android:defaultValue="0"
             android:entries="@array/image_load_type_entries"
             android:entryValues="@array/image_load_type_entry_values"
-            android:defaultValue="0"
+            android:icon="@drawable/ic_round_photo_size_select_actual"
+            android:key="image_load_type"
             android:title="@string/title_settings_image_load_type" />
 
         <ListPreference
+            android:defaultValue="0"
             android:entries="@array/sort_type_entries"
             android:entryValues="@array/sort_type_entry_values"
-            android:title="@string/title_settings_default_sort_type"
-            android:summaryOff="@string/summary_default_sort_type"
-            android:defaultValue="0"
+            android:icon="@drawable/ic_round_calendar_view_day"
             android:key="default_sort_type"
-            android:icon="@drawable/ic_round_calendar_view_day" />
+            android:summaryOff="@string/summary_default_sort_type"
+            android:title="@string/title_settings_default_sort_type" />
 
         <SwitchPreference
+            android:defaultValue="true"
             android:icon="@drawable/ic_quick_yellow"
-            android:defaultValue="true"
             android:key="showShortcutInThread"
-            android:title="@string/settings_show_shortcut"
             android:summaryOff="@string/tip_show_shortcut_in_thread"
-            android:summaryOn="@string/tip_show_shortcut_in_thread_on" />
+            android:summaryOn="@string/tip_show_shortcut_in_thread_on"
+            android:title="@string/settings_show_shortcut" />
 
         <SwitchPreference
+            android:defaultValue="true"
             android:icon="@drawable/ic_round_star_yellow"
-            android:defaultValue="true"
             android:key="collect_thread_see_lz"
-            android:title="@string/settings_collect_thread_see_lz"
             android:summaryOff="@string/tip_collect_thread_see_lz"
-            android:summaryOn="@string/tip_collect_thread_see_lz_on" />
+            android:summaryOn="@string/tip_collect_thread_see_lz_on"
+            android:title="@string/settings_collect_thread_see_lz" />
 
         <SwitchPreference
-            android:icon="@drawable/ic_arrow_dropup_circle"
             android:defaultValue="true"
+            android:icon="@drawable/ic_arrow_dropup_circle"
             android:key="show_top_forum_in_normal_list"
-            android:title="@string/title_settings_show_top_forum_in_normal_list"
-            android:summary="@string/summary_show_top_forum_in_normal_list" />
+            android:summary="@string/summary_show_top_forum_in_normal_list"
+            android:title="@string/title_settings_show_top_forum_in_normal_list" />
 
         <SwitchPreference
-            android:icon="@drawable/ic_round_verified"
             android:defaultValue="false"
+            android:icon="@drawable/ic_round_verified"
             android:key="show_both_username_and_nickname"
             android:title="@string/title_show_both_username_and_nickname" />
 
         <SwitchPreference
-            android:icon="@drawable/ic_round_hourglass_full"
             android:defaultValue="true"
+            android:icon="@drawable/ic_round_hourglass_full"
             android:key="loadPictureWhenScroll"
             android:title="@string/title_load_picture_when_scroll" />
 
         <SwitchPreference
-            android:icon="@drawable/ic_round_view_carousel_white"
             android:defaultValue="false"
+            android:icon="@drawable/ic_round_view_carousel_white"
             android:key="homePageScroll"
             android:title="@string/title_home_page_scroll" />
 
         <SwitchPreference
-            android:icon="@drawable/ic_round_whatshot"
             android:defaultValue="false"
+            android:icon="@drawable/ic_round_whatshot"
             android:key="hideHotMessageList"
             android:title="@string/title_hide_hot_message_list" />
 
         <ListPreference
-            android:entryValues="@array/forum_fab_function_values"
-            android:entries="@array/forum_fab_function_name_values"
             android:defaultValue="post"
-            android:key="forumFabFunction"
+            android:entries="@array/forum_fab_function_name_values"
+            android:entryValues="@array/forum_fab_function_values"
             android:icon="@drawable/ic_round_exit_to_app"
+            android:key="forumFabFunction"
             android:title="@string/settings_forum_fab_function" />
 
         <Preference
@@ -126,9 +125,9 @@
             android:key="plugin_manage"
             android:title="@string/title_plugin_manage">
             <intent
-                android:targetPackage="com.huanchengfly.tieba.post"
+                android:action="android.intent.action.VIEW"
                 android:targetClass="com.huanchengfly.tieba.post.activities.PluginManageActivity"
-                android:action="android.intent.action.VIEW" />
+                android:targetPackage="com.huanchengfly.tieba.post" />
         </Preference>
 
         <Preference
@@ -142,57 +141,57 @@
             android:key="font_size"
             android:title="@string/title_custom_font_size">
             <intent
-                android:targetPackage="com.huanchengfly.tieba.post"
+                android:action="android.intent.action.VIEW"
                 android:targetClass="com.huanchengfly.tieba.post.activities.AppFontSizeActivity"
-                android:action="android.intent.action.VIEW" />
+                android:targetPackage="com.huanchengfly.tieba.post" />
         </Preference>
 
         <ListPreference
-            android:icon="@drawable/ic_round_brightness_2_green"
-            android:key="dark_theme"
+            android:defaultValue="dark"
             android:entries="@array/dark_theme_names"
             android:entryValues="@array/dark_theme_values"
-            android:defaultValue="dark"
+            android:icon="@drawable/ic_round_brightness_2_green"
+            android:key="dark_theme"
             android:title="@string/settings_night_mode" />
 
         <SwitchPreference
-            android:icon="@drawable/ic_round_brightness_auto"
             android:defaultValue="true"
+            android:icon="@drawable/ic_round_brightness_auto"
             android:key="follow_system_night"
             android:title="@string/title_settings_follow_system_night" />
 
         <SwitchPreference
-            android:icon="@drawable/ic_beaker"
             android:defaultValue="true"
+            android:icon="@drawable/ic_beaker"
             android:key="status_bar_darker"
-            android:title="@string/settings_status_bar_darker"
-            android:summary="@string/tip_status_bar_darker" />
+            android:summary="@string/tip_status_bar_darker"
+            android:title="@string/settings_status_bar_darker" />
 
         <SwitchPreference
-            android:key="listItemsBackgroundIntermixed"
             android:defaultValue="true"
+            android:key="listItemsBackgroundIntermixed"
             android:title="@string/settings_list_items_background_intermixed" />
 
         <SwitchPreference
+            android:defaultValue="false"
             android:icon="@drawable/ic_forum_single_blue"
             android:key="listSingle"
-            android:defaultValue="false"
             android:title="@string/settings_forum_single" />
 
         <SwitchPreference
-            android:icon="@drawable/ic_round_explore"
             android:defaultValue="false"
+            android:icon="@drawable/ic_round_explore"
             android:key="hideExplore"
             android:title="@string/title_hide_explore" />
 
         <androidx.preference.SeekBarPreference
-            android:icon="@drawable/ic_round_rounded_corner"
-            app:min="0"
-            android:max="16"
-            app:showSeekBarValue="true"
             android:defaultValue="8"
+            android:icon="@drawable/ic_round_rounded_corner"
             android:key="radius"
-            android:title="@string/title_preference_radius" />
+            android:max="16"
+            android:title="@string/title_preference_radius"
+            app:min="0"
+            app:showSeekBarValue="true" />
 
         <Preference
             android:enabled="false"
@@ -201,27 +200,27 @@
 
     <androidx.preference.PreferenceCategory android:title="@string/title_sign_preference">
         <SwitchPreference
-            android:icon="@drawable/ic_round_speed"
-            android:summaryOn="@string/summary_oksign_slow_mode_on"
-            android:summaryOff="@string/summary_oksign_slow_mode"
             android:defaultValue="true"
+            android:icon="@drawable/ic_round_speed"
             android:key="oksign_slow_mode"
+            android:summaryOff="@string/summary_oksign_slow_mode"
+            android:summaryOn="@string/summary_oksign_slow_mode_on"
             android:title="@string/title_oksign_slow_mode" />
 
         <SwitchPreference
-            android:icon="@drawable/ic_round_offline_pin_blue"
-            android:summaryOn="@string/summary_auto_sign_on"
-            android:summaryOff="@string/summary_auto_sign"
             android:defaultValue="false"
+            android:icon="@drawable/ic_round_offline_pin_blue"
             android:key="auto_sign"
+            android:summaryOff="@string/summary_auto_sign"
+            android:summaryOn="@string/summary_auto_sign_on"
             android:title="@string/title_auto_sign" />
 
         <com.huanchengfly.tieba.post.components.prefs.TimePickerPreference
+            android:defaultValue="09:00"
             android:dependency="auto_sign"
             android:icon="@drawable/ic_round_watch_later_purple"
             android:key="auto_sign_time"
-            android:title="@string/title_auto_sign_time"
-            android:defaultValue="09:00" />
+            android:title="@string/title_auto_sign_time" />
 
         <Preference
             android:layout="@layout/layout_preference_dense"
@@ -234,27 +233,27 @@
 
     <androidx.preference.PreferenceCategory android:title="@string/title_settings_about">
         <SwitchPreference
-            android:icon="@drawable/ic_round_bug_report_blue"
             android:defaultValue="false"
+            android:icon="@drawable/ic_round_bug_report_blue"
             android:key="check_beta_update"
-            android:title="@string/title_check_beta_update"
-            android:summary="@string/tip_check_beta_update" />
+            android:summary="@string/tip_check_beta_update"
+            android:title="@string/title_check_beta_update" />
 
         <SwitchPreference
+            android:defaultValue="true"
             android:icon="@drawable/ic_chrome"
-            android:defaultValue="true"
             android:key="use_webview"
-            android:title="@string/title_use_webview"
+            android:summaryOff="@string/tip_use_webview"
             android:summaryOn="@string/tip_use_webview_on"
-            android:summaryOff="@string/tip_use_webview" />
+            android:title="@string/title_use_webview" />
 
         <SwitchPreference
-            android:icon="@drawable/ic_today"
             android:defaultValue="true"
+            android:icon="@drawable/ic_today"
             android:key="use_custom_tabs"
-            android:title="@string/title_use_custom_tabs"
+            android:summaryOff="@string/tip_use_custom_tab"
             android:summaryOn="@string/tip_use_custom_tab_on"
-            android:summaryOff="@string/tip_use_custom_tab" />
+            android:title="@string/title_use_custom_tabs" />
 
         <Preference
             android:icon="@drawable/ic_round_offline_bolt_green"
@@ -262,13 +261,13 @@
             android:title="@string/title_clear_cache" />
 
         <Preference
-            android:key="about"
             android:icon="@drawable/ic_round_info"
+            android:key="about"
             android:title="@string/title_about">
             <intent
-                android:targetPackage="com.huanchengfly.tieba.post"
+                android:action="android.intent.action.VIEW"
                 android:targetClass="com.huanchengfly.tieba.post.activities.AboutActivity"
-                android:action="android.intent.action.VIEW" />
+                android:targetPackage="com.huanchengfly.tieba.post" />
         </Preference>
 
         <Preference

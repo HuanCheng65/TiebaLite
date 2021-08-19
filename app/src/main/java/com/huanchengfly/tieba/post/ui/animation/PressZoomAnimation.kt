@@ -8,8 +8,8 @@ import com.huanchengfly.tieba.post.utils.anim.AnimSet
 import com.huanchengfly.tieba.post.utils.anim.animSet
 
 class PressZoomAnimation(
-        private var zoomRange: Float = DEFAULT_ZOOM_RANGE,
-        private var duration: Long = DEFAULT_DURATION
+    private var zoomRange: Float = DEFAULT_ZOOM_RANGE,
+    private var duration: Long = DEFAULT_DURATION
 ) : PressAnimation() {
     private var currentScaleValue: Float = 1f
         set(value) {
@@ -34,7 +34,8 @@ class PressZoomAnimation(
                         onUpdate = {
                             currentScaleValue = (it as ValueAnimator).animatedValue as Float
                         }
-                        duration = ((currentScaleValue - (1f - zoomRange)) / zoomRange * this@PressZoomAnimation.duration).toLong()
+                        duration =
+                            ((currentScaleValue - (1f - zoomRange)) / zoomRange * this@PressZoomAnimation.duration).toLong()
                         interpolator = IN_INTERPOLATOR
                     }
                 }.apply { start() }
@@ -54,7 +55,8 @@ class PressZoomAnimation(
                         onUpdate = {
                             currentScaleValue = (it as ValueAnimator).animatedValue as Float
                         }
-                        duration = ((1f - currentScaleValue) / zoomRange * this@PressZoomAnimation.duration).toLong()
+                        duration =
+                            ((1f - currentScaleValue) / zoomRange * this@PressZoomAnimation.duration).toLong()
                         interpolator = OUT_INTERPOLATOR
                     }
                 }.apply { start() }
@@ -72,8 +74,8 @@ class PressZoomAnimation(
 }
 
 fun PressAnimator.Builder.addZoomAnimation(
-        zoomRange: Float = DEFAULT_ZOOM_RANGE,
-        duration: Long = DEFAULT_DURATION
+    zoomRange: Float = DEFAULT_ZOOM_RANGE,
+    duration: Long = DEFAULT_DURATION
 ) {
     addAnimation(PressZoomAnimation(zoomRange, duration))
 }

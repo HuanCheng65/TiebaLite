@@ -1,24 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.huanchengfly.tieba.post.widgets.theme.TintRelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/footer"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:layout_marginStart="8dp"
     android:layout_marginEnd="8dp"
     android:layout_marginBottom="8dp"
     android:background="@drawable/bg_radius_8dp"
     app:backgroundTint="@color/default_color_card"
-    app:layout_srlSpinnerStyle="Translate"
-    android:id="@+id/footer"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    app:layout_srlSpinnerStyle="Translate">
 
     <com.huanchengfly.tieba.post.widgets.theme.TintTextView
-        android:layout_centerHorizontal="true"
-        android:textSize="14sp"
         android:id="@+id/footer_tip"
-        android:text="@string/tip_load_end"
-        android:gravity="center"
-        android:singleLine="true"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
+        android:layout_centerHorizontal="true"
+        android:gravity="center"
+        android:singleLine="true"
+        android:text="@string/tip_load_end"
+        android:textSize="14sp"
         app:tint="@color/default_color_text_secondary" />
 </com.huanchengfly.tieba.post.widgets.theme.TintRelativeLayout>

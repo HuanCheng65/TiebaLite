@@ -3,25 +3,27 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/menu_block"
-        android:orderInCategory="0"
         android:icon="@drawable/ic_round_remove_circle_outline"
+        android:orderInCategory="0"
         android:title="@string/title_block"
         app:showAsAction="ifRoom">
         <menu>
-            <item android:id="@+id/menu_block_black" android:title="@string/title_add_black" />
-            <item android:id="@+id/menu_block_white" android:title="@string/title_add_white" />
+            <item
+                android:id="@+id/menu_block_black"
+                android:title="@string/title_add_black" />
+            <item
+                android:id="@+id/menu_block_white"
+                android:title="@string/title_add_white" />
         </menu>
     </item>
     <item
         android:id="@+id/menu_edit_info"
         android:orderInCategory="1"
         android:title="@string/menu_edit_info"
-        app:showAsAction="never"
-        />
+        app:showAsAction="never" />
     <item
         android:id="@+id/menu_exit"
         android:orderInCategory="2"
         android:title="@string/sidebar_exit"
-        app:showAsAction="never"
-        />
+        app:showAsAction="never" />
 </menu>

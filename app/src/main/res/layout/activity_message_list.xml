@@ -8,12 +8,11 @@
     app:backgroundTint="@color/default_color_window_background"
     tools:context=".activities.MessageActivity">
 
-    <include
-        layout="@layout/layout_appbar" />
+    <include layout="@layout/layout_appbar" />
 
     <FrameLayout
         android:id="@+id/activity_message_list_content"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 </com.huanchengfly.tieba.post.widgets.theme.TintCoordinatorLayout>

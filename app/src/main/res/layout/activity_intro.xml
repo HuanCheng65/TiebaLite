@@ -1,52 +1,53 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/background"
-    android:background="@color/white"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/white"
     tools:context=".ui.intro.BaseIntroActivity">
+
     <com.huanchengfly.tieba.post.ui.intro.widgets.MyViewPager
         android:id="@+id/view_pager"
-        android:layout_alignParentTop="true"
-        android:layout_above="@id/bottom_bar"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:layout_above="@id/bottom_bar"
+        android:layout_alignParentTop="true" />
 
     <RelativeLayout
-        android:paddingStart="32dp"
-        android:paddingEnd="32dp"
-        android:padding="16dp"
-        android:elevation="4dp"
-        android:layout_alignParentBottom="true"
         android:id="@+id/bottom_bar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <com.google.android.material.button.MaterialButton
-            app:cornerRadius="18dp"
-            android:id="@+id/button_prev"
-            android:layout_alignParentStart="true"
-            android:layout_centerVertical="true"
-            android:textColor="?android:textColorSecondary"
-            style="@style/Widget.MaterialComponents.Button.TextButton"
-            android:visibility="invisible"
-            tools:visibility="visible"
-            android:text="@string/button_prev"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:elevation="4dp"
+        android:padding="16dp"
+        android:paddingStart="32dp"
+        android:paddingEnd="32dp">
 
         <com.google.android.material.button.MaterialButton
+            android:id="@+id/button_prev"
+            style="@style/Widget.MaterialComponents.Button.TextButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"
+            android:text="@string/button_prev"
+            android:textColor="?android:textColorSecondary"
+            android:visibility="invisible"
             app:cornerRadius="18dp"
+            tools:visibility="visible" />
+
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/button_next"
+            style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
+            android:text="@string/button_next_default"
             android:textColor="@color/white"
             app:backgroundTint="?colorAccent"
-            style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
-            android:text="@string/button_next_default"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            app:cornerRadius="18dp" />
     </RelativeLayout>
 </RelativeLayout>

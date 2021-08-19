@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.huanchengfly.tieba.post.widgets.theme.TintLinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/thread_list_item"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/bg_ripple"
     android:orientation="vertical"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    app:backgroundTint="@color/default_color_card"
     android:padding="16dp"
-    android:background="@drawable/bg_ripple">
+    app:backgroundTint="@color/default_color_card">
 
     <RelativeLayout
         android:id="@+id/thread_list_item_user"
@@ -22,36 +22,36 @@
             android:layout_alignParentStart="true"
             android:layout_centerVertical="true"
             app:srcCompat="@drawable/bg_placeholder_circle"
-            tools:srcCompat="@drawable/ic_splash"
-            tools:ignore="ContentDescription" />
+            tools:ignore="ContentDescription"
+            tools:srcCompat="@drawable/ic_splash" />
 
         <RelativeLayout
+            android:id="@+id/thread_list_item_user_name_holder"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_marginEnd="8dp"
-            android:id="@+id/thread_list_item_user_name_holder"
-            android:layout_toEndOf="@id/thread_list_item_user_avatar"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
+            android:layout_toEndOf="@id/thread_list_item_user_avatar">
 
             <com.huanchengfly.tieba.post.widgets.theme.TintTextView
-                android:layout_centerVertical="true"
-                android:textStyle="bold"
                 android:id="@+id/thread_list_item_user_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
                 android:layout_marginStart="8dp"
                 android:layout_marginEnd="8dp"
                 android:maxLines="1"
-                app:tint="@color/default_color_text"
                 android:textSize="@dimen/text_size_user_name"
+                android:textStyle="bold"
+                app:tint="@color/default_color_text"
                 tools:text="幻了个城fly" />
 
             <RelativeLayout
-                android:layout_centerVertical="true"
-                android:layout_toEndOf="@id/thread_list_item_user_name"
                 android:id="@+id/thread_list_item_user_status"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_toEndOf="@id/thread_list_item_user_name"
                 android:background="@drawable/bg_radius_50dp"
                 android:backgroundTint="#FFFF9800"
                 android:minWidth="28dp"
@@ -72,8 +72,8 @@
                         android:textColor="@color/white"
                         android:textSize="10dp"
                         android:textStyle="bold"
-                        tools:text="13"
-                        tools:ignore="SpUsage" />
+                        tools:ignore="SpUsage"
+                        tools:text="13" />
 
                     <TextView
                         android:id="@+id/thread_list_item_user_lz_tip"
@@ -105,21 +105,21 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="fill_vertical"
-            android:orientation="vertical"
             android:clipToPadding="false"
+            android:orientation="vertical"
             tools:layout_height="36dp" />
 
         <com.huanchengfly.tieba.post.widgets.theme.TintFloorMaterialCardView
-            android:visibility="gone"
-            tools:visibility="visible"
             android:id="@+id/thread_list_item_content_floor_card"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:layout_marginBottom="8dp"
-            app:strokeWidth="0dp"
+            android:visibility="gone"
             app:cardCornerRadius="8dp"
-            app:cardElevation="0dp">
+            app:cardElevation="0dp"
+            app:strokeWidth="0dp"
+            tools:visibility="visible">
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -148,40 +148,40 @@
         </com.huanchengfly.tieba.post.widgets.theme.TintFloorMaterialCardView>
 
         <LinearLayout
-            android:layout_marginTop="4dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
             android:orientation="horizontal">
 
             <com.huanchengfly.tieba.post.widgets.theme.TintTextView
                 android:id="@+id/thread_list_item_user_time"
                 android:layout_width="0dp"
-                android:layout_weight="1"
                 android:layout_height="wrap_content"
+                android:layout_weight="1"
                 android:maxLines="1"
                 android:textSize="@dimen/text_size_user_small"
                 app:tint="@color/default_color_text_disabled"
                 tools:text="第 1 楼 · 刚刚" />
 
             <com.huanchengfly.tieba.post.widgets.theme.TintTextView
-                android:layout_marginStart="16dp"
                 android:id="@+id/thread_list_item_agree_btn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:text="@string/btn_agree_post_default"
                 android:textSize="@dimen/text_size_user_small"
                 android:textStyle="bold"
-                app:tint="@color/default_color_text_disabled"
-                android:text="@string/btn_agree_post_default" />
+                app:tint="@color/default_color_text_disabled" />
 
             <com.huanchengfly.tieba.post.widgets.theme.TintTextView
-                android:layout_marginStart="16dp"
                 android:id="@+id/thread_list_item_reply_btn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:text="@string/btn_reply_post_default"
                 android:textSize="@dimen/text_size_user_small"
                 android:textStyle="bold"
-                app:tint="@color/default_color_text_disabled"
-                android:text="@string/btn_reply_post_default" />
+                app:tint="@color/default_color_text_disabled" />
         </LinearLayout>
     </LinearLayout>
 

@@ -3,41 +3,35 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/menu_see_lz"
-        android:orderInCategory="0"
         android:icon="@drawable/ic_outline_account_circle"
+        android:orderInCategory="0"
         android:title="@string/title_see_lz"
-        app:showAsAction="ifRoom"
-        />
+        app:showAsAction="ifRoom" />
     <item
         android:id="@+id/menu_sort"
         android:orderInCategory="2"
         android:title="@string/title_sort"
-        app:showAsAction="never"
-        />
+        app:showAsAction="never" />
     <item
         android:id="@+id/menu_pure_read"
         android:orderInCategory="3"
         android:title="@string/title_pure_read"
-        app:showAsAction="never"
-        />
+        app:showAsAction="never" />
     <item
         android:id="@+id/menu_share"
         android:orderInCategory="4"
         android:title="@string/title_share"
-        app:showAsAction="never"
-        />
+        app:showAsAction="never" />
     <item
         android:id="@+id/menu_collect"
         android:orderInCategory="5"
         android:title="@string/title_collect"
-        app:showAsAction="never"
-        />
+        app:showAsAction="never" />
     <item
         android:id="@+id/menu_jump_page"
         android:orderInCategory="6"
         android:title="@string/title_jump_page"
-        app:showAsAction="never"
-        />
+        app:showAsAction="never" />
     <item
         android:id="@+id/menu_report"
         android:orderInCategory="7"
@@ -48,6 +42,5 @@
         android:orderInCategory="8"
         android:title="@string/title_delete"
         android:visible="false"
-        app:showAsAction="never"
-        />
+        app:showAsAction="never" />
 </menu>

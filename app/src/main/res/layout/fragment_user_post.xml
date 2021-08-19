@@ -2,13 +2,13 @@
 <com.scwang.smart.refresh.layout.SmartRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/refresh"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     app:srlDragRate="0.8"
     app:srlEnableNestedScrolling="true"
     app:srlEnableOverScrollBounce="true"
     app:srlEnableOverScrollDrag="true"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:id="@+id/refresh"
     tools:context=".fragments.UserPostFragment">
 
     <com.huanchengfly.tieba.post.widgets.theme.TintMaterialHeader
@@ -17,17 +17,17 @@
         android:layout_height="match_parent" />
 
     <androidx.recyclerview.widget.RecyclerView
-        android:paddingTop="@dimen/card_margin"
-        android:paddingStart="@dimen/card_margin"
-        android:paddingEnd="@dimen/card_margin"
-        android:clipToPadding="false"
         android:id="@+id/user_post_reclcyer_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:clipToPadding="false"
+        android:paddingStart="@dimen/card_margin"
+        android:paddingTop="@dimen/card_margin"
+        android:paddingEnd="@dimen/card_margin" />
 
     <com.huanchengfly.tieba.post.components.LoadMoreFooter
-        app:footerSpinnerStyle="scale"
-        app:backgroundTint="@color/transparent"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        app:backgroundTint="@color/transparent"
+        app:footerSpinnerStyle="scale" />
 </com.scwang.smart.refresh.layout.SmartRefreshLayout>

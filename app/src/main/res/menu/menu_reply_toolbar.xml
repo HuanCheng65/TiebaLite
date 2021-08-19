@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-        android:icon="@drawable/ic_reply_toolbar_round_send"
         android:id="@+id/menu_send"
-        android:title="@string/title_send"
+        android:icon="@drawable/ic_reply_toolbar_round_send"
         android:orderInCategory="0"
+        android:title="@string/title_send"
         app:showAsAction="ifRoom" />
 </menu>

@@ -29,7 +29,10 @@ object QuickPreviewUtil {
         val path = uri.path
         val kw = uri.getQueryParameter("kw")
         val word = uri.getQueryParameter("word")
-        return (path.equals("/f", ignoreCase = true) || path.equals("/mo/q/m", ignoreCase = true)) &&
+        return (path.equals("/f", ignoreCase = true) || path.equals(
+            "/mo/q/m",
+            ignoreCase = true
+        )) &&
                 kw != null || word != null
     }
 
@@ -40,7 +43,10 @@ object QuickPreviewUtil {
         }
         val path = uri.path
         val kz = uri.getQueryParameter("kz")
-        return (path.equals("/f", ignoreCase = true) || path.equals("/mo/q/m", ignoreCase = true)) &&
+        return (path.equals("/f", ignoreCase = true) || path.equals(
+            "/mo/q/m",
+            ignoreCase = true
+        )) &&
                 kz != null || path!!.startsWith("/p/")
     }
 
@@ -62,25 +68,47 @@ object QuickPreviewUtil {
         return null
     }
 
-    private fun getThreadPreviewInfo(context: Context, uri: Uri, threadId: String, callback: CommonCallback<PreviewInfo>) {
-        TiebaApi.getInstance().threadContent(threadId).enqueue(object : Callback<ThreadContentBean> {
-            override fun onFailure(call: Call<ThreadContentBean>, t: Throwable) {
-                val code = if (t is TiebaException) t.code else -1
-                callback.onFailure(code, t.message)
-            }
+    private fun getThreadPreviewInfo(
+        context: Context,
+        uri: Uri,
+        threadId: String,
+        callback: CommonCallback<PreviewInfo>
+    ) {
+        TiebaApi.getInstance().threadContent(threadId)
+            .enqueue(object : Callback<ThreadContentBean> {
+                override fun onFailure(call: Call<ThreadContentBean>, t: Throwable) {
+                    val code = if (t is TiebaException) t.code else -1
+                    callback.onFailure(code, t.message)
+                }
 
-            override fun onResponse(call: Call<ThreadContentBean>, response: Response<ThreadContentBean>) {
-                val threadContentBean = response.body()!!
-                callback.onSuccess(PreviewInfo()
-                        .setTitle(threadContentBean.thread?.title)
-                        .setSubtitle(context.getString(R.string.subtitle_quick_preview_thread, threadContentBean.forum?.name, threadContentBean.thread?.replyNum))
-                        .setUrl(uri.toString())
-                        .setIconUrl(threadContentBean.thread?.author?.portrait))
-            }
-        })
+                override fun onResponse(
+                    call: Call<ThreadContentBean>,
+                    response: Response<ThreadContentBean>
+                ) {
+                    val threadContentBean = response.body()!!
+                    callback.onSuccess(
+                        PreviewInfo()
+                            .setTitle(threadContentBean.thread?.title)
+                            .setSubtitle(
+                                context.getString(
+                                    R.string.subtitle_quick_preview_thread,
+                                    threadContentBean.forum?.name,
+                                    threadContentBean.thread?.replyNum
+                                )
+                            )
+                            .setUrl(uri.toString())
+                            .setIconUrl(threadContentBean.thread?.author?.portrait)
+                    )
+                }
+            })
     }
 
-    private fun getForumPreviewInfo(context: Context, uri: Uri, forumName: String, callback: CommonCallback<PreviewInfo>) {
+    private fun getForumPreviewInfo(
+        context: Context,
+        uri: Uri,
+        forumName: String,
+        callback: CommonCallback<PreviewInfo>
+    ) {
         TiebaApi.getInstance().forumPage(forumName).enqueue(object : Callback<ForumPageBean> {
             override fun onFailure(call: Call<ForumPageBean>, t: Throwable) {
                 val code = if (t is TiebaException) t.code else -1
@@ -89,11 +117,18 @@ object QuickPreviewUtil {
 
             override fun onResponse(call: Call<ForumPageBean>, response: Response<ForumPageBean>) {
                 val forumPageBean = response.body()!!
-                callback.onSuccess(PreviewInfo()
-                        .setTitle(context.getString(R.string.title_forum, forumPageBean.forum?.name))
+                callback.onSuccess(
+                    PreviewInfo()
+                        .setTitle(
+                            context.getString(
+                                R.string.title_forum,
+                                forumPageBean.forum?.name
+                            )
+                        )
                         .setSubtitle(forumPageBean.forum?.slogan)
                         .setUrl(uri.toString())
-                        .setIconUrl(forumPageBean.forum?.avatar))
+                        .setIconUrl(forumPageBean.forum?.avatar)
+                )
             }
         })
     }
@@ -105,26 +140,34 @@ object QuickPreviewUtil {
             val path = uri.path
             if (path!!.startsWith("/p/")) {
                 getThreadPreviewInfo(context, uri, path.substring(3), callback)
-            } else if (path.equals("/f", ignoreCase = true) || path.equals("/mo/q/m", ignoreCase = true)) {
+            } else if (path.equals("/f", ignoreCase = true) || path.equals(
+                    "/mo/q/m",
+                    ignoreCase = true
+                )
+            ) {
                 val kw = uri.getQueryParameter("kw")
                 val word = uri.getQueryParameter("word")
                 val kz = uri.getQueryParameter("kz")
                 kw?.let { getForumPreviewInfo(context, uri, it, callback) }
-                        ?: (word?.let { getForumPreviewInfo(context, uri, it, callback) }
-                                ?: kz?.let { getThreadPreviewInfo(context, uri, it, callback) })
+                    ?: (word?.let { getForumPreviewInfo(context, uri, it, callback) }
+                        ?: kz?.let { getThreadPreviewInfo(context, uri, it, callback) })
             } else {
-                callback.onSuccess(PreviewInfo()
+                callback.onSuccess(
+                    PreviewInfo()
                         .setUrl(url)
                         .setTitle(url)
                         .setSubtitle(context.getString(R.string.subtitle_link))
-                        .setIconRes(R.drawable.ic_link))
+                        .setIconRes(R.drawable.ic_link)
+                )
             }
         } else {
-            callback.onSuccess(PreviewInfo()
+            callback.onSuccess(
+                PreviewInfo()
                     .setUrl(url)
                     .setTitle(url)
                     .setSubtitle(context.getString(R.string.subtitle_link))
-                    .setIconRes(R.drawable.ic_link))
+                    .setIconRes(R.drawable.ic_link)
+            )
         }
     }
 
@@ -185,6 +228,7 @@ object QuickPreviewUtil {
             private set
         var url: String? = null
             private set
+
         @DrawableRes
         var res = 0
             private set

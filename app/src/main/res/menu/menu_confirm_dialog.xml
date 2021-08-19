@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:id="@+id/yes" android:title="@string/button_sure_default" android:icon="@drawable/ic_round_check_circle" />
-    <item android:id="@+id/no" android:title="@string/button_cancel" android:icon="@drawable/ic_round_remove_circle" />
+    <item
+        android:id="@+id/yes"
+        android:icon="@drawable/ic_round_check_circle"
+        android:title="@string/button_sure_default" />
+    <item
+        android:id="@+id/no"
+        android:icon="@drawable/ic_round_remove_circle"
+        android:title="@string/button_cancel" />
 </menu>

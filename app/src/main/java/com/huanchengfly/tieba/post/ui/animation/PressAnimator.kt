@@ -5,8 +5,8 @@ import android.view.MotionEvent
 import android.view.View
 
 class PressAnimator(
-        val targetView: View,
-        private val animations: List<PressAnimation>
+    val targetView: View,
+    private val animations: List<PressAnimation>
 ) : View.OnTouchListener {
     @SuppressLint("ClickableViewAccessibility")
     override fun onTouch(v: View, event: MotionEvent): Boolean {
@@ -26,7 +26,7 @@ class PressAnimator(
     }
 
     class Builder(
-            private val targetView: View
+        private val targetView: View
     ) {
         private val animationList: MutableList<PressAnimation> = mutableListOf()
 

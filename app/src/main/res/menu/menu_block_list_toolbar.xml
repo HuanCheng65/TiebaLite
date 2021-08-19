@@ -3,9 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/menu_add"
-        android:orderInCategory="0"
         android:icon="@drawable/ic_round_add"
+        android:orderInCategory="0"
         android:title="@string/title_add_black"
-        app:showAsAction="always"
-        />
+        app:showAsAction="always" />
 </menu>

@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/background"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:descendantFocusability="afterDescendants"
     app:cardBackgroundColor="@android:color/black"
-    app:cardElevation="0dp"
     app:cardCornerRadius="@dimen/radius"
+    app:cardElevation="0dp"
     app:cardUseCompatPadding="false">
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -53,6 +53,7 @@
 
             <com.huanchengfly.tieba.post.widgets.theme.TintSeekBar
                 android:id="@+id/bottom_seek_progress"
+                style="@style/Widget.AppCompat.SeekBar"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
@@ -65,7 +66,6 @@
                 android:paddingTop="8dp"
                 android:paddingRight="12dp"
                 android:paddingBottom="8dp"
-                style="@style/Widget.AppCompat.SeekBar"
                 app:progressTint="@color/default_color_primary" />
 
             <TextView
@@ -86,17 +86,17 @@
                 android:textColor="#ffffff" />
 
             <ImageButton
-                android:clickable="true"
-                android:focusable="true"
-                style="@style/Widget.AppCompat.Button.Borderless"
                 android:id="@+id/fullscreen"
+                style="@style/Widget.AppCompat.Button.Borderless"
                 android:layout_width="52.5dp"
                 android:layout_height="fill_parent"
+                android:clickable="true"
+                android:focusable="true"
                 android:paddingLeft="14dp"
                 android:paddingRight="14dp"
                 android:scaleType="centerInside"
-                android:tint="@color/white"
-                android:src="@drawable/ic_round_fullscreen" />
+                android:src="@drawable/ic_round_fullscreen"
+                android:tint="@color/white" />
         </LinearLayout>
 
         <com.huanchengfly.tieba.post.widgets.theme.TintProgressBar
@@ -106,17 +106,17 @@
             android:layout_height="1.5dp"
             android:layout_alignParentBottom="true"
             android:max="100"
-            app:progressTint="@color/default_color_primary"
-            android:progressDrawable="@drawable/jz_bottom_progress" />
+            android:progressDrawable="@drawable/jz_bottom_progress"
+            app:progressTint="@color/default_color_primary" />
 
         <ImageButton
-            android:clickable="true"
-            android:focusable="true"
             android:id="@+id/back_tiny"
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:layout_marginLeft="6dp"
             android:layout_marginTop="6dp"
+            android:clickable="true"
+            android:focusable="true"
             android:src="@drawable/ic_round_close"
             android:tint="@color/white"
             android:visibility="gone" />
@@ -131,24 +131,24 @@
             android:background="@drawable/bg_video_title"
             android:paddingStart="10dp"
             android:paddingLeft="10dp"
-            tools:visibility="visible"
-            android:visibility="gone">
+            android:visibility="gone"
+            tools:visibility="visible">
 
             <ImageButton
-                style="@style/Widget.AppCompat.Button.Borderless"
                 android:id="@+id/back"
+                style="@style/Widget.AppCompat.Button.Borderless"
                 android:layout_width="26dp"
                 android:layout_height="26dp"
                 android:layout_alignParentStart="true"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentTop="true"
                 android:layout_marginTop="12dp"
-                android:padding="3dp"
-                android:scaleType="centerInside"
                 android:clickable="true"
                 android:focusable="true"
-                android:tint="@color/white"
-                android:src="@drawable/ic_round_arrow_back" />
+                android:padding="3dp"
+                android:scaleType="centerInside"
+                android:src="@drawable/ic_round_arrow_back"
+                android:tint="@color/white" />
 
             <TextView
                 android:id="@+id/title"
@@ -166,16 +166,16 @@
                 android:textSize="18sp" />
 
             <ImageButton
-                android:layout_alignParentRight="true"
-                style="@style/Widget.AppCompat.Button.Borderless"
-                android:src="@drawable/ic_round_get_app"
-                android:tint="@color/white"
                 android:id="@+id/download_btn"
+                style="@style/Widget.AppCompat.Button.Borderless"
+                android:layout_width="26dp"
+                android:layout_height="26dp"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
                 android:layout_marginEnd="14dp"
                 android:layout_marginRight="14dp"
-                android:layout_centerVertical="true"
-                android:layout_width="26dp"
-                android:layout_height="26dp" />
+                android:src="@drawable/ic_round_get_app"
+                android:tint="@color/white" />
 
             <LinearLayout
                 android:id="@+id/battery_time_layout"
@@ -219,24 +219,24 @@
             android:visibility="invisible" />
 
         <LinearLayout
-            android:background="@null"
             android:id="@+id/start_layout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
-            android:layout_gravity="center_vertical">
+            android:layout_gravity="center_vertical"
+            android:background="@null">
 
             <ImageButton
-                android:clickable="true"
-                android:focusable="true"
-                style="@style/Widget.MaterialComponents.Button.OutlinedButton.Icon"
-                android:background="@null"
                 android:id="@+id/start"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton.Icon"
                 android:layout_width="@dimen/jz_start_button_w_h_normal"
                 android:layout_height="@dimen/jz_start_button_w_h_normal"
-                android:tint="@color/white"
-                android:src="@drawable/ic_round_play_arrow" />
+                android:background="@null"
+                android:clickable="true"
+                android:focusable="true"
+                android:src="@drawable/ic_round_play_arrow"
+                android:tint="@color/white" />
         </LinearLayout>
 
 

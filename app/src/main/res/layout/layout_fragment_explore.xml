@@ -1,52 +1,55 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/explore_auto_sign"
-        android:focusable="true"
-        android:clickable="true"
-        app:cardElevation="0dp"
-        app:contentPadding="16dp"
-        app:cardBackgroundColor="@color/transparent"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:clickable="true"
+        android:focusable="true"
+        app:cardBackgroundColor="@color/transparent"
+        app:cardElevation="0dp"
+        app:contentPadding="16dp">
+
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
+
             <ImageView
-                android:layout_alignParentStart="true"
                 android:id="@+id/explore_icon_auto_sign"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_alignParentStart="true"
                 android:layout_centerVertical="true"
                 android:src="@drawable/ic_round_offline_pin_blue"
-                android:tint="@color/default_color_accent"
-                android:layout_width="30dp"
-                android:layout_height="30dp" />
+                android:tint="@color/default_color_accent" />
 
             <TextView
+                android:id="@+id/explore_title_auto_sign"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:layout_marginBottom="4dp"
+                android:layout_toEndOf="@+id/explore_icon_auto_sign"
                 android:text="@string/title_auto_sign"
                 android:textColor="@color/default_color_text"
-                android:id="@+id/explore_title_auto_sign"
-                android:layout_toEndOf="@+id/explore_icon_auto_sign"
-                android:textStyle="bold"
                 android:textSize="15sp"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:textStyle="bold" />
 
             <TextView
+                android:id="@+id/explore_subtitle_auto_sign"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/explore_title_auto_sign"
                 android:layout_alignStart="@id/explore_title_auto_sign"
-                android:textSize="13sp"
+                android:layout_toEndOf="@+id/explore_icon_auto_sign"
                 android:text="@string/summary_auto_sign"
                 android:textColor="@color/default_color_text_secondary"
-                android:id="@+id/explore_subtitle_auto_sign"
-                android:layout_below="@id/explore_title_auto_sign"
-                android:layout_toEndOf="@+id/explore_icon_auto_sign"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:textSize="13sp" />
         </RelativeLayout>
     </com.google.android.material.card.MaterialCardView>
 </LinearLayout>

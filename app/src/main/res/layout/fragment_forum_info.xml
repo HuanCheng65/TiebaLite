@@ -14,17 +14,17 @@
 
         <LinearLayout
             android:id="@+id/content"
-            android:padding="16dp"
-            android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
 
             <com.huanchengfly.tieba.post.widgets.theme.TintLinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:background="@drawable/bg_radius_10dp"
                 android:orientation="vertical"
                 android:padding="16dp"
-                android:background="@drawable/bg_radius_10dp"
                 app:backgroundTint="@color/default_color_card">
 
                 <RelativeLayout
@@ -72,169 +72,169 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:layout_marginTop="16dp">
+                    android:layout_marginTop="16dp"
+                    android:orientation="horizontal">
 
                     <LinearLayout
-                        android:orientation="vertical"
                         android:layout_width="0dp"
+                        android:layout_height="match_parent"
                         android:layout_weight="1"
-                        android:layout_height="match_parent">
+                        android:orientation="vertical">
 
                         <com.huanchengfly.tieba.post.widgets.theme.TintTextView
-                            android:layout_gravity="center"
-                            tools:text="241W"
-                            android:textStyle="bold"
-                            android:textSize="@dimen/stat_text_size"
                             android:id="@+id/forum_header_stat_members"
-                            app:tint="@color/default_color_text"
                             android:layout_width="wrap_content"
-                            android:layout_height="wrap_content" />
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:textSize="@dimen/stat_text_size"
+                            android:textStyle="bold"
+                            app:tint="@color/default_color_text"
+                            tools:text="241W" />
 
                         <com.huanchengfly.tieba.post.widgets.theme.TintTextView
-                            android:layout_marginTop="8dp"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
                             android:layout_gravity="center_horizontal"
+                            android:layout_marginTop="8dp"
                             android:text="关注"
                             android:textSize="14sp"
-                            app:tint="@color/default_color_text_secondary"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content" />
+                            app:tint="@color/default_color_text_secondary" />
                     </LinearLayout>
 
                     <LinearLayout
-                        android:orientation="vertical"
                         android:layout_width="0dp"
+                        android:layout_height="match_parent"
                         android:layout_weight="1"
-                        android:layout_height="match_parent">
+                        android:orientation="vertical">
 
                         <com.huanchengfly.tieba.post.widgets.theme.TintTextView
-                            android:layout_gravity="center_horizontal"
-                            tools:text="55W"
-                            android:textStyle="bold"
-                            android:textSize="@dimen/stat_text_size"
                             android:id="@+id/forum_header_stat_threads"
-                            app:tint="@color/default_color_text"
                             android:layout_width="wrap_content"
-                            android:layout_height="wrap_content" />
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_horizontal"
+                            android:textSize="@dimen/stat_text_size"
+                            android:textStyle="bold"
+                            app:tint="@color/default_color_text"
+                            tools:text="55W" />
 
                         <com.huanchengfly.tieba.post.widgets.theme.TintTextView
-                            android:layout_marginTop="8dp"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
                             android:layout_gravity="center_horizontal"
+                            android:layout_marginTop="8dp"
                             android:text="贴子"
                             android:textSize="14sp"
-                            app:tint="@color/default_color_text_secondary"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content" />
+                            app:tint="@color/default_color_text_secondary" />
                     </LinearLayout>
 
                     <LinearLayout
-                        android:orientation="vertical"
                         android:layout_width="0dp"
+                        android:layout_height="match_parent"
                         android:layout_weight="1"
-                        android:layout_height="match_parent">
+                        android:orientation="vertical">
 
                         <com.huanchengfly.tieba.post.widgets.theme.TintTextView
-                            android:layout_gravity="center_horizontal"
-                            tools:text="3KW"
-                            android:textStyle="bold"
-                            android:textSize="@dimen/stat_text_size"
                             android:id="@+id/forum_header_stat_posts"
-                            app:tint="@color/default_color_text"
                             android:layout_width="wrap_content"
-                            android:layout_height="wrap_content" />
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_horizontal"
+                            android:textSize="@dimen/stat_text_size"
+                            android:textStyle="bold"
+                            app:tint="@color/default_color_text"
+                            tools:text="3KW" />
 
                         <com.huanchengfly.tieba.post.widgets.theme.TintTextView
-                            android:layout_marginTop="8dp"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
                             android:layout_gravity="center_horizontal"
+                            android:layout_marginTop="8dp"
                             android:text="回贴"
                             android:textSize="14sp"
-                            app:tint="@color/default_color_text_secondary"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content" />
+                            app:tint="@color/default_color_text_secondary" />
                     </LinearLayout>
                 </LinearLayout>
             </com.huanchengfly.tieba.post.widgets.theme.TintLinearLayout>
 
             <com.huanchengfly.tieba.post.widgets.theme.TintLinearLayout
                 android:id="@+id/managers_view"
-                android:orientation="vertical"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
+                android:background="@drawable/bg_radius_10dp"
+                android:orientation="vertical"
                 android:paddingTop="10dp"
                 android:paddingBottom="10dp"
-                android:background="@drawable/bg_radius_10dp"
                 app:backgroundTint="@color/default_color_card">
 
                 <com.huanchengfly.tieba.post.widgets.theme.TintTextView
-                    android:paddingStart="16dp"
-                    android:paddingEnd="16dp"
-                    android:paddingTop="8dp"
-                    android:paddingBottom="8dp"
-                    android:textSize="18sp"
-                    android:textStyle="bold"
-                    app:tint="@color/default_color_text"
-                    android:text="@string/title_forum_managers"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
-
-                <androidx.recyclerview.widget.RecyclerView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:id="@+id/managers" />
+                    android:paddingStart="16dp"
+                    android:paddingTop="8dp"
+                    android:paddingEnd="16dp"
+                    android:paddingBottom="8dp"
+                    android:text="@string/title_forum_managers"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    app:tint="@color/default_color_text" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/managers"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
             </com.huanchengfly.tieba.post.widgets.theme.TintLinearLayout>
 
             <com.huanchengfly.tieba.post.widgets.theme.TintLinearLayout
-                android:orientation="vertical"
                 android:id="@+id/friend_links"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
+                android:background="@drawable/bg_radius_10dp"
+                android:orientation="vertical"
                 android:paddingTop="10dp"
                 android:paddingBottom="10dp"
-                android:background="@drawable/bg_radius_10dp"
                 app:backgroundTint="@color/default_color_card">
 
                 <com.huanchengfly.tieba.post.widgets.theme.TintTextView
+                    android:id="@+id/zyqtitle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
                     android:paddingStart="16dp"
-                    android:paddingEnd="16dp"
                     android:paddingTop="8dp"
+                    android:paddingEnd="16dp"
                     android:paddingBottom="8dp"
                     android:textSize="18sp"
                     android:textStyle="bold"
-                    app:tint="@color/default_color_text"
-                    android:id="@+id/zyqtitle"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
+                    app:tint="@color/default_color_text" />
 
                 <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/zyqdefine"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/zyqdefine" />
+                    android:layout_height="wrap_content" />
             </com.huanchengfly.tieba.post.widgets.theme.TintLinearLayout>
 
             <com.huanchengfly.tieba.post.widgets.theme.TintLinearLayout
-                android:orientation="vertical"
                 android:id="@+id/friend_forums"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
+                android:background="@drawable/bg_radius_10dp"
+                android:orientation="vertical"
                 android:paddingTop="10dp"
                 android:paddingBottom="10dp"
-                android:background="@drawable/bg_radius_10dp"
                 app:backgroundTint="@color/default_color_card">
 
                 <com.huanchengfly.tieba.post.widgets.theme.TintTextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
                     android:paddingStart="16dp"
-                    android:paddingEnd="16dp"
                     android:paddingTop="8dp"
+                    android:paddingEnd="16dp"
                     android:paddingBottom="8dp"
+                    android:text="@string/title_friend_forums"
                     android:textSize="18sp"
                     android:textStyle="bold"
-                    app:tint="@color/default_color_text"
-                    android:text="@string/title_friend_forums"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
+                    app:tint="@color/default_color_text" />
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/friend_forums_view"

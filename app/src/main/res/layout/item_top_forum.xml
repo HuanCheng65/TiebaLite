@@ -1,41 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.huanchengfly.tieba.post.widgets.theme.TintMaterialCardView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<com.huanchengfly.tieba.post.widgets.theme.TintMaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="85dp"
-    app:cardElevation="0dp"
-    android:layout_height="wrap_content"
     xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="85dp"
+    android:layout_height="wrap_content"
     android:clickable="true"
     android:focusable="true"
-    app:rippleColor="?attr/colorControlHighlight"
-    app:materialCardBackgroundTint="@color/default_color_card"
-    app:contentPadding="12dp"
     app:cardCornerRadius="8dp"
-    app:strokeWidth="1dp"
-    app:strokeColor="@color/default_color_divider">
+    app:cardElevation="0dp"
+    app:contentPadding="12dp"
+    app:materialCardBackgroundTint="@color/default_color_card"
+    app:rippleColor="?attr/colorControlHighlight"
+    app:strokeColor="@color/default_color_divider"
+    app:strokeWidth="1dp">
+
     <LinearLayout
-        android:layout_gravity="center"
-        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:orientation="vertical">
+
         <ImageView
-            android:layout_gravity="center_horizontal"
             android:id="@+id/forum_item_avatar"
             android:layout_width="48dp"
-            android:layout_height="48dp" />
+            android:layout_height="48dp"
+            android:layout_gravity="center_horizontal" />
+
         <com.huanchengfly.tieba.post.widgets.theme.TintTextView
-            android:layout_marginTop="12dp"
-            android:layout_gravity="center_horizontal"
-            android:gravity="center"
-            tools:text="Title"
-            android:textStyle="bold"
-            android:textSize="14sp"
-            android:maxLines="1"
-            android:ellipsize="end"
-            app:tint="@color/default_color_text"
             android:id="@+id/forum_item_name"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="12dp"
+            android:ellipsize="end"
+            android:gravity="center"
+            android:maxLines="1"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            app:tint="@color/default_color_text"
+            tools:text="Title" />
     </LinearLayout>
 </com.huanchengfly.tieba.post.widgets.theme.TintMaterialCardView>

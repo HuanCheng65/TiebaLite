@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
-    <item android:id="@+id/menu_finish"
-        android:title="@string/btn_finish"
+    <item
+        android:id="@+id/menu_finish"
         android:icon="@drawable/ic_round_check"
         android:orderInCategory="0"
-        app:showAsAction="ifRoom"/>
+        android:title="@string/btn_finish"
+        app:showAsAction="ifRoom" />
 </menu>

@@ -10,13 +10,13 @@
     <include layout="@layout/layout_new_appbar" />
 
     <androidx.recyclerview.widget.RecyclerView
-        android:paddingStart="@dimen/card_margin"
-        android:paddingEnd="@dimen/card_margin"
-        android:paddingTop="@dimen/card_margin"
-        android:clipToPadding="false"
         android:id="@+id/recycler_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:clipToPadding="false"
+        android:paddingStart="@dimen/card_margin"
+        android:paddingTop="@dimen/card_margin"
+        android:paddingEnd="@dimen/card_margin"
         app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
 </com.huanchengfly.tieba.post.widgets.theme.TintCoordinatorLayout>

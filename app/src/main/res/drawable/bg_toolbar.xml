@@ -4,7 +4,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
         <shape
-            android:tint="@color/default_color_toolbar"
-            android:shape="rectangle" />
+            android:shape="rectangle"
+            android:tint="@color/default_color_toolbar" />
     </item>
 </layer-list>

@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.huanchengfly.tieba.post.widgets.theme.TintSwipeRefreshLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<com.huanchengfly.tieba.post.widgets.theme.TintSwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/refresh"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/refresh"
     tools:context=".fragments.UserLikeForumFragment">
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/user_post_reclcyer_view"
         android:layout_width="match_parent"

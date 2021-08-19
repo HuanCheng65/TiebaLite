@@ -3,13 +3,12 @@
     <item
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-        <shape
-            android:shape="rectangle">
+        <shape android:shape="rectangle">
             <gradient
                 android:angle="0"
-                android:startColor="@color/colorSplashBg"
                 android:endColor="@color/colorSplashBg"
-                android:type="linear"/>
+                android:startColor="@color/colorSplashBg"
+                android:type="linear" />
         </shape>
     </item>
 </layer-list>

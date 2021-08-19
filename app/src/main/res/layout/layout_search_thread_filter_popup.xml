@@ -2,73 +2,73 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:padding="16dp"
-    android:orientation="vertical"
     android:layout_width="wrap_content"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="16dp">
 
     <com.huanchengfly.tieba.post.widgets.theme.TintTextView
-        app:tint="@color/default_color_primary"
-        android:text="@string/title_search_order"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textStyle="bold" />
+        android:text="@string/title_search_order"
+        android:textStyle="bold"
+        app:tint="@color/default_color_primary" />
 
     <RadioGroup
         android:id="@+id/search_order"
-        android:layout_marginTop="8dp"
-        tools:checkedButton="@id/search_order_new"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        tools:checkedButton="@id/search_order_new">
 
         <com.huanchengfly.tieba.post.widgets.theme.TintMaterialRadioButton
             android:id="@+id/search_order_new"
-            app:radioButtonTint="@color/tint_checkbox"
-            app:tint="@color/default_color_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:minHeight="40dp"
             android:paddingStart="4dp"
             android:text="@string/title_search_order_new"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            app:radioButtonTint="@color/tint_checkbox"
+            app:tint="@color/default_color_text" />
 
         <com.huanchengfly.tieba.post.widgets.theme.TintMaterialRadioButton
             android:id="@+id/search_order_old"
-            app:radioButtonTint="@color/tint_checkbox"
-            app:tint="@color/default_color_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:minHeight="40dp"
             android:paddingStart="4dp"
             android:text="@string/title_search_order_old"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            app:radioButtonTint="@color/tint_checkbox"
+            app:tint="@color/default_color_text" />
 
         <com.huanchengfly.tieba.post.widgets.theme.TintMaterialRadioButton
             android:id="@+id/search_order_relevant"
-            app:radioButtonTint="@color/tint_checkbox"
-            app:tint="@color/default_color_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:minHeight="40dp"
             android:paddingStart="4dp"
             android:text="@string/title_search_order_relevant"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            app:radioButtonTint="@color/tint_checkbox"
+            app:tint="@color/default_color_text" />
     </RadioGroup>
 
     <com.huanchengfly.tieba.post.widgets.theme.TintTextView
-        android:layout_marginTop="8dp"
-        app:tint="@color/default_color_primary"
-        android:text="@string/title_search_filter"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textStyle="bold" />
+        android:layout_marginTop="8dp"
+        android:text="@string/title_search_filter"
+        android:textStyle="bold"
+        app:tint="@color/default_color_primary" />
 
     <com.huanchengfly.tieba.post.widgets.theme.TintCheckBox
-        android:layout_marginTop="8dp"
-        android:text="@string/title_search_filter_only_thread"
-        app:buttonTint="@color/tint_checkbox"
-        app:textColor="@color/default_color_text"
-        android:minHeight="40dp"
-        android:paddingStart="4dp"
         android:id="@+id/search_filter_only_thread"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:minHeight="40dp"
+        android:paddingStart="4dp"
+        android:text="@string/title_search_filter_only_thread"
+        app:buttonTint="@color/tint_checkbox"
+        app:textColor="@color/default_color_text" />
 
 </LinearLayout>

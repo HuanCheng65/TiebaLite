@@ -19,21 +19,28 @@ import kotlin.math.abs
 object AnimUtil {
     fun nope(view: View): ObjectAnimator {
         val delta = view.resources.getDimensionPixelOffset(R.dimen.spacing_medium)
-        val pvhTranslateX = PropertyValuesHolder.ofKeyframe(View.TRANSLATION_X,
-                Keyframe.ofFloat(0f, 0f),
-                Keyframe.ofFloat(.10f, -delta.toFloat()),
-                Keyframe.ofFloat(.26f, delta.toFloat()),
-                Keyframe.ofFloat(.42f, -delta.toFloat()),
-                Keyframe.ofFloat(.58f, delta.toFloat()),
-                Keyframe.ofFloat(.74f, -delta.toFloat()),
-                Keyframe.ofFloat(.90f, delta.toFloat()),
-                Keyframe.ofFloat(1f, 0f)
+        val pvhTranslateX = PropertyValuesHolder.ofKeyframe(
+            View.TRANSLATION_X,
+            Keyframe.ofFloat(0f, 0f),
+            Keyframe.ofFloat(.10f, -delta.toFloat()),
+            Keyframe.ofFloat(.26f, delta.toFloat()),
+            Keyframe.ofFloat(.42f, -delta.toFloat()),
+            Keyframe.ofFloat(.58f, delta.toFloat()),
+            Keyframe.ofFloat(.74f, -delta.toFloat()),
+            Keyframe.ofFloat(.90f, delta.toFloat()),
+            Keyframe.ofFloat(1f, 0f)
         )
         return ObjectAnimator.ofPropertyValuesHolder(view, pvhTranslateX).setDuration(500)
     }
 
     @JvmStatic
-    fun bindTextSizeAnim(appBar: AppBarLayout, textView: TextView, startSize: Int, endSize: Int, endOffset: Int = 0) {
+    fun bindTextSizeAnim(
+        appBar: AppBarLayout,
+        textView: TextView,
+        startSize: Int,
+        endSize: Int,
+        endOffset: Int = 0
+    ) {
         appBar.addOnOffsetChangedListener(OnOffsetChangedListener { _, verticalOffset ->
             val offset = abs(verticalOffset * 1f)
             if (offset <= endOffset) {
@@ -53,10 +60,10 @@ object AnimUtil {
         view.alpha = 0f
         view.visibility = View.VISIBLE
         return view.animate()
-                .alpha(1f)
-                .setDuration(duration.toLong())
-                .setInterpolator(AccelerateDecelerateInterpolator())
-                .setListener(null)
+            .alpha(1f)
+            .setDuration(duration.toLong())
+            .setInterpolator(AccelerateDecelerateInterpolator())
+            .setListener(null)
     }
 
     @JvmOverloads
@@ -64,14 +71,21 @@ object AnimUtil {
         view.alpha = 1f
         view.visibility = View.VISIBLE
         return view.animate()
-                .alpha(0f)
-                .setDuration(duration.toLong())
-                .setInterpolator(AccelerateDecelerateInterpolator())
-                .setListener(null)
+            .alpha(0f)
+            .setDuration(duration.toLong())
+            .setInterpolator(AccelerateDecelerateInterpolator())
+            .setListener(null)
     }
 
     fun rotate(imageView: ImageView, fromDegrees: Int, toDegrees: Int) {
-        val rotateAnimation: Animation = RotateAnimation(fromDegrees.toFloat(), toDegrees.toFloat(), Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 1F)
+        val rotateAnimation: Animation = RotateAnimation(
+            fromDegrees.toFloat(),
+            toDegrees.toFloat(),
+            Animation.RELATIVE_TO_SELF,
+            0.5f,
+            Animation.RELATIVE_TO_SELF,
+            1F
+        )
         rotateAnimation.fillAfter = true
         rotateAnimation.duration = 150
         rotateAnimation.repeatCount = 0

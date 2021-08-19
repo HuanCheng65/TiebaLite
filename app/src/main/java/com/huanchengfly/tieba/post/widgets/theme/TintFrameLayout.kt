@@ -14,7 +14,11 @@ import com.huanchengfly.tieba.post.ui.theme.interfaces.Tintable
 import com.huanchengfly.tieba.post.ui.theme.utils.ColorStateListUtils
 
 @SuppressLint("CustomViewStyleable")
-class TintFrameLayout @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0) : FrameLayout(context, attrs, defStyleAttr), Tintable, BackgroundTintable {
+class TintFrameLayout @JvmOverloads constructor(
+    context: Context,
+    attrs: AttributeSet? = null,
+    defStyleAttr: Int = 0
+) : FrameLayout(context, attrs, defStyleAttr), Tintable, BackgroundTintable {
     var backgroundTintRes: Int = 0
 
     override fun tint() {
@@ -50,7 +54,8 @@ class TintFrameLayout @JvmOverloads constructor(context: Context, attrs: Attribu
 
     init {
         if (attrs != null) {
-            val array = getContext().obtainStyledAttributes(attrs, R.styleable.TintView, defStyleAttr, 0)
+            val array =
+                getContext().obtainStyledAttributes(attrs, R.styleable.TintView, defStyleAttr, 0)
             backgroundTintRes = array.getResourceId(R.styleable.TintView_backgroundTint, 0)
             array.recycle()
         }

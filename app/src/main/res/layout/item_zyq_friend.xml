@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="?selectableItemBackground"
-    android:orientation="horizontal"
-    android:gravity="start|center_vertical"
-    android:paddingTop="8dp"
-    android:paddingBottom="8dp"
-    android:paddingStart="16dp"
-    android:paddingEnd="16dp"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:background="?selectableItemBackground"
+    android:gravity="start|center_vertical"
+    android:orientation="horizontal"
+    android:paddingStart="16dp"
+    android:paddingTop="8dp"
+    android:paddingEnd="16dp"
+    android:paddingBottom="8dp">
 
     <com.huanchengfly.tieba.post.widgets.theme.TintImageView
         android:id="@+id/icon"
@@ -20,11 +20,11 @@
 
     <com.huanchengfly.tieba.post.widgets.theme.TintTextView
         android:id="@+id/title"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_weight="1"
         android:textSize="14sp"
         android:textStyle="bold"
-        android:layout_marginStart="8dp"
-        app:tint="@color/default_color_accent"
-        android:layout_weight="1"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content" />
+        app:tint="@color/default_color_accent" />
 </LinearLayout>

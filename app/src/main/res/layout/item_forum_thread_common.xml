@@ -8,10 +8,10 @@
         android:id="@+id/forum_item"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:materialCardBackgroundTint="@color/default_color_card"
         app:cardCornerRadius="10dp"
+        app:cardElevation="0dp"
         app:contentPadding="16dp"
-        app:cardElevation="0dp">
+        app:materialCardBackgroundTint="@color/default_color_card">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -37,19 +37,19 @@
             </RelativeLayout>
 
             <include
-                android:layout_marginTop="@dimen/forum_card_inner_gap"
-                android:layout_below="@id/forum_item_content"
-                android:layout_height="wrap_content"
+                layout="@layout/layout_forum_footer"
                 android:layout_width="match_parent"
-                layout="@layout/layout_forum_footer" />
+                android:layout_height="wrap_content"
+                android:layout_below="@id/forum_item_content"
+                android:layout_marginTop="@dimen/forum_card_inner_gap" />
         </RelativeLayout>
     </com.huanchengfly.tieba.post.widgets.theme.TintMaterialCardView>
 
     <include
-        layout="@layout/layout_refresh_tip"
         android:id="@+id/feed_refresh_tip"
-        android:layout_below="@id/forum_item"
+        layout="@layout/layout_refresh_tip"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_below="@id/forum_item"
         android:layout_marginTop="12dp" />
 </RelativeLayout>

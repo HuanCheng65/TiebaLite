@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/my_info_collect"
         android:icon="@drawable/ic_round_star_yellow"
@@ -18,9 +18,10 @@
         android:id="@+id/my_info_service_center"
         android:icon="@drawable/ic_round_help_green"
         android:title="@string/my_info_service_center" />
-    <item android:id="@+id/menu_test"
-        android:visible="false"
-        android:title="Test" />
+    <item
+        android:id="@+id/menu_test"
+        android:title="Test"
+        android:visible="false" />
     <item
         android:id="@+id/my_info_settings"
         android:icon="@drawable/ic_round_settings_grey"

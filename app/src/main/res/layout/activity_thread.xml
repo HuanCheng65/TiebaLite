@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.huanchengfly.tieba.post.widgets.theme.TintCoordinatorLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<com.huanchengfly.tieba.post.widgets.theme.TintCoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/background"
@@ -12,16 +11,16 @@
     <include layout="@layout/layout_appbar" />
 
     <com.scwang.smart.refresh.layout.SmartRefreshLayout
-        app:srlDragRate="0.8"
-        app:srlEnableNestedScrolling="true"
-        app:srlEnableOverScrollBounce="true"
-        app:srlEnableOverScrollDrag="true"
-        android:layout_marginBottom="@dimen/thread_bottom_bar_height"
-        app:layout_anchor="@id/appbar"
         android:id="@+id/thread_refresh_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+        android:layout_marginBottom="@dimen/thread_bottom_bar_height"
+        app:layout_anchor="@id/appbar"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        app:srlDragRate="0.8"
+        app:srlEnableNestedScrolling="true"
+        app:srlEnableOverScrollBounce="true"
+        app:srlEnableOverScrollDrag="true">
 
         <com.huanchengfly.tieba.post.widgets.theme.TintMaterialHeader
             android:id="@+id/refresh_header"
@@ -29,17 +28,17 @@
             android:layout_height="match_parent" />
 
         <androidx.recyclerview.widget.RecyclerView
-            android:paddingBottom="4dp"
-            android:clipToPadding="false"
             android:id="@+id/thread_recycler_view"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            android:clipToPadding="false"
+            android:paddingBottom="4dp" />
 
         <com.huanchengfly.tieba.post.components.LoadMoreFooter
-            app:footerSpinnerStyle="scale"
-            app:backgroundTint="@color/transparent"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            app:backgroundTint="@color/transparent"
+            app:footerSpinnerStyle="scale" />
 
     </com.scwang.smart.refresh.layout.SmartRefreshLayout>
 

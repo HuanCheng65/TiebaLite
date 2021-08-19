@@ -1,62 +1,64 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
     android:background="?attr/selectableItemBackground"
     android:paddingStart="16dp"
-    android:paddingEnd="16dp"
     android:paddingTop="12dp"
+    android:paddingEnd="16dp"
     android:paddingBottom="12dp">
+
     <FrameLayout
-        android:layout_marginEnd="16dp"
         android:id="@+id/theme_preview_shadow"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp">
 
         <View
             android:id="@+id/theme_preview"
-            android:background="@drawable/bg_radius_50dp"
             android:layout_width="36dp"
-            android:layout_height="36dp" />
+            android:layout_height="36dp"
+            android:background="@drawable/bg_radius_50dp" />
 
         <com.huanchengfly.tieba.post.widgets.theme.TintImageView
-            tools:backgroundTint="@color/black_trans"
-            tools:tint="@color/white"
-            app:backgroundTint="@color/black_trans"
-            android:background="@drawable/bg_radius_50dp"
             android:id="@+id/theme_selected"
-            app:srcCompat="@drawable/ic_round_check"
-            android:padding="8dp"
-            app:tint="@color/white"
             android:layout_width="36dp"
-            android:layout_height="36dp" />
+            android:layout_height="36dp"
+            android:background="@drawable/bg_radius_50dp"
+            android:padding="8dp"
+            app:backgroundTint="@color/black_trans"
+            app:srcCompat="@drawable/ic_round_check"
+            app:tint="@color/white"
+            tools:backgroundTint="@color/black_trans"
+            tools:tint="@color/white" />
     </FrameLayout>
 
     <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_alignWithParentIfMissing="true"
         android:layout_centerVertical="true"
         android:layout_toEndOf="@id/theme_preview_shadow"
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <com.huanchengfly.tieba.post.widgets.theme.TintTextView
-            android:layout_gravity="center_vertical"
-            android:id="@+id/theme_name"
-            app:tint="@color/default_color_text"
-            android:textSize="16sp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+        android:orientation="horizontal">
 
         <com.huanchengfly.tieba.post.widgets.theme.TintTextView
+            android:id="@+id/theme_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
+            android:textSize="16sp"
+            app:tint="@color/default_color_text" />
+
+        <com.huanchengfly.tieba.post.widgets.theme.TintTextView
             android:id="@+id/night_mode_tip"
-            app:tint="@color/default_color_text_secondary"
-            android:textSize="12sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
             android:layout_marginStart="8dp"
             android:text="@string/tip_night_mode_theme"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:textSize="12sp"
+            app:tint="@color/default_color_text_secondary" />
     </LinearLayout>
 </RelativeLayout>

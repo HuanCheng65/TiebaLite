@@ -27,7 +27,10 @@ object FailureResponseInterceptor : Interceptor {
         }.buffer.clone().inputStream().reader(charset)
 
         val jsonObject = try {
-            gson.fromJson<CommonResponse>(gson.newJsonReader(inputStreamReader), CommonResponse::class.java)
+            gson.fromJson<CommonResponse>(
+                gson.newJsonReader(inputStreamReader),
+                CommonResponse::class.java
+            )
         } catch (exception: Exception) {
             //如果返回内容解析失败, 说明它不是一个合法的 json
             //如果在拦截器抛出 MalformedJsonException 会导致 Retrofit 的异步请求一直卡着直到超时

@@ -5,7 +5,7 @@ import java.io.UnsupportedEncodingException
 import java.net.URLDecoder
 import java.net.URLEncoder
 
-fun String.urlEncode() : String {
+fun String.urlEncode(): String {
     return try {
         URLEncoder.encode(this, "UTF-8")
     } catch (e: UnsupportedEncodingException) {
@@ -14,7 +14,7 @@ fun String.urlEncode() : String {
     }
 }
 
-fun String.urlDecode() : String {
+fun String.urlDecode(): String {
     return try {
         URLDecoder.decode(this, "UTF-8")
     } catch (e: UnsupportedEncodingException) {
@@ -37,14 +37,14 @@ inline fun FormBody.forEach(block: (String, String) -> Unit) {
 }
 
 fun FormBody.raw() =
-        StringBuilder().apply {
-            repeat(size) {
-                if (it != 0) append('&')
-                append(encodedName(it))
-                append('=')
-                append(encodedValue(it))
-            }
-        }.toString()
+    StringBuilder().apply {
+        repeat(size) {
+            if (it != 0) append('&')
+            append(encodedName(it))
+            append('=')
+            append(encodedValue(it))
+        }
+    }.toString()
 
 fun FormBody.sortedEncodedRaw(separator: Boolean = true): String {
     val nameAndValue = ArrayList<String>()

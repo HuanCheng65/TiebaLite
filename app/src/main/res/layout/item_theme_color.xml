@@ -1,61 +1,61 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:paddingBottom="4dp"
-    android:paddingRight="4dp"
-    android:clipToPadding="false"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:clipToPadding="false"
+    android:paddingRight="4dp"
+    android:paddingBottom="4dp">
 
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/theme_preview"
-        app:cardCornerRadius="10dp"
-        app:cardBackgroundColor="@color/transparent"
-        app:strokeWidth="2dp"
-        app:cardElevation="0dp"
         android:layout_width="48dp"
-        android:layout_height="48dp">
+        android:layout_height="48dp"
+        app:cardBackgroundColor="@color/transparent"
+        app:cardCornerRadius="10dp"
+        app:cardElevation="0dp"
+        app:strokeWidth="2dp">
 
         <FrameLayout
-            android:background="@color/white"
             android:id="@+id/theme_preview_bg"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:background="@color/white">
 
             <com.huanchengfly.tieba.post.widgets.theme.TintImageView
-                android:background="@drawable/bg_radius_10dp"
-                android:backgroundTint="@color/black_trans"
-                app:tint="@color/white"
+                android:id="@+id/theme_icon"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:background="@drawable/bg_radius_10dp"
+                android:backgroundTint="@color/black_trans"
                 android:padding="16dp"
-                android:id="@+id/theme_icon"
-                android:visibility="gone" />
+                android:visibility="gone"
+                app:tint="@color/white" />
         </FrameLayout>
     </com.google.android.material.card.MaterialCardView>
 
     <RelativeLayout
-        android:visibility="gone"
-        tools:visibility="visible"
         android:id="@+id/theme_selected"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
-        android:layout_marginBottom="-4dp"
         android:layout_marginEnd="-4dp"
+        android:layout_marginBottom="-4dp"
         android:background="@drawable/bg_radius_50dp"
         android:backgroundTint="@color/white"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
+        android:visibility="gone"
+        tools:visibility="visible">
 
         <com.huanchengfly.tieba.post.widgets.theme.TintImageView
-            tools:tint="@color/white"
-            tools:backgroundTint="@color/default_color_accent"
-            app:backgroundTint="@color/default_color_accent"
-            android:background="@drawable/bg_radius_50dp"
-            app:srcCompat="@drawable/ic_round_check"
-            android:layout_margin="1dp"
-            app:tint="@color/white"
             android:layout_width="12dp"
-            android:layout_height="12dp" />
+            android:layout_height="12dp"
+            android:layout_margin="1dp"
+            android:background="@drawable/bg_radius_50dp"
+            app:backgroundTint="@color/default_color_accent"
+            app:srcCompat="@drawable/ic_round_check"
+            app:tint="@color/white"
+            tools:backgroundTint="@color/default_color_accent"
+            tools:tint="@color/white" />
     </RelativeLayout>
 </FrameLayout>

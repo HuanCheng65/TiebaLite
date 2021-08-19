@@ -68,13 +68,13 @@ public class TintImageView extends AppCompatImageView implements Tintable, Backg
     }
 
     @Override
-    public void setBackgroundTintResId(int resId) {
-        mBackgroundTintResId = resId;
-        applyTintColor();
+    public int getBackgroundTintResId() {
+        return mBackgroundTintResId;
     }
 
     @Override
-    public int getBackgroundTintResId() {
-        return mBackgroundTintResId;
+    public void setBackgroundTintResId(int resId) {
+        mBackgroundTintResId = resId;
+        applyTintColor();
     }
 }

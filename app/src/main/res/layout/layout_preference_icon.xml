@@ -1,23 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/icon_frame"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:minWidth="56dp"
     android:gravity="start|center_vertical"
+    android:minWidth="56dp"
     android:orientation="horizontal"
-    android:paddingEnd="8dp"
     android:paddingTop="4dp"
+    android:paddingEnd="8dp"
     android:paddingBottom="4dp">
 
     <com.huanchengfly.tieba.post.widgets.theme.TintPreferenceImageView
-        app:tint="@color/default_color_primary"
         android:id="@android:id/icon"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        app:maxHeight="48dp"
         app:maxWidth="48dp"
-        app:maxHeight="48dp"/>
+        app:tint="@color/default_color_primary" />
 
 </LinearLayout>

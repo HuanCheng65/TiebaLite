@@ -9,8 +9,8 @@
         app:showAsAction="always" />
     <item
         android:id="@+id/menu_sign"
+        android:icon="@drawable/ic_oksign"
         android:orderInCategory="1"
         android:title="@string/title_oksign"
-        android:icon="@drawable/ic_oksign"
         app:showAsAction="ifRoom" />
 </menu>

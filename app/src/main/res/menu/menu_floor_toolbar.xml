@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/menu_to_thread"
-        android:title="@string/title_to_thread"
         android:orderInCategory="0"
+        android:title="@string/title_to_thread"
         app:showAsAction="ifRoom" />
 </menu>

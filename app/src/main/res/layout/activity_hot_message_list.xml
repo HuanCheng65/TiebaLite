@@ -6,8 +6,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".activities.HotMessageListActivity">
-    <include
-        layout="@layout/layout_appbar"/>
+
+    <include layout="@layout/layout_appbar" />
 
     <com.huanchengfly.tieba.post.widgets.theme.TintSwipeRefreshLayout
         android:id="@+id/refresh"
@@ -18,7 +18,7 @@
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recycler_view"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+            android:layout_height="match_parent" />
 
     </com.huanchengfly.tieba.post.widgets.theme.TintSwipeRefreshLayout>
 </com.huanchengfly.tieba.post.widgets.theme.TintCoordinatorLayout>

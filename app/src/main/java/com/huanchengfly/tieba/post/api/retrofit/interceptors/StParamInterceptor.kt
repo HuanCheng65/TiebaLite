@@ -42,12 +42,12 @@ class StParamInterceptor(private val method: Boolean = false) : Interceptor {
         }
 
         val additionParams = arrayOf(
-                "stErrorNums" to { stErrorNums },
-                "stMethod" to { stMethod },
-                "stMode" to { stMode },
-                "stTimesNum" to { stTimesNum },
-                "stTime" to { stTime },
-                "stSize" to { stSize }
+            "stErrorNums" to { stErrorNums },
+            "stMethod" to { stMethod },
+            "stMode" to { stMode },
+            "stTimesNum" to { stTimesNum },
+            "stTime" to { stTime },
+            "stSize" to { stSize }
         )
 
         when {
@@ -84,11 +84,11 @@ class StParamInterceptor(private val method: Boolean = false) : Interceptor {
         }
 
         return chain.proceed(
-                request.newBuilder()
-                        .headers(headers)
-                        .url(httpUrl)
-                        .method(request.method, body)
-                        .build()
+            request.newBuilder()
+                .headers(headers)
+                .url(httpUrl)
+                .method(request.method, body)
+                .build()
         )
     }
 }

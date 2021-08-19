@@ -123,13 +123,15 @@ class UserPostBean : BaseBean() {
         companion object {
             fun createContentBean(content: String?): ContentBean {
                 val list: MutableList<PostContentBean> = ArrayList()
-                list.add(PostContentBean()
+                list.add(
+                    PostContentBean()
                         .setType("0")
-                        .setText(content))
+                        .setText(content)
+                )
                 return ContentBean()
-                        .setPostContent(list)
-                        .setCreateTime(null)
-                        .setPostId(null)
+                    .setPostContent(list)
+                    .setCreateTime(null)
+                    .setPostId(null)
             }
         }
     }

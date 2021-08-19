@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.huanchengfly.tieba.post.widgets.theme.TintView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    app:backgroundTint="@color/default_color_divider"
-    android:layout_below="@id/forum_tab"
+    android:layout_width="match_parent"
     android:layout_height="8dp"
-    android:layout_width="match_parent" />
+    android:layout_below="@id/forum_tab"
+    app:backgroundTint="@color/default_color_divider" />

@@ -27,12 +27,21 @@ class SortAndSignInterceptor(private val appSecret: String) : Interceptor {
             url.queryParameter("BDUSS") != null && url.queryParameter(Param.SIGN) == null -> {
                 Log.i("SortAndSign", "get")
                 val sortedQuery = url.query!!.split('&').sorted().joinToString(separator = "")
-                val sortedEncodedQuery = url.encodedQuery!!.split('&').sorted().joinToString(separator = "&")
+                val sortedEncodedQuery =
+                    url.encodedQuery!!.split('&').sorted().joinToString(separator = "&")
                 request.newBuilder()
-                        .url(url.newBuilder()
-                                .encodedQuery("$sortedEncodedQuery&${Param.SIGN}=${calculateSign(sortedQuery, appSecret)}")
-                                .build()
-                        ).build()
+                    .url(
+                        url.newBuilder()
+                            .encodedQuery(
+                                "$sortedEncodedQuery&${Param.SIGN}=${
+                                    calculateSign(
+                                        sortedQuery,
+                                        appSecret
+                                    )
+                                }"
+                            )
+                            .build()
+                    ).build()
             }
 
             //在 FormBody 里
@@ -47,8 +56,8 @@ class SortAndSignInterceptor(private val appSecret: String) : Interceptor {
                     addEncoded(Param.SIGN, calculateSign(body.sortedRaw(false), appSecret))
                 }.build()
                 request.newBuilder()
-                        .method(request.method, formBody)
-                        .build()
+                    .method(request.method, formBody)
+                    .build()
             }
 
             //不存在 accessKey
@@ -61,5 +70,6 @@ class SortAndSignInterceptor(private val appSecret: String) : Interceptor {
         return chain.proceed(request)
     }
 
-    internal fun calculateSign(sortedQuery: String, appSecret: String) = (sortedQuery + appSecret).toMD5()
+    internal fun calculateSign(sortedQuery: String, appSecret: String) =
+        (sortedQuery + appSecret).toMD5()
 }

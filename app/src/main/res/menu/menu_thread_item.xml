@@ -1,16 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:id="@+id/menu_copy"
+    <item
+        android:id="@+id/menu_copy"
         android:icon="@drawable/ic_round_file_copy"
         android:title="@string/menu_copy" />
-    <item android:id="@+id/menu_reply"
+    <item
+        android:id="@+id/menu_reply"
         android:icon="@drawable/ic_document_18dp"
         android:title="@string/title_reply" />
-    <item android:id="@+id/menu_report"
+    <item
+        android:id="@+id/menu_report"
         android:icon="@drawable/ic_round_warning"
         android:title="@string/title_report" />
-    <item android:id="@+id/menu_delete"
+    <item
+        android:id="@+id/menu_delete"
         android:icon="@drawable/ic_round_delete"
-        android:visible="false"
-        android:title="@string/title_delete_post" />
+        android:title="@string/title_delete_post"
+        android:visible="false" />
 </menu>

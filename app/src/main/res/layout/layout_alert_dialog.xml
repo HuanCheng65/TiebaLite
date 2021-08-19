@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
      Copyright (C) 2015 The Android Open Source Project
 
      Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,17 +14,17 @@
      limitations under the License.
 -->
 
-<com.huanchengfly.tieba.post.widgets.theme.TintAlertDialogLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<com.huanchengfly.tieba.post.widgets.theme.TintAlertDialogLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/parentPanel"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:gravity="start|left|top"
-    tools:ignore="PrivateResource"
+    android:orientation="vertical"
     app:backgroundTint="@color/default_color_card"
-    android:orientation="vertical">
+    tools:ignore="PrivateResource">
+
     <LinearLayout
         android:id="@+id/topPanel"
         android:layout_width="match_parent"
@@ -41,8 +40,8 @@
             android:gravity="center_vertical|start|left"
             android:orientation="horizontal"
             android:paddingLeft="?attr/dialogPreferredPadding"
-            android:paddingRight="?attr/dialogPreferredPadding"
-            android:paddingTop="@dimen/abc_dialog_padding_top_material">
+            android:paddingTop="@dimen/abc_dialog_padding_top_material"
+            android:paddingRight="?attr/dialogPreferredPadding">
 
             <ImageView
                 android:id="@android:id/icon"
@@ -51,19 +50,19 @@
                 android:layout_marginEnd="8dip"
                 android:layout_marginRight="8dip"
                 android:scaleType="fitCenter"
-                android:src="@null"/>
+                android:src="@null" />
 
             <com.huanchengfly.tieba.post.widgets.theme.TintDialogTitle
-                android:letterSpacing="0.02"
-                app:tint="@color/default_color_text"
-                android:textStyle="bold"
                 android:id="@+id/alertTitle"
                 style="?android:attr/windowTitleStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
+                android:letterSpacing="0.02"
                 android:singleLine="true"
-                android:textAlignment="viewStart"/>
+                android:textAlignment="viewStart"
+                android:textStyle="bold"
+                app:tint="@color/default_color_text" />
 
         </LinearLayout>
 
@@ -71,7 +70,7 @@
             android:id="@+id/titleDividerNoCustom"
             android:layout_width="match_parent"
             android:layout_height="@dimen/abc_dialog_title_divider_material"
-            android:visibility="gone"/>
+            android:visibility="gone" />
     </LinearLayout>
 
     <FrameLayout
@@ -80,12 +79,13 @@
         android:layout_height="wrap_content"
         android:minHeight="48dp">
 
-        <View android:id="@+id/scrollIndicatorUp"
+        <View
+            android:id="@+id/scrollIndicatorUp"
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:layout_gravity="top"
             android:background="?attr/colorControlHighlight"
-            android:visibility="gone"/>
+            android:visibility="gone" />
 
         <androidx.core.widget.NestedScrollView
             android:id="@+id/scrollView"
@@ -102,34 +102,35 @@
                     android:id="@+id/textSpacerNoTitle"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/abc_dialog_padding_top_material"
-                    android:visibility="gone"/>
+                    android:visibility="gone" />
 
                 <com.huanchengfly.tieba.post.widgets.theme.TintTextView
+                    android:id="@android:id/message"
+                    style="@style/TextAppearance.AppCompat.Subhead"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
                     android:letterSpacing="0.02"
                     android:lineSpacingExtra="0.5dp"
                     android:lineSpacingMultiplier="1.2"
-                    android:id="@android:id/message"
-                    style="@style/TextAppearance.AppCompat.Subhead"
-                    app:tint="@color/default_color_text"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
                     android:paddingLeft="?attr/dialogPreferredPadding"
-                    android:paddingRight="?attr/dialogPreferredPadding"/>
+                    android:paddingRight="?attr/dialogPreferredPadding"
+                    app:tint="@color/default_color_text" />
 
                 <android.widget.Space
                     android:id="@+id/textSpacerNoButtons"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/abc_dialog_padding_top_material"
-                    android:visibility="gone"/>
+                    android:visibility="gone" />
             </LinearLayout>
         </androidx.core.widget.NestedScrollView>
 
-        <View android:id="@+id/scrollIndicatorDown"
+        <View
+            android:id="@+id/scrollIndicatorDown"
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:layout_gravity="bottom"
             android:background="?attr/colorControlHighlight"
-            android:visibility="gone"/>
+            android:visibility="gone" />
 
     </FrameLayout>
 
@@ -142,7 +143,7 @@
         <FrameLayout
             android:id="@+id/custom"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content" />
     </FrameLayout>
 
     <ScrollView
@@ -160,39 +161,39 @@
             android:gravity="bottom"
             android:layoutDirection="locale"
             android:orientation="horizontal"
-            android:paddingBottom="4dp"
             android:paddingLeft="12dp"
+            android:paddingTop="4dp"
             android:paddingRight="12dp"
-            android:paddingTop="4dp">
+            android:paddingBottom="4dp">
 
             <com.huanchengfly.tieba.post.widgets.theme.TintMaterialButton
-                app:buttonTextColor="@color/default_color_primary"
                 android:id="@android:id/button3"
                 style="?attr/buttonBarNeutralButtonStyle"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content"
+                app:buttonTextColor="@color/default_color_primary" />
 
             <android.widget.Space
                 android:id="@+id/spacer"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 android:layout_weight="1"
-                android:visibility="invisible"/>
+                android:visibility="invisible" />
 
             <com.huanchengfly.tieba.post.widgets.theme.TintMaterialButton
-                app:buttonTextColor="@color/default_color_primary"
                 android:id="@android:id/button2"
-                android:layout_marginEnd="8dp"
                 style="?attr/buttonBarNegativeButtonStyle"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                app:buttonTextColor="@color/default_color_primary" />
 
             <com.huanchengfly.tieba.post.widgets.theme.TintMaterialButton
-                app:buttonTextColor="@color/default_color_text_on_primary"
                 android:id="@android:id/button1"
                 style="?attr/buttonBarPositiveButtonStyle"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content"
+                app:buttonTextColor="@color/default_color_text_on_primary" />
 
         </androidx.appcompat.widget.ButtonBarLayout>
 

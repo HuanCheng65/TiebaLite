@@ -9,7 +9,7 @@ import com.huanchengfly.tieba.post.ui.theme.utils.ColorStateListUtils
 import com.huanchengfly.tieba.post.ui.theme.utils.ThemeUtils
 
 class TintRecyclerView @JvmOverloads constructor(
-        context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
+    context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
 ) : RecyclerView(context, attrs, defStyleAttr), Tintable {
     private var backgroundTintResId: Int
 
@@ -17,8 +17,14 @@ class TintRecyclerView @JvmOverloads constructor(
         if (isInEditMode || attrs == null) {
             backgroundTintResId = 0
         } else {
-            val array = getContext().obtainStyledAttributes(attrs, R.styleable.TintRecyclerView, defStyleAttr, 0)
-            backgroundTintResId = array.getResourceId(R.styleable.TintRecyclerView_backgroundTint, 0)
+            val array = getContext().obtainStyledAttributes(
+                attrs,
+                R.styleable.TintRecyclerView,
+                defStyleAttr,
+                0
+            )
+            backgroundTintResId =
+                array.getResourceId(R.styleable.TintRecyclerView_backgroundTint, 0)
             array.recycle()
         }
         tint()
@@ -29,7 +35,8 @@ class TintRecyclerView @JvmOverloads constructor(
             if (background == null) {
                 setBackgroundColor(ThemeUtils.getColorById(context, backgroundTintResId))
             } else {
-                backgroundTintList = ColorStateListUtils.createColorStateList(context, backgroundTintResId)
+                backgroundTintList =
+                    ColorStateListUtils.createColorStateList(context, backgroundTintResId)
             }
         }
     }

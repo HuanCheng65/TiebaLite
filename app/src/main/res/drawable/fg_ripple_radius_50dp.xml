@@ -3,8 +3,8 @@
     android:color="?attr/colorControlHighlight">
     <item android:id="@android:id/mask">
         <shape>
-            <corners android:radius="50dp"/>
-            <solid android:color="@color/white"/>
+            <corners android:radius="50dp" />
+            <solid android:color="@color/white" />
         </shape>
     </item>
 </ripple>

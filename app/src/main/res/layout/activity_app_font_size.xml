@@ -2,10 +2,10 @@
 <com.huanchengfly.tieba.post.widgets.theme.TintRelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/background"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:backgroundTint="@color/default_color_window_background"
-    android:id="@+id/background"
     tools:context=".activities.AppFontSizeActivity">
 
     <include layout="@layout/layout_new_appbar" />
@@ -13,30 +13,30 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:padding="8dp"
-        android:layout_below="@+id/appbar">
+        android:layout_below="@+id/appbar"
+        android:padding="8dp">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/app_font_size_bubbles"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             app:layout_constraintBottom_toTopOf="@+id/app_font_size_card"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
-
-        <com.huanchengfly.tieba.post.widgets.theme.TintLinearLayout
-            android:padding="16dp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:gravity="center_horizontal"
-            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <com.huanchengfly.tieba.post.widgets.theme.TintLinearLayout
             android:id="@+id/app_font_size_card"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:background="@drawable/bg_radius_10dp"
-            android:backgroundTint="@color/default_color_card">
+            android:backgroundTint="@color/default_color_card"
+            android:gravity="center_horizontal"
+            android:orientation="vertical"
+            android:padding="16dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent">
 
             <com.huanchengfly.tieba.post.widgets.theme.TintTextView
                 android:id="@+id/app_font_size_text"
@@ -50,17 +50,17 @@
 
             <com.huanchengfly.tieba.post.widgets.RulerSeekBar
                 android:id="@+id/app_font_size_seekbar"
-                android:progressDrawable="@drawable/drawable_progress_font_size"
-                android:progressTint="@color/default_color_nav_bar_surface"
-                android:progressBackgroundTint="@color/default_color_nav_bar_surface"
-                android:minHeight="44dp"
-                android:maxHeight="44dp"
-                android:thumbOffset="-6dp"
-                android:max="10"
-                android:progress="4"
-                android:thumb="@drawable/drawable_thumb_font_size"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:max="10"
+                android:maxHeight="44dp"
+                android:minHeight="44dp"
+                android:progress="4"
+                android:progressBackgroundTint="@color/default_color_nav_bar_surface"
+                android:progressDrawable="@drawable/drawable_progress_font_size"
+                android:progressTint="@color/default_color_nav_bar_surface"
+                android:thumb="@drawable/drawable_thumb_font_size"
+                android:thumbOffset="-6dp"
                 app:rulerColor="@color/default_color_text_disabled"
                 app:rulerCount="4"
                 app:rulerOnEdge="true"

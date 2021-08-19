@@ -9,7 +9,11 @@ import java.lang.reflect.Type
 import java.lang.reflect.WildcardType
 
 class DeferredCallAdapterFactory : CallAdapter.Factory() {
-    override fun get(returnType: Type, annotations: Array<out Annotation>, retrofit: Retrofit): CallAdapter<*, *>? {
+    override fun get(
+        returnType: Type,
+        annotations: Array<out Annotation>,
+        retrofit: Retrofit
+    ): CallAdapter<*, *>? {
         if (getRawType(returnType) != Deferred::class.java) {
             return null
         }
@@ -25,7 +29,7 @@ class DeferredCallAdapterFactory : CallAdapter.Factory() {
     }
 
     class ApiResultCallAdapter<T>(
-            private val responseType: Type
+        private val responseType: Type
     ) : CallAdapter<T, Any> {
         override fun responseType(): Type {
             return responseType
@@ -59,7 +63,7 @@ class DeferredCallAdapterFactory : CallAdapter.Factory() {
     }
 
     class BodyCallAdapter<T>(
-            private val responseType: Type
+        private val responseType: Type
     ) : CallAdapter<T, Any> {
         override fun responseType(): Type {
             return responseType

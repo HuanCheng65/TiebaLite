@@ -53,13 +53,15 @@ class AnimSet : Anim() {
      * it creates a single [ValueAnim]
      * [with] and [before] is available to combine several [anim] to one complex animation set by chain-invocation style.
      */
-    fun anim(animCreation: ValueAnim.() -> Unit): Anim = ValueAnim().apply(animCreation).also { it.addListener() }.also { anims.add(it) }
+    fun anim(animCreation: ValueAnim.() -> Unit): Anim =
+        ValueAnim().apply(animCreation).also { it.addListener() }.also { anims.add(it) }
 
     /**
      * build an [ObjectAnim] with a much shorter and readable code by DSL
      */
     fun objectAnim(action: ObjectAnim.() -> Unit): Anim =
-            ObjectAnim().apply(action).also { it.setPropertyValueHolder() }.also { it.addListener() }.also { anims.add(it) }
+        ObjectAnim().apply(action).also { it.setPropertyValueHolder() }.also { it.addListener() }
+            .also { anims.add(it) }
 
     /**
      * start the [AnimSet]

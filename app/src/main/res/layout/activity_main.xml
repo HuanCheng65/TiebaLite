@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.huanchengfly.tieba.post.widgets.theme.TintLinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    app:backgroundTint="@color/default_color_window_background"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/background"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    app:backgroundTint="@color/default_color_window_background"
     tools:context=".activities.MainActivity">
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
@@ -15,11 +15,11 @@
         android:layout_weight="1">
 
         <com.huanchengfly.tieba.post.widgets.MyViewPager
-            android:layout_above="@id/navbar"
-            android:layout_below="@id/appbar"
             android:id="@+id/mViewPager"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            android:layout_above="@id/navbar"
+            android:layout_below="@id/appbar" />
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
     <com.huanchengfly.tieba.post.widgets.theme.TintBottomNavigationView

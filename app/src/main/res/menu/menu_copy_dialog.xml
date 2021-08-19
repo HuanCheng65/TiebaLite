@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
-        android:title="@string/menu_copy_text"
-        android:id="@+id/menu_copy" />
+        android:id="@+id/menu_copy"
+        android:title="@string/menu_copy_text" />
     <item
-        android:title="@string/menu_copy_selectable"
-        android:id="@+id/menu_copy_selectable" />
+        android:id="@+id/menu_copy_selectable"
+        android:title="@string/menu_copy_selectable" />
 </menu>

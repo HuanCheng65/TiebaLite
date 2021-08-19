@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layer-list xmlns:android="http://schemas.android.com/apk/res/android" >
-    <item
-        android:id="@android:id/background">
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@android:id/background">
         <shape>
             <corners android:radius="50dp" />
             <solid android:color="@color/default_color_divider" />

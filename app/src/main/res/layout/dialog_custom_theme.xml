@@ -1,44 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:backgroundTint="@color/default_color_background"
+    android:orientation="vertical"
+    android:padding="16dp"
     tools:background="@drawable/bg_radius_10dp"
-    android:padding="16dp">
+    tools:backgroundTint="@color/default_color_background">
+
     <androidx.gridlayout.widget.GridLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
         app:columnCount="2"
         app:orientation="vertical"
-        app:rowCount="1"
-        android:layout_gravity="center_horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        app:rowCount="1">
+
         <LinearLayout
             android:id="@+id/custom_theme_primary_holder"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
             app:layout_column="0"
             app:layout_columnSpan="1"
-            app:layout_columnWeight="1"
-            android:orientation="vertical"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
+            app:layout_columnWeight="1">
+
             <View
-                tools:backgroundTint="@color/default_color_primary"
-                android:layout_gravity="center_horizontal"
                 android:id="@+id/custom_theme_primary"
-                android:background="@drawable/bg_radius_50dp"
                 android:layout_width="48dp"
-                android:layout_height="48dp" />
+                android:layout_height="48dp"
+                android:layout_gravity="center_horizontal"
+                android:background="@drawable/bg_radius_50dp"
+                tools:backgroundTint="@color/default_color_primary" />
 
             <com.huanchengfly.tieba.post.widgets.theme.TintTextView
-                android:textStyle="bold"
-                android:layout_marginTop="8dp"
-                app:tint="@color/default_color_text"
-                android:text="@string/tip_primary_color"
-                android:layout_gravity="center_horizontal"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="8dp"
+                android:text="@string/tip_primary_color"
+                android:textStyle="bold"
+                app:tint="@color/default_color_text" />
         </LinearLayout>
         <!--
         <LinearLayout
@@ -86,28 +89,28 @@
         -->
 
     <com.huanchengfly.tieba.post.widgets.theme.TintCheckBox
+        android:id="@+id/custom_theme_toolbar_primary_color"
         style="@style/Widget.AppCompat.CompoundButton.CheckBox"
-        app:buttonTint="@color/tint_checkbox"
-        app:textColor="@color/default_color_text_secondary"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:minHeight="0dp"
         android:checked="false"
+        android:minHeight="0dp"
+        android:text="@string/tip_toolbar_primary_color"
         android:textStyle="bold"
-        android:id="@+id/custom_theme_toolbar_primary_color"
-        android:text="@string/tip_toolbar_primary_color" />
+        app:buttonTint="@color/tint_checkbox"
+        app:textColor="@color/default_color_text_secondary" />
 
     <com.huanchengfly.tieba.post.widgets.theme.TintCheckBox
+        android:id="@+id/custom_theme_status_bar_font"
         style="@style/Widget.AppCompat.CompoundButton.CheckBox"
-        app:buttonTint="@color/tint_checkbox"
-        app:textColor="@color/default_color_text_secondary"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:minHeight="0dp"
         android:checked="false"
+        android:minHeight="0dp"
+        android:text="@string/tip_status_bar_font"
         android:textStyle="bold"
-        android:id="@+id/custom_theme_status_bar_font"
-        android:text="@string/tip_status_bar_font" />
+        app:buttonTint="@color/tint_checkbox"
+        app:textColor="@color/default_color_text_secondary" />
 </LinearLayout>

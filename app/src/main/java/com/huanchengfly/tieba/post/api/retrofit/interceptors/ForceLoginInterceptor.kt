@@ -28,11 +28,11 @@ object ForceLoginInterceptor : Interceptor {
         }
 
         return chain.proceed(
-                request.newBuilder()
-                        .headers(headers)
-                        .url(httpUrl)
-                        .method(request.method, body)
-                        .build()
+            request.newBuilder()
+                .headers(headers)
+                .url(httpUrl)
+                .method(request.method, body)
+                .build()
         )
     }
 

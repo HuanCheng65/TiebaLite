@@ -1,39 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/background"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/background"
     android:background="@color/black"
     tools:context=".activities.PhotoViewActivity">
+
     <androidx.viewpager2.widget.ViewPager2
-        android:orientation="horizontal"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior"
         android:id="@+id/view_pager"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:orientation="horizontal"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+
     <com.google.android.material.bottomappbar.BottomAppBar
-        app:popupTheme="?attr/actionOverflowMenuStyle"
-        style="@style/Widget.MaterialComponents.BottomAppBar"
         android:id="@+id/bottom_app_bar"
+        style="@style/Widget.MaterialComponents.BottomAppBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
-        app:hideOnScroll="true"
-        app:titleTextColor="@color/white"
-        app:elevation="0dp"
         app:backgroundTint="@color/transparent"
-        app:menu="@menu/menu_photo_view">
+        app:elevation="0dp"
+        app:hideOnScroll="true"
+        app:menu="@menu/menu_photo_view"
+        app:popupTheme="?attr/actionOverflowMenuStyle"
+        app:titleTextColor="@color/white">
+
         <TextView
-            android:layout_gravity="start|center_vertical"
-            android:textSize="18sp"
-            android:textColor="@color/white"
             android:id="@+id/counter"
-            android:layout_marginEnd="16dp"
             android:layout_width="wrap_content"
-            tools:text="1 / 1"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:layout_gravity="start|center_vertical"
+            android:layout_marginEnd="16dp"
+            android:textColor="@color/white"
+            android:textSize="18sp"
+            tools:text="1 / 1" />
     </com.google.android.material.bottomappbar.BottomAppBar>
     <!--
         <RelativeLayout

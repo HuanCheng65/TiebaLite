@@ -28,12 +28,12 @@
     </declare-styleable>
 
     <declare-styleable name="ShadowLayout">
-        <attr name="shadow_layout_color" format="color"/>
-        <attr name="shadow_layout_background_color" format="color"/>
-        <attr name="shadow_layout_offsetX" format="dimension"/>
-        <attr name="shadow_layout_offsetY" format="dimension"/>
-        <attr name="shadow_layout_blur" format="dimension"/>
-        <attr name="shadow_layout_radius" format="dimension"/>
+        <attr name="shadow_layout_color" format="color" />
+        <attr name="shadow_layout_background_color" format="color" />
+        <attr name="shadow_layout_offsetX" format="dimension" />
+        <attr name="shadow_layout_offsetY" format="dimension" />
+        <attr name="shadow_layout_blur" format="dimension" />
+        <attr name="shadow_layout_radius" format="dimension" />
     </declare-styleable>
 
     <declare-styleable name="TintTabLayout">
@@ -146,7 +146,7 @@
 
     <declare-styleable name="MyViewPager">
         <attr name="orientation" />
-        <attr format="boolean" name="can_scroll" />
+        <attr name="can_scroll" format="boolean" />
     </declare-styleable>
 
     <declare-styleable name="TintEditText">

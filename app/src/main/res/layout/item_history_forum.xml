@@ -2,25 +2,25 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:padding="@dimen/card_margin"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:padding="@dimen/card_margin">
 
     <ImageView
-        android:layout_marginEnd="8dp"
-        android:layout_centerVertical="true"
-        tools:src="@drawable/bg_placeholder_circle"
         android:id="@+id/history_item_avatar"
         android:layout_width="@dimen/size_avatar_small"
         android:layout_height="@dimen/size_avatar_small"
-        tools:ignore="ContentDescription" />
+        android:layout_centerVertical="true"
+        android:layout_marginEnd="8dp"
+        tools:ignore="ContentDescription"
+        tools:src="@drawable/bg_placeholder_circle" />
 
     <LinearLayout
-        android:layout_centerVertical="true"
-        android:layout_alignWithParentIfMissing="true"
-        android:layout_toEndOf="@id/history_item_avatar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_alignWithParentIfMissing="true"
+        android:layout_centerVertical="true"
+        android:layout_toEndOf="@id/history_item_avatar"
         android:orientation="vertical">
 
         <RelativeLayout
@@ -28,27 +28,27 @@
             android:layout_height="wrap_content">
 
             <com.huanchengfly.tieba.post.widgets.theme.TintTextView
+                android:id="@+id/history_item_user"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_toStartOf="@id/history_item_header_title"
                 android:ellipsize="end"
                 android:maxLines="1"
                 android:textSize="15sp"
-                tools:text="吧"
-                app:tint="@color/default_color_text"
                 android:textStyle="bold"
-                android:id="@+id/history_item_user"
-                android:layout_centerVertical="true"
-                android:layout_toStartOf="@id/history_item_header_title"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                app:tint="@color/default_color_text"
+                tools:text="吧" />
 
             <com.huanchengfly.tieba.post.widgets.theme.TintTextView
-                app:tint="@color/default_color_text_secondary"
-                tools:text="今天"
                 android:id="@+id/history_item_header_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
                 android:layout_alignParentEnd="true"
-                android:textSize="13sp" />
+                android:layout_centerVertical="true"
+                android:textSize="13sp"
+                app:tint="@color/default_color_text_secondary"
+                tools:text="今天" />
         </RelativeLayout>
 
     </LinearLayout>

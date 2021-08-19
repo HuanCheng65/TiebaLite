@@ -1,43 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout android:id="@+id/header_view_parent"
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/header_view_parent"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    android:layout_height="wrap_content">
+
     <RelativeLayout
-        android:padding="16dp"
         android:id="@+id/header_view"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/header_view_height">
+        android:layout_height="@dimen/header_view_height"
+        android:padding="16dp">
+
         <RelativeLayout
-            android:layout_centerInParent="true"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:layout_centerInParent="true">
+
             <RelativeLayout
-                android:layout_alignParentStart="true"
-                android:layout_alignParentTop="true"
-                android:layout_centerVertical="true"
                 android:id="@+id/header_progress_holder"
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
+                android:layout_centerVertical="true">
+
                 <com.huanchengfly.tieba.post.widgets.theme.TintProgressBar
-                    app:progressTint="@color/default_color_primary"
-                    android:indeterminate="false"
                     android:id="@+id/header_progress"
                     style="?android:attr/progressBarStyleSmallInverse"
                     android:layout_width="wrap_content"
-                    android:layout_height="match_parent" />
+                    android:layout_height="match_parent"
+                    android:indeterminate="false"
+                    app:progressTint="@color/default_color_primary" />
             </RelativeLayout>
 
             <com.huanchengfly.tieba.post.widgets.theme.TintTextView
-                android:layout_marginStart="16dp"
-                android:layout_centerVertical="true"
-                android:layout_toEndOf="@id/header_progress_holder"
-                android:textSize="18sp"
                 android:id="@+id/header_tip"
-                android:singleLine="true"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="16dp"
+                android:layout_toEndOf="@id/header_progress_holder"
+                android:singleLine="true"
+                android:textSize="18sp"
                 app:tint="@color/default_color_text_secondary" />
         </RelativeLayout>
     </RelativeLayout>

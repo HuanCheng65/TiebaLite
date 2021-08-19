@@ -1,32 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/forum_item_title_holder"
-    android:layout_marginTop="@dimen/forum_card_inner_gap"
-    android:layout_height="wrap_content">
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="@dimen/forum_card_inner_gap">
+
     <com.huanchengfly.tieba.post.widgets.theme.TintTextView
         android:id="@+id/forum_item_good_tip"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:tint="@color/default_color_primary"
+        android:layout_marginEnd="4dp"
+        android:text="@string/tip_good"
         android:textSize="16sp"
         android:textStyle="bold"
-        android:layout_marginEnd="4dp"
-        android:text="@string/tip_good" />
+        app:tint="@color/default_color_primary" />
 
     <com.huanchengfly.tieba.post.widgets.theme.TintTextView
-        android:maxLines="2"
-        android:ellipsize="end"
-        android:letterSpacing="0.02"
-        android:layout_alignWithParentIfMissing="true"
-        android:layout_toEndOf="@id/forum_item_good_tip"
         android:id="@+id/forum_item_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:tint="@color/default_color_text"
+        android:layout_alignWithParentIfMissing="true"
+        android:layout_toEndOf="@id/forum_item_good_tip"
+        android:ellipsize="end"
+        android:letterSpacing="0.02"
+        android:maxLines="2"
         android:textSize="16sp"
         android:textStyle="bold"
+        app:tint="@color/default_color_text"
         tools:text="标题" />
 </RelativeLayout>

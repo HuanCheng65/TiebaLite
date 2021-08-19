@@ -1,26 +1,23 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--suppress AndroidElementNotAllowed -->
-<androidx.preference.PreferenceScreen
-    xmlns:android="http://schemas.android.com/apk/res/android">
-    <androidx.preference.PreferenceCategory
-        android:layout="@layout/layout_preference_category_no_title">
+<?xml version="1.0" encoding="utf-8"?><!--suppress AndroidElementNotAllowed -->
+<androidx.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <androidx.preference.PreferenceCategory android:layout="@layout/layout_preference_category_no_title">
         <SwitchPreference
-            android:layout="@layout/layout_preference"
-            android:widgetLayout="@layout/layout_switch"
-            android:icon="@drawable/ic_round_bug_report_blue"
             android:defaultValue="false"
+            android:icon="@drawable/ic_round_bug_report_blue"
             android:key="check_beta_update"
+            android:layout="@layout/layout_preference"
+            android:summary="@string/tip_check_beta_update"
             android:title="@string/title_check_beta_update"
-            android:summary="@string/tip_check_beta_update"/>
+            android:widgetLayout="@layout/layout_switch" />
 
         <SwitchPreference
-            android:icon="@drawable/ic_chrome"
-            android:layout="@layout/layout_preference"
-            android:widgetLayout="@layout/layout_switch"
             android:defaultValue="true"
+            android:icon="@drawable/ic_chrome"
             android:key="use_webview"
-            android:title="@string/title_use_webview"
+            android:layout="@layout/layout_preference"
+            android:summaryOff="@string/tip_use_webview"
             android:summaryOn="@string/tip_use_webview_on"
-            android:summaryOff="@string/tip_use_webview"/>
+            android:title="@string/title_use_webview"
+            android:widgetLayout="@layout/layout_switch" />
     </androidx.preference.PreferenceCategory>
 </androidx.preference.PreferenceScreen>

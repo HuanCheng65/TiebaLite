@@ -1,58 +1,55 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--suppress AndroidElementNotAllowed -->
-<androidx.preference.PreferenceScreen
-    xmlns:android="http://schemas.android.com/apk/res/android">
-    <androidx.preference.PreferenceCategory
-        android:layout="@layout/layout_preference_category_no_title">
+<?xml version="1.0" encoding="utf-8"?><!--suppress AndroidElementNotAllowed -->
+<androidx.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <androidx.preference.PreferenceCategory android:layout="@layout/layout_preference_category_no_title">
         <ListPreference
-            android:icon="@drawable/ic_round_photo_size_select_actual"
-            android:key="image_load_type"
+            android:defaultValue="0"
             android:entries="@array/image_load_type_entries"
             android:entryValues="@array/image_load_type_entry_values"
-            android:defaultValue="0"
+            android:icon="@drawable/ic_round_photo_size_select_actual"
+            android:key="image_load_type"
             android:title="@string/title_settings_image_load_type" />
 
         <ListPreference
+            android:defaultValue="0"
             android:entries="@array/sort_type_entries"
             android:entryValues="@array/sort_type_entry_values"
-            android:title="@string/title_settings_default_sort_type"
-            android:summaryOff="@string/summary_default_sort_type"
-            android:defaultValue="0"
+            android:icon="@drawable/ic_round_calendar_view_day"
             android:key="default_sort_type"
-            android:icon="@drawable/ic_round_calendar_view_day" />
+            android:summaryOff="@string/summary_default_sort_type"
+            android:title="@string/title_settings_default_sort_type" />
 
         <SwitchPreference
+            android:defaultValue="true"
             android:icon="@drawable/ic_quick_yellow"
-            android:defaultValue="true"
             android:key="showShortcutInThread"
-            android:title="@string/settings_show_shortcut"
             android:summaryOff="@string/tip_show_shortcut_in_thread"
-            android:summaryOn="@string/tip_show_shortcut_in_thread_on" />
+            android:summaryOn="@string/tip_show_shortcut_in_thread_on"
+            android:title="@string/settings_show_shortcut" />
 
         <SwitchPreference
+            android:defaultValue="true"
             android:icon="@drawable/ic_round_star_yellow"
-            android:defaultValue="true"
             android:key="collect_thread_see_lz"
-            android:title="@string/settings_collect_thread_see_lz"
             android:summaryOff="@string/tip_collect_thread_see_lz"
-            android:summaryOn="@string/tip_collect_thread_see_lz_on" />
+            android:summaryOn="@string/tip_collect_thread_see_lz_on"
+            android:title="@string/settings_collect_thread_see_lz" />
 
         <SwitchPreference
-            android:icon="@drawable/ic_arrow_dropup_circle"
             android:defaultValue="true"
+            android:icon="@drawable/ic_arrow_dropup_circle"
             android:key="show_top_forum_in_normal_list"
-            android:title="@string/title_settings_show_top_forum_in_normal_list"
-            android:summary="@string/summary_show_top_forum_in_normal_list" />
+            android:summary="@string/summary_show_top_forum_in_normal_list"
+            android:title="@string/title_settings_show_top_forum_in_normal_list" />
 
         <SwitchPreference
-            android:icon="@drawable/ic_round_verified"
             android:defaultValue="false"
+            android:icon="@drawable/ic_round_verified"
             android:key="show_both_username_and_nickname"
             android:title="@string/title_show_both_username_and_nickname" />
 
         <SwitchPreference
-            android:icon="@drawable/ic_round_hourglass_full"
             android:defaultValue="true"
+            android:icon="@drawable/ic_round_hourglass_full"
             android:key="loadPictureWhenScroll"
             android:title="@string/title_load_picture_when_scroll" />
     </androidx.preference.PreferenceCategory>

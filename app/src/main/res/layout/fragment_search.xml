@@ -1,32 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.scwang.smart.refresh.layout.SmartRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    app:srlDragRate="0.8"
-    app:srlEnableOverScrollBounce="true"
-    app:srlEnableOverScrollDrag="true"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/fragment_search_refresh"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    app:srlDragRate="0.8"
+    app:srlEnableOverScrollBounce="true"
+    app:srlEnableOverScrollDrag="true"
     tools:context=".fragments.SearchForumFragment">
+
     <com.huanchengfly.tieba.post.widgets.theme.TintMaterialHeader
         android:id="@+id/refresh_header"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
     <androidx.recyclerview.widget.RecyclerView
-        android:paddingStart="@dimen/card_margin"
-        android:paddingEnd="@dimen/card_margin"
-        android:paddingBottom="@dimen/card_margin"
-        android:clipToPadding="false"
         android:id="@+id/fragment_search_recycler_view"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:clipToPadding="false"
+        android:paddingStart="@dimen/card_margin"
+        android:paddingEnd="@dimen/card_margin"
+        android:paddingBottom="@dimen/card_margin" />
 
     <com.huanchengfly.tieba.post.components.LoadMoreFooter
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/card_margin"
         android:layout_marginEnd="@dimen/card_margin"
-        android:layout_marginBottom="@dimen/card_margin"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_marginBottom="@dimen/card_margin" />
 </com.scwang.smart.refresh.layout.SmartRefreshLayout>

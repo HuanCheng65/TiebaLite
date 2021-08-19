@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.huanchengfly.tieba.post.widgets.theme.TintCoordinatorLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<com.huanchengfly.tieba.post.widgets.theme.TintCoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/background"
@@ -8,13 +7,12 @@
     android:layout_height="match_parent"
     tools:context=".activities.LoginActivity">
 
-    <include
-        layout="@layout/layout_appbar"/>
+    <include layout="@layout/layout_appbar" />
 
     <RelativeLayout
-        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        android:id="@+id/main"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/main" />
+        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
 </com.huanchengfly.tieba.post.widgets.theme.TintCoordinatorLayout>

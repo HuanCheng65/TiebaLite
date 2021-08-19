@@ -22,8 +22,8 @@ object BilibiliUtil {
 
     @JvmStatic
     fun replaceVideoNumberSpan(
-            context: Context,
-            source: CharSequence?
+        context: Context,
+        source: CharSequence?
     ): SpannableString {
         if (source == null) {
             return SpannableString("")
@@ -41,10 +41,10 @@ object BilibiliUtil {
     }
 
     private fun replace(
-            context: Context,
-            regex: String,
-            source: SpannableString,
-            urlPrefix: String = "https://www.bilibili.com/video/"
+        context: Context,
+        regex: String,
+        source: SpannableString,
+        urlPrefix: String = "https://www.bilibili.com/video/"
     ): CharSequence {
         try {
             val pattern = Pattern.compile(regex)

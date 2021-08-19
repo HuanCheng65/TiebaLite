@@ -15,8 +15,8 @@ import java.util.concurrent.ThreadLocalRandom
 import kotlin.properties.Delegates
 
 abstract class IOKSigner(
-        val coroutineScope: CoroutineScope,
-        context: Context
+    val coroutineScope: CoroutineScope,
+    context: Context
 ) {
     private val contextWeakReference: WeakReference<Context> = WeakReference(context)
 
@@ -27,8 +27,8 @@ abstract class IOKSigner(
 
     suspend fun sign(signDataBean: SignDataBean): ApiResult<SignResultBean> {
         return TiebaApi.getInstance()
-                .signAsync(signDataBean.forumName, signDataBean.tbs)
-                .await()
+            .signAsync(signDataBean.forumName, signDataBean.tbs)
+            .await()
     }
 
     fun getSignDelay(): Long {
@@ -85,9 +85,9 @@ class MultiAccountSigner(
 */
 
 class SingleAccountSigner(
-        coroutineScope: CoroutineScope,
-        context: Context,
-        private val account: Account
+    coroutineScope: CoroutineScope,
+    context: Context,
+    private val account: Account
 ) : IOKSigner(coroutineScope, context) {
     companion object {
         const val TAG = "SingleAccountSigner"
@@ -110,30 +110,31 @@ class SingleAccountSigner(
         var userName: String by Delegates.notNull()
         var tbs: String by Delegates.notNull()
         AccountUtil.updateUserInfoAsync(coroutineScope, account.bduss)
-                .await()
-                .fetchIfSuccess {
-                    userName = it.data.name
-                    tbs = it.data.itbTbs
-                    TiebaApi.getInstance().forumRecommendAsync().getData()
+            .await()
+            .fetchIfSuccess {
+                userName = it.data.name
+                tbs = it.data.itbTbs
+                TiebaApi.getInstance().forumRecommendAsync().getData()
+            }
+            .doIfSuccess { forumRecommend ->
+                signData.addAll(forumRecommend.likeForum.filter { it.isSign != "1" }
+                    .map { SignDataBean(it.forumName, userName, tbs) })
+                totalCount = signData.size
+                mProgressListener?.onStart(totalCount)
+                if (signData.isNotEmpty()) {
+                    result = sign(0)
+                } else {
+                    mProgressListener?.onFinish(true, 0, 0)
                 }
-                .doIfSuccess { forumRecommend ->
-                    signData.addAll(forumRecommend.likeForum.filter { it.isSign != "1" }.map { SignDataBean(it.forumName, userName, tbs) })
-                    totalCount = signData.size
-                    mProgressListener?.onStart(totalCount)
-                    if (signData.isNotEmpty()) {
-                        result = sign(0)
-                    } else {
-                        mProgressListener?.onFinish(true, 0, 0)
-                    }
-                }
-                .doIfFailure {
-                    mProgressListener?.onFailure(
-                            0,
-                            0,
-                            it.getErrorCode(),
-                            it.getErrorMessage()
-                    )
-                }
+            }
+            .doIfFailure {
+                mProgressListener?.onFailure(
+                    0,
+                    0,
+                    it.getErrorCode(),
+                    it.getErrorMessage()
+                )
+            }
         return result
     }
 
@@ -142,13 +143,18 @@ class SingleAccountSigner(
         val data = signData[position]
         mProgressListener?.onProgressStart(data, position, signData.size)
         val result = sign(data)
-                .doIfSuccess {
-                    successCount += 1
-                    mProgressListener?.onProgressFinish(data, it, position, totalCount)
-                }
-                .doIfFailure {
-                    mProgressListener?.onFailure(position, totalCount, it.getErrorCode(), it.getErrorMessage())
-                }
+            .doIfSuccess {
+                successCount += 1
+                mProgressListener?.onProgressFinish(data, it, position, totalCount)
+            }
+            .doIfFailure {
+                mProgressListener?.onFailure(
+                    position,
+                    totalCount,
+                    it.getErrorCode(),
+                    it.getErrorMessage()
+                )
+            }
         return if (position < signData.size - 1) {
             delay(getSignDelay())
             sign(position + 1)
@@ -161,32 +167,32 @@ class SingleAccountSigner(
 
 interface ProgressListener {
     fun onStart(
-            total: Int
+        total: Int
     )
 
     fun onProgressStart(
-            signDataBean: SignDataBean,
-            current: Int,
-            total: Int
+        signDataBean: SignDataBean,
+        current: Int,
+        total: Int
     )
 
     fun onProgressFinish(
-            signDataBean: SignDataBean,
-            signResultBean: SignResultBean,
-            current: Int,
-            total: Int
+        signDataBean: SignDataBean,
+        signResultBean: SignResultBean,
+        current: Int,
+        total: Int
     )
 
     fun onFinish(
-            success: Boolean,
-            signedCount: Int,
-            total: Int
+        success: Boolean,
+        signedCount: Int,
+        total: Int
     )
 
     fun onFailure(
-            current: Int,
-            total: Int,
-            errorCode: Int,
-            errorMsg: String
+        current: Int,
+        total: Int,
+        errorCode: Int,
+        errorMsg: String
     )
 }

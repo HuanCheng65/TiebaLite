@@ -1,5 +1,8 @@
 package com.huanchengfly.tieba.post.utils;
 
+import static android.content.Intent.ACTION_VIEW;
+import static com.huanchengfly.tieba.post.utils.ColorUtils.greifyColor;
+
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
@@ -43,9 +46,6 @@ import com.huanchengfly.tieba.post.ui.theme.utils.ThemeUtils;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Calendar;
-
-import static android.content.Intent.ACTION_VIEW;
-import static com.huanchengfly.tieba.post.utils.ColorUtils.greifyColor;
 
 public class Util {
     public static final String TAG = "Util";

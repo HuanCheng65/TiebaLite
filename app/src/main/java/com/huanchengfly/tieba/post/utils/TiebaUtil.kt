@@ -23,7 +23,11 @@ import java.util.*
 object TiebaUtil {
     @JvmStatic
     @JvmOverloads
-    fun copyText(context: Context, text: String?, toast: String = context.getString(R.string.toast_copy_success)) {
+    fun copyText(
+        context: Context,
+        text: String?,
+        toast: String = context.getString(R.string.toast_copy_success)
+    ) {
         val cm = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
         val clipData = ClipData.newPlainText("Tieba Lite", text)
         cm.setPrimaryClip(clipData)
@@ -34,14 +38,14 @@ object TiebaUtil {
         val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
         val autoSign = context.appPreferences.autoSign
         val pendingIntent = PendingIntent.getBroadcast(
-                context,
-                0,
-                Intent(context, AutoSignAlarm::class.java),
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                    PendingIntent.FLAG_IMMUTABLE
-                } else {
-                    0
-                }
+            context,
+            0,
+            Intent(context, AutoSignAlarm::class.java),
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                PendingIntent.FLAG_IMMUTABLE
+            } else {
+                0
+            }
         )
         if (autoSign) {
             val autoSignTimeStr = context.appPreferences.autoSignTime!!
@@ -52,7 +56,12 @@ object TiebaUtil {
             calendar[Calendar.HOUR_OF_DAY] = hour
             calendar[Calendar.MINUTE] = minute
             if (calendar.timeInMillis >= System.currentTimeMillis()) {
-                alarmManager.setInexactRepeating(AlarmManager.RTC, calendar.timeInMillis, AlarmManager.INTERVAL_DAY, pendingIntent)
+                alarmManager.setInexactRepeating(
+                    AlarmManager.RTC,
+                    calendar.timeInMillis,
+                    AlarmManager.INTERVAL_DAY,
+                    pendingIntent
+                )
             }
         } else {
             alarmManager.cancel(pendingIntent)
@@ -91,7 +100,10 @@ object TiebaUtil {
         context.startActivity(Intent().apply {
             action = Intent.ACTION_SEND
             type = "text/plain"
-            putExtra(Intent.EXTRA_TEXT, "${if (title != null) "「$title」\n" else ""}$text\n（分享自贴吧 Lite）")
+            putExtra(
+                Intent.EXTRA_TEXT,
+                "${if (title != null) "「$title」\n" else ""}$text\n（分享自贴吧 Lite）"
+            )
         })
     }
 
@@ -99,17 +111,20 @@ object TiebaUtil {
     fun reportPost(context: Context, postId: String) {
         val dialog = LoadingDialog(context).apply { show() }
         TiebaApi.getInstance()
-                .checkReportPost(postId)
-                .enqueue(object : Callback<CheckReportBean> {
-                    override fun onResponse(call: Call<CheckReportBean>, response: Response<CheckReportBean>) {
-                        dialog.dismiss()
-                        WebViewActivity.launch(context, response.body()!!.data.url)
-                    }
+            .checkReportPost(postId)
+            .enqueue(object : Callback<CheckReportBean> {
+                override fun onResponse(
+                    call: Call<CheckReportBean>,
+                    response: Response<CheckReportBean>
+                ) {
+                    dialog.dismiss()
+                    WebViewActivity.launch(context, response.body()!!.data.url)
+                }
 
-                    override fun onFailure(call: Call<CheckReportBean>, t: Throwable) {
-                        dialog.dismiss()
-                        context.toastShort(R.string.toast_load_failed)
-                    }
-                })
+                override fun onFailure(call: Call<CheckReportBean>, t: Throwable) {
+                    dialog.dismiss()
+                    context.toastShort(R.string.toast_load_failed)
+                }
+            })
     }
 }

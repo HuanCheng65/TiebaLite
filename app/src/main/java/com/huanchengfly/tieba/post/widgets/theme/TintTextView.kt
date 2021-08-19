@@ -12,7 +12,11 @@ import com.huanchengfly.tieba.post.ui.theme.interfaces.Tintable
 import com.huanchengfly.tieba.post.ui.theme.utils.ColorStateListUtils
 
 @SuppressLint("CustomViewStyleable")
-class TintTextView @JvmOverloads constructor(context: Context?, attrs: AttributeSet? = null, defStyleAttr: Int = 0) : AppCompatTextView(context!!, attrs, defStyleAttr), Tintable {
+class TintTextView @JvmOverloads constructor(
+    context: Context?,
+    attrs: AttributeSet? = null,
+    defStyleAttr: Int = 0
+) : AppCompatTextView(context!!, attrs, defStyleAttr), Tintable {
     var backgroundTintResId: Int = 0
         set(value) {
             field = value
@@ -36,11 +40,13 @@ class TintTextView @JvmOverloads constructor(context: Context?, attrs: Attribute
             }
         }
         if (tintResId != 0) {
-            setTextColor(if (isInEditMode) {
-                context.getColorStateListCompat(tintResId)
-            } else {
-                ColorStateListUtils.createColorStateList(context, tintResId)
-            })
+            setTextColor(
+                if (isInEditMode) {
+                    context.getColorStateListCompat(tintResId)
+                } else {
+                    ColorStateListUtils.createColorStateList(context, tintResId)
+                }
+            )
         }
     }
 
@@ -50,7 +56,8 @@ class TintTextView @JvmOverloads constructor(context: Context?, attrs: Attribute
     }
 
     init {
-        val array = getContext().obtainStyledAttributes(attrs, R.styleable.TintView, defStyleAttr, 0)
+        val array =
+            getContext().obtainStyledAttributes(attrs, R.styleable.TintView, defStyleAttr, 0)
         backgroundTintResId = array.getResourceId(R.styleable.TintView_backgroundTint, 0)
         tintResId = array.getResourceId(R.styleable.TintView_tint, 0)
         array.recycle()

@@ -1,25 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.huanchengfly.tieba.post.widgets.theme.TintCoordinatorLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<com.huanchengfly.tieba.post.widgets.theme.TintCoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    app:backgroundTint="@color/default_color_window_background"
     android:id="@+id/background"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    app:backgroundTint="@color/default_color_window_background"
     tools:context=".activities.AboutActivity">
 
-<include
-        layout="@layout/layout_appbar" />
+    <include layout="@layout/layout_appbar" />
 
     <RelativeLayout
-        android:paddingStart="@dimen/card_margin"
-        android:paddingEnd="@dimen/card_margin"
-        android:paddingBottom="@dimen/card_margin"
-        android:clipToPadding="false"
-        android:animateLayoutChanges="true"
         android:id="@+id/main"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:animateLayoutChanges="true"
+        android:clipToPadding="false"
+        android:paddingStart="@dimen/card_margin"
+        android:paddingEnd="@dimen/card_margin"
+        android:paddingBottom="@dimen/card_margin"
         app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 </com.huanchengfly.tieba.post.widgets.theme.TintCoordinatorLayout>

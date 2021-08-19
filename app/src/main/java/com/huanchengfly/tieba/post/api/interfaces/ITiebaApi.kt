@@ -21,8 +21,8 @@ interface ITiebaApi {
      * @param page 分页页码
      */
     fun personalized(
-            loadType: Int,
-            page: Int = 1
+        loadType: Int,
+        page: Int = 1
     ): Call<PersonalizedBean>
 
     /**
@@ -34,8 +34,8 @@ interface ITiebaApi {
      * @param postId 回复 ID
      */
     fun agree(
-            threadId: String,
-            postId: String
+        threadId: String,
+        postId: String
     ): Call<AgreeBean>
 
     /**
@@ -47,8 +47,8 @@ interface ITiebaApi {
      * @param postId 回复 ID
      */
     fun disagree(
-            threadId: String,
-            postId: String
+        threadId: String,
+        postId: String
     ): Call<AgreeBean>
 
     /**
@@ -74,10 +74,10 @@ interface ITiebaApi {
      * @param goodClassifyId 精品贴分类 ID
      */
     fun forumPage(
-            forumName: String,
-            page: Int = 1,
-            sortType: ForumSortType = ForumSortType.REPLY_TIME,
-            goodClassifyId: String? = null
+        forumName: String,
+        page: Int = 1,
+        sortType: ForumSortType = ForumSortType.REPLY_TIME,
+        goodClassifyId: String? = null
     ): Call<ForumPageBean>
 
     /**
@@ -89,10 +89,10 @@ interface ITiebaApi {
      * @param subPostId 楼中楼回复 ID
      */
     fun floor(
-            threadId: String,
-            page: Int = 1,
-            postId: String?,
-            subPostId: String?
+        threadId: String,
+        page: Int = 1,
+        postId: String?,
+        subPostId: String?
     ): Call<SubFloorListBean>
 
     /**
@@ -102,8 +102,8 @@ interface ITiebaApi {
      * @param page 分页页码（从 1 开始）
      */
     fun userLikeForum(
-            uid: String,
-            page: Int = 1
+        uid: String,
+        page: Int = 1
     ): Call<UserLikeForumBean>
 
     /**
@@ -114,9 +114,9 @@ interface ITiebaApi {
      * @param isThread 是否查看主题贴
      */
     fun userPost(
-            uid: String,
-            page: Int = 1,
-            isThread: Boolean = true
+        uid: String,
+        page: Int = 1,
+        isThread: Boolean = true
     ): Call<UserPostBean>
 
     /**
@@ -132,14 +132,14 @@ interface ITiebaApi {
      * @param prev 不明，默认为 false
      */
     fun picPage(
-            forumId: String,
-            forumName: String,
-            threadId: String,
-            seeLz: Boolean,
-            picId: String,
-            picIndex: String,
-            objType: String,
-            prev: Boolean
+        forumId: String,
+        forumName: String,
+        threadId: String,
+        seeLz: Boolean,
+        picId: String,
+        picIndex: String,
+        objType: String,
+        prev: Boolean
     ): Call<PicPageBean>
 
     /**
@@ -148,7 +148,7 @@ interface ITiebaApi {
      * @param uid 用户 ID
      */
     fun profile(
-            uid: String
+        uid: String
     ): Call<ProfileBean>
 
     /**
@@ -161,9 +161,9 @@ interface ITiebaApi {
      * @param tbs tbs（长）
      */
     fun unlikeForum(
-            forumId: String,
-            forumName: String,
-            tbs: String
+        forumId: String,
+        forumName: String,
+        tbs: String
     ): Call<CommonResponse>
 
     /**
@@ -176,9 +176,9 @@ interface ITiebaApi {
      * @param tbs tbs（长）
      */
     fun likeForum(
-            forumId: String,
-            forumName: String,
-            tbs: String
+        forumId: String,
+        forumName: String,
+        tbs: String
     ): Call<LikeForumResultBean>
 
     /**
@@ -190,8 +190,8 @@ interface ITiebaApi {
      * @param tbs tbs
      */
     fun signAsync(
-            forumName: String,
-            tbs: String
+        forumName: String,
+        tbs: String
     ): Deferred<ApiResult<SignResultBean>>
 
     /**
@@ -204,10 +204,10 @@ interface ITiebaApi {
      * @param threadId 贴子 ID
      */
     fun delThread(
-            forumId: String,
-            forumName: String,
-            threadId: String,
-            tbs: String
+        forumId: String,
+        forumName: String,
+        threadId: String,
+        tbs: String
     ): Call<CommonResponse>
 
     /**
@@ -223,13 +223,13 @@ interface ITiebaApi {
      * @param delMyPost 是否为当前登录用户回复
      */
     fun delPost(
-            forumId: String,
-            forumName: String,
-            threadId: String,
-            postId: String,
-            tbs: String,
-            isFloor: Boolean,
-            delMyPost: Boolean
+        forumId: String,
+        forumName: String,
+        threadId: String,
+        postId: String,
+        tbs: String,
+        isFloor: Boolean,
+        delMyPost: Boolean
     ): Call<CommonResponse>
 
     /**
@@ -242,11 +242,11 @@ interface ITiebaApi {
      * @param pageSize 每页贴数（默认 30）
      */
     fun searchPost(
-            keyword: String,
-            forumName: String,
-            onlyThread: Boolean = false,
-            page: Int = 1,
-            pageSize: Int = 30
+        keyword: String,
+        forumName: String,
+        onlyThread: Boolean = false,
+        page: Int = 1,
+        pageSize: Int = 30
     ): Call<SearchPostBean>
 
     /**
@@ -255,7 +255,7 @@ interface ITiebaApi {
      * @param keyword 搜索关键词
      */
     fun searchUser(
-            keyword: String
+        keyword: String
     ): Call<SearchUserBean>
 
 
@@ -275,8 +275,8 @@ interface ITiebaApi {
      * @param pageSize 每页贴数（默认 20）
      */
     fun threadStore(
-            page: Int = 0,
-            pageSize: Int = 20
+        page: Int = 0,
+        pageSize: Int = 20
     ): Call<ThreadStoreBean>
 
     /**
@@ -288,8 +288,8 @@ interface ITiebaApi {
      * @param tbs tbs
      */
     fun removeStore(
-            threadId: String,
-            tbs: String
+        threadId: String,
+        tbs: String
     ): Call<CommonResponse>
 
     /**
@@ -302,9 +302,9 @@ interface ITiebaApi {
      * @param tbs tbs
      */
     fun addStore(
-            threadId: String,
-            postId: String,
-            tbs: String
+        threadId: String,
+        postId: String,
+        tbs: String
     ): Call<CommonResponse>
 
     /**
@@ -315,7 +315,7 @@ interface ITiebaApi {
      * @param page 分页页码（从 1 开始）
      */
     fun replyMe(
-            page: Int = 1
+        page: Int = 1
     ): Call<MessageListBean>
 
     /**
@@ -326,7 +326,7 @@ interface ITiebaApi {
      * @param page 分页页码（从 1 开始）
      */
     fun atMe(
-            page: Int = 1
+        page: Int = 1
     ): Call<MessageListBean>
 
     /**
@@ -337,7 +337,7 @@ interface ITiebaApi {
      * @param page 分页页码（从 1 开始）
      */
     fun agreeMe(
-            page: Int = 1
+        page: Int = 1
     ): Call<MessageListBean>
 
     /**
@@ -349,10 +349,10 @@ interface ITiebaApi {
      * @param reverse 是否逆序
      */
     fun threadContent(
-            threadId: String,
-            page: Int = 1,
-            seeLz: Boolean = false,
-            reverse: Boolean = false
+        threadId: String,
+        page: Int = 1,
+        seeLz: Boolean = false,
+        reverse: Boolean = false
     ): Call<ThreadContentBean>
 
     /**
@@ -364,10 +364,10 @@ interface ITiebaApi {
      * @param reverse 是否逆序
      */
     fun threadContent(
-            threadId: String,
-            postId: String?,
-            seeLz: Boolean = false,
-            reverse: Boolean = false
+        threadId: String,
+        postId: String?,
+        seeLz: Boolean = false,
+        reverse: Boolean = false
     ): Call<ThreadContentBean>
 
     /**
@@ -379,8 +379,8 @@ interface ITiebaApi {
      * @param stoken stoken
      */
     fun submitDislike(
-            dislikeBean: DislikeBean,
-            stoken: String
+        dislikeBean: DislikeBean,
+        stoken: String
     ): Call<CommonResponse>
 
     /**
@@ -392,8 +392,8 @@ interface ITiebaApi {
      * @param tbs tbs
      */
     fun follow(
-            portrait: String,
-            tbs: String
+        portrait: String,
+        tbs: String
     ): Call<CommonResponse>
 
     /**
@@ -405,8 +405,8 @@ interface ITiebaApi {
      * @param tbs tbs
      */
     fun unfollow(
-            portrait: String,
-            tbs: String
+        portrait: String,
+        tbs: String
     ): Call<CommonResponse>
 
     fun hotMessageList(): Call<HotMessageListBean>
@@ -417,7 +417,7 @@ interface ITiebaApi {
      * @param cookie 登录 Cookie 信息
      */
     fun myInfo(
-            cookie: String
+        cookie: String
     ): Call<MyInfoBean>
 
     /**
@@ -426,7 +426,7 @@ interface ITiebaApi {
      * @param cookie 登录 Cookie 信息
      */
     fun myInfoAsync(
-            cookie: String
+        cookie: String
     ): Deferred<ApiResult<MyInfoBean>>
 
     /**
@@ -435,7 +435,7 @@ interface ITiebaApi {
      * @param keyword 关键词
      */
     fun searchForum(
-            keyword: String
+        keyword: String
     ): Call<SearchForumBean>
 
     /**
@@ -447,10 +447,10 @@ interface ITiebaApi {
      * @param filter 过滤设置 [com.huanchengfly.tieba.api.SearchThreadFilter]
      */
     fun searchThread(
-            keyword: String,
-            page: Int,
-            order: SearchThreadOrder,
-            filter: SearchThreadFilter
+        keyword: String,
+        page: Int,
+        order: SearchThreadOrder,
+        filter: SearchThreadFilter
     ): Call<SearchThreadBean>
 
     /**
@@ -459,7 +459,7 @@ interface ITiebaApi {
      * **需登录**
      */
     fun webUploadPic(
-            photoInfoBean: PhotoInfoBean
+        photoInfoBean: PhotoInfoBean
     ): Call<WebUploadPicBean>
 
 
@@ -479,15 +479,15 @@ interface ITiebaApi {
      * @param bsk BSK
      */
     fun webReply(
-            forumId: String,
-            forumName: String,
-            threadId: String,
-            tbs: String,
-            content: String,
-            imgInfo: String?,
-            nickName: String,
-            pn: String,
-            bsk: String
+        forumId: String,
+        forumName: String,
+        threadId: String,
+        tbs: String,
+        content: String,
+        imgInfo: String?,
+        nickName: String,
+        pn: String,
+        bsk: String
     ): Call<WebReplyResultBean>
 
     /**
@@ -508,17 +508,17 @@ interface ITiebaApi {
      * @param bsk BSK
      */
     fun webReply(
-            forumId: String,
-            forumName: String,
-            threadId: String,
-            tbs: String,
-            content: String,
-            imgInfo: String?,
-            nickName: String,
-            postId: String,
-            floor: String,
-            pn: String,
-            bsk: String
+        forumId: String,
+        forumName: String,
+        threadId: String,
+        tbs: String,
+        content: String,
+        imgInfo: String?,
+        nickName: String,
+        postId: String,
+        floor: String,
+        pn: String,
+        bsk: String
     ): Call<WebReplyResultBean>
 
     /**
@@ -540,18 +540,18 @@ interface ITiebaApi {
      * @param bsk BSK
      */
     fun webReply(
-            forumId: String,
-            forumName: String,
-            threadId: String,
-            tbs: String,
-            content: String,
-            imgInfo: String?,
-            nickName: String,
-            postId: String,
-            replyPostId: String,
-            floor: String,
-            pn: String,
-            bsk: String
+        forumId: String,
+        forumName: String,
+        threadId: String,
+        tbs: String,
+        content: String,
+        imgInfo: String?,
+        nickName: String,
+        postId: String,
+        replyPostId: String,
+        floor: String,
+        pn: String,
+        bsk: String
     ): Call<WebReplyResultBean>
 
     /**
@@ -564,11 +564,11 @@ interface ITiebaApi {
      * @param pageSize 每页贴数（默认 30）
      */
     fun webForumPage(
-            forumName: String,
-            page: Int,
-            goodClassifyId: String? = null,
-            sortType: ForumSortType = ForumSortType.REPLY_TIME,
-            pageSize: Int = 30
+        forumName: String,
+        page: Int,
+        goodClassifyId: String? = null,
+        sortType: ForumSortType = ForumSortType.REPLY_TIME,
+        pageSize: Int = 30
     ): Call<ForumBean>
 
     /**
@@ -581,11 +581,11 @@ interface ITiebaApi {
      * @param pageSize 每页贴数（默认 30）
      */
     fun webForumPageAsync(
-            forumName: String,
-            page: Int,
-            goodClassifyId: String? = null,
-            sortType: ForumSortType = ForumSortType.REPLY_TIME,
-            pageSize: Int = 30
+        forumName: String,
+        page: Int,
+        goodClassifyId: String? = null,
+        sortType: ForumSortType = ForumSortType.REPLY_TIME,
+        pageSize: Int = 30
     ): Deferred<ApiResult<ForumBean>>
 
     /**
@@ -594,6 +594,6 @@ interface ITiebaApi {
      * @param postId PID
      */
     fun checkReportPost(
-            postId: String
+        postId: String
     ): Call<CheckReportBean>
 }

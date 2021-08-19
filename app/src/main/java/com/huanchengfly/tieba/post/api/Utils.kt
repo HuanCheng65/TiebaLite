@@ -10,6 +10,7 @@ fun getLanguage(): String {
     return "${locale.language}-${locale.country}"
 }
 
-fun getScreenHeight(): Int = ScreenInfo.EXACT_SCREEN_HEIGHT - StatusBarUtil.getStatusBarHeight(BaseApplication.instance)
+fun getScreenHeight(): Int =
+    ScreenInfo.EXACT_SCREEN_HEIGHT - StatusBarUtil.getStatusBarHeight(BaseApplication.instance)
 
 fun getScreenWidth(): Int = ScreenInfo.EXACT_SCREEN_WIDTH

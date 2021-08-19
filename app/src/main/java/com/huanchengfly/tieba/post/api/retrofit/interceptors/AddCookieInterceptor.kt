@@ -18,23 +18,23 @@ object AddCookieInterceptor : Interceptor {
         if (addCookieHeader != null) {
             if (addCookieHeader == Header.ADD_COOKIE_FALSE) addCookie = false
             headers = headers.newBuilder()
-                    .removeAll(Header.ADD_COOKIE)
-                    .build()
+                .removeAll(Header.ADD_COOKIE)
+                .build()
         }
 
         if (addCookie) {
             headers = headers.newBuilder()
-                    .removeAll(Header.COOKIE)
-                    .add(Header.COOKIE, AccountUtil.getCookie(BaseApplication.instance) ?: "")
-                    .build()
+                .removeAll(Header.COOKIE)
+                .add(Header.COOKIE, AccountUtil.getCookie(BaseApplication.instance) ?: "")
+                .build()
         }
 
         return chain.proceed(
-                request.newBuilder()
-                        .headers(headers)
-                        .url(httpUrl)
-                        .method(request.method, body)
-                        .build()
+            request.newBuilder()
+                .headers(headers)
+                .url(httpUrl)
+                .method(request.method, body)
+                .build()
         )
     }
 

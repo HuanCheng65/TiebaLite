@@ -8,7 +8,7 @@ import com.huanchengfly.tieba.post.ui.theme.interfaces.Tintable
 import com.huanchengfly.tieba.post.ui.theme.utils.ColorStateListUtils
 
 class TintEditText @JvmOverloads constructor(
-        context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = R.attr.editTextStyle
+    context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = R.attr.editTextStyle
 ) : AppCompatEditText(context, attrs, defStyleAttr), Tintable {
     private var textColorResId: Int
     private var textColorHintResId: Int
@@ -18,9 +18,15 @@ class TintEditText @JvmOverloads constructor(
             textColorResId = 0
             textColorHintResId = 0
         } else {
-            val array = getContext().obtainStyledAttributes(attrs, R.styleable.TintEditText, defStyleAttr, 0)
+            val array = getContext().obtainStyledAttributes(
+                attrs,
+                R.styleable.TintEditText,
+                defStyleAttr,
+                0
+            )
             textColorResId = array.getResourceId(R.styleable.TintEditText_textColor, 0)
-            textColorHintResId = array.getResourceId(R.styleable.TintEditText_android_textColorHint, 0)
+            textColorHintResId =
+                array.getResourceId(R.styleable.TintEditText_android_textColorHint, 0)
             array.recycle()
         }
         tint()

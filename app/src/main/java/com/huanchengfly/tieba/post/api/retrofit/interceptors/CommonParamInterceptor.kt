@@ -54,11 +54,11 @@ class CommonParamInterceptor(private vararg val additionParams: ParamExpression)
         }
 
         return chain.proceed(
-                request.newBuilder()
-                        .headers(headers)
-                        .url(httpUrl)
-                        .method(request.method, body)
-                        .build()
+            request.newBuilder()
+                .headers(headers)
+                .url(httpUrl)
+                .method(request.method, body)
+                .build()
         )
     }
 }

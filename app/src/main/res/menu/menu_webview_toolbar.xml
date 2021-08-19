@@ -1,36 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
+    xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/menu_share"
-        android:orderInCategory="1"
         android:icon="@drawable/ic_share"
+        android:orderInCategory="1"
         android:title="@string/title_share"
-        app:showAsAction="ifRoom"
-        />
+        app:showAsAction="ifRoom" />
     <item
         android:id="@+id/menu_copy_link"
         android:orderInCategory="2"
         android:title="@string/title_copy_link"
-        app:showAsAction="never"
-        />
+        app:showAsAction="never" />
     <item
         android:id="@+id/menu_open_in_browser"
         android:orderInCategory="3"
         android:title="@string/title_open_in_browser"
-        app:showAsAction="never"
-        />
+        app:showAsAction="never" />
     <item
         android:id="@+id/menu_refresh"
         android:orderInCategory="4"
         android:title="@string/title_refresh"
-        app:showAsAction="never"
-        />
+        app:showAsAction="never" />
     <item
         android:id="@+id/menu_exit"
         android:orderInCategory="5"
         android:title="@string/sidebar_exit"
-        app:showAsAction="never"
-        />
+        app:showAsAction="never" />
 </menu>

@@ -1,23 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    android:layout_height="wrap_content">
+
     <RelativeLayout
-        android:layout_centerInParent="true"
-        android:padding="8dp"
         android:id="@+id/footer_view"
         android:layout_width="wrap_content"
-        android:layout_height="@dimen/footer_view_height">
+        android:layout_height="@dimen/footer_view_height"
+        android:layout_centerInParent="true"
+        android:padding="8dp">
+
         <com.huanchengfly.tieba.post.widgets.theme.TintTextView
-            android:layout_centerVertical="true"
-            android:textSize="14sp"
             android:id="@+id/footer_tip"
-            android:gravity="center"
-            android:text="@string/tip_load_failed"
-            android:singleLine="true"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
+            android:layout_centerVertical="true"
+            android:gravity="center"
+            android:singleLine="true"
+            android:text="@string/tip_load_failed"
+            android:textSize="14sp"
             app:tint="@color/default_color_text_secondary" />
     </RelativeLayout>
 </RelativeLayout>

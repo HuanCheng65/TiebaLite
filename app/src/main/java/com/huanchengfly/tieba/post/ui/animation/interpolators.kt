@@ -13,13 +13,25 @@ class EaseCubicInterpolator(x1: Float, y1: Float, x2: Float, y2: Float) : Interp
         // 近似求解t的值[0,1]
         for (i in mLastI until ACCURACY) {
             t = 1.0f * i / ACCURACY
-            val x = cubicCurves(t.toDouble(), 0.0, mControlPoint1.x.toDouble(), mControlPoint2.x.toDouble(), 1.0)
+            val x = cubicCurves(
+                t.toDouble(),
+                0.0,
+                mControlPoint1.x.toDouble(),
+                mControlPoint2.x.toDouble(),
+                1.0
+            )
             if (x >= input) {
                 mLastI = i
                 break
             }
         }
-        var value = cubicCurves(t.toDouble(), 0.0, mControlPoint1.y.toDouble(), mControlPoint2.y.toDouble(), 1.0)
+        var value = cubicCurves(
+            t.toDouble(),
+            0.0,
+            mControlPoint1.y.toDouble(),
+            mControlPoint2.y.toDouble(),
+            1.0
+        )
         if (value > 0.999) {
             value = 1.0
             mLastI = 0
@@ -43,8 +55,10 @@ class EaseCubicInterpolator(x1: Float, y1: Float, x2: Float, y2: Float) : Interp
          * @param value3
          * @return
          */
-        fun cubicCurves(t: Double, value0: Double, value1: Double,
-                        value2: Double, value3: Double): Double {
+        fun cubicCurves(
+            t: Double, value0: Double, value1: Double,
+            value2: Double, value3: Double
+        ): Double {
             var value: Double
             val u = 1 - t
             val tt = t * t

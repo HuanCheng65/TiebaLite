@@ -2,57 +2,57 @@
 <com.huanchengfly.tieba.post.widgets.theme.TintRelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/item_search_thread"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="16dp"
-    android:id="@+id/item_search_thread"
-    android:orientation="vertical"
     android:background="@drawable/bg_radius_8dp_ripple"
+    android:orientation="vertical"
+    android:padding="16dp"
     app:backgroundTint="@color/default_color_card">
 
     <com.huanchengfly.tieba.post.widgets.theme.TintTextView
         android:id="@+id/item_search_thread_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:tint="@color/default_color_text"
-        android:textSize="16sp"
         android:layout_marginBottom="4dp"
-        android:maxLines="1"
         android:ellipsize="end"
+        android:maxLines="1"
+        android:textSize="16sp"
         android:textStyle="bold"
+        app:tint="@color/default_color_text"
         tools:text="Title" />
 
     <com.huanchengfly.tieba.post.widgets.theme.TintTextView
         android:id="@+id/item_search_thread_content"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_below="@id/item_search_thread_title"
-        tools:text="Content"
+        android:layout_marginBottom="4dp"
+        android:ellipsize="end"
+        android:maxLines="2"
         android:textSize="14sp"
         app:tint="@color/default_color_text_secondary"
-        android:layout_width="match_parent"
-        android:layout_marginBottom="4dp"
-        android:maxLines="2"
-        android:ellipsize="end"
-        android:layout_height="wrap_content" />
+        tools:text="Content" />
 
     <com.huanchengfly.tieba.post.widgets.theme.TintTextView
         android:id="@+id/item_search_thread_user"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_below="@id/item_search_thread_content"
-        tools:text="幻了个城fly"
         android:textSize="12sp"
         app:tint="@color/default_color_text_disabled"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        tools:text="幻了个城fly" />
 
     <com.huanchengfly.tieba.post.widgets.theme.TintTextView
-        android:layout_alignWithParentIfMissing="true"
-        android:layout_toEndOf="@id/item_search_thread_user"
-        android:layout_alignParentEnd="true"
-        android:gravity="end"
         android:id="@+id/item_search_thread_info"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignWithParentIfMissing="true"
         android:layout_below="@id/item_search_thread_content"
-        tools:text="minecraft吧 · 刚刚"
+        android:layout_alignParentEnd="true"
+        android:layout_toEndOf="@id/item_search_thread_user"
+        android:gravity="end"
         android:textSize="12sp"
         app:tint="@color/default_color_text_disabled"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        tools:text="minecraft吧 · 刚刚" />
 </com.huanchengfly.tieba.post.widgets.theme.TintRelativeLayout>

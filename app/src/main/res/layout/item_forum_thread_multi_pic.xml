@@ -9,10 +9,10 @@
         android:id="@+id/forum_item"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:materialCardBackgroundTint="@color/default_color_card"
         app:cardCornerRadius="8dp"
+        app:cardElevation="0dp"
         app:contentPadding="16dp"
-        app:cardElevation="0dp">
+        app:materialCardBackgroundTint="@color/default_color_card">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -34,114 +34,114 @@
 
                 <androidx.cardview.widget.CardView
                     android:id="@+id/forum_item_content_pics_card"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
                     android:layout_below="@id/forum_item_title_holder"
                     android:layout_marginTop="@dimen/forum_card_inner_gap"
                     app:cardElevation="0dp"
                     app:cardPreventCornerOverlap="false"
-                    app:cardUseCompatPadding="false"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    app:cardUseCompatPadding="false">
 
                     <androidx.gridlayout.widget.GridLayout
                         android:id="@+id/forum_item_content_pics"
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
                         app:columnCount="3"
                         app:orientation="vertical"
-                        app:rowCount="1"
-                        android:layout_width="match_parent"
-                        android:layout_height="0dp">
+                        app:rowCount="1">
 
                         <com.huanchengfly.tieba.post.widgets.MarkedImageView
-                            app:layout_column="0"
-                            app:layout_columnSpan="1"
-                            app:layout_columnWeight="1"
-                            android:scaleType="centerCrop"
                             android:id="@+id/forum_item_content_pic_1"
                             android:layout_width="0dp"
                             android:layout_height="match_parent"
-                            tools:ignore="ContentDescription" />
-
-                        <com.huanchengfly.tieba.post.widgets.MarkedImageView
-                            android:layout_marginStart="4dp"
+                            android:scaleType="centerCrop"
                             app:layout_column="0"
                             app:layout_columnSpan="1"
                             app:layout_columnWeight="1"
-                            android:scaleType="centerCrop"
+                            tools:ignore="ContentDescription" />
+
+                        <com.huanchengfly.tieba.post.widgets.MarkedImageView
                             android:id="@+id/forum_item_content_pic_2"
                             android:layout_width="0dp"
                             android:layout_height="match_parent"
-                            tools:ignore="ContentDescription" />
-
-                        <com.huanchengfly.tieba.post.widgets.MarkedImageView
                             android:layout_marginStart="4dp"
+                            android:scaleType="centerCrop"
                             app:layout_column="0"
                             app:layout_columnSpan="1"
                             app:layout_columnWeight="1"
-                            android:scaleType="centerCrop"
+                            tools:ignore="ContentDescription" />
+
+                        <com.huanchengfly.tieba.post.widgets.MarkedImageView
                             android:id="@+id/forum_item_content_pic_3"
                             android:layout_width="0dp"
                             android:layout_height="match_parent"
+                            android:layout_marginStart="4dp"
+                            android:scaleType="centerCrop"
+                            app:layout_column="0"
+                            app:layout_columnSpan="1"
+                            app:layout_columnWeight="1"
                             tools:ignore="ContentDescription" />
                     </androidx.gridlayout.widget.GridLayout>
                 </androidx.cardview.widget.CardView>
 
                 <RelativeLayout
-                    android:layout_marginBottom="8dp"
-                    android:layout_marginEnd="8dp"
-                    android:layout_alignEnd="@id/forum_item_content_pics_card"
-                    android:layout_alignBottom="@id/forum_item_content_pics_card"
-                    android:visibility="gone"
-                    android:paddingEnd="6dp"
-                    android:paddingStart="6dp"
-                    android:padding="2dp"
-                    android:backgroundTint="#66000000"
-                    android:background="@drawable/bg_radius_10dp"
                     android:id="@+id/forum_item_content_pic_badge"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:layout_alignEnd="@id/forum_item_content_pics_card"
+                    android:layout_alignBottom="@id/forum_item_content_pics_card"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginBottom="8dp"
+                    android:background="@drawable/bg_radius_10dp"
+                    android:backgroundTint="#66000000"
+                    android:padding="2dp"
+                    android:paddingStart="6dp"
+                    android:paddingEnd="6dp"
+                    android:visibility="gone">
 
                     <ImageView
                         android:id="@+id/forum_item_content_pic_badge_icon"
-                        android:src="@drawable/ic_round_photo_size_select_actual"
                         android:layout_width="10dp"
-                        android:layout_centerVertical="true"
                         android:layout_height="10dp"
-                        tools:ignore="ContentDescription"
-                        android:tint="@color/white" />
+                        android:layout_centerVertical="true"
+                        android:src="@drawable/ic_round_photo_size_select_actual"
+                        android:tint="@color/white"
+                        tools:ignore="ContentDescription" />
 
                     <TextView
-                        android:textColor="@color/white"
-                        tools:text="9"
-                        android:textSize="10dp"
-                        android:layout_marginStart="6dp"
                         android:id="@+id/forum_item_content_pic_badge_text"
-                        android:layout_toEndOf="@id/forum_item_content_pic_badge_icon"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        tools:ignore="SpUsage" />
+                        android:layout_marginStart="6dp"
+                        android:layout_toEndOf="@id/forum_item_content_pic_badge_icon"
+                        android:textColor="@color/white"
+                        android:textSize="10dp"
+                        tools:ignore="SpUsage"
+                        tools:text="9" />
                 </RelativeLayout>
 
                 <include
-                    android:layout_below="@id/forum_item_content_pics_card"
                     android:id="@+id/forum_item_content_text_holder"
                     layout="@layout/layout_forum_thread_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_width="match_parent" />
+                    android:layout_below="@id/forum_item_content_pics_card" />
             </RelativeLayout>
 
             <include
-                android:layout_marginTop="@dimen/forum_card_inner_gap"
-                android:layout_below="@id/forum_item_content"
-                android:layout_height="wrap_content"
+                layout="@layout/layout_forum_footer"
                 android:layout_width="match_parent"
-                layout="@layout/layout_forum_footer" />
+                android:layout_height="wrap_content"
+                android:layout_below="@id/forum_item_content"
+                android:layout_marginTop="@dimen/forum_card_inner_gap" />
         </RelativeLayout>
     </com.huanchengfly.tieba.post.widgets.theme.TintMaterialCardView>
 
     <include
-        layout="@layout/layout_refresh_tip"
         android:id="@+id/feed_refresh_tip"
-        android:layout_below="@id/forum_item"
+        layout="@layout/layout_refresh_tip"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_below="@id/forum_item"
         android:layout_marginTop="12dp" />
 </RelativeLayout>

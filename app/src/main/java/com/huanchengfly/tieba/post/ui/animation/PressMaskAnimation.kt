@@ -12,15 +12,16 @@ import com.huanchengfly.tieba.post.utils.getRadiusDrawable
 
 @RequiresApi(Build.VERSION_CODES.M)
 class PressMaskAnimation(
-        var maskAlpha: Float = DEFAULT_MASK_ALPHA,
-        var maskOriginColor: Int = DEFAULT_DARK_MASK_ORIGIN_COLOR,
-        var maskRadius: Float = 0f,
-        var duration: Long = DEFAULT_DURATION
+    var maskAlpha: Float = DEFAULT_MASK_ALPHA,
+    var maskOriginColor: Int = DEFAULT_DARK_MASK_ORIGIN_COLOR,
+    var maskRadius: Float = 0f,
+    var duration: Long = DEFAULT_DURATION
 ) : PressAnimation() {
     private var currentMaskAlpha = 0f
         set(value) {
             field = value
-            targetView.foregroundTintList = ColorStateList.valueOf(ColorUtils.alpha(maskOriginColor, (value * 255).toInt()))
+            targetView.foregroundTintList =
+                ColorStateList.valueOf(ColorUtils.alpha(maskOriginColor, (value * 255).toInt()))
         }
     private var currentAnimSet: AnimSet? = null
 
@@ -44,7 +45,8 @@ class PressMaskAnimation(
                         onUpdate = {
                             currentMaskAlpha = (it as ValueAnimator).animatedValue as Float
                         }
-                        duration = ((maskAlpha - currentMaskAlpha) / maskAlpha * this@PressMaskAnimation.duration).toLong()
+                        duration =
+                            ((maskAlpha - currentMaskAlpha) / maskAlpha * this@PressMaskAnimation.duration).toLong()
                         interpolator = INTERPOLATOR
                     }
                 }.apply { start() }
@@ -64,7 +66,8 @@ class PressMaskAnimation(
                         onUpdate = {
                             currentMaskAlpha = (it as ValueAnimator).animatedValue as Float
                         }
-                        duration = (currentMaskAlpha / maskAlpha * this@PressMaskAnimation.duration).toLong()
+                        duration =
+                            (currentMaskAlpha / maskAlpha * this@PressMaskAnimation.duration).toLong()
                         interpolator = INTERPOLATOR
                     }
                 }.apply { start() }
@@ -83,10 +86,10 @@ class PressMaskAnimation(
 
 @RequiresApi(Build.VERSION_CODES.M)
 fun PressAnimator.Builder.addMaskAnimation(
-        maskAlpha: Float = PressMaskAnimation.DEFAULT_MASK_ALPHA,
-        maskOriginColor: Int = PressMaskAnimation.DEFAULT_DARK_MASK_ORIGIN_COLOR,
-        maskRadius: Float = 0f,
-        duration: Long = PressMaskAnimation.DEFAULT_DURATION
+    maskAlpha: Float = PressMaskAnimation.DEFAULT_MASK_ALPHA,
+    maskOriginColor: Int = PressMaskAnimation.DEFAULT_DARK_MASK_ORIGIN_COLOR,
+    maskRadius: Float = 0f,
+    duration: Long = PressMaskAnimation.DEFAULT_DURATION
 ) {
     addAnimation(PressMaskAnimation(maskAlpha, maskOriginColor, maskRadius, duration))
 }

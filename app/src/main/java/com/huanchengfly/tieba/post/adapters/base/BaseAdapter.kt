@@ -5,8 +5,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.huanchengfly.tieba.post.components.MyViewHolder
 
 abstract class BaseAdapter<Item>(
-        val context: Context,
-        items: List<Item>? = null
+    val context: Context,
+    items: List<Item>? = null
 ) : RecyclerView.Adapter<MyViewHolder>() {
     private var itemList: MutableList<Item> = (items ?: emptyList()).toMutableList()
 

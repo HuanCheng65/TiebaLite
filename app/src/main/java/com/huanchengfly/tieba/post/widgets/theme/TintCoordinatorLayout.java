@@ -59,13 +59,13 @@ public class TintCoordinatorLayout extends CoordinatorLayout implements Tintable
     }
 
     @Override
-    public void setBackgroundTintResId(int resId) {
-        mBackgroundTintResId = resId;
-        tint();
+    public int getBackgroundTintResId() {
+        return mBackgroundTintResId;
     }
 
     @Override
-    public int getBackgroundTintResId() {
-        return mBackgroundTintResId;
+    public void setBackgroundTintResId(int resId) {
+        mBackgroundTintResId = resId;
+        tint();
     }
 }

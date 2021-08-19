@@ -1,27 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.huanchengfly.tieba.post.widgets.theme.TintRelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<com.huanchengfly.tieba.post.widgets.theme.TintRelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
     android:padding="8dp"
     android:paddingStart="20dp"
-    android:paddingEnd="20dp"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:paddingEnd="20dp">
+
     <com.huanchengfly.tieba.post.widgets.theme.TintTextView
-        android:layout_centerVertical="true"
         android:id="@+id/header_title"
-        app:tint="@color/default_color_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
         android:text="@string/title_hot_message_list"
         android:textSize="@dimen/text_size_hot_title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        app:tint="@color/default_color_text" />
+
     <com.huanchengfly.tieba.post.widgets.theme.TintTextView
-        android:layout_marginStart="4dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_centerVertical="true"
+        android:layout_marginStart="4dp"
         android:layout_toEndOf="@id/header_title"
-        app:tint="@color/default_color_text_secondary"
         android:text="@string/desc_hot_message_list"
         android:textSize="@dimen/text_size_hot_desc"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        app:tint="@color/default_color_text_secondary" />
 </com.huanchengfly.tieba.post.widgets.theme.TintRelativeLayout>

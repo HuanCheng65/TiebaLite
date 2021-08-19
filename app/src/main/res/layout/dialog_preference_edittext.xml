@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_marginTop="48dp"
     android:layout_marginBottom="48dp"
     android:overScrollMode="ifContentScrolls">
@@ -15,34 +15,34 @@
         <TextView
             android:id="@android:id/message"
             style="?android:attr/textAppearanceSmall"
-            android:layout_marginLeft="24dp"
-            android:layout_marginRight="24dp"
-            android:layout_marginStart="24dp"
-            android:layout_marginEnd="24dp"
-            android:layout_marginBottom="48dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="?android:attr/textColorSecondary"/>
+            android:layout_marginStart="24dp"
+            android:layout_marginLeft="24dp"
+            android:layout_marginEnd="24dp"
+            android:layout_marginRight="24dp"
+            android:layout_marginBottom="48dp"
+            android:textColor="?android:attr/textColorSecondary" />
 
         <com.huanchengfly.tieba.post.widgets.theme.TintTextInputLayout
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="20dp"
+            android:layout_marginRight="20dp"
             app:boxBackgroundColor="@color/transparent"
             app:boxStrokeColor="@color/default_color_primary"
             app:hintTextColor="@color/default_color_primary"
-            app:placeholderTextColor="@color/default_color_primary"
-            android:layout_marginTop="8dp"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"
-            android:layout_marginStart="20dp"
-            android:layout_marginEnd="20dp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            app:placeholderTextColor="@color/default_color_primary">
 
             <com.google.android.material.textfield.TextInputEditText
-                android:textCursorDrawable="@null"
                 android:id="@android:id/edit"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:textCursorDrawable="@null" />
         </com.huanchengfly.tieba.post.widgets.theme.TintTextInputLayout>
 
     </LinearLayout>

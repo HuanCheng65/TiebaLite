@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.huanchengfly.tieba.post.widgets.theme.TintTextView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@android:id/title"
     android:layout_width="wrap_content"
     android:layout_height="0dp"
-    android:visibility="invisible"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_marginStart="?android:attr/listPreferredItemPaddingStart"
-    android:maxLines="1"
-    android:textStyle="bold"
     android:ellipsize="end"
+    android:maxLines="1"
     android:textSize="16sp"
-    app:tint="@color/default_color_primary"
-    android:id="@android:id/title" />
+    android:textStyle="bold"
+    android:visibility="invisible"
+    app:tint="@color/default_color_primary" />

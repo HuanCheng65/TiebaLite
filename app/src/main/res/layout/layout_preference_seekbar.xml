@@ -4,16 +4,16 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:minHeight="?android:attr/listPreferredItemHeightSmall"
-    android:gravity="center_vertical"
-    android:paddingStart="?android:attr/listPreferredItemPaddingStart"
-    android:paddingEnd="?android:attr/listPreferredItemPaddingEnd"
     android:layout_marginStart="@dimen/card_margin"
     android:layout_marginEnd="@dimen/card_margin"
     android:background="@drawable/bg_ripple"
+    android:baselineAligned="false"
     android:clipToPadding="false"
     android:focusable="true"
-    android:baselineAligned="false"
+    android:gravity="center_vertical"
+    android:minHeight="?android:attr/listPreferredItemHeightSmall"
+    android:paddingStart="?android:attr/listPreferredItemPaddingStart"
+    android:paddingEnd="?android:attr/listPreferredItemPaddingEnd"
     app:backgroundTint="@color/default_color_card">
 
     <include layout="@layout/layout_preference_icon" />
@@ -21,11 +21,11 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:clipChildren="false"
+        android:clipToPadding="false"
         android:orientation="vertical"
         android:paddingTop="16dp"
-        android:paddingBottom="16dp"
-        android:clipChildren="false"
-        android:clipToPadding="false">
+        android:paddingBottom="16dp">
 
         <RelativeLayout
             android:layout_width="wrap_content"
@@ -36,66 +36,66 @@
                 android:id="@android:id/title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:ellipsize="marquee"
                 android:singleLine="true"
+                android:textAppearance="@style/TextAppearance.MaterialSubhead"
                 android:textStyle="bold"
                 app:tint="@color/text_color_selector"
-                android:textAppearance="@style/TextAppearance.MaterialSubhead"
-                android:ellipsize="marquee"
                 tools:ignore="PrivateResource" />
 
             <com.huanchengfly.tieba.post.widgets.theme.TintTextView
-                android:layout_marginTop="4dp"
                 android:id="@android:id/summary"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@android:id/title"
                 android:layout_alignStart="@android:id/title"
+                android:layout_marginTop="4dp"
+                android:maxLines="10"
                 android:textSize="14sp"
-                app:tint="@color/text_color_secondary_selector"
-                android:maxLines="10"/>
+                app:tint="@color/text_color_secondary_selector" />
 
         </RelativeLayout>
 
         <com.huanchengfly.tieba.post.widgets.UnPressableLinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:clipChildren="false"
+            android:clipToPadding="false"
             android:gravity="center_vertical"
             android:paddingStart="0dp"
-            android:paddingEnd="16dp"
-            android:clipChildren="false"
-            android:clipToPadding="false">
+            android:paddingEnd="16dp">
 
             <com.huanchengfly.tieba.post.widgets.theme.TintSeekBar
-                style="@style/Widget.AppCompat.SeekBar"
-                app:progressTint="@color/default_color_primary"
                 android:id="@+id/seekbar"
-                android:progressDrawable="@drawable/bg_seekbar_round"
+                style="@style/Widget.AppCompat.SeekBar"
                 android:layout_width="0dp"
-                android:layout_weight="1"
                 android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@null"
                 android:minHeight="16dp"
                 android:paddingStart="@dimen/preference_seekbar_padding_horizontal"
-                android:paddingEnd="@dimen/preference_seekbar_padding_horizontal"
                 android:paddingTop="@dimen/preference_seekbar_padding_vertical"
+                android:paddingEnd="@dimen/preference_seekbar_padding_horizontal"
                 android:paddingBottom="@dimen/preference_seekbar_padding_vertical"
-                android:background="@null"
+                android:progressDrawable="@drawable/bg_seekbar_round"
                 android:thumb="@null"
+                app:progressTint="@color/default_color_primary"
                 tools:ignore="PrivateResource" />
 
             <com.huanchengfly.tieba.post.widgets.theme.TintTextView
                 android:id="@+id/seekbar_value"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ellipsize="marquee"
+                android:fadingEdge="horizontal"
+                android:gravity="end"
                 android:minWidth="@dimen/preference_seekbar_value_minWidth"
                 android:paddingStart="8dp"
                 android:paddingEnd="0dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="end"
+                android:scrollbars="none"
                 android:singleLine="true"
                 android:textAppearance="?android:attr/textAppearanceListItem"
-                android:ellipsize="marquee"
-                android:fadingEdge="horizontal"
                 app:tint="@color/text_color_secondary_selector"
-                android:scrollbars="none"
                 tools:ignore="PrivateResource" />
 
         </com.huanchengfly.tieba.post.widgets.UnPressableLinearLayout>

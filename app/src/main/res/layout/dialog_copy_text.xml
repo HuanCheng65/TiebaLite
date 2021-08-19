@@ -1,28 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.huanchengfly.tieba.post.widgets.theme.TintRelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    app:backgroundTint="@color/default_color_background"
-    android:padding="16dp"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:padding="16dp"
+    app:backgroundTint="@color/default_color_background">
+
     <com.huanchengfly.tieba.post.widgets.theme.TintTextView
+        android:id="@+id/dialog_copy_text"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:layout_above="@id/dialog_copy_tip"
         android:layout_marginBottom="16dp"
         android:lineSpacingExtra="0.5dp"
         android:lineSpacingMultiplier="1.2"
         android:textSize="18sp"
-        app:tint="@color/default_color_text"
-        android:id="@+id/dialog_copy_text"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        app:tint="@color/default_color_text" />
 
     <com.huanchengfly.tieba.post.widgets.theme.TintTextView
-        app:tint="@color/default_color_primary"
-        android:textStyle="bold"
+        android:id="@+id/dialog_copy_tip"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:gravity="center"
-        android:id="@+id/dialog_copy_tip"
         android:text="@string/tip_copy_text"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:textStyle="bold"
+        app:tint="@color/default_color_primary" />
 </com.huanchengfly.tieba.post.widgets.theme.TintRelativeLayout>

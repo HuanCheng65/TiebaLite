@@ -4,21 +4,21 @@
     <item
         android:id="@+id/menu_toggle_orientation"
         android:icon="@drawable/ic_round_view_carousel_white"
+        android:orderInCategory="0"
         android:title="@string/title_comic_mode"
-        app:showAsAction="ifRoom"
-        android:orderInCategory="0" />
+        app:showAsAction="ifRoom" />
 
     <item
         android:id="@+id/menu_save_image"
         android:icon="@drawable/ic_round_get_app_white"
+        android:orderInCategory="2"
         android:title="@string/title_save_image"
-        app:showAsAction="ifRoom"
-        android:orderInCategory="2" />
+        app:showAsAction="ifRoom" />
 
     <item
         android:id="@+id/menu_share"
         android:icon="@drawable/ic_round_share_white"
+        android:orderInCategory="3"
         android:title="@string/title_share_pic"
-        app:showAsAction="ifRoom"
-        android:orderInCategory="3" />
+        app:showAsAction="ifRoom" />
 </menu>

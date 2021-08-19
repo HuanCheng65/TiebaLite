@@ -4,21 +4,21 @@
 
     <com.huanchengfly.tieba.post.widgets.theme.TintCollapsingToolbarLayout
         android:id="@+id/collapsing_toolbar"
-        app:textColor="@color/default_color_toolbar_item"
-        app:expandedTitleTextAppearance="@style/Toolbar.Title.Expanded"
-        app:collapsedTitleTextAppearance="@style/Toolbar.Title"
-        app:expandedTitleMarginStart="16dp"
-        app:expandedTitleMarginBottom="16dp"
-        app:statusBarScrim="@color/transparent"
-        app:layout_scrollFlags="scroll|exitUntilCollapsed"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:fitsSystemWindows="true">
+        android:fitsSystemWindows="true"
+        app:collapsedTitleTextAppearance="@style/Toolbar.Title"
+        app:expandedTitleMarginBottom="16dp"
+        app:expandedTitleMarginStart="16dp"
+        app:expandedTitleTextAppearance="@style/Toolbar.Title.Expanded"
+        app:layout_scrollFlags="scroll|exitUntilCollapsed"
+        app:statusBarScrim="@color/transparent"
+        app:textColor="@color/default_color_toolbar_item">
 
         <View
-            android:layout_marginTop="?actionBarSize"
             android:layout_width="match_parent"
             android:layout_height="@dimen/space_toolbar_top"
+            android:layout_marginTop="?actionBarSize"
             android:layout_marginBottom="4dp" />
 
         <com.huanchengfly.tieba.post.widgets.theme.TintToolbar

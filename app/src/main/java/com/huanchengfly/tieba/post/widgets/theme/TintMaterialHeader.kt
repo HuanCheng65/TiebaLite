@@ -8,8 +8,8 @@ import com.huanchengfly.tieba.post.ui.theme.utils.ThemeUtils
 import com.scwang.smart.refresh.header.MaterialHeader
 
 class TintMaterialHeader
-@JvmOverloads constructor(context: Context, attrs: AttributeSet? = null)
-    : MaterialHeader(context, attrs), Tintable {
+@JvmOverloads constructor(context: Context, attrs: AttributeSet? = null) :
+    MaterialHeader(context, attrs), Tintable {
     init {
         tint()
     }

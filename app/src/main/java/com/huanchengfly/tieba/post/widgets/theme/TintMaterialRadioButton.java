@@ -1,5 +1,7 @@
 package com.huanchengfly.tieba.post.widgets.theme;
 
+import static com.google.android.material.theme.overlay.MaterialThemeOverlay.wrap;
+
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.TypedArray;
@@ -12,8 +14,6 @@ import com.huanchengfly.tieba.post.R;
 import com.huanchengfly.tieba.post.ui.theme.interfaces.Tintable;
 import com.huanchengfly.tieba.post.ui.theme.utils.ColorStateListUtils;
 import com.huanchengfly.tieba.post.ui.theme.utils.ThemeUtils;
-
-import static com.google.android.material.theme.overlay.MaterialThemeOverlay.wrap;
 
 @SuppressLint("CustomViewStyleable")
 public class TintMaterialRadioButton extends MaterialRadioButton implements Tintable {

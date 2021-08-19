@@ -12,38 +12,38 @@
         android:layout_height="wrap_content">
 
         <ImageView
-            android:layout_marginEnd="8dp"
-            android:layout_centerVertical="true"
-            tools:src="@drawable/bg_placeholder_circle"
             android:id="@+id/collect_item_avatar"
             android:layout_width="@dimen/size_avatar_small"
             android:layout_height="@dimen/size_avatar_small"
-            tools:ignore="ContentDescription" />
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="8dp"
+            tools:ignore="ContentDescription"
+            tools:src="@drawable/bg_placeholder_circle" />
 
         <com.huanchengfly.tieba.post.widgets.theme.TintTextView
+            android:id="@+id/collect_item_header_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignWithParentIfMissing="true"
+            android:layout_centerVertical="true"
+            android:layout_toEndOf="@id/collect_item_avatar"
             android:ellipsize="end"
             android:maxLines="1"
             android:textSize="14sp"
-            android:id="@+id/collect_item_header_title"
-            tools:text="User"
-            app:tint="@color/default_color_text_secondary"
             android:textStyle="bold"
-            android:layout_centerVertical="true"
-            android:layout_alignWithParentIfMissing="true"
-            android:layout_toEndOf="@id/collect_item_avatar"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            app:tint="@color/default_color_text_secondary"
+            tools:text="User" />
     </RelativeLayout>
 
     <com.huanchengfly.tieba.post.widgets.theme.TintTextView
+        android:id="@+id/collect_item_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:ellipsize="end"
         android:maxLines="2"
         android:textSize="16sp"
-        tools:text="Title"
         android:textStyle="bold"
         app:tint="@color/default_color_text"
-        android:id="@+id/collect_item_title"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        tools:text="Title" />
 </LinearLayout>

@@ -6,9 +6,9 @@ import com.alibaba.android.vlayout.LayoutHelper
 import com.huanchengfly.tieba.post.components.MyViewHolder
 
 abstract class BaseDelegateAdapter<Item>(
-        val context: Context,
-        val layoutHelper: LayoutHelper,
-        items: List<Item>? = null
+    val context: Context,
+    val layoutHelper: LayoutHelper,
+    items: List<Item>? = null
 ) : DelegateAdapter.Adapter<MyViewHolder>() {
     private var itemList: MutableList<Item> = (items ?: emptyList()).toMutableList()
 

@@ -1,20 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <merge xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
     <com.huanchengfly.tieba.post.widgets.theme.TintTextView
-        tools:text="幻了个城fly:"
-        android:textSize="14sp"
-        app:tint="@color/default_color_text"
-        android:layout_centerVertical="true"
         android:id="@+id/floor_user"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
-    <com.huanchengfly.tieba.post.widgets.VoicePlayerView
-        android:layout_marginStart="8dp"
-        android:id="@+id/floor_audio"
+        android:layout_height="wrap_content"
         android:layout_centerVertical="true"
-        android:layout_toEndOf="@id/floor_user"
+        android:textSize="14sp"
+        app:tint="@color/default_color_text"
+        tools:text="幻了个城fly:" />
+
+    <com.huanchengfly.tieba.post.widgets.VoicePlayerView
+        android:id="@+id/floor_audio"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginStart="8dp"
+        android:layout_toEndOf="@id/floor_user" />
 </merge>

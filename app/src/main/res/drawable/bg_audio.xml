@@ -3,10 +3,11 @@
     android:color="?attr/colorControlHighlight">
     <item>
         <shape>
-            <stroke android:color="@color/default_color_accent" android:width="1.5dp" />
-            <corners
-                android:radius="50dp"/>
-            <solid android:color="@color/transparent"/>
+            <stroke
+                android:width="1.5dp"
+                android:color="@color/default_color_accent" />
+            <corners android:radius="50dp" />
+            <solid android:color="@color/transparent" />
         </shape>
     </item>
 </ripple>

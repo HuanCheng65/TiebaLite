@@ -1,5 +1,7 @@
 package com.huanchengfly.tieba.post.utils;
 
+import static com.huanchengfly.tieba.post.activities.ForumActivity.EXTRA_FORUM_NAME;
+
 import android.app.Activity;
 import android.app.ActivityOptions;
 import android.content.ActivityNotFoundException;
@@ -30,8 +32,6 @@ import com.huanchengfly.tieba.post.ui.theme.utils.ThemeUtils;
 import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Map;
-
-import static com.huanchengfly.tieba.post.activities.ForumActivity.EXTRA_FORUM_NAME;
 
 public final class NavigationHelper {
     public static final String TAG = "NavigationHelper";

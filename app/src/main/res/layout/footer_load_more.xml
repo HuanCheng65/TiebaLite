@@ -1,34 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.huanchengfly.tieba.post.widgets.theme.TintRelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:padding="8dp"
-    android:clipToPadding="false"
-    android:clipChildren="false"
-    app:backgroundTint="@color/default_color_card"
     android:id="@+id/footer_view"
     android:layout_width="match_parent"
+    android:layout_height="@dimen/footer_view_height"
+    android:clipChildren="false"
+    android:clipToPadding="false"
     android:gravity="center"
-    android:layout_height="@dimen/footer_view_height">
+    android:padding="8dp"
+    app:backgroundTint="@color/default_color_card">
 
     <com.huanchengfly.tieba.post.widgets.theme.TintProgressBar
-        app:progressTint="@color/default_color_primary"
-        android:layout_marginEnd="12dp"
-        android:indeterminate="false"
         android:id="@+id/footer_progress"
         style="?android:attr/progressBarStyleSmallInverse"
-        android:layout_centerVertical="true"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent" />
-
-    <com.huanchengfly.tieba.post.widgets.theme.TintTextView
-        android:layout_centerVertical="true"
-        android:layout_toEndOf="@id/footer_progress"
-        android:textSize="14sp"
-        android:id="@+id/footer_text"
-        android:text="@string/text_loading"
-        android:gravity="center"
-        android:singleLine="true"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
+        android:layout_centerVertical="true"
+        android:layout_marginEnd="12dp"
+        android:indeterminate="false"
+        app:progressTint="@color/default_color_primary" />
+
+    <com.huanchengfly.tieba.post.widgets.theme.TintTextView
+        android:id="@+id/footer_text"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_centerVertical="true"
+        android:layout_toEndOf="@id/footer_progress"
+        android:gravity="center"
+        android:singleLine="true"
+        android:text="@string/text_loading"
+        android:textSize="14sp"
         app:tint="@color/default_color_text_secondary" />
 </com.huanchengfly.tieba.post.widgets.theme.TintRelativeLayout>

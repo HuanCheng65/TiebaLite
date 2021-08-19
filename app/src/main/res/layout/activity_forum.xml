@@ -17,26 +17,26 @@
 
         <com.google.android.material.appbar.CollapsingToolbarLayout
             android:id="@+id/collapsing_toolbar"
-            android:fitsSystemWindows="true"
-            app:layout_scrollFlags="scroll|enterAlways|enterAlwaysCollapsed"
-            app:titleEnabled="false"
-            app:contentScrim="@color/transparent"
-            app:statusBarScrim="@color/transparent"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:fitsSystemWindows="true"
+            app:contentScrim="@color/transparent"
+            app:layout_scrollFlags="scroll|enterAlways|enterAlwaysCollapsed"
+            app:statusBarScrim="@color/transparent"
+            app:titleEnabled="false">
 
             <LinearLayout
                 android:id="@+id/forum_header"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:layout_marginTop="?attr/actionBarSize">
+                android:layout_marginTop="?attr/actionBarSize"
+                android:orientation="vertical">
 
                 <View
-                    android:visibility="gone"
+                    android:id="@+id/fake_status_bar"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:id="@+id/fake_status_bar" />
+                    android:visibility="gone" />
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/forum_info_parent"
@@ -54,13 +54,13 @@
                         app:layout_constraintTop_toTopOf="parent" />
 
                     <com.huanchengfly.tieba.post.widgets.theme.TintTextView
-                        android:gravity="top"
                         android:id="@+id/forum_header_name"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="16dp"
                         android:layout_marginEnd="16dp"
                         android:ellipsize="end"
+                        android:gravity="top"
                         android:maxLines="1"
                         android:textSize="20sp"
                         android:textStyle="bold"
@@ -109,8 +109,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginEnd="8dp"
-                        android:minWidth="72dp"
                         android:enabled="true"
+                        android:minWidth="72dp"
                         android:textStyle="bold"
                         app:buttonBackgroundTint="@color/selector_forum_header_button_color"
                         app:buttonTextColor="@color/selector_forum_header_button_text_color"
@@ -123,10 +123,10 @@
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="-16dp"
                     android:paddingStart="16dp"
                     android:paddingEnd="16dp"
                     android:paddingBottom="12dp"
-                    android:layout_marginTop="-16dp"
                     app:layout_constraintBottom_toBottomOf="@+id/tintImageView"
                     app:layout_constraintTop_toBottomOf="@+id/tintImageView">
 
@@ -136,11 +136,11 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="28dp"
                         android:background="@drawable/bg_radius_8dp"
-                        android:padding="24dp"
-                        android:textSize="16sp"
                         android:gravity="center"
-                        android:textStyle="bold"
+                        android:padding="24dp"
                         android:textColor="#D8FFFFFF"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
                         app:backgroundTint="@color/theme_color_card_translucent_dark"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
@@ -161,190 +161,190 @@
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
                 <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
                     android:layout_marginEnd="16dp"
                     android:layout_marginBottom="24dp"
-                    android:paddingTop="16dp"
-                    android:paddingBottom="8dp"
-                    android:backgroundTint="@color/theme_color_card_translucent_dark"
                     android:background="@drawable/bg_radius_8dp"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
+                    android:backgroundTint="@color/theme_color_card_translucent_dark"
+                    android:orientation="vertical"
+                    android:paddingTop="16dp"
+                    android:paddingBottom="8dp">
 
                     <TextView
                         android:id="@+id/forum_header_stat_title"
-                        android:layout_marginStart="16dp"
-                        android:textStyle="bold"
-                        android:textColor="@color/color_text_translucent_light"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/title_forum_stat" />
+                        android:layout_marginStart="16dp"
+                        android:text="@string/title_forum_stat"
+                        android:textColor="@color/color_text_translucent_light"
+                        android:textStyle="bold" />
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal"
                         android:layout_marginTop="16dp"
-                        android:layout_marginBottom="8dp">
+                        android:layout_marginBottom="8dp"
+                        android:orientation="horizontal">
 
                         <LinearLayout
-                            android:orientation="vertical"
                             android:layout_width="0dp"
+                            android:layout_height="match_parent"
                             android:layout_weight="1"
-                            android:layout_height="match_parent">
+                            android:orientation="vertical">
 
                             <com.huanchengfly.tieba.post.widgets.theme.TintTextView
-                                android:layout_gravity="center"
-                                tools:text="241W"
-                                android:textStyle="bold"
-                                android:textSize="@dimen/stat_text_size"
                                 android:id="@+id/forum_header_stat_members"
-                                app:tint="@color/color_text_translucent_light"
                                 android:layout_width="wrap_content"
-                                android:layout_height="wrap_content" />
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:textSize="@dimen/stat_text_size"
+                                android:textStyle="bold"
+                                app:tint="@color/color_text_translucent_light"
+                                tools:text="241W" />
 
                             <com.huanchengfly.tieba.post.widgets.theme.TintTextView
-                                android:layout_marginTop="8dp"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
                                 android:layout_gravity="center_horizontal"
+                                android:layout_marginTop="8dp"
                                 android:text="关注"
                                 android:textSize="14sp"
-                                app:tint="@color/color_text_secondary_translucent_light"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content" />
+                                app:tint="@color/color_text_secondary_translucent_light" />
                         </LinearLayout>
 
                         <LinearLayout
-                            android:orientation="vertical"
                             android:layout_width="0dp"
+                            android:layout_height="match_parent"
                             android:layout_weight="1"
-                            android:layout_height="match_parent">
+                            android:orientation="vertical">
 
                             <com.huanchengfly.tieba.post.widgets.theme.TintTextView
-                                android:layout_gravity="center_horizontal"
-                                tools:text="55W"
-                                android:textStyle="bold"
-                                android:textSize="@dimen/stat_text_size"
                                 android:id="@+id/forum_header_stat_threads"
-                                app:tint="@color/color_text_translucent_light"
                                 android:layout_width="wrap_content"
-                                android:layout_height="wrap_content" />
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center_horizontal"
+                                android:textSize="@dimen/stat_text_size"
+                                android:textStyle="bold"
+                                app:tint="@color/color_text_translucent_light"
+                                tools:text="55W" />
 
                             <com.huanchengfly.tieba.post.widgets.theme.TintTextView
-                                android:layout_marginTop="8dp"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
                                 android:layout_gravity="center_horizontal"
+                                android:layout_marginTop="8dp"
                                 android:text="贴子"
                                 android:textSize="14sp"
-                                app:tint="@color/color_text_secondary_translucent_light"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content" />
+                                app:tint="@color/color_text_secondary_translucent_light" />
                         </LinearLayout>
 
                         <LinearLayout
-                            android:orientation="vertical"
                             android:layout_width="0dp"
+                            android:layout_height="match_parent"
                             android:layout_weight="1"
-                            android:layout_height="match_parent">
+                            android:orientation="vertical">
 
                             <com.huanchengfly.tieba.post.widgets.theme.TintTextView
-                                android:layout_gravity="center_horizontal"
-                                tools:text="3KW"
-                                android:textStyle="bold"
-                                android:textSize="@dimen/stat_text_size"
                                 android:id="@+id/forum_header_stat_posts"
-                                app:tint="@color/color_text_translucent_light"
                                 android:layout_width="wrap_content"
-                                android:layout_height="wrap_content" />
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center_horizontal"
+                                android:textSize="@dimen/stat_text_size"
+                                android:textStyle="bold"
+                                app:tint="@color/color_text_translucent_light"
+                                tools:text="3KW" />
 
                             <com.huanchengfly.tieba.post.widgets.theme.TintTextView
-                                android:layout_marginTop="8dp"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
                                 android:layout_gravity="center_horizontal"
+                                android:layout_marginTop="8dp"
                                 android:text="回贴"
                                 android:textSize="14sp"
-                                app:tint="@color/color_text_secondary_translucent_light"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content" />
+                                app:tint="@color/color_text_secondary_translucent_light" />
                         </LinearLayout>
                     </LinearLayout>
                 </LinearLayout>
             </LinearLayout>
 
             <com.huanchengfly.tieba.post.widgets.theme.TintToolbar
-                android:minHeight="?attr/actionBarSize"
-                app:popupTheme="?attr/actionOverflowMenuStyle"
-                app:toolbarBackgroundTint="@color/default_color_toolbar"
-                app:itemTint="@color/color_text_translucent_light"
-                app:secondaryItemTint="@color/color_text_secondary_translucent_light"
-                app:activeItemTint="@color/color_text_translucent_light"
-                app:layout_collapseMode="pin"
                 android:id="@+id/toolbar"
-                app:titleTextAppearance="@style/Toolbar.Title"
-                app:subtitleTextAppearance="@style/Toolbar.Subtitle"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:minHeight="?attr/actionBarSize"
+                app:activeItemTint="@color/color_text_translucent_light"
+                app:itemTint="@color/color_text_translucent_light"
+                app:layout_collapseMode="pin"
+                app:popupTheme="?attr/actionOverflowMenuStyle"
+                app:secondaryItemTint="@color/color_text_secondary_translucent_light"
+                app:subtitleTextAppearance="@style/Toolbar.Subtitle"
+                app:titleTextAppearance="@style/Toolbar.Title"
+                app:toolbarBackgroundTint="@color/default_color_toolbar">
 
                 <com.huanchengfly.tieba.post.widgets.theme.TintMaterialButton
-                    style="@style/Widget.Button.Dense"
-                    app:cornerRadius="8dp"
-                    app:buttonBackgroundTint="@color/selector_forum_header_button_color"
-                    app:buttonTextColor="@color/selector_forum_header_button_text_color"
-                    android:textStyle="bold"
                     android:id="@+id/toolbar_btn_right"
-                    android:layout_gravity="end"
+                    style="@style/Widget.Button.Dense"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:enabled="true" />
+                    android:layout_gravity="end"
+                    android:enabled="true"
+                    android:textStyle="bold"
+                    app:buttonBackgroundTint="@color/selector_forum_header_button_color"
+                    app:buttonTextColor="@color/selector_forum_header_button_text_color"
+                    app:cornerRadius="8dp" />
             </com.huanchengfly.tieba.post.widgets.theme.TintToolbar>
         </com.google.android.material.appbar.CollapsingToolbarLayout>
 
         <com.huanchengfly.tieba.post.widgets.theme.TintFrameLayout
             android:id="@+id/forum_tab_background"
-            app:backgroundTint="@color/default_color_background"
-            android:background="@drawable/bg_top_radius_8dp"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_top_radius_8dp"
+            app:backgroundTint="@color/default_color_background">
 
             <com.huanchengfly.tieba.post.widgets.theme.TintFrameLayout
-                android:layout_marginTop="12dp"
-                android:layout_marginBottom="12dp"
-                android:layout_marginStart="16dp"
-                android:layout_marginEnd="16dp"
-                android:background="@drawable/bg_radius_8dp"
-                app:backgroundTint="@color/default_color_toolbar_bar"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="12dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginBottom="12dp"
+                android:background="@drawable/bg_radius_8dp"
+                app:backgroundTint="@color/default_color_toolbar_bar">
 
                 <com.huanchengfly.tieba.post.widgets.theme.TintTabLayout
+                    android:id="@+id/forum_tab"
+                    style="@style/Widget.TabLayout.Toolbar.Fixed"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
                     android:layout_marginStart="5dp"
                     android:layout_marginEnd="5dp"
-                    android:background="@color/transparent"
-                    style="@style/Widget.TabLayout.Toolbar.Fixed"
-                    android:id="@+id/forum_tab"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
+                    android:background="@color/transparent" />
             </com.huanchengfly.tieba.post.widgets.theme.TintFrameLayout>
         </com.huanchengfly.tieba.post.widgets.theme.TintFrameLayout>
     </com.huanchengfly.tieba.post.widgets.theme.TintAppBarLayout>
 
     <com.huanchengfly.tieba.post.widgets.MyViewPager
-        app:layout_behavior="@string/appbar_scrolling_view_behavior"
         android:id="@+id/forum_view_pager"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
     <com.huanchengfly.tieba.post.widgets.theme.TintFloatingActionButton
-        app:layout_behavior="com.huanchengfly.tieba.post.components.behaviors.FabBehavior"
         android:id="@+id/fab"
-        android:visibility="invisible"
         android:layout_width="wrap_content"
-        app:tint="@color/white"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:layout_margin="16dp"
-        app:rippleColor="?android:attr/colorControlHighlight"
         android:src="@drawable/ic_round_create"
+        android:visibility="invisible"
         app:backgroundTint="@color/default_color_primary"
-        app:borderWidth="0dp" />
+        app:borderWidth="0dp"
+        app:layout_behavior="com.huanchengfly.tieba.post.components.behaviors.FabBehavior"
+        app:rippleColor="?android:attr/colorControlHighlight"
+        app:tint="@color/white" />
 
     <include
         android:id="@+id/loading_view"

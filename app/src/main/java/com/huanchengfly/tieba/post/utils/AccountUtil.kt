@@ -31,7 +31,8 @@ object AccountUtil {
 
     @JvmStatic
     fun getLoginInfo(context: Context): Account? {
-        val loginUser = context.getSharedPreferences("accountData", Context.MODE_PRIVATE).getInt("now", -1)
+        val loginUser =
+            context.getSharedPreferences("accountData", Context.MODE_PRIVATE).getInt("now", -1)
         return if (loginUser == -1) {
             null
         } else getAccountInfo(loginUser)
@@ -70,7 +71,8 @@ object AccountUtil {
     @JvmStatic
     fun switchUser(context: Context, id: Int): Boolean {
         context.sendBroadcast(Intent().setAction(ACTION_SWITCH_ACCOUNT))
-        return context.getSharedPreferences("accountData", Context.MODE_PRIVATE).edit().putInt("now", id).commit()
+        return context.getSharedPreferences("accountData", Context.MODE_PRIVATE).edit()
+            .putInt("now", id).commit()
     }
 
     fun updateUserInfo(context: Context, commonCallback: CommonCallback<MyInfoBean>) {
@@ -92,8 +94,8 @@ object AccountUtil {
             val account = getAccountInfoByBduss(bduss)
             if (account != null) {
                 account.setsToken(sToken)
-                        .setCookie(cookie)
-                        .update(account.id.toLong())
+                    .setCookie(cookie)
+                    .update(account.id.toLong())
                 return true
             }
         }
@@ -101,27 +103,32 @@ object AccountUtil {
     }
 
     suspend fun updateUserInfoAsync(
-            coroutineScope: CoroutineScope,
-            bduss: String
+        coroutineScope: CoroutineScope,
+        bduss: String
     ): Deferred<ApiResult<MyInfoBean>> {
         return coroutineScope.async {
             var result = TiebaApi.getInstance()
-                    .myInfoAsync(getBdussCookie(bduss))
-                    .await()
+                .myInfoAsync(getBdussCookie(bduss))
+                .await()
             Log.i("AccountUtil", "updateUserInfo finish success:${result.isSuccessful}")
             result.doIfSuccess {
                 if (!it.data.isLogin()) {
-                    result = ApiResult.Failure(TiebaLocalException(Error.ERROR_LOGGED_IN_EXPIRED, "登录已过期"))
+                    result = ApiResult.Failure(
+                        TiebaLocalException(
+                            Error.ERROR_LOGGED_IN_EXPIRED,
+                            "登录已过期"
+                        )
+                    )
                 }
                 val userId = it.data.getUid().toString()
                 Account().setBduss(bduss)
-                        .setPortrait(it.data.getAvatarUrl())
-                        .setUid(userId)
-                        .setTbs(it.data.getTbs())
-                        .setItbTbs(it.data.getItbTbs())
-                        .setName(it.data.getName())
-                        .setNameShow(it.data.getShowName())
-                        .saveOrUpdate("uid = ? OR bduss = ?", userId, bduss)
+                    .setPortrait(it.data.getAvatarUrl())
+                    .setUid(userId)
+                    .setTbs(it.data.getTbs())
+                    .setItbTbs(it.data.getItbTbs())
+                    .setName(it.data.getName())
+                    .setNameShow(it.data.getShowName())
+                    .saveOrUpdate("uid = ? OR bduss = ?", userId, bduss)
             }
             result
         }
@@ -142,13 +149,13 @@ object AccountUtil {
                 }
                 val userId = myInfoBean.data.getUid().toString()
                 Account().setBduss(bduss)
-                        .setPortrait(myInfoBean.data.getAvatarUrl())
-                        .setUid(userId)
-                        .setTbs(myInfoBean.data.getTbs())
-                        .setItbTbs(myInfoBean.data.getItbTbs())
-                        .setName(myInfoBean.data.getName())
-                        .setNameShow(myInfoBean.data.getShowName())
-                        .saveOrUpdate("uid = ? OR bduss = ?", userId, bduss)
+                    .setPortrait(myInfoBean.data.getAvatarUrl())
+                    .setUid(userId)
+                    .setTbs(myInfoBean.data.getTbs())
+                    .setItbTbs(myInfoBean.data.getItbTbs())
+                    .setName(myInfoBean.data.getName())
+                    .setNameShow(myInfoBean.data.getShowName())
+                    .saveOrUpdate("uid = ? OR bduss = ?", userId, bduss)
                 commonCallback?.onSuccess(myInfoBean)
             }
 

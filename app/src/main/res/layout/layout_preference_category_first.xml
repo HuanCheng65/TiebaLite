@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.huanchengfly.tieba.post.widgets.theme.TintTextView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@android:id/title"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="12dp"
     android:layout_marginStart="@dimen/card_margin"
     android:layout_marginEnd="@dimen/card_margin"
-    android:maxLines="1"
-    android:textStyle="bold"
-    android:ellipsize="end"
-    android:textSize="16sp"
-    app:tint="@color/default_color_primary"
     android:background="@drawable/bg_top_radius_10dp"
+    android:ellipsize="end"
+    android:maxLines="1"
+    android:padding="12dp"
+    android:textSize="16sp"
+    android:textStyle="bold"
     app:backgroundTint="@color/default_color_card"
-    android:id="@android:id/title" />
+    app:tint="@color/default_color_primary" />

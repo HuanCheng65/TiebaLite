@@ -42,19 +42,19 @@ class ForumPageBean : ErrorBean() {
     }
 
     data class ThemeColors(
-            var day: ThemeColor,
-            var dark: ThemeColor,
-            var night: ThemeColor
+        var day: ThemeColor,
+        var dark: ThemeColor,
+        var night: ThemeColor
     ) {
         data class ThemeColor(
-                @SerializedName("common_color")
-                var commonColor: String,
-                @SerializedName("dark_color")
-                var darkColor: String,
-                @SerializedName("font_color")
-                var fontColor: String,
-                @SerializedName("light_color")
-                var lightColor: String,
+            @SerializedName("common_color")
+            var commonColor: String,
+            @SerializedName("dark_color")
+            var darkColor: String,
+            @SerializedName("font_color")
+            var fontColor: String,
+            @SerializedName("light_color")
+            var lightColor: String,
         )
     }
 

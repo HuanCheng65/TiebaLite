@@ -3,28 +3,25 @@
     <item
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-        <shape
-            android:shape="rectangle">
+        <shape android:shape="rectangle">
             <gradient
                 android:angle="0"
-                android:startColor="@color/colorSplashBg"
                 android:endColor="@color/colorSplashBg"
-                android:type="linear"/>
+                android:startColor="@color/colorSplashBg"
+                android:type="linear" />
         </shape>
     </item>
     <item
-        android:height="120dp"
         android:width="120dp"
+        android:height="120dp"
         android:gravity="center">
-        <bitmap
-            android:src="@drawable/ic_splash" />
+        <bitmap android:src="@drawable/ic_splash" />
     </item>
     <item
-        android:height="100dp"
         android:width="200dp"
+        android:height="100dp"
         android:bottom="35dp"
         android:gravity="bottom|center_horizontal">
-        <bitmap
-            android:src="@drawable/ic_splash_text" />
+        <bitmap android:src="@drawable/ic_splash_text" />
     </item>
 </layer-list>

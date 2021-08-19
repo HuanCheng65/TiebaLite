@@ -1,5 +1,7 @@
 package com.huanchengfly.tieba.post.utils;
 
+import static android.content.Context.DOWNLOAD_SERVICE;
+
 import android.app.DownloadManager;
 import android.content.ContentResolver;
 import android.content.ContentUris;
@@ -21,8 +23,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
-
-import static android.content.Context.DOWNLOAD_SERVICE;
 
 public class FileUtil {
     public static final int FILE_TYPE_DOWNLOAD = 0;

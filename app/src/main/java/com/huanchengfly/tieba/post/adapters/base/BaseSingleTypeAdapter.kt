@@ -5,11 +5,11 @@ import android.view.ViewGroup
 import com.huanchengfly.tieba.post.components.MyViewHolder
 
 abstract class BaseSingleTypeAdapter<Item>(
-        context: Context,
-        items: List<Item>? = null
+    context: Context,
+    items: List<Item>? = null
 ) : BaseAdapter<Item>(
-        context,
-        items
+    context,
+    items
 ) {
     protected abstract fun getItemLayoutId(): Int
 

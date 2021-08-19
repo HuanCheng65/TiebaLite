@@ -1,4 +1,5 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
+
     <style name="TextAppearance.MaterialSubhead">
         <item name="android:textSize">16sp</item>
         <item name="android:fontFamily" tools:ignore="NewApi">sans-serif</item>
@@ -592,7 +593,9 @@
         <item name="colorToolbar">@color/theme_color_toolbar_grey_dark</item>
         <item name="colorToolbarItem">@color/theme_color_toolbar_item_night</item>
         <item name="colorToolbarItemActive">@color/theme_color_toolbar_item_active_grey_dark</item>
-        <item name="color_toolbar_item_secondary">@color/theme_color_toolbar_item_secondary_grey_dark</item>
+        <item name="color_toolbar_item_secondary">
+            @color/theme_color_toolbar_item_secondary_grey_dark
+        </item>
         <item name="colorBg">@color/theme_color_background_grey_dark</item>
         <item name="colorWindowBackground">@color/theme_color_window_background_grey_dark</item>
         <item name="colorNavBar">@color/theme_color_nav_grey_dark</item>

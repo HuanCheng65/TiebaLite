@@ -1,30 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
     android:padding="8dp"
     android:paddingStart="18dp"
-    android:paddingEnd="18dp"
-    android:layout_height="wrap_content"
-    android:layout_width="match_parent">
+    android:paddingEnd="18dp">
+
     <com.huanchengfly.tieba.post.widgets.theme.TintTextView
+        android:id="@+id/forum_title_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/forum_list_title"
-        android:gravity="start|center_vertical"
-        android:id="@+id/forum_title_text"
-        app:tint="@color/default_color_text_secondary"
-        android:layout_toStartOf="@id/forum_title_icon"
         android:layout_alignWithParentIfMissing="true"
+        android:layout_alignParentStart="true"
         android:layout_centerVertical="true"
-        android:layout_alignParentStart="true" />
+        android:layout_toStartOf="@id/forum_title_icon"
+        android:gravity="start|center_vertical"
+        android:text="@string/forum_list_title"
+        app:tint="@color/default_color_text_secondary" />
 
     <com.huanchengfly.tieba.post.widgets.theme.TintImageView
-        android:visibility="gone"
-        app:tint="@color/default_color_text_secondary"
-        app:srcCompat="@drawable/ic_keyboard_arrow_down"
         android:id="@+id/forum_title_icon"
-        android:layout_centerVertical="true"
-        android:layout_alignParentEnd="true"
         android:layout_width="18dp"
-        android:layout_height="18dp" />
+        android:layout_height="18dp"
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true"
+        android:visibility="gone"
+        app:srcCompat="@drawable/ic_keyboard_arrow_down"
+        app:tint="@color/default_color_text_secondary" />
 </RelativeLayout>

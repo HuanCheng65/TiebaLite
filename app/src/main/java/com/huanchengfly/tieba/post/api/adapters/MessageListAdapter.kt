@@ -10,7 +10,11 @@ import java.util.*
 
 class MessageListAdapter : JsonDeserializer<List<MessageInfoBean>> {
     @Throws(JsonParseException::class)
-    override fun deserialize(json: JsonElement, typeOfT: Type, context: JsonDeserializationContext): List<MessageInfoBean> {
+    override fun deserialize(
+        json: JsonElement,
+        typeOfT: Type,
+        context: JsonDeserializationContext
+    ): List<MessageInfoBean> {
         return if (json.isJsonPrimitive) {
             ArrayList()
         } else context.deserialize(json, typeOfT)

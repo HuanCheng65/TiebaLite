@@ -1,34 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:tools="http://schemas.android.com/tools"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
     android:padding="8dp"
     android:paddingStart="@dimen/padding_start_default"
-    android:paddingEnd="@dimen/padding_end_default"
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="horizontal"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content">
+    android:paddingEnd="@dimen/padding_end_default">
+
     <com.huanchengfly.tieba.post.widgets.theme.TintRelativeLayout
         android:id="@+id/hot_message"
-        app:backgroundTint="@color/default_color_floor_card"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:background="@drawable/bg_radius_50dp"
         android:foreground="@drawable/fg_ripple_radius_50dp"
         android:padding="8dp"
         android:paddingStart="16dp"
         android:paddingEnd="16dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        app:backgroundTint="@color/default_color_floor_card"
         tools:ignore="UnusedAttribute">
+
         <com.huanchengfly.tieba.post.widgets.theme.TintTextView
-            android:text="@string/title_hot_message"
-            android:gravity="center"
-            android:ellipsize="end"
-            android:maxLines="1"
-            android:textStyle="bold"
-            app:tint="@color/default_color_text_secondary"
             android:id="@+id/text"
-            android:layout_centerInParent="true"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:ellipsize="end"
+            android:gravity="center"
+            android:maxLines="1"
+            android:text="@string/title_hot_message"
+            android:textStyle="bold"
+            app:tint="@color/default_color_text_secondary" />
     </com.huanchengfly.tieba.post.widgets.theme.TintRelativeLayout>
 </LinearLayout>

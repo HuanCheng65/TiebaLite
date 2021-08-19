@@ -5,8 +5,8 @@
     android:layout_height="wrap_content">
 
     <com.huanchengfly.tieba.post.widgets.theme.TintTextInputLayout
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
         android:id="@+id/dialog_edit_text_layout"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
@@ -14,19 +14,19 @@
         android:layout_marginEnd="8dp"
         app:boxBackgroundColor="@color/transparent"
         app:boxStrokeColor="@color/default_color_primary"
-        app:hintTextColor="@color/default_color_primary"
-        app:placeholderTextColor="@color/default_color_primary"
         app:hintAnimationEnabled="true"
         app:hintEnabled="true"
+        app:hintTextColor="@color/default_color_primary"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        app:placeholderTextColor="@color/default_color_primary">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:textCursorDrawable="@null"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/tip_input">
+            android:hint="@string/tip_input"
+            android:textCursorDrawable="@null">
 
             <requestFocus />
         </com.google.android.material.textfield.TextInputEditText>

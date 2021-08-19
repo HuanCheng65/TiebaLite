@@ -9,12 +9,17 @@ import com.huanchengfly.tieba.post.ui.theme.interfaces.Tintable
 import com.huanchengfly.tieba.post.ui.theme.utils.ColorStateListUtils
 
 class TintCollapsingToolbarLayout @JvmOverloads constructor(
-        context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
+    context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
 ) : CollapsingToolbarLayout(context, attrs, defStyleAttr), Tintable {
     private var textColorResId: Int
 
     init {
-        val array = getContext().obtainStyledAttributes(attrs, R.styleable.TintCollapsingToolbarLayout, defStyleAttr, 0)
+        val array = getContext().obtainStyledAttributes(
+            attrs,
+            R.styleable.TintCollapsingToolbarLayout,
+            defStyleAttr,
+            0
+        )
         textColorResId = array.getResourceId(R.styleable.TintCollapsingToolbarLayout_textColor, 0)
         array.recycle()
         tint()
@@ -26,8 +31,18 @@ class TintCollapsingToolbarLayout @JvmOverloads constructor(
                 setCollapsedTitleTextColor(context.getColorStateListCompat(textColorResId))
                 setExpandedTitleTextColor(context.getColorStateListCompat(textColorResId))
             } else {
-                setCollapsedTitleTextColor(ColorStateListUtils.createColorStateList(context, textColorResId))
-                setExpandedTitleTextColor(ColorStateListUtils.createColorStateList(context, textColorResId))
+                setCollapsedTitleTextColor(
+                    ColorStateListUtils.createColorStateList(
+                        context,
+                        textColorResId
+                    )
+                )
+                setExpandedTitleTextColor(
+                    ColorStateListUtils.createColorStateList(
+                        context,
+                        textColorResId
+                    )
+                )
             }
         }
     }

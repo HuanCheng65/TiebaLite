@@ -76,19 +76,19 @@ class ViewOffsetHelper {
         return layoutLeft;
     }
 
-    public void setVerticalOffsetEnabled(boolean verticalOffsetEnabled) {
-        this.verticalOffsetEnabled = verticalOffsetEnabled;
-    }
-
     public boolean isVerticalOffsetEnabled() {
         return verticalOffsetEnabled;
     }
 
-    public void setHorizontalOffsetEnabled(boolean horizontalOffsetEnabled) {
-        this.horizontalOffsetEnabled = horizontalOffsetEnabled;
+    public void setVerticalOffsetEnabled(boolean verticalOffsetEnabled) {
+        this.verticalOffsetEnabled = verticalOffsetEnabled;
     }
 
     public boolean isHorizontalOffsetEnabled() {
         return horizontalOffsetEnabled;
+    }
+
+    public void setHorizontalOffsetEnabled(boolean horizontalOffsetEnabled) {
+        this.horizontalOffsetEnabled = horizontalOffsetEnabled;
     }
 }
