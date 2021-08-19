@@ -77,8 +77,8 @@ class BaseApplication : Application(), IApp {
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
         LitePal.initialize(this)
         FlurryAgent.Builder()
-                .withCaptureUncaughtExceptions(true)
-                .build(this, "ZMRX6W76WNF95ZHT857X")
+            .withCaptureUncaughtExceptions(true)
+            .build(this, "ZMRX6W76WNF95ZHT857X")
         registerActivityLifecycleCallbacks(object : ActivityLifecycleCallbacks {
             private var clipBoardHash: Int = 0
             private fun updateClipBoardHashCode() {
@@ -517,7 +517,33 @@ class BaseApplication : Application(), IApp {
         return this
     }
 
+    override fun getCurrentContext(): Context {
+        return mActivityList.lastOrNull() ?: this
+    }
+
     override fun launchUrl(url: String) {
-        launchUrl(mActivityList.lastOrNull() ?: this, url)
+        launchUrl(getCurrentContext(), url)
+    }
+
+    override fun showLoadingDialog(): Dialog {
+        return LoadingDialog(getCurrentContext()).apply { show() }
+    }
+
+    override fun toastShort(text: String) {
+        getCurrentContext().toastShort(text)
+    }
+
+    override fun showAlertDialog(builder: AlertDialog.Builder.() -> Unit): AlertDialog {
+        val dialog = AlertDialog.Builder(getCurrentContext())
+            .apply(builder)
+            .create()
+        if (getCurrentContext() !is BaseActivity || (getCurrentContext() as BaseActivity).isActivityRunning) {
+            dialog.show()
+        }
+        return dialog
+    }
+
+    override fun copyText(text: String) {
+        TiebaUtil.copyText(getCurrentContext(), text)
     }
 }

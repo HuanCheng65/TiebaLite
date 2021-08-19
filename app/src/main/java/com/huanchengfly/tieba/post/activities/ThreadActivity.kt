@@ -508,7 +508,6 @@ class ThreadActivity : BaseActivity(), View.OnClickListener, IThreadMenuFragment
                 totalPage = Integer.valueOf(threadContentBean.page.totalPage!!)
                 refresh(pid)
             }
-
         })
     }
 

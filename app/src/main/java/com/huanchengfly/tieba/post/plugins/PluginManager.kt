@@ -4,6 +4,8 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.view.Menu
 import com.huanchengfly.tieba.post.api.models.ProfileBean
+import com.huanchengfly.tieba.post.api.models.SubFloorListBean
+import com.huanchengfly.tieba.post.api.models.ThreadContentBean
 import com.huanchengfly.tieba.post.fromJson
 import com.huanchengfly.tieba.post.plugins.interfaces.IApp
 import com.huanchengfly.tieba.post.plugins.models.BuiltInPlugins
@@ -15,6 +17,8 @@ import kotlin.reflect.KClass
 
 object PluginManager {
     const val MENU_USER_ACTIVITY = "user_activity"
+    const val MENU_POST_ITEM = "post_item"
+    const val MENU_SUB_POST_ITEM = "sub_post_item"
     const val MENU_NONE = "none"
 
     lateinit var appInstance: IApp
@@ -37,6 +41,8 @@ object PluginManager {
         registeredPluginMenuItems.clear()
         listOf(
             MENU_USER_ACTIVITY,
+            MENU_POST_ITEM,
+            MENU_SUB_POST_ITEM,
             MENU_NONE
         ).forEach {
             registeredPluginMenuItems[it] = mutableMapOf()
@@ -56,7 +62,7 @@ object PluginManager {
     fun initPluginMenu(menu: Menu, menuId: String) {
         val menuItems = registeredPluginMenuItems[menuId]!!
         menuItems.forEach {
-            menu.add(0, it.key, 0, it.value.title)
+            menu.add(0, it.key, 100, it.value.title)
         }
     }
 
@@ -196,6 +202,8 @@ fun getMenuByData(dataClass: KClass<*>): String = getMenuByData(dataClass.java)
 fun getMenuByData(dataClass: Class<*>): String {
     return when (dataClass.canonicalName) {
         ProfileBean::class.java.canonicalName -> PluginManager.MENU_USER_ACTIVITY
+        ThreadContentBean.PostListItemBean::class.java.canonicalName -> PluginManager.MENU_POST_ITEM
+        SubFloorListBean.PostInfo::class.java.canonicalName -> PluginManager.MENU_SUB_POST_ITEM
         else -> "none"
     }
 }

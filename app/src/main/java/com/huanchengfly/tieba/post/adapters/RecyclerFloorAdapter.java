@@ -32,6 +32,7 @@ import com.huanchengfly.tieba.post.fragments.ConfirmDialogFragment;
 import com.huanchengfly.tieba.post.fragments.MenuDialogFragment;
 import com.huanchengfly.tieba.post.models.PhotoViewBean;
 import com.huanchengfly.tieba.post.models.ReplyInfoBean;
+import com.huanchengfly.tieba.post.plugins.PluginManager;
 import com.huanchengfly.tieba.post.utils.AccountUtil;
 import com.huanchengfly.tieba.post.utils.BilibiliUtil;
 import com.huanchengfly.tieba.post.utils.DateTimeUtils;
@@ -178,9 +179,10 @@ public class RecyclerFloorAdapter extends CommonBaseAdapter<SubFloorListBean.Pos
                             }
                             return true;
                     }
-                    return false;
+                    return PluginManager.INSTANCE.performPluginMenuClick(PluginManager.MENU_SUB_POST_ITEM, item.getItemId(), postInfo);
                 })
                 .setInitMenuCallback(menu -> {
+                    PluginManager.INSTANCE.initPluginMenu(menu, PluginManager.MENU_SUB_POST_ITEM);
                     if (TextUtils.equals(AccountUtil.getLoginInfo(mContext).getUid(), postInfo.getAuthor().getId())) {
                         menu.findItem(R.id.menu_delete).setVisible(true);
                     }

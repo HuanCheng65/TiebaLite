@@ -4,19 +4,29 @@ import android.content.Context
 import com.huanchengfly.tieba.post.plugins.PluginMenuItem.ClickCallback
 import com.huanchengfly.tieba.post.plugins.interfaces.IApp
 import com.huanchengfly.tieba.post.plugins.models.PluginManifest
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlin.coroutines.CoroutineContext
 
 abstract class IPlugin(
     val app: IApp,
     val manifest: PluginManifest
-) {
+) : CoroutineScope {
+    val job = Job()
+    override val coroutineContext: CoroutineContext
+        get() = Dispatchers.Main + job
+
     val context: Context
-        get() = app.getAppContext()
+        get() = app.getCurrentContext()
 
     open fun onCreate() {}
 
     open fun onEnable() {}
 
-    open fun onDisable() {}
+    open fun onDisable() {
+        job.cancel()
+    }
 
     open fun onDestroy() {}
 }

@@ -34,6 +34,7 @@ import com.huanchengfly.tieba.post.fragments.ConfirmDialogFragment
 import com.huanchengfly.tieba.post.fragments.FloorFragment.Companion.newInstance
 import com.huanchengfly.tieba.post.fragments.MenuDialogFragment
 import com.huanchengfly.tieba.post.models.ReplyInfoBean
+import com.huanchengfly.tieba.post.plugins.PluginManager
 import com.huanchengfly.tieba.post.ui.theme.utils.ThemeUtils
 import com.huanchengfly.tieba.post.utils.*
 import com.huanchengfly.tieba.post.utils.BilibiliUtil.replaceVideoNumberSpan
@@ -314,9 +315,14 @@ class ThreadReplyAdapter(context: Context) : BaseSingleTypeDelegateAdapter<PostL
                             return@setOnNavigationItemSelectedListener true
                         }
                     }
-                    false
+                    PluginManager.performPluginMenuClick(
+                        PluginManager.MENU_SUB_POST_ITEM,
+                        item.itemId,
+                        subPostListItemBean
+                    )
                 }
                 .setInitMenuCallback { menu: Menu ->
+                    PluginManager.initPluginMenu(menu, PluginManager.MENU_SUB_POST_ITEM)
                     menu.findItem(R.id.menu_report).isVisible = false
                     if (TextUtils.equals(AccountUtil.getUid(context), subPostListItemBean.authorId)) {
                         menu.findItem(R.id.menu_delete).isVisible = true
@@ -384,9 +390,14 @@ class ThreadReplyAdapter(context: Context) : BaseSingleTypeDelegateAdapter<PostL
                             return@setOnNavigationItemSelectedListener true
                         }
                     }
-                    false
+                    PluginManager.performPluginMenuClick(
+                        PluginManager.MENU_POST_ITEM,
+                        item.itemId,
+                        postListItemBean
+                    )
                 }
                 .setInitMenuCallback { menu: Menu ->
+                    PluginManager.initPluginMenu(menu, PluginManager.MENU_POST_ITEM)
                     if (TextUtils.equals(dataBean!!.user!!.id, postListItemBean.authorId) || TextUtils.equals(dataBean!!.user!!.id, dataBean!!.thread!!.author!!.id)) {
                         menu.findItem(R.id.menu_delete).isVisible = true
                     }

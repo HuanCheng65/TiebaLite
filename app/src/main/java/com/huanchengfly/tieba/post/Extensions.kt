@@ -5,15 +5,18 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.content.res.ColorStateList
-import android.os.Build
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.annotation.ColorRes
+import androidx.appcompat.content.res.AppCompatResources
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import com.huanchengfly.tieba.post.utils.GsonUtil
 import com.huanchengfly.tieba.post.utils.MD5Util
+
 
 fun Float.dpToPx(): Int =
         dpToPxFloat().toInt()
@@ -38,26 +41,21 @@ fun Int.pxToDp(): Int = this.toFloat().pxToDp()
 
 fun Int.pxToSp(): Int = this.toFloat().pxToSp()
 
-inline fun <reified Data> String.fromJson() = GsonUtil.getGson().fromJson<Data>(this, Data::class.java)
+inline fun <reified Data> String.fromJson(): Data {
+    val type = object : TypeToken<Data>() {}.type
+    return GsonUtil.getGson().fromJson(this, type)
+}
 
 fun Any.toJson(): String = Gson().toJson(this)
 
 fun String.toMD5(): String = MD5Util.toMd5(this)
 
 fun Context.getColorCompat(@ColorRes id: Int): Int {
-    return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-        resources.getColor(id, theme)
-    } else {
-        resources.getColor(id)
-    }
+    return ContextCompat.getColor(this, id)
 }
 
 fun Context.getColorStateListCompat(id: Int): ColorStateList {
-    return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-        resources.getColorStateList(id, theme)
-    } else {
-        resources.getColorStateList(id)
-    }
+    return AppCompatResources.getColorStateList(this, id)
 }
 
 inline fun <reified T : Activity> Context.goToActivity() {

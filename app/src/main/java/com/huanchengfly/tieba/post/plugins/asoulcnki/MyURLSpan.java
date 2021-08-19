@@ -1,4 +1,4 @@
-package com.huanchengfly.tieba.post.components.spans;
+package com.huanchengfly.tieba.post.plugins.asoulcnki;
 
 import android.content.Context;
 import android.text.TextPaint;
@@ -31,5 +31,6 @@ public class MyURLSpan extends ClickableSpan {
     @Override
     public void onClick(@NonNull View view) {
         UtilsKt.launchUrl(context, url);
+        //context.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(url)).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
     }
 }

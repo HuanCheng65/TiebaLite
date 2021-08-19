@@ -20,6 +20,7 @@ import com.huanchengfly.tieba.post.api.models.ThreadContentBean
 import com.huanchengfly.tieba.post.components.MyViewHolder
 import com.huanchengfly.tieba.post.fragments.MenuDialogFragment
 import com.huanchengfly.tieba.post.models.ReplyInfoBean
+import com.huanchengfly.tieba.post.plugins.PluginManager
 import com.huanchengfly.tieba.post.utils.*
 import com.huanchengfly.tieba.post.utils.NavigationHelper
 import com.huanchengfly.tieba.post.utils.TiebaUtil.reportPost
@@ -120,13 +121,22 @@ class ThreadMainPostAdapter(
                                     stringBuilder.append(contentBean.text)
                                 }
                             }
-                            Util.showCopyDialog(context as BaseActivity?, stringBuilder.toString(), threadPostBean!!.id)
+                            Util.showCopyDialog(
+                                context as BaseActivity?,
+                                stringBuilder.toString(),
+                                threadPostBean!!.id
+                            )
                             true
                         }
-                        else -> false
+                        else -> PluginManager.performPluginMenuClick(
+                            PluginManager.MENU_POST_ITEM,
+                            item.itemId,
+                            threadPostBean!!
+                        )
                     }
                 }
                 .setInitMenuCallback { menu: Menu ->
+                    PluginManager.initPluginMenu(menu, PluginManager.MENU_POST_ITEM)
                     menu.findItem(R.id.menu_delete).isVisible = false
                 }
                 .show((context as BaseActivity).supportFragmentManager, threadPostBean!!.id + "_Menu")
