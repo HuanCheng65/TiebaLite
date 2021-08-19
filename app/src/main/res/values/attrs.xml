@@ -163,6 +163,14 @@
         <attr name="textColor" />
     </declare-styleable>
 
+    <declare-styleable name="RulerSeekBar">
+        <attr name="rulerColor" format="color" />
+        <attr name="rulerSize" format="dimension" />
+        <attr name="rulerCount" format="integer" />
+        <attr name="rulerShowTopOfThumb" format="boolean" />
+        <attr name="rulerOnEdge" format="boolean" />
+    </declare-styleable>
+
     <declare-styleable name="ScrollCollapsingToolbarLayout">
         <!--  Specifies extra space on the start, top, end and bottom
               sides of the the expanded title text. Margin values should be positive. -->

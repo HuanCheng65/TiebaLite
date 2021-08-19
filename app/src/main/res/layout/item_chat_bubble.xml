@@ -16,7 +16,7 @@
         <com.huanchengfly.tieba.post.widgets.theme.TintTextView
             android:id="@+id/chat_bubble_text"
             android:padding="16dp"
-            android:textSize="14sp"
+            android:textSize="15sp"
             android:maxWidth="250dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />

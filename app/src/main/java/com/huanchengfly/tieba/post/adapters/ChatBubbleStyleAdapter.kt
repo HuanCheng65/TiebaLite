@@ -1,6 +1,8 @@
 package com.huanchengfly.tieba.post.adapters
 
+import android.annotation.SuppressLint
 import android.content.Context
+import android.util.TypedValue
 import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
@@ -16,6 +18,13 @@ class ChatBubbleStyleAdapter(
     context: Context,
     bubbles: List<Bubble>
 ) : BaseSingleTypeAdapter<ChatBubbleStyleAdapter.Bubble>(context, bubbles) {
+    var bubblesFontSize: Float = 0f
+        @SuppressLint("NotifyDataSetChanged")
+        set(value) {
+            field = value
+            notifyDataSetChanged()
+        }
+
     override fun getItemLayoutId(): Int = R.layout.item_chat_bubble
 
     override fun convert(viewHolder: MyViewHolder, item: Bubble, position: Int) {
@@ -34,12 +43,17 @@ class ChatBubbleStyleAdapter(
                     Gravity.START
                 }
         }
-        viewHolder.getView<TintTextView>(R.id.chat_bubble_text).tintResId =
-            if (item.position == POSITION_RIGHT) {
-                R.color.default_color_on_accent
-            } else {
-                R.color.default_color_text
+        viewHolder.getView<TintTextView>(R.id.chat_bubble_text).apply {
+            tintResId =
+                if (item.position == POSITION_RIGHT) {
+                    R.color.default_color_on_accent
+                } else {
+                    R.color.default_color_text
+                }
+            if (bubblesFontSize > 0f) {
+                setTextSize(TypedValue.COMPLEX_UNIT_PX, bubblesFontSize)
             }
+        }
         viewHolder.setText(R.id.chat_bubble_text, item.text)
         val customView = item.customViewBuilder?.invoke(context, item.position)
         if (customView != null) {

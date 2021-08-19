@@ -118,6 +118,7 @@
             android:entries="@array/forum_fab_function_name_values"
             android:defaultValue="post"
             android:key="forumFabFunction"
+            android:icon="@drawable/ic_round_exit_to_app"
             android:title="@string/settings_forum_fab_function" />
 
         <Preference
@@ -136,6 +137,16 @@
     </androidx.preference.PreferenceCategory>
 
     <androidx.preference.PreferenceCategory android:title="@string/title_settings_custom">
+        <Preference
+            android:icon="@drawable/ic_round_font_download"
+            android:key="font_size"
+            android:title="@string/title_custom_font_size">
+            <intent
+                android:targetPackage="com.huanchengfly.tieba.post"
+                android:targetClass="com.huanchengfly.tieba.post.activities.AppFontSizeActivity"
+                android:action="android.intent.action.VIEW" />
+        </Preference>
+
         <ListPreference
             android:icon="@drawable/ic_round_brightness_2_green"
             android:key="dark_theme"

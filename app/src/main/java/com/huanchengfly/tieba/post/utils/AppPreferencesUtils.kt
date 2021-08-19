@@ -21,15 +21,29 @@ open class AppPreferencesUtils(context: Context) {
 
     var customPrimaryColor by SharedPreferenceDelegates.string(key = "custom_primary_color")
 
-    var customStatusBarFontDark by SharedPreferenceDelegates.boolean(defaultValue = false, key = "custom_status_bar_font_dark")
+    var customStatusBarFontDark by SharedPreferenceDelegates.boolean(
+        defaultValue = false,
+        key = "custom_status_bar_font_dark"
+    )
 
-    var customToolbarPrimaryColor by SharedPreferenceDelegates.boolean(defaultValue = true, key = "custom_toolbar_primary_color")
+    var customToolbarPrimaryColor by SharedPreferenceDelegates.boolean(
+        defaultValue = true,
+        key = "custom_toolbar_primary_color"
+    )
 
-    var defaultSortType by SharedPreferenceDelegates.string(key = "default_sort_type", defaultValue = "0")
+    var defaultSortType by SharedPreferenceDelegates.string(
+        key = "default_sort_type",
+        defaultValue = "0"
+    )
 
     var darkTheme by SharedPreferenceDelegates.string(key = "dark_theme", defaultValue = "dark")
 
-    var followSystemNight by SharedPreferenceDelegates.boolean(defaultValue = true, key = "follow_system_night")
+    var followSystemNight by SharedPreferenceDelegates.boolean(
+        defaultValue = true,
+        key = "follow_system_night"
+    )
+
+    var fontScale by SharedPreferenceDelegates.float(defaultValue = 1.0f)
 
     var forumFabFunction by SharedPreferenceDelegates.string(defaultValue = "post")
 
@@ -39,7 +53,10 @@ open class AppPreferencesUtils(context: Context) {
 
     var homePageScroll by SharedPreferenceDelegates.boolean(defaultValue = false)
 
-    var imageLoadType by SharedPreferenceDelegates.string(key = "image_load_type", defaultValue = "0")
+    var imageLoadType by SharedPreferenceDelegates.string(
+        key = "image_load_type",
+        defaultValue = "0"
+    )
 
     var listItemsBackgroundIntermixed by SharedPreferenceDelegates.boolean(defaultValue = true)
 

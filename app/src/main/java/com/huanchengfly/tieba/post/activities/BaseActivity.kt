@@ -6,6 +6,7 @@ import android.app.Activity
 import android.app.Dialog
 import android.content.Context
 import android.content.res.ColorStateList
+import android.content.res.Resources
 import android.graphics.Color
 import android.os.Bundle
 import android.text.TextUtils
@@ -58,6 +59,18 @@ abstract class BaseActivity : SwipeBackActivity(), ExtraRefreshable, CoroutineSc
         super.onPause()
         isActivityRunning = false
         Jzvd.releaseAllVideos()
+    }
+
+    //禁止app字体大小跟随系统字体大小调节
+    override fun getResources(): Resources {
+        val fontScale = appPreferences.fontScale
+        val resources = super.getResources()
+        if (resources.configuration.fontScale != fontScale) {
+            val configuration = resources.configuration
+            configuration.fontScale = fontScale
+            resources.updateConfiguration(configuration, resources.displayMetrics)
+        }
+        return resources
     }
 
     protected fun showDialog(dialog: Dialog): Boolean {

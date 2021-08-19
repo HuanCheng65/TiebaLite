@@ -45,21 +45,24 @@
         android:usesCleartextTraffic="true"
         tools:ignore="UnusedAttribute">
         <activity
+            android:name=".activities.AppFontSizeActivity"
+            android:configChanges="screenSize|screenLayout|orientation|smallestScreenSize|keyboardHidden"
+            android:label="@string/title_custom_font_size"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
             android:name=".activities.PluginManageActivity"
             android:configChanges="screenSize|screenLayout|orientation|smallestScreenSize|keyboardHidden"
-            android:windowSoftInputMode="adjustResize"
-            android:label="@string/title_plugin_manage" />
-
+            android:label="@string/title_plugin_manage"
+            android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".activities.HotMessageListActivity"
             android:configChanges="screenSize|screenLayout|orientation|smallestScreenSize|keyboardHidden"
             android:windowSoftInputMode="adjustResize" />
-
         <activity
             android:name=".activities.PhotoViewActivity"
             android:configChanges="screenSize|screenLayout|orientation|smallestScreenSize|keyboardHidden"
-            android:windowSoftInputMode="adjustResize"
-            android:theme="@style/AppTheme.PhotoView" />
+            android:theme="@style/AppTheme.PhotoView"
+            android:windowSoftInputMode="adjustResize" />
 
         <receiver
             android:name=".receivers.BootCompleteSignReceiver"
@@ -140,6 +143,7 @@
                 <action android:name="com.huanchengfly.tieba.post.action.OKSIGN" />
             </intent-filter>
         </activity>
+
         <activity
             android:name=".activities.AboutActivity"
             android:configChanges="screenSize|screenLayout|orientation|smallestScreenSize|keyboardHidden"

@@ -435,10 +435,7 @@
     <string name="title_collected">已收藏</string>
     <string name="text_stat_follow">关注</string>
     <string name="text_stat_fans">粉丝</string>
-    <string name="title_custom_title_style">标题样式</string>
-    <string name="text_custom_title_style">Title</string>
     <string name="title_custom_font_size">字体大小</string>
-    <string name="text_custom_font_size">永a</string>
     <string name="text_singing_progress">%1$s吧 ✓</string>
     <string name="text_singing_progress_exp">%1$s吧 ✓ 经验 +%2$s</string>
     <string name="title_start_sign">即将开始签到</string>
@@ -468,4 +465,19 @@
     <string name="plugin_comment_lookup_menu">查询发言</string>
     <string name="title_plugin_manage">附加功能管理</string>
     <string name="template_plugin_info">v%1$s · 作者 %2$s</string>
+    <string name="plugin_asoul_cnki_check">枝网查重</string>
+    <string name="plugin_asoul_cnki_result">枝网文本复制检测报告(简洁)\n查重时间: %1$s\n总文字复制比: %2$s\n%3$s\n\n查重结果仅作参考，请注意辨别是否为原创</string>
+    <string name="plugin_asoul_cnki_related">相似小作文: %1$s\n作者: %2$s\n发表时间: %3$s</string>
+    <string name="plugin_asoul_cnki_check_result_percent">总文本复制比: %1$s</string>
+    <string name="plugin_asoul_cnki_check_result_related">相似小作文 (%1$d)</string>
+    <string name="btn_copy_check_result">复制查重结果</string>
+    <string name="bubble_want_change_font_size">怎么调节应用内的字体大小呢？</string>
+    <string name="bubble_change_font_size">尝试着调节下方的控制条吧，可以在这里即时预览字体大小。</string>
+    <string name="text_size_small">小</string>
+    <string name="text_size_little_small">较小</string>
+    <string name="text_size_default">默认大小</string>
+    <string name="text_size_little_large">较大</string>
+    <string name="text_size_large">大</string>
+    <string name="text_size_very_large">极大</string>
+    <string name="toast_after_change_will_restart">修改已保存，即将重启 App 以应用设置</string>
 </resources>

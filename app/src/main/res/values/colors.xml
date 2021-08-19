@@ -44,14 +44,14 @@
     <color name="default_color_text">#FF31343C</color>
     <color name="default_color_text_on_primary">#FFFFFFFF</color>
     <color name="default_color_text_secondary">#FF545967</color>
-    <color name="default_color_text_disabled">#FF65696C</color>
+    <color name="default_color_text_disabled">#FFA8ADBB</color>
     <color name="default_color_toolbar">#FFFFFFFF</color>
     <color name="default_color_toolbar_item">#FF474B54</color>
     <color name="default_color_toolbar_item_secondary">#FF545967</color>
     <color name="default_color_toolbar_item_active">#FF4477E0</color>
     <color name="default_color_toolbar_bar">#E6F2F7FB</color>
     <color name="default_color_on_toolbar_bar">#6654585B</color>
-    <color name="default_color_nav_bar_surface">#FFF3F7F9</color>
+    <color name="default_color_nav_bar_surface">#FFF3F7FA</color>
     <color name="default_color_on_nav_bar_surface">#FF8D9194</color>
     <color name="default_color_background">#FFFFFFFF</color>
     <color name="default_color_window_background">#FFF3F7F9</color>

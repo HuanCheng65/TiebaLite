@@ -1,23 +1,33 @@
 package com.huanchengfly.tieba.post
 
 import android.app.Activity
+import android.app.ActivityManager
 import android.app.Application
+import android.app.Dialog
 import android.content.ClipboardManager
 import android.content.Context
 import android.content.Intent
 import android.content.res.ColorStateList
 import android.content.res.Configuration
+import android.content.res.Resources
 import android.graphics.Color
 import android.graphics.drawable.Drawable
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
+import android.os.Process
 import android.view.View
+import android.webkit.WebView
 import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.annotation.RequiresApi
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatDelegate
 import com.flurry.android.FlurryAgent
+import com.huanchengfly.tieba.post.activities.BaseActivity
 import com.huanchengfly.tieba.post.api.interfaces.CommonCallback
+import com.huanchengfly.tieba.post.components.dialogs.LoadingDialog
 import com.huanchengfly.tieba.post.plugins.PluginManager
 import com.huanchengfly.tieba.post.plugins.interfaces.IApp
 import com.huanchengfly.tieba.post.ui.theme.interfaces.ThemeSwitcher
@@ -33,12 +43,36 @@ import org.litepal.LitePal
 import java.util.*
 import java.util.regex.Pattern
 
+
 class BaseApplication : Application(), IApp {
     private val mActivityList: MutableList<Activity> = mutableListOf()
+
+    @RequiresApi(api = 28)
+    fun setWebViewPath(context: Context) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+            val processName = getProcessName(context)
+            if (applicationContext.packageName != processName) { //判断不等于默认进程名称
+                WebView.setDataDirectorySuffix(processName!!)
+            }
+        }
+    }
+
+    private fun getProcessName(context: Context): String? {
+        val manager = context.getSystemService(ACTIVITY_SERVICE) as ActivityManager
+        for (processInfo in manager.runningAppProcesses) {
+            if (processInfo.pid == Process.myPid()) {
+                return processInfo.processName
+            }
+        }
+        return null
+    }
 
     override fun onCreate() {
         instance = this
         super.onCreate()
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+            setWebViewPath(this)
+        }
         ThemeUtils.init(ThemeDelegate)
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
         LitePal.initialize(this)
@@ -175,6 +209,18 @@ class BaseApplication : Application(), IApp {
         })
         if (BuildConfig.DEBUG) CrashUtil.CrashHandler.getInstance().init(this)
         PluginManager.init(this)
+    }
+
+    //禁止app字体大小跟随系统字体大小调节
+    override fun getResources(): Resources {
+        val fontScale = appPreferences.fontScale
+        val resources = super.getResources()
+        if (resources.configuration.fontScale != fontScale) {
+            val configuration = resources.configuration
+            configuration.fontScale = fontScale
+            resources.updateConfiguration(configuration, resources.displayMetrics)
+        }
+        return resources
     }
 
     /**
