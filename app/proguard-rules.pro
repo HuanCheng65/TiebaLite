@@ -38,11 +38,11 @@
 -dontnote com.google.android.material.**
 -dontwarn androidx.**
 
--keepclasseswithmembernames class * {
+-keepclasseswithmembers class * {
     public <init>(android.content.Context, android.util.AttributeSet);
 }
 
--keepclasseswithmembernames class * {
+-keepclasseswithmembers class * {
     public <init>(android.content.Context, android.util.AttributeSet, int);
 }
 
@@ -85,7 +85,7 @@
     void *(**On*Listener);
 }
 # 保留本地native方法不被混淆
--keepclasseswithmembernames class * {
+-keepclasseswithmembers class * {
     native <methods>;
 }
 
