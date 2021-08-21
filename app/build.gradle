@@ -118,7 +118,7 @@ dependencies {
     implementation "com.squareup.retrofit2:converter-gson:$retrofitVersion"
     implementation "com.tsy:myokhttp:1.1.4"
 
-    implementation "com.google.code.gson:gson:2.8.7"
+    implementation "com.google.code.gson:gson:2.8.8"
     implementation "cn.dreamtobe.kpswitch:library:1.6.2"
     implementation "org.litepal.android:kotlin:3.0.0"
     implementation "com.github.SheHuan:RecyclerViewAdapter:1.2.9"
