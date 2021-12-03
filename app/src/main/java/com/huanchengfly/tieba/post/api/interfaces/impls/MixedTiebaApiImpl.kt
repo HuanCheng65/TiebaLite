@@ -50,6 +50,19 @@ object MixedTiebaApiImpl : ITiebaApi {
     ): Call<ForumPageBean> =
         RetrofitTiebaApi.MINI_TIEBA_API.forumPage(forumName, page, sortType.value, goodClassifyId)
 
+    override fun forumPageAsync(
+        forumName: String,
+        page: Int,
+        sortType: ForumSortType,
+        goodClassifyId: String?
+    ): Deferred<ApiResult<ForumPageBean>> =
+        RetrofitTiebaApi.MINI_TIEBA_API.forumPageAsync(
+            forumName,
+            page,
+            sortType.value,
+            goodClassifyId
+        )
+
     override fun floor(
         threadId: String, page: Int, postId: String?, subPostId: String?
     ): Call<SubFloorListBean> =

@@ -115,6 +115,23 @@ interface MiniTiebaApi {
         @Field("scr_w") scr_w: String = getScreenWidth().toString()
     ): Call<ForumPageBean>
 
+    @POST("/c/f/frs/page")
+    @FormUrlEncoded
+    fun forumPageAsync(
+        @Field("kw") forumName: String,
+        @Field("pn") page: Int = 1,
+        @Field("sort_type") sort_type: Int,
+        @Field("cid") goodClassifyId: String? = null,
+        @Field("is_good") is_good: String? = if (TextUtils.isEmpty(goodClassifyId)) null else "1",
+        @Field("q_type") q_type: String = "2",
+        @Field("st_type") st_type: String = "tb_forumlist",
+        @Field("with_group") with_group: String = "0",
+        @Field("rn") rn: String = "20",
+        @Field("scr_dip") scr_dip: String = ScreenInfo.DENSITY.toString(),
+        @Field("scr_h") scr_h: String = getScreenHeight().toString(),
+        @Field("scr_w") scr_w: String = getScreenWidth().toString()
+    ): Deferred<ApiResult<ForumPageBean>>
+
     @POST("/c/f/pb/floor")
     @FormUrlEncoded
     fun floor(

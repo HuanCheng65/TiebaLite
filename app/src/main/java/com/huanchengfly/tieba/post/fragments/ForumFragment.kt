@@ -18,6 +18,8 @@ import com.huanchengfly.tieba.post.api.ForumSortType
 import com.huanchengfly.tieba.post.api.ForumSortType.Companion.valueOf
 import com.huanchengfly.tieba.post.api.TiebaApi
 import com.huanchengfly.tieba.post.api.models.ForumPageBean
+import com.huanchengfly.tieba.post.api.retrofit.doIfFailure
+import com.huanchengfly.tieba.post.api.retrofit.doIfSuccess
 import com.huanchengfly.tieba.post.api.retrofit.exception.TiebaException
 import com.huanchengfly.tieba.post.components.dividers.ForumDivider
 import com.huanchengfly.tieba.post.interfaces.OnSwitchListener
@@ -172,25 +174,21 @@ class ForumFragment : BaseFragment(), Refreshable, OnSwitchListener, ScrollTopab
     }
 
     private fun loadMore() {
-        TiebaApi.getInstance().forumPage(forumName!!, page + 1, sortType, classifyId)
-            .enqueue(object : Callback<ForumPageBean> {
-                override fun onFailure(call: Call<ForumPageBean>, t: Throwable) {
+        launchIO {
+            TiebaApi.getInstance()
+                .forumPageAsync(forumName!!, page + 1, sortType, classifyId)
+                .doIfSuccess {
+                    page += 1
+                    mRefreshLayout.finishLoadMore()
+                    mDataBean = it
+                    pageSize = it.page?.pageSize?.toInt() ?: 0
+                    forumAdapter.addData(it)
+                    mRefreshLayout.setNoMoreData(it.page?.hasMore == "0")
+                }
+                .doIfFailure {
                     mRefreshLayout.finishLoadMore(false)
                 }
-
-                override fun onResponse(
-                    call: Call<ForumPageBean>,
-                    response: Response<ForumPageBean>
-                ) {
-                    page += 1
-                    val forumPageBean = response.body()!!
-                    mRefreshLayout.finishLoadMore()
-                    mDataBean = forumPageBean
-                    pageSize = forumPageBean.page?.pageSize?.toInt()!!
-                    forumAdapter.addData(forumPageBean)
-                    mRefreshLayout.setNoMoreData(mDataBean!!.page?.hasMore == "0")
-                }
-            })
+        }
     }
 
     fun refresh() {

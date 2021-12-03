@@ -81,6 +81,21 @@ interface ITiebaApi {
     ): Call<ForumPageBean>
 
     /**
+     * 吧页面（异步）
+     *
+     * @param forumName 吧名
+     * @param page 分页页码（从 1 开始）
+     * @param sortType 排序类型 [com.huanchengfly.tieba.api.ForumSortType]
+     * @param goodClassifyId 精品贴分类 ID
+     */
+    fun forumPageAsync(
+        forumName: String,
+        page: Int = 1,
+        sortType: ForumSortType = ForumSortType.REPLY_TIME,
+        goodClassifyId: String? = null
+    ): Deferred<ApiResult<ForumPageBean>>
+
+    /**
      * 楼中楼页面
      *
      * @param threadId 贴 ID
