@@ -4,11 +4,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
         <shape android:shape="rectangle">
-            <gradient
-                android:angle="0"
-                android:endColor="@color/colorSplashBg"
-                android:startColor="@color/colorSplashBg"
-                android:type="linear" />
+            <solid android:color="@color/colorSplashBg" />
         </shape>
     </item>
 </layer-list>

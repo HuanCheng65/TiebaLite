@@ -130,16 +130,15 @@
             android:windowSoftInputMode="adjustResize" />
 
         <service
-            android:process=":oksign"
             android:name=".services.OKSignService"
-            android:exported="false" />
+            android:exported="false"
+            android:process=":oksign" />
 
         <activity
             android:name=".activities.HistoryActivity"
             android:configChanges="screenSize|screenLayout|orientation|smallestScreenSize|keyboardHidden"
             android:label="@string/title_history"
             android:windowSoftInputMode="adjustResize" />
-
         <activity
             android:name=".activities.OKSignActivity"
             android:excludeFromRecents="true"
@@ -148,7 +147,6 @@
                 <action android:name="com.huanchengfly.tieba.post.action.OKSIGN" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".activities.AboutActivity"
             android:configChanges="screenSize|screenLayout|orientation|smallestScreenSize|keyboardHidden"
@@ -235,10 +233,6 @@
             android:exported="true"
             android:permission="android.permission.BIND_JOB_SERVICE" />
 
-        <activity
-            android:name=".activities.ThemeActivity"
-            android:configChanges="screenSize|screenLayout|orientation|smallestScreenSize|keyboardHidden"
-            android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".activities.SearchPostActivity"
             android:configChanges="screenSize|screenLayout|orientation|smallestScreenSize|keyboardHidden"
