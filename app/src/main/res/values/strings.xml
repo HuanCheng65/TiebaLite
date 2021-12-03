@@ -480,4 +480,8 @@
     <string name="text_size_large">大</string>
     <string name="text_size_very_large">极大</string>
     <string name="toast_after_change_will_restart">修改已保存，即将重启 App 以应用设置</string>
+    <string name="title_dialog_crash">崩溃了！</string>
+    <string name="message_dialog_crash">非常抱歉，应用在使用中发生了崩溃。\n您可以复制崩溃报告链接来向开发者反馈。</string>
+    <string name="button_copy_crash_link">复制报告链接</string>
+    <string name="toast_get_link_failed">获取链接失败</string>
 </resources>

@@ -37,6 +37,13 @@ import com.huanchengfly.tieba.post.utils.QuickPreviewUtil.getForumName
 import com.huanchengfly.tieba.post.utils.QuickPreviewUtil.getPreviewInfo
 import com.huanchengfly.tieba.post.utils.QuickPreviewUtil.isForumUrl
 import com.huanchengfly.tieba.post.utils.QuickPreviewUtil.isThreadUrl
+import com.microsoft.appcenter.AppCenter
+import com.microsoft.appcenter.analytics.Analytics
+import com.microsoft.appcenter.crashes.Crashes
+import com.microsoft.appcenter.distribute.Distribute
+import com.microsoft.appcenter.distribute.DistributeListener
+import com.microsoft.appcenter.distribute.ReleaseDetails
+import com.microsoft.appcenter.distribute.UpdateAction
 import org.intellij.lang.annotations.RegExp
 import org.litepal.LitePal
 import java.util.*
@@ -72,6 +79,11 @@ class BaseApplication : Application(), IApp {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
             setWebViewPath(this)
         }
+        Distribute.setListener(MyDistributeListener())
+        AppCenter.start(
+            this, "b56debcc-264b-4368-a2cd-8c20213f6433",
+            Analytics::class.java, Crashes::class.java, Distribute::class.java
+        )
         ThemeUtils.init(ThemeDelegate)
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
         LitePal.initialize(this)
@@ -266,6 +278,35 @@ class BaseApplication : Application(), IApp {
 
         @JvmField
         var DENSITY = 0f
+    }
+
+    class MyDistributeListener : DistributeListener {
+        override fun onReleaseAvailable(
+            activity: Activity,
+            releaseDetails: ReleaseDetails
+        ): Boolean {
+            val versionName = releaseDetails.shortVersion
+            val releaseNotes = releaseDetails.releaseNotes
+            if (activity is BaseActivity) {
+                activity.showDialog {
+                    setTitle(activity.getString(R.string.title_dialog_update, versionName))
+                    setMessage(releaseNotes)
+                    setCancelable(!releaseDetails.isMandatoryUpdate)
+                    setPositiveButton(R.string.appcenter_distribute_update_dialog_download) { _, _ ->
+                        Distribute.notifyUpdateAction(UpdateAction.UPDATE)
+                    }
+                    if (!releaseDetails.isMandatoryUpdate) {
+                        setNeutralButton(R.string.appcenter_distribute_update_dialog_postpone) { _, _ ->
+                            Distribute.notifyUpdateAction(UpdateAction.POSTPONE)
+                        }
+                        setNegativeButton(R.string.button_next_time, null)
+                    }
+                }
+            }
+            return true
+        }
+
+        override fun onNoReleaseAvailable(activity: Activity) {}
     }
 
     companion object {

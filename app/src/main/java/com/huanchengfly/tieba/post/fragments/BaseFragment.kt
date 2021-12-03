@@ -16,9 +16,8 @@ import com.huanchengfly.tieba.post.interfaces.BackHandledInterface
 import com.huanchengfly.tieba.post.interfaces.Refreshable
 import com.huanchengfly.tieba.post.utils.AppPreferencesUtils
 import com.huanchengfly.tieba.post.utils.HandleBackUtil
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
+import kotlinx.coroutines.*
+import kotlinx.coroutines.Dispatchers.IO
 import kotlin.coroutines.CoroutineContext
 
 /**
@@ -190,6 +189,13 @@ abstract class BaseFragment : Fragment(), BackHandledInterface, CoroutineScope {
 
     open fun hasOwnAppbar(): Boolean {
         return false
+    }
+
+    fun launchIO(
+        start: CoroutineStart = CoroutineStart.DEFAULT,
+        block: suspend CoroutineScope.() -> Unit
+    ): Job {
+        return launch(IO + job, start, block)
     }
 
     companion object {

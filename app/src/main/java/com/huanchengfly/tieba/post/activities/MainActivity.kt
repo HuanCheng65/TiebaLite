@@ -23,7 +23,10 @@ import com.google.android.material.snackbar.Snackbar
 import com.huanchengfly.tieba.post.*
 import com.huanchengfly.tieba.post.adapters.ViewPagerAdapter
 import com.huanchengfly.tieba.post.api.Error
+import com.huanchengfly.tieba.post.api.LiteApi
 import com.huanchengfly.tieba.post.api.interfaces.CommonCallback
+import com.huanchengfly.tieba.post.api.retrofit.doIfFailure
+import com.huanchengfly.tieba.post.api.retrofit.doIfSuccess
 import com.huanchengfly.tieba.post.fragments.MainForumListFragment
 import com.huanchengfly.tieba.post.fragments.MessageFragment
 import com.huanchengfly.tieba.post.fragments.MyInfoFragment
@@ -33,9 +36,12 @@ import com.huanchengfly.tieba.post.models.MyInfoBean
 import com.huanchengfly.tieba.post.services.NotifyJobService
 import com.huanchengfly.tieba.post.utils.*
 import com.huanchengfly.tieba.post.widgets.MyViewPager
-import com.microsoft.appcenter.AppCenter
-import com.microsoft.appcenter.analytics.Analytics
 import com.microsoft.appcenter.crashes.Crashes
+import com.microsoft.appcenter.distribute.Distribute
+import kotlinx.coroutines.Dispatchers.IO
+import kotlinx.coroutines.launch
+import java.text.SimpleDateFormat
+import java.util.*
 
 open class MainActivity : BaseActivity(), BottomNavigationView.OnNavigationItemSelectedListener, OnNavigationItemReselectedListener {
     var mAdapter: ViewPagerAdapter = ViewPagerAdapter(supportFragmentManager)
@@ -147,6 +153,13 @@ open class MainActivity : BaseActivity(), BottomNavigationView.OnNavigationItemS
 
     override fun getLayoutId(): Int = R.layout.activity_main
 
+    private fun formatDateTime(
+        pattern: String,
+        timestamp: Long = System.currentTimeMillis()
+    ): String {
+        return SimpleDateFormat(pattern, Locale.getDefault()).format(Date(timestamp))
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setSwipeBackEnable(false)
@@ -154,20 +167,53 @@ open class MainActivity : BaseActivity(), BottomNavigationView.OnNavigationItemS
         findView()
         initView()
         initListener()
-        AppCenter.start(
-            getApplication(), "b56debcc-264b-4368-a2cd-8c20213f6433",
-            Analytics::class.java, Crashes::class.java
-        )
+        Distribute.checkForUpdate()
+        Crashes.hasCrashedInLastSession().thenAccept { hasCrashed ->
+            if (hasCrashed) {
+                Crashes.getLastSessionCrashReport().thenAccept {
+                    val device = it.device
+                    showDialog {
+                        setTitle(R.string.title_dialog_crash)
+                        setMessage(R.string.message_dialog_crash)
+                        setPositiveButton(R.string.button_copy_crash_link) { _, _ ->
+                            launch(IO + job) {
+                                LiteApi.instance.pastebinAsync(
+                                    "崩溃报告 ${
+                                        formatDateTime(
+                                            "yyyy-MM-dd HH:mm:ss",
+                                            it.appErrorTime.time
+                                        )
+                                    }",
+                                    """
+                                        App 版本：${device.appVersion}
+                                        系统版本：${device.osVersion}
+                                        机型：${device.oemName} ${device.model}
+                                        
+                                        崩溃：
+                                        ${it.stackTrace}
+                                    """.trimIndent()
+                                ).doIfSuccess {
+                                    TiebaUtil.copyText(this@MainActivity, it)
+                                }.doIfFailure {
+                                    toastShort(R.string.toast_get_link_failed)
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
         if (!SharedPreferencesUtil.get(SharedPreferencesUtil.SP_APP_DATA)
                 .getBoolean("notice_dialog", false)
         ) {
-            showDialog(DialogUtil.build(this)
-                .setTitle(R.string.title_dialog_notice)
-                .setMessage(R.string.message_dialog_notice)
-                .setPositiveButton(R.string.button_sure_default) { _, _ ->
-                    SharedPreferencesUtil.put(
-                        this,
-                        SharedPreferencesUtil.SP_APP_DATA,
+            showDialog(
+                DialogUtil.build(this)
+                    .setTitle(R.string.title_dialog_notice)
+                    .setMessage(R.string.message_dialog_notice)
+                    .setPositiveButton(R.string.button_sure_default) { _, _ ->
+                        SharedPreferencesUtil.put(
+                            this,
+                            SharedPreferencesUtil.SP_APP_DATA,
                         "notice_dialog",
                         true
                     )
