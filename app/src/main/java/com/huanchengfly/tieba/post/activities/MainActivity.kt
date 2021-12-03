@@ -33,6 +33,9 @@ import com.huanchengfly.tieba.post.models.MyInfoBean
 import com.huanchengfly.tieba.post.services.NotifyJobService
 import com.huanchengfly.tieba.post.utils.*
 import com.huanchengfly.tieba.post.widgets.MyViewPager
+import com.microsoft.appcenter.AppCenter
+import com.microsoft.appcenter.analytics.Analytics
+import com.microsoft.appcenter.crashes.Crashes
 
 open class MainActivity : BaseActivity(), BottomNavigationView.OnNavigationItemSelectedListener, OnNavigationItemReselectedListener {
     var mAdapter: ViewPagerAdapter = ViewPagerAdapter(supportFragmentManager)
@@ -151,15 +154,26 @@ open class MainActivity : BaseActivity(), BottomNavigationView.OnNavigationItemS
         findView()
         initView()
         initListener()
-        if (!SharedPreferencesUtil.get(SharedPreferencesUtil.SP_APP_DATA).getBoolean("notice_dialog", false)) {
+        AppCenter.start(
+            getApplication(), "b56debcc-264b-4368-a2cd-8c20213f6433",
+            Analytics::class.java, Crashes::class.java
+        )
+        if (!SharedPreferencesUtil.get(SharedPreferencesUtil.SP_APP_DATA)
+                .getBoolean("notice_dialog", false)
+        ) {
             showDialog(DialogUtil.build(this)
-                    .setTitle(R.string.title_dialog_notice)
-                    .setMessage(R.string.message_dialog_notice)
-                    .setPositiveButton(R.string.button_sure_default) { _, _ ->
-                        SharedPreferencesUtil.put(this, SharedPreferencesUtil.SP_APP_DATA, "notice_dialog", true)
-                    }
-                    .setCancelable(false)
-                    .create())
+                .setTitle(R.string.title_dialog_notice)
+                .setMessage(R.string.message_dialog_notice)
+                .setPositiveButton(R.string.button_sure_default) { _, _ ->
+                    SharedPreferencesUtil.put(
+                        this,
+                        SharedPreferencesUtil.SP_APP_DATA,
+                        "notice_dialog",
+                        true
+                    )
+                }
+                .setCancelable(false)
+                .create())
         }
         if (shouldShowSwitchSnackbar()) {
             Util.createSnackbar(mViewPager, if (ThemeUtil.isNightMode(this)) R.string.snackbar_auto_switch_to_night else R.string.snackbar_auto_switch_from_night, Snackbar.LENGTH_SHORT)

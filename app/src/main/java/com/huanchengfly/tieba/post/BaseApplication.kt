@@ -24,7 +24,6 @@ import android.widget.TextView
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatDelegate
-import com.flurry.android.FlurryAgent
 import com.huanchengfly.tieba.post.activities.BaseActivity
 import com.huanchengfly.tieba.post.api.interfaces.CommonCallback
 import com.huanchengfly.tieba.post.components.dialogs.LoadingDialog
@@ -76,9 +75,6 @@ class BaseApplication : Application(), IApp {
         ThemeUtils.init(ThemeDelegate)
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
         LitePal.initialize(this)
-        FlurryAgent.Builder()
-            .withCaptureUncaughtExceptions(true)
-            .build(this, "ZMRX6W76WNF95ZHT857X")
         registerActivityLifecycleCallbacks(object : ActivityLifecycleCallbacks {
             private var clipBoardHash: Int = 0
             private fun updateClipBoardHashCode() {
