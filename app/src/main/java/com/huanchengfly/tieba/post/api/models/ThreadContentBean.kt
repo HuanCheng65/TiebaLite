@@ -2,6 +2,7 @@ package com.huanchengfly.tieba.post.api.models
 
 import com.google.gson.annotations.JsonAdapter
 import com.google.gson.annotations.SerializedName
+import com.huanchengfly.tieba.post.api.adapters.ContentMsgAdapter
 import com.huanchengfly.tieba.post.api.adapters.PortraitAdapter
 import com.huanchengfly.tieba.post.api.adapters.SubPostListAdapter
 import com.huanchengfly.tieba.post.models.BaseBean
@@ -158,6 +159,7 @@ class ThreadContentBean : BaseBean() {
 
     class OriginThreadInfo {
         val title: String? = null
+        @JsonAdapter(ContentMsgAdapter::class)
         val content: List<ContentBean>? = null
     }
 
@@ -166,6 +168,7 @@ class ThreadContentBean : BaseBean() {
         val title: String? = null
         val floor: String? = null
         val time: String? = null
+        @JsonAdapter(ContentMsgAdapter::class)
         val content: List<ContentBean>? = null
         val agree: AgreeBean? = null
 
