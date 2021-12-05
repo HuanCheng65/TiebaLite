@@ -190,7 +190,13 @@ object MixedTiebaApiImpl : ITiebaApi {
     override fun replyMe(page: Int): Call<MessageListBean> =
         RetrofitTiebaApi.NEW_TIEBA_API.replyMe(page)
 
+    override fun replyMeAsync(page: Int): Deferred<ApiResult<MessageListBean>> =
+        RetrofitTiebaApi.NEW_TIEBA_API.replyMeAsync(page)
+
     override fun atMe(page: Int): Call<MessageListBean> = RetrofitTiebaApi.NEW_TIEBA_API.atMe(page)
+
+    override fun atMeAsync(page: Int): Deferred<ApiResult<MessageListBean>> =
+        RetrofitTiebaApi.NEW_TIEBA_API.atMeAsync(page)
 
     override fun agreeMe(page: Int): Call<MessageListBean> =
         RetrofitTiebaApi.NEW_TIEBA_API.agreeMe(page)

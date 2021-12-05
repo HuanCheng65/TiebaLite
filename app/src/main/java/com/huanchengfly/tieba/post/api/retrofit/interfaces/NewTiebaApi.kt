@@ -5,6 +5,8 @@ import com.huanchengfly.tieba.post.api.models.CommonResponse
 import com.huanchengfly.tieba.post.api.models.MessageListBean
 import com.huanchengfly.tieba.post.api.models.MsgBean
 import com.huanchengfly.tieba.post.api.models.ThreadStoreBean
+import com.huanchengfly.tieba.post.api.retrofit.ApiResult
+import kotlinx.coroutines.Deferred
 import retrofit2.Call
 import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded
@@ -53,11 +55,25 @@ interface NewTiebaApi {
     ): Call<MessageListBean>
 
     @Headers("${Header.FORCE_LOGIN}: ${Header.FORCE_LOGIN_TRUE}")
+    @POST("/c/u/feed/replyme")
+    @FormUrlEncoded
+    fun replyMeAsync(
+        @Field("pn") page: Int = 0
+    ): Deferred<ApiResult<MessageListBean>>
+
+    @Headers("${Header.FORCE_LOGIN}: ${Header.FORCE_LOGIN_TRUE}")
     @POST("/c/u/feed/atme")
     @FormUrlEncoded
     fun atMe(
         @Field("pn") page: Int = 0
     ): Call<MessageListBean>
+
+    @Headers("${Header.FORCE_LOGIN}: ${Header.FORCE_LOGIN_TRUE}")
+    @POST("/c/u/feed/atme")
+    @FormUrlEncoded
+    fun atMeAsync(
+        @Field("pn") page: Int = 0
+    ): Deferred<ApiResult<MessageListBean>>
 
     @Headers("${Header.FORCE_LOGIN}: ${Header.FORCE_LOGIN_TRUE}")
     @POST("/c/u/feed/agreeme")

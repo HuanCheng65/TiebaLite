@@ -1,6 +1,5 @@
 package com.huanchengfly.tieba.post.fragments
 
-import android.content.Context
 import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
@@ -19,8 +18,10 @@ import com.huanchengfly.tieba.post.activities.NewSearchActivity
 import com.huanchengfly.tieba.post.activities.ThreadActivity
 import com.huanchengfly.tieba.post.adapters.MessageListAdapter
 import com.huanchengfly.tieba.post.adapters.TabViewPagerAdapter
-import com.huanchengfly.tieba.post.api.TiebaApi.getInstance
+import com.huanchengfly.tieba.post.api.TiebaApi
 import com.huanchengfly.tieba.post.api.models.MessageListBean
+import com.huanchengfly.tieba.post.api.retrofit.doIfFailure
+import com.huanchengfly.tieba.post.api.retrofit.doIfSuccess
 import com.huanchengfly.tieba.post.api.retrofit.exception.TiebaException
 import com.huanchengfly.tieba.post.components.MyLinearLayoutManager
 import com.huanchengfly.tieba.post.goToActivity
@@ -29,28 +30,26 @@ import com.huanchengfly.tieba.post.utils.ThemeUtil
 import com.huanchengfly.tieba.post.utils.Util
 import com.scwang.smart.refresh.header.MaterialHeader
 import com.scwang.smart.refresh.layout.SmartRefreshLayout
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 
-class MessageFragment : BaseFragment(), Refreshable, OnTabSelectedListener, Toolbar.OnMenuItemClickListener {
-    @JvmField
+class MessageFragment : BaseFragment(), Refreshable, OnTabSelectedListener,
+    Toolbar.OnMenuItemClickListener {
     @BindView(R.id.fragment_message_tab)
-    var tabLayout: TabLayout? = null
+    lateinit var tabLayout: TabLayout
 
-    @JvmField
     @BindView(R.id.toolbar)
-    var mToolbar: Toolbar? = null
+    lateinit var toolbar: Toolbar
 
-    @JvmField
     @BindView(R.id.appbar)
-    var mAppBarLayout: AppBarLayout? = null
+    lateinit var mAppBarLayout: AppBarLayout
 
-    @JvmField
+    @BindView(R.id.fragment_message_vp)
+    lateinit var viewPager: ViewPager
+
     @BindView(R.id.title)
-    var mTitleTextView: TextView? = null
-    private var replyMe: MessageListHelper? = null
-    private var atMe: MessageListHelper? = null
+    lateinit var mTitleTextView: TextView
+
+    private val replyMe: MessageListHelper by lazy { MessageListHelper(TYPE_REPLY_ME) }
+    private val atMe: MessageListHelper by lazy { MessageListHelper(TYPE_AT_ME) }
     var type = 0
         private set
     private var isFromMain = false
@@ -73,26 +72,30 @@ class MessageFragment : BaseFragment(), Refreshable, OnTabSelectedListener, Tool
         }
     }
 
-    public override fun getLayoutId(): Int {
+    override fun getLayoutId(): Int {
         return R.layout.fragment_message
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         if (!isFromMain) {
-            mToolbar?.visibility = View.GONE
-            (mToolbar?.layoutParams as AppBarLayout.LayoutParams?)?.scrollFlags = SCROLL_FLAG_NO_SCROLL
+            toolbar.visibility = View.GONE
+            (toolbar.layoutParams as AppBarLayout.LayoutParams?)?.scrollFlags =
+                SCROLL_FLAG_NO_SCROLL
         }
-        mToolbar?.setOnMenuItemClickListener(this)
-        val viewPager: ViewPager = view.findViewById(R.id.fragment_message_vp)
-        val viewPagerAdapter = TabViewPagerAdapter()
-        replyMe = MessageListHelper(attachContext, TYPE_REPLY_ME)
-        atMe = MessageListHelper(attachContext, TYPE_AT_ME)
-        viewPagerAdapter.addView(replyMe!!.contentView, attachContext.getString(R.string.title_reply_me))
-        viewPagerAdapter.addView(atMe!!.contentView, attachContext.getString(R.string.title_at_me))
-        viewPager.adapter = viewPagerAdapter
-        tabLayout!!.setupWithViewPager(viewPager)
-        tabLayout!!.addOnTabSelectedListener(this)
+        toolbar.setOnMenuItemClickListener(this)
+        viewPager.adapter = TabViewPagerAdapter().apply {
+            addView(
+                replyMe.requireContentView(),
+                attachContext.getString(R.string.title_reply_me)
+            )
+            addView(
+                atMe.requireContentView(),
+                attachContext.getString(R.string.title_at_me)
+            )
+        }
+        tabLayout.setupWithViewPager(viewPager)
+        tabLayout.addOnTabSelectedListener(this)
         viewPager.setCurrentItem(type, false)
         if (!isFromMain) {
             refreshIfNeed()
@@ -111,27 +114,27 @@ class MessageFragment : BaseFragment(), Refreshable, OnTabSelectedListener, Tool
     }
 
     override fun onRefresh() {
-        when (tabLayout!!.selectedTabPosition) {
-            0 -> if (isFragmentVisible) {
-                replyMe!!.refresh(true)
+        when (tabLayout.selectedTabPosition) {
+            0 -> replyMe
+            1 -> atMe
+            else -> null
+        }?.apply {
+            if (isFragmentVisible) {
+                refresh(true)
             } else {
-                replyMe!!.dataBean = null
-            }
-            1 -> if (isFragmentVisible) {
-                atMe!!.refresh(true)
-            } else {
-                atMe!!.dataBean = null
+                dataBean = null
             }
         }
     }
 
     private fun refreshIfNeed() {
-        when (tabLayout!!.selectedTabPosition) {
-            0 -> if (replyMe!!.needLoad()) {
-                replyMe!!.refresh(true)
-            }
-            1 -> if (atMe!!.needLoad()) {
-                atMe!!.refresh(true)
+        when (tabLayout.selectedTabPosition) {
+            0 -> replyMe
+            1 -> atMe
+            else -> null
+        }?.apply {
+            if (needLoad()) {
+                refresh(true)
             }
         }
     }
@@ -141,16 +144,17 @@ class MessageFragment : BaseFragment(), Refreshable, OnTabSelectedListener, Tool
     }
 
     override fun onTabUnselected(tab: TabLayout.Tab) {}
+
     override fun onTabReselected(tab: TabLayout.Tab) {
         refreshIfNeed()
     }
 
-    internal inner class MessageListHelper(context: Context?, val type: Int) {
-        val contentView: View?
-        private val mSmartRefreshLayout: SmartRefreshLayout
-        private val materialHeader: MaterialHeader
-        private val recyclerView: RecyclerView
-        private val adapter: MessageListAdapter
+    internal inner class MessageListHelper(val type: Int) {
+        var contentView: View? = null
+        private lateinit var smartRefreshLayout: SmartRefreshLayout
+        private lateinit var materialHeader: MaterialHeader
+        private lateinit var recyclerView: RecyclerView
+        private lateinit var adapter: MessageListAdapter
         private var page = 0
         var dataBean: MessageListBean? = null
 
@@ -160,7 +164,7 @@ class MessageFragment : BaseFragment(), Refreshable, OnTabSelectedListener, Tool
 
         @JvmOverloads
         fun refresh(autoRefresh: Boolean = true) {
-            if (autoRefresh) mSmartRefreshLayout.autoRefresh()
+            if (autoRefresh) smartRefreshLayout.autoRefresh()
             load(true)
         }
 
@@ -169,42 +173,35 @@ class MessageFragment : BaseFragment(), Refreshable, OnTabSelectedListener, Tool
                 recyclerView.scrollToPosition(0)
                 page = 1
             }
-            val messageListBeanCallback: Callback<MessageListBean> = object : Callback<MessageListBean> {
-                override fun onResponse(call: Call<MessageListBean?>, response: Response<MessageListBean?>) {
-                    dataBean = response.body()
-                    if (dataBean == null) {
-                        return
-                    }
+            launchIO {
+                when (type) {
+                    TYPE_AT_ME -> TiebaApi.getInstance().atMeAsync(page)
+                    else -> TiebaApi.getInstance().replyMeAsync(page)
+                }.doIfSuccess {
+                    dataBean = it
                     if (reload) {
                         adapter.reset()
-                        dataBean?.let { adapter.setData(it) }
+                        adapter.setData(it)
                         recyclerView.scrollToPosition(0)
                     } else {
-                        dataBean?.let { adapter.addData(it) }
+                        adapter.addData(it)
                     }
-                    mSmartRefreshLayout.finishRefresh(true)
-                    if (dataBean?.page?.hasMore != "1") {
-                        mSmartRefreshLayout.finishRefreshWithNoMoreData()
+                    smartRefreshLayout.finishRefresh(true)
+                    if (it.page?.hasMore != "1") {
+                        smartRefreshLayout.finishRefreshWithNoMoreData()
                     }
-                }
-
-                override fun onFailure(call: Call<MessageListBean?>, t: Throwable) {
+                }.doIfFailure {
                     if (reload) {
-                        if (t !is TiebaException) {
+                        if (it !is TiebaException) {
                             Util.showNetworkErrorSnackbar(recyclerView) { refresh() }
-                            return
                         }
                     }
                     if (reload) {
-                        mSmartRefreshLayout.finishRefresh(false)
+                        smartRefreshLayout.finishRefresh(false)
                     } else {
-                        mSmartRefreshLayout.finishLoadMore(false)
+                        smartRefreshLayout.finishLoadMore(false)
                     }
                 }
-            }
-            when (type) {
-                TYPE_REPLY_ME -> getInstance().replyMe(page).enqueue(messageListBeanCallback)
-                TYPE_AT_ME -> getInstance().atMe(page).enqueue(messageListBeanCallback)
             }
         }
 
@@ -213,31 +210,39 @@ class MessageFragment : BaseFragment(), Refreshable, OnTabSelectedListener, Tool
                 page += 1
                 load(false)
             } else {
-                mSmartRefreshLayout.finishLoadMoreWithNoMoreData()
+                smartRefreshLayout.finishLoadMoreWithNoMoreData()
             }
         }
 
-        init {
-            require(!(this.type != TYPE_REPLY_ME && this.type != TYPE_AT_ME)) { "参数不正确" }
-            contentView = Util.inflate(context, R.layout.fragment_message_list)
+        fun requireContentView(): View {
             if (contentView == null) {
-                throw NullPointerException("引入的布局为空")
+                initView()
             }
-            recyclerView = contentView.findViewById(R.id.fragment_message_recycler_view)
-            mSmartRefreshLayout = contentView.findViewById(R.id.fragment_message_refresh_layout)
-            materialHeader = contentView.findViewById(R.id.refresh_header)
+            return contentView!!
+        }
+
+        fun initView() {
+            contentView = Util.inflate(attachContext, R.layout.fragment_message_list)!!.also {
+                recyclerView = it.findViewById(R.id.fragment_message_recycler_view)
+                smartRefreshLayout = it.findViewById(R.id.fragment_message_refresh_layout)
+                materialHeader = it.findViewById(R.id.refresh_header)
+            }
             ThemeUtil.setThemeForMaterialHeader(materialHeader)
-            mSmartRefreshLayout.setOnRefreshListener {
+            smartRefreshLayout.setOnRefreshListener {
                 refresh(false)
             }
-            mSmartRefreshLayout.setOnLoadMoreListener {
+            smartRefreshLayout.setOnLoadMoreListener {
                 loadMore()
             }
             recyclerView.layoutManager = MyLinearLayoutManager(context)
             adapter = MessageListAdapter(context!!, type).apply {
                 setOnItemClickListener { _, item, _ ->
                     if (item.isFloor == "1") {
-                        FloorActivity.launch(attachContext, item.threadId!!, subPostId = item.postId)
+                        FloorActivity.launch(
+                            attachContext,
+                            item.threadId!!,
+                            subPostId = item.postId
+                        )
                     } else {
                         ThreadActivity.launch(context, item.threadId!!, item.postId)
                     }
@@ -245,12 +250,17 @@ class MessageFragment : BaseFragment(), Refreshable, OnTabSelectedListener, Tool
             }
             recyclerView.adapter = adapter
         }
+
+        init {
+            require(!(this.type != TYPE_REPLY_ME && this.type != TYPE_AT_ME)) { "参数不正确" }
+            initView()
+        }
     }
 
     companion object {
         const val TYPE_REPLY_ME = 0
         const val TYPE_AT_ME = 1
-        val TAG = MessageFragment::class.java.simpleName
+        val TAG: String = MessageFragment::class.java.simpleName
         private const val PARAM_TYPE = "type"
         const val PARAM_FROM_MAIN = "from_main"
 

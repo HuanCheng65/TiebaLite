@@ -334,6 +334,17 @@ interface ITiebaApi {
     ): Call<MessageListBean>
 
     /**
+     * 回复我的消息列表（异步）
+     *
+     * **需登录**
+     *
+     * @param page 分页页码（从 1 开始）
+     */
+    fun replyMeAsync(
+        page: Int = 1
+    ): Deferred<ApiResult<MessageListBean>>
+
+    /**
      * 提到我的消息列表
      *
      * **需登录**
@@ -343,6 +354,17 @@ interface ITiebaApi {
     fun atMe(
         page: Int = 1
     ): Call<MessageListBean>
+
+    /**
+     * 提到我的消息列表（异步）
+     *
+     * **需登录**
+     *
+     * @param page 分页页码（从 1 开始）
+     */
+    fun atMeAsync(
+        page: Int = 1
+    ): Deferred<ApiResult<MessageListBean>>
 
     /**
      * 赞我的消息列表
