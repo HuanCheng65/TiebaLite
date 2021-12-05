@@ -2,5 +2,5 @@
 <resource>
     <external-path
         name="images"
-        path="Pictures/Tieba Lite/shareTemp" />
+        path="Pictures/TiebaLite/shareTemp" />
 </resource>

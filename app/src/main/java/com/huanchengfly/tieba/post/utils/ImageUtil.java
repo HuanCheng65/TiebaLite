@@ -1,5 +1,7 @@
 package com.huanchengfly.tieba.post.utils;
 
+import static com.huanchengfly.tieba.post.utils.FileUtil.FILE_FOLDER;
+
 import android.annotation.SuppressLint;
 import android.content.ContentResolver;
 import android.content.ContentValues;
@@ -233,7 +235,7 @@ public class ImageUtil {
         }
         new DownloadAsyncTask(context, url, file -> {
             String fileName = URLUtil.guessFileName(url, null, MimeType.JPEG.toString());
-            String relativePath = Environment.DIRECTORY_PICTURES + File.separator + "Tieba Lite";
+            String relativePath = Environment.DIRECTORY_PICTURES + File.separator + FILE_FOLDER;
             if (forShare) {
                 relativePath += File.separator + "shareTemp";
             }
@@ -271,15 +273,14 @@ public class ImageUtil {
         downloadAboveQ(context, url, false, null);
     }
 
-    @SuppressLint("StaticFieldLeak")
     private static void downloadBelowQ(Context context, String url, boolean forShare, @Nullable ShareTaskCallback taskCallback) {
         new DownloadAsyncTask(context, url, file -> {
             File pictureFolder = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES).getAbsoluteFile();
             File appDir;
             if (forShare) {
-                appDir = new File(pictureFolder, "Tieba Lite" + File.separator + "shareTemp");
+                appDir = new File(pictureFolder, FILE_FOLDER + File.separator + "shareTemp");
             } else {
-                appDir = new File(pictureFolder, "Tieba Lite");
+                appDir = new File(pictureFolder, FILE_FOLDER);
             }
             if (appDir.exists() || appDir.mkdirs()) {
                 if (forShare) {
