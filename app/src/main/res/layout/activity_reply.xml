@@ -9,9 +9,10 @@
     tools:context=".activities.ReplyActivity">
 
     <FrameLayout
+        android:visibility="invisible"
         android:id="@+id/webview_container"
-        android:layout_width="0dp"
-        android:layout_height="0dp" />
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 
     <com.huanchengfly.tieba.post.widgets.theme.TintConstraintLayout
         android:id="@+id/activity_reply_layout"

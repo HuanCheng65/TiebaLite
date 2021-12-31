@@ -34,9 +34,7 @@ import com.huanchengfly.tieba.post.ui.theme.utils.ThemeUtils
 import com.huanchengfly.tieba.post.utils.*
 import com.huanchengfly.tieba.post.widgets.VoicePlayerView
 import com.huanchengfly.tieba.post.widgets.theme.TintToolbar
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
+import kotlinx.coroutines.*
 import me.imid.swipebacklayout.lib.app.SwipeBackActivity
 import kotlin.coroutines.CoroutineContext
 
@@ -307,15 +305,28 @@ abstract class BaseActivity : SwipeBackActivity(), ExtraRefreshable, CoroutineSc
 
     open fun getLayoutId(): Int = -1
 
+    fun launchIO(
+        start: CoroutineStart = CoroutineStart.DEFAULT,
+        block: suspend CoroutineScope.() -> Unit
+    ): Job {
+        return launch(Dispatchers.IO + job, start, block)
+    }
+
     companion object {
         fun calcStatusBarColor(context: Context, @ColorInt originColor: Int): Int {
             var darkerStatusBar = true
-            if (ThemeUtil.THEME_CUSTOM == ThemeUtil.getTheme(context) && !SharedPreferencesUtil.get(context, SharedPreferencesUtil.SP_SETTINGS)
-                            .getBoolean(ThemeUtil.SP_CUSTOM_TOOLBAR_PRIMARY_COLOR, true)) {
+            if (ThemeUtil.THEME_CUSTOM == ThemeUtil.getTheme(context) && !SharedPreferencesUtil.get(
+                    context,
+                    SharedPreferencesUtil.SP_SETTINGS
+                )
+                    .getBoolean(ThemeUtil.SP_CUSTOM_TOOLBAR_PRIMARY_COLOR, true)
+            ) {
                 darkerStatusBar = false
             } else if (ThemeUtil.getTheme(context) == ThemeUtil.THEME_WHITE) {
                 darkerStatusBar = false
-            } else if (!SharedPreferencesUtil.get(context, SharedPreferencesUtil.SP_SETTINGS).getBoolean("status_bar_darker", true)) {
+            } else if (!SharedPreferencesUtil.get(context, SharedPreferencesUtil.SP_SETTINGS)
+                    .getBoolean("status_bar_darker", true)
+            ) {
                 darkerStatusBar = false
             }
             return if (darkerStatusBar) ColorUtils.getDarkerColor(originColor) else originColor

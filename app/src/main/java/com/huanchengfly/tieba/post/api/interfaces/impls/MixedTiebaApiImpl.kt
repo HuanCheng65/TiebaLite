@@ -371,6 +371,86 @@ object MixedTiebaApiImpl : ITiebaApi {
             referer = "https://tieba.baidu.com/p/$threadId?lp=5028&mo_device=1&is_jingpost=0&pn=$pn&"
         )
 
+    override fun webReplyAsync(
+        forumId: String,
+        forumName: String,
+        threadId: String,
+        tbs: String,
+        content: String,
+        imgInfo: String?,
+        nickName: String,
+        pn: String,
+        bsk: String
+    ): Deferred<ApiResult<WebReplyResultBean>> =
+        RetrofitTiebaApi.WEB_TIEBA_API.webReplyAsync(
+            content = content,
+            imgInfo = imgInfo ?: "",
+            forumId = forumId,
+            forumName = forumName,
+            tbs = tbs,
+            threadId = threadId,
+            nickName = nickName,
+            bsk = bsk,
+            referer = "https://tieba.baidu.com/p/$threadId?lp=5028&mo_device=1&is_jingpost=0&pn=$pn&"
+        )
+
+    override fun webReplyAsync(
+        forumId: String,
+        forumName: String,
+        threadId: String,
+        tbs: String,
+        content: String,
+        imgInfo: String?,
+        nickName: String,
+        postId: String,
+        floor: String,
+        pn: String,
+        bsk: String
+    ): Deferred<ApiResult<WebReplyResultBean>> =
+        RetrofitTiebaApi.WEB_TIEBA_API.webReplyAsync(
+            content = content,
+            imgInfo = imgInfo ?: "",
+            forumId = forumId,
+            forumName = forumName,
+            tbs = tbs,
+            threadId = threadId,
+            nickName = nickName,
+            postId = postId,
+            floor = floor,
+            bsk = bsk,
+            referer = "https://tieba.baidu.com/p/$threadId?lp=5028&mo_device=1&is_jingpost=0&pn=$pn&"
+        )
+
+    override fun webReplyAsync(
+        forumId: String,
+        forumName: String,
+        threadId: String,
+        tbs: String,
+        content: String,
+        imgInfo: String?,
+        nickName: String,
+        postId: String,
+        replyPostId: String,
+        floor: String,
+        pn: String,
+        bsk: String
+    ): Deferred<ApiResult<WebReplyResultBean>> =
+        RetrofitTiebaApi.WEB_TIEBA_API.webReplyAsync(
+            content = content,
+            imgInfo = imgInfo ?: "",
+            forumId = forumId,
+            forumName = forumName,
+            tbs = tbs,
+            threadId = threadId,
+            nickName = nickName,
+            postId = postId,
+            replyPostId = replyPostId,
+            floor = floor,
+            bsk = bsk,
+            referer = "https://tieba.baidu.com/p/$threadId?lp=5028&mo_device=1&is_jingpost=0&pn=$pn&"
+        )
+
+
     override fun webForumPage(
         forumName: String,
         page: Int,

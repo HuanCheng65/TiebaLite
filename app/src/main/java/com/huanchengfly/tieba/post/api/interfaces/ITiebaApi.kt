@@ -592,6 +592,97 @@ interface ITiebaApi {
     ): Call<WebReplyResultBean>
 
     /**
+     * 回贴 - 回复主题贴（web 接口）（异步）
+     *
+     * **需登录**
+     *
+     * @param forumId 吧 ID
+     * @param forumName 吧名
+     * @param threadId 贴子 ID
+     * @param tbs tbs
+     * @param content 回复内容
+     * @param imgInfo 图片
+     * @param nickName 昵称
+     * @param pn 页码
+     * @param bsk BSK
+     */
+    fun webReplyAsync(
+        forumId: String,
+        forumName: String,
+        threadId: String,
+        tbs: String,
+        content: String,
+        imgInfo: String?,
+        nickName: String,
+        pn: String,
+        bsk: String
+    ): Deferred<ApiResult<WebReplyResultBean>>
+
+    /**
+     * 回贴 - 回复别人的回复（web 接口）（异步）
+     *
+     * **需登录**
+     *
+     * @param forumId 吧 ID
+     * @param forumName 吧名
+     * @param threadId 贴子 ID
+     * @param tbs tbs
+     * @param content 回复内容
+     * @param imgInfo 图片
+     * @param nickName 昵称
+     * @param postId 回复 ID
+     * @param floor 回复楼层
+     * @param pn 页码
+     * @param bsk BSK
+     */
+    fun webReplyAsync(
+        forumId: String,
+        forumName: String,
+        threadId: String,
+        tbs: String,
+        content: String,
+        imgInfo: String?,
+        nickName: String,
+        postId: String,
+        floor: String,
+        pn: String,
+        bsk: String
+    ): Deferred<ApiResult<WebReplyResultBean>>
+
+    /**
+     * 回贴 - 回复楼中楼（web 接口）（异步）
+     *
+     * **需登录**
+     *
+     * @param forumId 吧 ID
+     * @param forumName 吧名
+     * @param threadId 贴子 ID
+     * @param tbs tbs
+     * @param content 回复内容
+     * @param imgInfo 图片
+     * @param nickName 昵称
+     * @param postId 回复 ID
+     * @param replyPostId 楼中楼 ID
+     * @param floor 回复楼层
+     * @param pn 页码
+     * @param bsk BSK
+     */
+    fun webReplyAsync(
+        forumId: String,
+        forumName: String,
+        threadId: String,
+        tbs: String,
+        content: String,
+        imgInfo: String?,
+        nickName: String,
+        postId: String,
+        replyPostId: String,
+        floor: String,
+        pn: String,
+        bsk: String
+    ): Deferred<ApiResult<WebReplyResultBean>>
+
+    /**
      * 吧页面（web 接口）
      *
      * @param forumName 吧名

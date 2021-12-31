@@ -152,4 +152,31 @@ interface WebTiebaApi {
         @Field("_BSK") bsk: String,
         @retrofit2.http.Header(Header.REFERER) referer: String
     ): Call<WebReplyResultBean>
+
+    @Headers(
+        "${Header.HOST}: tieba.baidu.com",
+        "${Header.ORIGIN}: https://tieba.baidu.com",
+        "X-Requested-With: XMLHttpRequest"
+    )
+    @POST("/mo/q/apubpost")
+    @FormUrlEncoded
+    fun webReplyAsync(
+        @Query("_t") _t_url: Long = System.currentTimeMillis(),
+        @Field("co") content: String,
+        @Field("_t") _t_form: Long = System.currentTimeMillis(),
+        @Field("tag") tag: String = "11",
+        @Field("upload_img_info") imgInfo: String,
+        @Field("fid") forumId: String,
+        @Field("src") src: String = "1",
+        @Field("word") forumName: String,
+        @Field("tbs") tbs: String,
+        @Field("z") threadId: String,
+        @Field("lp") lp: String = "6026",
+        @Field("nick_name") nickName: String,
+        @Field("pid") postId: String? = null,
+        @Field("lzl_id") replyPostId: String? = null,
+        @Field("floor") floor: String? = null,
+        @Field("_BSK") bsk: String,
+        @retrofit2.http.Header(Header.REFERER) referer: String
+    ): Deferred<ApiResult<WebReplyResultBean>>
 }
