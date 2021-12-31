@@ -21,6 +21,7 @@ import android.webkit.WebView
 import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.annotation.Keep
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatDelegate
@@ -218,6 +219,10 @@ class BaseApplication : Application(), IApp {
         if (BuildConfig.DEBUG) CrashUtil.CrashHandler.getInstance().init(this)
         PluginManager.init(this)
     }
+
+    //解决魅族 Flyme 系统夜间模式强制反色
+    @Keep
+    fun mzNightModeUseOf(): Int = 2
 
     //禁止app字体大小跟随系统字体大小调节
     override fun getResources(): Resources {
