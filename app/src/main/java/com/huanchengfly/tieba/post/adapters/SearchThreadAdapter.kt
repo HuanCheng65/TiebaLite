@@ -11,10 +11,10 @@ import com.huanchengfly.tieba.post.utils.ImageUtil
 import com.huanchengfly.tieba.post.utils.getItemBackgroundDrawable
 
 class SearchThreadAdapter(
-        fragment: SearchThreadFragment
+    fragment: SearchThreadFragment
 ) : BaseSingleTypeDelegateAdapter<SearchThreadBean.ThreadInfoBean>(
-        fragment.requireContext(),
-        LinearLayoutHelper()
+    fragment.requireContext(),
+    LinearLayoutHelper()
 ) {
     override fun convert(viewHolder: MyViewHolder, item: SearchThreadBean.ThreadInfoBean, position: Int) {
         viewHolder.setText(R.id.item_search_thread_title, item.title)
@@ -24,25 +24,28 @@ class SearchThreadAdapter(
         ImageUtil.load(viewHolder.getView(R.id.user_avatar), ImageUtil.LOAD_TYPE_AVATAR, item.user?.portrait)
         if (item.forumName == null) {
             viewHolder.setText(
-                    R.id.user_content,
-                    DateTimeUtils.getRelativeTimeString(context, item.time!!)
+                R.id.user_content,
+                if (item.time != null) DateTimeUtils.getRelativeTimeString(
+                    context,
+                    item.time
+                ) else null
             )
         } else {
             viewHolder.setText(
-                    R.id.user_content,
-                    context.getString(
-                            R.string.template_two_string,
-                            DateTimeUtils.getRelativeTimeString(context, item.time!!),
-                            context.getString(R.string.text_forum_name, item.forumName)
-                    )
+                R.id.user_content,
+                if (item.time != null) context.getString(
+                    R.string.template_two_string,
+                    DateTimeUtils.getRelativeTimeString(context, item.time),
+                    context.getString(R.string.text_forum_name, item.forumName)
+                ) else context.getString(R.string.text_forum_name, item.forumName)
             )
         }
         viewHolder.itemView.background = getItemBackgroundDrawable(
-                context,
-                position,
-                itemCount,
-                positionOffset = 1,
-                radius = context.resources.getDimension(R.dimen.card_radius)
+            context,
+            position,
+            itemCount,
+            positionOffset = 1,
+            radius = context.resources.getDimension(R.dimen.card_radius)
         )
     }
 
