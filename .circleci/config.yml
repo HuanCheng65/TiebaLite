@@ -1,4 +1,7 @@
-version: 2
+version: 2.1
+
+orbs:
+  app-center: rakutentech/app-center@0.1.3
 
 jobs:
   build:
@@ -39,3 +42,52 @@ jobs:
       - store_artifacts:
           path: app/build/outputs/mapping/release/
           destination: mapping/
+
+  upload_apk:
+    working_directory: ~/code/app/build/outputs/apk/release
+
+    docker:
+      - image: circleci/android:api-30-ndk
+
+    environment:
+      JVM_OPTS: -Xmx4G
+
+    steps:
+      - run:
+          name: Define Environment Variable at Runtime
+          command: |
+            echo "export APP_VERSION_NAME=\$(cat output-metadata.json | jq '.elements[0].versionName' | awk -F '\"' '{print \$2}')" >> $BASH_ENV
+            echo "export APP_OUTPUT_FILE=\$(cat output-metadata.json | jq '.elements[0].outputFile' | awk -F '\"' '{print \$2}')" >> $BASH_ENV
+            echo "export APP_VERSION_CODE=\$(cat output-metadata.json | jq '.elements[0].versionCode'" >> $BASH_ENV
+            source $BASH_ENV
+      - publish:
+          name: Publish to App Center
+          group: HuanCheng65
+          file: $APP_OUTPUT_FILE
+          app: TiebaLite
+          token: $APP_CENTER_TOKEN
+          notes: $APP_VERSION_NAME
+
+  upload_mapping:
+    working_directory: ~/code/app/build/outputs/mapping/release
+
+    docker:
+      - image: circleci/android:api-30-ndk
+
+    environment:
+      JVM_OPTS: -Xmx4G
+
+    steps:
+      - run:
+          name: Define Environment Variable at Runtime
+          command: |
+            echo "export APP_VERSION_NAME=\$(cat output-metadata.json | jq '.elements[0].versionName' | awk -F '\"' '{print \$2}')" >> $BASH_ENV
+            echo "export APP_VERSION_CODE=\$(cat output-metadata.json | jq '.elements[0].versionCode'" >> $BASH_ENV
+            source $BASH_ENV
+      - mapping:
+          name: Upload to App Center
+          file: mapping.txt
+          app: TiebaLite
+          token: $APP_CENTER_TOKEN
+          version-name: $APP_VERSION_NAME
+          version-code: $APP_VERSION_CODE
