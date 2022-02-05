@@ -57,6 +57,7 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
+//TODO: 重写，去除两次加载
 @SuppressLint("NonConstantResourceId")
 class ThreadActivity : BaseActivity(), View.OnClickListener, IThreadMenuFragment.OnActionsListener {
     @BindView(R.id.toolbar)
@@ -206,10 +207,10 @@ class ThreadActivity : BaseActivity(), View.OnClickListener, IThreadMenuFragment
                         }
                         if (newState == RecyclerView.SCROLL_STATE_IDLE) {
                             Glide.with(this@ThreadActivity)
-                                    .resumeRequests()
+                                .resumeRequests()
                         } else {
                             Glide.with(this@ThreadActivity)
-                                    .pauseRequests()
+                                .pauseRequests()
                         }
                     }
                 })
@@ -231,7 +232,7 @@ class ThreadActivity : BaseActivity(), View.OnClickListener, IThreadMenuFragment
                     }
                     val videoPlayerStandard: VideoPlayerStandard? = view.findViewById(R.id.video_player)
                     if (videoPlayerStandard != null && Jzvd.CURRENT_JZVD != null &&
-                            videoPlayerStandard.jzDataSource.containsTheUrl(Jzvd.CURRENT_JZVD.jzDataSource.currentUrl)) {
+                        videoPlayerStandard.jzDataSource.containsTheUrl(Jzvd.CURRENT_JZVD.jzDataSource.currentUrl)) {
                         if (Jzvd.CURRENT_JZVD != null && Jzvd.CURRENT_JZVD.screen != Jzvd.SCREEN_FULLSCREEN) {
                             Jzvd.releaseAllVideos()
                         }
@@ -361,8 +362,8 @@ class ThreadActivity : BaseActivity(), View.OnClickListener, IThreadMenuFragment
         threadMainPostAdapter.dataBean = dataBean
         delegateAdapter.addAdapter(threadMainPostAdapter)
         if (!dataBean?.postList?.filter {
-                    it.floor != "1"
-                }.isNullOrEmpty()) {
+                it.floor != "1"
+            }.isNullOrEmpty()) {
             threadHeaderAdapter.title = getString(R.string.title_thread_header, dataBean?.thread?.replyNum)
             threadHeaderAdapter.seeLz = seeLz
             delegateAdapter.addAdapter(threadHeaderAdapter)
@@ -431,21 +432,21 @@ class ThreadActivity : BaseActivity(), View.OnClickListener, IThreadMenuFragment
                                 tip = true
                                 if (pid != maxPostId) {
                                     Util.createSnackbar(recyclerView, getString(R.string.tip_collect, postListItemBean.floor), Snackbar.LENGTH_LONG)
-                                            .setAction(R.string.button_load_new) { refreshByPid(maxPostId!!) }
-                                            .show()
+                                        .setAction(R.string.button_load_new) { refreshByPid(maxPostId!!) }
+                                        .show()
                                 }
                             }
                             FROM_HISTORY == from && "1" != postListItemBean.floor -> {
                                 tip = true
                                 Util.createSnackbar(recyclerView, getString(R.string.tip_from_history, postListItemBean.floor), Snackbar.LENGTH_LONG)
-                                        .setAction(R.string.button_load_top) {
-                                            if (page <= 1) {
-                                                recyclerView.scrollToPosition(0)
-                                            } else {
-                                                refreshLayout.autoRefresh()
-                                            }
+                                    .setAction(R.string.button_load_top) {
+                                        if (page <= 1) {
+                                            recyclerView.scrollToPosition(0)
+                                        } else {
+                                            refreshLayout.autoRefresh()
                                         }
-                                        .show()
+                                    }
+                                    .show()
                             }
                         }
                     }
@@ -615,19 +616,27 @@ class ThreadActivity : BaseActivity(), View.OnClickListener, IThreadMenuFragment
 
     private fun updateHistory(async: Boolean = false) {
         if (dataBean != null && dataBean!!.thread != null) {
-            val postListItemBean = lastVisibleItem
+            val postListItemBean = try {
+                lastVisibleItem
+            } catch (t: Throwable) {
+                try {
+                    firstVisibleItem
+                } catch (t: Throwable) {
+                    null
+                }
+            }
             var extras = ""
             if (postListItemBean != null) {
                 extras = ThreadHistoryInfoBean()
-                        .setPid(postListItemBean.id)
-                        .setSeeLz(seeLz)
-                        .toString()
+                    .setPid(postListItemBean.id)
+                    .setSeeLz(seeLz)
+                    .toString()
             }
             val history = History()
-                    .setData(threadId)
-                    .setExtras(extras)
-                    .setTitle(dataBean!!.thread?.title)
-                    .setType(HistoryUtil.TYPE_THREAD)
+                .setData(threadId)
+                .setExtras(extras)
+                .setTitle(dataBean!!.thread?.title)
+                .setType(HistoryUtil.TYPE_THREAD)
             if (dataBean!!.thread?.author != null) {
                 history.avatar = dataBean!!.thread?.author?.portrait
                 history.username = dataBean!!.thread?.author?.nameShow
@@ -644,27 +653,27 @@ class ThreadActivity : BaseActivity(), View.OnClickListener, IThreadMenuFragment
     private fun exit(): Boolean {
         if (collect) {
             DialogUtil.build(this)
-                    .setMessage(R.string.message_update_store_floor)
-                    .setPositiveButton(R.string.button_yes) { dialog: DialogInterface, _ ->
-                        collect(object : CommonAPICallback<CommonResponse> {
-                            override fun onSuccess(data: CommonResponse) {
-                                Toast.makeText(this@ThreadActivity, R.string.toast_collect_update_success, Toast.LENGTH_SHORT).show()
-                                dialog.cancel()
-                                finish()
-                            }
+                .setMessage(R.string.message_update_store_floor)
+                .setPositiveButton(R.string.button_yes) { dialog: DialogInterface, _ ->
+                    collect(object : CommonAPICallback<CommonResponse> {
+                        override fun onSuccess(data: CommonResponse) {
+                            Toast.makeText(this@ThreadActivity, R.string.toast_collect_update_success, Toast.LENGTH_SHORT).show()
+                            dialog.cancel()
+                            finish()
+                        }
 
-                            override fun onFailure(code: Int, error: String) {
-                                Toast.makeText(this@ThreadActivity, getString(R.string.toast_collect_update_error, error), Toast.LENGTH_SHORT).show()
-                            }
-                        }, true)
-                    }
-                    .setNegativeButton(R.string.button_no) { dialog: DialogInterface, _ ->
-                        dialog.cancel()
-                        finish()
-                    }
-                    .setNeutralButton(R.string.button_cancel, null)
-                    .create()
-                    .show()
+                        override fun onFailure(code: Int, error: String) {
+                            Toast.makeText(this@ThreadActivity, getString(R.string.toast_collect_update_error, error), Toast.LENGTH_SHORT).show()
+                        }
+                    }, true)
+                }
+                .setNegativeButton(R.string.button_no) { dialog: DialogInterface, _ ->
+                    dialog.cancel()
+                    finish()
+                }
+                .setNeutralButton(R.string.button_cancel, null)
+                .create()
+                .show()
             return false
         }
         return true
@@ -683,20 +692,20 @@ class ThreadActivity : BaseActivity(), View.OnClickListener, IThreadMenuFragment
         when (v.id) {
             R.id.thread_reply_bar -> if (dataBean != null && dataBean!!.thread != null) {
                 startActivity(Intent(this@ThreadActivity, ReplyActivity::class.java)
-                        .putExtra("data", ReplyInfoBean(dataBean!!.thread?.id,
-                                dataBean!!.forum?.id,
-                                dataBean!!.forum?.name,
-                                dataBean!!.anti?.tbs,
-                                dataBean!!.user?.nameShow).setPn(dataBean!!.page?.offset).toString()))
+                    .putExtra("data", ReplyInfoBean(dataBean!!.thread?.id,
+                        dataBean!!.forum?.id,
+                        dataBean!!.forum?.name,
+                        dataBean!!.anti?.tbs,
+                        dataBean!!.user?.nameShow).setPn(dataBean!!.page?.offset).toString()))
             }
             R.id.toolbar -> recyclerView.scrollToPosition(0)
             R.id.thread_bottom_bar_more_btn -> {
                 MIUIThreadMenuFragment(
-                        seeLz,
-                        collect,
-                        replyAdapter.isPureRead,
-                        sort,
-                        canDelete()
+                    seeLz,
+                    collect,
+                    replyAdapter.isPureRead,
+                    sort,
+                    canDelete()
                 ).apply {
                     setOnActionsListener(this@ThreadActivity)
                     show(supportFragmentManager, "Menu")
@@ -822,12 +831,12 @@ class ThreadActivity : BaseActivity(), View.OnClickListener, IThreadMenuFragment
         @JvmOverloads
         @JvmStatic
         fun launch(
-                context: Context,
-                threadId: String,
-                postId: String? = null,
-                seeLz: Boolean? = null,
-                from: String? = null,
-                maxPid: String? = null
+            context: Context,
+            threadId: String,
+            postId: String? = null,
+            seeLz: Boolean? = null,
+            from: String? = null,
+            maxPid: String? = null
         ) {
             context.goToActivity<ThreadActivity> {
                 putExtra(EXTRA_THREAD_ID, threadId)
@@ -926,17 +935,17 @@ class ThreadActivity : BaseActivity(), View.OnClickListener, IThreadMenuFragment
 
     override fun onJumpPage() {
         val dialog = EditTextDialog(this)
-                .setInputType(InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_VARIATION_NORMAL)
-                .setHelperText(String.format(getString(R.string.tip_jump_page), page, totalPage))
-                .setOnSubmitListener { page: String? ->
-                    val pn = Integer.valueOf(page!!)
-                    if (pn in 1..totalPage) {
-                        this.page = pn
-                        refresh(false)
-                    } else {
-                        Toast.makeText(this@ThreadActivity, R.string.toast_jump_page_too_big, Toast.LENGTH_SHORT).show()
-                    }
+            .setInputType(InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_VARIATION_NORMAL)
+            .setHelperText(String.format(getString(R.string.tip_jump_page), page, totalPage))
+            .setOnSubmitListener { page: String? ->
+                val pn = Integer.valueOf(page!!)
+                if (pn in 1..totalPage) {
+                    this.page = pn
+                    refresh(false)
+                } else {
+                    Toast.makeText(this@ThreadActivity, R.string.toast_jump_page_too_big, Toast.LENGTH_SHORT).show()
                 }
+            }
         dialog.setTitle(R.string.title_jump_page)
         dialog.show()
     }

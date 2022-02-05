@@ -20,7 +20,6 @@ import com.huanchengfly.tieba.post.models.ThreadHistoryInfoBean
 import com.huanchengfly.tieba.post.models.database.History
 import com.huanchengfly.tieba.post.utils.DateTimeUtils
 import com.huanchengfly.tieba.post.utils.HistoryUtil
-import kotlin.properties.Delegates
 
 class HistoryFragment : BaseFragment(), OnItemClickListener<History>, Refreshable {
     @BindView(R.id.recycler_view)
@@ -31,7 +30,7 @@ class HistoryFragment : BaseFragment(), OnItemClickListener<History>, Refreshabl
     private val todayHistoryAdapter: HistoryAdapter by lazy { HistoryAdapter(attachContext) }
     private val beforeHistoryAdapter: HistoryAdapter by lazy { HistoryAdapter(attachContext) }
 
-    private var type by Delegates.notNull<Int>()
+    private var type = 0
 
     companion object {
         const val PARAM_TYPE = "type"

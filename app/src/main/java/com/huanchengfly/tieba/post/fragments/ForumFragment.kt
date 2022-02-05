@@ -46,7 +46,7 @@ class ForumFragment : BaseFragment(), Refreshable, OnSwitchListener, ScrollTopab
     lateinit var mRecyclerView: RecyclerView
 
     @BindView(R.id.refresh)
-    lateinit var mRefreshLayout: SmartRefreshLayout
+    var mRefreshLayout: SmartRefreshLayout? = null
 
     private val virtualLayoutManager: VirtualLayoutManager by lazy {
         VirtualLayoutManager(
@@ -62,13 +62,13 @@ class ForumFragment : BaseFragment(), Refreshable, OnSwitchListener, ScrollTopab
         if (preload) {
             PreLoader.listenData<ForumPageBean>(preloadId, DataHolder())
         } else if (mDataBean == null) {
-            mRefreshLayout.autoRefresh()
+            mRefreshLayout?.autoRefresh()
         }
     }
 
     override fun onFragmentVisibleChange(isVisible: Boolean) {
         if (isVisible && mDataBean == null) {
-            mRefreshLayout.autoRefresh()
+            mRefreshLayout?.autoRefresh()
         }
     }
 
@@ -147,8 +147,8 @@ class ForumFragment : BaseFragment(), Refreshable, OnSwitchListener, ScrollTopab
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        mRefreshLayout.setOnRefreshListener { refresh() }
-        mRefreshLayout.setOnLoadMoreListener { loadMore() }
+        mRefreshLayout?.setOnRefreshListener { refresh() }
+        mRefreshLayout?.setOnLoadMoreListener { loadMore() }
         mRecyclerView.apply {
             layoutManager = virtualLayoutManager
             adapter = delegateAdapter
@@ -179,14 +179,14 @@ class ForumFragment : BaseFragment(), Refreshable, OnSwitchListener, ScrollTopab
                 .forumPageAsync(forumName!!, page + 1, sortType, classifyId)
                 .doIfSuccess {
                     page += 1
-                    mRefreshLayout.finishLoadMore()
+                    mRefreshLayout?.finishLoadMore()
                     mDataBean = it
                     pageSize = it.page?.pageSize?.toInt() ?: 0
                     forumAdapter.addData(it)
-                    mRefreshLayout.setNoMoreData(it.page?.hasMore == "0")
+                    mRefreshLayout?.setNoMoreData(it.page?.hasMore == "0")
                 }
                 .doIfFailure {
-                    mRefreshLayout.finishLoadMore(false)
+                    mRefreshLayout?.finishLoadMore(false)
                 }
         }
     }
@@ -208,10 +208,10 @@ class ForumFragment : BaseFragment(), Refreshable, OnSwitchListener, ScrollTopab
                             (attachContext as OnRefreshedListener).onFailure(errorCode, t.message)
                         }
                     }
-                    mRefreshLayout.finishRefresh(false)
+                    mRefreshLayout?.finishRefresh(false)
                     if (errorCode == -1) {
                         Util.showNetworkErrorSnackbar(mRecyclerView) {
-                            mRefreshLayout.autoRefresh()
+                            mRefreshLayout?.autoRefresh()
                         }
                         return
                     }
@@ -232,24 +232,24 @@ class ForumFragment : BaseFragment(), Refreshable, OnSwitchListener, ScrollTopab
                             (attachContext as OnRefreshedListener).onSuccess(forumPageBean)
                         }
                     }
-                    mRefreshLayout.finishRefresh()
+                    mRefreshLayout?.finishRefresh()
                     mDataBean = forumPageBean
                     pageSize = forumPageBean.page?.pageSize?.toInt()!!
                     forumAdapter.setData(forumPageBean)
-                    mRefreshLayout.setNoMoreData(mDataBean!!.page?.hasMore == "0")
+                    mRefreshLayout?.setNoMoreData(mDataBean!!.page?.hasMore == "0")
                     reloadAdapters()
                 }
             })
     }
 
     override fun onRefresh() {
-        mRefreshLayout.autoRefresh()
+        mRefreshLayout?.autoRefresh()
     }
 
     override fun onSwitch(which: Int) {
         if (isGood && mDataBean != null) {
             classifyId = mDataBean!!.forum?.goodClassify?.get(which)?.classId!!
-            mRefreshLayout.autoRefresh()
+            mRefreshLayout?.autoRefresh()
         }
     }
 
@@ -265,7 +265,7 @@ class ForumFragment : BaseFragment(), Refreshable, OnSwitchListener, ScrollTopab
     internal inner class DataHolder : DataListener<ForumPageBean?> {
         override fun onDataArrived(forumPageBean: ForumPageBean?) {
             if (forumPageBean == null) {
-                mRefreshLayout.autoRefresh()
+                mRefreshLayout?.autoRefresh()
                 return
             }
             if (!isGood) {
@@ -273,11 +273,11 @@ class ForumFragment : BaseFragment(), Refreshable, OnSwitchListener, ScrollTopab
                     (attachContext as OnRefreshedListener).onSuccess(forumPageBean)
                 }
             }
-            mRefreshLayout.finishRefresh()
+            mRefreshLayout?.finishRefresh()
             mDataBean = forumPageBean
             pageSize = forumPageBean.page?.pageSize?.toInt()!!
             forumAdapter.setData(forumPageBean)
-            mRefreshLayout.setNoMoreData(mDataBean!!.page?.hasMore == "0")
+            mRefreshLayout?.setNoMoreData(mDataBean!!.page?.hasMore == "0")
             reloadAdapters()
         }
     }

@@ -31,6 +31,7 @@ class SearchForumFragment : BaseFragment(), ISearchFragment, OnItemClickListener
     @BindView(R.id.fragment_search_recycler_view)
     lateinit var recyclerView: RecyclerView
 
+    private var loaded: Boolean = false
     private var keyword: String? = null
     private val layoutManager: VirtualLayoutManager by lazy { VirtualLayoutManager(attachContext) }
     private val delegateAdapter: DelegateAdapter by lazy { DelegateAdapter(layoutManager) }
@@ -55,7 +56,7 @@ class SearchForumFragment : BaseFragment(), ISearchFragment, OnItemClickListener
             refreshLayout?.autoRefresh()
         } else {
             mData = null
-            delegateAdapter.clear()
+            if (loaded) delegateAdapter.clear()
         }
     }
 
@@ -105,6 +106,7 @@ class SearchForumFragment : BaseFragment(), ISearchFragment, OnItemClickListener
     private fun reloadAdapters() {
         delegateAdapter.clear()
         if (mData != null) {
+            loaded = true
             if (mData!!.exactMatch != null) {
                 exactMatchAdapter.setData(listOf(mData!!.exactMatch!!))
                 delegateAdapter.addAdapter(HeaderDelegateAdapter(
