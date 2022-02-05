@@ -232,12 +232,14 @@
     </androidx.preference.PreferenceCategory>
 
     <androidx.preference.PreferenceCategory android:title="@string/title_settings_about">
+        <!--
         <SwitchPreference
             android:defaultValue="false"
             android:icon="@drawable/ic_round_bug_report_blue"
             android:key="check_beta_update"
             android:summary="@string/tip_check_beta_update"
             android:title="@string/title_check_beta_update" />
+        -->
 
         <SwitchPreference
             android:defaultValue="true"

@@ -7,7 +7,6 @@ import com.huanchengfly.tieba.post.R;
 import com.huanchengfly.tieba.post.fragments.intro.CustomSettingsFragment;
 import com.huanchengfly.tieba.post.fragments.intro.ExploreFragment;
 import com.huanchengfly.tieba.post.fragments.intro.HabitSettingsFragment;
-import com.huanchengfly.tieba.post.fragments.intro.OtherSettingsFragment;
 import com.huanchengfly.tieba.post.fragments.intro.PermissionFragment;
 import com.huanchengfly.tieba.post.ui.intro.BaseIntroActivity;
 import com.huanchengfly.tieba.post.ui.intro.fragments.AppIntroFragment;
@@ -35,7 +34,6 @@ public class NewIntroActivity extends BaseIntroActivity {
         }
         getAdapter().addFragment(new HabitSettingsFragment());
         getAdapter().addFragment(new CustomSettingsFragment());
-        getAdapter().addFragment(new OtherSettingsFragment());
         getAdapter().addFragment(new ExploreFragment());
         getAdapter().addFragment(new AppIntroFragment.Builder(this)
                 .setIconRes(R.drawable.ic_round_emoji_emotions)
