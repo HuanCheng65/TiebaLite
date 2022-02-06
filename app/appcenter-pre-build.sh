@@ -1,7 +1,6 @@
 #!/usr/bin/env bash
 
-echo "export JAVA_HOME=$JAVA_HOME_11_X64" >> $BASH_ENV
-source $BASH_ENV
+echo "org.gradle.java.home=$JAVA_HOME_11_X64" >> ${APPCENTER_SOURCE_DIRECTORY}/gradle.properties
 
 openssl aes-256-cbc -d -in "${APPCENTER_SOURCE_DIRECTORY}/${releaseKeyStore}.encrypted" -k $RELEASE_ENCRYPT_SECRET_KEY -md md5 >> ${APPCENTER_SOURCE_DIRECTORY}/$releaseKeyStore
 
