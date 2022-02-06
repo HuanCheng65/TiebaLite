@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+echo "export JAVA_HOME=$JAVA_HOME_11_X64" >> $BASH_ENV
+source $BASH_ENV
+
 openssl aes-256-cbc -d -in "${APPCENTER_SOURCE_DIRECTORY}/${releaseKeyStore}.encrypted" -k $RELEASE_ENCRYPT_SECRET_KEY -md md5 >> ${APPCENTER_SOURCE_DIRECTORY}/$releaseKeyStore
 
 printf 'releaseKeyAlias=%s\nreleaseKeyPassword=%s\nreleaseKeyStore=%s\nreleaseStorePassword=%s' $releaseKeyAlias $releaseKeyPassword $releaseKeyStore $releaseStorePassword > ${APPCENTER_SOURCE_DIRECTORY}/keystore.properties
