@@ -60,7 +60,7 @@ jobs:
             echo "export APP_OUTPUT_FILE=\$(cat output-metadata.json | jq '.elements[0].outputFile' | awk -F '\"' '{print \$2}')" >> $BASH_ENV
             echo "export APP_VERSION_CODE=\$(cat output-metadata.json | jq '.elements[0].versionCode'" >> $BASH_ENV
             source $BASH_ENV
-      - publish:
+      - app-center/publish:
           name: Publish to App Center
           group: HuanCheng65
           file: $APP_OUTPUT_FILE
@@ -84,10 +84,18 @@ jobs:
             echo "export APP_VERSION_NAME=\$(cat output-metadata.json | jq '.elements[0].versionName' | awk -F '\"' '{print \$2}')" >> $BASH_ENV
             echo "export APP_VERSION_CODE=\$(cat output-metadata.json | jq '.elements[0].versionCode'" >> $BASH_ENV
             source $BASH_ENV
-      - mapping:
+      - app-center/mapping:
           name: Upload to App Center
           file: mapping.txt
           app: TiebaLite
           token: $APP_CENTER_TOKEN
           version-name: $APP_VERSION_NAME
           version-code: $APP_VERSION_CODE
+
+workflows:
+  version: 2
+  build_and_upload:
+    jobs:
+      - build
+      - upload_apk
+      - upload_mapping
