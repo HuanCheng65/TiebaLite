@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-echo "org.gradle.java.home=$JAVA_HOME_11_X64" >> ${APPCENTER_SOURCE_DIRECTORY}/gradle.properties
+echo "\norg.gradle.java.home=$JAVA_HOME_11_X64" >> ${APPCENTER_SOURCE_DIRECTORY}/gradle.properties
 
 cat ${APPCENTER_SOURCE_DIRECTORY}/gradle.properties
 
