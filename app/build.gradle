@@ -8,12 +8,12 @@ def keystoreProperties = new Properties()
 keystoreProperties.load(new FileInputStream(rootProject.file("keystore.properties")))
 def applicationProperties = new Properties()
 applicationProperties.load(new FileInputStream(rootProject.file("application.properties")))
-def SHA1 = System.getenv("CIRCLE_SHA1")
+def buildId = System.getenv("APPCENTER_BUILD_ID")
 def applicationVersionCode = applicationProperties["versionCode"].toInteger()
 def applicationVersionName = applicationProperties["versionName"]
 def isPerVersion = applicationProperties["isPerRelease"] == "true"
-if (SHA1 != null) {
-    applicationVersionName = applicationVersionName + ".${SHA1.substring(0, 7)}"
+if (buildId != null) {
+    applicationVersionName = applicationVersionName + ".${buildId.substring(0, 7)}"
 }
 if (isPerVersion) {
     applicationVersionName = applicationVersionName + ".${applicationProperties["preReleaseName"]}-${applicationProperties["preReleaseVer"]}"
