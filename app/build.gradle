@@ -13,7 +13,7 @@ def applicationVersionCode = applicationProperties["versionCode"].toInteger()
 def applicationVersionName = applicationProperties["versionName"]
 def isPerVersion = applicationProperties["isPerRelease"] == "true"
 if (buildId != null) {
-    applicationVersionName = applicationVersionName + ".${buildId.substring(0, 7)}"
+    applicationVersionName = applicationVersionName + ".${buildId}"
 }
 if (isPerVersion) {
     applicationVersionName = applicationVersionName + ".${applicationProperties["preReleaseName"]}-${applicationProperties["preReleaseVer"]}"
