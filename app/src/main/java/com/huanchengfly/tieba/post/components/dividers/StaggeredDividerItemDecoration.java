@@ -23,12 +23,14 @@ public class StaggeredDividerItemDecoration extends RecyclerView.ItemDecoration 
     public void getItemOffsets(@NonNull Rect outRect, @NonNull View view, @NonNull RecyclerView parent, @NonNull RecyclerView.State state) {
         int position = parent.getChildAdapterPosition(view);
         int interval = DisplayUtil.dp2px(context, this.interval);
+        StaggeredGridLayoutManager layoutManager = (StaggeredGridLayoutManager) parent.getLayoutManager();
+        int spanCount = layoutManager.getSpanCount();
         StaggeredGridLayoutManager.LayoutParams params =
                 (StaggeredGridLayoutManager.LayoutParams) view.getLayoutParams();
         /*
             第一行设置上边距
          */
-        if (position <= 1) {
+        if (position <= spanCount - 1) {
             outRect.top = interval;
         } else {
             outRect.top = 0;
@@ -37,12 +39,15 @@ public class StaggeredDividerItemDecoration extends RecyclerView.ItemDecoration 
           根据params.getSpanIndex()来判断左右边确定分割线
           第一列设置左边距为interval，右边距为interval/2  （第二列反之）
          */
-        if (params.getSpanIndex() % 2 == 0) {
+        if (params.getSpanIndex() % spanCount == 0) {
             outRect.left = interval;
             outRect.right = interval / 2;
-        } else {
+        } else if (params.getSpanIndex() % spanCount == spanCount - 1) {
             outRect.left = interval / 2;
             outRect.right = interval;
+        } else {
+            outRect.left = interval / 2;
+            outRect.right = interval / 2;
         }
         outRect.bottom = interval;
     }

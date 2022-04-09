@@ -22,6 +22,7 @@ import com.huanchengfly.tieba.post.components.spans.MyImageSpan
 import com.huanchengfly.tieba.post.components.spans.MyURLSpan
 import com.huanchengfly.tieba.post.components.spans.MyUserSpan
 import com.huanchengfly.tieba.post.dpToPx
+import com.huanchengfly.tieba.post.isTablet
 import com.huanchengfly.tieba.post.models.PhotoViewBean
 import com.huanchengfly.tieba.post.ui.theme.utils.ThemeUtils
 import com.huanchengfly.tieba.post.utils.BilibiliUtil.replaceVideoNumberSpan
@@ -31,6 +32,7 @@ import com.huanchengfly.tieba.post.widgets.VoicePlayerView
 import com.huanchengfly.tieba.post.widgets.theme.TintMySpannableTextView
 import java.util.*
 import kotlin.collections.ArrayList
+import kotlin.math.roundToInt
 
 class PostListAdapterHelper(
     private val context: Context
@@ -142,6 +144,9 @@ class PostListAdapterHelper(
             maxWidth =
                 BaseApplication.ScreenInfo.EXACT_SCREEN_WIDTH.toFloat() - (16 * 2 + 4).dpToPx()
         }
+        if (context.isTablet) {
+            return maxWidth / 2;
+        }
         return maxWidth
     }
 
@@ -166,17 +171,24 @@ class PostListAdapterHelper(
             heightFloat = java.lang.Float.valueOf(contentBean.height!!)
             heightFloat *= widthFloat / width
         }
-        val width = Math.round(widthFloat)
-        val height = Math.round(heightFloat)
+        val width = widthFloat.roundToInt()
+        val height = heightFloat.roundToInt()
         val layoutParams = LinearLayout.LayoutParams(width, height)
-        layoutParams.gravity = Gravity.CENTER_HORIZONTAL
-        val dp16 = DisplayUtil.dp2px(context, 16f)
-        val dp4 = DisplayUtil.dp2px(context, 4f)
-        val dp2 = DisplayUtil.dp2px(context, 2f)
+        layoutParams.gravity = if (context.isTablet) {
+            Gravity.START
+        } else {
+            Gravity.CENTER_HORIZONTAL
+        }
+        val dp16 = 16f.dpToPx()
+        val dp4 = 4f.dpToPx()
+        val dp2 = 2f.dpToPx()
         if ("1" == floor) {
             layoutParams.setMargins(dp16, dp2, dp16, dp2)
         } else {
             layoutParams.setMargins(dp4, dp2, dp4, dp2)
+        }
+        if (context.isTablet) {
+            layoutParams.setMargins(0, dp2, 0, dp2)
         }
         return layoutParams
     }

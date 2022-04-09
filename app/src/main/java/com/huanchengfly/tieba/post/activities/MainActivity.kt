@@ -129,11 +129,16 @@ open class MainActivity : BaseActivity(), BottomNavigationView.OnNavigationItemS
         mViewPager.offscreenPageLimit = mAdapter.count
     }
 
-    protected fun initListener() {
+    private fun initListener() {
         mBottomNavigationView.setOnNavigationItemSelectedListener(this)
         mBottomNavigationView.setOnNavigationItemReselectedListener(this)
         mViewPager.addOnPageChangeListener(object : OnPageChangeListener {
-            override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {}
+            override fun onPageScrolled(
+                position: Int,
+                positionOffset: Float,
+                positionOffsetPixels: Int
+            ) {
+            }
 
             @SuppressLint("RestrictedApi")
             override fun onPageSelected(position: Int) {

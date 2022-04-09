@@ -6,6 +6,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.res.ColorStateList
 import android.content.res.Configuration
+import android.content.res.Configuration.SCREENLAYOUT_SIZE_MASK
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
@@ -97,3 +98,9 @@ val Configuration.isPortrait: Boolean
 
 val Configuration.isLandscape: Boolean
     get() = orientation == Configuration.ORIENTATION_LANDSCAPE
+
+val Configuration.isTablet: Boolean
+    get() = (screenLayout and SCREENLAYOUT_SIZE_MASK) >= Configuration.SCREENLAYOUT_SIZE_LARGE
+
+val Context.isTablet: Boolean
+    get() = resources.configuration.isTablet
