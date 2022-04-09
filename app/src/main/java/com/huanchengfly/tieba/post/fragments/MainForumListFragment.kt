@@ -77,7 +77,6 @@ class MainForumListFragment : BaseFragment(), Refreshable, Toolbar.OnMenuItemCli
 
     @BindView(R.id.refresh)
     lateinit var mRefreshView: SmartRefreshLayout
-    private var navigationHelper: NavigationHelper? = null
     private lateinit var delegateAdapter: DelegateAdapter
     private lateinit var virtualLayoutManager: VirtualLayoutManager
     private lateinit var mainForumListAdapter: MainForumListAdapter
@@ -120,14 +119,19 @@ class MainForumListFragment : BaseFragment(), Refreshable, Toolbar.OnMenuItemCli
         super.onCreate(savedInstanceState)
         virtualLayoutManager = VirtualLayoutManager(attachContext)
         delegateAdapter = DelegateAdapter(virtualLayoutManager)
-        navigationHelper = NavigationHelper.newInstance(attachContext)
     }
 
     private val spanCount: Int
-        get() = if (appPreferences.listSingle) {
-            1
-        } else {
-            2
+        get() = when {
+            appPreferences.listSingle -> {
+                1
+            }
+            resources.getBoolean(R.bool.is_tablet) -> {
+                3
+            }
+            else -> {
+                2
+            }
         }
 
     private fun toggleTopForum(forumId: String) {

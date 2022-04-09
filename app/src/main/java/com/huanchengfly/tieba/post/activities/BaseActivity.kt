@@ -6,6 +6,7 @@ import android.app.Activity
 import android.app.Dialog
 import android.content.Context
 import android.content.res.ColorStateList
+import android.content.res.Configuration
 import android.content.res.Resources
 import android.graphics.Color
 import android.os.Bundle
@@ -110,6 +111,11 @@ abstract class BaseActivity : SwipeBackActivity(), ExtraRefreshable, CoroutineSc
             setContentView(getLayoutId())
             ButterKnife.bind(this)
         }
+    }
+
+    override fun onConfigurationChanged(newConfig: Configuration) {
+        super.onConfigurationChanged(newConfig)
+        getDeviceDensity()
     }
 
     private fun fixBackground() {

@@ -54,14 +54,14 @@ class MainForumListAdapter(
                     viewHolder.itemView.backgroundTintList = ColorStateListUtils.createColorStateList(context, R.color.default_color_card)
                 }
             }
-            //双列左
+            //多列第一个
             position % spanCount == 0 -> {
                 viewHolder.itemView.backgroundTintList = ColorStateListUtils.createColorStateList(context, R.color.default_color_card)
                 viewHolder.itemView.background = wrapRipple(
                         Util.getColorByAttr(context, R.attr.colorControlHighlight, R.color.transparent),
                         when (position) {
                             //最后一行，左
-                            getCount() - 2 -> getRadiusDrawable(bottomLeftPx = cardRadius)
+                            getCount() - spanCount -> getRadiusDrawable(bottomLeftPx = cardRadius)
                             //最后一项
                             getCount() - 1 -> getRadiusDrawable(bottomLeftPx = cardRadius, bottomRightPx = cardRadius)
                             //其他
@@ -69,7 +69,7 @@ class MainForumListAdapter(
                         }
                 )
             }
-            //双列右
+            //多列右
             else -> {
                 viewHolder.itemView.backgroundTintList = ColorStateListUtils.createColorStateList(context, R.color.default_color_card)
                 viewHolder.itemView.background = wrapRipple(

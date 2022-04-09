@@ -2,6 +2,7 @@ package com.huanchengfly.tieba.post.fragments
 
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
+import android.content.res.Configuration
 import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
@@ -10,6 +11,7 @@ import android.widget.Toast
 import androidx.appcompat.widget.Toolbar
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.OnChildAttachStateChangeListener
+import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import butterknife.BindView
 import cn.jzvd.Jzvd
 import com.bumptech.glide.Glide
@@ -22,8 +24,11 @@ import com.huanchengfly.tieba.post.api.models.PersonalizedBean
 import com.huanchengfly.tieba.post.api.retrofit.exception.TiebaException
 import com.huanchengfly.tieba.post.components.MyLinearLayoutManager
 import com.huanchengfly.tieba.post.components.dividers.FeedDivider
+import com.huanchengfly.tieba.post.components.dividers.StaggeredDividerItemDecoration
 import com.huanchengfly.tieba.post.goToActivity
 import com.huanchengfly.tieba.post.interfaces.Refreshable
+import com.huanchengfly.tieba.post.isLandscape
+import com.huanchengfly.tieba.post.isPortrait
 import com.huanchengfly.tieba.post.utils.*
 import com.huanchengfly.tieba.post.widgets.ShadowLayout
 import com.huanchengfly.tieba.post.widgets.VideoPlayerStandard
@@ -65,7 +70,7 @@ class PersonalizedFeedFragment : BaseFragment(), PersonalizedFeedAdapter.OnRefre
 
     override fun hasOwnAppbar(): Boolean = true
 
-    public override fun getLayoutId(): Int = R.layout.fragment_personalized_feed
+    override fun getLayoutId(): Int = R.layout.fragment_personalized_feed
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -84,7 +89,6 @@ class PersonalizedFeedFragment : BaseFragment(), PersonalizedFeedAdapter.OnRefre
             onRefreshListener = this@PersonalizedFeedFragment
         }
         recyclerView.apply {
-            addItemDecoration(FeedDivider(attachContext))
             if (!appPreferences.loadPictureWhenScroll) {
                 addOnScrollListener(object : RecyclerView.OnScrollListener() {
                     override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
@@ -105,19 +109,50 @@ class PersonalizedFeedFragment : BaseFragment(), PersonalizedFeedAdapter.OnRefre
             addOnChildAttachStateChangeListener(object : OnChildAttachStateChangeListener {
                 override fun onChildViewAttachedToWindow(view: View) {}
                 override fun onChildViewDetachedFromWindow(view: View) {
-                    val videoPlayerStandard: VideoPlayerStandard? = view.findViewById(R.id.forum_item_content_video)
+                    val videoPlayerStandard: VideoPlayerStandard? =
+                        view.findViewById(R.id.forum_item_content_video)
                     if (videoPlayerStandard != null && Jzvd.CURRENT_JZVD != null &&
-                            videoPlayerStandard.jzDataSource.containsTheUrl(Jzvd.CURRENT_JZVD.jzDataSource.currentUrl)) {
+                        videoPlayerStandard.jzDataSource.containsTheUrl(Jzvd.CURRENT_JZVD.jzDataSource.currentUrl)
+                    ) {
                         if (Jzvd.CURRENT_JZVD != null && Jzvd.CURRENT_JZVD.screen != Jzvd.SCREEN_FULLSCREEN) {
                             Jzvd.releaseAllVideos()
                         }
                     }
                 }
             })
-            layoutManager = MyLinearLayoutManager(attachContext)
+            layoutManager = if (!isTablet) {
+                addItemDecoration(FeedDivider(attachContext))
+                MyLinearLayoutManager(attachContext)
+            } else {
+                addItemDecoration(StaggeredDividerItemDecoration(attachContext, 12))
+                StaggeredGridLayoutManager(getSpanCount(), StaggeredGridLayoutManager.VERTICAL)
+            }
             adapter = this@PersonalizedFeedFragment.adapter
         }
     }
+
+    override fun onConfigurationChanged(newConfig: Configuration) {
+        super.onConfigurationChanged(newConfig)
+        if (recyclerView.layoutManager is StaggeredGridLayoutManager) {
+            (recyclerView.layoutManager as StaggeredGridLayoutManager).spanCount =
+                getSpanCount(newConfig)
+        }
+    }
+
+    private fun getSpanCount(configuration: Configuration = attachContext.resources.configuration): Int {
+        return when {
+            isTablet && configuration.isPortrait -> {
+                2
+            }
+            isTablet && configuration.isLandscape -> {
+                3
+            }
+            else -> {
+                1
+            }
+        }
+    }
+
 
     fun refresh() {
         page = 1

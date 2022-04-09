@@ -13,6 +13,7 @@ import androidx.gridlayout.widget.GridLayout;
 
 import com.bumptech.glide.Glide;
 import com.huanchengfly.tieba.post.BaseApplication;
+import com.huanchengfly.tieba.post.ExtensionsKt;
 import com.huanchengfly.tieba.post.R;
 import com.huanchengfly.tieba.post.api.models.ForumPageBean;
 import com.huanchengfly.tieba.post.api.models.PersonalizedBean;
@@ -69,11 +70,19 @@ public class PersonalizedFeedAdapter extends MultiBaseAdapter<PersonalizedBean.T
     }
 
     private int getMaxWidth() {
-        return BaseApplication.ScreenInfo.EXACT_SCREEN_WIDTH - DisplayUtil.dp2px(mContext, 56);
+        int maxWidth = BaseApplication.ScreenInfo.EXACT_SCREEN_WIDTH - DisplayUtil.dp2px(mContext, 56);
+        if (mContext.getResources().getBoolean(R.bool.is_tablet)) {
+            if (ExtensionsKt.isLandscape(mContext.getResources().getConfiguration())) {
+                return maxWidth / 3;
+            } else {
+                return maxWidth / 2;
+            }
+        }
+        return maxWidth;
     }
 
     private int getGridHeight() {
-        return (BaseApplication.ScreenInfo.EXACT_SCREEN_WIDTH - DisplayUtil.dp2px(mContext, 56)) / 3;
+        return getMaxWidth() / 3;
     }
 
     private RelativeLayout.LayoutParams getLayoutParams(RelativeLayout.LayoutParams layoutParams) {
