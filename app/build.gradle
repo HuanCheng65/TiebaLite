@@ -130,7 +130,7 @@ dependencies {
     implementation "cn.dreamtobe.kpswitch:library:1.6.2"
     implementation "org.litepal.android:kotlin:3.0.0"
     implementation "com.github.SheHuan:RecyclerViewAdapter:1.2.9"
-    implementation "com.davemorrissey.labs:subsampling-scale-image-view:3.10.0"
+    implementation "com.davemorrissey.labs:subsampling-scale-image-view-androidx:3.10.0"
     implementation "com.bm.photoview:library:2.0.7"
     implementation "cn.jzvd:jiaozivideoplayer:7.7.0"
     implementation "com.jrummyapps:colorpicker:2.1.7"
