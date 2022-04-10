@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:window="http://schemas.android.com/apk/res-auto">
+    <SplitPairRule
+        window:splitRatio="0.5"
+        window:splitMinWidth="600dp"
+        window:finishPrimaryWithSecondary="false"
+        window:finishSecondaryWithPrimary="true">
+        <SplitPairFilter
+            window:primaryActivityName=".activities.MainActivity"
+            window:secondaryActivityName="*/*" />
+        <SplitPairFilter
+            window:primaryActivityName=".activities.NewSearchActivity"
+            window:secondaryActivityName="*/*" />
+        <SplitPairFilter
+            window:primaryActivityName=".activities.ForumActivity"
+            window:secondaryActivityName="*/*" />
+        <SplitPairFilter
+            window:primaryActivityName=".activities.ThreadActivity"
+            window:secondaryActivityName="*/*" />
+        <SplitPairFilter
+            window:primaryActivityName=".activities.MessageActivity"
+            window:secondaryActivityName=".activities.FloorActivity" />
+        <SplitPairFilter
+            window:primaryActivityName=".activities.UserCollectActivity"
+            window:secondaryActivityName=".activities.ThreadActivity" />
+        <SplitPairFilter
+            window:primaryActivityName=".activities.UserCollectActivity"
+            window:secondaryActivityName=".activities.UserActivity" />
+        <SplitPairFilter
+            window:primaryActivityName=".activities.UserActivity"
+            window:secondaryActivityName=".activities.ThreadActivity" />
+    </SplitPairRule>
+</resources>

@@ -277,6 +277,16 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/file_paths_share_img" />
         </provider>
+
+        <provider
+            android:name="androidx.startup.InitializationProvider"
+            android:authorities="com.huanchengfly.tieba.post.androidx-startup"
+            android:exported="false"
+            tools:node="merge">
+            <meta-data
+                android:name="com.huanchengfly.tieba.post.components.WindowInitializer"
+                android:value="androidx.startup" />
+        </provider>
     </application>
 
 </manifest>
