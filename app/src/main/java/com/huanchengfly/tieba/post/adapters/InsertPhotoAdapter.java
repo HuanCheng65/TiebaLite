@@ -16,7 +16,6 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.huanchengfly.tieba.post.R;
 import com.huanchengfly.tieba.post.activities.ReplyActivity;
-import com.huanchengfly.tieba.post.components.MyImageEngine;
 import com.huanchengfly.tieba.post.components.MyViewHolder;
 import com.huanchengfly.tieba.post.components.transformations.RadiusTransformation;
 import com.huanchengfly.tieba.post.models.PhotoInfoBean;
@@ -26,6 +25,7 @@ import com.yanzhenjie.permission.Action;
 import com.yanzhenjie.permission.runtime.Permission;
 import com.zhihu.matisse.Matisse;
 import com.zhihu.matisse.MimeType;
+import com.zhihu.matisse.engine.impl.GlideEngine;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -97,7 +97,7 @@ public class InsertPhotoAdapter extends RecyclerView.Adapter<MyViewHolder> {
                                 .countable(true)
                                 .maxSelectable(10 - fileList.size())
                                 .theme(ThemeUtil.isNightMode(mContext) ? R.style.Matisse_Dracula : R.style.Matisse_Zhihu)
-                                .imageEngine(new MyImageEngine())
+                                .imageEngine(new GlideEngine())
                                 .forResult(ReplyActivity.REQUEST_CODE_CHOOSE));
                     }
                 });

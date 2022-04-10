@@ -35,7 +35,6 @@ import com.huanchengfly.tieba.post.adapters.TranslucentThemeColorAdapter
 import com.huanchengfly.tieba.post.adapters.WallpaperAdapter
 import com.huanchengfly.tieba.post.api.LiteApi
 import com.huanchengfly.tieba.post.api.retrofit.doIfSuccess
-import com.huanchengfly.tieba.post.components.MyImageEngine
 import com.huanchengfly.tieba.post.components.MyLinearLayoutManager
 import com.huanchengfly.tieba.post.components.dividers.HorizontalSpacesDecoration
 import com.huanchengfly.tieba.post.components.transformations.BlurTransformation
@@ -52,6 +51,7 @@ import com.yanzhenjie.permission.Action
 import com.yanzhenjie.permission.runtime.Permission
 import com.zhihu.matisse.Matisse
 import com.zhihu.matisse.MimeType
+import com.zhihu.matisse.engine.impl.GlideEngine
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch
 import java.io.File
@@ -457,9 +457,9 @@ class TranslucentThemeActivity : BaseActivity(), View.OnClickListener, OnSeekBar
             }
             R.id.select_pic -> askPermission {
                 Matisse.from(this)
-                        .choose(MimeType.ofImage())
-                        .theme(if (ThemeUtil.isNightMode(this)) R.style.Matisse_Dracula else R.style.Matisse_Zhihu)
-                        .imageEngine(MyImageEngine())
+                    .choose(MimeType.ofImage())
+                    .theme(if (ThemeUtil.isNightMode(this)) R.style.Matisse_Dracula else R.style.Matisse_Zhihu)
+                    .imageEngine(GlideEngine())
                         .forResult(REQUEST_CODE_CHOOSE)
             }
             R.id.custom_color -> {
