@@ -16,16 +16,17 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bumptech.glide.request.RequestOptions;
 import com.huanchengfly.tieba.post.R;
 import com.huanchengfly.tieba.post.activities.BaseActivity;
 import com.huanchengfly.tieba.post.activities.ReplyActivity;
+import com.huanchengfly.tieba.post.adapters.base.BaseSingleTypeAdapter;
 import com.huanchengfly.tieba.post.api.TiebaApi;
 import com.huanchengfly.tieba.post.api.models.CommonResponse;
 import com.huanchengfly.tieba.post.api.models.SubFloorListBean;
 import com.huanchengfly.tieba.post.api.models.ThreadContentBean;
 import com.huanchengfly.tieba.post.components.LinkMovementClickMethod;
 import com.huanchengfly.tieba.post.components.LinkTouchMovementMethod;
+import com.huanchengfly.tieba.post.components.MyViewHolder;
 import com.huanchengfly.tieba.post.components.spans.MyURLSpan;
 import com.huanchengfly.tieba.post.components.spans.MyUserSpan;
 import com.huanchengfly.tieba.post.fragments.ConfirmDialogFragment;
@@ -47,8 +48,6 @@ import com.huanchengfly.tieba.post.widgets.MyLinearLayout;
 import com.huanchengfly.tieba.post.widgets.VoicePlayerView;
 import com.huanchengfly.tieba.post.widgets.theme.TintMySpannableTextView;
 import com.huanchengfly.tieba.post.widgets.theme.TintTextView;
-import com.othershe.baseadapter.ViewHolder;
-import com.othershe.baseadapter.base.CommonBaseAdapter;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -59,23 +58,20 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class RecyclerFloorAdapter extends CommonBaseAdapter<SubFloorListBean.PostInfo> {
+public class RecyclerFloorAdapter extends BaseSingleTypeAdapter<SubFloorListBean.PostInfo> {
     public static final String TAG = "RecyclerFloorAdapter";
     private static final int TEXT_VIEW_TYPE_CONTENT = 0;
-    private NavigationHelper navigationHelper;
-    private RequestOptions avatarRequestOptions;
-    private LinearLayout.LayoutParams defaultLayoutParams;
-    private RequestOptions defaultRequestOptions;
-    private Float maxWidth;
+    private final LinearLayout.LayoutParams defaultLayoutParams;
+    private final Float maxWidth;
     private SubFloorListBean dataBean;
 
     public RecyclerFloorAdapter(Context context) {
-        super(context, null, true);
+        super(context, null);
         setOnItemClickListener((viewHolder, postInfo, position) -> {
             int floor = Integer.parseInt(dataBean.getPost().getFloor());
             int pn = floor - (floor % 30);
             ThreadContentBean.UserInfoBean userInfoBean = postInfo.getAuthor();
-            mContext.startActivity(new Intent(mContext, ReplyActivity.class)
+            getContext().startActivity(new Intent(getContext(), ReplyActivity.class)
                     .putExtra("data", new ReplyInfoBean(dataBean.getThread().getId(),
                             dataBean.getForum().getId(),
                             dataBean.getForum().getName(),
@@ -84,31 +80,23 @@ public class RecyclerFloorAdapter extends CommonBaseAdapter<SubFloorListBean.Pos
                             postInfo.getId(),
                             dataBean.getPost().getFloor(),
                             userInfoBean != null ? userInfoBean.getNameShow() : "",
-                            AccountUtil.getLoginInfo(mContext).getNameShow()).setPn(String.valueOf(pn)).toString()));
+                            AccountUtil.getLoginInfo(getContext()).getNameShow()).setPn(String.valueOf(pn)).toString()));
         });
-        avatarRequestOptions = new RequestOptions()
-                .placeholder(R.drawable.bg_placeholder_circle)
-                .circleCrop()
-                .skipMemoryCache(true);
-        navigationHelper = NavigationHelper.newInstance(mContext);
-        DisplayMetrics dm = mContext.getResources().getDisplayMetrics();
+        DisplayMetrics dm = getContext().getResources().getDisplayMetrics();
         maxWidth = (float) dm.widthPixels;
         defaultLayoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         defaultLayoutParams.setMargins(0, 8, 0, 8);
-        defaultRequestOptions = new RequestOptions()
-                .placeholder(R.drawable.bg_placeholder)
-                .skipMemoryCache(true);
     }
 
     public void setData(SubFloorListBean data) {
         dataBean = data;
         data.getSubPostList().add(0, data.getPost());
-        setNewData(data.getSubPostList());
+        setData(data.getSubPostList());
     }
 
     public void addData(SubFloorListBean data) {
         dataBean = data;
-        setLoadMoreData(data.getSubPostList());
+        insert(data.getSubPostList());
     }
 
     private void showMenu(SubFloorListBean.PostInfo postInfo, int position) {
@@ -127,13 +115,13 @@ public class RecyclerFloorAdapter extends CommonBaseAdapter<SubFloorListBean.Pos
                                     postInfo.getId(),
                                     dataBean.getPost().getFloor(),
                                     userInfoBean != null ? userInfoBean.getNameShow() : "",
-                                    AccountUtil.getLoginInfo(mContext).getNameShow()).setPn(String.valueOf(pn)).toString();
+                                    AccountUtil.getLoginInfo(getContext()).getNameShow()).setPn(String.valueOf(pn)).toString();
                             Log.i(TAG, "convert: " + replyData);
-                            mContext.startActivity(new Intent(mContext, ReplyActivity.class)
+                            getContext().startActivity(new Intent(getContext(), ReplyActivity.class)
                                     .putExtra("data", replyData));
                             return true;
                         case R.id.menu_report:
-                            TiebaUtil.reportPost(mContext, postInfo.getId());
+                            TiebaUtil.reportPost(getContext(), postInfo.getId());
                             return true;
                         case R.id.menu_copy:
                             StringBuilder stringBuilder = new StringBuilder();
@@ -154,28 +142,28 @@ public class RecyclerFloorAdapter extends CommonBaseAdapter<SubFloorListBean.Pos
                                     stringBuilder.append(contentBean.getText());
                                 }
                             }
-                            Util.showCopyDialog((BaseActivity) mContext, stringBuilder.toString(), postInfo.getId());
+                            Util.showCopyDialog((BaseActivity) getContext(), stringBuilder.toString(), postInfo.getId());
                             return true;
                         case R.id.menu_delete:
-                            if (TextUtils.equals(AccountUtil.getLoginInfo(mContext).getUid(), postInfo.getAuthor().getId())) {
-                                ConfirmDialogFragment.newInstance(mContext.getString(R.string.title_dialog_del_post))
+                            if (TextUtils.equals(AccountUtil.getLoginInfo(getContext()).getUid(), postInfo.getAuthor().getId())) {
+                                ConfirmDialogFragment.newInstance(getContext().getString(R.string.title_dialog_del_post))
                                         .setOnConfirmListener(() -> {
                                             TiebaApi.getInstance()
                                                     .delPost(dataBean.getForum().getId(), dataBean.getForum().getName(), dataBean.getThread().getId(), postInfo.getId(), dataBean.getAnti().getTbs(), true, true)
                                                     .enqueue(new Callback<CommonResponse>() {
                                                         @Override
                                                         public void onResponse(@NotNull Call<CommonResponse> call, @NotNull Response<CommonResponse> response) {
-                                                            Toast.makeText(mContext, R.string.toast_success, Toast.LENGTH_SHORT).show();
+                                                            Toast.makeText(getContext(), R.string.toast_success, Toast.LENGTH_SHORT).show();
                                                             remove(position);
                                                         }
 
                                                         @Override
                                                         public void onFailure(@NotNull Call<CommonResponse> call, @NotNull Throwable t) {
-                                                            Toast.makeText(mContext, t.getMessage(), Toast.LENGTH_SHORT).show();
+                                                            Toast.makeText(getContext(), t.getMessage(), Toast.LENGTH_SHORT).show();
                                                         }
                                                     });
                                         })
-                                        .show(((BaseActivity) mContext).getSupportFragmentManager(), postInfo.getId() + "_Confirm");
+                                        .show(((BaseActivity) getContext()).getSupportFragmentManager(), postInfo.getId() + "_Confirm");
                             }
                             return true;
                     }
@@ -183,27 +171,27 @@ public class RecyclerFloorAdapter extends CommonBaseAdapter<SubFloorListBean.Pos
                 })
                 .setInitMenuCallback(menu -> {
                     PluginManager.INSTANCE.initPluginMenu(menu, PluginManager.MENU_SUB_POST_ITEM);
-                    if (TextUtils.equals(AccountUtil.getLoginInfo(mContext).getUid(), postInfo.getAuthor().getId())) {
+                    if (TextUtils.equals(AccountUtil.getLoginInfo(getContext()).getUid(), postInfo.getAuthor().getId())) {
                         menu.findItem(R.id.menu_delete).setVisible(true);
                     }
                 })
-                .show(((BaseActivity) mContext).getSupportFragmentManager(), postInfo.getId() + "_Menu");
+                .show(((BaseActivity) getContext()).getSupportFragmentManager(), postInfo.getId() + "_Menu");
     }
 
     @Override
-    protected void convert(ViewHolder holder, SubFloorListBean.PostInfo data, int position) {
+    protected void convert(MyViewHolder holder, SubFloorListBean.PostInfo data, int position) {
         ThreadContentBean.UserInfoBean userInfoBean = data.getAuthor();
         if (dataBean != null && dataBean.getThread() != null && dataBean.getThread().getAuthor() != null && userInfoBean != null && userInfoBean.getId() != null && userInfoBean.getId().equals(dataBean.getThread().getAuthor().getId())) {
             holder.setVisibility(R.id.thread_list_item_user_lz_tip, View.VISIBLE);
         } else {
             holder.setVisibility(R.id.thread_list_item_user_lz_tip, View.GONE);
         }
-        holder.getConvertView().setOnLongClickListener(v -> {
+        holder.itemView.setOnLongClickListener(v -> {
             showMenu(data, position);
             return true;
         });
-        holder.setText(R.id.thread_list_item_user_name, userInfoBean == null ? "" : StringUtil.getUsernameString(mContext, userInfoBean.getName(), userInfoBean.getNameShow()));
-        holder.setText(R.id.thread_list_item_user_time, DateTimeUtils.getRelativeTimeString(mContext, data.getTime()));
+        holder.setText(R.id.thread_list_item_user_name, userInfoBean == null ? "" : StringUtil.getUsernameString(getContext(), userInfoBean.getName(), userInfoBean.getNameShow()));
+        holder.setText(R.id.thread_list_item_user_time, DateTimeUtils.getRelativeTimeString(getContext(), data.getTime()));
         if (userInfoBean != null) {
             String levelId = userInfoBean.getLevelId() == null || TextUtils.isEmpty(userInfoBean.getLevelId()) ? "?" : userInfoBean.getLevelId();
             ThemeUtil.setChipThemeByLevel(levelId,
@@ -212,7 +200,7 @@ public class RecyclerFloorAdapter extends CommonBaseAdapter<SubFloorListBean.Pos
                     holder.getView(R.id.thread_list_item_user_lz_tip));
             holder.setText(R.id.thread_list_item_user_level, levelId);
             holder.setOnClickListener(R.id.thread_list_item_user_avatar, view -> {
-                NavigationHelper.toUserSpaceWithAnim(mContext, userInfoBean.getId(), StringUtil.getAvatarUrl(userInfoBean.getPortrait()), view);
+                NavigationHelper.toUserSpaceWithAnim(getContext(), userInfoBean.getId(), StringUtil.getAvatarUrl(userInfoBean.getPortrait()), view);
             });
             ImageUtil.load(holder.getView(R.id.thread_list_item_user_avatar), ImageUtil.LOAD_TYPE_AVATAR, userInfoBean.getPortrait());
         }
@@ -241,12 +229,12 @@ public class RecyclerFloorAdapter extends CommonBaseAdapter<SubFloorListBean.Pos
     private TextView createTextView(int type) {
         TextView textView;
         if (type == TEXT_VIEW_TYPE_CONTENT) {
-            TintMySpannableTextView mySpannableTextView = new TintMySpannableTextView(mContext);
+            TintMySpannableTextView mySpannableTextView = new TintMySpannableTextView(getContext());
             mySpannableTextView.setTintResId(R.color.default_color_text);
             mySpannableTextView.setLinkTouchMovementMethod(LinkTouchMovementMethod.getInstance());
             textView = mySpannableTextView;
         } else {
-            TintTextView tintTextView = new TintTextView(mContext);
+            TintTextView tintTextView = new TintTextView(getContext());
             tintTextView.setTintResId(R.color.default_color_text);
             tintTextView.setMovementMethod(LinkMovementClickMethod.getInstance());
             textView = tintTextView;
@@ -265,7 +253,7 @@ public class RecyclerFloorAdapter extends CommonBaseAdapter<SubFloorListBean.Pos
     }
 
     private void setText(TextView textView, CharSequence content) {
-        content = BilibiliUtil.replaceVideoNumberSpan(mContext, content);
+        content = BilibiliUtil.replaceVideoNumberSpan(getContext(), content);
         content = StringUtil.getEmotionContent(EmotionUtil.EMOTION_ALL_TYPE, textView, content);
         textView.setText(content);
     }
@@ -304,7 +292,7 @@ public class RecyclerFloorAdapter extends CommonBaseAdapter<SubFloorListBean.Pos
         int end = start + newContent.length();
         SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder(oldContent);
         spannableStringBuilder.append(newContent);
-        spannableStringBuilder.setSpan(new MyURLSpan(mContext, url), start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        spannableStringBuilder.setSpan(new MyURLSpan(getContext(), url), start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         return spannableStringBuilder;
     }
 
@@ -321,8 +309,8 @@ public class RecyclerFloorAdapter extends CommonBaseAdapter<SubFloorListBean.Pos
     }
 
     private boolean canLoadGlide() {
-        if (mContext instanceof Activity) {
-            return !((Activity) mContext).isDestroyed();
+        if (getContext() instanceof Activity) {
+            return !((Activity) getContext()).isDestroyed();
         }
         return false;
     }
@@ -348,7 +336,7 @@ public class RecyclerFloorAdapter extends CommonBaseAdapter<SubFloorListBean.Pos
         int end = start + newContent.length();
         SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder(oldContent);
         spannableStringBuilder.append(newContent);
-        spannableStringBuilder.setSpan(new MyUserSpan(mContext, uid), start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        spannableStringBuilder.setSpan(new MyUserSpan(getContext(), uid), start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         return spannableStringBuilder;
     }
 
@@ -384,7 +372,7 @@ public class RecyclerFloorAdapter extends CommonBaseAdapter<SubFloorListBean.Pos
                     }
                     break;
                 case "3":
-                    ImageView imageView = new ImageView(mContext);
+                    ImageView imageView = new ImageView(getContext());
                     imageView.setLayoutParams(getLayoutParams(contentBean));
                     imageView.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
                     ImageUtil.load(imageView, ImageUtil.LOAD_TYPE_SMALL_PIC, contentBean.getSrc());
@@ -405,7 +393,7 @@ public class RecyclerFloorAdapter extends CommonBaseAdapter<SubFloorListBean.Pos
                     break;
                 case "10":
                     String voiceUrl = "http://c.tieba.baidu.com/c/p/voice?voice_md5=" + contentBean.getVoiceMD5() + "&play_from=pb_voice_play";
-                    VoicePlayerView voicePlayerView = new VoicePlayerView(mContext);
+                    VoicePlayerView voicePlayerView = new VoicePlayerView(getContext());
                     voicePlayerView.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
                     //voicePlayerView.setMini(false);
                     voicePlayerView.setDuration(Integer.valueOf(contentBean.getDuringTime()));
@@ -417,7 +405,7 @@ public class RecyclerFloorAdapter extends CommonBaseAdapter<SubFloorListBean.Pos
         return views;
     }
 
-    private void initContentView(ViewHolder viewHolder, SubFloorListBean.PostInfo postListItemBean) {
+    private void initContentView(MyViewHolder viewHolder, SubFloorListBean.PostInfo postListItemBean) {
         MyLinearLayout myLinearLayout = viewHolder.getView(R.id.thread_list_item_content_content);
         myLinearLayout.removeAllViews();
         myLinearLayout.addViews(getContentViews(postListItemBean));

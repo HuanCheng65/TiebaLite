@@ -27,6 +27,7 @@ import com.huanchengfly.tieba.post.components.transformations.RadiusTransformati
 import com.huanchengfly.tieba.post.models.ReplyInfoBean
 import com.huanchengfly.tieba.post.utils.AccountUtil
 import com.huanchengfly.tieba.post.utils.ThemeUtil
+import com.scwang.smart.refresh.layout.SmartRefreshLayout
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -34,11 +35,16 @@ import retrofit2.Response
 class FloorFragment : BaseBottomSheetDialogFragment() {
     @BindView(R.id.toolbar)
     lateinit var toolbar: Toolbar
+
     @BindView(R.id.appbar)
     lateinit var appBarLayout: AppBarLayout
     private var dataBean: SubFloorListBean? = null
+
     @BindView(R.id.floor_recycler_view)
     lateinit var recyclerView: RecyclerView
+
+    @BindView(R.id.refresh_layout)
+    lateinit var refreshLayout: SmartRefreshLayout
     private var recyclerViewAdapter: RecyclerFloorAdapter? = null
     private var tid = ""
     private var pid = ""
@@ -52,7 +58,7 @@ class FloorFragment : BaseBottomSheetDialogFragment() {
             if (action != null && action == ThreadActivity.ACTION_REPLY_SUCCESS) {
                 val pid = intent.getStringExtra("pid")
                 if (pid == this@FloorFragment.pid) {
-                    refresh()
+                    refreshLayout.autoRefresh()
                 }
             }
         }
@@ -107,9 +113,11 @@ class FloorFragment : BaseBottomSheetDialogFragment() {
         ThemeUtil.setTranslucentThemeBackground(rootView.findViewById(R.id.background),
                 false,
                 false,
-                RadiusTransformation(
-                        8,
-                        RadiusTransformation.CORNER_TOP_LEFT or RadiusTransformation.CORNER_TOP_RIGHT))
+            RadiusTransformation(
+                8,
+                RadiusTransformation.CORNER_TOP_LEFT or RadiusTransformation.CORNER_TOP_RIGHT
+            )
+        )
         toolbar.apply {
             setTitle(R.string.title_floor)
             setNavigationIcon(R.drawable.ic_round_close)
@@ -117,12 +125,12 @@ class FloorFragment : BaseBottomSheetDialogFragment() {
         }
         appBarLayout.setBackgroundResource(R.drawable.bg_toolbar)
         mLayoutManager = MyLinearLayoutManager(attachContext)
-        recyclerViewAdapter = RecyclerFloorAdapter(attachContext).apply {
-            setLoadingView(R.layout.layout_footer_loading)
-            setLoadEndView(R.layout.layout_footer_loadend)
-            setLoadFailedView(R.layout.layout_footer_load_failed)
-            setOnLoadMoreListener { load(it) }
+        refreshLayout.apply {
+            ThemeUtil.setThemeForSmartRefreshLayout(this)
+            setOnRefreshListener { refresh() }
+            setOnLoadMoreListener { load() }
         }
+        recyclerViewAdapter = RecyclerFloorAdapter(attachContext)
         recyclerView.apply {
             addItemDecoration(ThreadDivider(attachContext))
             layoutManager = mLayoutManager
@@ -130,6 +138,7 @@ class FloorFragment : BaseBottomSheetDialogFragment() {
         }
         if (tid.isNotEmpty() && (pid.isNotEmpty() || !spid.isNullOrEmpty())) {
             refresh(jump)
+            refreshLayout.autoRefreshAnimationOnly()
         }
     }
 
@@ -162,15 +171,16 @@ class FloorFragment : BaseBottomSheetDialogFragment() {
                 .enqueue(object : Callback<SubFloorListBean> {
                     override fun onFailure(call: Call<SubFloorListBean>, t: Throwable) {
                         Toast.makeText(attachContext, t.message, Toast.LENGTH_SHORT).show()
-                        recyclerViewAdapter!!.loadFailed()
+                        refreshLayout.finishRefresh(false)
                     }
 
                     override fun onResponse(call: Call<SubFloorListBean>, response: Response<SubFloorListBean>) {
                         val subFloorListBean = response.body() ?: return
                         dataBean = subFloorListBean
                         recyclerViewAdapter!!.setData(subFloorListBean)
+                        refreshLayout.finishRefresh()
                         if (subFloorListBean.page!!.currentPage.toInt() >= subFloorListBean.page.totalPage.toInt()) {
-                            recyclerViewAdapter!!.loadEnd()
+                            refreshLayout.setNoMoreData(true)
                         }
                         toolbar.title = attachContext.getString(R.string.title_floor_loaded, subFloorListBean.post!!.floor)
                         if (jump) {
@@ -180,26 +190,27 @@ class FloorFragment : BaseBottomSheetDialogFragment() {
                 })
     }
 
-    private fun load(reload: Boolean) {
-        if (!reload) {
-            pn += 1
-        }
+    private fun load() {
         TiebaApi.getInstance()
-                .floor(tid, pn, pid, spid)
-                .enqueue(object : Callback<SubFloorListBean> {
-                    override fun onFailure(call: Call<SubFloorListBean>, t: Throwable) {
-                        recyclerViewAdapter!!.loadFailed()
-                    }
+            .floor(tid, pn, pid, spid)
+            .enqueue(object : Callback<SubFloorListBean> {
+                override fun onFailure(call: Call<SubFloorListBean>, t: Throwable) {
+                    refreshLayout.finishLoadMore(false)
+                }
 
-                    override fun onResponse(call: Call<SubFloorListBean>, response: Response<SubFloorListBean>) {
-                        val subFloorListBean = response.body() ?: return
-                        dataBean = subFloorListBean
-                        recyclerViewAdapter!!.addData(subFloorListBean)
+                override fun onResponse(
+                    call: Call<SubFloorListBean>,
+                    response: Response<SubFloorListBean>
+                ) {
+                    val subFloorListBean = response.body() ?: return
+                    dataBean = subFloorListBean
+                    recyclerViewAdapter!!.addData(subFloorListBean)
+                    refreshLayout.finishLoadMore()
                         if (subFloorListBean.page!!.currentPage.toInt() >= subFloorListBean.page.totalPage.toInt()) {
-                            recyclerViewAdapter!!.loadEnd()
+                            refreshLayout.setNoMoreData(true)
                         }
+                    pn += 1
                     }
-
                 })
     }
 

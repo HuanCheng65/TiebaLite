@@ -21,8 +21,8 @@ if (isPerVersion) {
 project.ext.set("archivesBaseName",  "${applicationVersionName}(${applicationVersionCode})".toString())
 
 android {
-    compileSdkVersion 30
-    buildToolsVersion "30.0.3"
+    compileSdkVersion 31
+    buildToolsVersion '31.0.0'
     defaultConfig {
         applicationId "com.huanchengfly.tieba.post"
         minSdkVersion 21
