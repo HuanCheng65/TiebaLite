@@ -45,7 +45,7 @@ class AboutActivity : BaseActivity() {
                     colorIcon
                 ).setOnClickListener {
                     if (System.currentTimeMillis() - lastClickTime > 2000) {
-                        clickCount = 0
+                        clickCount = 1
                     } else {
                         clickCount++
                     }
@@ -58,6 +58,7 @@ class AboutActivity : BaseActivity() {
                             appPreferences.checkCIUpdate = true
                         }
                     }
+                    lastClickTime = System.currentTimeMillis()
                 }
             )
             .addItem(
