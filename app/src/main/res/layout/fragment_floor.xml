@@ -31,30 +31,37 @@
             app:toolbarBackgroundTint="@color/transparent" />
     </com.huanchengfly.tieba.post.widgets.theme.TintAppBarLayout>
 
-    <com.scwang.smart.refresh.layout.SmartRefreshLayout
-        android:id="@+id/refresh_layout"
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:srlDragRate="0.8"
-        app:srlEnableOverScrollBounce="true"
-        app:srlEnableOverScrollDrag="true"
-        android:layout_marginBottom="@dimen/reply_bar_height"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-        <com.huanchengfly.tieba.post.widgets.theme.TintMaterialHeader
-            android:id="@+id/refresh_header"
+        <com.scwang.smart.refresh.layout.SmartRefreshLayout
+            android:id="@+id/refresh_layout"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            app:srlDragRate="0.8"
+            app:srlEnableOverScrollBounce="true"
+            app:srlEnableOverScrollDrag="true"
+            android:layout_marginBottom="@dimen/reply_bar_height">
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/floor_recycler_view"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            <com.huanchengfly.tieba.post.widgets.theme.TintMaterialHeader
+                android:id="@+id/refresh_header"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
 
-        <com.huanchengfly.tieba.post.components.LoadMoreFooter
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-    </com.scwang.smart.refresh.layout.SmartRefreshLayout>
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/floor_recycler_view"
+                android:overScrollMode="never"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+            <com.huanchengfly.tieba.post.components.LoadMoreFooter
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+        </com.scwang.smart.refresh.layout.SmartRefreshLayout>
+
+    </androidx.core.widget.NestedScrollView>
 
     <com.huanchengfly.tieba.post.widgets.theme.TintConstraintLayout
         android:id="@+id/floor_reply_bar"
