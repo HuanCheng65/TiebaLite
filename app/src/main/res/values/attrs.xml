@@ -87,6 +87,12 @@
         <attr name="itemTextTintList" format="color" />
     </declare-styleable>
 
+    <declare-styleable name="TintNavigationRailView">
+        <attr name="backgroundTint" />
+        <attr name="itemIconTintList" />
+        <attr name="itemTextTintList" />
+    </declare-styleable>
+
     <declare-styleable name="TintToolbar">
         <attr name="toolbarBackgroundTint" format="color" />
         <attr name="itemTint" format="color" />

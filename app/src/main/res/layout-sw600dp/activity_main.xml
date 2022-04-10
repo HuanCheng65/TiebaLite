@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.huanchengfly.tieba.post.widgets.theme.TintCoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/background"
+    app:backgroundTint="@color/default_color_window_background"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activities.MainActivity">
+
+    <com.huanchengfly.tieba.post.widgets.theme.TintNavigationRailView
+        android:id="@+id/navbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:bottomNavigationBackgroundTint="@color/default_color_nav"
+        app:elevation="4dp"
+        app:itemIconTintList="@color/bottom_item_icon_tint_list"
+        app:itemTextTintList="@color/bottom_item_icon_tint_list"
+        app:labelVisibilityMode="unlabeled"
+        app:menu="@menu/navbar_main" />
+
+    <com.huanchengfly.tieba.post.widgets.MyViewPager
+        android:id="@+id/mViewPager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+</com.huanchengfly.tieba.post.widgets.theme.TintCoordinatorLayout>

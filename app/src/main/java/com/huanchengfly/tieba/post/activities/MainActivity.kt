@@ -16,9 +16,8 @@ import android.widget.Toast
 import androidx.viewpager.widget.ViewPager.OnPageChangeListener
 import butterknife.BindView
 import com.google.android.material.bottomnavigation.BottomNavigationItemView
-import com.google.android.material.bottomnavigation.BottomNavigationMenuView
-import com.google.android.material.bottomnavigation.BottomNavigationView
-import com.google.android.material.bottomnavigation.BottomNavigationView.OnNavigationItemReselectedListener
+import com.google.android.material.navigation.NavigationBarMenuView
+import com.google.android.material.navigation.NavigationBarView
 import com.google.android.material.snackbar.Snackbar
 import com.huanchengfly.tieba.post.*
 import com.huanchengfly.tieba.post.adapters.ViewPagerAdapter
@@ -43,15 +42,16 @@ import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*
 
-open class MainActivity : BaseActivity(), BottomNavigationView.OnNavigationItemSelectedListener, OnNavigationItemReselectedListener {
+open class MainActivity : BaseActivity(), NavigationBarView.OnItemSelectedListener,
+    NavigationBarView.OnItemReselectedListener {
     var mAdapter: ViewPagerAdapter = ViewPagerAdapter(supportFragmentManager)
 
     @BindView(R.id.mViewPager)
     lateinit var mViewPager: MyViewPager
 
     @BindView(R.id.navbar)
-    lateinit var mBottomNavigationView: BottomNavigationView
-    private var menuView: BottomNavigationMenuView? = null
+    lateinit var navigationView: NavigationBarView
+    private var menuView: NavigationBarMenuView? = null
 
     private var lastTime: Long = 0
     private val navigationHelper: NavigationHelper = NavigationHelper.newInstance(this)
@@ -68,7 +68,7 @@ open class MainActivity : BaseActivity(), BottomNavigationView.OnNavigationItemS
     public override fun onResume() {
         super.onResume()
         ThemeUtil.setTranslucentThemeBackground(findViewById(R.id.background))
-        mBottomNavigationView.elevation = if (ThemeUtil.isTranslucentTheme(this)) {
+        navigationView.elevation = if (ThemeUtil.isTranslucentTheme(this)) {
             0f
         } else {
             4f.dpToPxFloat()
@@ -107,7 +107,7 @@ open class MainActivity : BaseActivity(), BottomNavigationView.OnNavigationItemS
     }
 
     private fun findView() {
-        menuView = mBottomNavigationView.getChildAt(0) as BottomNavigationMenuView
+        menuView = navigationView.getChildAt(0) as NavigationBarMenuView
     }
 
     protected fun initView() {
@@ -115,7 +115,7 @@ open class MainActivity : BaseActivity(), BottomNavigationView.OnNavigationItemS
         val badge = layoutInflater.inflate(R.layout.layout_badge, hideExploreItemView, true)
         badgeTextView = badge.findViewById(R.id.tv_msg_count)
         if (hideExplore) {
-            mBottomNavigationView.menu.removeItem(R.id.navbar_explore)
+            navigationView.menu.removeItem(R.id.navbar_explore)
         }
         mAdapter.addFragment(MainForumListFragment())
         if (!hideExplore) {
@@ -130,8 +130,8 @@ open class MainActivity : BaseActivity(), BottomNavigationView.OnNavigationItemS
     }
 
     private fun initListener() {
-        mBottomNavigationView.setOnNavigationItemSelectedListener(this)
-        mBottomNavigationView.setOnNavigationItemReselectedListener(this)
+        navigationView.setOnItemSelectedListener(this)
+        navigationView.setOnItemReselectedListener(this)
         mViewPager.addOnPageChangeListener(object : OnPageChangeListener {
             override fun onPageScrolled(
                 position: Int,
@@ -142,7 +142,7 @@ open class MainActivity : BaseActivity(), BottomNavigationView.OnNavigationItemS
 
             @SuppressLint("RestrictedApi")
             override fun onPageSelected(position: Int) {
-                mBottomNavigationView.menu.getItem(position).isChecked = true
+                navigationView.menu.getItem(position).isChecked = true
                 if (position == msgNavPosition) {
                     badgeTextView!!.visibility = View.GONE
                 }
