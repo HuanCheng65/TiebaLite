@@ -138,7 +138,7 @@ dependencies {
     implementation "com.scwang.smart:refresh-layout-kernel:2.0.1"
     implementation "com.scwang.smart:refresh-header-material:2.0.1"
 
-    implementation "com.zhihu.android:matisse:0.5.3-beta3"
+    implementation 'com.github.lwj1994:Matisse:0.5.3-20220115'
     implementation "com.yanzhenjie:permission:2.0.3"
     implementation "com.gyf.immersionbar:immersionbar:3.0.0"
 
