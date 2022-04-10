@@ -186,6 +186,7 @@ class FloorFragment : BaseBottomSheetDialogFragment() {
                         if (jump) {
                             mLayoutManager!!.scrollToPositionWithOffset(1, 0)
                         }
+                        refreshLayout.setEnableRefresh(false)
                     }
                 })
     }
