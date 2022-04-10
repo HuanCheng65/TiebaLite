@@ -488,4 +488,6 @@
     <string name="title_dialog_error_detail">错误详情</string>
     <string name="button_copy_detail">复制详情</string>
     <string name="snackbar_error">出现了一点小问题(%1$d)</string>
+    <string name="toast_ci_version_enabled">已启用接收自动构建版本更新（需要 App Center 账号）</string>
+    <string name="toast_ci_version_disabled">已禁用接收自动构建版本更新（需要 App Center 账号）</string>
 </resources>

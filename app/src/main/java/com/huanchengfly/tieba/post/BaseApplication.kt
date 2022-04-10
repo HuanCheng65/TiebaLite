@@ -41,10 +41,7 @@ import com.huanchengfly.tieba.post.utils.QuickPreviewUtil.isThreadUrl
 import com.microsoft.appcenter.AppCenter
 import com.microsoft.appcenter.analytics.Analytics
 import com.microsoft.appcenter.crashes.Crashes
-import com.microsoft.appcenter.distribute.Distribute
-import com.microsoft.appcenter.distribute.DistributeListener
-import com.microsoft.appcenter.distribute.ReleaseDetails
-import com.microsoft.appcenter.distribute.UpdateAction
+import com.microsoft.appcenter.distribute.*
 import org.intellij.lang.annotations.RegExp
 import org.litepal.LitePal
 import java.util.*
@@ -80,6 +77,7 @@ class BaseApplication : Application(), IApp {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
             setWebViewPath(this)
         }
+        Distribute.setUpdateTrack(if (appPreferences.checkCIUpdate) UpdateTrack.PRIVATE else UpdateTrack.PUBLIC)
         Distribute.setListener(MyDistributeListener())
         AppCenter.start(
             this, "b56debcc-264b-4368-a2cd-8c20213f6433",

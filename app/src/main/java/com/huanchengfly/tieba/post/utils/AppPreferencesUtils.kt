@@ -18,9 +18,8 @@ open class AppPreferencesUtils(context: Context) {
         key = "auto_sign_time"
     )
 
-    var checkBetaUpdate by SharedPreferenceDelegates.boolean(
-        defaultValue = false,
-        key = "check_beta_update"
+    var checkCIUpdate by SharedPreferenceDelegates.boolean(
+        defaultValue = false
     )
 
     var collectThreadSeeLz by SharedPreferenceDelegates.boolean(
