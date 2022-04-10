@@ -20,6 +20,7 @@ import com.alibaba.android.vlayout.layout.LinearLayoutHelper;
 import com.alibaba.android.vlayout.layout.StaggeredGridLayoutHelper;
 import com.bumptech.glide.Glide;
 import com.huanchengfly.tieba.post.BaseApplication;
+import com.huanchengfly.tieba.post.ExtensionsKt;
 import com.huanchengfly.tieba.post.R;
 import com.huanchengfly.tieba.post.activities.ThreadActivity;
 import com.huanchengfly.tieba.post.adapters.base.BaseMultiTypeDelegateAdapter;
@@ -60,7 +61,7 @@ public class NewForumAdapter extends BaseMultiTypeDelegateAdapter<ForumPageBean.
     @NonNull
     @Override
     public LayoutHelper onCreateLayoutHelper() {
-        if (getContext().getResources().getBoolean(R.bool.is_tablet)) {
+        if (ExtensionsKt.isTablet(getContext())) {
             return new StaggeredGridLayoutHelper(2);
         } else {
             return new LinearLayoutHelper();
@@ -86,7 +87,7 @@ public class NewForumAdapter extends BaseMultiTypeDelegateAdapter<ForumPageBean.
 
     private int getMaxWidth() {
         int maxWidth = BaseApplication.ScreenInfo.EXACT_SCREEN_WIDTH - DisplayUtil.dp2px(getContext(), 40);
-        if (getContext().getResources().getBoolean(R.bool.is_tablet)) {
+        if (ExtensionsKt.isTablet(getContext())) {
             return maxWidth / 2;
         }
         return maxWidth;
@@ -94,7 +95,7 @@ public class NewForumAdapter extends BaseMultiTypeDelegateAdapter<ForumPageBean.
 
     private int getGridHeight() {
         int maxWidth = BaseApplication.ScreenInfo.EXACT_SCREEN_WIDTH - DisplayUtil.dp2px(getContext(), 70);
-        if (getContext().getResources().getBoolean(R.bool.is_tablet)) {
+        if (ExtensionsKt.isTablet(getContext())) {
             maxWidth = maxWidth / 2;
         }
         return maxWidth / 3;

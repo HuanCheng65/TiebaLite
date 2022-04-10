@@ -126,7 +126,7 @@ class MainForumListFragment : BaseFragment(), Refreshable, Toolbar.OnMenuItemCli
             appPreferences.listSingle -> {
                 1
             }
-            resources.getBoolean(R.bool.is_tablet) -> {
+            attachContext.isTablet -> {
                 3
             }
             else -> {

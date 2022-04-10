@@ -71,7 +71,7 @@ public class PersonalizedFeedAdapter extends MultiBaseAdapter<PersonalizedBean.T
 
     private int getMaxWidth() {
         int maxWidth = BaseApplication.ScreenInfo.EXACT_SCREEN_WIDTH - DisplayUtil.dp2px(mContext, 56);
-        if (mContext.getResources().getBoolean(R.bool.is_tablet)) {
+        if (ExtensionsKt.isTablet(mContext)) {
             if (ExtensionsKt.isLandscape(mContext.getResources().getConfiguration())) {
                 return maxWidth / 3;
             } else {

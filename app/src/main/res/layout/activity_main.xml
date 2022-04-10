@@ -29,8 +29,8 @@
         android:layout_alignParentBottom="true"
         app:bottomNavigationBackgroundTint="@color/default_color_nav"
         app:elevation="4dp"
-        app:itemIconTintList="@drawable/bottom_item_icon_tint_list"
-        app:itemTextTintList="@drawable/bottom_item_icon_tint_list"
+        app:itemIconTintList="@color/bottom_item_icon_tint_list"
+        app:itemTextTintList="@color/bottom_item_icon_tint_list"
         app:labelVisibilityMode="unlabeled"
         app:menu="@menu/navbar_main" />
 

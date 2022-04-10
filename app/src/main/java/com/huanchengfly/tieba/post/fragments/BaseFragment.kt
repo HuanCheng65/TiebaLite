@@ -12,11 +12,11 @@ import androidx.annotation.CallSuper
 import androidx.fragment.app.Fragment
 import butterknife.ButterKnife
 import butterknife.Unbinder
-import com.huanchengfly.tieba.post.R
 import com.huanchengfly.tieba.post.interfaces.BackHandledInterface
 import com.huanchengfly.tieba.post.interfaces.Refreshable
 import com.huanchengfly.tieba.post.isLandscape
 import com.huanchengfly.tieba.post.isPortrait
+import com.huanchengfly.tieba.post.isTablet
 import com.huanchengfly.tieba.post.utils.AppPreferencesUtils
 import com.huanchengfly.tieba.post.utils.HandleBackUtil
 import kotlinx.coroutines.*
@@ -191,7 +191,7 @@ abstract class BaseFragment : Fragment(), BackHandledInterface, CoroutineScope {
     }
 
     protected val isTablet: Boolean
-        get() = attachContext.resources.getBoolean(R.bool.is_tablet)
+        get() = attachContext.isTablet
 
     protected val isPortrait: Boolean
         get() = attachContext.resources.configuration.isPortrait
