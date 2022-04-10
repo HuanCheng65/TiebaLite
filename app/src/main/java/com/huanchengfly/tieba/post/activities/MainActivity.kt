@@ -15,7 +15,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.viewpager.widget.ViewPager.OnPageChangeListener
 import butterknife.BindView
-import com.google.android.material.bottomnavigation.BottomNavigationItemView
+import com.google.android.material.navigation.NavigationBarItemView
 import com.google.android.material.navigation.NavigationBarMenuView
 import com.google.android.material.navigation.NavigationBarView
 import com.google.android.material.snackbar.Snackbar
@@ -106,12 +106,13 @@ open class MainActivity : BaseActivity(), NavigationBarView.OnItemSelectedListen
         return false
     }
 
+    @SuppressLint("RestrictedApi")
     private fun findView() {
-        menuView = navigationView.getChildAt(0) as NavigationBarMenuView
+        menuView = navigationView.menuView as NavigationBarMenuView
     }
 
     protected fun initView() {
-        val hideExploreItemView = menuView!!.getChildAt(msgNavPosition) as BottomNavigationItemView
+        val hideExploreItemView = menuView!!.getChildAt(msgNavPosition) as NavigationBarItemView
         val badge = layoutInflater.inflate(R.layout.layout_badge, hideExploreItemView, true)
         badgeTextView = badge.findViewById(R.id.tv_msg_count)
         if (hideExplore) {
