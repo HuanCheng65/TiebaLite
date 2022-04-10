@@ -127,6 +127,7 @@ class FloorFragment : BaseBottomSheetDialogFragment() {
         mLayoutManager = MyLinearLayoutManager(attachContext)
         refreshLayout.apply {
             ThemeUtil.setThemeForSmartRefreshLayout(this)
+            setEnableNestedScroll(true)
             setOnRefreshListener { refresh() }
             setOnLoadMoreListener { load() }
         }
@@ -186,6 +187,7 @@ class FloorFragment : BaseBottomSheetDialogFragment() {
                         if (jump) {
                             mLayoutManager!!.scrollToPositionWithOffset(1, 0)
                         }
+                        refreshLayout.setEnableRefresh(false)
                     }
                 })
     }
