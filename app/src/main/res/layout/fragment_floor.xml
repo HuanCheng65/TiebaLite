@@ -34,7 +34,8 @@
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        android:layout_marginBottom="@dimen/reply_bar_height">
 
         <com.scwang.smart.refresh.layout.SmartRefreshLayout
             android:id="@+id/refresh_layout"
@@ -42,8 +43,7 @@
             android:layout_height="match_parent"
             app:srlDragRate="0.8"
             app:srlEnableOverScrollBounce="true"
-            app:srlEnableOverScrollDrag="true"
-            android:layout_marginBottom="@dimen/reply_bar_height">
+            app:srlEnableOverScrollDrag="true">
 
             <com.huanchengfly.tieba.post.widgets.theme.TintMaterialHeader
                 android:id="@+id/refresh_header"
