@@ -3,6 +3,7 @@ package com.huanchengfly.tieba.post.utils;
 import android.content.Context;
 import android.text.Spannable;
 import android.text.SpannableString;
+import android.text.TextPaint;
 import android.text.TextUtils;
 import android.widget.TextView;
 
@@ -32,7 +33,8 @@ public class StringUtil {
                 int start = matcherEmotion.start();
                 int imgRes = EmotionUtil.getImgByName(emotion_map_type, key);
                 if (imgRes != -1) {
-                    int size = (int) tv.getTextSize();
+                    TextPaint paint = tv.getPaint();
+                    int size = Math.round(-paint.ascent() + paint.descent());
                     /*
                     Bitmap bitmap = BitmapFactory.decodeResource(res, imgRes);
                     Bitmap scaleBitmap = Bitmap.createScaledBitmap(bitmap, size, size, true);
