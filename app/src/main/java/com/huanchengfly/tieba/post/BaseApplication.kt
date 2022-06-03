@@ -4,7 +4,6 @@ import android.app.Activity
 import android.app.ActivityManager
 import android.app.Application
 import android.app.Dialog
-import android.content.ClipboardManager
 import android.content.Context
 import android.content.Intent
 import android.content.res.ColorStateList
@@ -87,30 +86,20 @@ class BaseApplication : Application(), IApp {
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
         LitePal.initialize(this)
         registerActivityLifecycleCallbacks(object : ActivityLifecycleCallbacks {
-            private var clipBoardHash: Int = 0
+            private var clipBoardHash: String? = null
             private fun updateClipBoardHashCode() {
                 clipBoardHash = getClipBoardHash()
             }
 
-            private fun getClipBoardHash(): Int {
-                val cm = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
-                val data = cm.primaryClip
-                if (data != null) {
-                    val item = data.getItemAt(0)
-                    return item.hashCode()
-                }
-                return 0
+            private fun getClipBoardHash(): String? {
+                return "$clipBoard $clipBoardTimestamp"
             }
 
-            private val clipBoard: String
-                get() {
-                    val cm = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
-                    val data = cm.primaryClip ?: return ""
-                    val item = data.getItemAt(0)
-                    return if (item == null || item.text == null) {
-                        ""
-                    } else item.text.toString()
-                }
+            private val clipBoard: String?
+                get() = getClipBoardText()
+
+            private val clipBoardTimestamp: Long
+                get() = getClipBoardTimestamp()
 
             private fun isTiebaDomain(host: String?): Boolean {
                 return host != null && (host.equals("wapp.baidu.com", ignoreCase = true) ||
