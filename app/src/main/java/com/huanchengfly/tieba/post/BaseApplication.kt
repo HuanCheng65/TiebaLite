@@ -145,11 +145,12 @@ class BaseApplication : Application(), IApp {
             }
 
             override fun onActivityResumed(activity: Activity) {
-                if (clipBoardHash != getClipBoardHash()) {
+                val clipBoardText = clipBoard
+                if (clipBoardHash != getClipBoardHash() && clipBoardText != null) {
                     @RegExp val regex =
                         "((http|https)://)(([a-zA-Z0-9._-]+\\.[a-zA-Z]{2,6})|([0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}))(:[0-9]{1,4})*(/[a-zA-Z0-9&%_./-~-]*)?"
                     val pattern = Pattern.compile(regex)
-                    val matcher = pattern.matcher(clipBoard)
+                    val matcher = pattern.matcher(clipBoardText)
                     if (matcher.find()) {
                         val url = matcher.group()
                         val uri = Uri.parse(url)
