@@ -57,6 +57,7 @@ class AboutActivity : BaseActivity() {
                             toastShort(R.string.toast_ci_version_enabled)
                             appPreferences.checkCIUpdate = true
                         }
+                        clickCount = 0
                     }
                     lastClickTime = System.currentTimeMillis()
                 }
