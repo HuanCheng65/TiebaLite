@@ -81,6 +81,8 @@ open class AppPreferencesUtils(context: Context) {
         key = "oksign_slow_mode"
     )
 
+    var postOrReplyWarning by SharedPreferenceDelegates.boolean(defaultValue = true)
+
     var radius by SharedPreferenceDelegates.int(defaultValue = 8)
 
     var signDay by SharedPreferenceDelegates.int(defaultValue = -1, key = "sign_day")

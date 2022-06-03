@@ -1,8 +1,11 @@
 package com.huanchengfly.tieba.post.activities
 
 import android.annotation.SuppressLint
+import android.content.ActivityNotFoundException
 import android.content.Intent
+import android.content.Intent.ACTION_VIEW
 import android.graphics.Color
+import android.net.Uri
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextUtils
@@ -41,13 +44,13 @@ import com.huanchengfly.tieba.post.interfaces.UploadCallback
 import com.huanchengfly.tieba.post.models.PhotoInfoBean
 import com.huanchengfly.tieba.post.models.ReplyInfoBean
 import com.huanchengfly.tieba.post.models.database.Draft
+import com.huanchengfly.tieba.post.toastShort
 import com.huanchengfly.tieba.post.utils.*
 import com.huanchengfly.tieba.post.widgets.edittext.widget.UndoableEditText
 import com.huanchengfly.tieba.post.widgets.theme.TintConstraintLayout
 import com.huanchengfly.tieba.post.widgets.theme.TintImageView
 import com.zhihu.matisse.Matisse
 import org.litepal.LitePal.where
-import java.util.*
 
 class ReplyActivity : BaseActivity(), View.OnClickListener {
     @BindView(R.id.activity_reply_edit_text)
@@ -107,6 +110,37 @@ class ReplyActivity : BaseActivity(), View.OnClickListener {
         window.setBackgroundDrawableResource(R.drawable.bg_trans)
         initData()
         initView()
+        if (appPreferences.postOrReplyWarning) showDialog {
+            setTitle(R.string.title_dialog_reply_warning)
+            setMessage(R.string.message_dialog_reply_warning)
+            setNegativeButton(R.string.btn_cancel_reply) { _, _ ->
+                finish()
+            }
+            setNeutralButton(R.string.btn_continue_reply, null)
+            setPositiveButton(R.string.button_official_client_reply) { _, _ ->
+                try {
+                    if (isOfficialClientInstalled()) {
+                        startActivity(Intent(ACTION_VIEW).setData(getDispatchUri()))
+                    } else {
+                        toastShort(R.string.toast_official_client_not_install)
+                    }
+                } catch (e: ActivityNotFoundException) {
+                    toastShort(R.string.toast_official_client_not_install)
+                }
+                finish()
+            }
+        }
+    }
+
+    private fun getDispatchUri(): Uri? {
+        if (replyInfoBean == null) {
+            return null
+        }
+        return if (replyInfoBean!!.pid != null) {
+            Uri.parse("com.baidu.tieba://unidispatch/pb?obj_locate=comment_lzl_cut_guide&obj_source=wise&obj_name=index&obj_param2=chrome&has_token=0&qd=scheme&refer=tieba.baidu.com&wise_sample_id=3000232_2&hightlight_anchor_pid=${replyInfoBean!!.pid}&is_anchor_to_comment=1&comment_sort_type=0&fr=bpush&tid=${replyInfoBean!!.threadId}")
+        } else {
+            Uri.parse("com.baidu.tieba://unidispatch/pb?obj_locate=pb_reply&obj_source=wise&obj_name=index&obj_param2=chrome&has_token=0&qd=scheme&refer=tieba.baidu.com&wise_sample_id=3000232_2-99999_9&fr=bpush&tid=${replyInfoBean!!.threadId}")
+        }
     }
 
     private fun destroyWebView() {

@@ -112,6 +112,12 @@
             android:key="hideHotMessageList"
             android:title="@string/title_hide_hot_message_list" />
 
+        <SwitchPreference
+            android:defaultValue="true"
+            android:icon="@drawable/ic_round_warning"
+            android:key="postOrReplyWarning"
+            android:title="@string/title_post_or_reply_warning" />
+
         <ListPreference
             android:defaultValue="post"
             android:entries="@array/forum_fab_function_name_values"

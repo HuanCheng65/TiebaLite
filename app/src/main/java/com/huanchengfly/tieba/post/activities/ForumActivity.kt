@@ -4,6 +4,7 @@ package com.huanchengfly.tieba.post.activities
 
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
+import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
 import android.content.res.ColorStateList
@@ -60,6 +61,7 @@ import com.huanchengfly.tieba.post.interfaces.Refreshable
 import com.huanchengfly.tieba.post.interfaces.ScrollTopable
 import com.huanchengfly.tieba.post.models.PhotoViewBean
 import com.huanchengfly.tieba.post.models.database.History
+import com.huanchengfly.tieba.post.toastShort
 import com.huanchengfly.tieba.post.ui.animation.addMaskAnimation
 import com.huanchengfly.tieba.post.ui.animation.addZoomAnimation
 import com.huanchengfly.tieba.post.ui.animation.buildPressAnimator
@@ -427,12 +429,35 @@ class ForumActivity : BaseActivity(), View.OnClickListener, OnRefreshedListener,
                         }
                     }
                     else -> {
-                        if ("0" != mDataBean!!.anti?.ifPost) {
-                            NavigationHelper.newInstance(this).navigationByData(NavigationHelper.ACTION_THREAD_POST, forumName)
-                        } else {
-                            if (!TextUtils.isEmpty(mDataBean!!.anti?.forbidInfo)) {
-                                Toast.makeText(this, mDataBean!!.anti?.forbidInfo, Toast.LENGTH_SHORT).show()
+                        if (appPreferences.postOrReplyWarning) {
+                            showDialog {
+                                setTitle(R.string.title_thread_post_recommend)
+                                setMessage(R.string.message_thread_post_recommend)
+                                setNegativeButton(R.string.btn_cancel_post, null)
+                                setNeutralButton(R.string.btn_continue_post) { _, _ ->
+                                    launchPost()
+                                }
+                                setPositiveButton(R.string.button_official_client_post) { _, _ ->
+                                    try {
+                                        if (isOfficialClientInstalled()) {
+                                            startActivity(
+                                                Intent(Intent.ACTION_VIEW).setData(
+                                                    Uri.parse(
+                                                        "com.baidu.tieba://unidispatch/frs?obj_locate=frs_top_diverse&obj_source=wise&obj_name=index&obj_param2=chrome&has_token=0&qd=scheme&refer=tieba.baidu.com&wise_sample_id=3000232_2&fr=bpush&kw=$forumName"
+                                                    )
+                                                )
+                                            )
+                                        } else {
+                                            toastShort(R.string.toast_official_client_not_install)
+                                        }
+                                    } catch (e: ActivityNotFoundException) {
+                                        toastShort(R.string.toast_official_client_not_install)
+                                    }
+                                    finish()
+                                }
                             }
+                        } else {
+                            launchPost()
                         }
                     }
                 }
@@ -475,12 +500,29 @@ class ForumActivity : BaseActivity(), View.OnClickListener, OnRefreshedListener,
 
                                 override fun onResponse(call: Call<LikeForumResultBean>, response: Response<LikeForumResultBean>) {
                                     mDataBean!!.forum?.isLike = "1"
-                                    Toast.makeText(this@ForumActivity, getString(R.string.toast_like_success, response.body()!!.info?.memberSum), Toast.LENGTH_SHORT).show()
+                                    Toast.makeText(
+                                        this@ForumActivity,
+                                        getString(
+                                            R.string.toast_like_success,
+                                            response.body()!!.info?.memberSum
+                                        ),
+                                        Toast.LENGTH_SHORT
+                                    ).show()
                                     refreshHeaderView()
                                     refreshForumInfo()
                                 }
                             })
                 }
+            }
+        }
+    }
+
+    private fun launchPost() {
+        if ("0" != mDataBean!!.anti?.ifPost) {
+            WebViewActivity.launch(this, "https://tieba.baidu.com/mo/q/thread_post?word=$forumName")
+        } else {
+            if (!TextUtils.isEmpty(mDataBean!!.anti?.forbidInfo)) {
+                Toast.makeText(this, mDataBean!!.anti?.forbidInfo, Toast.LENGTH_SHORT).show()
             }
         }
     }

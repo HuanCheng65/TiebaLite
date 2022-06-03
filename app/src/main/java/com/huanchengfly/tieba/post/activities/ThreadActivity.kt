@@ -749,14 +749,16 @@ class ThreadActivity : BaseActivity(), View.OnClickListener, IThreadMenuFragment
         }
     }
 
-    fun invalidateAgreeStatus() {
+    private fun invalidateAgreeStatus() {
         val color = ThemeUtils.getColorByAttr(this, R.attr.colorAccent)
         if (agreeBtn.imageTintList != null) {
             val agreeBtnAnimator: ValueAnimator
             val agreeNumAnimator: ValueAnimator
             if (agree) {
-                agreeNumAnimator = colorAnim(agreeNumTextView, ThemeUtil.getTextColor(this@ThreadActivity), color)
-                agreeBtnAnimator = colorAnim(agreeBtn, ThemeUtil.getTextColor(this@ThreadActivity), color)
+                agreeNumAnimator =
+                    colorAnim(agreeNumTextView, ThemeUtil.getTextColor(this@ThreadActivity), color)
+                agreeBtnAnimator =
+                    colorAnim(agreeBtn, ThemeUtil.getTextColor(this@ThreadActivity), color)
                 agreeNumAnimator.addListener(object : AnimatorListenerAdapter() {
                     override fun onAnimationEnd(animation: Animator) {
                         agreeNumTextView.setTextColor(color)

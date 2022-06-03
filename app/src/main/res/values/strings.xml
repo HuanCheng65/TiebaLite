@@ -401,12 +401,7 @@
     <string name="title_oksign_fail">签到失败</string>
     <string name="text_login_first">请先登录</string>
     <string name="update_tip_loading">正在检查更新</string>
-    <string name="title_thread_post_recommend">建议您使用其他途径发贴</string>
-    <string name="message_thread_post_recommend">继续使用本软件发贴可能会出现发贴失败、发贴被隐藏甚至封号等异常情况，建议您使用官方客户端或 PC 网页版发贴</string>
-    <string name="button_official_client_post">使用官方客户端发贴</string>
     <string name="toast_start_failed">启动失败</string>
-    <string name="button_pc_web_post">使用 PC 网页版发贴</string>
-    <string name="button_lite_post">继续使用本软件发贴</string>
     <string name="permission_name_clipboard_copy">写入剪贴板</string>
     <string name="title_history_thread_user">%1$s的贴子</string>
     <string name="title_history_today">今天早些时候</string>
@@ -490,4 +485,17 @@
     <string name="snackbar_error">出现了一点小问题(%1$d)</string>
     <string name="toast_ci_version_enabled">已启用接收自动构建版本更新（需要 App Center 账号）</string>
     <string name="toast_ci_version_disabled">已禁用接收自动构建版本更新（需要 App Center 账号）</string>
+    <string name="title_thread_post_recommend">建议使用官方途径发贴</string>
+    <string name="message_thread_post_recommend">使用本 App 发贴可能会出现发贴失败、被吞等问题，甚至导致账户永久封禁等严重后果。\n我们建议你使用官方途径进行回贴。</string>
+    <string name="button_official_client_post">使用官方客户端发贴</string>
+    <string name="btn_cancel_post">放弃发贴</string>
+    <string name="btn_continue_post">无视风险，继续发帖</string>
+    <string name="title_dialog_reply_warning">建议使用官方途径回贴</string>
+    <string name="message_dialog_reply_warning">使用本 App 回贴可能会遇到回贴失败、需验证码等问题，甚至导致账户永久封禁等严重后果。\n我们建议你使用官方途径进行回贴。</string>
+    <string name="btn_cancel_reply">放弃回贴</string>
+    <string name="btn_continue_reply">无视风险，继续回贴</string>
+    <string name="button_official_client_reply">使用官方客户端回贴</string>
+    <string name="toast_official_client_not_install">未安装官方版客户端</string>
+    <string name="button_pc_web_post">使用 PC 网页版发贴</string>
+    <string name="title_post_or_reply_warning">发贴回贴风险提示</string>
 </resources>
