@@ -5,6 +5,7 @@ import com.huanchengfly.tieba.post.api.SearchThreadFilter
 import com.huanchengfly.tieba.post.api.SearchThreadOrder
 import com.huanchengfly.tieba.post.api.models.*
 import com.huanchengfly.tieba.post.api.models.web.ForumBean
+import com.huanchengfly.tieba.post.api.models.web.ForumHome
 import com.huanchengfly.tieba.post.api.models.web.HotMessageListBean
 import com.huanchengfly.tieba.post.api.retrofit.ApiResult
 import com.huanchengfly.tieba.post.models.DislikeBean
@@ -109,6 +110,11 @@ interface ITiebaApi {
         postId: String?,
         subPostId: String?
     ): Call<SubFloorListBean>
+
+    fun forumHomeAsync(
+        sortType: Int,
+        page: Int = 0
+    ): Deferred<ApiResult<ForumHome>>
 
     /**
      * 查看用户关注的吧列表

@@ -28,6 +28,23 @@ interface WebTiebaApi {
         @Url url: String
     ): Call<CommonResponse>
 
+    @Headers(
+        "${Header.FORCE_LOGIN}: ${Header.FORCE_LOGIN_TRUE}",
+        "${Header.REFERER}: https://tieba.baidu.com/index/tbwise/forum?source=index",
+        "sec-ch-ua: \".Not/A)Brand\";v=\"99\", \"Microsoft Edge\";v=\"103\", \"Chromium\";v=\"103\"",
+        "sec-ch-ua-mobile: ?1",
+        "sec-ch-ua-platform: Android"
+    )
+    @GET("/mg/o/getForumHome")
+    fun getForumHomeAsync(
+        @Query("st") sortType: Int,
+        @Query("pn") page: Int,
+        @Query("rn") pageSize: Int,
+        @Query("eqid") eqid: String,
+        @Query("refer") refer: String,
+        @retrofit2.http.Header("Cookie") cookie: String?
+    ): Deferred<ApiResult<ForumHome>>
+
     @GET("/mo/q/hotMessage/main")
     fun hotTopicMain(
         @Query("topic_id") topicId: String,

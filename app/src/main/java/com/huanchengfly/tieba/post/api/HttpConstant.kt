@@ -37,6 +37,8 @@ object Header {
     const val ADD_COOKIE = "add_cookie"
     const val ADD_COOKIE_FALSE = "false"
 
+    const val ACCEPT_LANGUAGE = "Accept-Language"
+    const val ACCEPT_LANGUAGE_VALUE = "zh-CN,zh;q=0.9"
     const val COOKIE = "cookie"
     const val HOST = "Host"
     const val ORIGIN = "Origin"

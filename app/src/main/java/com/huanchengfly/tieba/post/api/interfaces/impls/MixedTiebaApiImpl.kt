@@ -9,6 +9,7 @@ import com.huanchengfly.tieba.post.api.SearchThreadOrder
 import com.huanchengfly.tieba.post.api.interfaces.ITiebaApi
 import com.huanchengfly.tieba.post.api.models.*
 import com.huanchengfly.tieba.post.api.models.web.ForumBean
+import com.huanchengfly.tieba.post.api.models.web.ForumHome
 import com.huanchengfly.tieba.post.api.models.web.HotMessageListBean
 import com.huanchengfly.tieba.post.api.retrofit.ApiResult
 import com.huanchengfly.tieba.post.api.retrofit.RetrofitTiebaApi
@@ -67,6 +68,17 @@ object MixedTiebaApiImpl : ITiebaApi {
         threadId: String, page: Int, postId: String?, subPostId: String?
     ): Call<SubFloorListBean> =
         RetrofitTiebaApi.MINI_TIEBA_API.floor(threadId, page, postId, subPostId)
+
+    override fun forumHomeAsync(sortType: Int, page: Int): Deferred<ApiResult<ForumHome>> {
+        return RetrofitTiebaApi.WEB_TIEBA_API.getForumHomeAsync(
+            sortType,
+            page,
+            20,
+            "",
+            "",
+            AccountUtil.getCookie(BaseApplication.instance)
+        )
+    }
 
     override fun userLikeForum(
         uid: String, page: Int
