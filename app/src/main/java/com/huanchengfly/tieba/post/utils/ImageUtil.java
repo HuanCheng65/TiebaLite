@@ -1,6 +1,7 @@
 package com.huanchengfly.tieba.post.utils;
 
 import static com.huanchengfly.tieba.post.utils.FileUtil.FILE_FOLDER;
+import static com.huanchengfly.tieba.post.utils.FileUtil.changeFileExtension;
 
 import android.annotation.SuppressLint;
 import android.content.ContentResolver;
@@ -86,6 +87,36 @@ public class ImageUtil {
     public static final int LOAD_TYPE_NO_RADIUS = 2;
     public static final int LOAD_TYPE_ALWAYS_ROUND = 3;
     public static final String TAG = "ImageUtil";
+
+    private static boolean isGifFile(File file) {
+        try {
+            return isGifFile(new FileInputStream(file));
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    private static boolean isGifFile(FileInputStream inputStream) {
+        try {
+            int[] flags = new int[5];
+            flags[0] = inputStream.read();
+            flags[1] = inputStream.read();
+            flags[2] = inputStream.read();
+            flags[3] = inputStream.read();
+            inputStream.skip(inputStream.available() - 1);
+            flags[4] = inputStream.read();
+            inputStream.close();
+            return flags[0] == 71 && flags[1] == 73 && flags[2] == 70 && flags[3] == 56 && flags[4] == 0x3B;
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
 
     public static File compressImage(Bitmap bitmap, File output, int maxSize) {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -235,6 +266,9 @@ public class ImageUtil {
         }
         new DownloadAsyncTask(context, url, file -> {
             String fileName = URLUtil.guessFileName(url, null, MimeType.JPEG.toString());
+            if (isGifFile(file)) {
+                fileName = changeFileExtension(fileName, "gif");
+            }
             String relativePath = Environment.DIRECTORY_PICTURES + File.separator + FILE_FOLDER;
             if (forShare) {
                 relativePath += File.separator + "shareTemp";
@@ -299,6 +333,7 @@ public class ImageUtil {
                     return;
                 }
                 copyFile(file, destFile);
+                checkGifFile(destFile);
                 if (!forShare) {
                     context.sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.fromFile(new File(destFile.getPath()))));
                     Toast.makeText(context, context.getString(R.string.toast_photo_saved, destFile.getPath()), Toast.LENGTH_SHORT).show();
@@ -307,6 +342,17 @@ public class ImageUtil {
                 }
             }
         }).execute();
+    }
+
+    private static void checkGifFile(File file) {
+        if (isGifFile(file)) {
+            File gifFile = new File(file.getParentFile(), FileUtil.changeFileExtension(file.getName(), "gif"));
+            if (gifFile.exists()) {
+                file.delete();
+            } else {
+                file.renameTo(gifFile);
+            }
+        }
     }
 
     @SuppressLint("StaticFieldLeak")
@@ -554,9 +600,9 @@ public class ImageUtil {
     }
 
     public static class DownloadAsyncTask extends AsyncTask<Void, Integer, File> {
-        private WeakReference<Context> contextWeakReference;
-        private TaskCallback callback;
-        private String url;
+        private final WeakReference<Context> contextWeakReference;
+        private final TaskCallback callback;
+        private final String url;
 
         public DownloadAsyncTask(Context context, String url, TaskCallback callback) {
             this.contextWeakReference = new WeakReference<>(context);

@@ -12,6 +12,7 @@ import android.os.Build;
 import android.os.Environment;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
+import android.text.TextUtils;
 import android.webkit.URLUtil;
 
 import com.huanchengfly.tieba.post.R;
@@ -232,5 +233,17 @@ public class FileUtil {
             e.printStackTrace();
         }
         return false;
+    }
+
+    //修改文件扩展名
+    public static String changeFileExtension(String fileName, String newExtension) {
+        if (TextUtils.isEmpty(fileName)) {
+            return fileName;
+        }
+        int index = fileName.lastIndexOf(".");
+        if (index == -1) {
+            return fileName + newExtension;
+        }
+        return fileName.substring(0, index) + newExtension;
     }
 }
