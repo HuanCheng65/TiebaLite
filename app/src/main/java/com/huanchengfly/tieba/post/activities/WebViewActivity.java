@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.webkit.WebView;
@@ -29,6 +30,13 @@ public class WebViewActivity extends BaseActivity implements OnReceivedTitleList
     private String mUrl;
 
     public static void launch(Context context, String url) {
+        if (url == null) {
+            return;
+        }
+        Uri uri = Uri.parse(url);
+        if (TextUtils.equals(uri.getPath(), "/mo/q/checkurl")) {
+            url = uri.getQueryParameter("url");
+        }
         context.startActivity(newIntent(context, url));
     }
 
