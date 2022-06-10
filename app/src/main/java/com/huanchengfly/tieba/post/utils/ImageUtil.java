@@ -107,7 +107,7 @@ public class ImageUtil {
             inputStream.skip(inputStream.available() - 1);
             flags[4] = inputStream.read();
             inputStream.close();
-            return flags[0] == 71 && flags[1] == 73 && flags[2] == 70 && flags[3] == 56 && flags[4] == 0x3B;
+            return flags[0] == 71 && flags[1] == 73 && flags[2] == 70;
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
