@@ -7,6 +7,7 @@ import android.view.inputmethod.EditorInfo
 import android.widget.EditText
 import androidx.recyclerview.widget.RecyclerView
 import butterknife.BindView
+import cn.dreamtobe.kpswitch.util.KeyboardUtil
 import com.google.android.material.textfield.TextInputLayout
 import com.huanchengfly.tieba.post.R
 import com.huanchengfly.tieba.post.adapters.SearchPostAdapter
@@ -62,6 +63,9 @@ class SearchPostActivity : BaseActivity() {
         keyword = intent.getStringExtra(PARAM_KEYWORD)
         if (keyword != null) {
             editText.setText(keyword)
+        }
+        editText.post {
+            KeyboardUtil.showKeyboard(editText)
         }
     }
 
