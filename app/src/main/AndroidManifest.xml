@@ -26,11 +26,6 @@
     <uses-permission android:name="com.miui.personalassistant.permission.FAVORITE" />
     <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS" />
 
-    <queries>
-        <package android:name="com.baidu.tieba" />
-        <package android:name="com.baidu.tieba_mini" />
-    </queries>
-
     <supports-screens
         android:anyDensity="true"
         android:largeScreens="true"
@@ -49,6 +44,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
+        android:dataExtractionRules="@xml/data_extraction_rules"
         tools:ignore="UnusedAttribute">
         <activity
             android:name=".activities.AppFontSizeActivity"
