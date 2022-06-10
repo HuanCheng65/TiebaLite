@@ -15,6 +15,7 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.os.Process
+import android.util.Log
 import android.view.View
 import android.webkit.WebView
 import android.widget.FrameLayout
@@ -125,7 +126,7 @@ class BaseApplication : Application(), IApp {
                         iconView.setImageResource(data.icon!!.res)
                         val iconLayoutParams = iconView.layoutParams as FrameLayout.LayoutParams
                         run {
-                            iconLayoutParams.height = 24f.pxToDp()
+                            iconLayoutParams.height = 24f.dpToPx()
                             iconLayoutParams.width = iconLayoutParams.height
                         }
                         iconView.layoutParams = iconLayoutParams
@@ -135,7 +136,7 @@ class BaseApplication : Application(), IApp {
                         ImageUtil.load(iconView, ImageUtil.LOAD_TYPE_AVATAR, data.icon!!.url)
                         val avatarLayoutParams = iconView.layoutParams as FrameLayout.LayoutParams
                         run {
-                            avatarLayoutParams.height = 40f.pxToDp()
+                            avatarLayoutParams.height = 24f.dpToPx()
                             avatarLayoutParams.width = avatarLayoutParams.height
                         }
                         iconView.layoutParams = avatarLayoutParams
@@ -145,7 +146,15 @@ class BaseApplication : Application(), IApp {
             }
 
             override fun onActivityResumed(activity: Activity) {
+                activity.window.decorView.post { checkClipBoard(activity) }
+            }
+
+            private fun checkClipBoard(activity: Activity) {
                 val clipBoardText = clipBoard
+                Log.i(
+                    TAG,
+                    "checkClipBoard: ${activity.clipBoardManager.hasPrimaryClip()} $clipBoardText $clipBoardHash ${getClipBoardHash()}"
+                )
                 if (clipBoardHash != getClipBoardHash() && clipBoardText != null) {
                     @RegExp val regex =
                         "((http|https)://)(([a-zA-Z0-9._-]+\\.[a-zA-Z]{2,6})|([0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}))(:[0-9]{1,4})*(/[a-zA-Z0-9&%_./-~-]*)?"
@@ -164,11 +173,13 @@ class BaseApplication : Application(), IApp {
                                         .setSubtitle(activity.getString(R.string.text_loading))
                                         .setUrl(url))
                             } else if (isThreadUrl(uri)) {
-                                updatePreviewView(activity, previewView, PreviewInfo()
+                                updatePreviewView(
+                                    activity, previewView, PreviewInfo()
                                         .setIconRes(R.drawable.ic_round_mode_comment)
                                         .setTitle(url)
                                         .setSubtitle(activity.getString(R.string.text_loading))
-                                        .setUrl(url))
+                                        .setUrl(url)
+                                )
                             }
                             getPreviewInfo(activity, url, object : CommonCallback<PreviewInfo> {
                                 override fun onSuccess(data: PreviewInfo) {
@@ -176,23 +187,27 @@ class BaseApplication : Application(), IApp {
                                 }
 
                                 override fun onFailure(code: Int, error: String) {
-                                    updatePreviewView(activity, previewView, PreviewInfo()
+                                    updatePreviewView(
+                                        activity, previewView, PreviewInfo()
                                             .setUrl(url)
                                             .setTitle(url)
                                             .setSubtitle(activity.getString(R.string.subtitle_link))
-                                            .setIconRes(R.drawable.ic_link))
+                                            .setIconRes(R.drawable.ic_link)
+                                    )
                                 }
                             })
                             DialogUtil.build(activity)
-                                    .setTitle(R.string.title_dialog_clip_board_tieba_url)
-                                    .setPositiveButton(R.string.button_yes) { _, _ ->
-                                        startActivity(Intent("com.huanchengfly.tieba.post.ACTION_JUMP", uri)
-                                                .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                                                .addCategory(Intent.CATEGORY_DEFAULT))
-                                    }
-                                    .setView(previewView)
-                                    .setNegativeButton(R.string.button_no, null)
-                                    .show()
+                                .setTitle(R.string.title_dialog_clip_board_tieba_url)
+                                .setPositiveButton(R.string.button_yes) { _, _ ->
+                                    startActivity(
+                                        Intent("com.huanchengfly.tieba.post.ACTION_JUMP", uri)
+                                            .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                                            .addCategory(Intent.CATEGORY_DEFAULT)
+                                    )
+                                }
+                                .setView(previewView)
+                                .setNegativeButton(R.string.button_no, null)
+                                .show()
                         }
                     }
                 }

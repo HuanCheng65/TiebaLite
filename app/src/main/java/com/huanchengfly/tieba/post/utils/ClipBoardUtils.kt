@@ -4,7 +4,7 @@ import android.content.ClipboardManager
 import android.content.Context
 import android.os.Build
 
-private val Context.clipBoardManager
+val Context.clipBoardManager
     get() = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
 
 fun Context.getClipBoardHtmlText(): String? {
@@ -16,7 +16,7 @@ fun Context.getClipBoardHtmlText(): String? {
 fun Context.getClipBoardText(): String? {
     val data = clipBoardManager.primaryClip ?: return null
     val item = data.getItemAt(0)
-    return item?.coerceToText(this)?.toString()
+    return item?.text?.toString()
 }
 
 fun Context.getClipBoardTimestamp(): Long {
