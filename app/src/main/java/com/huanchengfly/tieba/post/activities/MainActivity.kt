@@ -19,17 +19,17 @@ import com.google.android.material.navigation.NavigationBarItemView
 import com.google.android.material.navigation.NavigationBarMenuView
 import com.google.android.material.navigation.NavigationBarView
 import com.google.android.material.snackbar.Snackbar
-import com.huanchengfly.tieba.post.*
+import com.huanchengfly.tieba.post.BaseApplication
+import com.huanchengfly.tieba.post.R
 import com.huanchengfly.tieba.post.adapters.ViewPagerAdapter
 import com.huanchengfly.tieba.post.api.Error
-import com.huanchengfly.tieba.post.api.LiteApi
 import com.huanchengfly.tieba.post.api.interfaces.CommonCallback
-import com.huanchengfly.tieba.post.api.retrofit.doIfFailure
-import com.huanchengfly.tieba.post.api.retrofit.doIfSuccess
+import com.huanchengfly.tieba.post.dpToPxFloat
 import com.huanchengfly.tieba.post.fragments.MainForumListFragment
 import com.huanchengfly.tieba.post.fragments.MessageFragment
 import com.huanchengfly.tieba.post.fragments.MyInfoFragment
 import com.huanchengfly.tieba.post.fragments.PersonalizedFeedFragment
+import com.huanchengfly.tieba.post.goToActivity
 import com.huanchengfly.tieba.post.interfaces.Refreshable
 import com.huanchengfly.tieba.post.models.MyInfoBean
 import com.huanchengfly.tieba.post.services.NotifyJobService
@@ -37,8 +37,6 @@ import com.huanchengfly.tieba.post.utils.*
 import com.huanchengfly.tieba.post.widgets.MyViewPager
 import com.microsoft.appcenter.crashes.Crashes
 import com.microsoft.appcenter.distribute.Distribute
-import kotlinx.coroutines.Dispatchers.IO
-import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -181,16 +179,9 @@ open class MainActivity : BaseActivity(), NavigationBarView.OnItemSelectedListen
                     showDialog {
                         setTitle(R.string.title_dialog_crash)
                         setMessage(R.string.message_dialog_crash)
-                        setPositiveButton(R.string.button_copy_crash_link) { _, _ ->
-                            launch(IO + job) {
-                                LiteApi.instance.pastebinAsync(
-                                    "崩溃报告 ${
-                                        formatDateTime(
-                                            "yyyy-MM-dd HH:mm:ss",
-                                            it.appErrorTime.time
-                                        )
-                                    }",
-                                    """
+                        setPositiveButton(R.string.button_copy_crash) { _, _ ->
+                            TiebaUtil.copyText(
+                                this@MainActivity, """
                                         App 版本：${device.appVersion}
                                         系统版本：${device.osVersion}
                                         机型：${device.oemName} ${device.model}
@@ -198,13 +189,9 @@ open class MainActivity : BaseActivity(), NavigationBarView.OnItemSelectedListen
                                         崩溃：
                                         ${it.stackTrace}
                                     """.trimIndent()
-                                ).doIfSuccess {
-                                    TiebaUtil.copyText(this@MainActivity, it)
-                                }.doIfFailure {
-                                    toastShort(R.string.toast_get_link_failed)
-                                }
-                            }
+                            )
                         }
+                        setNegativeButton(R.string.button_cancel, null)
                     }
                 }
             }

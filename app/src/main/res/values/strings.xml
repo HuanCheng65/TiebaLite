@@ -503,4 +503,5 @@
     <string name="summary_battery_optimization_old_android_version">旧版 Android 无“电池优化”</string>
     <string name="summary_battery_optimization_ignored">“电池优化”已忽略</string>
     <string name="toast_ignore_battery_optimization_already">已忽略电池优化</string>
+    <string name="button_copy_crash">复制崩溃报告</string>
 </resources>
