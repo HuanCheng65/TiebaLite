@@ -41,9 +41,22 @@ interface WebTiebaApi {
         @Query("pn") page: Int,
         @Query("rn") pageSize: Int,
         @Query("eqid") eqid: String,
-        @Query("refer") refer: String,
-        @retrofit2.http.Header("Cookie") cookie: String?
+        @Query("refer") refer: String
     ): Deferred<ApiResult<ForumHome>>
+
+    @Headers(
+        "${Header.FORCE_LOGIN}: ${Header.FORCE_LOGIN_TRUE}",
+        "${Header.REFERER}: https://tieba.baidu.com/index/tbwise/mine?source=index",
+        "sec-ch-ua: \".Not/A)Brand\";v=\"99\", \"Microsoft Edge\";v=\"103\", \"Chromium\";v=\"103\"",
+        "sec-ch-ua-mobile: ?1",
+        "sec-ch-ua-platform: Android"
+    )
+    @GET("/mg/o/profile")
+    fun myProfileAsync(
+        @Query("format") format: String,
+        @Query("eqid") eqid: String,
+        @Query("refer") refer: String
+    ): Deferred<ApiResult<Profile>>
 
     @GET("/mo/q/hotMessage/main")
     fun hotTopicMain(
@@ -117,6 +130,7 @@ interface WebTiebaApi {
     fun myInfoAsync(
         @retrofit2.http.Header("cookie") cookie: String
     ): Deferred<ApiResult<MyInfoBean>>
+
 
     @GET("/mo/q/search/forum")
     fun searchForum(

@@ -7,6 +7,7 @@ import com.huanchengfly.tieba.post.api.models.*
 import com.huanchengfly.tieba.post.api.models.web.ForumBean
 import com.huanchengfly.tieba.post.api.models.web.ForumHome
 import com.huanchengfly.tieba.post.api.models.web.HotMessageListBean
+import com.huanchengfly.tieba.post.api.models.web.Profile
 import com.huanchengfly.tieba.post.api.retrofit.ApiResult
 import com.huanchengfly.tieba.post.models.DislikeBean
 import com.huanchengfly.tieba.post.models.MyInfoBean
@@ -111,6 +112,12 @@ interface ITiebaApi {
         subPostId: String?
     ): Call<SubFloorListBean>
 
+    /**
+     * 获取首页关注吧列表（网页版接口）
+     *
+     * @param sortType 排序方式（0 = 等级排序，1 = 关注顺序）
+     * @param page 分页页码（从 0 开始）
+     */
     fun forumHomeAsync(
         sortType: Int,
         page: Int = 0
@@ -171,6 +178,11 @@ interface ITiebaApi {
     fun profile(
         uid: String
     ): Call<ProfileBean>
+
+    /**
+     * 用户信息（异步）
+     */
+    fun myProfileAsync(): Deferred<ApiResult<Profile>>
 
     /**
      * 取关一个吧
