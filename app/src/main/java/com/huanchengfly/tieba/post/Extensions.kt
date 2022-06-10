@@ -2,11 +2,13 @@ package com.huanchengfly.tieba.post
 
 import android.animation.LayoutTransition
 import android.app.Activity
+import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.content.res.ColorStateList
 import android.content.res.Configuration
 import android.content.res.Configuration.SCREENLAYOUT_SIZE_MASK
+import android.os.Build
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
@@ -104,3 +106,19 @@ val Configuration.isTablet: Boolean
 
 val Context.isTablet: Boolean
     get() = resources.configuration.isTablet
+
+fun pendingIntentFlagMutable(): Int {
+    return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+        PendingIntent.FLAG_MUTABLE
+    } else {
+        0
+    }
+}
+
+fun pendingIntentFlagImmutable(): Int {
+    return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+        PendingIntent.FLAG_IMMUTABLE
+    } else {
+        0
+    }
+}

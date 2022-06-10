@@ -25,6 +25,8 @@ abstract class IOKSigner(
 
     abstract suspend fun start(): Boolean
 
+    abstract suspend fun startSync(): Boolean
+
     suspend fun sign(signDataBean: SignDataBean): ApiResult<SignResultBean> {
         return TiebaApi.getInstance()
             .signAsync(signDataBean.forumName, signDataBean.tbs)
@@ -98,10 +100,48 @@ class SingleAccountSigner(
     private var successCount = 0
     private var totalCount = 0
 
+    var lastFailure: Throwable? = null
+
     private var mProgressListener: ProgressListener? = null
 
     fun setProgressListener(listener: ProgressListener?) {
         mProgressListener = listener
+    }
+
+    override suspend fun startSync(): Boolean {
+        var result = false
+        signData.clear()
+        var userName: String by Delegates.notNull()
+        var tbs: String by Delegates.notNull()
+        AccountUtil.updateUserInfoAsync(coroutineScope, account.bduss)
+            .await()
+            .fetchIfSuccess {
+                userName = it.data.name
+                tbs = it.data.itbTbs
+                TiebaApi.getInstance().forumRecommendAsync().getData()
+            }
+            .doIfSuccess { forumRecommend ->
+                signData.addAll(forumRecommend.likeForum.filter { it.isSign != "1" }
+                    .map { SignDataBean(it.forumName, userName, tbs) })
+                totalCount = signData.size
+                mProgressListener?.onStart(totalCount)
+                if (signData.isNotEmpty()) {
+                    result = sign(0)
+                } else {
+                    mProgressListener?.onFinish(true, 0, 0)
+                }
+            }
+            .doIfFailure {
+                lastFailure = it
+                mProgressListener?.onFailure(
+                    0,
+                    0,
+                    it.getErrorCode(),
+                    it.getErrorMessage()
+                )
+                throw it
+            }
+        return result
     }
 
     override suspend fun start(): Boolean {
@@ -128,6 +168,7 @@ class SingleAccountSigner(
                 }
             }
             .doIfFailure {
+                lastFailure = it
                 mProgressListener?.onFailure(
                     0,
                     0,

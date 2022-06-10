@@ -6,7 +6,7 @@ import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
-import android.os.*
+import android.os.Build
 import android.widget.Toast
 import androidx.core.app.NotificationCompat
 import com.huanchengfly.tieba.post.R
@@ -14,11 +14,17 @@ import com.huanchengfly.tieba.post.activities.LoginActivity
 import com.huanchengfly.tieba.post.activities.MainActivity
 import com.huanchengfly.tieba.post.api.models.SignResultBean
 import com.huanchengfly.tieba.post.models.SignDataBean
+import com.huanchengfly.tieba.post.pendingIntentFlagImmutable
 import com.huanchengfly.tieba.post.ui.theme.utils.ThemeUtils
-import com.huanchengfly.tieba.post.utils.*
-import kotlinx.coroutines.*
+import com.huanchengfly.tieba.post.utils.AccountUtil
+import com.huanchengfly.tieba.post.utils.ProgressListener
+import com.huanchengfly.tieba.post.utils.SingleAccountSigner
+import com.huanchengfly.tieba.post.utils.addFlag
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers.Main
-import java.util.*
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.runBlocking
 import kotlin.coroutines.CoroutineContext
 
 class OKSignService : IntentService(TAG), CoroutineScope, ProgressListener {
@@ -54,13 +60,15 @@ class OKSignService : IntentService(TAG), CoroutineScope, ProgressListener {
 
     private fun updateNotification(title: String, text: String, intent: Intent) {
         manager.notify(1,
-                buildNotification(title, text)
-                        .setContentIntent(PendingIntent.getActivity(this, 0, intent,
-                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                                    PendingIntent.FLAG_IMMUTABLE
-                                } else {
-                                    0
-                                }))
+            buildNotification(title, text)
+                .setContentIntent(
+                    PendingIntent.getActivity(
+                        this,
+                        0,
+                        intent,
+                        pendingIntentFlagImmutable()
+                    )
+                )
                         .build())
     }
 

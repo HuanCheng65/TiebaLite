@@ -16,6 +16,7 @@ import com.huanchengfly.tieba.post.activities.MessageActivity
 import com.huanchengfly.tieba.post.api.TiebaApi
 import com.huanchengfly.tieba.post.api.models.MsgBean
 import com.huanchengfly.tieba.post.fragments.MessageFragment
+import com.huanchengfly.tieba.post.pendingIntentFlagImmutable
 import com.huanchengfly.tieba.post.ui.theme.utils.ThemeUtils
 import retrofit2.Call
 import retrofit2.Callback
@@ -104,14 +105,10 @@ class NotifyJobService : JobService() {
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT)
                 .setContentIntent(
                         PendingIntent.getActivity(
-                                this,
-                                0,
-                                intent,
-                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                                    PendingIntent.FLAG_IMMUTABLE
-                                } else {
-                                    0
-                                }
+                            this,
+                            0,
+                            intent,
+                            pendingIntentFlagImmutable()
                         )
                 )
                 .setColor(ThemeUtils.getColorByAttr(this, R.attr.colorPrimary))

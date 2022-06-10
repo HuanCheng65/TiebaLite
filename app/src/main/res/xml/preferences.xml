@@ -229,6 +229,12 @@
             android:title="@string/title_auto_sign_time" />
 
         <Preference
+            android:icon="@drawable/ic_round_battery_alert"
+            android:key="ignore_battery_optimization"
+            android:summary="@string/summary_ignore_battery_optimization"
+            android:title="@string/title_ignore_battery_optimization" />
+
+        <Preference
             android:layout="@layout/layout_preference_dense"
             android:summary="@string/tip_auto_sign" />
 

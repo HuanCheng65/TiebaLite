@@ -27,7 +27,7 @@ android {
         applicationId "com.huanchengfly.tieba.post"
         minSdkVersion 21
         //noinspection OldTargetApi
-        targetSdkVersion 30
+        targetSdkVersion 31
         versionCode applicationVersionCode
         versionName applicationVersionName
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -64,7 +64,6 @@ android {
     }
     kotlinOptions {
         jvmTarget = '1.8'
-        useIR = true
     }
     packagingOptions {
         resources {
@@ -74,11 +73,11 @@ android {
 }
 
 dependencies {
-    implementation "org.jetbrains:annotations:19.0.0"
+    implementation 'org.jetbrains:annotations:23.0.0'
 
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
-    api "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.5.2"
-    api "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.2"
+    api 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.2'
+    api 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.2'
 
     implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.3.1'
 
@@ -126,13 +125,13 @@ dependencies {
     implementation "com.squareup.retrofit2:retrofit:$retrofit_version"
     implementation "com.squareup.retrofit2:converter-gson:$retrofit_version"
 
-    implementation "com.google.code.gson:gson:2.8.7"
+    implementation 'com.google.code.gson:gson:2.9.0'
     implementation "cn.dreamtobe.kpswitch:library:1.6.2"
     implementation "org.litepal.android:kotlin:3.0.0"
     implementation "com.github.SheHuan:RecyclerViewAdapter:1.2.9"
     implementation "com.davemorrissey.labs:subsampling-scale-image-view-androidx:3.10.0"
     implementation "com.bm.photoview:library:2.0.7"
-    implementation "cn.jzvd:jiaozivideoplayer:7.7.0"
+    implementation 'cn.jzvd:jiaozivideoplayer:7.7.2.3300'
     implementation "com.jrummyapps:colorpicker:2.1.7"
 
     implementation "com.scwang.smart:refresh-layout-kernel:2.0.1"
@@ -149,11 +148,11 @@ dependencies {
     implementation "com.jakewharton:butterknife:10.2.3"
     kapt "com.jakewharton:butterknife-compiler:10.2.3"
 
-    implementation ("com.alibaba.android:vlayout:1.2.31@aar") {
+    implementation ('com.alibaba.android:vlayout:1.3.0@aar') {
         transitive = true
     }
 
-    def appCenterSdkVersion = '4.3.1'
+    def appCenterSdkVersion = '4.4.3'
     implementation "com.microsoft.appcenter:appcenter-analytics:${appCenterSdkVersion}"
     implementation "com.microsoft.appcenter:appcenter-crashes:${appCenterSdkVersion}"
     implementation "com.microsoft.appcenter:appcenter-distribute:${appCenterSdkVersion}"

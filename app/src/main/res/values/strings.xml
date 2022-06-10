@@ -201,7 +201,7 @@
     <string name="summary_auto_sign">开启后，将每天定时运行一键签到</string>
     <string name="summary_auto_sign_on">自动签到已开启</string>
     <string name="summary_auto_sign_time">当前设置为 %1$s</string>
-    <string name="tip_auto_sign">提示：请您允许贴吧 Lite 的自启动，否则可能无法正常唤醒签到。</string>
+    <string name="tip_auto_sign">提示：请允许贴吧 Lite 的自启动，否则可能无法正常唤醒签到。\n若使用的是 MIUI 等国产定制 UI，你还需要在系统设置中进行相应修改。</string>
     <string name="update_tip_no_content">点击查看完整更新日志</string>
     <string name="title_forum">%1$s吧</string>
     <string name="menu_edit_info">编辑资料</string>
@@ -498,4 +498,9 @@
     <string name="toast_official_client_not_install">未安装官方版客户端</string>
     <string name="button_pc_web_post">使用 PC 网页版发贴</string>
     <string name="title_post_or_reply_warning">发贴回贴风险提示</string>
+    <string name="summary_ignore_battery_optimization">请忽略“电池优化”以允许应用启动自动签到</string>
+    <string name="title_ignore_battery_optimization">忽略“电池优化”</string>
+    <string name="summary_battery_optimization_old_android_version">旧版 Android 无“电池优化”</string>
+    <string name="summary_battery_optimization_ignored">“电池优化”已忽略</string>
+    <string name="toast_ignore_battery_optimization_already">已忽略电池优化</string>
 </resources>

@@ -1,5 +1,7 @@
 package com.huanchengfly.tieba.post.utils;
 
+import static com.huanchengfly.tieba.post.ExtensionsKt.pendingIntentFlagMutable;
+
 import android.annotation.SuppressLint;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
@@ -114,7 +116,7 @@ public class CrashUtil {
                     context.getApplicationContext(),
                     0,
                     intent,
-                    0
+                    pendingIntentFlagMutable()
             );
             mAlarmManager.set(AlarmManager.RTC, System.currentTimeMillis() + 1000,
                     restartIntent);

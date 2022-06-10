@@ -1,10 +1,14 @@
 package com.huanchengfly.tieba.post.fragments
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.os.PowerManager
+import android.provider.Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS
 import android.view.View
 import android.widget.Toast
 import androidx.core.content.ContextCompat
@@ -20,15 +24,27 @@ import com.huanchengfly.tieba.post.components.prefs.TimePickerPreference
 import com.huanchengfly.tieba.post.fragments.preference.PreferencesFragment
 import com.huanchengfly.tieba.post.models.database.Account
 import com.huanchengfly.tieba.post.models.database.Block
+import com.huanchengfly.tieba.post.toastShort
 import com.huanchengfly.tieba.post.ui.theme.utils.ThemeUtils
 import com.huanchengfly.tieba.post.utils.*
-import java.util.*
 
 class SettingsFragment : PreferencesFragment() {
     private var loginInfo: Account? = null
     override fun onResume() {
         super.onResume()
         refresh()
+    }
+
+    //忽略电池优化
+    private fun ignoreBatteryOptimization() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            val powerManager = attachContext.getSystemService(Context.POWER_SERVICE) as PowerManager
+            if (!powerManager.isIgnoringBatteryOptimizations(attachContext.packageName)) {
+                val intent = Intent(ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS)
+                intent.data = Uri.parse("package:${attachContext.packageName}")
+                startActivity(intent)
+            }
+        }
     }
 
     private fun refresh() {
@@ -56,23 +72,62 @@ class SettingsFragment : PreferencesFragment() {
         preferenceManager.sharedPreferencesName = "settings"
         addPreferencesFromResource(R.xml.preferences)
         val accountsPreference = findPreference<ListPreference>("switch_account")
-        accountsPreference!!.onPreferenceChangeListener = Preference.OnPreferenceChangeListener { _: Preference?, newValue: Any? ->
-            if (AccountUtil.switchUser(attachContext, Integer.valueOf((newValue as String?)!!))) {
-                refresh()
-                Toast.makeText(attachContext, R.string.toast_switch_success, Toast.LENGTH_SHORT).show()
+        accountsPreference!!.onPreferenceChangeListener =
+            Preference.OnPreferenceChangeListener { _: Preference?, newValue: Any? ->
+                if (AccountUtil.switchUser(
+                        attachContext,
+                        Integer.valueOf((newValue as String?)!!)
+                    )
+                ) {
+                    refresh()
+                    Toast.makeText(attachContext, R.string.toast_switch_success, Toast.LENGTH_SHORT)
+                        .show()
+                }
+                false
             }
-            false
-        }
-        findPreference<Preference>("copy_bduss")!!.onPreferenceClickListener = Preference.OnPreferenceClickListener {
-            val account = AccountUtil.getLoginInfo(attachContext)
-            if (account != null) {
-                TiebaUtil.copyText(attachContext, account.bduss)
+        findPreference<Preference>("ignore_battery_optimization")?.let {
+            val powerManager = attachContext.getSystemService(Context.POWER_SERVICE) as PowerManager
+            it.onPreferenceClickListener = Preference.OnPreferenceClickListener {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    if (!powerManager.isIgnoringBatteryOptimizations(attachContext.packageName)) {
+                        ignoreBatteryOptimization()
+                    } else {
+                        attachContext.toastShort(R.string.toast_ignore_battery_optimization_already)
+                    }
+                }
+                true
             }
-            true
+            it.isEnabled =
+                Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !powerManager.isIgnoringBatteryOptimizations(
+                    attachContext.packageName
+                )
+            it.setSummaryProvider {
+                when {
+                    Build.VERSION.SDK_INT < Build.VERSION_CODES.M -> {
+                        attachContext.getString(R.string.summary_battery_optimization_old_android_version)
+                    }
+                    powerManager.isIgnoringBatteryOptimizations(attachContext.packageName) -> {
+                        attachContext.getString(R.string.summary_battery_optimization_ignored)
+                    }
+                    else -> {
+                        attachContext.getString(R.string.summary_ignore_battery_optimization)
+                    }
+                }
+            }
         }
-        findPreference<Preference>("exit_account")!!.isEnabled = AccountUtil.isLoggedIn(attachContext)
-        findPreference<Preference>("exit_account")!!.onPreferenceClickListener = Preference.OnPreferenceClickListener {
-            DialogUtil.build(attachContext)
+        findPreference<Preference>("copy_bduss")!!.onPreferenceClickListener =
+            Preference.OnPreferenceClickListener {
+                val account = AccountUtil.getLoginInfo(attachContext)
+                if (account != null) {
+                    TiebaUtil.copyText(attachContext, account.bduss)
+                }
+                true
+            }
+        findPreference<Preference>("exit_account")!!.isEnabled =
+            AccountUtil.isLoggedIn(attachContext)
+        findPreference<Preference>("exit_account")!!.onPreferenceClickListener =
+            Preference.OnPreferenceClickListener {
+                DialogUtil.build(attachContext)
                     .setMessage(R.string.title_dialog_exit_account)
                     .setPositiveButton(R.string.button_sure_default) { _: DialogInterface?, _: Int ->
                         AccountUtil.exit(attachContext)

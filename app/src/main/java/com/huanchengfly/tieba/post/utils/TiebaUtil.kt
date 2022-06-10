@@ -12,6 +12,7 @@ import com.huanchengfly.tieba.post.activities.WebViewActivity
 import com.huanchengfly.tieba.post.api.TiebaApi
 import com.huanchengfly.tieba.post.api.models.CheckReportBean
 import com.huanchengfly.tieba.post.components.dialogs.LoadingDialog
+import com.huanchengfly.tieba.post.pendingIntentFlagImmutable
 import com.huanchengfly.tieba.post.receivers.AutoSignAlarm
 import com.huanchengfly.tieba.post.services.OKSignService
 import com.huanchengfly.tieba.post.toastShort
@@ -41,11 +42,7 @@ object TiebaUtil {
             context,
             0,
             Intent(context, AutoSignAlarm::class.java),
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                PendingIntent.FLAG_IMMUTABLE
-            } else {
-                0
-            }
+            pendingIntentFlagImmutable()
         )
         if (autoSign) {
             val autoSignTimeStr = context.appPreferences.autoSignTime!!
