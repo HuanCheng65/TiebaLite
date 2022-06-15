@@ -409,7 +409,7 @@
     <string name="text_badge_history_forum">贴吧</string>
     <string name="title_history_thread">贴子记录</string>
     <string name="title_history_forum">经过贴吧</string>
-    <string name="tip_thread_item_thread">发布于 %1$s</string>
+    <string name="tip_thread_item_thread">%1$s 来自 %2$s</string>
     <string name="title_all_reply">全部</string>
     <string name="title_thread_header">回复 %1$s</string>
     <string name="btn_agree_post">%1$s 赞</string>
@@ -521,4 +521,5 @@
     <string name="usage_webview_location_permission">用于向当前访问的网页提供你的位置信息，以便该网页向你提供相关服务。</string>
     <string name="title_hide_forum_intro_and_stat">精简吧页面</string>
     <string name="summary_hide_forum_intro_and_stat">开启后将隐藏吧页面的吧简介和数据（仍然可以通过“关于本吧”查看这些内容）</string>
+    <string name="relative_date_today">今天 %1$s</string>
 </resources>

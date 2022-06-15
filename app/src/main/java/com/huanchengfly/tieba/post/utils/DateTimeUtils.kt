@@ -25,38 +25,34 @@ object DateTimeUtils {
         }
         val currentCalendar = Calendar.getInstance()
         return if (currentCalendar.after(calendar)) {
-            if (calendar.get(Calendar.YEAR) == currentCalendar.get(Calendar.YEAR)) {
-                if (calendar.get(Calendar.MONTH) == currentCalendar.get(Calendar.MONTH)) {
-                    if (calendar.get(Calendar.DAY_OF_MONTH) == currentCalendar.get(Calendar.DAY_OF_MONTH)) {
-                        if (calendar.get(Calendar.HOUR_OF_DAY) == currentCalendar.get(Calendar.HOUR_OF_DAY)) {
-                            if (calendar.get(Calendar.MINUTE) == currentCalendar.get(Calendar.MINUTE)) {
-                                context.getString(
-                                    R.string.relative_date_second,
-                                    currentCalendar.get(Calendar.SECOND) - calendar.get(Calendar.SECOND)
-                                )
-                            } else {
-                                context.getString(
-                                    R.string.relative_date_minute,
-                                    currentCalendar.get(Calendar.MINUTE) - calendar.get(Calendar.MINUTE)
-                                )
-                            }
+            if (calendar.get(Calendar.YEAR) == currentCalendar.get(Calendar.YEAR) && calendar.get(
+                    Calendar.MONTH
+                ) == currentCalendar.get(Calendar.MONTH)
+            ) {
+                if (calendar.get(Calendar.DAY_OF_MONTH) == currentCalendar.get(Calendar.DAY_OF_MONTH)) {
+                    if (calendar.get(Calendar.HOUR_OF_DAY) == currentCalendar.get(Calendar.HOUR_OF_DAY)) {
+                        if (calendar.get(Calendar.MINUTE) == currentCalendar.get(Calendar.MINUTE)) {
+                            context.getString(
+                                R.string.relative_date_second,
+                                currentCalendar.get(Calendar.SECOND) - calendar.get(Calendar.SECOND)
+                            )
                         } else {
                             context.getString(
-                                R.string.relative_date_hour,
-                                currentCalendar.get(Calendar.HOUR_OF_DAY) - calendar.get(Calendar.HOUR_OF_DAY)
+                                R.string.relative_date_minute,
+                                currentCalendar.get(Calendar.MINUTE) - calendar.get(Calendar.MINUTE)
                             )
                         }
                     } else {
                         context.getString(
-                            R.string.relative_date_month,
-                            currentCalendar.get(Calendar.DAY_OF_MONTH) - calendar.get(Calendar.DAY_OF_MONTH)
+                            R.string.relative_date_today,
+                            calendar.format("HH:mm")
                         )
                     }
                 } else {
-                    calendar.format(context.getString(R.string.pattern_date_short))
+                    calendar.format("MM-dd HH:mm")
                 }
             } else {
-                calendar.format(context.getString(R.string.pattern_date_long))
+                calendar.format("yyyy-MM-dd HH:mm")
             }
         } else {
             calendar.format(context.getString(R.string.relative_date_after))
