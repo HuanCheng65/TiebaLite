@@ -23,6 +23,7 @@ import android.os.ParcelFileDescriptor;
 import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.util.Base64;
+import android.util.Log;
 import android.webkit.URLUtil;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -96,22 +97,15 @@ public class ImageUtil {
         return false;
     }
 
-    private static boolean isGifFile(FileInputStream inputStream) {
+    //判断是否为GIF文件
+    private static boolean isGifFile(InputStream inputStream) {
+        byte[] bytes = new byte[4];
         try {
-            int[] flags = new int[5];
-            flags[0] = inputStream.read();
-            flags[1] = inputStream.read();
-            flags[2] = inputStream.read();
-            flags[3] = inputStream.read();
-            inputStream.skip(inputStream.available() - 1);
-            flags[4] = inputStream.read();
+            inputStream.read(bytes);
             inputStream.close();
-            return flags[0] == 71 && flags[1] == 73 && flags[2] == 70;
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
+            String str = new String(bytes);
+            return str.equalsIgnoreCase("GIF8");
         } catch (IOException e) {
-            e.printStackTrace();
-        } catch (Exception e) {
             e.printStackTrace();
         }
         return false;
@@ -271,10 +265,13 @@ public class ImageUtil {
             return;
         }
         new DownloadAsyncTask(context, url, file -> {
+            String mimeType = MimeType.JPEG.toString();
             String fileName = URLUtil.guessFileName(url, null, MimeType.JPEG.toString());
             if (isGifFile(file)) {
-                fileName = changeFileExtension(fileName, "gif");
+                fileName = changeFileExtension(fileName, ".gif");
+                mimeType = MimeType.GIF.toString();
             }
+            Log.i(TAG, "download: fileName = " + fileName);
             String relativePath = Environment.DIRECTORY_PICTURES + File.separator + FILE_FOLDER;
             if (forShare) {
                 relativePath += File.separator + "shareTemp";
@@ -282,7 +279,7 @@ public class ImageUtil {
             ContentValues values = new ContentValues();
             values.put(MediaStore.Images.Media.RELATIVE_PATH, relativePath);
             values.put(MediaStore.Images.Media.DISPLAY_NAME, fileName);
-            values.put(MediaStore.Images.Media.MIME_TYPE, MimeType.JPEG.toString());
+            values.put(MediaStore.Images.Media.MIME_TYPE, mimeType);
             values.put(MediaStore.Images.Media.DESCRIPTION, fileName);
             Uri uri = null;
             ContentResolver cr = context.getContentResolver();
@@ -335,7 +332,7 @@ public class ImageUtil {
                 }
                 String fileName = URLUtil.guessFileName(url, null, MimeType.JPEG.toString());
                 if (isGifFile(file)) {
-                    fileName = changeFileExtension(fileName, "gif");
+                    fileName = changeFileExtension(fileName, ".gif");
                 }
                 File destFile = new File(appDir, fileName);
                 if (destFile.exists()) {
@@ -355,7 +352,7 @@ public class ImageUtil {
 
     private static void checkGifFile(File file) {
         if (isGifFile(file)) {
-            File gifFile = new File(file.getParentFile(), FileUtil.changeFileExtension(file.getName(), "gif"));
+            File gifFile = new File(file.getParentFile(), FileUtil.changeFileExtension(file.getName(), ".gif"));
             if (gifFile.exists()) {
                 file.delete();
             } else {
