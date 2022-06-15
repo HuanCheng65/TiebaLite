@@ -178,7 +178,7 @@ class NewSearchActivity : BaseActivity(), TabLayout.OnTabSelectedListener {
             })
             delegateAdapter.addAdapter(SearchHistoryDelegateAdapter(histories))
             delegateAdapter.notifyDataSetChanged()
-            loadHotTopic()
+            //loadHotTopic()
         }
     }
 
@@ -240,7 +240,7 @@ class NewSearchActivity : BaseActivity(), TabLayout.OnTabSelectedListener {
     }
 
     companion object {
-        const val EXTRA_KEYWORD = "keyword";
+        const val EXTRA_KEYWORD = "keyword"
     }
 
     inner class SearchHistoryDelegateAdapter(
