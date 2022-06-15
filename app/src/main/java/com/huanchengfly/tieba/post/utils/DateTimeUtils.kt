@@ -25,11 +25,10 @@ object DateTimeUtils {
         }
         val currentCalendar = Calendar.getInstance()
         return if (currentCalendar.after(calendar)) {
-            if (calendar.get(Calendar.YEAR) == currentCalendar.get(Calendar.YEAR) && calendar.get(
-                    Calendar.MONTH
-                ) == currentCalendar.get(Calendar.MONTH)
-            ) {
-                if (calendar.get(Calendar.DAY_OF_MONTH) == currentCalendar.get(Calendar.DAY_OF_MONTH)) {
+            if (calendar.get(Calendar.YEAR) == currentCalendar.get(Calendar.YEAR)) {
+                if (calendar.get(Calendar.DAY_OF_MONTH) == currentCalendar.get(Calendar.DAY_OF_MONTH) &&
+                    calendar.get(Calendar.MONTH) == currentCalendar.get(Calendar.MONTH)
+                ) {
                     if (calendar.get(Calendar.HOUR_OF_DAY) == currentCalendar.get(Calendar.HOUR_OF_DAY)) {
                         if (calendar.get(Calendar.MINUTE) == currentCalendar.get(Calendar.MINUTE)) {
                             context.getString(

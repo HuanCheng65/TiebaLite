@@ -95,7 +95,7 @@ object RetrofitTiebaApi {
         createAPI<OfficialTiebaApi>("http://c.tieba.baidu.com/",
             defaultCommonHeaderInterceptor,
             CommonHeaderInterceptor(
-                Header.USER_AGENT to { "bdtb for Android 9.9.8.32" },
+                Header.USER_AGENT to { "bdtb for Android 12.25.1.0" },
                 Header.CUID to { UIDUtil.getNewCUID() },
                 Header.CUID_GALAXY2 to { UIDUtil.getFinalCUID() },
                 Header.CUID_GID to { "" }
@@ -107,7 +107,7 @@ object RetrofitTiebaApi {
                 Param.CUID_GALAXY2 to { UIDUtil.getFinalCUID() },
                 Param.CUID_GID to { "" },
                 Param.FROM to { "tieba" },
-                Param.CLIENT_VERSION to { "9.9.8.32" }
+                Param.CLIENT_VERSION to { "12.25.1.0" }
             ))
     }
 

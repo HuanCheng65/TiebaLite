@@ -22,7 +22,6 @@ import com.huanchengfly.tieba.post.fragments.MenuDialogFragment
 import com.huanchengfly.tieba.post.models.ReplyInfoBean
 import com.huanchengfly.tieba.post.plugins.PluginManager
 import com.huanchengfly.tieba.post.utils.*
-import com.huanchengfly.tieba.post.utils.NavigationHelper
 import com.huanchengfly.tieba.post.utils.TiebaUtil.reportPost
 import com.huanchengfly.tieba.post.widgets.MyLinearLayout
 
@@ -163,8 +162,9 @@ class ThreadMainPostAdapter(
         holder.setText(
                 R.id.thread_list_item_user_time,
                 context.getString(
-                        R.string.tip_thread_item_thread,
-                        DateTimeUtils.getRelativeTimeString(context, threadBean.createTime!!)
+                    R.string.tip_thread_item_thread,
+                    DateTimeUtils.getRelativeTimeString(context, threadBean.createTime!!),
+                    user.ipAddress
                 )
         )
         holder.setText(R.id.thread_list_item_content_title, title)

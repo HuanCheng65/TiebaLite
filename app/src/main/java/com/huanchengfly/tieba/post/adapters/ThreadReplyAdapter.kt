@@ -46,7 +46,6 @@ import com.huanchengfly.tieba.post.widgets.theme.TintTextView
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import java.util.*
 
 class ThreadReplyAdapter(context: Context) : BaseSingleTypeDelegateAdapter<PostListItemBean>(context, LinearLayoutHelper()) {
     private var userInfoBeanMap: MutableMap<String?, ThreadContentBean.UserInfoBean?> = HashMap()
@@ -418,27 +417,60 @@ class ThreadReplyAdapter(context: Context) : BaseSingleTypeDelegateAdapter<PostL
         }
         viewHolder.setText(R.id.thread_list_item_user_name, if (userInfoBean == null) item.authorId else StringUtil.getUsernameString(context, userInfoBean.name, userInfoBean.nameShow))
         if (userInfoBean != null) {
-            val levelId = if (userInfoBean.levelId == null || TextUtils.isEmpty(userInfoBean.levelId)) "?" else userInfoBean.levelId
-            ThemeUtil.setChipThemeByLevel(levelId,
-                    viewHolder.getView(R.id.thread_list_item_user_status),
-                    viewHolder.getView(R.id.thread_list_item_user_level),
-                    viewHolder.getView(R.id.thread_list_item_user_lz_tip))
+            val levelId =
+                if (userInfoBean.levelId == null || TextUtils.isEmpty(userInfoBean.levelId)) "?" else userInfoBean.levelId
+            ThemeUtil.setChipThemeByLevel(
+                levelId,
+                viewHolder.getView(R.id.thread_list_item_user_status),
+                viewHolder.getView(R.id.thread_list_item_user_level),
+                viewHolder.getView(R.id.thread_list_item_user_lz_tip)
+            )
             viewHolder.setText(R.id.thread_list_item_user_level, levelId)
-            viewHolder.setOnClickListener(R.id.thread_list_item_user_avatar) { view: View? -> NavigationHelper.toUserSpaceWithAnim(context, userInfoBean.id, StringUtil.getAvatarUrl(userInfoBean.portrait), view) }
-            ImageUtil.load(viewHolder.getView(R.id.thread_list_item_user_avatar), ImageUtil.LOAD_TYPE_AVATAR, userInfoBean.portrait)
+            viewHolder.setOnClickListener(R.id.thread_list_item_user_avatar) { view: View? ->
+                NavigationHelper.toUserSpaceWithAnim(
+                    context,
+                    userInfoBean.id,
+                    StringUtil.getAvatarUrl(userInfoBean.portrait),
+                    view
+                )
+            }
+            ImageUtil.load(
+                viewHolder.getView(R.id.thread_list_item_user_avatar),
+                ImageUtil.LOAD_TYPE_AVATAR,
+                userInfoBean.portrait
+            )
         }
         initContentView(viewHolder, item)
-        viewHolder.setText(R.id.thread_list_item_user_time, context.getString(R.string.tip_thread_item, item.floor, getRelativeTimeString(context, item.time!!)))
+        viewHolder.setText(
+            R.id.thread_list_item_user_time,
+            context.getString(
+                R.string.tip_thread_item,
+                item.floor,
+                getRelativeTimeString(context, item.time!!),
+                userInfoBean?.ipAddress
+            )
+        )
         initFloorView(viewHolder, item)
         if (isPureRead) {
-            viewHolder.getView<View>(R.id.thread_list_item_content).setPadding(DisplayUtil.dp2px(context, 4f), 0, DisplayUtil.dp2px(context, 4f), 0)
+            viewHolder.getView<View>(R.id.thread_list_item_content)
+                .setPadding(DisplayUtil.dp2px(context, 4f), 0, DisplayUtil.dp2px(context, 4f), 0)
             viewHolder.setVisibility(R.id.thread_list_item_user, View.GONE)
             viewHolder.setVisibility(R.id.thread_list_item_content_floor_card, View.GONE)
         } else {
             if (viewHolder.getView<View>(R.id.thread_list_item_content).layoutDirection == View.LAYOUT_DIRECTION_LTR) {
-                viewHolder.getView<View>(R.id.thread_list_item_content).setPadding(DisplayUtil.dp2px(context, 38f), 0, DisplayUtil.dp2px(context, 4f), 0)
+                viewHolder.getView<View>(R.id.thread_list_item_content).setPadding(
+                    DisplayUtil.dp2px(context, 38f),
+                    0,
+                    DisplayUtil.dp2px(context, 4f),
+                    0
+                )
             } else {
-                viewHolder.getView<View>(R.id.thread_list_item_content).setPadding(DisplayUtil.dp2px(context, 4f), 0, DisplayUtil.dp2px(context, 38f), 0)
+                viewHolder.getView<View>(R.id.thread_list_item_content).setPadding(
+                    DisplayUtil.dp2px(context, 4f),
+                    0,
+                    DisplayUtil.dp2px(context, 38f),
+                    0
+                )
             }
             viewHolder.setVisibility(R.id.thread_list_item_user, View.VISIBLE)
         }

@@ -113,8 +113,14 @@ class ThreadContentBean : BaseBean() {
         @SerializedName("is_like")
         val isLike: String? = null
 
-        @SerializedName("is_manager")
-        val isManager: String? = null
+        @SerializedName("is_bawu")
+        val isBawu: String? = null
+
+        @SerializedName("bawu_type")
+        val bawuType: String? = null
+
+        @SerializedName("ip_address")
+        val ipAddress: String? = null
 
     }
 
