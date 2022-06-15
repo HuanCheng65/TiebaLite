@@ -7,6 +7,7 @@ import android.animation.AnimatorListenerAdapter
 import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.content.res.ColorStateList
 import android.graphics.Bitmap
 import android.graphics.Color
@@ -438,22 +439,25 @@ class ForumActivity : BaseActivity(), View.OnClickListener, OnRefreshedListener,
                                     launchPost()
                                 }
                                 setPositiveButton(R.string.button_official_client_post) { _, _ ->
-                                    try {
-                                        if (isOfficialClientInstalled()) {
-                                            startActivity(
-                                                Intent(Intent.ACTION_VIEW).setData(
-                                                    Uri.parse(
-                                                        "com.baidu.tieba://unidispatch/frs?obj_locate=frs_top_diverse&obj_source=wise&obj_name=index&obj_param2=chrome&has_token=0&qd=scheme&refer=tieba.baidu.com&wise_sample_id=3000232_2&fr=bpush&kw=$forumName"
-                                                    )
-                                                )
+                                    val intent =
+                                        Intent(Intent.ACTION_VIEW).setData(
+                                            Uri.parse(
+                                                "com.baidu.tieba://unidispatch/frs?obj_locate=frs_top_diverse&obj_source=wise&obj_name=index&obj_param2=chrome&has_token=0&qd=scheme&refer=tieba.baidu.com&wise_sample_id=3000232_2&fr=bpush&kw=$forumName"
                                             )
+                                        )
+                                    val resolveInfos = packageManager.queryIntentActivities(
+                                        intent,
+                                        PackageManager.MATCH_DEFAULT_ONLY
+                                    ).filter { it.resolvePackageName != packageName }
+                                    try {
+                                        if (resolveInfos.isNotEmpty()) {
+                                            startActivity(intent)
                                         } else {
                                             toastShort(R.string.toast_official_client_not_install)
                                         }
                                     } catch (e: ActivityNotFoundException) {
                                         toastShort(R.string.toast_official_client_not_install)
                                     }
-                                    finish()
                                 }
                             }
                         } else {

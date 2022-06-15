@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.content.Intent.ACTION_VIEW
+import android.content.pm.PackageManager
 import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
@@ -132,9 +133,13 @@ class ReplyActivity : BaseActivity(), View.OnClickListener,
             }
             setNeutralButton(R.string.btn_continue_reply, null)
             setPositiveButton(R.string.button_official_client_reply) { _, _ ->
+                val intent = Intent(ACTION_VIEW).setData(getDispatchUri())
+                val resolveInfos =
+                    packageManager.queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY)
+                        .filter { it.resolvePackageName != packageName }
                 try {
-                    if (isOfficialClientInstalled()) {
-                        startActivity(Intent(ACTION_VIEW).setData(getDispatchUri()))
+                    if (resolveInfos.isNotEmpty()) {
+                        startActivity(intent)
                     } else {
                         toastShort(R.string.toast_official_client_not_install)
                     }

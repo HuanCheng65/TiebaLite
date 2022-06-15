@@ -33,6 +33,14 @@
         android:resizeable="true"
         android:smallScreens="true" />
 
+    <queries>
+        <intent>
+            <data
+                android:host="unidispatch"
+                android:scheme="com.baidu.tieba" />
+        </intent>
+    </queries>
+
     <application
         android:name=".BaseApplication"
         android:allowBackup="true"
