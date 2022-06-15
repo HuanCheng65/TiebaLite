@@ -253,26 +253,6 @@ open class MainActivity : BaseActivity(), NavigationBarView.OnItemSelectedListen
         } else if (!AccountUtil.isLoggedIn(this)) {
             navigationHelper.navigationByData(NavigationHelper.ACTION_LOGIN)
         }
-        /*
-        handler.postDelayed(() -> {
-            try {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                    String relativePath = Environment.DIRECTORY_PICTURES + File.separator + "Tieba Lite" + File.separator + "shareTemp";
-                    String where = MediaStore.Images.Media.RELATIVE_PATH + " like \"" + relativePath + "%" + "\"";
-                    int i = getContentResolver().deleteAll(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, where, null);
-                } else {
-                    if (AndPermission.hasPermissions(this, Permission.Group.STORAGE)) {
-                        File shareTemp = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES).getAbsoluteFile(), "Tieba Lite" + File.separator + "shareTemp");
-                        if (shareTemp.exists() && shareTemp.deleteAll()) {
-                            FileUtil.deleteAllFiles(shareTemp);
-                        }
-                    }
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }, 100);
-        */
     }
 
     override fun recreate() {

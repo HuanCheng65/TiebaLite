@@ -45,7 +45,6 @@ import com.huanchengfly.tieba.post.R;
 import com.huanchengfly.tieba.post.activities.PhotoViewActivity;
 import com.huanchengfly.tieba.post.components.transformations.RadiusTransformation;
 import com.huanchengfly.tieba.post.models.PhotoViewBean;
-import com.yanzhenjie.permission.runtime.Permission;
 import com.zhihu.matisse.MimeType;
 
 import java.io.ByteArrayOutputStream;
@@ -254,10 +253,17 @@ public class ImageUtil {
             downloadAboveQ(context, url, forShare, taskCallback);
             return;
         }
-        PermissionUtil.askPermission(context,
-                data -> downloadBelowQ(context, url, forShare, taskCallback),
+        PermissionUtils.INSTANCE.askPermission(
+                context,
+                new PermissionUtils.Permission(
+                        Arrays.asList(PermissionUtils.READ_EXTERNAL_STORAGE, PermissionUtils.WRITE_EXTERNAL_STORAGE),
+                        context.getString(R.string.tip_permission_storage)
+                ),
                 R.string.toast_no_permission_save_photo,
-                new PermissionUtil.Permission(Permission.Group.STORAGE, context.getString(R.string.tip_permission_storage)));
+                () -> {
+                    downloadBelowQ(context, url, forShare, taskCallback);
+                    return null;
+                });
     }
 
     private static void downloadAboveQ(Context context, String url, boolean forShare, @Nullable ShareTaskCallback taskCallback) {
@@ -328,6 +334,9 @@ public class ImageUtil {
                     }
                 }
                 String fileName = URLUtil.guessFileName(url, null, MimeType.JPEG.toString());
+                if (isGifFile(file)) {
+                    fileName = changeFileExtension(fileName, "gif");
+                }
                 File destFile = new File(appDir, fileName);
                 if (destFile.exists()) {
                     return;

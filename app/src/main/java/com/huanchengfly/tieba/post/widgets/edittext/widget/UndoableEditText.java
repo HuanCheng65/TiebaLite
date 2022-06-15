@@ -4,9 +4,15 @@ import android.content.Context;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.util.AttributeSet;
+import android.view.ActionMode;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 
 import androidx.appcompat.widget.AppCompatEditText;
+import androidx.core.widget.TextViewCompat;
 
+import com.huanchengfly.tieba.post.R;
 import com.huanchengfly.tieba.post.widgets.edittext.OperationManager;
 
 public class UndoableEditText extends AppCompatEditText {
@@ -50,6 +56,28 @@ public class UndoableEditText extends AppCompatEditText {
     }
 
     private void init() {
+        TextViewCompat.setCustomSelectionActionModeCallback(this, new ActionMode.Callback() {
+            @Override
+            public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+                MenuInflater menuInflater = mode.getMenuInflater();
+                menuInflater.inflate(R.menu.menu_undoable_edit_text, menu);
+                return true;
+            }
+
+            @Override
+            public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+                return false;
+            }
+
+            @Override
+            public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+                return false;
+            }
+
+            @Override
+            public void onDestroyActionMode(ActionMode mode) {
+            }
+        });
         addTextChangedListener(mgr);
     }
 

@@ -16,7 +16,6 @@ import android.text.TextUtils;
 import android.webkit.URLUtil;
 
 import com.huanchengfly.tieba.post.R;
-import com.yanzhenjie.permission.runtime.Permission;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -24,6 +23,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
 
 public class FileUtil {
     public static final int FILE_TYPE_DOWNLOAD = 0;
@@ -197,10 +197,17 @@ public class FileUtil {
             downloadBySystemWithPermission(context, fileType, url, fileName);
             return;
         }
-        PermissionUtil.askPermission(context,
-                data -> downloadBySystemWithPermission(context, fileType, url, fileName),
-                R.string.toast_without_permission_download,
-                new PermissionUtil.Permission(Permission.WRITE_EXTERNAL_STORAGE, context.getString(R.string.tip_permission_storage_download)));
+        PermissionUtils.INSTANCE.askPermission(
+                context,
+                new PermissionUtils.Permission(
+                        Arrays.asList(PermissionUtils.READ_EXTERNAL_STORAGE, PermissionUtils.WRITE_EXTERNAL_STORAGE),
+                        context.getString(R.string.tip_permission_storage_download)
+                ),
+                () -> {
+                    downloadBySystemWithPermission(context, fileType, url, fileName);
+                    return null;
+                }
+        );
     }
 
     public static String readFile(File file) {

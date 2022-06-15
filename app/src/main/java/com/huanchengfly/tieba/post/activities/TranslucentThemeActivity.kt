@@ -10,7 +10,10 @@ import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import android.view.*
+import android.view.MenuItem
+import android.view.MotionEvent
+import android.view.View
+import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.SeekBar
 import android.widget.SeekBar.OnSeekBarChangeListener
@@ -47,8 +50,6 @@ import com.huanchengfly.tieba.post.widgets.theme.TintMaterialButton
 import com.jrummyapps.android.colorpicker.ColorPickerDialog
 import com.jrummyapps.android.colorpicker.ColorPickerDialogListener
 import com.yalantis.ucrop.UCrop
-import com.yanzhenjie.permission.Action
-import com.yanzhenjie.permission.runtime.Permission
 import com.zhihu.matisse.Matisse
 import com.zhihu.matisse.MimeType
 import com.zhihu.matisse.engine.impl.GlideEngine
@@ -460,7 +461,7 @@ class TranslucentThemeActivity : BaseActivity(), View.OnClickListener, OnSeekBar
                     .choose(MimeType.ofImage())
                     .theme(if (ThemeUtil.isNightMode(this)) R.style.Matisse_Dracula else R.style.Matisse_Zhihu)
                     .imageEngine(GlideEngine())
-                        .forResult(REQUEST_CODE_CHOOSE)
+                    .forResult(REQUEST_CODE_CHOOSE)
             }
             R.id.custom_color -> {
                 val primaryColorPicker = ColorPickerDialog.newBuilder()
@@ -485,14 +486,23 @@ class TranslucentThemeActivity : BaseActivity(), View.OnClickListener, OnSeekBar
         }
     }
 
-    private fun askPermission(granted: Action<List<String?>>) {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
-            PermissionUtil.askPermission(this, granted, R.string.toast_no_permission_insert_photo,
-                    PermissionUtil.Permission(Permission.Group.STORAGE, getString(R.string.tip_permission_storage)))
-        } else {
-            PermissionUtil.askPermission(this, granted, R.string.toast_no_permission_insert_photo,
-                    PermissionUtil.Permission(Permission.READ_EXTERNAL_STORAGE, getString(R.string.tip_permission_storage)))
-        }
+    private fun askPermission(granted: () -> Unit) {
+        PermissionUtils.askPermission(
+            this,
+            PermissionUtils.Permission(
+                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
+                    listOf(
+                        PermissionUtils.READ_EXTERNAL_STORAGE,
+                        PermissionUtils.WRITE_EXTERNAL_STORAGE
+                    )
+                } else {
+                    listOf(PermissionUtils.READ_EXTERNAL_STORAGE)
+                },
+                getString(R.string.tip_permission_storage)
+            ),
+            R.string.toast_no_permission_insert_photo,
+            granted
+        )
     }
 
     interface SavePicCallback<T> {

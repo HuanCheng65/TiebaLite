@@ -143,6 +143,13 @@
         <item name="android:windowAnimationStyle">@style/Animation.Bottom</item>
     </style>
 
+    <style name="Dialog.RequestPermissionTip" parent="Theme.MaterialComponents.DayNight.Dialog">
+        <item name="android:windowFrame">@null</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowAnimationStyle">@style/Animation.Fade</item>
+    </style>
+
     <style name="Widget.ScrollCollapsingToolbar" parent="android:Widget">
         <item name="expandedTitleMargin">32dp</item>
         <item name="statusBarScrim">?attr/colorPrimaryDark</item>

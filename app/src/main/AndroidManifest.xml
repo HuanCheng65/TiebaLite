@@ -92,6 +92,9 @@
         <meta-data
             android:name="use_miui_font"
             android:value="true" />
+        <meta-data
+            android:name="ScopedStorage"
+            android:value="true" />
 
         <activity
             android:name=".activities.MainActivity"

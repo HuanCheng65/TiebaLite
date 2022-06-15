@@ -1,5 +1,7 @@
 package com.huanchengfly.tieba.post.fragments;
 
+import static com.huanchengfly.tieba.post.utils.FileUtil.FILE_TYPE_DOWNLOAD;
+
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.Activity;
@@ -33,6 +35,7 @@ import androidx.annotation.Nullable;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.google.android.material.snackbar.Snackbar;
+import com.hjq.permissions.Permission;
 import com.huanchengfly.tieba.post.R;
 import com.huanchengfly.tieba.post.components.dialogs.PermissionDialog;
 import com.huanchengfly.tieba.post.interfaces.OnReceivedTitleListener;
@@ -43,17 +46,14 @@ import com.huanchengfly.tieba.post.utils.AssetUtil;
 import com.huanchengfly.tieba.post.utils.DialogUtil;
 import com.huanchengfly.tieba.post.utils.FileUtil;
 import com.huanchengfly.tieba.post.utils.NavigationHelper;
+import com.huanchengfly.tieba.post.utils.PermissionUtils;
 import com.huanchengfly.tieba.post.utils.ThemeUtil;
 import com.huanchengfly.tieba.post.utils.TiebaLiteJavaScript;
 import com.huanchengfly.tieba.post.utils.Util;
-import com.yanzhenjie.permission.AndPermission;
-import com.yanzhenjie.permission.runtime.Permission;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.util.List;
-
-import static com.huanchengfly.tieba.post.utils.FileUtil.FILE_TYPE_DOWNLOAD;
+import java.util.Arrays;
 
 //TODO: 代码太烂，需要重写
 public class WebViewFragment extends BaseFragment implements DownloadListener {
@@ -380,18 +380,26 @@ public class WebViewFragment extends BaseFragment implements DownloadListener {
                                 getAttachContext().getString(R.string.title_ask_permission, uri.getHost(), getAttachContext().getString(R.string.permission_name_location)),
                                 R.drawable.ic_round_location_on))
                         .setOnGrantedCallback(isForever -> {
-                            AndPermission.with(getAttachContext())
-                                    .runtime()
-                                    .permission(Permission.ACCESS_COARSE_LOCATION, Permission.ACCESS_FINE_LOCATION)
-                                    .onGranted((List<String> permissions) -> {
+                            PermissionUtils.INSTANCE.askPermission(
+                                    getAttachContext(),
+                                    new PermissionUtils.Permission(
+                                            Arrays.asList(Permission.ACCESS_COARSE_LOCATION, Permission.ACCESS_FINE_LOCATION),
+                                            getAttachContext().getString(R.string.usage_webview_location_permission)
+                                    ),
+                                    R.string.tip_no_permission,
+                                    () -> {
                                         if (isEnabledLocationFunction()) {
                                             callback.invoke(origin, true, isForever);
                                         } else {
                                             callback.invoke(origin, false, false);
                                         }
-                                    })
-                                    .onDenied((List<String> permissions) -> callback.invoke(origin, false, false))
-                                    .start();
+                                        return null;
+                                    },
+                                    () -> {
+                                        callback.invoke(origin, false, false);
+                                        return null;
+                                    }
+                            );
                         })
                         .setOnDeniedCallback(isForever -> callback.invoke(origin, false, false))
                         .show();
