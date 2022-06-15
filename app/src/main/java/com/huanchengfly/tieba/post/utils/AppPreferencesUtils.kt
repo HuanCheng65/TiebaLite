@@ -57,7 +57,7 @@ open class AppPreferencesUtils(context: Context) {
 
     var hideExplore by SharedPreferenceDelegates.boolean(defaultValue = false)
 
-    var hideHotMessageList by SharedPreferenceDelegates.boolean(defaultValue = false)
+    var hideForumIntroAndStat by SharedPreferenceDelegates.boolean(defaultValue = false)
 
     var homePageScroll by SharedPreferenceDelegates.boolean(defaultValue = false)
 

@@ -111,6 +111,12 @@ class ForumActivity : BaseActivity(), View.OnClickListener, OnRefreshedListener,
     @BindView(R.id.forum_header)
     lateinit var headerView: View
 
+    @BindView(R.id.forum_header_slogan_container)
+    lateinit var headerViewSloganContainer: View
+
+    @BindView(R.id.forum_header_stat_container)
+    lateinit var headerViewStatContainer: View
+
     @BindView(R.id.fake_status_bar)
     lateinit var fakeStatusBar: View
 
@@ -615,7 +621,11 @@ class ForumActivity : BaseActivity(), View.OnClickListener, OnRefreshedListener,
                 button.isEnabled = true
                 toolbarEndBtn.setText(R.string.button_like)
                 toolbarEndBtn.isEnabled = true
-                tipTextView.text = getString(R.string.tip_forum_header_liked, "??", getString(R.string.text_unliked))
+                tipTextView.text = getString(
+                    R.string.tip_forum_header_liked,
+                    "??",
+                    getString(R.string.text_unliked)
+                )
             }
             /*
             when (mSortType) {
@@ -624,6 +634,13 @@ class ForumActivity : BaseActivity(), View.OnClickListener, OnRefreshedListener,
                 ForumSortType.ONLY_FOLLOWED -> sortTypeText.setText(R.string.title_sort_by_like_user)
             }
             */
+            listOf(
+                headerViewSloganContainer,
+                headerViewStatContainer
+            ).forEach {
+                it.visibility =
+                    if (appPreferences.hideForumIntroAndStat) View.GONE else View.VISIBLE
+            }
         } else {
             headerView.visibility = View.INVISIBLE
         }
