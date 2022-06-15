@@ -10,6 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.palette.graphics.Palette;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.card.MaterialCardView;
 import com.huanchengfly.tieba.post.R;
 import com.huanchengfly.tieba.post.components.MyViewHolder;
 import com.huanchengfly.tieba.post.interfaces.OnItemClickListener;
@@ -79,8 +80,9 @@ public class TranslucentThemeColorAdapter extends RecyclerView.Adapter<MyViewHol
                 getOnItemClickListener().onClick(holder.itemView, mColors.get(position), position, 0);
             }
         });
-        View preview = holder.getView(R.id.theme_preview);
-        preview.setBackgroundTintList(ColorStateList.valueOf(mColors.get(position)));
+        MaterialCardView preview = holder.getView(R.id.theme_preview);
+        preview.setCardBackgroundColor(mColors.get(position));
+        preview.setStrokeColor(ColorStateList.valueOf(mColors.get(position)));
         if (mSelectedColor == mColors.get(position)) {
             holder.setVisibility(R.id.theme_selected, View.VISIBLE);
         } else {

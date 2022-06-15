@@ -1,9 +1,7 @@
 package com.huanchengfly.tieba.post.adapters
 
 import android.content.Context
-import android.content.res.ColorStateList
 import android.os.Build
-import android.view.View
 import com.google.android.material.card.MaterialCardView
 import com.huanchengfly.tieba.post.BaseApplication.ThemeDelegate.getColorByAttr
 import com.huanchengfly.tieba.post.R
@@ -45,8 +43,8 @@ class AppThemeAdapter private constructor(
         }
         viewHolder.getView<MaterialCardView>(R.id.theme_preview).strokeColor =
             getThemePrimaryColor(item.value)
-        viewHolder.getView<View>(R.id.theme_preview_bg).backgroundTintList =
-            ColorStateList.valueOf(getThemeColor(item.value))
+        viewHolder.getView<MaterialCardView>(R.id.theme_preview)
+            .setCardBackgroundColor(getThemeColor(item.value))
         viewHolder.itemView.apply {
             contentDescription = item.name
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {

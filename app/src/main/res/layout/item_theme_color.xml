@@ -12,7 +12,7 @@
         android:id="@+id/theme_preview"
         android:layout_width="48dp"
         android:layout_height="48dp"
-        app:cardBackgroundColor="@color/transparent"
+        app:cardBackgroundColor="@color/white"
         app:cardCornerRadius="10dp"
         app:cardElevation="0dp"
         app:strokeWidth="2dp">
@@ -20,8 +20,7 @@
         <FrameLayout
             android:id="@+id/theme_preview_bg"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@color/white">
+            android:layout_height="match_parent">
 
             <com.huanchengfly.tieba.post.widgets.theme.TintImageView
                 android:id="@+id/theme_icon"
