@@ -20,23 +20,25 @@ import com.alibaba.android.vlayout.VirtualLayoutManager
 import com.alibaba.android.vlayout.layout.LinearLayoutHelper
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.textfield.TextInputLayout
-import com.huanchengfly.tieba.post.*
+import com.huanchengfly.tieba.post.R
 import com.huanchengfly.tieba.post.adapters.FragmentTabViewPagerAdapter
 import com.huanchengfly.tieba.post.adapters.HeaderDelegateAdapter
 import com.huanchengfly.tieba.post.adapters.HeaderDelegateAdapter.Companion.NO_ICON
 import com.huanchengfly.tieba.post.adapters.SearchHistoryAdapter
 import com.huanchengfly.tieba.post.adapters.SingleLayoutDelegateAdapter
 import com.huanchengfly.tieba.post.adapters.base.BaseSingleTypeDelegateAdapter
-import com.huanchengfly.tieba.post.api.TiebaApi
 import com.huanchengfly.tieba.post.api.models.web.HotMessageListBean
 import com.huanchengfly.tieba.post.components.AutoLineFeedLayoutManager
 import com.huanchengfly.tieba.post.components.MyViewHolder
 import com.huanchengfly.tieba.post.components.dividers.SpacesItemDecoration
+import com.huanchengfly.tieba.post.dpToPx
 import com.huanchengfly.tieba.post.fragments.SearchForumFragment
 import com.huanchengfly.tieba.post.fragments.SearchThreadFragment
 import com.huanchengfly.tieba.post.fragments.SearchUserFragment
+import com.huanchengfly.tieba.post.getColorCompat
 import com.huanchengfly.tieba.post.interfaces.ISearchFragment
 import com.huanchengfly.tieba.post.models.database.SearchHistory
+import com.huanchengfly.tieba.post.toastShort
 import com.huanchengfly.tieba.post.ui.theme.utils.ColorStateListUtils
 import com.huanchengfly.tieba.post.utils.AnimUtil
 import com.huanchengfly.tieba.post.utils.NavigationHelper
@@ -45,9 +47,6 @@ import com.huanchengfly.tieba.post.utils.anim.animSet
 import com.huanchengfly.tieba.post.utils.getIntermixedColorBackground
 import com.huanchengfly.tieba.post.widgets.MyViewPager
 import org.litepal.LitePal
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 
 class NewSearchActivity : BaseActivity(), TabLayout.OnTabSelectedListener {
     private var state: State = State.DEFAULT
@@ -178,49 +177,7 @@ class NewSearchActivity : BaseActivity(), TabLayout.OnTabSelectedListener {
             })
             delegateAdapter.addAdapter(SearchHistoryDelegateAdapter(histories))
             delegateAdapter.notifyDataSetChanged()
-            //loadHotTopic()
         }
-    }
-
-    private fun loadHotTopic() {
-        if (appPreferences.hideHotMessageList) {
-            return
-        }
-        if (hotMessageListBean != null) {
-            addHotTopicAdapters(hotMessageListBean!!)
-        } else {
-            TiebaApi.getInstance().hotMessageList().enqueue(object : Callback<HotMessageListBean> {
-                override fun onResponse(call: Call<HotMessageListBean>, response: Response<HotMessageListBean>) {
-                    response.body()?.let {
-                        hotMessageListBean = it
-                        addHotTopicAdapters(it)
-                    }
-                }
-
-                override fun onFailure(call: Call<HotMessageListBean>, t: Throwable) {}
-            })
-        }
-    }
-
-    private fun addHotTopicAdapters(hotMessageListBean: HotMessageListBean) {
-        delegateAdapter.addAdapter(HeaderDelegateAdapter(
-                this@NewSearchActivity,
-                R.string.title_hot_message,
-                R.drawable.ic_round_polymer,
-                R.drawable.ic_round_chevron_right
-        ).apply {
-            setHeaderBackgroundResource(R.drawable.bg_top_radius_8dp)
-            headerBackgroundTintList = R.color.default_color_card
-            iconTintList = R.color.default_color_primary
-            titleTextColor = R.color.default_color_primary
-            topMargin = resources.getDimensionPixelSize(R.dimen.card_margin)
-            startPadding = 16.dpToPx()
-            endPadding = 16.dpToPx()
-            setOnClickListener {
-                goToActivity<HotMessageListActivity>()
-            }
-        })
-        delegateAdapter.addAdapter(HotTopicDelegateAdapter(hotMessageListBean.data.list.ret.subList(0, 5)))
     }
 
     override fun onBackPressed() {
