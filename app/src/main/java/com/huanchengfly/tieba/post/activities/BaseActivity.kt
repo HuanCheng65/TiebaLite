@@ -129,8 +129,9 @@ abstract class BaseActivity : AppCompatActivity(), ExtraRefreshable, CoroutineSc
 
     fun refreshUIIfNeed() {
         if (TextUtils.equals(oldTheme, ThemeUtil.getTheme(this)) &&
-                ThemeUtil.THEME_CUSTOM != ThemeUtil.getTheme(this) &&
-                !ThemeUtil.isTranslucentTheme(this)) {
+            ThemeUtil.THEME_CUSTOM != ThemeUtil.getTheme(this) &&
+            !ThemeUtil.isTranslucentTheme(this)
+        ) {
             return
         }
         if (recreateIfNeed()) {
@@ -144,10 +145,18 @@ abstract class BaseActivity : AppCompatActivity(), ExtraRefreshable, CoroutineSc
         isActivityRunning = true
         if (appPreferences.followSystemNight) {
             if (BaseApplication.isSystemNight && !ThemeUtil.isNightMode(this)) {
-                SharedPreferencesUtil.put(ThemeUtil.getSharedPreferences(this), MainActivity.SP_SHOULD_SHOW_SNACKBAR, true)
+                SharedPreferencesUtil.put(
+                    ThemeUtil.getSharedPreferences(this),
+                    MainActivity.SP_SHOULD_SHOW_SNACKBAR,
+                    true
+                )
                 ThemeUtil.switchToNightMode(this, false)
             } else if (!BaseApplication.isSystemNight && ThemeUtil.isNightMode(this)) {
-                SharedPreferencesUtil.put(ThemeUtil.getSharedPreferences(this), MainActivity.SP_SHOULD_SHOW_SNACKBAR, true)
+                SharedPreferencesUtil.put(
+                    ThemeUtil.getSharedPreferences(this),
+                    MainActivity.SP_SHOULD_SHOW_SNACKBAR,
+                    true
+                )
                 ThemeUtil.switchFromNightMode(this, false)
             }
         }
@@ -224,14 +233,16 @@ abstract class BaseActivity : AppCompatActivity(), ExtraRefreshable, CoroutineSc
     }
 
     protected fun colorAnim(view: ImageView, vararg value: Int): ValueAnimator {
-        val animator: ValueAnimator = ObjectAnimator.ofArgb(ImageViewAnimWrapper(view), "tint", *value)
+        val animator: ValueAnimator =
+            ObjectAnimator.ofArgb(ImageViewAnimWrapper(view), "tint", *value)
         animator.duration = 150
         animator.interpolator = AccelerateDecelerateInterpolator()
         return animator
     }
 
     protected fun colorAnim(view: TextView, vararg value: Int): ValueAnimator {
-        val animator: ValueAnimator = ObjectAnimator.ofArgb(TextViewAnimWrapper(view), "textColor", *value)
+        val animator: ValueAnimator =
+            ObjectAnimator.ofArgb(TextViewAnimWrapper(view), "textColor", *value)
         animator.duration = 150
         animator.interpolator = AccelerateDecelerateInterpolator()
         return animator
@@ -248,19 +259,32 @@ abstract class BaseActivity : AppCompatActivity(), ExtraRefreshable, CoroutineSc
     open fun refreshStatusBarColor() {
         if (ThemeUtil.isTranslucentTheme(this)) {
             ImmersionBar.with(this)
-                    .transparentBar()
-                    .init()
+                .transparentBar()
+                .init()
         } else {
             ImmersionBar.with(this).apply {
                 if (customStatusColor != -1) {
                     statusBarColorInt(customStatusColor)
                     autoStatusBarDarkModeEnable(true)
                 } else {
-                    statusBarColorInt(calcStatusBarColor(this@BaseActivity, ThemeUtils.getColorByAttr(this@BaseActivity, R.attr.colorToolbar)))
+                    statusBarColorInt(
+                        calcStatusBarColor(
+                            this@BaseActivity,
+                            ThemeUtils.getColorByAttr(this@BaseActivity, R.attr.colorToolbar)
+                        )
+                    )
                     statusBarDarkFont(ThemeUtil.isStatusBarFontDark(this@BaseActivity))
                 }
-                fitsSystemWindowsInt(true, ThemeUtils.getColorByAttr(this@BaseActivity, R.attr.colorBg))
-                navigationBarColorInt(ThemeUtils.getColorByAttr(this@BaseActivity, R.attr.colorNavBar))
+                fitsSystemWindowsInt(
+                    true,
+                    ThemeUtils.getColorByAttr(this@BaseActivity, R.attr.colorBg)
+                )
+                navigationBarColorInt(
+                    ThemeUtils.getColorByAttr(
+                        this@BaseActivity,
+                        R.attr.colorNavBar
+                    )
+                )
                 navigationBarDarkIcon(ThemeUtil.isNavigationBarFontDark(this@BaseActivity))
             }.init()
         }
@@ -279,12 +303,16 @@ abstract class BaseActivity : AppCompatActivity(), ExtraRefreshable, CoroutineSc
 
     private fun recreateIfNeed(): Boolean {
         if (ThemeUtil.isNightMode(this) && !ThemeUtil.isNightMode(oldTheme) ||
-                !ThemeUtil.isNightMode(this) && ThemeUtil.isNightMode(oldTheme)) {
+            !ThemeUtil.isNightMode(this) && ThemeUtil.isNightMode(oldTheme)
+        ) {
             recreate()
             return true
         }
-        if (oldTheme?.contains(ThemeUtil.THEME_TRANSLUCENT) == true && !ThemeUtil.isTranslucentTheme(this) ||
-                ThemeUtil.isTranslucentTheme(this) && oldTheme?.contains(ThemeUtil.THEME_TRANSLUCENT) == false) {
+        if (oldTheme?.contains(ThemeUtil.THEME_TRANSLUCENT) == true && !ThemeUtil.isTranslucentTheme(
+                this
+            ) ||
+            ThemeUtil.isTranslucentTheme(this) && oldTheme?.contains(ThemeUtil.THEME_TRANSLUCENT) == false
+        ) {
             recreate()
             return true
         }

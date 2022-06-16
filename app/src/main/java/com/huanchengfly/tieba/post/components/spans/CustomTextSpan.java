@@ -12,8 +12,8 @@ import androidx.annotation.Nullable;
 public class CustomTextSpan extends ReplacementSpan {
     public static final String TAG = CustomTextSpan.class.getSimpleName();
 
-    private String text;
-    private int color;
+    private final String text;
+    private final int color;
 
     public CustomTextSpan(String text, @ColorInt int color) {
         this.text = text;

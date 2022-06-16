@@ -10,7 +10,7 @@ import androidx.appcompat.app.AlertDialog;
 import com.huanchengfly.tieba.post.R;
 
 public class LoadingDialog extends AlertDialog {
-    private Context mContext;
+    private final Context mContext;
     private TextView loadingTipView;
 
     public LoadingDialog(Context context) {

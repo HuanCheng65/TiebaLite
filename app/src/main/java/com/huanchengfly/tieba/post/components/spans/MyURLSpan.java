@@ -13,7 +13,7 @@ import com.huanchengfly.tieba.post.utils.UtilsKt;
 
 public class MyURLSpan extends ClickableSpan {
     public String url;
-    private Context context;
+    private final Context context;
 
     public MyURLSpan(Context context, String url) {
         super();

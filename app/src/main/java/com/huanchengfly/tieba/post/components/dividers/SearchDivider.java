@@ -22,9 +22,9 @@ public class SearchDivider extends RecyclerView.ItemDecoration implements Tintab
     public static final String TAG = SearchDivider.class.getSimpleName();
 
     private Drawable mDivider;
-    private int mOrientation;
-    private int mDividerHeight;
-    private int mCommonDividerHeight;
+    private final int mOrientation;
+    private final int mDividerHeight;
+    private final int mCommonDividerHeight;
 
     public SearchDivider(Context context) {
         mOrientation = LinearLayoutManager.VERTICAL;

@@ -31,7 +31,6 @@ import com.huanchengfly.tieba.post.widgets.VideoPlayerStandard
 import com.huanchengfly.tieba.post.widgets.VoicePlayerView
 import com.huanchengfly.tieba.post.widgets.theme.TintMySpannableTextView
 import java.util.*
-import kotlin.collections.ArrayList
 import kotlin.math.roundToInt
 
 class PostListAdapterHelper(
@@ -145,7 +144,7 @@ class PostListAdapterHelper(
                 BaseApplication.ScreenInfo.EXACT_SCREEN_WIDTH.toFloat() - (16 * 2 + 4).dpToPx()
         }
         if (context.isTablet) {
-            return maxWidth / 2;
+            return maxWidth / 2
         }
         return maxWidth
     }

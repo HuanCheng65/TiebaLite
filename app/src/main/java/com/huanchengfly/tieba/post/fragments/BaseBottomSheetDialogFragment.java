@@ -28,9 +28,9 @@ import butterknife.Unbinder;
 public abstract class BaseBottomSheetDialogFragment extends BottomSheetDialogFragment {
     public static final String TAG = "BaseBottomSheetDialog";
     protected BottomSheetDialog dialog;
+    protected BottomSheetBehavior mBehavior;
     Unbinder mUnbinder;
     View rootView;
-    protected BottomSheetBehavior mBehavior;
     private Context attachContext;
 
     public BaseBottomSheetDialogFragment() {

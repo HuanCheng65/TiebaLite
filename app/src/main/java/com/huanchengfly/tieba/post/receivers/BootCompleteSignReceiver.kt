@@ -24,7 +24,8 @@ class BootCompleteSignReceiver : BroadcastReceiver() {
                     if (signDay != Calendar.getInstance()[Calendar.DAY_OF_MONTH]) {
                         TiebaUtil.startSign(context)
                     }
-                    val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+                    val alarmManager =
+                        context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
                     val time = Util.time2Calendar(autoSignTimeStr).apply {
                         add(Calendar.DAY_OF_MONTH, 1)
                     }.timeInMillis
@@ -34,7 +35,12 @@ class BootCompleteSignReceiver : BroadcastReceiver() {
                         Intent(context, AutoSignAlarm::class.java),
                         pendingIntentFlagImmutable()
                     )
-                    alarmManager.setInexactRepeating(AlarmManager.RTC, time, AlarmManager.INTERVAL_DAY, pendingIntent)
+                    alarmManager.setInexactRepeating(
+                        AlarmManager.RTC,
+                        time,
+                        AlarmManager.INTERVAL_DAY,
+                        pendingIntent
+                    )
                 }
             }
         }

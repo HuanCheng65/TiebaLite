@@ -6,7 +6,6 @@ import com.google.gson.JsonElement
 import com.google.gson.JsonParseException
 import com.huanchengfly.tieba.post.api.models.MessageListBean.MessageInfoBean
 import java.lang.reflect.Type
-import java.util.*
 
 class MessageListAdapter : JsonDeserializer<List<MessageInfoBean>> {
     @Throws(JsonParseException::class)

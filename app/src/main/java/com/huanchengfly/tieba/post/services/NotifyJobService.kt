@@ -26,8 +26,10 @@ class NotifyJobService : JobService() {
     var notificationManager: NotificationManager? = null
     private fun createChannel(id: String, name: String) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val channel = NotificationChannel(id,
-                    name, NotificationManager.IMPORTANCE_DEFAULT)
+            val channel = NotificationChannel(
+                id,
+                name, NotificationManager.IMPORTANCE_DEFAULT
+            )
             channel.group = CHANNEL_GROUP
             channel.setShowBadge(true)
             notificationManager!!.createNotificationChannel(channel)
@@ -62,27 +64,57 @@ class NotifyJobService : JobService() {
                         if (replyCount != null) {
                             total += replyCount
                         }
-                        sendBroadcast(Intent()
+                        sendBroadcast(
+                            Intent()
                                 .setAction(ACTION_NEW_MESSAGE)
                                 .putExtra("channel", CHANNEL_REPLY)
-                                .putExtra("count", replyCount))
-                        updateNotification(getString(R.string.tips_message_reply, msgBean.message?.replyMe), ID_REPLY, CHANNEL_REPLY, CHANNEL_REPLY_NAME, MessageActivity.createIntent(this@NotifyJobService, MessageFragment.TYPE_REPLY_ME))
+                                .putExtra("count", replyCount)
+                        )
+                        updateNotification(
+                            getString(
+                                R.string.tips_message_reply,
+                                msgBean.message?.replyMe
+                            ),
+                            ID_REPLY,
+                            CHANNEL_REPLY,
+                            CHANNEL_REPLY_NAME,
+                            MessageActivity.createIntent(
+                                this@NotifyJobService,
+                                MessageFragment.TYPE_REPLY_ME
+                            )
+                        )
                     }
                     if ("0" != msgBean.message?.atMe) {
                         val atCount = msgBean.message?.atMe?.let { Integer.valueOf(it) }
                         if (atCount != null) {
                             total += atCount
                         }
-                        sendBroadcast(Intent()
+                        sendBroadcast(
+                            Intent()
                                 .setAction(ACTION_NEW_MESSAGE)
                                 .putExtra("channel", CHANNEL_AT)
-                                .putExtra("count", msgBean.message?.atMe))
-                        updateNotification(getString(R.string.tips_message_at, msgBean.message?.atMe), ID_AT, CHANNEL_AT, CHANNEL_AT_NAME, MessageActivity.createIntent(this@NotifyJobService, MessageFragment.TYPE_AT_ME))
+                                .putExtra("count", msgBean.message?.atMe)
+                        )
+                        updateNotification(
+                            getString(
+                                R.string.tips_message_at,
+                                msgBean.message?.atMe
+                            ),
+                            ID_AT,
+                            CHANNEL_AT,
+                            CHANNEL_AT_NAME,
+                            MessageActivity.createIntent(
+                                this@NotifyJobService,
+                                MessageFragment.TYPE_AT_ME
+                            )
+                        )
                     }
-                    sendBroadcast(Intent()
+                    sendBroadcast(
+                        Intent()
                             .setAction(ACTION_NEW_MESSAGE)
                             .putExtra("channel", CHANNEL_TOTAL)
-                            .putExtra("count", total))
+                            .putExtra("count", total)
+                    )
                 }
                 jobFinished(params, false)
             }
@@ -94,25 +126,31 @@ class NotifyJobService : JobService() {
         return true
     }
 
-    private fun updateNotification(text: String, id: Int, channel: String, channelName: String, intent: Intent) {
+    private fun updateNotification(
+        text: String,
+        id: Int,
+        channel: String,
+        channelName: String,
+        intent: Intent
+    ) {
         val notification = NotificationCompat.Builder(this, channel)
-                .setSubText(channelName)
-                .setContentText(getString(R.string.tip_touch_to_view))
-                .setContentTitle(text)
-                .setSmallIcon(R.drawable.ic_round_drafts)
-                .setWhen(System.currentTimeMillis())
-                .setAutoCancel(true)
-                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-                .setContentIntent(
-                        PendingIntent.getActivity(
-                            this,
-                            0,
-                            intent,
-                            pendingIntentFlagImmutable()
-                        )
+            .setSubText(channelName)
+            .setContentText(getString(R.string.tip_touch_to_view))
+            .setContentTitle(text)
+            .setSmallIcon(R.drawable.ic_round_drafts)
+            .setWhen(System.currentTimeMillis())
+            .setAutoCancel(true)
+            .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+            .setContentIntent(
+                PendingIntent.getActivity(
+                    this,
+                    0,
+                    intent,
+                    pendingIntentFlagImmutable()
                 )
-                .setColor(ThemeUtils.getColorByAttr(this, R.attr.colorPrimary))
-                .build()
+            )
+            .setColor(ThemeUtils.getColorByAttr(this, R.attr.colorPrimary))
+            .build()
         notificationManager!!.notify(id, notification)
     }
 

@@ -18,7 +18,7 @@ import retrofit2.Response;
 
 public class UploadHelper {
     public static final String TAG = UploadHelper.class.getSimpleName();
-    private Context mContext;
+    private final Context mContext;
     private List<PhotoInfoBean> fileList;
     private List<PhotoInfoBean> uploadList;
     private UploadCallback callback;

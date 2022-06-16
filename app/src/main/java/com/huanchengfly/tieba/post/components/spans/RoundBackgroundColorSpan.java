@@ -10,11 +10,11 @@ import android.text.style.ReplacementSpan;
 import com.huanchengfly.tieba.post.utils.DisplayUtil;
 
 public class RoundBackgroundColorSpan extends ReplacementSpan {
-    private Context context;
+    private final Context context;
 
-    private float fontSizePx;    //px
-    private int bgColor;
-    private int textColor;
+    private final float fontSizePx;    //px
+    private final int bgColor;
+    private final int textColor;
 
     public RoundBackgroundColorSpan(Context context, int bgColor, int textColor, float fontSizePx) {
         super();

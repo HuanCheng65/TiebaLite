@@ -11,7 +11,7 @@ import com.huanchengfly.tieba.post.R;
 public class CopyTextDialog extends BaseFullScreenDialog {
     public static final String TAG = CopyTextDialog.class.getSimpleName();
 
-    private String mText;
+    private final String mText;
 
     public CopyTextDialog(@NonNull Context context, @NonNull String text) {
         super(context);

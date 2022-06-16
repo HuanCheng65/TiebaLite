@@ -27,13 +27,13 @@ public class EmotionUtil {
     private static final String REGEX_WEB = "\\(#([\u4e00-\u9fa5\\w\u007e])+\\)";
     @RegExp
     private static final String REGEX = "#\\(([一-龥\\w~])+\\)";
-    private static Map<String, Integer> EMPTY_MAP;
-    private static Map<String, Integer> EMOTION_ALL_MAP;
-    private static Map<String, Integer> EMOTION_CLASSIC_MAP;
-    private static Map<String, Integer> EMOTION_EMOJI_MAP;
-    private static Map<String, Integer> EMOTION_ALL_WEB_MAP;
-    private static Map<String, Integer> EMOTION_CLASSIC_WEB_MAP;
-    private static Map<String, Integer> EMOTION_EMOJI_WEB_MAP;
+    private static final Map<String, Integer> EMPTY_MAP;
+    private static final Map<String, Integer> EMOTION_ALL_MAP;
+    private static final Map<String, Integer> EMOTION_CLASSIC_MAP;
+    private static final Map<String, Integer> EMOTION_EMOJI_MAP;
+    private static final Map<String, Integer> EMOTION_ALL_WEB_MAP;
+    private static final Map<String, Integer> EMOTION_CLASSIC_WEB_MAP;
+    private static final Map<String, Integer> EMOTION_EMOJI_WEB_MAP;
 
     static {
         EMPTY_MAP = new HashMap<>();

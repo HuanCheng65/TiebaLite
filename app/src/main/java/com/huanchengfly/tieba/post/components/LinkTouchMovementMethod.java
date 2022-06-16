@@ -14,6 +14,13 @@ public class LinkTouchMovementMethod extends LinkMovementMethod {
 
     private ClickableSpan mPressedSpan;
 
+    public static LinkTouchMovementMethod getInstance() {
+        if (sInstance == null) {
+            sInstance = new LinkTouchMovementMethod();
+        }
+        return sInstance;
+    }
+
     @Override
     public boolean onTouchEvent(TextView textView, Spannable spannable, MotionEvent event) {
 
@@ -70,12 +77,5 @@ public class LinkTouchMovementMethod extends LinkMovementMethod {
 
     public boolean isPressedSpan() {
         return mPressedSpan != null;
-    }
-
-    public static LinkTouchMovementMethod getInstance() {
-        if (sInstance == null) {
-            sInstance = new LinkTouchMovementMethod();
-        }
-        return sInstance;
     }
 }

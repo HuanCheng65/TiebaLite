@@ -26,7 +26,7 @@ class AboutPageAdapter(context: Context) : BaseAdapter<AboutPage.Item>(context) 
         return R.layout.item_about
     }
 
-    protected override fun convert(viewHolder: ViewHolder, item: AboutPage.Item, position: Int) {
+    override fun convert(viewHolder: ViewHolder, item: AboutPage.Item, position: Int) {
         val textColor = ThemeUtils.getColorByAttr(mContext, R.attr.colorText)
         val secondaryTextColor = ThemeUtils.getColorByAttr(mContext, R.attr.colorTextSecondary)
         viewHolder.setOnClickListener(R.id.item_about_root, item.onClickListener)

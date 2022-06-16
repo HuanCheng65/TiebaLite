@@ -37,9 +37,9 @@ public class BlockListActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_block_list);
         ThemeUtil.setTranslucentThemeBackground(findViewById(R.id.background));
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
-        toolbarContainer = (AppBarLayout) findViewById(R.id.appbar);
-        recyclerView = (RecyclerView) findViewById(R.id.block_list_recycler_view);
+        toolbar = findViewById(R.id.toolbar);
+        toolbarContainer = findViewById(R.id.appbar);
+        recyclerView = findViewById(R.id.block_list_recycler_view);
         Intent intent = getIntent();
         this.type = intent.getIntExtra("category", Block.CATEGORY_BLACK_LIST);
         setSupportActionBar(toolbar);

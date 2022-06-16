@@ -21,10 +21,10 @@ import java.util.Map;
  */
 public class EmotionGridViewAdapter extends BaseAdapter {
 
-    private Context context;
-    private int emotionType;
-    private List<String> emotionNames;
-    private int itemWidth;
+    private final Context context;
+    private final int emotionType;
+    private final List<String> emotionNames;
+    private final int itemWidth;
 
     public EmotionGridViewAdapter(Context context, int itemWidth) {
         this(context, EmotionUtil.EMOTION_ALL_WEB_TYPE, itemWidth);

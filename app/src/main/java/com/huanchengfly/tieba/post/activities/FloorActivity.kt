@@ -136,16 +136,22 @@ class FloorActivity : BaseActivity() {
         }
         val floor = dataBean!!.post!!.floor.toInt()
         val pn = floor - floor % 30
-        startActivity(Intent(this, ReplyActivity::class.java)
-                .putExtra("data",
-                        ReplyInfoBean(dataBean!!.thread!!.id,
-                                dataBean!!.forum!!.id,
-                                dataBean!!.forum!!.name,
-                                dataBean!!.anti!!.tbs,
-                                dataBean!!.post!!.id,
-                                dataBean!!.post!!.floor,
-                                dataBean!!.post!!.author.nameShow,
-                                AccountUtil.getLoginInfo(this)!!.nameShow).setPn(pn.toString()).toString()))
+        startActivity(
+            Intent(this, ReplyActivity::class.java)
+                .putExtra(
+                    "data",
+                    ReplyInfoBean(
+                        dataBean!!.thread!!.id,
+                        dataBean!!.forum!!.id,
+                        dataBean!!.forum!!.name,
+                        dataBean!!.anti!!.tbs,
+                        dataBean!!.post!!.id,
+                        dataBean!!.post!!.floor,
+                        dataBean!!.post!!.author.nameShow,
+                        AccountUtil.getLoginInfo(this)!!.nameShow
+                    ).setPn(pn.toString()).toString()
+                )
+        )
     }
 
     private fun refresh() {
@@ -153,52 +159,61 @@ class FloorActivity : BaseActivity() {
             return
         }
         TiebaApi.getInstance()
-                .floor(tid!!, pn, pid, spid)
-                .enqueue(object : Callback<SubFloorListBean> {
-                    override fun onFailure(call: Call<SubFloorListBean>, t: Throwable) {
-                        Toast.makeText(this@FloorActivity, t.message, Toast.LENGTH_SHORT).show()
-                        refreshLayout.finishRefresh(false)
-                    }
+            .floor(tid!!, pn, pid, spid)
+            .enqueue(object : Callback<SubFloorListBean> {
+                override fun onFailure(call: Call<SubFloorListBean>, t: Throwable) {
+                    Toast.makeText(this@FloorActivity, t.message, Toast.LENGTH_SHORT).show()
+                    refreshLayout.finishRefresh(false)
+                }
 
-                    override fun onResponse(call: Call<SubFloorListBean>, response: Response<SubFloorListBean>) {
-                        val subFloorListBean = response.body() ?: return
-                        dataBean = subFloorListBean
-                        recyclerViewAdapter!!.setData(subFloorListBean)
-                        pid = subFloorListBean.post!!.id
-                        spid = null
-                        hasMore = subFloorListBean.page!!.currentPage.toInt() < subFloorListBean.page.totalPage.toInt()
-                        refreshLayout.finishRefresh()
-                        if (!hasMore) {
-                            refreshLayout.setNoMoreData(true)
-                        }
-                        toolbar.title = getString(R.string.title_floor_loaded, subFloorListBean.post.floor)
+                override fun onResponse(
+                    call: Call<SubFloorListBean>,
+                    response: Response<SubFloorListBean>
+                ) {
+                    val subFloorListBean = response.body() ?: return
+                    dataBean = subFloorListBean
+                    recyclerViewAdapter!!.setData(subFloorListBean)
+                    pid = subFloorListBean.post!!.id
+                    spid = null
+                    hasMore =
+                        subFloorListBean.page!!.currentPage.toInt() < subFloorListBean.page.totalPage.toInt()
+                    refreshLayout.finishRefresh()
+                    if (!hasMore) {
+                        refreshLayout.setNoMoreData(true)
                     }
-                })
+                    toolbar.title =
+                        getString(R.string.title_floor_loaded, subFloorListBean.post.floor)
+                }
+            })
     }
 
     private fun loadMore() {
         if (!hasMore) return
         TiebaApi.getInstance()
-                .floor(tid!!, pn, pid, spid)
-                .enqueue(object : Callback<SubFloorListBean> {
-                    override fun onFailure(call: Call<SubFloorListBean>, t: Throwable) {
-                        refreshLayout.finishLoadMore(false)
-                    }
+            .floor(tid!!, pn, pid, spid)
+            .enqueue(object : Callback<SubFloorListBean> {
+                override fun onFailure(call: Call<SubFloorListBean>, t: Throwable) {
+                    refreshLayout.finishLoadMore(false)
+                }
 
-                    override fun onResponse(call: Call<SubFloorListBean>, response: Response<SubFloorListBean>) {
-                        val subFloorListBean = response.body() ?: return
-                        dataBean = subFloorListBean
-                        recyclerViewAdapter!!.addData(subFloorListBean)
-                        pid = subFloorListBean.post!!.id
-                        spid = null
-                        hasMore = subFloorListBean.page!!.currentPage.toInt() < subFloorListBean.page.totalPage.toInt()
-                        refreshLayout.finishLoadMore()
-                        if (!hasMore) {
-                            refreshLayout.setNoMoreData(true)
-                        }
-                        pn += 1
+                override fun onResponse(
+                    call: Call<SubFloorListBean>,
+                    response: Response<SubFloorListBean>
+                ) {
+                    val subFloorListBean = response.body() ?: return
+                    dataBean = subFloorListBean
+                    recyclerViewAdapter!!.addData(subFloorListBean)
+                    pid = subFloorListBean.post!!.id
+                    spid = null
+                    hasMore =
+                        subFloorListBean.page!!.currentPage.toInt() < subFloorListBean.page.totalPage.toInt()
+                    refreshLayout.finishLoadMore()
+                    if (!hasMore) {
+                        refreshLayout.setNoMoreData(true)
                     }
-                })
+                    pn += 1
+                }
+            })
     }
 
     companion object {
@@ -209,10 +224,10 @@ class FloorActivity : BaseActivity() {
         @JvmStatic
         @JvmOverloads
         fun launch(
-                context: Context,
-                threadId: String,
-                postId: String? = null,
-                subPostId: String? = null
+            context: Context,
+            threadId: String,
+            postId: String? = null,
+            subPostId: String? = null
         ) {
             if (postId == null && subPostId == null) {
                 throw IllegalArgumentException()

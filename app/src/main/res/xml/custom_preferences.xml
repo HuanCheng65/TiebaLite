@@ -9,7 +9,7 @@
             android:title="@string/title_select_theme">
             <intent
                 android:action="android.intent.action.VIEW"
-                android:targetClass="com.huanchengfly.tieba.post.activities.ThemeActivity"
+                android:targetClass="com.huanchengfly.tieba.post.activities.AppThemeActivity"
                 android:targetPackage="com.huanchengfly.tieba.post" />
         </Preference>
 

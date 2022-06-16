@@ -222,9 +222,11 @@ class ThreadActivity : BaseActivity(), View.OnClickListener, IThreadMenuFragment
                     if (refreshLayout.isRefreshing) {
                         return
                     }
-                    val videoPlayerStandard: VideoPlayerStandard? = view.findViewById(R.id.video_player)
+                    val videoPlayerStandard: VideoPlayerStandard? =
+                        view.findViewById(R.id.video_player)
                     if (videoPlayerStandard != null && Jzvd.CURRENT_JZVD != null &&
-                        videoPlayerStandard.jzDataSource.containsTheUrl(Jzvd.CURRENT_JZVD.jzDataSource.currentUrl)) {
+                        videoPlayerStandard.jzDataSource.containsTheUrl(Jzvd.CURRENT_JZVD.jzDataSource.currentUrl)
+                    ) {
                         if (Jzvd.CURRENT_JZVD != null && Jzvd.CURRENT_JZVD.screen != Jzvd.SCREEN_FULLSCREEN) {
                             Jzvd.releaseAllVideos()
                         }
@@ -259,7 +261,7 @@ class ThreadActivity : BaseActivity(), View.OnClickListener, IThreadMenuFragment
                 null
             }
             postId = uri.getQueryParameter("sc") ?: ""
-            seeLz = uri.getQueryParameter("see_lz") ?: "0" == "1"
+            seeLz = (uri.getQueryParameter("see_lz") ?: "0") == "1"
             from = FROM_NONE
             maxPostId = null
         }
@@ -311,16 +313,20 @@ class ThreadActivity : BaseActivity(), View.OnClickListener, IThreadMenuFragment
                 }
                 return
             }
-            TiebaApi.getInstance().threadContent(threadId!!, page, seeLz, sort).enqueue(object : Callback<ThreadContentBean> {
-                override fun onFailure(call: Call<ThreadContentBean>, t: Throwable) {
-                    refreshLayout.finishLoadMore(false)
-                }
+            TiebaApi.getInstance().threadContent(threadId!!, page, seeLz, sort)
+                .enqueue(object : Callback<ThreadContentBean> {
+                    override fun onFailure(call: Call<ThreadContentBean>, t: Throwable) {
+                        refreshLayout.finishLoadMore(false)
+                    }
 
-                override fun onResponse(call: Call<ThreadContentBean>, response: Response<ThreadContentBean>) {
-                    loadMoreSuccess(response.body()!!)
-                }
+                    override fun onResponse(
+                        call: Call<ThreadContentBean>,
+                        response: Response<ThreadContentBean>
+                    ) {
+                        loadMoreSuccess(response.body()!!)
+                    }
 
-            })
+                })
         }
     }
 
@@ -338,8 +344,10 @@ class ThreadActivity : BaseActivity(), View.OnClickListener, IThreadMenuFragment
         totalPage = Integer.valueOf(threadContentBean.page.totalPage!!)
         title = threadContentBean.thread?.title
         collect = threadContentBean.thread != null && "0" != threadContentBean.thread.collectStatus
-        agree = threadContentBean.thread?.agree != null && "0" != threadContentBean.thread.agree.hasAgree
-        agreeNum = Integer.valueOf(if (TextUtils.isEmpty(threadContentBean.thread?.agreeNum)) "0" else threadContentBean.thread?.agreeNum!!)
+        agree =
+            threadContentBean.thread?.agree != null && "0" != threadContentBean.thread.agree.hasAgree
+        agreeNum =
+            Integer.valueOf(if (TextUtils.isEmpty(threadContentBean.thread?.agreeNum)) "0" else threadContentBean.thread?.agreeNum!!)
         invalidateOptionsMenu()
         hasMore()
         refreshLayout.finishRefresh(true)
@@ -356,7 +364,8 @@ class ThreadActivity : BaseActivity(), View.OnClickListener, IThreadMenuFragment
         if (!dataBean?.postList?.filter {
                 it.floor != "1"
             }.isNullOrEmpty()) {
-            threadHeaderAdapter.title = getString(R.string.title_thread_header, dataBean?.thread?.replyNum)
+            threadHeaderAdapter.title =
+                getString(R.string.title_thread_header, dataBean?.thread?.replyNum)
             threadHeaderAdapter.seeLz = seeLz
             delegateAdapter.addAdapter(threadHeaderAdapter)
             replyAdapter.reset()
@@ -373,20 +382,24 @@ class ThreadActivity : BaseActivity(), View.OnClickListener, IThreadMenuFragment
             recyclerView.scrollToPosition(0)
             page = if (sort) totalPage else 1
         }
-        TiebaApi.getInstance().threadContent(threadId!!, page, seeLz, sort).enqueue(object : Callback<ThreadContentBean> {
-            override fun onFailure(call: Call<ThreadContentBean>, t: Throwable) {
-                refreshLayout.finishRefresh(false)
-                if (t !is TiebaException) {
-                    Util.showNetworkErrorSnackbar(recyclerView) { refreshLayout.autoRefresh() }
-                } else {
-                    Toast.makeText(this@ThreadActivity, t.message, Toast.LENGTH_SHORT).show()
+        TiebaApi.getInstance().threadContent(threadId!!, page, seeLz, sort)
+            .enqueue(object : Callback<ThreadContentBean> {
+                override fun onFailure(call: Call<ThreadContentBean>, t: Throwable) {
+                    refreshLayout.finishRefresh(false)
+                    if (t !is TiebaException) {
+                        Util.showNetworkErrorSnackbar(recyclerView) { refreshLayout.autoRefresh() }
+                    } else {
+                        Toast.makeText(this@ThreadActivity, t.message, Toast.LENGTH_SHORT).show()
+                    }
                 }
-            }
 
-            override fun onResponse(call: Call<ThreadContentBean>, response: Response<ThreadContentBean>) {
-                refreshSuccess(response.body()!!)
-            }
-        })
+                override fun onResponse(
+                    call: Call<ThreadContentBean>,
+                    response: Response<ThreadContentBean>
+                ) {
+                    refreshSuccess(response.body()!!)
+                }
+            })
     }
 
     override fun onStart() {
@@ -404,53 +417,75 @@ class ThreadActivity : BaseActivity(), View.OnClickListener, IThreadMenuFragment
     fun refresh(pid: String) {
         replyAdapter.setSeeLz(seeLz)
         threadMainPostAdapter.seeLz = seeLz
-        TiebaApi.getInstance().threadContent(threadId!!, page, seeLz, sort).enqueue(object : Callback<ThreadContentBean> {
-            override fun onFailure(call: Call<ThreadContentBean>, t: Throwable) {
-                if (t !is TiebaException) {
-                    Util.showNetworkErrorSnackbar(recyclerView) { refreshLayout.autoRefresh() }
-                } else {
-                    t.message?.let { toastShort(it) }
+        TiebaApi.getInstance().threadContent(threadId!!, page, seeLz, sort)
+            .enqueue(object : Callback<ThreadContentBean> {
+                override fun onFailure(call: Call<ThreadContentBean>, t: Throwable) {
+                    if (t !is TiebaException) {
+                        Util.showNetworkErrorSnackbar(recyclerView) { refreshLayout.autoRefresh() }
+                    } else {
+                        t.message?.let { toastShort(it) }
+                    }
                 }
-            }
 
-            override fun onResponse(call: Call<ThreadContentBean>, response: Response<ThreadContentBean>) {
-                val threadContentBean = response.body()!!
-                refreshSuccess(threadContentBean)
-                val postListItemBean = getItemByPid(pid)
-                if (postListItemBean != null) {
-                    if (!tip) {
-                        when {
-                            FROM_COLLECT == from && maxPostId != null -> {
-                                tip = true
-                                if (pid != maxPostId) {
-                                    Util.createSnackbar(recyclerView, getString(R.string.tip_collect, postListItemBean.floor), Snackbar.LENGTH_LONG)
-                                        .setAction(R.string.button_load_new) { refreshByPid(maxPostId!!) }
+                override fun onResponse(
+                    call: Call<ThreadContentBean>,
+                    response: Response<ThreadContentBean>
+                ) {
+                    val threadContentBean = response.body()!!
+                    refreshSuccess(threadContentBean)
+                    val postListItemBean = getItemByPid(pid)
+                    if (postListItemBean != null) {
+                        if (!tip) {
+                            when {
+                                FROM_COLLECT == from && maxPostId != null -> {
+                                    tip = true
+                                    if (pid != maxPostId) {
+                                        Util.createSnackbar(
+                                            recyclerView,
+                                            getString(R.string.tip_collect, postListItemBean.floor),
+                                            Snackbar.LENGTH_LONG
+                                        )
+                                            .setAction(R.string.button_load_new) {
+                                                refreshByPid(
+                                                    maxPostId!!
+                                                )
+                                            }
+                                            .show()
+                                    }
+                                }
+                                FROM_HISTORY == from && "1" != postListItemBean.floor -> {
+                                    tip = true
+                                    Util.createSnackbar(
+                                        recyclerView,
+                                        getString(
+                                            R.string.tip_from_history,
+                                            postListItemBean.floor
+                                        ),
+                                        Snackbar.LENGTH_LONG
+                                    )
+                                        .setAction(R.string.button_load_top) {
+                                            if (page <= 1) {
+                                                recyclerView.scrollToPosition(0)
+                                            } else {
+                                                refreshLayout.autoRefresh()
+                                            }
+                                        }
                                         .show()
                                 }
                             }
-                            FROM_HISTORY == from && "1" != postListItemBean.floor -> {
-                                tip = true
-                                Util.createSnackbar(recyclerView, getString(R.string.tip_from_history, postListItemBean.floor), Snackbar.LENGTH_LONG)
-                                    .setAction(R.string.button_load_top) {
-                                        if (page <= 1) {
-                                            recyclerView.scrollToPosition(0)
-                                        } else {
-                                            refreshLayout.autoRefresh()
-                                        }
-                                    }
-                                    .show()
-                            }
+                        }
+                        if (pid != threadMainPostAdapter.threadBean.postId) {
+                            val position = getItemPositionByPid(pid)
+                            //TODO: 历史记录自动滚动
+                            Log.i("ThreadActivity", "${getAdapterPositionByItemPosition(position)}")
+                            if (position >= 0) virtualLayoutManager.scrollToPositionWithOffset(
+                                getAdapterPositionByItemPosition(position),
+                                0
+                            )
                         }
                     }
-                    if (pid != threadMainPostAdapter.threadBean.postId) {
-                        val position = getItemPositionByPid(pid)
-                        //TODO: 历史记录自动滚动
-                        Log.i("ThreadActivity", "${getAdapterPositionByItemPosition(position)}")
-                        if (position >= 0) virtualLayoutManager.scrollToPositionWithOffset(getAdapterPositionByItemPosition(position), 0)
-                    }
                 }
-            }
-        })
+            })
     }
 
     fun getItemByPid(pid: String): PostListItemBean? {
@@ -485,23 +520,27 @@ class ThreadActivity : BaseActivity(), View.OnClickListener, IThreadMenuFragment
     private fun refreshByPid(pid: String) {
         replyAdapter.setSeeLz(seeLz)
         threadMainPostAdapter.seeLz = seeLz
-        TiebaApi.getInstance().threadContent(threadId!!, pid, seeLz, sort).enqueue(object : Callback<ThreadContentBean> {
-            override fun onFailure(call: Call<ThreadContentBean>, t: Throwable) {
-                if (t is TiebaException) {
-                    Toast.makeText(this@ThreadActivity, t.message, Toast.LENGTH_SHORT).show()
-                } else {
-                    Util.showNetworkErrorSnackbar(recyclerView) { refreshLayout.autoRefresh() }
+        TiebaApi.getInstance().threadContent(threadId!!, pid, seeLz, sort)
+            .enqueue(object : Callback<ThreadContentBean> {
+                override fun onFailure(call: Call<ThreadContentBean>, t: Throwable) {
+                    if (t is TiebaException) {
+                        Toast.makeText(this@ThreadActivity, t.message, Toast.LENGTH_SHORT).show()
+                    } else {
+                        Util.showNetworkErrorSnackbar(recyclerView) { refreshLayout.autoRefresh() }
+                    }
                 }
-            }
 
-            override fun onResponse(call: Call<ThreadContentBean>, response: Response<ThreadContentBean>) {
-                val threadContentBean = response.body()!!
-                dataBean = threadContentBean
-                page = Integer.valueOf(threadContentBean.page?.currentPage!!)
-                totalPage = Integer.valueOf(threadContentBean.page.totalPage!!)
-                refresh(pid)
-            }
-        })
+                override fun onResponse(
+                    call: Call<ThreadContentBean>,
+                    response: Response<ThreadContentBean>
+                ) {
+                    val threadContentBean = response.body()!!
+                    dataBean = threadContentBean
+                    page = Integer.valueOf(threadContentBean.page?.currentPage!!)
+                    totalPage = Integer.valueOf(threadContentBean.page.totalPage!!)
+                    refresh(pid)
+                }
+            })
     }
 
     private fun loadFirstData() {
@@ -571,7 +610,8 @@ class ThreadActivity : BaseActivity(), View.OnClickListener, IThreadMenuFragment
     private val lastVisibleItem: PostListItemBean?
         get() {
             if (dataBean == null) return null
-            val position = getItemPositionByAdapterPosition(virtualLayoutManager.findLastVisibleItemPosition())
+            val position =
+                getItemPositionByAdapterPosition(virtualLayoutManager.findLastVisibleItemPosition())
             return when {
                 position < 0 -> {
                     null
@@ -589,21 +629,30 @@ class ThreadActivity : BaseActivity(), View.OnClickListener, IThreadMenuFragment
     private fun collect(commonAPICallback: CommonAPICallback<CommonResponse>?, update: Boolean) {
         if (dataBean == null || threadId == null) return
         val postListItemBean = firstVisibleItem ?: return
-        TiebaApi.getInstance().addStore(threadId!!, postListItemBean.id!!, tbs = dataBean!!.anti?.tbs!!).enqueue(object : Callback<CommonResponse> {
-            override fun onFailure(call: Call<CommonResponse>, t: Throwable) {
-                if (t is TiebaException) {
-                    commonAPICallback?.onFailure(t.code, t.message)
-                } else {
-                    commonAPICallback?.onFailure(-1, t.message)
+        TiebaApi.getInstance()
+            .addStore(threadId!!, postListItemBean.id!!, tbs = dataBean!!.anti?.tbs!!)
+            .enqueue(object : Callback<CommonResponse> {
+                override fun onFailure(call: Call<CommonResponse>, t: Throwable) {
+                    if (t is TiebaException) {
+                        commonAPICallback?.onFailure(t.code, t.message)
+                    } else {
+                        commonAPICallback?.onFailure(-1, t.message)
+                    }
                 }
-            }
 
-            override fun onResponse(call: Call<CommonResponse>, response: Response<CommonResponse>) {
-                commonAPICallback?.onSuccess(response.body()!!)
-            }
+                override fun onResponse(
+                    call: Call<CommonResponse>,
+                    response: Response<CommonResponse>
+                ) {
+                    commonAPICallback?.onSuccess(response.body()!!)
+                }
 
-        })
-        if (!update) Util.miuiFav(this, getString(R.string.title_miui_fav, dataBean!!.thread?.title), url)
+            })
+        if (!update) Util.miuiFav(
+            this,
+            getString(R.string.title_miui_fav, dataBean!!.thread?.title),
+            url
+        )
     }
 
     private fun updateHistory(async: Boolean = false) {
@@ -649,13 +698,21 @@ class ThreadActivity : BaseActivity(), View.OnClickListener, IThreadMenuFragment
                 .setPositiveButton(R.string.button_yes) { dialog: DialogInterface, _ ->
                     collect(object : CommonAPICallback<CommonResponse> {
                         override fun onSuccess(data: CommonResponse) {
-                            Toast.makeText(this@ThreadActivity, R.string.toast_collect_update_success, Toast.LENGTH_SHORT).show()
+                            Toast.makeText(
+                                this@ThreadActivity,
+                                R.string.toast_collect_update_success,
+                                Toast.LENGTH_SHORT
+                            ).show()
                             dialog.cancel()
                             finish()
                         }
 
                         override fun onFailure(code: Int, error: String) {
-                            Toast.makeText(this@ThreadActivity, getString(R.string.toast_collect_update_error, error), Toast.LENGTH_SHORT).show()
+                            Toast.makeText(
+                                this@ThreadActivity,
+                                getString(R.string.toast_collect_update_error, error),
+                                Toast.LENGTH_SHORT
+                            ).show()
                         }
                     }, true)
                 }
@@ -683,12 +740,18 @@ class ThreadActivity : BaseActivity(), View.OnClickListener, IThreadMenuFragment
     override fun onClick(v: View) {
         when (v.id) {
             R.id.thread_reply_bar -> if (dataBean != null && dataBean!!.thread != null) {
-                startActivity(Intent(this@ThreadActivity, ReplyActivity::class.java)
-                    .putExtra("data", ReplyInfoBean(dataBean!!.thread?.id,
-                        dataBean!!.forum?.id,
-                        dataBean!!.forum?.name,
-                        dataBean!!.anti?.tbs,
-                        dataBean!!.user?.nameShow).setPn(dataBean!!.page?.offset).toString()))
+                startActivity(
+                    Intent(this@ThreadActivity, ReplyActivity::class.java)
+                        .putExtra(
+                            "data", ReplyInfoBean(
+                                dataBean!!.thread?.id,
+                                dataBean!!.forum?.id,
+                                dataBean!!.forum?.name,
+                                dataBean!!.anti?.tbs,
+                                dataBean!!.user?.nameShow
+                            ).setPn(dataBean!!.page?.offset).toString()
+                        )
+                )
             }
             R.id.toolbar -> recyclerView.scrollToPosition(0)
             R.id.thread_bottom_bar_more_btn -> {
@@ -707,14 +770,24 @@ class ThreadActivity : BaseActivity(), View.OnClickListener, IThreadMenuFragment
                 if (!agree) {
                     agree = true
                     agreeNum += 1
-                    TiebaApi.getInstance().agree(dataBean!!.thread?.threadInfo?.threadId!!, dataBean!!.thread?.threadInfo?.firstPostId!!).enqueue(object : Callback<AgreeBean> {
+                    TiebaApi.getInstance().agree(
+                        dataBean!!.thread?.threadInfo?.threadId!!,
+                        dataBean!!.thread?.threadInfo?.firstPostId!!
+                    ).enqueue(object : Callback<AgreeBean> {
                         override fun onFailure(call: Call<AgreeBean>, t: Throwable) {
                             agree = false
                             agreeNum -= 1
-                            Toast.makeText(this@ThreadActivity, getString(R.string.toast_agree_failed, t.message), Toast.LENGTH_SHORT).show()
+                            Toast.makeText(
+                                this@ThreadActivity,
+                                getString(R.string.toast_agree_failed, t.message),
+                                Toast.LENGTH_SHORT
+                            ).show()
                         }
 
-                        override fun onResponse(call: Call<AgreeBean>, response: Response<AgreeBean>) {
+                        override fun onResponse(
+                            call: Call<AgreeBean>,
+                            response: Response<AgreeBean>
+                        ) {
                             if (!agree) {
                                 agree = true
                             }
@@ -723,14 +796,24 @@ class ThreadActivity : BaseActivity(), View.OnClickListener, IThreadMenuFragment
                 } else {
                     agree = false
                     agreeNum -= 1
-                    TiebaApi.getInstance().disagree(dataBean!!.thread?.threadInfo?.threadId!!, dataBean!!.thread?.threadInfo?.firstPostId!!).enqueue(object : Callback<AgreeBean> {
+                    TiebaApi.getInstance().disagree(
+                        dataBean!!.thread?.threadInfo?.threadId!!,
+                        dataBean!!.thread?.threadInfo?.firstPostId!!
+                    ).enqueue(object : Callback<AgreeBean> {
                         override fun onFailure(call: Call<AgreeBean>, t: Throwable) {
                             agree = true
                             agreeNum += 1
-                            Toast.makeText(this@ThreadActivity, getString(R.string.toast_unagree_failed, t.message), Toast.LENGTH_SHORT).show()
+                            Toast.makeText(
+                                this@ThreadActivity,
+                                getString(R.string.toast_unagree_failed, t.message),
+                                Toast.LENGTH_SHORT
+                            ).show()
                         }
 
-                        override fun onResponse(call: Call<AgreeBean>, response: Response<AgreeBean>) {
+                        override fun onResponse(
+                            call: Call<AgreeBean>,
+                            response: Response<AgreeBean>
+                        ) {
                             if (agree) {
                                 agree = false
                             }
@@ -770,8 +853,10 @@ class ThreadActivity : BaseActivity(), View.OnClickListener, IThreadMenuFragment
                     }
                 })
             } else {
-                agreeNumAnimator = colorAnim(agreeNumTextView, color, ThemeUtil.getTextColor(this@ThreadActivity))
-                agreeBtnAnimator = colorAnim(agreeBtn, color, ThemeUtil.getTextColor(this@ThreadActivity))
+                agreeNumAnimator =
+                    colorAnim(agreeNumTextView, color, ThemeUtil.getTextColor(this@ThreadActivity))
+                agreeBtnAnimator =
+                    colorAnim(agreeBtn, color, ThemeUtil.getTextColor(this@ThreadActivity))
                 agreeNumAnimator.addListener(object : AnimatorListenerAdapter() {
                     override fun onAnimationEnd(animation: Animator) {
                         agreeNumTextView.setTextColor(ThemeUtil.getTextColor(this@ThreadActivity))
@@ -780,7 +865,8 @@ class ThreadActivity : BaseActivity(), View.OnClickListener, IThreadMenuFragment
                 })
                 agreeBtnAnimator.addListener(object : AnimatorListenerAdapter() {
                     override fun onAnimationEnd(animation: Animator) {
-                        agreeBtn.imageTintList = ColorStateList.valueOf(ThemeUtil.getTextColor(this@ThreadActivity))
+                        agreeBtn.imageTintList =
+                            ColorStateList.valueOf(ThemeUtil.getTextColor(this@ThreadActivity))
                         agreeBtn.contentDescription = getString(R.string.title_agree)
                         super.onAnimationEnd(animation)
                     }
@@ -850,13 +936,29 @@ class ThreadActivity : BaseActivity(), View.OnClickListener, IThreadMenuFragment
         if (dataBean == null || !canDelete()) {
             return
         }
-        TiebaApi.getInstance().delThread(dataBean!!.forum?.id!!, dataBean!!.forum?.name!!, dataBean!!.thread?.id!!, dataBean!!.anti?.tbs!!).enqueue(object : Callback<CommonResponse> {
+        TiebaApi.getInstance().delThread(
+            dataBean!!.forum?.id!!,
+            dataBean!!.forum?.name!!,
+            dataBean!!.thread?.id!!,
+            dataBean!!.anti?.tbs!!
+        ).enqueue(object : Callback<CommonResponse> {
             override fun onFailure(call: Call<CommonResponse>, t: Throwable) {
-                Toast.makeText(this@ThreadActivity, getString(R.string.toast_delete_error, t.message), Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    this@ThreadActivity,
+                    getString(R.string.toast_delete_error, t.message),
+                    Toast.LENGTH_SHORT
+                ).show()
             }
 
-            override fun onResponse(call: Call<CommonResponse>, response: Response<CommonResponse>) {
-                Toast.makeText(this@ThreadActivity, R.string.toast_delete_thread_success, Toast.LENGTH_SHORT).show()
+            override fun onResponse(
+                call: Call<CommonResponse>,
+                response: Response<CommonResponse>
+            ) {
+                Toast.makeText(
+                    this@ThreadActivity,
+                    R.string.toast_delete_thread_success,
+                    Toast.LENGTH_SHORT
+                ).show()
                 finish()
             }
         })
@@ -877,28 +979,48 @@ class ThreadActivity : BaseActivity(), View.OnClickListener, IThreadMenuFragment
     override fun onToggleCollect(collect: Boolean) {
         if (dataBean != null) {
             if (!collect) {
-                TiebaApi.getInstance().removeStore(threadId!!, dataBean!!.anti?.tbs!!).enqueue(object : Callback<CommonResponse> {
-                    override fun onFailure(call: Call<CommonResponse>, t: Throwable) {
-                        Toast.makeText(this@ThreadActivity, getString(R.string.toast_collect_remove_error, t.message), Toast.LENGTH_SHORT).show()
-                    }
+                TiebaApi.getInstance().removeStore(threadId!!, dataBean!!.anti?.tbs!!)
+                    .enqueue(object : Callback<CommonResponse> {
+                        override fun onFailure(call: Call<CommonResponse>, t: Throwable) {
+                            Toast.makeText(
+                                this@ThreadActivity,
+                                getString(R.string.toast_collect_remove_error, t.message),
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
 
-                    override fun onResponse(call: Call<CommonResponse>, response: Response<CommonResponse>) {
-                        Toast.makeText(this@ThreadActivity, R.string.toast_collect_remove_success, Toast.LENGTH_SHORT).show()
-                        this@ThreadActivity.collect = collect
-                        invalidateOptionsMenu()
-                    }
+                        override fun onResponse(
+                            call: Call<CommonResponse>,
+                            response: Response<CommonResponse>
+                        ) {
+                            Toast.makeText(
+                                this@ThreadActivity,
+                                R.string.toast_collect_remove_success,
+                                Toast.LENGTH_SHORT
+                            ).show()
+                            this@ThreadActivity.collect = collect
+                            invalidateOptionsMenu()
+                        }
 
-                })
+                    })
             } else {
                 collect(object : CommonAPICallback<CommonResponse> {
                     override fun onSuccess(data: CommonResponse) {
-                        Toast.makeText(this@ThreadActivity, R.string.toast_collect_add_success, Toast.LENGTH_SHORT).show()
+                        Toast.makeText(
+                            this@ThreadActivity,
+                            R.string.toast_collect_add_success,
+                            Toast.LENGTH_SHORT
+                        ).show()
                         this@ThreadActivity.collect = collect
                         invalidateOptionsMenu()
                     }
 
                     override fun onFailure(code: Int, error: String) {
-                        Toast.makeText(this@ThreadActivity, getString(R.string.toast_collect_add_error) + " " + error, Toast.LENGTH_SHORT).show()
+                        Toast.makeText(
+                            this@ThreadActivity,
+                            getString(R.string.toast_collect_add_error) + " " + error,
+                            Toast.LENGTH_SHORT
+                        ).show()
                     }
                 }, false)
             }
@@ -937,7 +1059,11 @@ class ThreadActivity : BaseActivity(), View.OnClickListener, IThreadMenuFragment
                     this.page = pn
                     refresh(false)
                 } else {
-                    Toast.makeText(this@ThreadActivity, R.string.toast_jump_page_too_big, Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        this@ThreadActivity,
+                        R.string.toast_jump_page_too_big,
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
             }
         dialog.setTitle(R.string.title_jump_page)

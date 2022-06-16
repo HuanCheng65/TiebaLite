@@ -17,13 +17,13 @@ import com.huanchengfly.tieba.post.interfaces.OnSubmitListener;
 import com.huanchengfly.tieba.post.utils.ImageUtil;
 
 public class VerifyCodeDialog extends AlertDialog {
-    private Context mContext;
+    private final Context mContext;
     private View contentView;
     private ImageView codeImageView;
     private Button submitBtn;
     private TextInputLayout codeInputLayout;
     private EditText codeInputEditText;
-    private String picUrl;
+    private final String picUrl;
     private OnSubmitListener onSubmitListener;
 
     public VerifyCodeDialog(Context context, String picUrl) {

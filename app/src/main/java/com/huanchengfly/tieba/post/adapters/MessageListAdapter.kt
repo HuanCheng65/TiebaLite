@@ -13,7 +13,7 @@ import com.huanchengfly.tieba.post.fragments.MessageFragment
 import com.huanchengfly.tieba.post.utils.*
 
 class MessageListAdapter(
-        context: Context, private val type: Int
+    context: Context, private val type: Int
 ) : BaseSingleTypeAdapter<MessageInfoBean>(context) {
     fun setData(messageListBean: MessageListBean) {
         if (type == MessageFragment.TYPE_REPLY_ME) {
@@ -36,39 +36,60 @@ class MessageListAdapter(
     }
 
     override fun convert(viewHolder: MyViewHolder, item: MessageInfoBean, position: Int) {
-        ImageUtil.load(viewHolder.getView(R.id.message_list_item_user_avatar), ImageUtil.LOAD_TYPE_AVATAR, item.replyer!!.portrait)
+        ImageUtil.load(
+            viewHolder.getView(R.id.message_list_item_user_avatar),
+            ImageUtil.LOAD_TYPE_AVATAR,
+            item.replyer!!.portrait
+        )
         viewHolder.itemView.background = getItemBackgroundDrawable(
-                context,
-                position,
-                itemCount,
-                radius = context.resources.getDimension(R.dimen.card_radius)
+            context,
+            position,
+            itemCount,
+            radius = context.resources.getDimension(R.dimen.card_radius)
         )
         viewHolder.setOnClickListener(R.id.message_list_item_user_avatar) {
-            NavigationHelper.toUserSpaceWithAnim(context, item.replyer.id, StringUtil.getAvatarUrl(item.replyer.portrait), it)
+            NavigationHelper.toUserSpaceWithAnim(
+                context,
+                item.replyer.id,
+                StringUtil.getAvatarUrl(item.replyer.portrait),
+                it
+            )
         }
         viewHolder.setOnClickListener(R.id.message_list_item_user_name) {
-            NavigationHelper.toUserSpaceWithAnim(context, item.replyer.id, StringUtil.getAvatarUrl(item.replyer.portrait), it)
+            NavigationHelper.toUserSpaceWithAnim(
+                context,
+                item.replyer.id,
+                StringUtil.getAvatarUrl(item.replyer.portrait),
+                it
+            )
         }
-        viewHolder.setText(R.id.message_list_item_user_name, StringUtil.getUsernameString(context, item.replyer.name, item.replyer.nameShow))
         viewHolder.setText(
-                R.id.message_list_item_user_time,
-                DateTimeUtils.getRelativeTimeString(context, item.time!!)
+            R.id.message_list_item_user_name,
+            StringUtil.getUsernameString(context, item.replyer.name, item.replyer.nameShow)
+        )
+        viewHolder.setText(
+            R.id.message_list_item_user_time,
+            DateTimeUtils.getRelativeTimeString(context, item.time!!)
         )
         val contentTextView = viewHolder.getView<TextView>(R.id.message_list_item_content)
-        contentTextView.text = StringUtil.getEmotionContent(EmotionUtil.EMOTION_ALL_TYPE, contentTextView, item.content)
+        contentTextView.text = StringUtil.getEmotionContent(
+            EmotionUtil.EMOTION_ALL_TYPE,
+            contentTextView,
+            item.content
+        )
         val textView = viewHolder.getView<TextView>(R.id.message_list_item_quote)
         textView.text = StringUtil.getEmotionContent(
-                EmotionUtil.EMOTION_ALL_TYPE,
-                textView,
-                if (type == MessageFragment.TYPE_REPLY_ME) {
-                    if ("1" == item.isFloor) {
-                        item.quoteContent
-                    } else {
-                        context.getString(R.string.text_message_list_item_reply_my_thread, item.title)
-                    }
+            EmotionUtil.EMOTION_ALL_TYPE,
+            textView,
+            if (type == MessageFragment.TYPE_REPLY_ME) {
+                if ("1" == item.isFloor) {
+                    item.quoteContent
                 } else {
-                    item.title
+                    context.getString(R.string.text_message_list_item_reply_my_thread, item.title)
                 }
+            } else {
+                item.title
+            }
         )
         textView.setOnClickListener {
             if ("1" == item.isFloor && item.quotePid != null) {

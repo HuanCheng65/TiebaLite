@@ -12,8 +12,8 @@ import com.huanchengfly.tieba.post.components.dividers.SpacesItemDecoration
 import com.huanchengfly.tieba.post.dpToPx
 
 class GoodClassifyLayoutAdapter(
-        context: Context,
-        data: ForumPageBean? = null
+    context: Context,
+    data: ForumPageBean? = null
 ) : SingleLayoutDelegateAdapter(context, R.layout.layout_header_forum_good) {
     var dataBean: ForumPageBean? = null
         set(value) {
@@ -32,7 +32,8 @@ class GoodClassifyLayoutAdapter(
             val recyclerView: RecyclerView = viewHolder.getView(R.id.forum_good_classify)
             recyclerView.apply {
                 if (tag != true) {
-                    layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+                    layoutManager =
+                        LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
                     addItemDecoration(SpacesItemDecoration(0, 0, 8.dpToPx(), 0))
                     adapter = this@GoodClassifyLayoutAdapter.adapter
                     tag = true

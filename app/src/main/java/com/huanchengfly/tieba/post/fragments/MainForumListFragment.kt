@@ -44,8 +44,8 @@ import retrofit2.Response
 import kotlin.math.abs
 
 class MainForumListFragment : BaseFragment(), Refreshable, Toolbar.OnMenuItemClickListener,
-        OnItemClickListener<ForumRecommend.LikeForum>,
-        OnItemLongClickListener<ForumRecommend.LikeForum> {
+    OnItemClickListener<ForumRecommend.LikeForum>,
+    OnItemLongClickListener<ForumRecommend.LikeForum> {
     companion object {
         // 50 + 56 / 2 = 83
         val MOTION_START_OFFSET = 78f.dpToPx()
@@ -147,8 +147,10 @@ class MainForumListFragment : BaseFragment(), Refreshable, Toolbar.OnMenuItemCli
 
     private fun getSortType(forumName: String): ForumSortType {
         val defaultSortType = appPreferences.defaultSortType!!.toInt()
-        return ForumSortType.valueOf(SharedPreferencesUtil.get(attachContext, SharedPreferencesUtil.SP_SETTINGS)
-                .getInt(forumName + "_sort_type", defaultSortType))
+        return ForumSortType.valueOf(
+            SharedPreferencesUtil.get(attachContext, SharedPreferencesUtil.SP_SETTINGS)
+                .getInt(forumName + "_sort_type", defaultSortType)
+        )
     }
 
     override fun hasOwnAppbar(): Boolean = true
@@ -159,15 +161,15 @@ class MainForumListFragment : BaseFragment(), Refreshable, Toolbar.OnMenuItemCli
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         topForumListAdapter = MainForumListAdapter(
-                attachContext,
-                spanCount
+            attachContext,
+            spanCount
         ).apply {
             setOnItemClickListener(this@MainForumListFragment)
             setOnItemLongClickListener(this@MainForumListFragment)
         }
         mainForumListAdapter = MainForumListAdapter(
-                attachContext,
-                spanCount
+            attachContext,
+            spanCount
         ).apply {
             setOnItemClickListener(this@MainForumListFragment)
             setOnItemLongClickListener(this@MainForumListFragment)
@@ -183,7 +185,8 @@ class MainForumListFragment : BaseFragment(), Refreshable, Toolbar.OnMenuItemCli
         appBar.addOnOffsetChangedListener(OnOffsetChangedListener { appBarLayout: AppBarLayout, verticalOffset: Int ->
             val offset = abs(verticalOffset * 1.0f)
             if (offset >= MOTION_START_OFFSET) {
-                val percent = (offset - MOTION_START_OFFSET) / (appBarLayout.totalScrollRange - MOTION_START_OFFSET)
+                val percent =
+                    (offset - MOTION_START_OFFSET) / (appBarLayout.totalScrollRange - MOTION_START_OFFSET)
                 searchBarMotionLayout.progress = percent
             } else {
                 searchBarMotionLayout.progress = 0f
@@ -220,9 +223,9 @@ class MainForumListFragment : BaseFragment(), Refreshable, Toolbar.OnMenuItemCli
         mainForumListAdapter.spanCount = spanCount
         if (topForumItems.isNotEmpty()) {
             delegateAdapter.addAdapter(HeaderDelegateAdapter(
-                    attachContext,
-                    R.string.title_top_forum,
-                    R.drawable.ic_round_graphic_eq
+                attachContext,
+                R.string.title_top_forum,
+                R.drawable.ic_round_graphic_eq
             ).apply {
                 setHeaderBackgroundResource(R.drawable.bg_top_radius_8dp)
                 headerBackgroundTintList = R.color.default_color_card
@@ -236,9 +239,9 @@ class MainForumListFragment : BaseFragment(), Refreshable, Toolbar.OnMenuItemCli
         }
         if (mainForumListAdapter.getItemList().isNotEmpty()) {
             delegateAdapter.addAdapter(HeaderDelegateAdapter(
-                    attachContext,
-                    R.string.forum_list_title,
-                    R.drawable.ic_infinite
+                attachContext,
+                R.string.forum_list_title,
+                R.drawable.ic_infinite
             ).apply {
                 setHeaderBackgroundResource(R.drawable.bg_top_radius_8dp)
                 headerBackgroundTintList = R.color.default_color_card
@@ -255,32 +258,40 @@ class MainForumListFragment : BaseFragment(), Refreshable, Toolbar.OnMenuItemCli
 
     fun refresh() {
         TiebaApi.getInstance()
-                .forumRecommend()
-                .enqueue(object : Callback<ForumRecommend> {
-                    override fun onFailure(call: Call<ForumRecommend>, t: Throwable) {
-                        mRefreshView.finishRefreshWithNoMoreData()
-                        t.printStackTrace()
-                        if (t is TiebaException) {
-                            if (t !is TiebaLocalException || t.code != Error.ERROR_NOT_LOGGED_IN) {
-                                Toast.makeText(attachContext, t.message, Toast.LENGTH_SHORT).show()
-                            } else if (!BaseApplication.isFirstRun) {
-                                Toast.makeText(attachContext, R.string.toast_please_login, Toast.LENGTH_SHORT).show()
-                            }
-                        } else Util.showNetworkErrorSnackbar(mRefreshView) { refresh() }
-                    }
-
-                    override fun onResponse(call: Call<ForumRecommend>, response: Response<ForumRecommend>) {
-                        mData = response.body()
-                        if (mData != null) {
-                            mainForumListAdapter.setData(mData!!.likeForum)
-                            mRefreshView.finishRefresh(false)
-                        } else {
-                            Toast.makeText(attachContext, R.string.error_unknown, Toast.LENGTH_SHORT).show()
+            .forumRecommend()
+            .enqueue(object : Callback<ForumRecommend> {
+                override fun onFailure(call: Call<ForumRecommend>, t: Throwable) {
+                    mRefreshView.finishRefreshWithNoMoreData()
+                    t.printStackTrace()
+                    if (t is TiebaException) {
+                        if (t !is TiebaLocalException || t.code != Error.ERROR_NOT_LOGGED_IN) {
+                            Toast.makeText(attachContext, t.message, Toast.LENGTH_SHORT).show()
+                        } else if (!BaseApplication.isFirstRun) {
+                            Toast.makeText(
+                                attachContext,
+                                R.string.toast_please_login,
+                                Toast.LENGTH_SHORT
+                            ).show()
                         }
-                        reloadAdapters()
-                    }
+                    } else Util.showNetworkErrorSnackbar(mRefreshView) { refresh() }
+                }
 
-                })
+                override fun onResponse(
+                    call: Call<ForumRecommend>,
+                    response: Response<ForumRecommend>
+                ) {
+                    mData = response.body()
+                    if (mData != null) {
+                        mainForumListAdapter.setData(mData!!.likeForum)
+                        mRefreshView.finishRefresh(false)
+                    } else {
+                        Toast.makeText(attachContext, R.string.error_unknown, Toast.LENGTH_SHORT)
+                            .show()
+                    }
+                    reloadAdapters()
+                }
+
+            })
     }
 
     override fun onRefresh() {
@@ -309,13 +320,20 @@ class MainForumListFragment : BaseFragment(), Refreshable, Toolbar.OnMenuItemCli
 
     override fun onClick(viewHolder: MyViewHolder, item: ForumRecommend.LikeForum, position: Int) {
         PreloadUtil.startActivityWithPreload(
+            attachContext,
+            Intent(
                 attachContext,
-                Intent(attachContext, ForumActivity::class.java).putExtra(ForumActivity.EXTRA_FORUM_NAME, item.forumName),
-                ForumLoader(item.forumName, 1, getSortType(item.forumName))
+                ForumActivity::class.java
+            ).putExtra(ForumActivity.EXTRA_FORUM_NAME, item.forumName),
+            ForumLoader(item.forumName, 1, getSortType(item.forumName))
         )
     }
 
-    override fun onLongClick(viewHolder: MyViewHolder, item: ForumRecommend.LikeForum, position: Int): Boolean {
+    override fun onLongClick(
+        viewHolder: MyViewHolder,
+        item: ForumRecommend.LikeForum,
+        position: Int
+    ): Boolean {
         val popupMenu = PopupUtil.create(viewHolder.itemView).apply {
             menuInflater.inflate(R.menu.menu_forum_long_click, menu)
         }
@@ -328,16 +346,16 @@ class MainForumListFragment : BaseFragment(), Refreshable, Toolbar.OnMenuItemCli
                 R.id.menu_top -> {
                     if (!appPreferences.showTopForumInNormalList) {
                         DialogUtil.build(attachContext)
-                                .setTitle(R.string.title_dialog_show_top_forum)
-                                .setMessage(R.string.message_dialog_show_top_forum)
-                                .setNegativeButton(R.string.button_no) { _, _ -> toggleTopForum(item.forumId) }
-                                .setPositiveButton(R.string.button_yes) { _, _ ->
-                                    appPreferences.showTopForumInNormalList = true
-                                    toggleTopForum(item.forumId)
-                                }
-                                .setNeutralButton(R.string.button_cancel, null)
-                                .create()
-                                .show()
+                            .setTitle(R.string.title_dialog_show_top_forum)
+                            .setMessage(R.string.message_dialog_show_top_forum)
+                            .setNegativeButton(R.string.button_no) { _, _ -> toggleTopForum(item.forumId) }
+                            .setPositiveButton(R.string.button_yes) { _, _ ->
+                                appPreferences.showTopForumInNormalList = true
+                                toggleTopForum(item.forumId)
+                            }
+                            .setNeutralButton(R.string.button_cancel, null)
+                            .create()
+                            .show()
                     } else {
                         toggleTopForum(item.forumId)
                     }
@@ -349,26 +367,35 @@ class MainForumListFragment : BaseFragment(), Refreshable, Toolbar.OnMenuItemCli
                 }
                 R.id.menu_unfollow -> {
                     DialogUtil.build(attachContext)
-                            .setMessage(R.string.title_dialog_unfollow)
-                            .setNegativeButton(R.string.button_cancel, null)
-                            .setPositiveButton(R.string.button_sure_default) { _, _ ->
-                                TiebaApi.getInstance().unlikeForum(item.forumId,
-                                        item.forumName,
-                                        AccountUtil.getLoginInfo(attachContext)!!.itbTbs
-                                ).enqueue(object : Callback<CommonResponse> {
-                                    override fun onResponse(call: Call<CommonResponse>, response: Response<CommonResponse>) {
-                                        attachContext.toastShort(R.string.toast_unlike_success)
-                                        mainForumListAdapter.remove(position)
-                                        mRefreshView.autoRefresh()
-                                    }
+                        .setMessage(R.string.title_dialog_unfollow)
+                        .setNegativeButton(R.string.button_cancel, null)
+                        .setPositiveButton(R.string.button_sure_default) { _, _ ->
+                            TiebaApi.getInstance().unlikeForum(
+                                item.forumId,
+                                item.forumName,
+                                AccountUtil.getLoginInfo(attachContext)!!.itbTbs
+                            ).enqueue(object : Callback<CommonResponse> {
+                                override fun onResponse(
+                                    call: Call<CommonResponse>,
+                                    response: Response<CommonResponse>
+                                ) {
+                                    attachContext.toastShort(R.string.toast_unlike_success)
+                                    mainForumListAdapter.remove(position)
+                                    mRefreshView.autoRefresh()
+                                }
 
-                                    override fun onFailure(call: Call<CommonResponse>, t: Throwable) {
-                                        attachContext.toastShort(getString(R.string.toast_unlike_failed, t.message))
-                                    }
-                                })
-                            }
-                            .create()
-                            .show()
+                                override fun onFailure(call: Call<CommonResponse>, t: Throwable) {
+                                    attachContext.toastShort(
+                                        getString(
+                                            R.string.toast_unlike_failed,
+                                            t.message
+                                        )
+                                    )
+                                }
+                            })
+                        }
+                        .create()
+                        .show()
                     true
                 }
                 else -> false

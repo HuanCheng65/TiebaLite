@@ -115,16 +115,16 @@ class ForumInfoFragment : BaseFragment(), Refreshable, ScrollTopable {
         mRefreshLayout.setOnRefreshListener { refresh() }
         content.visibility = View.GONE
         listOf(
-                managers,
-                friendForumsRecyclerView,
-                zyqDefine
+            managers,
+            friendForumsRecyclerView,
+            zyqDefine
         ).forEach {
             it.layoutManager = GridLayoutManager(attachContext, 2)
         }
         listOf(
-                statMembersTextView,
-                statPostsTextView,
-                statThreadsTextView
+            statMembersTextView,
+            statPostsTextView,
+            statThreadsTextView
         ).forEach {
             it.typeface = Typeface.createFromAsset(attachContext.assets, "bebas.ttf")
         }
@@ -161,54 +161,61 @@ class ForumInfoFragment : BaseFragment(), Refreshable, ScrollTopable {
         mRefreshLayout.isRefreshing = true
         launch(IO + job) {
             TiebaApi.getInstance()
-                    .webForumPageAsync(forumName!!, 1, null, ForumSortType.REPLY_TIME, 30)
-                    .doIfSuccess {
-                        val data = ForumBeanCaster().cast(it)
-                        if (attachContext is OnRefreshedListener) {
-                            (attachContext as OnRefreshedListener).onSuccess(data)
-                        }
-                        mRefreshLayout.isRefreshing = false
-                        alphaIn(content).start()
-                        mDataBean = data
-                        ImageUtil.load(avatar, ImageUtil.LOAD_TYPE_AVATAR, data.forum!!.avatar)
-                        title.text = attachContext.getString(R.string.title_forum, data.forum!!.name)
-                        slogan.text = data.forum!!.slogan
-                        statMembersTextView.text = getNumStr(mDataBean!!.forum!!.memberNum!!)
-                        statPostsTextView.text = getNumStr(mDataBean!!.forum!!.postNum!!)
-                        statThreadsTextView.text = getNumStr(mDataBean!!.forum!!.threadNum!!)
-                        if (data.forum!!.zyqDefine != null && data.forum!!.zyqDefine!!.isNotEmpty()) {
-                            mFriendLinksView.visibility = View.VISIBLE
-                            zyqTitle.text = data.forum!!.zyqTitle
-                            zyqDefine.adapter = ZyqFriendLinkAdapter(attachContext, data.forum!!.zyqDefine!!)
-                        } else {
-                            mFriendLinksView.visibility = View.GONE
-                        }
-                        if (data.forum!!.zyqFriend != null && data.forum!!.zyqFriend!!.isNotEmpty()) {
-                            mFriendForumsView.visibility = View.VISIBLE
-                            friendForumsRecyclerView.adapter = ZyqFriendForumAdapter(attachContext, data.forum!!.zyqFriend!!)
-                        } else {
-                            mFriendForumsView.visibility = View.GONE
-                        }
-                        if (data.forum!!.managers != null && data.forum!!.managers!!.isNotEmpty()) {
-                            mManagersView.visibility = View.VISIBLE
-                            managers.adapter = ForumManagerAdapter(attachContext, data.forum!!.managers!!)
-                        } else {
-                            mManagersView.visibility = View.GONE
-                        }
+                .webForumPageAsync(forumName!!, 1, null, ForumSortType.REPLY_TIME, 30)
+                .doIfSuccess {
+                    val data = ForumBeanCaster().cast(it)
+                    if (attachContext is OnRefreshedListener) {
+                        (attachContext as OnRefreshedListener).onSuccess(data)
                     }
-                    .doIfFailure {
-                        val code = it.getErrorCode()
-                        val error = it.getErrorMessage()
-                        if (attachContext is OnRefreshedListener) {
-                            (attachContext as OnRefreshedListener).onFailure(code, error)
-                        }
-                        mRefreshLayout.isRefreshing = false
-                        if (code == 0) {
-                            Util.showNetworkErrorSnackbar(content) { refresh() }
-                        } else {
-                            Toast.makeText(attachContext, getString(R.string.toast_error, code, error), Toast.LENGTH_SHORT).show()
-                        }
+                    mRefreshLayout.isRefreshing = false
+                    alphaIn(content).start()
+                    mDataBean = data
+                    ImageUtil.load(avatar, ImageUtil.LOAD_TYPE_AVATAR, data.forum!!.avatar)
+                    title.text = attachContext.getString(R.string.title_forum, data.forum!!.name)
+                    slogan.text = data.forum!!.slogan
+                    statMembersTextView.text = getNumStr(mDataBean!!.forum!!.memberNum!!)
+                    statPostsTextView.text = getNumStr(mDataBean!!.forum!!.postNum!!)
+                    statThreadsTextView.text = getNumStr(mDataBean!!.forum!!.threadNum!!)
+                    if (data.forum!!.zyqDefine != null && data.forum!!.zyqDefine!!.isNotEmpty()) {
+                        mFriendLinksView.visibility = View.VISIBLE
+                        zyqTitle.text = data.forum!!.zyqTitle
+                        zyqDefine.adapter =
+                            ZyqFriendLinkAdapter(attachContext, data.forum!!.zyqDefine!!)
+                    } else {
+                        mFriendLinksView.visibility = View.GONE
                     }
+                    if (data.forum!!.zyqFriend != null && data.forum!!.zyqFriend!!.isNotEmpty()) {
+                        mFriendForumsView.visibility = View.VISIBLE
+                        friendForumsRecyclerView.adapter =
+                            ZyqFriendForumAdapter(attachContext, data.forum!!.zyqFriend!!)
+                    } else {
+                        mFriendForumsView.visibility = View.GONE
+                    }
+                    if (data.forum!!.managers != null && data.forum!!.managers!!.isNotEmpty()) {
+                        mManagersView.visibility = View.VISIBLE
+                        managers.adapter =
+                            ForumManagerAdapter(attachContext, data.forum!!.managers!!)
+                    } else {
+                        mManagersView.visibility = View.GONE
+                    }
+                }
+                .doIfFailure {
+                    val code = it.getErrorCode()
+                    val error = it.getErrorMessage()
+                    if (attachContext is OnRefreshedListener) {
+                        (attachContext as OnRefreshedListener).onFailure(code, error)
+                    }
+                    mRefreshLayout.isRefreshing = false
+                    if (code == 0) {
+                        Util.showNetworkErrorSnackbar(content) { refresh() }
+                    } else {
+                        Toast.makeText(
+                            attachContext,
+                            getString(R.string.toast_error, code, error),
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+                }
         }
 
     }

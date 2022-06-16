@@ -133,18 +133,29 @@ class SettingsFragment : PreferencesFragment() {
                         AccountUtil.exit(attachContext)
                         refresh()
                         if (AccountUtil.getLoginInfo(attachContext) == null) {
-                            attachContext.startActivity(Intent(attachContext, LoginActivity::class.java))
+                            attachContext.startActivity(
+                                Intent(
+                                    attachContext,
+                                    LoginActivity::class.java
+                                )
+                            )
                         }
                     }
                     .setNegativeButton(R.string.button_cancel, null)
                     .create()
                     .show()
-            true
-        }
-        findPreference<Preference>("black_list")!!.onPreferenceClickListener = Preference.OnPreferenceClickListener {
-            startActivity(Intent(attachContext, BlockListActivity::class.java).putExtra("category", Block.CATEGORY_BLACK_LIST))
-            true
-        }
+                true
+            }
+        findPreference<Preference>("black_list")!!.onPreferenceClickListener =
+            Preference.OnPreferenceClickListener {
+                startActivity(
+                    Intent(
+                        attachContext,
+                        BlockListActivity::class.java
+                    ).putExtra("category", Block.CATEGORY_BLACK_LIST)
+                )
+                true
+            }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
             findPreference<Preference>("follow_system_night")!!.isEnabled = true
             findPreference<Preference>("follow_system_night")!!.summary = null
@@ -152,36 +163,58 @@ class SettingsFragment : PreferencesFragment() {
             findPreference<Preference>("follow_system_night")!!.isEnabled = false
             findPreference<Preference>("follow_system_night")!!.setSummary(R.string.summary_follow_system_night_disabled)
         }
-        findPreference<Preference>("show_top_forum_in_normal_list")!!.onPreferenceChangeListener = Preference.OnPreferenceChangeListener { preference: Preference, _: Any? ->
-            preference.setSummary(R.string.summary_show_top_forum_in_normal_list_changed)
-            true
-        }
-        findPreference<Preference>("status_bar_darker")!!.onPreferenceChangeListener = Preference.OnPreferenceChangeListener { preference: Preference, _: Any? ->
-            preference.setSummary(R.string.summary_status_bar_darker_changed)
-            true
-        }
-        findPreference<Preference>("hideExplore")!!.onPreferenceChangeListener = Preference.OnPreferenceChangeListener { preference: Preference, _: Any? ->
-            preference.setSummary(R.string.summary_change_need_restart)
-            true
-        }
-        findPreference<Preference>("white_list")!!.onPreferenceClickListener = Preference.OnPreferenceClickListener {
-            startActivity(Intent(attachContext, BlockListActivity::class.java).putExtra("category", Block.CATEGORY_WHITE_LIST))
-            true
-        }
+        findPreference<Preference>("show_top_forum_in_normal_list")!!.onPreferenceChangeListener =
+            Preference.OnPreferenceChangeListener { preference: Preference, _: Any? ->
+                preference.setSummary(R.string.summary_show_top_forum_in_normal_list_changed)
+                true
+            }
+        findPreference<Preference>("status_bar_darker")!!.onPreferenceChangeListener =
+            Preference.OnPreferenceChangeListener { preference: Preference, _: Any? ->
+                preference.setSummary(R.string.summary_status_bar_darker_changed)
+                true
+            }
+        findPreference<Preference>("hideExplore")!!.onPreferenceChangeListener =
+            Preference.OnPreferenceChangeListener { preference: Preference, _: Any? ->
+                preference.setSummary(R.string.summary_change_need_restart)
+                true
+            }
+        findPreference<Preference>("white_list")!!.onPreferenceClickListener =
+            Preference.OnPreferenceClickListener {
+                startActivity(
+                    Intent(
+                        attachContext,
+                        BlockListActivity::class.java
+                    ).putExtra("category", Block.CATEGORY_WHITE_LIST)
+                )
+                true
+            }
         val timePickerPreference = findPreference<TimePickerPreference>("auto_sign_time")
-        timePickerPreference!!.onPreferenceChangeListener = Preference.OnPreferenceChangeListener { preference: Preference, newValue: Any? ->
-            preference.summary = attachContext.getString(R.string.summary_auto_sign_time, newValue as String?)
-            true
-        }
-        timePickerPreference.summary = attachContext.getString(R.string.summary_auto_sign_time, preferenceManager.sharedPreferences.getString("auto_sign_time", "09:00"))
+        timePickerPreference!!.onPreferenceChangeListener =
+            Preference.OnPreferenceChangeListener { preference: Preference, newValue: Any? ->
+                preference.summary =
+                    attachContext.getString(R.string.summary_auto_sign_time, newValue as String?)
+                true
+            }
+        timePickerPreference.summary = attachContext.getString(
+            R.string.summary_auto_sign_time,
+            preferenceManager.sharedPreferences.getString("auto_sign_time", "09:00")
+        )
         val clearCache = findPreference<Preference>("clear_cache")
-        clearCache!!.summary = attachContext.getString(R.string.tip_cache, GlideCacheUtil.getInstance().getCacheSize(attachContext))
-        clearCache.onPreferenceClickListener = Preference.OnPreferenceClickListener { preference: Preference ->
-            GlideCacheUtil.getInstance().clearImageAllCache(attachContext)
-            if (view != null) Util.createSnackbar(requireView(), R.string.toast_clear_cache_success, Snackbar.LENGTH_SHORT).show()
-            preference.summary = attachContext.getString(R.string.tip_cache, "0.0B")
-            true
-        }
+        clearCache!!.summary = attachContext.getString(
+            R.string.tip_cache,
+            GlideCacheUtil.getInstance().getCacheSize(attachContext)
+        )
+        clearCache.onPreferenceClickListener =
+            Preference.OnPreferenceClickListener { preference: Preference ->
+                GlideCacheUtil.getInstance().clearImageAllCache(attachContext)
+                if (view != null) Util.createSnackbar(
+                    requireView(),
+                    R.string.toast_clear_cache_success,
+                    Snackbar.LENGTH_SHORT
+                ).show()
+                preference.summary = attachContext.getString(R.string.tip_cache, "0.0B")
+                true
+            }
         val littleTaliPreference = findPreference<EditTextPreference>("little_tail")
         val littleTali = preferenceManager.sharedPreferences.getString("little_tail", "")
         if (littleTali!!.isEmpty()) {
@@ -190,26 +223,30 @@ class SettingsFragment : PreferencesFragment() {
             littleTaliPreference!!.summary = littleTali
             littleTaliPreference.text = littleTali
         }
-        littleTaliPreference.onPreferenceChangeListener = Preference.OnPreferenceChangeListener { _: Preference?, value: Any? ->
-            if (value is String) {
-                if (value.isEmpty()) {
-                    littleTaliPreference.setSummary(R.string.tip_no_little_tail)
-                } else {
-                    littleTaliPreference.summary = value
-                    littleTaliPreference.text = value
+        littleTaliPreference.onPreferenceChangeListener =
+            Preference.OnPreferenceChangeListener { _: Preference?, value: Any? ->
+                if (value is String) {
+                    if (value.isEmpty()) {
+                        littleTaliPreference.setSummary(R.string.tip_no_little_tail)
+                    } else {
+                        littleTaliPreference.summary = value
+                        littleTaliPreference.text = value
+                    }
                 }
+                true
             }
-            true
-        }
         val aboutPreference = findPreference<Preference>("about")
         val useCustomTabs = findPreference<SwitchPreference>("use_custom_tabs")
-        useCustomTabs!!.isEnabled = !preferenceManager.sharedPreferences.getBoolean("use_webview", true)
-        findPreference<Preference>("use_webview")!!.onPreferenceChangeListener = Preference.OnPreferenceChangeListener { _: Preference?, newValue: Any? ->
-            useCustomTabs.isEnabled = !(newValue as Boolean)
-            true
-        }
+        useCustomTabs!!.isEnabled =
+            !preferenceManager.sharedPreferences.getBoolean("use_webview", true)
+        findPreference<Preference>("use_webview")!!.onPreferenceChangeListener =
+            Preference.OnPreferenceChangeListener { _: Preference?, newValue: Any? ->
+                useCustomTabs.isEnabled = !(newValue as Boolean)
+                true
+            }
         initListPreference("dark_theme", "dark")
-        aboutPreference!!.summary = getString(R.string.tip_about, VersionUtil.getVersionName(attachContext))
+        aboutPreference!!.summary =
+            getString(R.string.tip_about, VersionUtil.getVersionName(attachContext))
         refresh()
         /*
         try {
@@ -227,10 +264,10 @@ class SettingsFragment : PreferencesFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setDivider(
-                ThemeUtils.tintDrawable(
-                        ContextCompat.getDrawable(attachContext, R.drawable.drawable_divider_8dp),
-                        ThemeUtils.getColorById(attachContext, R.color.default_color_window_background)
-                )
+            ThemeUtils.tintDrawable(
+                ContextCompat.getDrawable(attachContext, R.drawable.drawable_divider_8dp),
+                ThemeUtils.getColorById(attachContext, R.color.default_color_window_background)
+            )
         )
         setDividerHeight(0)
     }
@@ -240,7 +277,10 @@ class SettingsFragment : PreferencesFragment() {
         initSwitchPreference(switchPreference, defValue)
     }
 
-    private fun initSwitchPreference(switchPreference: SwitchPreference?, defValue: Boolean = false) {
+    private fun initSwitchPreference(
+        switchPreference: SwitchPreference?,
+        defValue: Boolean = false
+    ) {
         val value = preferenceManager.sharedPreferences.getBoolean(switchPreference!!.key, defValue)
         switchPreference.isChecked = value
     }

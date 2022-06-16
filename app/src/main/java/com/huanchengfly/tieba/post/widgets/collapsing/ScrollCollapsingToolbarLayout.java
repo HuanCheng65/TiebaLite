@@ -62,7 +62,7 @@ public class ScrollCollapsingToolbarLayout extends FrameLayout {
     @Nullable
     WindowInsetsCompat lastInsets;
     private boolean refreshToolbar = true;
-    private int toolbarId;
+    private final int toolbarId;
     @Nullable
     private Toolbar toolbar;
     @Nullable
@@ -1168,6 +1168,7 @@ public class ScrollCollapsingToolbarLayout extends FrameLayout {
         private int mCollapsedMarginTop;
         private int mCollapsedMarginEnd;
         private int mCollapsedMarginBottom;
+
         public LayoutParams(Context c, AttributeSet attrs) {
             super(c, attrs);
 

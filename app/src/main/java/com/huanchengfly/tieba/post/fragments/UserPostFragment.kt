@@ -33,7 +33,11 @@ class UserPostFragment : BaseFragment() {
     @BindView(R.id.user_post_reclcyer_view)
     lateinit var recyclerView: RecyclerView
 
-    private val virtualLayoutManager: VirtualLayoutManager by lazy { VirtualLayoutManager(attachContext) }
+    private val virtualLayoutManager: VirtualLayoutManager by lazy {
+        VirtualLayoutManager(
+            attachContext
+        )
+    }
     private val delegateAdapter: DelegateAdapter by lazy { DelegateAdapter(virtualLayoutManager) }
     private val userPostAdapter: UserPostAdapter by lazy { UserPostAdapter(attachContext) }
 
@@ -52,7 +56,7 @@ class UserPostFragment : BaseFragment() {
         }
     }
 
-    public override fun getLayoutId(): Int {
+    override fun getLayoutId(): Int {
         return R.layout.fragment_user_post
     }
 
@@ -69,7 +73,14 @@ class UserPostFragment : BaseFragment() {
                 load()
             }
         })
-        recyclerView.addItemDecoration(SpacesItemDecoration(0, 0, 0, DisplayUtil.dp2px(attachContext, 12f)))
+        recyclerView.addItemDecoration(
+            SpacesItemDecoration(
+                0,
+                0,
+                0,
+                DisplayUtil.dp2px(attachContext, 12f)
+            )
+        )
         recyclerView.layoutManager = virtualLayoutManager
         recyclerView.adapter = delegateAdapter
         userPostAdapter.setOnItemClickListener { _, postBean, _ ->
@@ -88,11 +99,12 @@ class UserPostFragment : BaseFragment() {
     fun refreshAdapter() {
         delegateAdapter.clear()
         if (hidePost || userPostAdapter.itemCount == 0) {
-            delegateAdapter.addAdapter(object : SingleLayoutDelegateAdapter(attachContext, R.layout.layout_empty_view) {
+            delegateAdapter.addAdapter(object :
+                SingleLayoutDelegateAdapter(attachContext, R.layout.layout_empty_view) {
                 override fun convert(viewHolder: MyViewHolder, itemView: View) {
                     viewHolder.setText(
-                            R.id.empty_tip,
-                            if (hidePost) R.string.tip_user_hide else R.string.tip_empty
+                        R.id.empty_tip,
+                        if (hidePost) R.string.tip_user_hide else R.string.tip_empty
                     )
                 }
             })
@@ -104,51 +116,57 @@ class UserPostFragment : BaseFragment() {
 
     fun load() {
         getInstance()
-                .userPost(uid!!, page + 1, isThread)
-                .enqueue(object : Callback<UserPostBean> {
-                    override fun onResponse(call: Call<UserPostBean>, response: Response<UserPostBean>) {
-                        page += 1
-                        val data = response.body()
-                        userPostBean = data
-                        refreshLayout.finishLoadMore()
-                        if (data!!.postList.isNullOrEmpty()) {
-                            refreshLayout.setNoMoreData(true)
-                        } else {
-                            userPostAdapter.insert(data.postList!!)
-                        }
+            .userPost(uid!!, page + 1, isThread)
+            .enqueue(object : Callback<UserPostBean> {
+                override fun onResponse(
+                    call: Call<UserPostBean>,
+                    response: Response<UserPostBean>
+                ) {
+                    page += 1
+                    val data = response.body()
+                    userPostBean = data
+                    refreshLayout.finishLoadMore()
+                    if (data!!.postList.isNullOrEmpty()) {
+                        refreshLayout.setNoMoreData(true)
+                    } else {
+                        userPostAdapter.insert(data.postList!!)
                     }
+                }
 
-                    override fun onFailure(call: Call<UserPostBean>, t: Throwable) {
-                        Toast.makeText(attachContext, t.message, Toast.LENGTH_SHORT).show()
-                        refreshLayout.finishLoadMore(false)
-                    }
-                })
+                override fun onFailure(call: Call<UserPostBean>, t: Throwable) {
+                    Toast.makeText(attachContext, t.message, Toast.LENGTH_SHORT).show()
+                    refreshLayout.finishLoadMore(false)
+                }
+            })
     }
 
     fun refresh() {
         page = 1
         userPostAdapter.reset()
         getInstance()
-                .userPost(uid!!, page, isThread)
-                .enqueue(object : Callback<UserPostBean> {
-                    override fun onResponse(call: Call<UserPostBean>, response: Response<UserPostBean>) {
-                        val data = response.body()
-                        userPostBean = data
-                        hidePost = "1" == data!!.hidePost
-                        if (!hidePost) {
-                            userPostAdapter.setData(data.postList)
-                        } else {
-                            refreshLayout.setNoMoreData(true)
-                        }
-                        refreshLayout.finishRefresh()
-                        refreshAdapter()
+            .userPost(uid!!, page, isThread)
+            .enqueue(object : Callback<UserPostBean> {
+                override fun onResponse(
+                    call: Call<UserPostBean>,
+                    response: Response<UserPostBean>
+                ) {
+                    val data = response.body()
+                    userPostBean = data
+                    hidePost = "1" == data!!.hidePost
+                    if (!hidePost) {
+                        userPostAdapter.setData(data.postList)
+                    } else {
+                        refreshLayout.setNoMoreData(true)
                     }
+                    refreshLayout.finishRefresh()
+                    refreshAdapter()
+                }
 
-                    override fun onFailure(call: Call<UserPostBean>, t: Throwable) {
-                        Toast.makeText(attachContext, t.message, Toast.LENGTH_SHORT).show()
-                        refreshLayout.finishRefresh(false)
-                    }
-                })
+                override fun onFailure(call: Call<UserPostBean>, t: Throwable) {
+                    Toast.makeText(attachContext, t.message, Toast.LENGTH_SHORT).show()
+                    refreshLayout.finishRefresh(false)
+                }
+            })
     }
 
     override fun onFragmentFirstVisible() {

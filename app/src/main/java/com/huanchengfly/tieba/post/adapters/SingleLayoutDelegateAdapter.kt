@@ -10,27 +10,28 @@ import com.alibaba.android.vlayout.layout.SingleLayoutHelper
 import com.huanchengfly.tieba.post.components.MyViewHolder
 
 open class SingleLayoutDelegateAdapter(
-        val context: Context,
-        val itemView: View
+    val context: Context,
+    val itemView: View
 ) : DelegateAdapter.Adapter<MyViewHolder>() {
     constructor(
-            context: Context,
-            @LayoutRes
-            layoutResId: Int
+        context: Context,
+        @LayoutRes
+        layoutResId: Int
     ) : this(
-            context,
-            View.inflate(context, layoutResId, null)
+        context,
+        View.inflate(context, layoutResId, null)
     )
 
     constructor(
-            context: Context,
-            createViewFunction: () -> View
+        context: Context,
+        createViewFunction: () -> View
     ) : this(
-            context,
-            createViewFunction()
+        context,
+        createViewFunction()
     )
 
-    final override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder = MyViewHolder(itemView)
+    final override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder =
+        MyViewHolder(itemView)
 
     final override fun onBindViewHolder(viewHolder: MyViewHolder, position: Int) {
         convert(viewHolder, itemView)

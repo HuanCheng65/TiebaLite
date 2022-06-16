@@ -19,12 +19,11 @@ import com.huanchengfly.tieba.post.utils.AccountUtil
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import java.util.*
 
 class DislikeDialog(
-        context: Context,
-        private val threadPersonalizedBean: ThreadPersonalizedBean,
-        private val fid: String
+    context: Context,
+    private val threadPersonalizedBean: ThreadPersonalizedBean,
+    private val fid: String
 ) : AlertDialog(context), View.OnClickListener {
     private var dislikeAdapter: DislikeAdapter? = null
     var onSubmitListener: OnSubmitListener? = null
@@ -60,17 +59,21 @@ class DislikeDialog(
                 it.extra?.let { it1 -> extras.add(it1) }
             }
             TiebaApi.getInstance().submitDislike(
-                    DislikeBean(
-                            threadPersonalizedBean.tid,
-                            selectIds.joinToString(","),
-                            fid,
-                            clickTime,
-                            extras.joinToString(",")
-                    ),
-                    AccountUtil.getSToken(context)!!
+                DislikeBean(
+                    threadPersonalizedBean.tid,
+                    selectIds.joinToString(","),
+                    fid,
+                    clickTime,
+                    extras.joinToString(",")
+                ),
+                AccountUtil.getSToken(context)!!
             ).enqueue(object : Callback<CommonResponse> {
                 override fun onFailure(call: Call<CommonResponse>, t: Throwable) {}
-                override fun onResponse(call: Call<CommonResponse>, response: Response<CommonResponse>) {}
+                override fun onResponse(
+                    call: Call<CommonResponse>,
+                    response: Response<CommonResponse>
+                ) {
+                }
             })
             if (onSubmitListener != null) {
                 onSubmitListener!!.onSubmit()

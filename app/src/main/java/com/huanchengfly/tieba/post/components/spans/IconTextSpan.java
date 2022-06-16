@@ -14,10 +14,10 @@ import androidx.annotation.Nullable;
 public class IconTextSpan extends MyImageSpan {
     public static final String TAG = IconTextSpan.class.getSimpleName();
 
-    private String text;
-    private int color;
-    private Bitmap bitmap;
-    private boolean textBold;
+    private final String text;
+    private final int color;
+    private final Bitmap bitmap;
+    private final boolean textBold;
 
     public IconTextSpan(Context context, Bitmap bitmap, String text, @ColorInt int color) {
         this(context, bitmap, text, color, false);

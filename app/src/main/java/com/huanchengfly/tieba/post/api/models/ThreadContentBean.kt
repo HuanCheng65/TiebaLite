@@ -165,6 +165,7 @@ class ThreadContentBean : BaseBean() {
 
     class OriginThreadInfo {
         val title: String? = null
+
         @JsonAdapter(ContentMsgAdapter::class)
         val content: List<ContentBean>? = null
     }
@@ -174,6 +175,7 @@ class ThreadContentBean : BaseBean() {
         val title: String? = null
         val floor: String? = null
         val time: String? = null
+
         @JsonAdapter(ContentMsgAdapter::class)
         val content: List<ContentBean>? = null
         val agree: AgreeBean? = null

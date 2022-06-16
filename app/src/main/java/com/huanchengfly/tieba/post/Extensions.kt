@@ -23,19 +23,19 @@ import com.huanchengfly.tieba.post.utils.MD5Util
 
 
 fun Float.dpToPx(): Int =
-        dpToPxFloat().toInt()
+    dpToPxFloat().toInt()
 
 fun Float.dpToPxFloat(): Float =
-        this * BaseApplication.ScreenInfo.DENSITY + 0.5f
+    this * BaseApplication.ScreenInfo.DENSITY + 0.5f
 
 fun Float.spToPx(): Int =
-        (this * BaseApplication.instance.resources.displayMetrics.scaledDensity + 0.5f).toInt()
+    (this * BaseApplication.instance.resources.displayMetrics.scaledDensity + 0.5f).toInt()
 
 fun Float.pxToDp(): Int =
-        (this / BaseApplication.ScreenInfo.DENSITY + 0.5f).toInt()
+    (this / BaseApplication.ScreenInfo.DENSITY + 0.5f).toInt()
 
 fun Float.pxToSp(): Int =
-        (this / BaseApplication.instance.resources.displayMetrics.scaledDensity + 0.5f).toInt()
+    (this / BaseApplication.instance.resources.displayMetrics.scaledDensity + 0.5f).toInt()
 
 fun Int.dpToPx(): Int = this.toFloat().dpToPx()
 

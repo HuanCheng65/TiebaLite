@@ -71,15 +71,21 @@ class FloorFragment : BaseBottomSheetDialogFragment() {
         }
         val floor = dataBean!!.post!!.floor.toInt()
         val pn = floor - floor % 30
-        startActivity(Intent(attachContext, ReplyActivity::class.java).putExtra("data",
-                ReplyInfoBean(dataBean!!.thread!!.id,
-                        dataBean!!.forum!!.id,
-                        dataBean!!.forum!!.name,
-                        dataBean!!.anti!!.tbs,
-                        dataBean!!.post!!.id,
-                        dataBean!!.post!!.floor,
-                        dataBean!!.post!!.author.nameShow,
-                        AccountUtil.getLoginInfo(attachContext)!!.nameShow).setPn(pn.toString()).toString()))
+        startActivity(
+            Intent(attachContext, ReplyActivity::class.java).putExtra(
+                "data",
+                ReplyInfoBean(
+                    dataBean!!.thread!!.id,
+                    dataBean!!.forum!!.id,
+                    dataBean!!.forum!!.name,
+                    dataBean!!.anti!!.tbs,
+                    dataBean!!.post!!.id,
+                    dataBean!!.post!!.floor,
+                    dataBean!!.post!!.author.nameShow,
+                    AccountUtil.getLoginInfo(attachContext)!!.nameShow
+                ).setPn(pn.toString()).toString()
+            )
+        )
     }
 
     override fun isFullScreen(): Boolean {
@@ -110,9 +116,10 @@ class FloorFragment : BaseBottomSheetDialogFragment() {
     }
 
     override fun initView() {
-        ThemeUtil.setTranslucentThemeBackground(rootView.findViewById(R.id.background),
-                false,
-                false,
+        ThemeUtil.setTranslucentThemeBackground(
+            rootView.findViewById(R.id.background),
+            false,
+            false,
             RadiusTransformation(
                 8,
                 RadiusTransformation.CORNER_TOP_LEFT or RadiusTransformation.CORNER_TOP_RIGHT
@@ -168,28 +175,34 @@ class FloorFragment : BaseBottomSheetDialogFragment() {
 
     private fun refresh(jump: Boolean = false) {
         TiebaApi.getInstance()
-                .floor(tid, pn, pid, spid)
-                .enqueue(object : Callback<SubFloorListBean> {
-                    override fun onFailure(call: Call<SubFloorListBean>, t: Throwable) {
-                        Toast.makeText(attachContext, t.message, Toast.LENGTH_SHORT).show()
-                        refreshLayout.finishRefresh(false)
-                    }
+            .floor(tid, pn, pid, spid)
+            .enqueue(object : Callback<SubFloorListBean> {
+                override fun onFailure(call: Call<SubFloorListBean>, t: Throwable) {
+                    Toast.makeText(attachContext, t.message, Toast.LENGTH_SHORT).show()
+                    refreshLayout.finishRefresh(false)
+                }
 
-                    override fun onResponse(call: Call<SubFloorListBean>, response: Response<SubFloorListBean>) {
-                        val subFloorListBean = response.body() ?: return
-                        dataBean = subFloorListBean
-                        recyclerViewAdapter!!.setData(subFloorListBean)
-                        refreshLayout.finishRefresh()
-                        if (subFloorListBean.page!!.currentPage.toInt() >= subFloorListBean.page.totalPage.toInt()) {
-                            refreshLayout.setNoMoreData(true)
-                        }
-                        toolbar.title = attachContext.getString(R.string.title_floor_loaded, subFloorListBean.post!!.floor)
-                        if (jump) {
-                            mLayoutManager!!.scrollToPositionWithOffset(1, 0)
-                        }
-                        refreshLayout.setEnableRefresh(false)
+                override fun onResponse(
+                    call: Call<SubFloorListBean>,
+                    response: Response<SubFloorListBean>
+                ) {
+                    val subFloorListBean = response.body() ?: return
+                    dataBean = subFloorListBean
+                    recyclerViewAdapter!!.setData(subFloorListBean)
+                    refreshLayout.finishRefresh()
+                    if (subFloorListBean.page!!.currentPage.toInt() >= subFloorListBean.page.totalPage.toInt()) {
+                        refreshLayout.setNoMoreData(true)
                     }
-                })
+                    toolbar.title = attachContext.getString(
+                        R.string.title_floor_loaded,
+                        subFloorListBean.post!!.floor
+                    )
+                    if (jump) {
+                        mLayoutManager!!.scrollToPositionWithOffset(1, 0)
+                    }
+                    refreshLayout.setEnableRefresh(false)
+                }
+            })
     }
 
     private fun load() {
@@ -208,12 +221,12 @@ class FloorFragment : BaseBottomSheetDialogFragment() {
                     dataBean = subFloorListBean
                     recyclerViewAdapter!!.addData(subFloorListBean)
                     refreshLayout.finishLoadMore()
-                        if (subFloorListBean.page!!.currentPage.toInt() >= subFloorListBean.page.totalPage.toInt()) {
-                            refreshLayout.setNoMoreData(true)
-                        }
-                    pn += 1
+                    if (subFloorListBean.page!!.currentPage.toInt() >= subFloorListBean.page.totalPage.toInt()) {
+                        refreshLayout.setNoMoreData(true)
                     }
-                })
+                    pn += 1
+                }
+            })
     }
 
     companion object {
@@ -221,9 +234,15 @@ class FloorFragment : BaseBottomSheetDialogFragment() {
         const val PARAM_PID = "pid"
         const val PARAM_SUB_POST_ID = "spid"
         const val PARAM_JUMP = "jump"
+
         @JvmStatic
         @JvmOverloads
-        fun newInstance(tid: String?, pid: String?, spid: String? = null, jump: Boolean = false): FloorFragment {
+        fun newInstance(
+            tid: String?,
+            pid: String?,
+            spid: String? = null,
+            jump: Boolean = false
+        ): FloorFragment {
             val fragment = FloorFragment()
             val bundle = Bundle()
             bundle.putString(PARAM_TID, tid)

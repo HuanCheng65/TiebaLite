@@ -43,9 +43,9 @@ public final class NavigationHelper {
     public static final int ACTION_THREAD_POST = 6;
     public static final int ACTION_USER = 7;
     public static final int ACTION_USER_BY_UID = 8;
-    private Context mContext;
+    private final Context mContext;
     private Activity activity;
-    private String activityName;
+    private final String activityName;
     private boolean isActivityContext;
 
     private NavigationHelper(Context context) {

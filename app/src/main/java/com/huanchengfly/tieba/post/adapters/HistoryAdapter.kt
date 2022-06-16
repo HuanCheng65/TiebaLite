@@ -11,8 +11,11 @@ import com.huanchengfly.tieba.post.utils.HistoryUtil
 import com.huanchengfly.tieba.post.utils.ImageUtil
 import com.huanchengfly.tieba.post.utils.getItemBackgroundDrawable
 
-class HistoryAdapter @JvmOverloads constructor(context: Context, items: List<History> = emptyList()) :
-        BaseMultiTypeDelegateAdapter<History>(context, LinearLayoutHelper(), items) {
+class HistoryAdapter @JvmOverloads constructor(
+    context: Context,
+    items: List<History> = emptyList()
+) :
+    BaseMultiTypeDelegateAdapter<History>(context, LinearLayoutHelper(), items) {
     override fun getItemLayoutId(itemType: Int): Int = when (itemType) {
         HistoryUtil.TYPE_THREAD -> R.layout.item_history_thread
         HistoryUtil.TYPE_FORUM -> R.layout.item_history_forum
@@ -27,30 +30,44 @@ class HistoryAdapter @JvmOverloads constructor(context: Context, items: List<His
                 viewHolder.setVisibility(R.id.history_item_title, true)
                 if (item.avatar != null) {
                     viewHolder.setVisibility(R.id.history_item_avatar, true)
-                    ImageUtil.load(viewHolder.getView(R.id.history_item_avatar), ImageUtil.LOAD_TYPE_AVATAR, item.avatar)
+                    ImageUtil.load(
+                        viewHolder.getView(R.id.history_item_avatar),
+                        ImageUtil.LOAD_TYPE_AVATAR,
+                        item.avatar
+                    )
                 } else {
                     viewHolder.setVisibility(R.id.history_item_avatar, false)
                     ImageUtil.clear(viewHolder.getView(R.id.history_item_avatar))
                 }
-                viewHolder.setText(R.id.history_item_header_title, getRelativeTimeString(context, item.timestamp))
+                viewHolder.setText(
+                    R.id.history_item_header_title,
+                    getRelativeTimeString(context, item.timestamp)
+                )
             }
             HistoryUtil.TYPE_FORUM -> {
                 viewHolder.setText(R.id.history_item_user, item.title)
                 if (item.avatar != null) {
                     viewHolder.setVisibility(R.id.history_item_avatar, true)
-                    ImageUtil.load(viewHolder.getView(R.id.history_item_avatar), ImageUtil.LOAD_TYPE_AVATAR, item.avatar)
+                    ImageUtil.load(
+                        viewHolder.getView(R.id.history_item_avatar),
+                        ImageUtil.LOAD_TYPE_AVATAR,
+                        item.avatar
+                    )
                 } else {
                     viewHolder.setVisibility(R.id.history_item_avatar, false)
                     ImageUtil.clear(viewHolder.getView(R.id.history_item_avatar))
                 }
-                viewHolder.setText(R.id.history_item_header_title, getRelativeTimeString(context, item.timestamp))
+                viewHolder.setText(
+                    R.id.history_item_header_title,
+                    getRelativeTimeString(context, item.timestamp)
+                )
             }
         }
         viewHolder.itemView.background = getItemBackgroundDrawable(
-                context,
-                position,
-                itemCount,
-                positionOffset = 1
+            context,
+            position,
+            itemCount,
+            positionOffset = 1
         )
     }
 

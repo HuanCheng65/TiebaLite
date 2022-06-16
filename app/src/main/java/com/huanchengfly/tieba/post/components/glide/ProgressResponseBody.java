@@ -26,7 +26,7 @@ public class ProgressResponseBody extends ResponseBody {
 
     private BufferedSource bufferedSource;
 
-    private ResponseBody responseBody;
+    private final ResponseBody responseBody;
 
     private ProgressListener listener;
 

@@ -16,7 +16,7 @@ import com.huanchengfly.tieba.post.adapters.TextWatcherAdapter;
 import com.huanchengfly.tieba.post.interfaces.OnSubmitListener;
 
 public class EditTextDialog extends AlertDialog {
-    private Context mContext;
+    private final Context mContext;
     private View contentView;
     private ImageView codeImageView;
     private Button submitBtn;

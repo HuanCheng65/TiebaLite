@@ -7,7 +7,8 @@ import com.huanchengfly.tieba.post.adapters.base.BaseSingleTypeAdapter
 import com.huanchengfly.tieba.post.api.models.ForumPageBean
 import com.huanchengfly.tieba.post.components.MyViewHolder
 
-class ForumManagerAdapter(context: Context, items: List<ForumPageBean.ManagerBean>) : BaseSingleTypeAdapter<ForumPageBean.ManagerBean>(context, items) {
+class ForumManagerAdapter(context: Context, items: List<ForumPageBean.ManagerBean>) :
+    BaseSingleTypeAdapter<ForumPageBean.ManagerBean>(context, items) {
     override fun getItemLayoutId(): Int {
         return R.layout.item_zyq_friend
     }

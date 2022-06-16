@@ -19,7 +19,7 @@ import com.scwang.smart.refresh.layout.constant.SpinnerStyle
 import com.scwang.smart.refresh.layout.simple.SimpleComponent
 
 class LoadMoreFooter @JvmOverloads constructor(
-        context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
+    context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
 ) : SimpleComponent(context, attrs, defStyleAttr), RefreshFooter {
     private var noMoreData = false
     private var backgroundTintRes: Int = 0
@@ -66,7 +66,11 @@ class LoadMoreFooter @JvmOverloads constructor(
         return false
     }
 
-    override fun onStateChanged(refreshLayout: RefreshLayout, oldState: RefreshState, newState: RefreshState) {
+    override fun onStateChanged(
+        refreshLayout: RefreshLayout,
+        oldState: RefreshState,
+        newState: RefreshState
+    ) {
         if (!noMoreData) {
             when (newState) {
                 RefreshState.None,
@@ -107,14 +111,26 @@ class LoadMoreFooter @JvmOverloads constructor(
         View.inflate(context, R.layout.footer_load_more, this)
         ButterKnife.bind(this)
         if (attrs != null) {
-            val array = getContext().obtainStyledAttributes(attrs, R.styleable.LoadMoreFooter, defStyleAttr, 0)
-            radius = array.getDimension(R.styleable.LoadMoreFooter_radius, resources.getDimension(R.dimen.card_radius))
-            backgroundTintRes = array.getResourceId(R.styleable.LoadMoreFooter_backgroundTint, R.color.default_color_card)
-            spinnerStyle = when (array.getInteger(R.styleable.LoadMoreFooter_footerSpinnerStyle, 1)) {
-                0 -> SpinnerStyle.Scale
-                2 -> SpinnerStyle.FixedBehind
-                else -> SpinnerStyle.Translate
-            }
+            val array = getContext().obtainStyledAttributes(
+                attrs,
+                R.styleable.LoadMoreFooter,
+                defStyleAttr,
+                0
+            )
+            radius = array.getDimension(
+                R.styleable.LoadMoreFooter_radius,
+                resources.getDimension(R.dimen.card_radius)
+            )
+            backgroundTintRes = array.getResourceId(
+                R.styleable.LoadMoreFooter_backgroundTint,
+                R.color.default_color_card
+            )
+            spinnerStyle =
+                when (array.getInteger(R.styleable.LoadMoreFooter_footerSpinnerStyle, 1)) {
+                    0 -> SpinnerStyle.Scale
+                    2 -> SpinnerStyle.FixedBehind
+                    else -> SpinnerStyle.Translate
+                }
             array.recycle()
         } else {
             spinnerStyle = SpinnerStyle.Translate

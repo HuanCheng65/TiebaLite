@@ -12,7 +12,7 @@ import com.huanchengfly.tieba.post.R
 import com.huanchengfly.tieba.post.components.MyViewHolder
 
 class ThreadHeaderAdapter(
-        private val context: Context
+    private val context: Context
 ) : DelegateAdapter.Adapter<MyViewHolder>(), View.OnClickListener {
     var title: CharSequence? = null
         set(value) {
@@ -39,7 +39,8 @@ class ThreadHeaderAdapter(
         }
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder = MyViewHolder(context, R.layout.layout_thread_header)
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder =
+        MyViewHolder(context, R.layout.layout_thread_header)
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
         holder.setText(R.id.thread_header_title, title)

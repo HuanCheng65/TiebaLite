@@ -16,11 +16,11 @@ import com.huanchengfly.tieba.post.widgets.theme.TintLinearLayout
 import com.huanchengfly.tieba.post.widgets.theme.TintTextView
 
 class MIUIThreadMenuFragment(
-        seeLz: Boolean,
-        collect: Boolean,
-        pureRead: Boolean,
-        sort: Boolean,
-        canDelete: Boolean
+    seeLz: Boolean,
+    collect: Boolean,
+    pureRead: Boolean,
+    sort: Boolean,
+    canDelete: Boolean
 ) : IThreadMenuFragment(seeLz, collect, pureRead, sort, canDelete) {
     @BindView(R.id.thread_menu_see_lz)
     lateinit var seeLzItem: TintLinearLayout
@@ -144,10 +144,10 @@ class MIUIThreadMenuFragment(
             sortStatus.alpha = 1f
         }
         listOf(
-                seeLzItem,
-                collectItem,
-                pureReadItem,
-                sortItem
+            seeLzItem,
+            collectItem,
+            pureReadItem,
+            sortItem
         ).forEach {
             buildPressAnimator(it) {
                 addZoomAnimation(0.1f)
@@ -162,22 +162,25 @@ class MIUIThreadMenuFragment(
             View.GONE
         }
         menuView.post {
-            mBehavior.setPeekHeight(((4 + 8 * 2 + 16 * 3 + 8).dpToPx() + seeLzItem.height * 2 + jumpPageItem.height * 2.5f).toInt(), false)
+            mBehavior.setPeekHeight(
+                ((4 + 8 * 2 + 16 * 3 + 8).dpToPx() + seeLzItem.height * 2 + jumpPageItem.height * 2.5f).toInt(),
+                false
+            )
         }
     }
 
     override fun getLayoutId(): Int = R.layout.fragment_thread_menu_miui_style
 
     @OnClick(
-            R.id.thread_menu_see_lz,
-            R.id.thread_menu_collect,
-            R.id.thread_menu_pure_read,
-            R.id.thread_menu_sort,
-            R.id.thread_menu_report,
-            R.id.thread_menu_jump_page,
-            R.id.thread_menu_copy_link,
-            R.id.thread_menu_share,
-            R.id.thread_menu_close
+        R.id.thread_menu_see_lz,
+        R.id.thread_menu_collect,
+        R.id.thread_menu_pure_read,
+        R.id.thread_menu_sort,
+        R.id.thread_menu_report,
+        R.id.thread_menu_jump_page,
+        R.id.thread_menu_copy_link,
+        R.id.thread_menu_share,
+        R.id.thread_menu_close
     )
     override fun onClick(v: View) {
         when (v.id) {

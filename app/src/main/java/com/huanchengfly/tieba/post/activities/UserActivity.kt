@@ -97,7 +97,8 @@ class UserActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         StatusBarUtil.transparentStatusBar(this)
-        (toolbar.layoutParams as CollapsingToolbarLayout.LayoutParams).topMargin = StatusBarUtil.getStatusBarHeight(this)
+        (toolbar.layoutParams as CollapsingToolbarLayout.LayoutParams).topMargin =
+            StatusBarUtil.getStatusBarHeight(this)
         fakeStatusBarView.minimumHeight = StatusBarUtil.getStatusBarHeight(this)
         ThemeUtil.setTranslucentThemeBackground(findViewById(R.id.background))
         uid = intent.getStringExtra(EXTRA_UID)
@@ -108,8 +109,8 @@ class UserActivity : BaseActivity() {
             return
         }
         val adapter = FragmentTabViewPagerAdapter(supportFragmentManager)
-        val viewPager = findViewById(R.id.user_center_vp) as ViewPager
-        val tabLayout = findViewById(R.id.user_center_tab) as TabLayout
+        val viewPager = findViewById<ViewPager>(R.id.user_center_vp)
+        val tabLayout = findViewById<TabLayout>(R.id.user_center_tab)
         actionBtn.visibility = View.GONE
         if (!TextUtils.isEmpty(avatar)) {
             loadingView.visibility = View.GONE
@@ -140,17 +141,26 @@ class UserActivity : BaseActivity() {
                 profileBean = data
                 refreshHeader()
                 adapter.clear()
-                adapter.addFragment(UserPostFragment.newInstance(uid, true), "贴子 " + data!!.user!!.threadNum)
-                adapter.addFragment(UserPostFragment.newInstance(uid, false), "回复 " + data.user!!.repostNum)
-                adapter.addFragment(UserLikeForumFragment.newInstance(uid), "关注吧 " + data.user.myLikeNum)
+                adapter.addFragment(
+                    UserPostFragment.newInstance(uid, true),
+                    "贴子 " + data!!.user!!.threadNum
+                )
+                adapter.addFragment(
+                    UserPostFragment.newInstance(uid, false),
+                    "回复 " + data.user!!.repostNum
+                )
+                adapter.addFragment(
+                    UserLikeForumFragment.newInstance(uid),
+                    "关注吧 " + data.user.myLikeNum
+                )
                 viewPager.setCurrentItem(tab, false)
             }
 
             override fun onFailure(call: Call<ProfileBean?>, t: Throwable) {}
         })
         listOf(
-                followStatTv,
-                fansStatTv
+            followStatTv,
+            fansStatTv
         ).forEach {
             it.typeface = Typeface.createFromAsset(assets, "bebas.ttf")
         }
@@ -163,8 +173,15 @@ class UserActivity : BaseActivity() {
         fansStatTv.text = "${profileBean!!.user!!.fansNum}"
         //getString(R.string.tip_stat, profileBean!!.user!!.concernNum, profileBean!!.user!!.fansNum)
         if (avatarView.tag == null) {
-            ImageUtil.load(avatarView, ImageUtil.LOAD_TYPE_ALWAYS_ROUND, "http://tb.himg.baidu.com/sys/portrait/item/" + profileBean!!.user!!.portrait)
-            ImageUtil.initImageView(avatarView, PhotoViewBean("http://tb.himg.baidu.com/sys/portrait/item/" + profileBean!!.user!!.portrait))
+            ImageUtil.load(
+                avatarView,
+                ImageUtil.LOAD_TYPE_ALWAYS_ROUND,
+                "http://tb.himg.baidu.com/sys/portrait/item/" + profileBean!!.user!!.portrait
+            )
+            ImageUtil.initImageView(
+                avatarView,
+                PhotoViewBean("http://tb.himg.baidu.com/sys/portrait/item/" + profileBean!!.user!!.portrait)
+            )
         }
         if (TextUtils.equals(AccountUtil.getUid(this), profileBean!!.user!!.id)) {
             actionBtn.setText(R.string.menu_edit_info)
@@ -175,7 +192,8 @@ class UserActivity : BaseActivity() {
                 actionBtn.setText(R.string.button_follow)
             }
         }
-        sexTv.text = if (profileBean!!.user!!.sex == "1") "♂" else if (profileBean!!.user!!.sex == "2") "♀" else "?"
+        sexTv.text =
+            if (profileBean!!.user!!.sex == "1") "♂" else if (profileBean!!.user!!.sex == "2") "♀" else "?"
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -198,19 +216,20 @@ class UserActivity : BaseActivity() {
                 if (profileBean == null || profileBean!!.user == null) {
                     return true
                 }
-                val category = if (item.itemId == R.id.menu_block_black) Block.CATEGORY_BLACK_LIST else Block.CATEGORY_WHITE_LIST
+                val category =
+                    if (item.itemId == R.id.menu_block_black) Block.CATEGORY_BLACK_LIST else Block.CATEGORY_WHITE_LIST
                 Block()
-                        .setUid(profileBean!!.user!!.id)
-                        .setUsername(profileBean!!.user!!.name)
-                        .setType(Block.TYPE_USER)
-                        .setCategory(category)
-                        .saveAsync()
-                        .listen { success: Boolean ->
-                            if (success) {
-                                Toast.makeText(this, R.string.toast_add_success, Toast.LENGTH_SHORT)
-                                    .show()
-                            }
+                    .setUid(profileBean!!.user!!.id)
+                    .setUsername(profileBean!!.user!!.name)
+                    .setType(Block.TYPE_USER)
+                    .setCategory(category)
+                    .saveAsync()
+                    .listen { success: Boolean ->
+                        if (success) {
+                            Toast.makeText(this, R.string.toast_add_success, Toast.LENGTH_SHORT)
+                                .show()
                         }
+                    }
                 return true
             }
             R.id.menu_edit_info -> {
@@ -237,8 +256,14 @@ class UserActivity : BaseActivity() {
             return
         }
         if ("1" == profileBean!!.user!!.hasConcerned) {
-            getInstance().unfollow(profileBean!!.user!!.portrait!!, AccountUtil.getLoginInfo(this)!!.tbs).enqueue(object : Callback<CommonResponse?> {
-                override fun onResponse(call: Call<CommonResponse?>, response: Response<CommonResponse?>) {
+            getInstance().unfollow(
+                profileBean!!.user!!.portrait!!,
+                AccountUtil.getLoginInfo(this)!!.tbs
+            ).enqueue(object : Callback<CommonResponse?> {
+                override fun onResponse(
+                    call: Call<CommonResponse?>,
+                    response: Response<CommonResponse?>
+                ) {
                     val data = response.body()
                     Toast.makeText(this@UserActivity, data!!.errorMsg, Toast.LENGTH_SHORT).show()
                     profileBean!!.user!!.setHasConcerned("0")
@@ -250,8 +275,14 @@ class UserActivity : BaseActivity() {
                 }
             })
         } else {
-            getInstance().follow(profileBean!!.user!!.portrait!!, AccountUtil.getLoginInfo(this)!!.tbs).enqueue(object : Callback<CommonResponse?> {
-                override fun onResponse(call: Call<CommonResponse?>, response: Response<CommonResponse?>) {
+            getInstance().follow(
+                profileBean!!.user!!.portrait!!,
+                AccountUtil.getLoginInfo(this)!!.tbs
+            ).enqueue(object : Callback<CommonResponse?> {
+                override fun onResponse(
+                    call: Call<CommonResponse?>,
+                    response: Response<CommonResponse?>
+                ) {
                     val data = response.body()
                     Toast.makeText(this@UserActivity, data!!.errorMsg, Toast.LENGTH_SHORT).show()
                     profileBean!!.user!!.setHasConcerned("1")

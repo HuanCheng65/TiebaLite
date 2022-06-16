@@ -22,9 +22,9 @@ import java.util.List;
 
 public class BlockListAdapter extends RecyclerView.Adapter<MyViewHolder> {
     private static final String TAG = "BlockListAdapter";
-    private Context mContext;
+    private final Context mContext;
     private List<Block> dataList;
-    private int type;
+    private final int type;
 
     public BlockListAdapter(Context context, int type) {
         super();
@@ -101,6 +101,6 @@ public class BlockListAdapter extends RecyclerView.Adapter<MyViewHolder> {
         for (int i = 0; i < list.size(); i++) {
             sb.append(list.get(i)).append(separator);
         }
-        return sb.toString().substring(0, sb.toString().length() - 1);
+        return sb.substring(0, sb.toString().length() - 1);
     }
 }

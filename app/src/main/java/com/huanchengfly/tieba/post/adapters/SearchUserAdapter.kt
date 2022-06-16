@@ -12,13 +12,20 @@ import com.huanchengfly.tieba.post.utils.StringUtil
 import com.huanchengfly.tieba.post.utils.getIntermixedColorBackground
 
 class SearchUserAdapter(
-        context: Context
+    context: Context
 ) : BaseSingleTypeDelegateAdapter<SearchUserBean.UserBean>(
-        context, LinearLayoutHelper()
+    context, LinearLayoutHelper()
 ) {
     override fun convert(viewHolder: MyViewHolder, item: SearchUserBean.UserBean, position: Int) {
-        viewHolder.setText(R.id.item_search_user_title, StringUtil.getUsernameString(context, item.name, item.userNickname))
-        ImageUtil.load(viewHolder.getView(R.id.item_search_user_avatar), ImageUtil.LOAD_TYPE_AVATAR, item.portrait)
+        viewHolder.setText(
+            R.id.item_search_user_title,
+            StringUtil.getUsernameString(context, item.name, item.userNickname)
+        )
+        ImageUtil.load(
+            viewHolder.getView(R.id.item_search_user_avatar),
+            ImageUtil.LOAD_TYPE_AVATAR,
+            item.portrait
+        )
         val subTitleBuilder = StringBuilder()
         if (!TextUtils.isEmpty(item.intro)) {
             subTitleBuilder.append(item.intro)
@@ -27,12 +34,12 @@ class SearchUserAdapter(
         subTitleBuilder.append(context.getString(R.string.fans_num, item.fansNum))
         viewHolder.setText(R.id.item_search_user_subtitle, subTitleBuilder.toString())
         viewHolder.itemView.background = getIntermixedColorBackground(
-                context,
-                position,
-                itemCount,
-                positionOffset = 1,
-                colors = intArrayOf(R.color.default_color_card, R.color.default_color_divider),
-                radius = context.resources.getDimension(R.dimen.card_radius)
+            context,
+            position,
+            itemCount,
+            positionOffset = 1,
+            colors = intArrayOf(R.color.default_color_card, R.color.default_color_divider),
+            radius = context.resources.getDimension(R.dimen.card_radius)
         )
     }
 

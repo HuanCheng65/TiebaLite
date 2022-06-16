@@ -24,11 +24,11 @@ import com.huanchengfly.tieba.post.widgets.theme.TintImageView
 import com.huanchengfly.tieba.post.widgets.theme.TintTextView
 
 class HeaderDelegateAdapter @JvmOverloads constructor(
-        val context: Context,
-        val title: CharSequence = "",
-        val startIconDrawable: Drawable? = null,
-        val endIconDrawable: Drawable? = null,
-        val sticky: Int = STICKY_NO
+    val context: Context,
+    val title: CharSequence = "",
+    val startIconDrawable: Drawable? = null,
+    val endIconDrawable: Drawable? = null,
+    val sticky: Int = STICKY_NO
 ) : DelegateAdapter.Adapter<MyViewHolder>() {
     var topPadding: Int = DEFAULT_PADDING_DP.dpToPx()
         set(value) {
@@ -180,50 +180,65 @@ class HeaderDelegateAdapter @JvmOverloads constructor(
     }
 
     constructor(
-            context: Context,
-            titleResId: Int = NO_TITLE,
-            startIconResId: Int = NO_ICON,
-            endIconResId: Int = NO_ICON,
-            sticky: Int = STICKY_NO
+        context: Context,
+        titleResId: Int = NO_TITLE,
+        startIconResId: Int = NO_ICON,
+        endIconResId: Int = NO_ICON,
+        sticky: Int = STICKY_NO
     ) : this(
-            context,
-            if (titleResId == NO_TITLE) "" else context.getString(titleResId),
-            if (startIconResId == NO_ICON) null else ContextCompat.getDrawable(context, startIconResId),
-            if (endIconResId == NO_ICON) null else ContextCompat.getDrawable(context, endIconResId),
-            sticky
+        context,
+        if (titleResId == NO_TITLE) "" else context.getString(titleResId),
+        if (startIconResId == NO_ICON) null else ContextCompat.getDrawable(context, startIconResId),
+        if (endIconResId == NO_ICON) null else ContextCompat.getDrawable(context, endIconResId),
+        sticky
     )
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder = MyViewHolder(context, R.layout.item_header_delegate)
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder =
+        MyViewHolder(context, R.layout.item_header_delegate)
 
     override fun getItemCount(): Int = 1
 
     override fun onCreateLayoutHelper(): LayoutHelper =
-            if (sticky == STICKY_NO) {
-                SingleLayoutHelper()
-            } else {
-                StickyLayoutHelper(sticky != STICKY_BOTTOM)
-            }
+        if (sticky == STICKY_NO) {
+            SingleLayoutHelper()
+        } else {
+            StickyLayoutHelper(sticky != STICKY_BOTTOM)
+        }
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
         val rootView = holder.getView<RelativeLayout>(R.id.header_root_view)
         rootView.setPaddingRelative(startPadding, topPadding, endPadding, bottomPadding)
-        rootView.layoutParams = FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT).apply {
+        rootView.layoutParams = FrameLayout.LayoutParams(
+            ViewGroup.LayoutParams.MATCH_PARENT,
+            ViewGroup.LayoutParams.WRAP_CONTENT
+        ).apply {
             this.marginStart = this@HeaderDelegateAdapter.startMargin
             this.topMargin = this@HeaderDelegateAdapter.topMargin
             this.marginEnd = this@HeaderDelegateAdapter.endMargin
             this.bottomMargin = this@HeaderDelegateAdapter.bottomMargin
         }
         rootView.background = headerBackground
-        rootView.backgroundTintList = if (headerBackgroundTintList == 0) null else ColorStateListUtils.createColorStateList(context, headerBackgroundTintList)
+        rootView.backgroundTintList =
+            if (headerBackgroundTintList == 0) null else ColorStateListUtils.createColorStateList(
+                context,
+                headerBackgroundTintList
+            )
         holder.itemView.background = viewBackground
-        holder.itemView.backgroundTintList = if (viewBackgroundTintList == 0) null else ColorStateListUtils.createColorStateList(context, viewBackgroundTintList)
+        holder.itemView.backgroundTintList =
+            if (viewBackgroundTintList == 0) null else ColorStateListUtils.createColorStateList(
+                context,
+                viewBackgroundTintList
+            )
         holder.getView<TintImageView>(R.id.icon).setTintListResId(iconTintList)
         holder.getView<TintImageView>(R.id.end_icon).setTintListResId(iconTintList)
         holder.getView<TintTextView>(R.id.title).tintResId = titleTextColor
         holder.setImageDrawable(R.id.icon, startIconDrawable)
         holder.setVisibility(R.id.icon, if (startIconDrawable == null) View.GONE else View.VISIBLE)
         holder.setImageDrawable(R.id.end_icon, endIconDrawable)
-        holder.setVisibility(R.id.end_icon, if (endIconDrawable == null) View.GONE else View.VISIBLE)
+        holder.setVisibility(
+            R.id.end_icon,
+            if (endIconDrawable == null) View.GONE else View.VISIBLE
+        )
         holder.setText(R.id.title, title)
         setOnClickListener(rootView, onClickListener)
         setOnClickListener(holder.getView(R.id.icon), onStartIconClickListener)

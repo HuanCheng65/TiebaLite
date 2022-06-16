@@ -25,7 +25,7 @@ public class RecycleViewDivider extends RecyclerView.ItemDecoration implements T
     private Context mContext;
     private Drawable mDivider;
     private int mDividerHeight = 2;//分割线高度，默认为1px
-    private int mOrientation;//列表的方向：LinearLayoutManager.VERTICAL或LinearLayoutManager.HORIZONTAL
+    private final int mOrientation;//列表的方向：LinearLayoutManager.VERTICAL或LinearLayoutManager.HORIZONTAL
     private int leftInner = 0;
     private int rightInner = 0;
 

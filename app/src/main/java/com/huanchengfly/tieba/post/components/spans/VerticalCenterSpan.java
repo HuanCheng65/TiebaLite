@@ -9,7 +9,7 @@ import android.text.style.ReplacementSpan;
  * 使TextView中不同大小字体垂直居中
  */
 public class VerticalCenterSpan extends ReplacementSpan {
-    private float fontSizePx;    //px
+    private final float fontSizePx;    //px
 
     public VerticalCenterSpan(float fontSizePx) {
         this.fontSizePx = fontSizePx;

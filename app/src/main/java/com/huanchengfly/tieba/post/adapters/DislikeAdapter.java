@@ -18,9 +18,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class DislikeAdapter extends RecyclerView.Adapter<MyViewHolder> {
-    private Context mContext;
-    private List<PersonalizedBean.DislikeResourceBean> beans;
-    private List<String> selectedIds;
+    private final Context mContext;
+    private final List<PersonalizedBean.DislikeResourceBean> beans;
+    private final List<String> selectedIds;
 
     public DislikeAdapter(Context context, List<PersonalizedBean.DislikeResourceBean> beans) {
         this.mContext = context;

@@ -12,22 +12,49 @@ import com.huanchengfly.tieba.post.components.MyViewHolder
 import com.huanchengfly.tieba.post.ui.theme.utils.ThemeUtils
 import com.huanchengfly.tieba.post.utils.DateTimeUtils.getRelativeTimeString
 
-class SearchPostAdapter(context: Context) : BaseSingleTypeAdapter<SearchPostBean.ThreadInfoBean>(context) {
-    override fun convert(viewHolder: MyViewHolder, item: SearchPostBean.ThreadInfoBean, position: Int) {
+class SearchPostAdapter(context: Context) :
+    BaseSingleTypeAdapter<SearchPostBean.ThreadInfoBean>(context) {
+    override fun convert(
+        viewHolder: MyViewHolder,
+        item: SearchPostBean.ThreadInfoBean,
+        position: Int
+    ) {
         val contentTextView = viewHolder.getView<TextView>(R.id.item_search_thread_content)
         val titleTextView = viewHolder.getView<TextView>(R.id.item_search_thread_title)
-        titleTextView.text = HtmlCompat.fromHtml(item.title!!.getReplaced(), HtmlCompat.FROM_HTML_MODE_COMPACT)
-        contentTextView.text = HtmlCompat.fromHtml(item.content!!.getReplaced(), HtmlCompat.FROM_HTML_MODE_COMPACT)
+        titleTextView.text =
+            HtmlCompat.fromHtml(item.title!!.getReplaced(), HtmlCompat.FROM_HTML_MODE_COMPACT)
+        contentTextView.text =
+            HtmlCompat.fromHtml(item.content!!.getReplaced(), HtmlCompat.FROM_HTML_MODE_COMPACT)
         viewHolder.setText(R.id.item_search_thread_user, item.author!!.nameShow)
         if (item.forumName == null) {
-            viewHolder.setText(R.id.item_search_thread_info, getRelativeTimeString(context, item.time!!))
+            viewHolder.setText(
+                R.id.item_search_thread_info,
+                getRelativeTimeString(context, item.time!!)
+            )
         } else {
-            viewHolder.setText(R.id.item_search_thread_info, context.getString(R.string.template_two_string, item.forumName, getRelativeTimeString(context, item.time!!)))
+            viewHolder.setText(
+                R.id.item_search_thread_info,
+                context.getString(
+                    R.string.template_two_string,
+                    item.forumName,
+                    getRelativeTimeString(context, item.time!!)
+                )
+            )
         }
     }
 
     private fun String.getReplaced(): String {
-        return replace("<em>", "<strong><font color=\"${toString(ThemeUtils.getColorById(context, R.color.default_color_accent))}\">").replace("</em>", "</font></strong>")
+        return replace(
+            "<em>",
+            "<strong><font color=\"${
+                toString(
+                    ThemeUtils.getColorById(
+                        context,
+                        R.color.default_color_accent
+                    )
+                )
+            }\">"
+        ).replace("</em>", "</font></strong>")
     }
 
     override fun getItemLayoutId(): Int {

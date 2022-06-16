@@ -25,7 +25,8 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class SearchUserFragment : BaseFragment(), ISearchFragment, OnItemClickListener<SearchUserBean.UserBean> {
+class SearchUserFragment : BaseFragment(), ISearchFragment,
+    OnItemClickListener<SearchUserBean.UserBean> {
     private var keyword: String? = null
 
     @JvmField
@@ -41,8 +42,8 @@ class SearchUserFragment : BaseFragment(), ISearchFragment, OnItemClickListener<
     private var mData: SearchUserDataBean? = null
 
     override fun setKeyword(
-            keyword: String?,
-            needRefresh: Boolean
+        keyword: String?,
+        needRefresh: Boolean
     ) {
         this.keyword = keyword
         this.mData = null
@@ -72,7 +73,7 @@ class SearchUserFragment : BaseFragment(), ISearchFragment, OnItemClickListener<
         }
     }
 
-    public override fun getLayoutId(): Int {
+    override fun getLayoutId(): Int {
         return R.layout.fragment_search
     }
 
@@ -95,9 +96,9 @@ class SearchUserFragment : BaseFragment(), ISearchFragment, OnItemClickListener<
             if (mData!!.exactMatch != null) {
                 exactMatchAdapter.setData(listOf(mData!!.exactMatch!!))
                 delegateAdapter.addAdapter(HeaderDelegateAdapter(
-                        attachContext,
-                        R.string.title_exact_match,
-                        R.drawable.ic_round_graphic_eq
+                    attachContext,
+                    R.string.title_exact_match,
+                    R.drawable.ic_round_graphic_eq
                 ).apply {
                     setHeaderBackgroundResource(R.drawable.bg_top_radius_8dp)
                     topMargin = attachContext.resources.getDimensionPixelSize(R.dimen.card_margin)
@@ -109,9 +110,9 @@ class SearchUserFragment : BaseFragment(), ISearchFragment, OnItemClickListener<
             if (!mData!!.fuzzyMatch.isNullOrEmpty()) {
                 fuzzyMatchAdapter.setData(mData!!.fuzzyMatch!!)
                 delegateAdapter.addAdapter(HeaderDelegateAdapter(
-                        attachContext,
-                        R.string.title_fuzzy_match,
-                        R.drawable.ic_infinite
+                    attachContext,
+                    R.string.title_fuzzy_match,
+                    R.drawable.ic_infinite
                 ).apply {
                     setHeaderBackgroundResource(R.drawable.bg_top_radius_8dp)
                     topMargin = attachContext.resources.getDimensionPixelSize(R.dimen.card_margin)
@@ -129,7 +130,10 @@ class SearchUserFragment : BaseFragment(), ISearchFragment, OnItemClickListener<
             return
         }
         TiebaApi.getInstance().searchUser(keyword!!).enqueue(object : Callback<SearchUserBean> {
-            override fun onResponse(call: Call<SearchUserBean>, response: Response<SearchUserBean>) {
+            override fun onResponse(
+                call: Call<SearchUserBean>,
+                response: Response<SearchUserBean>
+            ) {
                 val searchUserDataBean = response.body()!!.data
                 mData = searchUserDataBean
                 reloadAdapters()

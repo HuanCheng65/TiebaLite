@@ -7,7 +7,9 @@ import com.alibaba.android.vlayout.VirtualLayoutManager
 
 class FillVirtualLayoutManager(context: Context) : VirtualLayoutManager(context) {
     override fun generateDefaultLayoutParams(): RecyclerView.LayoutParams {
-        return LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT)
+        return LayoutParams(
+            ViewGroup.LayoutParams.MATCH_PARENT,
+            ViewGroup.LayoutParams.WRAP_CONTENT
+        )
     }
 }

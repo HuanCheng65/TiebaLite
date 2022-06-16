@@ -11,8 +11,8 @@ import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 import com.huanchengfly.tieba.post.utils.DisplayUtil;
 
 public class StaggeredDividerItemDecoration extends RecyclerView.ItemDecoration {
-    private Context context;
-    private int interval;
+    private final Context context;
+    private final int interval;
 
     public StaggeredDividerItemDecoration(Context context, int interval) {
         this.context = context;

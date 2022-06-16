@@ -127,10 +127,6 @@ abstract class BaseFragment : Fragment(), BackHandledInterface, CoroutineScope {
         super.onViewCreated((if (isReuseView) rootView else view)!!, savedInstanceState)
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-    }
-
     override fun onDestroy() {
         super.onDestroy()
         initVariable()
@@ -143,7 +139,11 @@ abstract class BaseFragment : Fragment(), BackHandledInterface, CoroutineScope {
         isReuseView = true
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
         val inflate = inflater.inflate(getLayoutId(), container, false)
         unbinder = ButterKnife.bind(this, inflate)
         return inflate

@@ -31,7 +31,7 @@ public class UIDUtil {
         if (TextUtils.isEmpty(imei)) {
             imei = "0";
         }
-        return getCUID() + "|" + new StringBuffer(imei).reverse().toString();
+        return getCUID() + "|" + new StringBuffer(imei).reverse();
     }
 
     @SuppressLint("ApplySharedPref")

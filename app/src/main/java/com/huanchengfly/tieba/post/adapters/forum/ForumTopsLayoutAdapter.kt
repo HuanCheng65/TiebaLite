@@ -10,8 +10,8 @@ import com.huanchengfly.tieba.post.components.MyLinearLayoutManager
 import com.huanchengfly.tieba.post.components.MyViewHolder
 
 class ForumTopsLayoutAdapter(
-        context: Context,
-        data: ForumPageBean? = null
+    context: Context,
+    data: ForumPageBean? = null
 ) : SingleLayoutDelegateAdapter(context, R.layout.layout_forum_tops) {
     var dataBean: ForumPageBean? = null
         set(value) {
@@ -29,7 +29,8 @@ class ForumTopsLayoutAdapter(
             val recyclerView: RecyclerView = viewHolder.getView(R.id.recyclerview)
             recyclerView.apply {
                 if (tag != true) {
-                    layoutManager = MyLinearLayoutManager(context).apply { setCanVerticalScroll(false) }
+                    layoutManager =
+                        MyLinearLayoutManager(context).apply { setCanVerticalScroll(false) }
                     adapter = ForumTopsAdapter(context, dataBean)
                     tag = true
                 } else {

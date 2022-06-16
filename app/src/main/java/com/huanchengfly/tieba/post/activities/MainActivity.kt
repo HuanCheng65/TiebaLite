@@ -206,17 +206,25 @@ open class MainActivity : BaseActivity(), NavigationBarView.OnItemSelectedListen
                         SharedPreferencesUtil.put(
                             this,
                             SharedPreferencesUtil.SP_APP_DATA,
-                        "notice_dialog",
-                        true
-                    )
-                }
-                .setCancelable(false)
-                .create())
+                            "notice_dialog",
+                            true
+                        )
+                    }
+                    .setCancelable(false)
+                    .create())
         }
         if (shouldShowSwitchSnackbar()) {
-            Util.createSnackbar(mViewPager, if (ThemeUtil.isNightMode(this)) R.string.snackbar_auto_switch_to_night else R.string.snackbar_auto_switch_from_night, Snackbar.LENGTH_SHORT)
-                    .show()
-            SharedPreferencesUtil.put(ThemeUtil.getSharedPreferences(this), SP_SHOULD_SHOW_SNACKBAR, false)
+            Util.createSnackbar(
+                mViewPager,
+                if (ThemeUtil.isNightMode(this)) R.string.snackbar_auto_switch_to_night else R.string.snackbar_auto_switch_from_night,
+                Snackbar.LENGTH_SHORT
+            )
+                .show()
+            SharedPreferencesUtil.put(
+                ThemeUtil.getSharedPreferences(this),
+                SP_SHOULD_SHOW_SNACKBAR,
+                false
+            )
         }
         handler.postDelayed({
             try {
@@ -226,11 +234,18 @@ open class MainActivity : BaseActivity(), NavigationBarView.OnItemSelectedListen
             }
             if (AccountUtil.isLoggedIn(this) && AccountUtil.getCookie(this) == null) {
                 showDialog(DialogUtil.build(this)
-                        .setTitle(R.string.title_dialog_update_stoken)
-                        .setMessage(R.string.message_dialog_update_stoken)
-                        .setPositiveButton(R.string.button_sure_default) { _: DialogInterface?, _: Int -> startActivity(UpdateInfoActivity.newIntent(this, UpdateInfoActivity.ACTION_UPDATE_LOGIN_INFO)) }
-                        .setCancelable(false)
-                        .create())
+                    .setTitle(R.string.title_dialog_update_stoken)
+                    .setMessage(R.string.message_dialog_update_stoken)
+                    .setPositiveButton(R.string.button_sure_default) { _: DialogInterface?, _: Int ->
+                        startActivity(
+                            UpdateInfoActivity.newIntent(
+                                this,
+                                UpdateInfoActivity.ACTION_UPDATE_LOGIN_INFO
+                            )
+                        )
+                    }
+                    .setCancelable(false)
+                    .create())
             }
             AccountUtil.updateUserInfo(this, object : CommonCallback<MyInfoBean> {
                 override fun onSuccess(data: MyInfoBean) {}
@@ -238,11 +253,15 @@ open class MainActivity : BaseActivity(), NavigationBarView.OnItemSelectedListen
                 override fun onFailure(code: Int, error: String) {
                     if (code == Error.ERROR_LOGGED_IN_EXPIRED) {
                         showDialog(DialogUtil.build(this@MainActivity)
-                                .setTitle(R.string.title_dialog_logged_in_expired)
-                                .setMessage(R.string.message_dialog_logged_in_expired)
-                                .setPositiveButton(R.string.button_ok) { _: DialogInterface?, _: Int -> navigationHelper.navigationByData(NavigationHelper.ACTION_LOGIN) }
-                                .setCancelable(false)
-                                .create())
+                            .setTitle(R.string.title_dialog_logged_in_expired)
+                            .setMessage(R.string.message_dialog_logged_in_expired)
+                            .setPositiveButton(R.string.button_ok) { _: DialogInterface?, _: Int ->
+                                navigationHelper.navigationByData(
+                                    NavigationHelper.ACTION_LOGIN
+                                )
+                            }
+                            .setCancelable(false)
+                            .create())
                     }
                 }
             })
@@ -261,14 +280,23 @@ open class MainActivity : BaseActivity(), NavigationBarView.OnItemSelectedListen
 
     override fun onStart() {
         super.onStart()
-        registerReceiver(newMessageReceiver, ReceiverUtil.createIntentFilter(NotifyJobService.ACTION_NEW_MESSAGE))
-        registerReceiver(accountSwitchReceiver, ReceiverUtil.createIntentFilter(AccountUtil.ACTION_SWITCH_ACCOUNT))
+        registerReceiver(
+            newMessageReceiver,
+            ReceiverUtil.createIntentFilter(NotifyJobService.ACTION_NEW_MESSAGE)
+        )
+        registerReceiver(
+            accountSwitchReceiver,
+            ReceiverUtil.createIntentFilter(AccountUtil.ACTION_SWITCH_ACCOUNT)
+        )
         try {
             startService(Intent(this, NotifyJobService::class.java))
-            val builder = JobInfo.Builder(JobServiceUtil.getJobId(this), ComponentName(this, NotifyJobService::class.java))
-                    .setPersisted(true)
-                    .setPeriodic(30 * 60 * 1000L)
-                    .setRequiredNetworkType(JobInfo.NETWORK_TYPE_ANY)
+            val builder = JobInfo.Builder(
+                JobServiceUtil.getJobId(this),
+                ComponentName(this, NotifyJobService::class.java)
+            )
+                .setPersisted(true)
+                .setPeriodic(30 * 60 * 1000L)
+                .setRequiredNetworkType(JobInfo.NETWORK_TYPE_ANY)
             val jobScheduler = getSystemService(Context.JOB_SCHEDULER_SERVICE) as JobScheduler
             jobScheduler.schedule(builder.build())
         } catch (ignored: Exception) {

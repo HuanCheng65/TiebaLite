@@ -22,8 +22,8 @@ public class ForumDivider extends RecyclerView.ItemDecoration implements Tintabl
     public static final String TAG = "ForumDivider";
 
     private Drawable mDivider;
-    private int mOrientation;
-    private int mDividerHeight;
+    private final int mOrientation;
+    private final int mDividerHeight;
 
     public ForumDivider(Context context, int orientation) {
         if (orientation != LinearLayoutManager.VERTICAL && orientation != LinearLayoutManager.HORIZONTAL) {

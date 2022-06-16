@@ -28,13 +28,12 @@ import retrofit2.Response;
 
 public class UserLikeForumFragment extends BaseFragment {
     public static final String PARAM_UID = "uid";
-    private String uid;
-    private int page;
-
     @BindView(R.id.refresh)
     public SmartRefreshLayout refreshLayout;
     @BindView(R.id.user_post_reclcyer_view)
     public RecyclerView recyclerView;
+    private String uid;
+    private int page;
     private UserLikeForumAdapter userLikeForumAdapter;
 
     private UserLikeForumBean userLikeForumBean;

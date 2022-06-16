@@ -13,15 +13,15 @@ import androidx.appcompat.widget.AppCompatImageView;
 import com.huanchengfly.tieba.post.utils.DisplayUtil;
 
 public class MarkedImageView extends AppCompatImageView {
-    private Paint mCirclePaint;
-    private Paint mTextPaint;
+    private final Paint mCirclePaint;
+    private final Paint mTextPaint;
     private String mMarkText;
     private boolean mIsMarkVisible = false;
 
-    private Context mContext;
-    private int mPaddingPx;
-    private float mMarkRadius;
-    private int mTextSize;
+    private final Context mContext;
+    private final int mPaddingPx;
+    private final float mMarkRadius;
+    private final int mTextSize;
 
     public MarkedImageView(Context context) {
         this(context, null);

@@ -29,7 +29,8 @@ import com.huanchengfly.tieba.post.ui.theme.utils.ThemeUtils
 import com.huanchengfly.tieba.post.utils.*
 import com.huanchengfly.tieba.post.widgets.theme.TintSwitch
 
-class MyInfoFragment : BaseFragment(), View.OnClickListener, CompoundButton.OnCheckedChangeListener, Refreshable {
+class MyInfoFragment : BaseFragment(), View.OnClickListener, CompoundButton.OnCheckedChangeListener,
+    Refreshable {
 
     @BindView(R.id.my_refresh)
     lateinit var mRefreshView: SwipeRefreshLayout
@@ -72,9 +73,14 @@ class MyInfoFragment : BaseFragment(), View.OnClickListener, CompoundButton.OnCh
     private fun tintStatusBar(visible: Boolean) {
         if (visible) {
             ImmersionBar.with(this)
-                    .statusBarDarkFont(!ThemeUtil.isNightMode(attachContext))
-                    .statusBarColorInt(ThemeUtils.getColorByAttr(attachContext, R.attr.colorWindowBackground))
-                    .init()
+                .statusBarDarkFont(!ThemeUtil.isNightMode(attachContext))
+                .statusBarColorInt(
+                    ThemeUtils.getColorByAttr(
+                        attachContext,
+                        R.attr.colorWindowBackground
+                    )
+                )
+                .init()
         } else {
             ThemeUtils.refreshUI(attachContext, attachContext as ExtraRefreshable)
         }
@@ -105,7 +111,11 @@ class MyInfoFragment : BaseFragment(), View.OnClickListener, CompoundButton.OnCh
                             contentTextView.text = dataBean!!.data.getIntro()
                             if (Util.canLoadGlide(attachContext)) {
                                 Glide.with(attachContext).clear(avatarImageView)
-                                ImageUtil.load(avatarImageView, ImageUtil.LOAD_TYPE_ALWAYS_ROUND, dataBean!!.data.getAvatarUrl())
+                                ImageUtil.load(
+                                    avatarImageView,
+                                    ImageUtil.LOAD_TYPE_ALWAYS_ROUND,
+                                    dataBean!!.data.getAvatarUrl()
+                                )
                             }
                             mRefreshView.isRefreshing = false
                         }
@@ -133,7 +143,7 @@ class MyInfoFragment : BaseFragment(), View.OnClickListener, CompoundButton.OnCh
         }
     }
 
-    public override fun getLayoutId(): Int {
+    override fun getLayoutId(): Int {
         return R.layout.fragment_my_info
     }
 
@@ -141,20 +151,20 @@ class MyInfoFragment : BaseFragment(), View.OnClickListener, CompoundButton.OnCh
         super.onViewCreated(view, savedInstanceState)
         ThemeUtil.setThemeForSwipeRefreshLayout(mRefreshView)
         listOf(
-                followsTextView,
-                fansTextView,
-                threadsTextView
+            followsTextView,
+            fansTextView,
+            threadsTextView
         ).forEach {
             it.typeface = Typeface.createFromAsset(attachContext.assets, "bebas.ttf")
             (it.parent as ViewGroup).enableChangingLayoutTransition()
         }
         listOf(
-                R.id.my_info_collect,
-                R.id.my_info_theme,
-                R.id.my_info_history,
-                R.id.my_info_service_center,
-                R.id.my_info_settings,
-                R.id.my_info_about
+            R.id.my_info_collect,
+            R.id.my_info_theme,
+            R.id.my_info_history,
+            R.id.my_info_service_center,
+            R.id.my_info_settings,
+            R.id.my_info_about
         ).forEach {
             view.findViewById<View>(it).setOnClickListener(this)
         }
@@ -163,13 +173,27 @@ class MyInfoFragment : BaseFragment(), View.OnClickListener, CompoundButton.OnCh
             if (dataBean == null || dataBean!!.data == null) {
                 return@setOnClickListener
             }
-            WebViewActivity.launch(attachContext, attachContext.resources.getString(R.string.url_user_home, dataBean!!.data.getName(), 2))
+            WebViewActivity.launch(
+                attachContext,
+                attachContext.resources.getString(
+                    R.string.url_user_home,
+                    dataBean!!.data.getName(),
+                    2
+                )
+            )
         }
         (fansTextView.parent as View).setOnClickListener {
             if (dataBean == null || dataBean!!.data == null) {
                 return@setOnClickListener
             }
-            WebViewActivity.launch(attachContext, attachContext.resources.getString(R.string.url_user_home, dataBean!!.data.getName(), 3))
+            WebViewActivity.launch(
+                attachContext,
+                attachContext.resources.getString(
+                    R.string.url_user_home,
+                    dataBean!!.data.getName(),
+                    3
+                )
+            )
         }
         (threadsTextView.parent as View).setOnClickListener {
             if (dataBean == null || dataBean!!.data == null) {
@@ -195,10 +219,20 @@ class MyInfoFragment : BaseFragment(), View.OnClickListener, CompoundButton.OnCh
     fun onMyInfoClicked(view: View) {
         if (AccountUtil.isLoggedIn(attachContext)) {
             if (dataBean != null) {
-                NavigationHelper.toUserSpaceWithAnim(attachContext, dataBean!!.data.getUid().toString(), dataBean!!.data.getAvatarUrl(), avatarImageView)
+                NavigationHelper.toUserSpaceWithAnim(
+                    attachContext,
+                    dataBean!!.data.getUid().toString(),
+                    dataBean!!.data.getAvatarUrl(),
+                    avatarImageView
+                )
             } else {
                 val loginInfo = AccountUtil.getLoginInfo(attachContext)!!
-                NavigationHelper.toUserSpaceWithAnim(attachContext, loginInfo.uid.toString(), loginInfo.portrait, avatarImageView)
+                NavigationHelper.toUserSpaceWithAnim(
+                    attachContext,
+                    loginInfo.uid.toString(),
+                    loginInfo.portrait,
+                    avatarImageView
+                )
             }
         } else {
             attachContext.startActivity(Intent(attachContext, LoginActivity::class.java))
@@ -209,15 +243,21 @@ class MyInfoFragment : BaseFragment(), View.OnClickListener, CompoundButton.OnCh
         super.onResume()
         refreshNightModeStatus()
         listOf(
-                R.id.my_info_history,
-                R.id.my_info_service_center,
-                R.id.my_info_about
+            R.id.my_info_history,
+            R.id.my_info_service_center,
+            R.id.my_info_about
         ).forEach {
             mRefreshView.findViewById<View>(it).apply {
                 backgroundTintList = if (appPreferences.listItemsBackgroundIntermixed) {
-                    ColorStateListUtils.createColorStateList(attachContext, R.color.default_color_divider)
+                    ColorStateListUtils.createColorStateList(
+                        attachContext,
+                        R.color.default_color_divider
+                    )
                 } else {
-                    ColorStateListUtils.createColorStateList(attachContext, R.color.default_color_card)
+                    ColorStateListUtils.createColorStateList(
+                        attachContext,
+                        R.color.default_color_card
+                    )
                 }
             }
         }
@@ -235,7 +275,10 @@ class MyInfoFragment : BaseFragment(), View.OnClickListener, CompoundButton.OnCh
                 goToActivity<HistoryActivity>()
             }
             R.id.my_info_service_center -> {
-                WebViewActivity.launch(attachContext, "http://tieba.baidu.com/n/apage-runtime/page/ueg_service_center")
+                WebViewActivity.launch(
+                    attachContext,
+                    "http://tieba.baidu.com/n/apage-runtime/page/ueg_service_center"
+                )
             }
             R.id.my_info_settings -> {
                 goToActivity<SettingsActivity>()
@@ -249,15 +292,15 @@ class MyInfoFragment : BaseFragment(), View.OnClickListener, CompoundButton.OnCh
     override fun onCheckedChanged(buttonView: CompoundButton, isChecked: Boolean) {
         if (appPreferences.followSystemNight) {
             DialogUtil.build(attachContext)
-                    .setMessage(R.string.message_dialog_follow_system_night)
-                    .setPositiveButton(R.string.btn_keep_following) { _, _ ->
-                        refreshNightModeStatus()
-                    }
-                    .setNegativeButton(R.string.btn_close_following) { _, _ ->
-                        attachContext.appPreferences.followSystemNight = false
-                        switchNightMode(isChecked)
-                    }
-                    .show()
+                .setMessage(R.string.message_dialog_follow_system_night)
+                .setPositiveButton(R.string.btn_keep_following) { _, _ ->
+                    refreshNightModeStatus()
+                }
+                .setNegativeButton(R.string.btn_close_following) { _, _ ->
+                    attachContext.appPreferences.followSystemNight = false
+                    switchNightMode(isChecked)
+                }
+                .show()
         } else {
             switchNightMode(isChecked)
         }

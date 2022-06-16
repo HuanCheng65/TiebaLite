@@ -24,7 +24,7 @@ public class RadiusTransformation extends BitmapTransformation {
     private static final String ID =
             "com.huanchengfly.tieba.post.components.transformations.RadiusTransformation";
     private float radius = 0f;
-    private int corners;
+    private final int corners;
 
     public RadiusTransformation() {
         this(8);

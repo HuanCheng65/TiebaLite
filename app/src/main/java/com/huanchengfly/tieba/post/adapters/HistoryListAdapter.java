@@ -19,9 +19,9 @@ import com.huanchengfly.tieba.post.utils.ImageUtil;
 import java.util.List;
 
 public class HistoryListAdapter extends BaseAdapter {
-    private List<History> mList;
-    private LayoutInflater mInflater;
-    private Context mContext;
+    private final List<History> mList;
+    private final LayoutInflater mInflater;
+    private final Context mContext;
 
     public HistoryListAdapter(Context context, List<History> list) {
         mList = list;

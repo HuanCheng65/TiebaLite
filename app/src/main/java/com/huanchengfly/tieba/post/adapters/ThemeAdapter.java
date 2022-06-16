@@ -1,5 +1,8 @@
 package com.huanchengfly.tieba.post.adapters;
 
+import static com.huanchengfly.tieba.post.utils.ThemeUtil.THEME_CUSTOM;
+import static com.huanchengfly.tieba.post.utils.ThemeUtil.THEME_TRANSLUCENT;
+
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.ColorStateList;
@@ -25,16 +28,13 @@ import com.huanchengfly.tieba.post.utils.ThemeUtil;
 import java.util.Arrays;
 import java.util.List;
 
-import static com.huanchengfly.tieba.post.utils.ThemeUtil.THEME_CUSTOM;
-import static com.huanchengfly.tieba.post.utils.ThemeUtil.THEME_TRANSLUCENT;
-
 public class ThemeAdapter extends RecyclerView.Adapter<MyViewHolder> implements View.OnClickListener {
     public static final int THEME_DAY = 0;
     public static final int THEME_NIGHT = 1;
 
-    private Context mContext;
-    private String[] themes;
-    private String[] themeNames;
+    private final Context mContext;
+    private final String[] themes;
+    private final String[] themeNames;
     private OnItemClickListener<String> onItemClickListener;
     private int selectedPosition;
 

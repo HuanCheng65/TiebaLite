@@ -21,7 +21,8 @@ import com.jrummyapps.android.colorpicker.ColorPickerDialogListener
 import java.util.*
 
 class CustomThemeDialog(context: Context) : AlertDialog(context),
-        View.OnClickListener, DialogInterface.OnClickListener, CompoundButton.OnCheckedChangeListener, ColorPickerDialogListener {
+    View.OnClickListener, DialogInterface.OnClickListener, CompoundButton.OnCheckedChangeListener,
+    ColorPickerDialogListener {
     private var primaryColorLayout: LinearLayout? = null
     private var primaryColorView: View? = null
     private var statusBarFont: CheckBox? = null
@@ -59,15 +60,18 @@ class CustomThemeDialog(context: Context) : AlertDialog(context),
     override fun onClick(v: View) {
         if (v.id == R.id.custom_theme_primary_holder) {
             val primaryColorPicker = ColorPickerDialog.newBuilder()
-                    .setDialogTitle(R.string.title_color_picker_primary)
-                    .setDialogType(ColorPickerDialog.TYPE_PRESETS)
-                    .setShowAlphaSlider(false)
-                    .setDialogId(0)
-                    .setAllowPresets(true)
-                    .setColor(primaryColor)
-                    .create()
+                .setDialogTitle(R.string.title_color_picker_primary)
+                .setDialogType(ColorPickerDialog.TYPE_PRESETS)
+                .setShowAlphaSlider(false)
+                .setDialogId(0)
+                .setAllowPresets(true)
+                .setColor(primaryColor)
+                .create()
             primaryColorPicker.setColorPickerDialogListener(this)
-            primaryColorPicker.show(Objects.requireNonNull(ThemeUtils.getWrapperActivity(context)).fragmentManager, "ColorPicker_PrimaryColor")
+            primaryColorPicker.show(
+                Objects.requireNonNull(ThemeUtils.getWrapperActivity(context)).fragmentManager,
+                "ColorPicker_PrimaryColor"
+            )
         }
         refreshView()
     }
@@ -125,7 +129,12 @@ class CustomThemeDialog(context: Context) : AlertDialog(context),
         }
 
         fun toString(@ColorInt color: Int): String {
-            return toString(Color.alpha(color), Color.red(color), Color.green(color), Color.blue(color))
+            return toString(
+                Color.alpha(color),
+                Color.red(color),
+                Color.green(color),
+                Color.blue(color)
+            )
         }
     }
 

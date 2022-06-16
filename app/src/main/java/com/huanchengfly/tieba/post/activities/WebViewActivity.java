@@ -49,7 +49,7 @@ public class WebViewActivity extends BaseActivity implements OnReceivedTitleList
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_webview);
         ThemeUtil.setTranslucentThemeBackground(findViewById(R.id.background));
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) actionBar.setDisplayHomeAsUpEnabled(true);

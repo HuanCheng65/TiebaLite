@@ -6,7 +6,8 @@ import com.huanchengfly.tieba.post.activities.ForumActivity
 import com.huanchengfly.tieba.post.adapters.base.BaseSingleTypeAdapter
 import com.huanchengfly.tieba.post.components.MyViewHolder
 
-class ZyqFriendForumAdapter(context: Context, items: List<String>) : BaseSingleTypeAdapter<String>(context, items) {
+class ZyqFriendForumAdapter(context: Context, items: List<String>) :
+    BaseSingleTypeAdapter<String>(context, items) {
     override fun getItemLayoutId(): Int {
         return R.layout.item_zyq_friend
     }

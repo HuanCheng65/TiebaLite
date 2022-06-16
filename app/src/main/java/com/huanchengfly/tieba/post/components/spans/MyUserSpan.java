@@ -13,8 +13,8 @@ import com.huanchengfly.tieba.post.utils.NavigationHelper;
 
 public class MyUserSpan extends ClickableSpan {
     public String uid;
-    private Context context;
-    private NavigationHelper navigationHelper;
+    private final Context context;
+    private final NavigationHelper navigationHelper;
 
     public MyUserSpan(Context context, String uid) {
         super();

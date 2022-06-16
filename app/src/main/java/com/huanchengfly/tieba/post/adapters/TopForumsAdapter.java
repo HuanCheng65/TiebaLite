@@ -18,7 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TopForumsAdapter extends RecyclerView.Adapter<MyViewHolder> {
-    private Context mContext;
+    private final Context mContext;
     private List<ForumRecommend.LikeForum> topForums;
 
     private OnItemClickListener<ForumRecommend.LikeForum> onItemClickListener;

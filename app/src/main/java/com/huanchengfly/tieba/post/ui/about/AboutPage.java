@@ -31,7 +31,7 @@ public class AboutPage {
     private final RecyclerView mRecyclerView;
     private final List<Item> itemList;
     private View mHeaderView;
-    private AboutPageAdapter aboutPageAdapter;
+    private final AboutPageAdapter aboutPageAdapter;
 
     @SuppressLint("InflateParams")
     public AboutPage(Context context) {

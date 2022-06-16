@@ -14,10 +14,10 @@ public class ContentMsgAdapter implements JsonDeserializer<List<ThreadContentBea
     @Override
     public List<ThreadContentBean.ContentBean> deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
         List<ThreadContentBean.ContentBean> list = new ArrayList<>();
-        if(json.isJsonArray()){
-            json.getAsJsonArray().forEach(element->{
-                if(element.isJsonObject()){
-                    list.add(context.deserialize(element,ThreadContentBean.ContentBean.class));
+        if (json.isJsonArray()) {
+            json.getAsJsonArray().forEach(element -> {
+                if (element.isJsonObject()) {
+                    list.add(context.deserialize(element, ThreadContentBean.ContentBean.class));
                 }
             });
         }

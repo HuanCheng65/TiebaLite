@@ -27,7 +27,7 @@ import com.huanchengfly.tieba.post.widgets.MyLinearLayout
 
 
 class ThreadMainPostAdapter(
-        private val context: Context
+    private val context: Context
 ) : DelegateAdapter.Adapter<MyViewHolder>() {
     var dataBean: ThreadContentBean? = null
         set(value) {
@@ -90,55 +90,61 @@ class ThreadMainPostAdapter(
     private fun showMenu() {
         val userInfoBean: ThreadContentBean.UserInfoBean = user
         MenuDialogFragment.newInstance(R.menu.menu_thread_item, null)
-                .setOnNavigationItemSelectedListener { item: MenuItem ->
-                    when (item.itemId) {
-                        R.id.menu_reply -> {
-                            context.startActivity(Intent(context, ReplyActivity::class.java)
-                                    .putExtra("data", ReplyInfoBean(dataBean?.thread!!.id,
-                                            dataBean?.forum!!.id,
-                                            dataBean?.forum!!.name,
-                                            dataBean?.anti!!.tbs,
-                                            threadPostBean!!.id,
-                                            threadPostBean!!.floor,
-                                            userInfoBean.nameShow,
-                                            dataBean?.user!!.nameShow).setPn(dataBean?.page!!.offset).toString()))
-                            true
-                        }
-                        R.id.menu_report -> {
-                            reportPost(context, threadPostBean!!.id!!)
-                            true
-                        }
-                        R.id.menu_copy -> {
-                            val stringBuilder = StringBuilder()
-                            for (contentBean in threadPostBean!!.content!!) {
-                                when (contentBean.type) {
-                                    "2" -> contentBean.setText("#(" + contentBean.c + ")")
-                                    "3", "20" -> contentBean.setText("[图片]\n")
-                                    "10" -> contentBean.setText("[语音]\n")
-                                }
-                                if (contentBean.text != null) {
-                                    stringBuilder.append(contentBean.text)
-                                }
-                            }
-                            Util.showCopyDialog(
-                                context as BaseActivity?,
-                                stringBuilder.toString(),
-                                threadPostBean!!.id
-                            )
-                            true
-                        }
-                        else -> PluginManager.performPluginMenuClick(
-                            PluginManager.MENU_POST_ITEM,
-                            item.itemId,
-                            threadPostBean!!
+            .setOnNavigationItemSelectedListener { item: MenuItem ->
+                when (item.itemId) {
+                    R.id.menu_reply -> {
+                        context.startActivity(
+                            Intent(context, ReplyActivity::class.java)
+                                .putExtra(
+                                    "data", ReplyInfoBean(
+                                        dataBean?.thread!!.id,
+                                        dataBean?.forum!!.id,
+                                        dataBean?.forum!!.name,
+                                        dataBean?.anti!!.tbs,
+                                        threadPostBean!!.id,
+                                        threadPostBean!!.floor,
+                                        userInfoBean.nameShow,
+                                        dataBean?.user!!.nameShow
+                                    ).setPn(dataBean?.page!!.offset).toString()
+                                )
                         )
+                        true
                     }
+                    R.id.menu_report -> {
+                        reportPost(context, threadPostBean!!.id!!)
+                        true
+                    }
+                    R.id.menu_copy -> {
+                        val stringBuilder = StringBuilder()
+                        for (contentBean in threadPostBean!!.content!!) {
+                            when (contentBean.type) {
+                                "2" -> contentBean.setText("#(" + contentBean.c + ")")
+                                "3", "20" -> contentBean.setText("[图片]\n")
+                                "10" -> contentBean.setText("[语音]\n")
+                            }
+                            if (contentBean.text != null) {
+                                stringBuilder.append(contentBean.text)
+                            }
+                        }
+                        Util.showCopyDialog(
+                            context as BaseActivity?,
+                            stringBuilder.toString(),
+                            threadPostBean!!.id
+                        )
+                        true
+                    }
+                    else -> PluginManager.performPluginMenuClick(
+                        PluginManager.MENU_POST_ITEM,
+                        item.itemId,
+                        threadPostBean!!
+                    )
                 }
-                .setInitMenuCallback { menu: Menu ->
-                    PluginManager.initPluginMenu(menu, PluginManager.MENU_POST_ITEM)
-                    menu.findItem(R.id.menu_delete).isVisible = false
-                }
-                .show((context as BaseActivity).supportFragmentManager, threadPostBean!!.id + "_Menu")
+            }
+            .setInitMenuCallback { menu: Menu ->
+                PluginManager.initPluginMenu(menu, PluginManager.MENU_POST_ITEM)
+                menu.findItem(R.id.menu_delete).isVisible = false
+            }
+            .show((context as BaseActivity).supportFragmentManager, threadPostBean!!.id + "_Menu")
     }
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
@@ -148,24 +154,39 @@ class ThreadMainPostAdapter(
             true
         }
         holder.setVisibility(R.id.thread_list_item_user_lz_tip, true)
-        holder.setText(R.id.thread_list_item_user_name, StringUtil.getUsernameString(context, user.name, user.nameShow))
-        val levelId = if (user.levelId == null || TextUtils.isEmpty(user.levelId)) "?" else user.levelId
-        ThemeUtil.setChipThemeByLevel(levelId,
-                holder.getView(R.id.thread_list_item_user_status),
-                holder.getView(R.id.thread_list_item_user_level),
-                holder.getView(R.id.thread_list_item_user_lz_tip))
+        holder.setText(
+            R.id.thread_list_item_user_name,
+            StringUtil.getUsernameString(context, user.name, user.nameShow)
+        )
+        val levelId =
+            if (user.levelId == null || TextUtils.isEmpty(user.levelId)) "?" else user.levelId
+        ThemeUtil.setChipThemeByLevel(
+            levelId,
+            holder.getView(R.id.thread_list_item_user_status),
+            holder.getView(R.id.thread_list_item_user_level),
+            holder.getView(R.id.thread_list_item_user_lz_tip)
+        )
         holder.setText(R.id.thread_list_item_user_level, levelId)
         holder.setOnClickListener(R.id.thread_list_item_user_avatar) {
-            NavigationHelper.toUserSpaceWithAnim(context, user.id, StringUtil.getAvatarUrl(user.portrait), it)
+            NavigationHelper.toUserSpaceWithAnim(
+                context,
+                user.id,
+                StringUtil.getAvatarUrl(user.portrait),
+                it
+            )
         }
-        ImageUtil.load(holder.getView(R.id.thread_list_item_user_avatar), ImageUtil.LOAD_TYPE_AVATAR, user.portrait)
+        ImageUtil.load(
+            holder.getView(R.id.thread_list_item_user_avatar),
+            ImageUtil.LOAD_TYPE_AVATAR,
+            user.portrait
+        )
         holder.setText(
-                R.id.thread_list_item_user_time,
-                context.getString(
-                    R.string.tip_thread_item_thread,
-                    DateTimeUtils.getRelativeTimeString(context, threadBean.createTime!!),
-                    user.ipAddress
-                )
+            R.id.thread_list_item_user_time,
+            context.getString(
+                R.string.tip_thread_item_thread,
+                DateTimeUtils.getRelativeTimeString(context, threadBean.createTime!!),
+                user.ipAddress
+            )
         )
         holder.setText(R.id.thread_list_item_content_title, title)
         if (threadPostBean != null) {
@@ -180,7 +201,10 @@ class ThreadMainPostAdapter(
         return 1
     }
 
-    private fun refreshForumView(forumInfoBean: ThreadContentBean.ForumInfoBean?, forumView: ViewGroup?) {
+    private fun refreshForumView(
+        forumInfoBean: ThreadContentBean.ForumInfoBean?,
+        forumView: ViewGroup?
+    ) {
         if (forumView == null || forumInfoBean == null) {
             return
         }

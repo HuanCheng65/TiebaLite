@@ -5,7 +5,6 @@ import com.google.gson.annotations.SerializedName
 import com.huanchengfly.tieba.post.api.adapters.PortraitAdapter
 import com.huanchengfly.tieba.post.api.adapters.UserPostContentAdapter
 import com.huanchengfly.tieba.post.models.BaseBean
-import java.util.*
 
 class UserPostBean : BaseBean() {
     @SerializedName("error_code")

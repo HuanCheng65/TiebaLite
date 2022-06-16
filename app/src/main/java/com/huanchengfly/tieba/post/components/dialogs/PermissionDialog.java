@@ -21,11 +21,11 @@ public class PermissionDialog extends AlertDialog implements View.OnClickListene
     public static final int STATE_DENIED = 2;
     public static final int STATE_ALLOW = 1;
     public static final int STATE_UNSET = 0;
-    private TextView titleView;
-    private ImageView iconView;
-    private Button allowBtn;
-    private Button deniedBtn;
-    private CheckBox checkBox;
+    private final TextView titleView;
+    private final ImageView iconView;
+    private final Button allowBtn;
+    private final Button deniedBtn;
+    private final CheckBox checkBox;
     private PermissionBean permissionBean;
     private OnGrantedCallback onGrantedCallback;
     private OnDeniedCallback onDeniedCallback;

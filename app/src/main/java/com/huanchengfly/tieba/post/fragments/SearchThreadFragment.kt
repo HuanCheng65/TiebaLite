@@ -51,8 +51,8 @@ class SearchThreadFragment : BaseFragment(), ISearchFragment, NewSearchActivity.
     private var page = 0
 
     override fun setKeyword(
-            keyword: String?,
-            needRefresh: Boolean
+        keyword: String?,
+        needRefresh: Boolean
     ) {
         this.keyword = keyword
         if (searchThreadAdapter != null) {
@@ -82,7 +82,7 @@ class SearchThreadFragment : BaseFragment(), ISearchFragment, NewSearchActivity.
         }
     }
 
-    public override fun getLayoutId(): Int {
+    override fun getLayoutId(): Int {
         return R.layout.fragment_search
     }
 
@@ -107,8 +107,8 @@ class SearchThreadFragment : BaseFragment(), ISearchFragment, NewSearchActivity.
     private fun reloadAdapters() {
         delegateAdapter.clear()
         delegateAdapter.addAdapter(HeaderDelegateAdapter(
-                attachContext,
-                titleResId = getSearchFilterTitleResId(filter)
+            attachContext,
+            titleResId = getSearchFilterTitleResId(filter)
         ).apply {
             setHeaderBackgroundResource(R.drawable.bg_top_radius_8dp)
             headerBackgroundTintList = R.color.default_color_card
@@ -149,46 +149,54 @@ class SearchThreadFragment : BaseFragment(), ISearchFragment, NewSearchActivity.
             return
         }
         page = 1
-        TiebaApi.getInstance().searchThread(keyword!!, page, order, filter).enqueue(object : Callback<SearchThreadBean> {
-            override fun onFailure(call: Call<SearchThreadBean>, t: Throwable) {
-                Toast.makeText(attachContext, t.message, Toast.LENGTH_SHORT).show()
-                refreshLayout?.finishRefresh(false)
-            }
+        TiebaApi.getInstance().searchThread(keyword!!, page, order, filter)
+            .enqueue(object : Callback<SearchThreadBean> {
+                override fun onFailure(call: Call<SearchThreadBean>, t: Throwable) {
+                    Toast.makeText(attachContext, t.message, Toast.LENGTH_SHORT).show()
+                    refreshLayout?.finishRefresh(false)
+                }
 
-            override fun onResponse(call: Call<SearchThreadBean>, response: Response<SearchThreadBean>) {
-                val searchThreadBean = response.body()!!
-                mData = searchThreadBean.data
-                searchThreadAdapter!!.setData(mData!!.postList)
-                reloadAdapters()
-                if (mData!!.hasMore == 1)
-                    refreshLayout?.finishRefresh(true)
-                else
-                    refreshLayout?.finishRefreshWithNoMoreData()
-            }
-        })
+                override fun onResponse(
+                    call: Call<SearchThreadBean>,
+                    response: Response<SearchThreadBean>
+                ) {
+                    val searchThreadBean = response.body()!!
+                    mData = searchThreadBean.data
+                    searchThreadAdapter!!.setData(mData!!.postList)
+                    reloadAdapters()
+                    if (mData!!.hasMore == 1)
+                        refreshLayout?.finishRefresh(true)
+                    else
+                        refreshLayout?.finishRefreshWithNoMoreData()
+                }
+            })
     }
 
     private fun loadMore() {
         if (hasMore()) {
-            TiebaApi.getInstance().searchThread(keyword!!, page + 1, order, filter).enqueue(object : Callback<SearchThreadBean> {
-                override fun onFailure(call: Call<SearchThreadBean>, t: Throwable) {
-                    Toast.makeText(attachContext, t.message, Toast.LENGTH_SHORT).show()
-                    refreshLayout?.finishLoadMore(false)
-                }
-
-                override fun onResponse(call: Call<SearchThreadBean>, response: Response<SearchThreadBean>) {
-                    val searchThreadBean = response.body()!!
-                    mData = searchThreadBean.data
-                    mData!!.postList?.let {
-                        searchThreadAdapter!!.insert(it)
+            TiebaApi.getInstance().searchThread(keyword!!, page + 1, order, filter)
+                .enqueue(object : Callback<SearchThreadBean> {
+                    override fun onFailure(call: Call<SearchThreadBean>, t: Throwable) {
+                        Toast.makeText(attachContext, t.message, Toast.LENGTH_SHORT).show()
+                        refreshLayout?.finishLoadMore(false)
                     }
-                    page += 1
-                    if (mData!!.hasMore == 1)
-                        refreshLayout?.finishLoadMore()
-                    else
-                        refreshLayout?.finishLoadMoreWithNoMoreData()
-                }
-            })
+
+                    override fun onResponse(
+                        call: Call<SearchThreadBean>,
+                        response: Response<SearchThreadBean>
+                    ) {
+                        val searchThreadBean = response.body()!!
+                        mData = searchThreadBean.data
+                        mData!!.postList?.let {
+                            searchThreadAdapter!!.insert(it)
+                        }
+                        page += 1
+                        if (mData!!.hasMore == 1)
+                            refreshLayout?.finishLoadMore()
+                        else
+                            refreshLayout?.finishLoadMoreWithNoMoreData()
+                    }
+                })
         }
     }
 
@@ -200,7 +208,11 @@ class SearchThreadFragment : BaseFragment(), ISearchFragment, NewSearchActivity.
         val tabLocationArray = view.getLocationInWindow()
         FilterPopupWindow(context, order, filter).apply {
             onChangedListener = object : FilterPopupWindow.OnChangedListener {
-                override fun onChanged(popup: FilterPopupWindow, order: SearchThreadOrder, filter: SearchThreadFilter) {
+                override fun onChanged(
+                    popup: FilterPopupWindow,
+                    order: SearchThreadOrder,
+                    filter: SearchThreadFilter
+                ) {
                     this@SearchThreadFragment.order = order
                     this@SearchThreadFragment.filter = filter
                     refreshLayout!!.autoRefresh()
@@ -211,18 +223,20 @@ class SearchThreadFragment : BaseFragment(), ISearchFragment, NewSearchActivity.
                 onClose()
             }
         }.also {
-            it.showAtLocation(view,
-                    Gravity.BOTTOM + Gravity.START,
-                    tabLocationArray[0],
-                    view.height)
+            it.showAtLocation(
+                view,
+                Gravity.BOTTOM + Gravity.START,
+                tabLocationArray[0],
+                view.height
+            )
         }
     }
 
     @SuppressLint("InflateParams")
     class FilterPopupWindow(
-            context: Context,
-            selectedOrder: SearchThreadOrder,
-            selectedFilter: SearchThreadFilter
+        context: Context,
+        selectedOrder: SearchThreadOrder,
+        selectedFilter: SearchThreadFilter
     ) : PopupWindow(context) {
         private val searchOrderRadioGroup: RadioGroup
         private val searchFilterCheckBox: CheckBox
@@ -263,11 +277,19 @@ class SearchThreadFragment : BaseFragment(), ISearchFragment, NewSearchActivity.
             searchFilterCheckBox = contentView.findViewById(R.id.search_filter_only_thread)
             searchOrderRadioGroup.check(getSearchOrderRadioButtonId(selectedOrder))
             searchOrderRadioGroup.setOnCheckedChangeListener { _, checkedId ->
-                onChangedListener?.onChanged(this, getSearchOrderByCheckedId(checkedId), getSearchFilterByChecked(searchFilterCheckBox.isChecked))
+                onChangedListener?.onChanged(
+                    this,
+                    getSearchOrderByCheckedId(checkedId),
+                    getSearchFilterByChecked(searchFilterCheckBox.isChecked)
+                )
             }
             searchFilterCheckBox.isChecked = getSearchFilterCheckBoxChecked(selectedFilter)
             searchFilterCheckBox.setOnCheckedChangeListener { _, isChecked ->
-                onChangedListener?.onChanged(this, getSearchOrderByCheckedId(searchOrderRadioGroup.checkedRadioButtonId), getSearchFilterByChecked(isChecked))
+                onChangedListener?.onChanged(
+                    this,
+                    getSearchOrderByCheckedId(searchOrderRadioGroup.checkedRadioButtonId),
+                    getSearchFilterByChecked(isChecked)
+                )
             }
             width = ViewGroup.LayoutParams.WRAP_CONTENT
             height = ViewGroup.LayoutParams.WRAP_CONTENT
@@ -280,9 +302,9 @@ class SearchThreadFragment : BaseFragment(), ISearchFragment, NewSearchActivity.
 
         interface OnChangedListener {
             fun onChanged(
-                    popup: FilterPopupWindow,
-                    order: SearchThreadOrder,
-                    filter: SearchThreadFilter
+                popup: FilterPopupWindow,
+                order: SearchThreadOrder,
+                filter: SearchThreadFilter
             ) {
             }
         }

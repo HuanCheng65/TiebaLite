@@ -14,9 +14,9 @@ import java.util.Arrays;
 import java.util.List;
 
 public class SingleChooseDialog extends AlertDialog {
-    private Context mContext;
+    private final Context mContext;
     private ListView listView;
-    private List<String> strings;
+    private final List<String> strings;
     private OnChooseListener onChooseListener;
     private SingleChooseAdapter adapter;
 

@@ -116,7 +116,8 @@ class BaseApplication : Application(), IApp {
                     return
                 }
                 previewView.visibility = View.VISIBLE
-                val iconView = Objects.requireNonNull(previewView).findViewById<ImageView>(R.id.icon)
+                val iconView =
+                    Objects.requireNonNull(previewView).findViewById<ImageView>(R.id.icon)
                 val title = previewView.findViewById<TextView>(R.id.title)
                 val subtitle = previewView.findViewById<TextView>(R.id.subtitle)
                 title.text = data.title
@@ -130,7 +131,12 @@ class BaseApplication : Application(), IApp {
                             iconLayoutParams.width = iconLayoutParams.height
                         }
                         iconView.layoutParams = iconLayoutParams
-                        iconView.imageTintList = ColorStateList.valueOf(ThemeUtils.getColorByAttr(context, R.attr.colorAccent))
+                        iconView.imageTintList = ColorStateList.valueOf(
+                            ThemeUtils.getColorByAttr(
+                                context,
+                                R.attr.colorAccent
+                            )
+                        )
                     }
                     QuickPreviewUtil.Icon.TYPE_URL -> {
                         ImageUtil.load(iconView, ImageUtil.LOAD_TYPE_AVATAR, data.icon!!.url)
@@ -169,9 +175,15 @@ class BaseApplication : Application(), IApp {
                                 updatePreviewView(
                                     activity, previewView, PreviewInfo()
                                         .setIconRes(R.drawable.ic_round_forum)
-                                        .setTitle(activity.getString(R.string.title_forum, getForumName(uri)))
+                                        .setTitle(
+                                            activity.getString(
+                                                R.string.title_forum,
+                                                getForumName(uri)
+                                            )
+                                        )
                                         .setSubtitle(activity.getString(R.string.text_loading))
-                                        .setUrl(url))
+                                        .setUrl(url)
+                                )
                             } else if (isThreadUrl(uri)) {
                                 updatePreviewView(
                                     activity, previewView, PreviewInfo()
@@ -334,7 +346,8 @@ class BaseApplication : Application(), IApp {
             get() = nightMode == Configuration.UI_MODE_NIGHT_YES
 
         val isFirstRun: Boolean
-            get() = SharedPreferencesUtil.get(SharedPreferencesUtil.SP_APP_DATA).getBoolean("first", true)
+            get() = SharedPreferencesUtil.get(SharedPreferencesUtil.SP_APP_DATA)
+                .getBoolean("first", true)
 
         private val nightMode: Int
             get() = instance.resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
@@ -356,18 +369,30 @@ class BaseApplication : Application(), IApp {
                             Color.parseColor(primaryColorStr)
                         } else getColorByAttr(context, attrId, ThemeUtil.THEME_WHITE)
                     }
-                    return context.getColorCompat(resources.getIdentifier("theme_color_primary_$theme", "color", packageName))
+                    return context.getColorCompat(
+                        resources.getIdentifier(
+                            "theme_color_primary_$theme",
+                            "color",
+                            packageName
+                        )
+                    )
                 }
                 R.attr.colorAccent -> {
                     return if (ThemeUtil.THEME_CUSTOM == theme || ThemeUtil.isTranslucentTheme(theme)) {
                         getColorByAttr(context, R.attr.colorPrimary, theme)
                     } else context.getColorCompat(
-                            resources.getIdentifier("theme_color_accent_$theme", "color", packageName)
+                        resources.getIdentifier("theme_color_accent_$theme", "color", packageName)
                     )
                 }
                 R.attr.colorOnAccent -> {
                     return if (ThemeUtil.isNightMode(context) || ThemeUtil.isTranslucentTheme(theme)) {
-                        context.getColorCompat(resources.getIdentifier("theme_color_on_accent_$theme", "color", packageName))
+                        context.getColorCompat(
+                            resources.getIdentifier(
+                                "theme_color_on_accent_$theme",
+                                "color",
+                                packageName
+                            )
+                        )
                     } else context.getColorCompat(R.color.theme_color_on_accent_light)
                 }
                 R.attr.colorToolbar -> {
@@ -381,22 +406,46 @@ class BaseApplication : Application(), IApp {
                         } else context.getColorCompat(R.color.white)
                     }
                     return if (ThemeUtil.THEME_WHITE == theme || ThemeUtil.isNightMode(theme)) {
-                        context.getColorCompat(resources.getIdentifier("theme_color_toolbar_$theme", "color", packageName))
+                        context.getColorCompat(
+                            resources.getIdentifier(
+                                "theme_color_toolbar_$theme",
+                                "color",
+                                packageName
+                            )
+                        )
                     } else getColorByAttr(context, R.attr.colorPrimary, theme)
                 }
                 R.attr.colorText -> {
                     return if (ThemeUtil.isTranslucentTheme(theme)) {
-                        context.getColorCompat(resources.getIdentifier("color_text_$theme", "color", packageName))
+                        context.getColorCompat(
+                            resources.getIdentifier(
+                                "color_text_$theme",
+                                "color",
+                                packageName
+                            )
+                        )
                     } else context.getColorCompat(if (ThemeUtil.isNightMode(context)) R.color.color_text_night else R.color.color_text)
                 }
                 R.attr.color_text_disabled -> {
                     return if (ThemeUtil.isTranslucentTheme(theme)) {
-                        context.getColorCompat(resources.getIdentifier("color_text_disabled_$theme", "color", packageName))
+                        context.getColorCompat(
+                            resources.getIdentifier(
+                                "color_text_disabled_$theme",
+                                "color",
+                                packageName
+                            )
+                        )
                     } else context.getColorCompat(if (ThemeUtil.isNightMode(context)) R.color.color_text_disabled_night else R.color.color_text_disabled)
                 }
                 R.attr.colorTextSecondary -> {
                     return if (ThemeUtil.isTranslucentTheme(theme)) {
-                        context.getColorCompat(resources.getIdentifier("color_text_secondary_$theme", "color", packageName))
+                        context.getColorCompat(
+                            resources.getIdentifier(
+                                "color_text_secondary_$theme",
+                                "color",
+                                packageName
+                            )
+                        )
                     } else context.getColorCompat(if (ThemeUtil.isNightMode(context)) R.color.color_text_secondary_night else R.color.color_text_secondary)
                 }
                 R.attr.colorTextOnPrimary -> {
@@ -409,7 +458,13 @@ class BaseApplication : Application(), IApp {
                         return context.getColorCompat(R.color.transparent)
                     }
                     return if (ThemeUtil.isNightMode(context)) {
-                        context.getColorCompat(resources.getIdentifier("theme_color_background_$theme", "color", packageName))
+                        context.getColorCompat(
+                            resources.getIdentifier(
+                                "theme_color_background_$theme",
+                                "color",
+                                packageName
+                            )
+                        )
                     } else context.getColorCompat(R.color.theme_color_background_light)
                 }
                 R.attr.colorWindowBackground -> {
@@ -417,33 +472,69 @@ class BaseApplication : Application(), IApp {
                         return context.getColorCompat(R.color.transparent)
                     }
                     return if (ThemeUtil.isNightMode(context)) {
-                        context.getColorCompat(resources.getIdentifier("theme_color_window_background_$theme", "color", packageName))
+                        context.getColorCompat(
+                            resources.getIdentifier(
+                                "theme_color_window_background_$theme",
+                                "color",
+                                packageName
+                            )
+                        )
                     } else context.getColorCompat(R.color.theme_color_window_background_light)
                 }
                 R.attr.colorUnselected -> {
-                    return context.getColorCompat(if (ThemeUtil.isNightMode(context)) resources.getIdentifier("theme_color_unselected_$theme", "color", packageName) else R.color.theme_color_unselected_day)
+                    return context.getColorCompat(
+                        if (ThemeUtil.isNightMode(context)) resources.getIdentifier(
+                            "theme_color_unselected_$theme",
+                            "color",
+                            packageName
+                        ) else R.color.theme_color_unselected_day
+                    )
                 }
                 R.attr.colorNavBar -> {
                     if (ThemeUtil.isTranslucentTheme(theme)) {
                         return context.getColorCompat(R.color.transparent)
                     }
                     return if (ThemeUtil.isNightMode(context)) {
-                        context.getColorCompat(resources.getIdentifier("theme_color_nav_$theme", "color", packageName))
+                        context.getColorCompat(
+                            resources.getIdentifier(
+                                "theme_color_nav_$theme",
+                                "color",
+                                packageName
+                            )
+                        )
                     } else context.getColorCompat(R.color.theme_color_nav_light)
                 }
                 R.attr.colorFloorCard -> {
                     return if (ThemeUtil.isNightMode(context) || ThemeUtil.isTranslucentTheme(theme)) {
-                        context.getColorCompat(resources.getIdentifier("theme_color_floor_card_$theme", "color", packageName))
+                        context.getColorCompat(
+                            resources.getIdentifier(
+                                "theme_color_floor_card_$theme",
+                                "color",
+                                packageName
+                            )
+                        )
                     } else context.getColorCompat(R.color.theme_color_floor_card_light)
                 }
                 R.attr.colorCard -> {
                     return if (ThemeUtil.isNightMode(context) || ThemeUtil.isTranslucentTheme(theme)) {
-                        context.getColorCompat(resources.getIdentifier("theme_color_card_$theme", "color", packageName))
+                        context.getColorCompat(
+                            resources.getIdentifier(
+                                "theme_color_card_$theme",
+                                "color",
+                                packageName
+                            )
+                        )
                     } else context.getColorCompat(R.color.theme_color_card_light)
                 }
                 R.attr.colorDivider -> {
                     return if (ThemeUtil.isNightMode(context) || ThemeUtil.isTranslucentTheme(theme)) {
-                        context.getColorCompat(resources.getIdentifier("theme_color_divider_$theme", "color", packageName))
+                        context.getColorCompat(
+                            resources.getIdentifier(
+                                "theme_color_divider_$theme",
+                                "color",
+                                packageName
+                            )
+                        )
                     } else context.getColorCompat(R.color.theme_color_divider_light)
                 }
                 R.attr.shadow_color -> {
@@ -453,7 +544,13 @@ class BaseApplication : Application(), IApp {
                 }
                 R.attr.colorToolbarItem -> {
                     if (ThemeUtil.isTranslucentTheme(theme)) {
-                        return context.getColorCompat(resources.getIdentifier("theme_color_toolbar_item_$theme", "color", packageName))
+                        return context.getColorCompat(
+                            resources.getIdentifier(
+                                "theme_color_toolbar_item_$theme",
+                                "color",
+                                packageName
+                            )
+                        )
                     }
                     return if (ThemeUtil.isNightMode(context)) {
                         context.getColorCompat(R.color.theme_color_toolbar_item_night)
@@ -461,25 +558,52 @@ class BaseApplication : Application(), IApp {
                 }
                 R.attr.colorToolbarItemActive -> {
                     if (ThemeUtil.THEME_WHITE == theme || ThemeUtil.isTranslucentTheme(theme)) {
-                        return context.getColorCompat(resources.getIdentifier("theme_color_toolbar_item_active_$theme", "color", packageName))
+                        return context.getColorCompat(
+                            resources.getIdentifier(
+                                "theme_color_toolbar_item_active_$theme",
+                                "color",
+                                packageName
+                            )
+                        )
                     } else if (ThemeUtil.isNightMode(theme)) {
                         return getColorByAttr(context, R.attr.colorAccent, theme)
                     }
                     return context.getColorCompat(if (ThemeUtil.isStatusBarFontDark(context)) R.color.theme_color_toolbar_item_light else R.color.theme_color_toolbar_item_dark)
                 }
                 R.attr.color_toolbar_item_secondary -> {
-                    return if (ThemeUtil.THEME_WHITE == theme || ThemeUtil.isNightMode(theme) || ThemeUtil.isTranslucentTheme(theme)) {
-                        context.getColorCompat(resources.getIdentifier("theme_color_toolbar_item_secondary_$theme", "color", packageName))
+                    return if (ThemeUtil.THEME_WHITE == theme || ThemeUtil.isNightMode(theme) || ThemeUtil.isTranslucentTheme(
+                            theme
+                        )
+                    ) {
+                        context.getColorCompat(
+                            resources.getIdentifier(
+                                "theme_color_toolbar_item_secondary_$theme",
+                                "color",
+                                packageName
+                            )
+                        )
                     } else context.getColorCompat(if (ThemeUtil.isStatusBarFontDark(context)) R.color.theme_color_toolbar_item_secondary_white else R.color.theme_color_toolbar_item_secondary_light)
                 }
                 R.attr.color_swipe_refresh_layout_background -> {
                     return if (ThemeUtil.isNightMode(theme) || ThemeUtil.isTranslucentTheme(theme)) {
-                        context.getColorCompat(resources.getIdentifier("theme_color_swipe_refresh_view_background_$theme", "color", packageName))
+                        context.getColorCompat(
+                            resources.getIdentifier(
+                                "theme_color_swipe_refresh_view_background_$theme",
+                                "color",
+                                packageName
+                            )
+                        )
                     } else context.getColorCompat(R.color.theme_color_swipe_refresh_view_background_light)
                 }
                 R.attr.colorToolbarBar -> {
                     return if (ThemeUtil.isTranslucentTheme(theme)) {
-                        context.getColorCompat(resources.getIdentifier("theme_color_toolbar_bar_$theme", "color", packageName))
+                        context.getColorCompat(
+                            resources.getIdentifier(
+                                "theme_color_toolbar_bar_$theme",
+                                "color",
+                                packageName
+                            )
+                        )
                     } else if (ThemeUtil.isNightMode(context)) {
                         context.getColorCompat(R.color.theme_color_toolbar_bar_dark)
                     } else {
@@ -519,22 +643,55 @@ class BaseApplication : Application(), IApp {
             when (colorId) {
                 R.color.default_color_primary -> return getColorByAttr(context, R.attr.colorPrimary)
                 R.color.default_color_accent -> return getColorByAttr(context, R.attr.colorAccent)
-                R.color.default_color_on_accent -> return getColorByAttr(context, R.attr.colorOnAccent)
+                R.color.default_color_on_accent -> return getColorByAttr(
+                    context,
+                    R.attr.colorOnAccent
+                )
                 R.color.default_color_background -> return getColorByAttr(context, R.attr.colorBg)
-                R.color.default_color_window_background -> return getColorByAttr(context, R.attr.colorWindowBackground)
+                R.color.default_color_window_background -> return getColorByAttr(
+                    context,
+                    R.attr.colorWindowBackground
+                )
                 R.color.default_color_toolbar -> return getColorByAttr(context, R.attr.colorToolbar)
-                R.color.default_color_toolbar_item -> return getColorByAttr(context, R.attr.colorToolbarItem)
-                R.color.default_color_toolbar_item_active -> return getColorByAttr(context, R.attr.colorToolbarItemActive)
-                R.color.default_color_toolbar_item_secondary -> return getColorByAttr(context, R.attr.color_toolbar_item_secondary)
-                R.color.default_color_toolbar_bar -> return getColorByAttr(context, R.attr.colorToolbarBar)
-                R.color.default_color_on_toolbar_bar -> return getColorByAttr(context, R.attr.colorOnToolbarBar)
-                R.color.default_color_nav_bar_surface -> return getColorByAttr(context, R.attr.colorNavBarSurface)
-                R.color.default_color_on_nav_bar_surface -> return getColorByAttr(context, R.attr.colorOnNavBarSurface)
+                R.color.default_color_toolbar_item -> return getColorByAttr(
+                    context,
+                    R.attr.colorToolbarItem
+                )
+                R.color.default_color_toolbar_item_active -> return getColorByAttr(
+                    context,
+                    R.attr.colorToolbarItemActive
+                )
+                R.color.default_color_toolbar_item_secondary -> return getColorByAttr(
+                    context,
+                    R.attr.color_toolbar_item_secondary
+                )
+                R.color.default_color_toolbar_bar -> return getColorByAttr(
+                    context,
+                    R.attr.colorToolbarBar
+                )
+                R.color.default_color_on_toolbar_bar -> return getColorByAttr(
+                    context,
+                    R.attr.colorOnToolbarBar
+                )
+                R.color.default_color_nav_bar_surface -> return getColorByAttr(
+                    context,
+                    R.attr.colorNavBarSurface
+                )
+                R.color.default_color_on_nav_bar_surface -> return getColorByAttr(
+                    context,
+                    R.attr.colorOnNavBarSurface
+                )
                 R.color.default_color_card -> return getColorByAttr(context, R.attr.colorCard)
-                R.color.default_color_floor_card -> return getColorByAttr(context, R.attr.colorFloorCard)
+                R.color.default_color_floor_card -> return getColorByAttr(
+                    context,
+                    R.attr.colorFloorCard
+                )
                 R.color.default_color_nav -> return getColorByAttr(context, R.attr.colorNavBar)
                 R.color.default_color_shadow -> return getColorByAttr(context, R.attr.shadow_color)
-                R.color.default_color_unselected -> return getColorByAttr(context, R.attr.colorUnselected)
+                R.color.default_color_unselected -> return getColorByAttr(
+                    context,
+                    R.attr.colorUnselected
+                )
                 R.color.default_color_text -> return getColorByAttr(context, R.attr.colorText)
                 R.color.default_color_text_on_primary -> return getColorByAttr(
                     context,

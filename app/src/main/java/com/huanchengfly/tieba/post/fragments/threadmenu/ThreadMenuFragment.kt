@@ -10,11 +10,11 @@ import com.huanchengfly.tieba.post.widgets.theme.TintImageView
 import com.huanchengfly.tieba.post.widgets.theme.TintTextView
 
 class ThreadMenuFragment(
-        seeLz: Boolean,
-        collect: Boolean,
-        pureRead: Boolean,
-        sort: Boolean,
-        canDelete: Boolean = false
+    seeLz: Boolean,
+    collect: Boolean,
+    pureRead: Boolean,
+    sort: Boolean,
+    canDelete: Boolean = false
 ) : IThreadMenuFragment(seeLz, collect, pureRead, sort, canDelete) {
     @BindView(R.id.thread_menu_see_lz_icon)
     lateinit var seeLzIcon: TintImageView
@@ -81,10 +81,10 @@ class ThreadMenuFragment(
             sortText.setText(R.string.title_sort)
         }
         listOf(
-                seeLzIcon,
-                collectIcon,
-                pureReadIcon,
-                sortIcon
+            seeLzIcon,
+            collectIcon,
+            pureReadIcon,
+            sortIcon
         ).forEach {
             buildPressAnimator(it) {
                 addZoomAnimation()
@@ -100,19 +100,19 @@ class ThreadMenuFragment(
     override fun getLayoutId(): Int = R.layout.fragment_thread_menu
 
     @OnClick(
-            R.id.thread_menu_see_lz,
-            R.id.thread_menu_collect,
-            R.id.thread_menu_pure_read,
-            R.id.thread_menu_sort,
-            R.id.thread_menu_see_lz_icon,
-            R.id.thread_menu_collect_icon,
-            R.id.thread_menu_pure_read_icon,
-            R.id.thread_menu_sort_icon,
-            R.id.thread_menu_report,
-            R.id.thread_menu_jump_page,
-            R.id.thread_menu_copy_link,
-            R.id.thread_menu_share,
-            R.id.thread_menu_close
+        R.id.thread_menu_see_lz,
+        R.id.thread_menu_collect,
+        R.id.thread_menu_pure_read,
+        R.id.thread_menu_sort,
+        R.id.thread_menu_see_lz_icon,
+        R.id.thread_menu_collect_icon,
+        R.id.thread_menu_pure_read_icon,
+        R.id.thread_menu_sort_icon,
+        R.id.thread_menu_report,
+        R.id.thread_menu_jump_page,
+        R.id.thread_menu_copy_link,
+        R.id.thread_menu_share,
+        R.id.thread_menu_close
     )
     override fun onClick(v: View) {
         when (v.id) {

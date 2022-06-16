@@ -10,21 +10,34 @@ import com.huanchengfly.tieba.post.components.MyViewHolder
 import com.huanchengfly.tieba.post.utils.ImageUtil
 import com.huanchengfly.tieba.post.utils.getIntermixedColorBackground
 
-class SearchForumAdapter(context: Context?) : BaseMultiTypeDelegateAdapter<SearchForumBean.ForumInfoBean>(context!!, LinearLayoutHelper()) {
-    override fun convert(viewHolder: MyViewHolder, item: SearchForumBean.ForumInfoBean, position: Int, viewType: Int) {
-        viewHolder.setText(R.id.item_search_forum_title, context.getString(R.string.title_forum, item.forumNameShow))
-        ImageUtil.load(viewHolder.getView(R.id.item_search_forum_avatar), ImageUtil.LOAD_TYPE_AVATAR, item.avatar)
+class SearchForumAdapter(context: Context?) :
+    BaseMultiTypeDelegateAdapter<SearchForumBean.ForumInfoBean>(context!!, LinearLayoutHelper()) {
+    override fun convert(
+        viewHolder: MyViewHolder,
+        item: SearchForumBean.ForumInfoBean,
+        position: Int,
+        viewType: Int
+    ) {
+        viewHolder.setText(
+            R.id.item_search_forum_title,
+            context.getString(R.string.title_forum, item.forumNameShow)
+        )
+        ImageUtil.load(
+            viewHolder.getView(R.id.item_search_forum_avatar),
+            ImageUtil.LOAD_TYPE_AVATAR,
+            item.avatar
+        )
         if (viewType == TYPE_EXACT) {
             val exactForumInfoBean = item as ExactForumInfoBean
             viewHolder.setText(R.id.item_search_forum_subtitle, exactForumInfoBean.slogan)
         }
         viewHolder.itemView.background = getIntermixedColorBackground(
-                context,
-                position,
-                itemCount,
-                positionOffset = 1,
-                colors = intArrayOf(R.color.default_color_card, R.color.default_color_divider),
-                radius = context.resources.getDimension(R.dimen.card_radius)
+            context,
+            position,
+            itemCount,
+            positionOffset = 1,
+            colors = intArrayOf(R.color.default_color_card, R.color.default_color_divider),
+            radius = context.resources.getDimension(R.dimen.card_radius)
         )
     }
 

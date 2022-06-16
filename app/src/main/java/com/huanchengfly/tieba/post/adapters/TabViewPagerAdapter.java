@@ -10,8 +10,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TabViewPagerAdapter extends PagerAdapter {
-    private List<View> views = new ArrayList<>();
-    private List<String> titles = new ArrayList<>();
+    private final List<View> views = new ArrayList<>();
+    private final List<String> titles = new ArrayList<>();
     private int currentPosition;
 
     public int getCurrentPosition() {

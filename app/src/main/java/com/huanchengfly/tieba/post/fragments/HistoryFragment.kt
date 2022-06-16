@@ -25,7 +25,11 @@ class HistoryFragment : BaseFragment(), OnItemClickListener<History>, Refreshabl
     @BindView(R.id.recycler_view)
     lateinit var recyclerView: RecyclerView
 
-    private val virtualLayoutManager: VirtualLayoutManager by lazy { VirtualLayoutManager(attachContext) }
+    private val virtualLayoutManager: VirtualLayoutManager by lazy {
+        VirtualLayoutManager(
+            attachContext
+        )
+    }
     private val delegateAdapter: DelegateAdapter by lazy { DelegateAdapter(virtualLayoutManager) }
     private val todayHistoryAdapter: HistoryAdapter by lazy { HistoryAdapter(attachContext) }
     private val beforeHistoryAdapter: HistoryAdapter by lazy { HistoryAdapter(attachContext) }
@@ -74,10 +78,10 @@ class HistoryFragment : BaseFragment(), OnItemClickListener<History>, Refreshabl
             beforeHistoryAdapter.setData(before)
             if (today.size > 0) {
                 delegateAdapter.addAdapter(HeaderDelegateAdapter(
-                        attachContext,
-                        R.string.title_history_today,
-                        startIconResId = R.drawable.ic_date_range,
-                        sticky = HeaderDelegateAdapter.STICKY_START
+                    attachContext,
+                    R.string.title_history_today,
+                    startIconResId = R.drawable.ic_date_range,
+                    sticky = HeaderDelegateAdapter.STICKY_START
                 ).apply {
                     setHeaderBackgroundResource(R.drawable.bg_top_radius_8dp)
                     iconTintList = R.color.default_color_primary
@@ -92,10 +96,10 @@ class HistoryFragment : BaseFragment(), OnItemClickListener<History>, Refreshabl
             }
             if (before.size > 0) {
                 delegateAdapter.addAdapter(HeaderDelegateAdapter(
-                        attachContext,
-                        R.string.title_history_before,
-                        startIconResId = R.drawable.ic_date_range,
-                        sticky = HeaderDelegateAdapter.STICKY_START
+                    attachContext,
+                    R.string.title_history_before,
+                    startIconResId = R.drawable.ic_date_range,
+                    sticky = HeaderDelegateAdapter.STICKY_START
                 ).apply {
                     setHeaderBackgroundResource(R.drawable.bg_top_radius_8dp)
                     iconTintList = R.color.default_color_primary
@@ -116,13 +120,14 @@ class HistoryFragment : BaseFragment(), OnItemClickListener<History>, Refreshabl
         when (item.type) {
             HistoryUtil.TYPE_FORUM -> ForumActivity.launch(attachContext, item.data)
             HistoryUtil.TYPE_THREAD -> {
-                val historyInfoBean = if (item.extras != null) item.extras.fromJson<ThreadHistoryInfoBean>() else null
+                val historyInfoBean =
+                    if (item.extras != null) item.extras.fromJson<ThreadHistoryInfoBean>() else null
                 ThreadActivity.launch(
-                        attachContext,
-                        item.data,
-                        historyInfoBean?.pid,
-                        historyInfoBean?.isSeeLz,
-                        ThreadActivity.FROM_HISTORY
+                    attachContext,
+                    item.data,
+                    historyInfoBean?.pid,
+                    historyInfoBean?.isSeeLz,
+                    ThreadActivity.FROM_HISTORY
                 )
             }
         }

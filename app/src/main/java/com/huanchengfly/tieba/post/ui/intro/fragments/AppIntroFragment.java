@@ -9,9 +9,9 @@ import androidx.annotation.Nullable;
 import java.lang.ref.WeakReference;
 
 public class AppIntroFragment extends BaseIntroFragment {
-    private int iconColor;
-    private int titleTextColor;
-    private int subtitleTextColor;
+    private final int iconColor;
+    private final int titleTextColor;
+    private final int subtitleTextColor;
     private int iconRes;
     private CharSequence title;
     private CharSequence subtitle;
@@ -70,7 +70,7 @@ public class AppIntroFragment extends BaseIntroFragment {
     }
 
     public static class Builder {
-        private WeakReference<Context> contextWeakReference;
+        private final WeakReference<Context> contextWeakReference;
 
         private int iconColor;
         private int titleTextColor;

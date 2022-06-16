@@ -15,7 +15,7 @@ import com.huanchengfly.tieba.post.R;
 import java.util.Objects;
 
 public abstract class BaseFullScreenDialog extends Dialog {
-    private View mContentView;
+    private final View mContentView;
 
     BaseFullScreenDialog(@NonNull Context context) {
         super(context, R.style.Dialog_FullScreen);

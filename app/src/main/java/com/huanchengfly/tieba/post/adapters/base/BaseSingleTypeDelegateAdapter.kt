@@ -7,15 +7,16 @@ import com.alibaba.android.vlayout.LayoutHelper
 import com.huanchengfly.tieba.post.components.MyViewHolder
 
 abstract class BaseSingleTypeDelegateAdapter<Item> @JvmOverloads constructor(
-        context: Context,
-        layoutHelper: LayoutHelper,
-        items: List<Item>? = null
+    context: Context,
+    layoutHelper: LayoutHelper,
+    items: List<Item>? = null
 ) : BaseDelegateAdapter<Item>(
-        context, layoutHelper, items
+    context, layoutHelper, items
 ) {
     protected abstract fun getItemLayoutId(): Int
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder = MyViewHolder(context, getItemLayoutId())
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder =
+        MyViewHolder(context, getItemLayoutId())
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
         holder.setItemOnClickListener(View.OnClickListener {

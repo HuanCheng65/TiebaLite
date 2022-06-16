@@ -4,11 +4,11 @@ import android.view.View
 import com.huanchengfly.tieba.post.fragments.BaseBottomSheetDialogFragment
 
 abstract class IThreadMenuFragment(
-        internal val seeLz: Boolean,
-        internal val collect: Boolean,
-        internal val pureRead: Boolean,
-        internal val sort: Boolean,
-        internal val canDelete: Boolean
+    internal val seeLz: Boolean,
+    internal val collect: Boolean,
+    internal val pureRead: Boolean,
+    internal val sort: Boolean,
+    internal val canDelete: Boolean
 ) : BaseBottomSheetDialogFragment(), View.OnClickListener {
     internal var onActionsListener: OnActionsListener? = null
 

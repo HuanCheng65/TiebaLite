@@ -66,7 +66,7 @@ class NewSearchActivity : BaseActivity(), TabLayout.OnTabSelectedListener {
             field = value
             if (value != null) {
                 SearchHistory(value)
-                        .saveOrUpdate("content = ?", value)
+                    .saveOrUpdate("content = ?", value)
             }
             state = if (value == null) {
                 State.INPUT
@@ -82,7 +82,8 @@ class NewSearchActivity : BaseActivity(), TabLayout.OnTabSelectedListener {
                 }
             }
         }
-    private val fragmentAdapter: FragmentTabViewPagerAdapter = FragmentTabViewPagerAdapter(supportFragmentManager)
+    private val fragmentAdapter: FragmentTabViewPagerAdapter =
+        FragmentTabViewPagerAdapter(supportFragmentManager)
     private val virtualLayoutManager: VirtualLayoutManager = VirtualLayoutManager(this)
     private val delegateAdapter: DelegateAdapter = DelegateAdapter(virtualLayoutManager)
 
@@ -91,9 +92,18 @@ class NewSearchActivity : BaseActivity(), TabLayout.OnTabSelectedListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         ThemeUtil.setTranslucentThemeBackground(findViewById(R.id.background))
-        fragmentAdapter.addFragment(SearchForumFragment.newInstance(), getString(R.string.title_search_forum))
-        fragmentAdapter.addFragment(SearchThreadFragment.newInstance(), getString(R.string.title_search_thread))
-        fragmentAdapter.addFragment(SearchUserFragment.newInstance(), getString(R.string.title_search_user))
+        fragmentAdapter.addFragment(
+            SearchForumFragment.newInstance(),
+            getString(R.string.title_search_forum)
+        )
+        fragmentAdapter.addFragment(
+            SearchThreadFragment.newInstance(),
+            getString(R.string.title_search_thread)
+        )
+        fragmentAdapter.addFragment(
+            SearchUserFragment.newInstance(),
+            getString(R.string.title_search_user)
+        )
         viewPager.adapter = fragmentAdapter
         viewPager.offscreenPageLimit = 3
         tabLayout.setupWithViewPager(viewPager)
@@ -144,10 +154,10 @@ class NewSearchActivity : BaseActivity(), TabLayout.OnTabSelectedListener {
         delegateAdapter.clear()
         LitePal.order("timestamp DESC").findAsync(SearchHistory::class.java).listen { histories ->
             delegateAdapter.addAdapter(HeaderDelegateAdapter(
-                    this,
-                    R.string.title_search_history,
-                    R.drawable.ic_round_keyboard,
-                    if (histories.size > 0) R.drawable.ic_round_delete else NO_ICON
+                this,
+                R.string.title_search_history,
+                R.drawable.ic_round_keyboard,
+                if (histories.size > 0) R.drawable.ic_round_delete else NO_ICON
             ).apply {
                 setHeaderBackgroundResource(R.drawable.bg_top_radius_8dp)
                 headerBackgroundTintList = R.color.default_color_card
@@ -191,30 +201,31 @@ class NewSearchActivity : BaseActivity(), TabLayout.OnTabSelectedListener {
     }
 
     inner class SearchHistoryDelegateAdapter(
-            val data: List<SearchHistory>? = null
+        val data: List<SearchHistory>? = null
     ) : SingleLayoutDelegateAdapter(
-            this,
-            {
-                val parentLayout = LinearLayout(this).apply {
-                    orientation = LinearLayout.VERTICAL
-                    layoutParams = RecyclerView.LayoutParams(MATCH_PARENT, WRAP_CONTENT)
-                    setPadding(16.dpToPx(), 8.dpToPx(), 8.dpToPx(), 8.dpToPx())
-                    setBackgroundResource(R.drawable.bg_bottom_radius_8dp)
-                    backgroundTintList = ColorStateListUtils.createColorStateList(context, R.color.default_color_card)
-                }
-                RecyclerView(this).apply {
-                    id = R.id.recyclerview
-                    addItemDecoration(SpacesItemDecoration(0, 0, 8.dpToPx(), 8.dpToPx()))
-                }.also {
-                    parentLayout.addView(it)
-                }
-                View.inflate(this, R.layout.layout_no_data, null).apply {
-                    id = R.id.no_data
-                }.also {
-                    parentLayout.addView(it)
-                }
-                parentLayout
+        this,
+        {
+            val parentLayout = LinearLayout(this).apply {
+                orientation = LinearLayout.VERTICAL
+                layoutParams = RecyclerView.LayoutParams(MATCH_PARENT, WRAP_CONTENT)
+                setPadding(16.dpToPx(), 8.dpToPx(), 8.dpToPx(), 8.dpToPx())
+                setBackgroundResource(R.drawable.bg_bottom_radius_8dp)
+                backgroundTintList =
+                    ColorStateListUtils.createColorStateList(context, R.color.default_color_card)
             }
+            RecyclerView(this).apply {
+                id = R.id.recyclerview
+                addItemDecoration(SpacesItemDecoration(0, 0, 8.dpToPx(), 8.dpToPx()))
+            }.also {
+                parentLayout.addView(it)
+            }
+            View.inflate(this, R.layout.layout_no_data, null).apply {
+                id = R.id.no_data
+            }.also {
+                parentLayout.addView(it)
+            }
+            parentLayout
+        }
     ) {
         val adapter: SearchHistoryAdapter = SearchHistoryAdapter(context).apply {
             setData(data)

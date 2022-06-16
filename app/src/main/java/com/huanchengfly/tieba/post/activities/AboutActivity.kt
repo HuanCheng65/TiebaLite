@@ -24,8 +24,8 @@ class AboutActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         ThemeUtil.setTranslucentThemeBackground(findViewById(R.id.background))
-        val toolbar = findViewById(R.id.toolbar) as Toolbar
-        val mainView = findViewById(R.id.main) as RelativeLayout
+        val toolbar = findViewById<Toolbar>(R.id.toolbar)
+        val mainView = findViewById<RelativeLayout>(R.id.main)
         val headerView = View.inflate(this, R.layout.header_about, null)
         (headerView as ViewGroup).layoutTransition = LayoutTransition()
         setSupportActionBar(toolbar)

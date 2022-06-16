@@ -55,8 +55,14 @@ public class NewForumAdapter extends BaseMultiTypeDelegateAdapter<ForumPageBean.
     public static final int TYPE_THREAD_MULTI_PIC = 13;
     public static final int TYPE_THREAD_VIDEO = 14;
     private ForumPageBean data;
-    private Map<String, ForumPageBean.UserBean> userBeanMap;
+    private final Map<String, ForumPageBean.UserBean> userBeanMap;
     private List<Long> ids;
+
+    public NewForumAdapter(Context context) {
+        super(context, new LinearLayoutHelper());
+        ids = new ArrayList<>();
+        userBeanMap = new HashMap<>();
+    }
 
     @NonNull
     @Override
@@ -66,12 +72,6 @@ public class NewForumAdapter extends BaseMultiTypeDelegateAdapter<ForumPageBean.
         } else {
             return new LinearLayoutHelper();
         }
-    }
-
-    public NewForumAdapter(Context context) {
-        super(context, new LinearLayoutHelper());
-        ids = new ArrayList<>();
-        userBeanMap = new HashMap<>();
     }
 
     @Override

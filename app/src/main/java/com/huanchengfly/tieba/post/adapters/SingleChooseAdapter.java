@@ -13,9 +13,9 @@ import com.huanchengfly.tieba.post.R;
 import java.util.List;
 
 public class SingleChooseAdapter extends BaseAdapter {
-    private List<String> strings;
+    private final List<String> strings;
     private int choosePosition;
-    private LayoutInflater mInflater;
+    private final LayoutInflater mInflater;
 
     public SingleChooseAdapter(Context context, List<String> strings) {
         this(context, strings, 0);

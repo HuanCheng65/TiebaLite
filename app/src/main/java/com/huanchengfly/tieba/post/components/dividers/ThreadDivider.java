@@ -20,12 +20,12 @@ import com.huanchengfly.tieba.post.utils.DisplayUtil;
 public class ThreadDivider extends RecyclerView.ItemDecoration implements Tintable {
     public static final String TAG = "ThreadDivider";
 
-    private Context mContext;
+    private final Context mContext;
 
     private Drawable mDivider;
-    private int mOrientation;
-    private int mHeaderDividerHeight;
-    private int mCommonDividerHeight;
+    private final int mOrientation;
+    private final int mHeaderDividerHeight;
+    private final int mCommonDividerHeight;
 
     public ThreadDivider(Context context) {
         mContext = context;

@@ -101,18 +101,22 @@ class SearchPostActivity : BaseActivity() {
             return
         }
         page = 1
-        getInstance().searchPost(keyword!!, forumName!!, false, page, 30).enqueue(object : Callback<SearchPostBean> {
-            override fun onResponse(call: Call<SearchPostBean>, response: Response<SearchPostBean>) {
-                val data = response.body()
-                searchPostAdapter.setData(data!!.postList)
-                refreshLayout.finishRefresh()
-                refreshLayout.setNoMoreData("1" != data.page!!.hasMore)
-            }
+        getInstance().searchPost(keyword!!, forumName!!, false, page, 30)
+            .enqueue(object : Callback<SearchPostBean> {
+                override fun onResponse(
+                    call: Call<SearchPostBean>,
+                    response: Response<SearchPostBean>
+                ) {
+                    val data = response.body()
+                    searchPostAdapter.setData(data!!.postList)
+                    refreshLayout.finishRefresh()
+                    refreshLayout.setNoMoreData("1" != data.page!!.hasMore)
+                }
 
-            override fun onFailure(call: Call<SearchPostBean?>, t: Throwable) {
-                refreshLayout.finishRefresh(false)
-            }
-        })
+                override fun onFailure(call: Call<SearchPostBean?>, t: Throwable) {
+                    refreshLayout.finishRefresh(false)
+                }
+            })
     }
 
     private fun loadMore() {
@@ -120,19 +124,23 @@ class SearchPostActivity : BaseActivity() {
             refreshLayout.finishLoadMore(false)
             return
         }
-        getInstance().searchPost(keyword!!, forumName!!, false, page + 1, 30).enqueue(object : Callback<SearchPostBean> {
-            override fun onResponse(call: Call<SearchPostBean>, response: Response<SearchPostBean>) {
-                val data = response.body()
-                page += 1
-                data!!.postList?.let { searchPostAdapter.insert(it) }
-                refreshLayout.finishLoadMore()
-                refreshLayout.setNoMoreData("1" != data.page!!.hasMore)
-            }
+        getInstance().searchPost(keyword!!, forumName!!, false, page + 1, 30)
+            .enqueue(object : Callback<SearchPostBean> {
+                override fun onResponse(
+                    call: Call<SearchPostBean>,
+                    response: Response<SearchPostBean>
+                ) {
+                    val data = response.body()
+                    page += 1
+                    data!!.postList?.let { searchPostAdapter.insert(it) }
+                    refreshLayout.finishLoadMore()
+                    refreshLayout.setNoMoreData("1" != data.page!!.hasMore)
+                }
 
-            override fun onFailure(call: Call<SearchPostBean?>, t: Throwable) {
-                refreshLayout.finishLoadMore(false)
-            }
-        })
+                override fun onFailure(call: Call<SearchPostBean?>, t: Throwable) {
+                    refreshLayout.finishLoadMore(false)
+                }
+            })
     }
 
     companion object {

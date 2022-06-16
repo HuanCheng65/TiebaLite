@@ -23,7 +23,7 @@ import com.huanchengfly.tieba.post.utils.Util;
 public class UpdateInfoActivity extends BaseActivity implements WebViewListener {
     public static final int ACTION_UPDATE_LOGIN_INFO = 0;
     private static final String EXTRA_ACTION = "action";
-    private static Handler handler = new Handler();
+    private static final Handler handler = new Handler();
     private Toolbar toolbar;
     private int action;
     private WebViewFragment mWebViewFragment;
@@ -37,7 +37,7 @@ public class UpdateInfoActivity extends BaseActivity implements WebViewListener 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         ThemeUtil.setTranslucentThemeBackground(findViewById(R.id.background));
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar = findViewById(R.id.toolbar);
         action = getIntent().getIntExtra(EXTRA_ACTION, ACTION_UPDATE_LOGIN_INFO);
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();

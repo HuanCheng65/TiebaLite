@@ -21,8 +21,8 @@ public class FeedDivider extends RecyclerView.ItemDecoration implements Tintable
     public static final String TAG = "ThreadDivider";
 
     private Drawable mDivider;
-    private int mOrientation;
-    private int mCommonDividerHeight;
+    private final int mOrientation;
+    private final int mCommonDividerHeight;
 
     public FeedDivider(Context context) {
         mOrientation = LinearLayoutManager.VERTICAL;

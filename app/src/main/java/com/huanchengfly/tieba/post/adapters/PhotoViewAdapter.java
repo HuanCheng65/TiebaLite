@@ -15,7 +15,7 @@ import java.util.Collection;
 import java.util.List;
 
 public class PhotoViewAdapter extends FragmentStateAdapter {
-    private List<PhotoViewBean> mList;
+    private final List<PhotoViewBean> mList;
 
     @SuppressLint("WrongConstant")
     public PhotoViewAdapter(@NonNull FragmentActivity fragmentActivity, List<PhotoViewBean> list) {

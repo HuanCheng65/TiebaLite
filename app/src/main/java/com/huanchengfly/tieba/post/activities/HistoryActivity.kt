@@ -43,8 +43,14 @@ class HistoryActivity : BaseActivity() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         collapsingToolbar.title = title
         collapsingToolbar.isTitleEnabled = true
-        viewPagerAdapter.addFragment(HistoryFragment.newInstance(HistoryUtil.TYPE_THREAD), getString(R.string.title_history_thread))
-        viewPagerAdapter.addFragment(HistoryFragment.newInstance(HistoryUtil.TYPE_FORUM), getString(R.string.title_history_forum))
+        viewPagerAdapter.addFragment(
+            HistoryFragment.newInstance(HistoryUtil.TYPE_THREAD),
+            getString(R.string.title_history_thread)
+        )
+        viewPagerAdapter.addFragment(
+            HistoryFragment.newInstance(HistoryUtil.TYPE_FORUM),
+            getString(R.string.title_history_forum)
+        )
         viewPager.adapter = viewPagerAdapter
         tabLayout.setupWithViewPager(viewPager)
     }

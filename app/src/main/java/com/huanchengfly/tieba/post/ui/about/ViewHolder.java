@@ -14,8 +14,8 @@ import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 
 public class ViewHolder extends RecyclerView.ViewHolder {
-    private SparseArray<View> mViews;
-    private View itemView;
+    private final SparseArray<View> mViews;
+    private final View itemView;
 
     private ViewHolder(@NonNull View itemView) {
         super(itemView);

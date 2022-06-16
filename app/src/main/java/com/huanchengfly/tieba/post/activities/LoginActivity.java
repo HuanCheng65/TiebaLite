@@ -25,7 +25,7 @@ import com.huanchengfly.tieba.post.utils.Util;
 public class LoginActivity extends BaseActivity implements WebViewListener {
     public static final String TAG = LoginActivity.class.getSimpleName();
 
-    private static Handler handler = new Handler();
+    private static final Handler handler = new Handler();
     private Toolbar toolbar;
 
     @Override
@@ -33,7 +33,7 @@ public class LoginActivity extends BaseActivity implements WebViewListener {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         ThemeUtil.setTranslucentThemeBackground(findViewById(R.id.background));
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {

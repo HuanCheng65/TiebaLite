@@ -30,8 +30,12 @@ class ForumInfoActivity : BaseActivity() {
             finish()
         } else {
             supportFragmentManager.beginTransaction()
-                    .replace(R.id.container, ForumInfoFragment.newInstance(forumName), "ForumInfoFragment")
-                    .commit()
+                .replace(
+                    R.id.container,
+                    ForumInfoFragment.newInstance(forumName),
+                    "ForumInfoFragment"
+                )
+                .commit()
         }
     }
 
@@ -43,8 +47,8 @@ class ForumInfoActivity : BaseActivity() {
         const val EXTRA_FORUM_NAME = "forum_name"
 
         fun launch(
-                context: Context,
-                forumName: String
+            context: Context,
+            forumName: String
         ) {
             context.goToActivity<ForumInfoActivity> {
                 putExtra(EXTRA_FORUM_NAME, forumName)
