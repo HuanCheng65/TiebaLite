@@ -186,12 +186,12 @@ class ThreadMainPostAdapter(
         }
         val forumNameView = forumView.findViewById<TextView>(R.id.forum_bar_name)
         val forumAvatarView: ImageView = forumView.findViewById(R.id.forum_bar_avatar)
-        if (!showForum || !context.appPreferences.showShortcutInThread || "0" == forumInfoBean.isExists || forumInfoBean.name!!.isEmpty()) {
+        if (!showForum || !context.appPreferences.showShortcutInThread || "0" == forumInfoBean.isExists || forumInfoBean.name?.isEmpty() == true) {
             forumView.visibility = View.GONE
             return
         }
         forumView.visibility = View.VISIBLE
-        forumView.setOnClickListener(View.OnClickListener { launch(context, forumInfoBean.name) })
+        forumView.setOnClickListener(View.OnClickListener { launch(context, forumInfoBean.name!!) })
         forumNameView.text = forumInfoBean.name
         ImageUtil.load(forumAvatarView, ImageUtil.LOAD_TYPE_AVATAR, forumInfoBean.avatar)
     }

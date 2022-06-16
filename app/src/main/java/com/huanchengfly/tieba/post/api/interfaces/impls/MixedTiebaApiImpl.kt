@@ -30,6 +30,12 @@ object MixedTiebaApiImpl : ITiebaApi {
     override fun personalized(loadType: Int, page: Int): Call<PersonalizedBean> =
         RetrofitTiebaApi.MINI_TIEBA_API.personalized(loadType, page)
 
+    override fun personalizedAsync(
+        loadType: Int,
+        page: Int
+    ): Deferred<ApiResult<PersonalizedBean>> =
+        RetrofitTiebaApi.MINI_TIEBA_API.personalizedAsync(loadType, page)
+
     override fun myProfileAsync(): Deferred<ApiResult<Profile>> =
         RetrofitTiebaApi.WEB_TIEBA_API.myProfileAsync("json", "", "")
 

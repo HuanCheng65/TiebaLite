@@ -15,8 +15,10 @@ import com.bumptech.glide.Glide;
 import com.huanchengfly.tieba.post.BaseApplication;
 import com.huanchengfly.tieba.post.ExtensionsKt;
 import com.huanchengfly.tieba.post.R;
+import com.huanchengfly.tieba.post.adapters.base.BaseMultiTypeAdapter;
 import com.huanchengfly.tieba.post.api.models.ForumPageBean;
 import com.huanchengfly.tieba.post.api.models.PersonalizedBean;
+import com.huanchengfly.tieba.post.components.MyViewHolder;
 import com.huanchengfly.tieba.post.components.dialogs.DislikeDialog;
 import com.huanchengfly.tieba.post.models.PhotoViewBean;
 import com.huanchengfly.tieba.post.utils.DateTimeUtils;
@@ -27,27 +29,25 @@ import com.huanchengfly.tieba.post.utils.SharedPreferencesUtil;
 import com.huanchengfly.tieba.post.utils.Util;
 import com.huanchengfly.tieba.post.widgets.MarkedImageView;
 import com.huanchengfly.tieba.post.widgets.VideoPlayerStandard;
-import com.othershe.baseadapter.ViewHolder;
-import com.othershe.baseadapter.base.MultiBaseAdapter;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class PersonalizedFeedAdapter extends MultiBaseAdapter<PersonalizedBean.ThreadBean> {
+public class PersonalizedFeedAdapter extends BaseMultiTypeAdapter<PersonalizedBean.ThreadBean> {
     public static final int TYPE_THREAD_COMMON = 11;
     public static final int TYPE_THREAD_SINGLE_PIC = 12;
     public static final int TYPE_THREAD_MULTI_PIC = 13;
     public static final int TYPE_THREAD_VIDEO = 14;
 
-    private NavigationHelper navigationHelper;
+    private final NavigationHelper navigationHelper;
 
     private int refreshPosition;
     private OnRefreshListener onRefreshListener;
 
     public PersonalizedFeedAdapter(Context context) {
-        super(context, null, false);
+        super(context);
         refreshPosition = -1;
         navigationHelper = NavigationHelper.newInstance(context);
     }
@@ -70,9 +70,9 @@ public class PersonalizedFeedAdapter extends MultiBaseAdapter<PersonalizedBean.T
     }
 
     private int getMaxWidth() {
-        int maxWidth = BaseApplication.ScreenInfo.EXACT_SCREEN_WIDTH - DisplayUtil.dp2px(mContext, 56);
-        if (ExtensionsKt.isTablet(mContext)) {
-            if (ExtensionsKt.isLandscape(mContext.getResources().getConfiguration())) {
+        int maxWidth = BaseApplication.ScreenInfo.EXACT_SCREEN_WIDTH - DisplayUtil.dp2px(getContext(), 56);
+        if (ExtensionsKt.isTablet(getContext())) {
+            if (ExtensionsKt.isLandscape(getContext().getResources().getConfiguration())) {
                 return maxWidth / 3;
             } else {
                 return maxWidth / 2;
@@ -108,7 +108,7 @@ public class PersonalizedFeedAdapter extends MultiBaseAdapter<PersonalizedBean.T
 
     private void load(ForumPageBean.MediaInfoBean mediaInfoBean, ImageView imageView) {
         imageView.setVisibility(View.VISIBLE);
-        String url = ImageUtil.getUrl(mContext, true, mediaInfoBean.getOriginPic(), mediaInfoBean.getSrcPic());
+        String url = ImageUtil.getUrl(getContext(), true, mediaInfoBean.getOriginPic(), mediaInfoBean.getSrcPic());
         if ("3".equals(mediaInfoBean.getType())) {
             ImageUtil.load(imageView, ImageUtil.LOAD_TYPE_NO_RADIUS, url);
         }
@@ -119,7 +119,7 @@ public class PersonalizedFeedAdapter extends MultiBaseAdapter<PersonalizedBean.T
     }
 
     @Override
-    protected void convert(ViewHolder viewHolder, PersonalizedBean.ThreadBean threadBean, int position, int viewType) {
+    protected void convert(MyViewHolder viewHolder, PersonalizedBean.ThreadBean threadBean, int position, int viewType) {
         View refreshTip = viewHolder.getView(R.id.feed_refresh_tip);
         if (position == getRefreshPosition()) {
             refreshTip.setVisibility(View.VISIBLE);
@@ -152,7 +152,7 @@ public class PersonalizedFeedAdapter extends MultiBaseAdapter<PersonalizedBean.T
                 }
                 remove(position);
             } else {
-                DislikeDialog dislikeDialog = new DislikeDialog(mContext, threadBean.getThreadPersonalizedBean(), threadBean.getForumId());
+                DislikeDialog dislikeDialog = new DislikeDialog(getContext(), threadBean.getThreadPersonalizedBean(), threadBean.getForumId());
                 dislikeDialog.setOnSubmitListener(() -> {
                     if (position <= refreshPosition && refreshPosition > -1) {
                         refreshPosition -= 1;
@@ -208,19 +208,19 @@ public class PersonalizedFeedAdapter extends MultiBaseAdapter<PersonalizedBean.T
         }
         PersonalizedBean.AuthorBean authorBean = threadBean.getAuthor();
         if (authorBean != null) {
-            viewHolder.setOnClickListener(R.id.forum_item_user_avatar, v -> NavigationHelper.toUserSpaceWithAnim(mContext, authorBean.getId(), authorBean.getPortrait(), v));
+            viewHolder.setOnClickListener(R.id.forum_item_user_avatar, v -> NavigationHelper.toUserSpaceWithAnim(getContext(), authorBean.getId(), authorBean.getPortrait(), v));
             viewHolder.setText(R.id.forum_item_user_name, authorBean.getNameShow());
             ImageUtil.load(viewHolder.getView(R.id.forum_item_user_avatar), ImageUtil.LOAD_TYPE_AVATAR, authorBean.getPortrait());
         }
         TextView timeTextView = viewHolder.getView(R.id.forum_item_user_time);
         String relativeTime =
-                DateTimeUtils.getRelativeTimeString(mContext, threadBean.getLastTimeInt());
+                DateTimeUtils.getRelativeTimeString(getContext(), threadBean.getLastTimeInt());
         if (!TextUtils.isEmpty(threadBean.getForumName())) {
             timeTextView.setText(
-                    mContext.getString(
+                    getContext().getString(
                             R.string.template_two_string,
                             relativeTime,
-                            mContext.getString(R.string.text_forum_name, threadBean.getForumName())
+                            getContext().getString(R.string.text_forum_name, threadBean.getForumName())
                     )
             );
         } else {
@@ -228,7 +228,7 @@ public class PersonalizedFeedAdapter extends MultiBaseAdapter<PersonalizedBean.T
         }
         switch (viewType) {
             case TYPE_THREAD_SINGLE_PIC:
-                if (Util.canLoadGlide(mContext) && "3".equals(threadBean.getMedia().get(0).getType())) {
+                if (Util.canLoadGlide(getContext()) && "3".equals(threadBean.getMedia().get(0).getType())) {
                     ImageView imageView = viewHolder.getView(R.id.forum_item_content_pic);
                     imageView.setLayoutParams(getLayoutParams((RelativeLayout.LayoutParams) imageView.getLayoutParams()));
                     setListenerForImageView(threadBean.getMedia(), imageView, 0);
@@ -236,14 +236,14 @@ public class PersonalizedFeedAdapter extends MultiBaseAdapter<PersonalizedBean.T
                     ImageUtil.load(
                             imageView,
                             ImageUtil.LOAD_TYPE_SMALL_PIC,
-                            ImageUtil.getUrl(mContext, true, mediaInfoBean.getOriginPic(), mediaInfoBean.getSrcPic())
+                            ImageUtil.getUrl(getContext(), true, mediaInfoBean.getOriginPic(), mediaInfoBean.getSrcPic())
                     );
                 }
                 break;
             case TYPE_THREAD_MULTI_PIC:
                 GridLayout gridLayout = viewHolder.getView(R.id.forum_item_content_pics);
                 CardView cardView = viewHolder.getView(R.id.forum_item_content_pics_card);
-                cardView.setRadius(DisplayUtil.dp2px(mContext, SharedPreferencesUtil.get(mContext, SharedPreferencesUtil.SP_SETTINGS).getInt("radius", 8)));
+                cardView.setRadius(DisplayUtil.dp2px(getContext(), SharedPreferencesUtil.get(getContext(), SharedPreferencesUtil.SP_SETTINGS).getInt("radius", 8)));
                 MarkedImageView firstImageView = viewHolder.getView(R.id.forum_item_content_pic_1);
                 MarkedImageView secondImageView = viewHolder.getView(R.id.forum_item_content_pic_2);
                 MarkedImageView thirdImageView = viewHolder.getView(R.id.forum_item_content_pic_3);
@@ -255,7 +255,7 @@ public class PersonalizedFeedAdapter extends MultiBaseAdapter<PersonalizedBean.T
                     load(firstMedia, firstImageView);
                 } else {
                     firstImageView.setVisibility(View.GONE);
-                    Glide.with(mContext)
+                    Glide.with(getContext())
                             .clear(firstImageView);
                 }
                 if (size >= 2) {
@@ -264,7 +264,7 @@ public class PersonalizedFeedAdapter extends MultiBaseAdapter<PersonalizedBean.T
                     load(secondMedia, secondImageView);
                 } else {
                     secondImageView.setVisibility(View.GONE);
-                    Glide.with(mContext)
+                    Glide.with(getContext())
                             .clear(secondImageView);
                 }
                 if (size >= 3) {
@@ -273,7 +273,7 @@ public class PersonalizedFeedAdapter extends MultiBaseAdapter<PersonalizedBean.T
                     load(thirdMedia, thirdImageView);
                 } else {
                     thirdImageView.setVisibility(View.GONE);
-                    Glide.with(mContext)
+                    Glide.with(getContext())
                             .clear(thirdImageView);
                 }
                 if (size > 3) {

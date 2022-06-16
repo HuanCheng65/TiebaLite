@@ -28,6 +28,17 @@ interface ITiebaApi {
     ): Call<PersonalizedBean>
 
     /**
+     * 个性推荐（每页 15 贴）
+     *
+     * @param loadType 加载类型（1 - 下拉刷新 2 - 加载更多）
+     * @param page 分页页码
+     */
+    fun personalizedAsync(
+        loadType: Int,
+        page: Int = 1
+    ): Deferred<ApiResult<PersonalizedBean>>
+
+    /**
      * 给贴子/回复点赞
      *
      * **需登录**

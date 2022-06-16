@@ -1,11 +1,10 @@
 package com.huanchengfly.tieba.post.fragments
 
-import android.animation.Animator
-import android.animation.AnimatorListenerAdapter
 import android.content.res.Configuration
 import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
+import android.view.animation.AccelerateDecelerateInterpolator
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.widget.Toolbar
@@ -21,6 +20,8 @@ import com.huanchengfly.tieba.post.activities.NewSearchActivity
 import com.huanchengfly.tieba.post.adapters.PersonalizedFeedAdapter
 import com.huanchengfly.tieba.post.api.TiebaApi
 import com.huanchengfly.tieba.post.api.models.PersonalizedBean
+import com.huanchengfly.tieba.post.api.retrofit.doIfFailure
+import com.huanchengfly.tieba.post.api.retrofit.doIfSuccess
 import com.huanchengfly.tieba.post.api.retrofit.exception.TiebaException
 import com.huanchengfly.tieba.post.components.MyLinearLayoutManager
 import com.huanchengfly.tieba.post.components.dividers.FeedDivider
@@ -29,7 +30,11 @@ import com.huanchengfly.tieba.post.goToActivity
 import com.huanchengfly.tieba.post.interfaces.Refreshable
 import com.huanchengfly.tieba.post.isLandscape
 import com.huanchengfly.tieba.post.isPortrait
-import com.huanchengfly.tieba.post.utils.*
+import com.huanchengfly.tieba.post.utils.BlockUtil
+import com.huanchengfly.tieba.post.utils.ThemeUtil
+import com.huanchengfly.tieba.post.utils.TiebaUtil
+import com.huanchengfly.tieba.post.utils.Util
+import com.huanchengfly.tieba.post.utils.anim.animSet
 import com.huanchengfly.tieba.post.widgets.ShadowLayout
 import com.huanchengfly.tieba.post.widgets.VideoPlayerStandard
 import com.scwang.smart.refresh.header.MaterialHeader
@@ -37,10 +42,10 @@ import com.scwang.smart.refresh.layout.SmartRefreshLayout
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import java.util.*
 
-class PersonalizedFeedFragment : BaseFragment(), PersonalizedFeedAdapter.OnRefreshListener, Refreshable, Toolbar.OnMenuItemClickListener {
-    private var adapter: PersonalizedFeedAdapter? = null
+class PersonalizedFeedFragment : BaseFragment(), PersonalizedFeedAdapter.OnRefreshListener,
+    Refreshable, Toolbar.OnMenuItemClickListener {
+    private val adapter: PersonalizedFeedAdapter by lazy { PersonalizedFeedAdapter(attachContext) }
     private var personalizedBean: PersonalizedBean? = null
     private var page = 1
 
@@ -85,9 +90,7 @@ class PersonalizedFeedFragment : BaseFragment(), PersonalizedFeedAdapter.OnRefre
                 loadMore()
             }
         }
-        adapter = PersonalizedFeedAdapter(attachContext).apply {
-            onRefreshListener = this@PersonalizedFeedFragment
-        }
+        adapter.onRefreshListener = this
         recyclerView.apply {
             if (!appPreferences.loadPictureWhenScroll) {
                 addOnScrollListener(object : RecyclerView.OnScrollListener() {
@@ -98,10 +101,10 @@ class PersonalizedFeedFragment : BaseFragment(), PersonalizedFeedAdapter.OnRefre
                         }
                         if (newState == RecyclerView.SCROLL_STATE_IDLE) {
                             Glide.with(attachContext)
-                                    .resumeRequests()
+                                .resumeRequests()
                         } else {
                             Glide.with(attachContext)
-                                    .pauseRequests()
+                                .pauseRequests()
                         }
                     }
                 })
@@ -156,75 +159,103 @@ class PersonalizedFeedFragment : BaseFragment(), PersonalizedFeedAdapter.OnRefre
 
     fun refresh() {
         page = 1
-        TiebaApi.getInstance().personalized(1, page).enqueue(object : Callback<PersonalizedBean> {
-            override fun onFailure(call: Call<PersonalizedBean>, t: Throwable) {
-                refreshLayout.finishRefresh(false)
-                if (t is TiebaException) {
-                    Toast.makeText(attachContext, "${t.message}", Toast.LENGTH_SHORT).show()
-                } else {
-                    Util.showNetworkErrorSnackbar(recyclerView) { refresh() }
-                    return
-                }
-            }
-
-            override fun onResponse(call: Call<PersonalizedBean>, response: Response<PersonalizedBean>) {
-                val personalizedBean = response.body()!!
-                this@PersonalizedFeedFragment.personalizedBean = personalizedBean
-                personalizedBean.threadList?.forEachIndexed { index, threadBean ->
-                    threadBean.threadPersonalizedBean = personalizedBean.threadPersonalized?.get(index)
-                }
-                val newThreadBeans: List<PersonalizedBean.ThreadBean> = personalizedBean.threadList?.filterNot {
-                    (it.abstractBeans?.size!! > 0 && BlockUtil.needBlock(it.abstractBeans[0].text)) || BlockUtil.needBlock(it.author?.nameShow, it.author?.id)
-                }!!
-                val threadBeans: MutableList<PersonalizedBean.ThreadBean> = ArrayList(adapter!!.allData)
-                adapter!!.apply {
-                    if (dataCount > 0) {
-                        refreshPosition = newThreadBeans.size - 1
+        launchIO {
+            TiebaApi.getInstance().personalizedAsync(1, page)
+                .doIfSuccess { bean ->
+                    personalizedBean = bean
+                    bean.threadList?.forEachIndexed { index, threadBean ->
+                        threadBean.threadPersonalizedBean = bean.threadPersonalized?.get(index)
                     }
-                    setNewData(if (threadBeans.addAll(0, newThreadBeans)) threadBeans else newThreadBeans)
-                }
-                refreshTipText.text = attachContext.getString(R.string.toast_feed_refresh, newThreadBeans.size)
-                AnimUtil.alphaIn(refreshTip)
-                        .setListener(object : AnimatorListenerAdapter() {
-                            override fun onAnimationEnd(animation: Animator) {
-                                refreshTip.postDelayed({
-                                    AnimUtil.alphaOut(refreshTip)
-                                            .setListener(object : AnimatorListenerAdapter() {
-                                                override fun onAnimationEnd(animation1: Animator) {
-                                                    refreshTip.visibility = View.GONE
-                                                }
-                                            })
-                                            .start()
-                                }, 1500)
+                    val newThreadBeans: List<PersonalizedBean.ThreadBean> =
+                        bean.threadList?.filterNot {
+                            (it.abstractBeans?.size!! > 0 && BlockUtil.needBlock(it.abstractBeans[0].text)) || BlockUtil.needBlock(
+                                it.author?.nameShow,
+                                it.author?.id
+                            )
+                        }!!
+                    val threadBeans: MutableList<PersonalizedBean.ThreadBean> =
+                        ArrayList(adapter.getItemList())
+                    adapter.apply {
+                        if (getItemList().isNotEmpty()) {
+                            refreshPosition = newThreadBeans.size - 1
+                        }
+                        setData(
+                            if (threadBeans.addAll(
+                                    0,
+                                    newThreadBeans
+                                )
+                            ) threadBeans else newThreadBeans
+                        )
+                    }
+                    refreshTipText.text =
+                        attachContext.getString(R.string.toast_feed_refresh, newThreadBeans.size)
+                    animSet {
+                        animator.interpolator = AccelerateDecelerateInterpolator()
+                        anim {
+                            values = intArrayOf(0, 100)
+                            duration = 200
+                            action = {
+                                refreshTip.alpha = it as Int / 100f
                             }
-                        }).start()
-                refreshLayout.finishRefresh(true)
-            }
-        })
+                            onStart = {
+                                refreshTip.visibility = View.VISIBLE
+                            }
+                        } before anim {
+                            values = intArrayOf(100, 0)
+                            duration = 200
+                            action = {
+                                refreshTip.alpha = it as Int / 100f
+                            }
+                            delay = 1500
+                            onEnd = {
+                                refreshTip.visibility = View.GONE
+                            }
+                        }
+                    }.start()
+                    refreshLayout.finishRefresh(true)
+                }
+                .doIfFailure {
+                    refreshLayout.finishRefresh(false)
+                    if (it is TiebaException) {
+                        Toast.makeText(attachContext, "${it.message}", Toast.LENGTH_SHORT).show()
+                    } else {
+                        Util.showNetworkErrorSnackbar(recyclerView) { refresh() }
+                    }
+                }
+        }
     }
 
     private fun loadMore() {
-        TiebaApi.getInstance().personalized(2, page + 1).enqueue(object : Callback<PersonalizedBean> {
-            override fun onFailure(call: Call<PersonalizedBean>, t: Throwable) {
-                refreshLayout.finishLoadMore(false)
-            }
+        TiebaApi.getInstance().personalized(2, page + 1)
+            .enqueue(object : Callback<PersonalizedBean> {
+                override fun onFailure(call: Call<PersonalizedBean>, t: Throwable) {
+                    refreshLayout.finishLoadMore(false)
+                }
 
-            override fun onResponse(call: Call<PersonalizedBean>, response: Response<PersonalizedBean>) {
-                val personalizedBean = response.body()!!
-                this@PersonalizedFeedFragment.personalizedBean = personalizedBean
-                personalizedBean.threadList?.forEachIndexed { index, threadBean ->
-                    threadBean.threadPersonalizedBean = personalizedBean.threadPersonalized?.get(index)
+                override fun onResponse(
+                    call: Call<PersonalizedBean>,
+                    response: Response<PersonalizedBean>
+                ) {
+                    val personalizedBean = response.body()!!
+                    this@PersonalizedFeedFragment.personalizedBean = personalizedBean
+                    personalizedBean.threadList?.forEachIndexed { index, threadBean ->
+                        threadBean.threadPersonalizedBean =
+                            personalizedBean.threadPersonalized?.get(index)
+                    }
+                    val newThreadBeans: List<PersonalizedBean.ThreadBean> =
+                        personalizedBean.threadList?.filterNot {
+                            (it.abstractBeans?.size!! > 0 && BlockUtil.needBlock(it.abstractBeans[0].text)) || BlockUtil.needBlock(
+                                it.author?.nameShow,
+                                it.author?.id
+                            )
+                        }!!
+                    adapter.apply {
+                        insert(newThreadBeans)
+                    }
+                    page += 1
+                    refreshLayout.finishLoadMore(true)
                 }
-                val newThreadBeans: List<PersonalizedBean.ThreadBean> = personalizedBean.threadList?.filterNot {
-                    (it.abstractBeans?.size!! > 0 && BlockUtil.needBlock(it.abstractBeans[0].text)) || BlockUtil.needBlock(it.author?.nameShow, it.author?.id)
-                }!!
-                adapter!!.apply {
-                    setLoadMoreData(newThreadBeans)
-                }
-                page += 1
-                refreshLayout.finishLoadMore(true)
-            }
-        })
+            })
     }
 
     override fun onFragmentVisibleChange(isVisible: Boolean) {
