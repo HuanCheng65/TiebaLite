@@ -69,15 +69,19 @@ object TiebaUtil {
     fun startSign(context: Context) {
         context.appPreferences.signDay = Calendar.getInstance()[Calendar.DAY_OF_MONTH]
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            context.startForegroundService(
-                Intent()
-                    .setClassName(
-                        context.packageName,
-                        "${context.packageName}.services.OKSignService"
-                    )
-                    .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                    .setAction(OKSignService.ACTION_START_SIGN)
-            )
+            try {
+                context.startForegroundService(
+                    Intent()
+                        .setClassName(
+                            context.packageName,
+                            "${context.packageName}.services.OKSignService"
+                        )
+                        .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                        .setAction(OKSignService.ACTION_START_SIGN)
+                )
+            } catch (e: IllegalStateException) {
+                e.printStackTrace()
+            }
         } else {
             context.startService(
                 Intent()
