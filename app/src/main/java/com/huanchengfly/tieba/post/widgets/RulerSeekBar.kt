@@ -6,7 +6,6 @@ import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
 import android.util.AttributeSet
-import android.widget.AbsSeekBar
 import androidx.appcompat.widget.AppCompatSeekBar
 import com.huanchengfly.tieba.post.R
 import com.huanchengfly.tieba.post.dpToPxFloat
@@ -140,14 +139,11 @@ class RulerSeekBar : AppCompatSeekBar {
             canvas.drawCircle(rulerCenterX, rulerCenterY, mRulerSize / 2, mRulerPaint)
         }
         if (!isShowTopOfThumb) {
-            try {
-                val absSeekBarClazz = Class.forName("android.widget.AbsSeekBar")
-                val absSeekBarDrawThumbMethod =
-                    absSeekBarClazz.getDeclaredMethod("drawThumb", Canvas::class.java)
-                absSeekBarDrawThumbMethod.isAccessible = true
-                absSeekBarDrawThumbMethod.invoke(this as AbsSeekBar, canvas)
-            } catch (e: Exception) {
-                e.printStackTrace()
+            if (thumb != null) {
+                val saveCount = canvas.save()
+                canvas.translate(paddingLeft.toFloat() - thumbOffset, paddingTop.toFloat())
+                thumb.draw(canvas)
+                canvas.restoreToCount(saveCount)
             }
         }
     }
