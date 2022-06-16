@@ -23,6 +23,7 @@ import androidx.annotation.CallSuper
 import androidx.annotation.ColorInt
 import androidx.annotation.Keep
 import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import butterknife.ButterKnife
 import cn.jzvd.Jzvd
@@ -30,16 +31,16 @@ import com.gyf.immersionbar.ImmersionBar
 import com.huanchengfly.tieba.post.BaseApplication
 import com.huanchengfly.tieba.post.BaseApplication.Companion.instance
 import com.huanchengfly.tieba.post.R
+import com.huanchengfly.tieba.post.ui.slideback.SlideBack
 import com.huanchengfly.tieba.post.ui.theme.interfaces.ExtraRefreshable
 import com.huanchengfly.tieba.post.ui.theme.utils.ThemeUtils
 import com.huanchengfly.tieba.post.utils.*
 import com.huanchengfly.tieba.post.widgets.VoicePlayerView
 import com.huanchengfly.tieba.post.widgets.theme.TintToolbar
 import kotlinx.coroutines.*
-import me.imid.swipebacklayout.lib.app.SwipeBackActivity
 import kotlin.coroutines.CoroutineContext
 
-abstract class BaseActivity : SwipeBackActivity(), ExtraRefreshable, CoroutineScope {
+abstract class BaseActivity : AppCompatActivity(), ExtraRefreshable, CoroutineScope {
     val job = Job()
     override val coroutineContext: CoroutineContext
         get() = Dispatchers.Main + job
@@ -99,6 +100,8 @@ abstract class BaseActivity : SwipeBackActivity(), ExtraRefreshable, CoroutineSc
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        SlideBack.create()
+            .attachToActivity(this)
         fixBackground()
         getDeviceDensity()
         instance.addActivity(this)

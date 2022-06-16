@@ -84,9 +84,6 @@ dependencies {
     //Local Files
     implementation fileTree(include: ["*.jar"], dir: "libs")
 
-    //滑动返回
-    implementation "me.imid.swipebacklayout.lib:library:1.3.0"
-
     //兼容 Glide
     implementation "com.android.support:support-annotations:28.0.0"
     kapt "com.android.support:support-annotations:28.0.0"

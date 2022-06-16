@@ -52,7 +52,6 @@ import com.huanchengfly.tieba.post.utils.preload.PreloadUtil
 import com.huanchengfly.tieba.post.utils.preload.loaders.ThreadContentLoader
 import com.huanchengfly.tieba.post.widgets.VideoPlayerStandard
 import com.scwang.smart.refresh.layout.SmartRefreshLayout
-import me.imid.swipebacklayout.lib.SwipeBackLayout.SwipeListener
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -174,13 +173,6 @@ class ThreadActivity : BaseActivity(), View.OnClickListener, IThreadMenuFragment
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         ThemeUtil.setTranslucentThemeBackground(findViewById(R.id.background))
-        swipeBackLayout.addSwipeListener(object : SwipeListener {
-            override fun onScrollStateChange(state: Int, scrollPercent: Float) {}
-            override fun onScrollOverThreshold() {}
-            override fun onEdgeTouch(edgeFlag: Int) {
-                exit()
-            }
-        })
         refreshLayout.apply {
             ThemeUtil.setThemeForSmartRefreshLayout(this)
             refreshLayout.setOnRefreshListener {
@@ -243,8 +235,8 @@ class ThreadActivity : BaseActivity(), View.OnClickListener, IThreadMenuFragment
         setSupportActionBar(toolbar)
         supportActionBar?.title = null
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        findViewById(R.id.thread_bottom_bar_agree).setOnClickListener(this)
-        findViewById(R.id.thread_reply_bar).setOnClickListener(this)
+        findViewById<View>(R.id.thread_bottom_bar_agree).setOnClickListener(this)
+        findViewById<View>(R.id.thread_reply_bar).setOnClickListener(this)
         moreBtn.setOnClickListener(this)
         toolbar.setOnClickListener(this)
         threadHeaderAdapter.setOnToggleSeeLzListener {

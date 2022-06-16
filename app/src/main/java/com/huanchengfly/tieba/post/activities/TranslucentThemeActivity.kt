@@ -204,7 +204,7 @@ class TranslucentThemeActivity : BaseActivity(), View.OnClickListener, OnSeekBar
     private fun refreshBackground() {
         mProgress.visibility = View.VISIBLE
         if (mUri == null) {
-            findViewById(R.id.background).setBackgroundColor(Color.BLACK)
+            findViewById<View>(R.id.background).setBackgroundColor(Color.BLACK)
             mProgress.visibility = View.GONE
             return
         }
@@ -222,7 +222,8 @@ class TranslucentThemeActivity : BaseActivity(), View.OnClickListener, OnSeekBar
                     override fun onResourceReady(resource: Drawable, transition: Transition<in Drawable>?) {
                         resource.alpha = alpha
                         val bitmap = ImageUtil.drawableToBitmap(resource)
-                        findViewById(R.id.background).background = BitmapDrawable(resources, bitmap)
+                        findViewById<View>(R.id.background).background =
+                            BitmapDrawable(resources, bitmap)
                         mPalette = Palette.from(bitmap).generate()
                         mTranslucentThemeColorAdapter.setPalette(mPalette)
                         mSelectColor.visibility = View.VISIBLE
@@ -291,7 +292,7 @@ class TranslucentThemeActivity : BaseActivity(), View.OnClickListener, OnSeekBar
                 appPreferences.translucentPrimaryColor = toString(themeColor)
                 ThemeUtils.refreshUI(this)
             }
-        (findViewById(R.id.select_color_recycler_view) as RecyclerView).apply {
+        (findViewById<RecyclerView>(R.id.select_color_recycler_view)).apply {
             addItemDecoration(HorizontalSpacesDecoration(0, 0, 12.dpToPx(), 12.dpToPx(), false))
             layoutManager = MyLinearLayoutManager(
                 this@TranslucentThemeActivity,
@@ -302,11 +303,11 @@ class TranslucentThemeActivity : BaseActivity(), View.OnClickListener, OnSeekBar
         }
         alpha = appPreferences.translucentBackgroundAlpha
         blur = appPreferences.translucentBackgroundBlur
-        (findViewById(R.id.alpha) as SeekBar).apply {
+        (findViewById<SeekBar>(R.id.alpha)).apply {
             progress = this@TranslucentThemeActivity.alpha
             setOnSeekBarChangeListener(this@TranslucentThemeActivity)
         }
-        (findViewById(R.id.blur) as SeekBar).apply {
+        (findViewById<SeekBar>(R.id.blur)).apply {
             progress = this@TranslucentThemeActivity.blur
             setOnSeekBarChangeListener(this@TranslucentThemeActivity)
         }

@@ -10,14 +10,11 @@ import android.view.inputmethod.EditorInfo
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.LinearLayout
-import android.widget.TextView
-import androidx.core.widget.TextViewCompat
 import androidx.recyclerview.widget.RecyclerView
 import butterknife.BindView
 import cn.dreamtobe.kpswitch.util.KeyboardUtil
 import com.alibaba.android.vlayout.DelegateAdapter
 import com.alibaba.android.vlayout.VirtualLayoutManager
-import com.alibaba.android.vlayout.layout.LinearLayoutHelper
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.textfield.TextInputLayout
 import com.huanchengfly.tieba.post.R
@@ -26,8 +23,6 @@ import com.huanchengfly.tieba.post.adapters.HeaderDelegateAdapter
 import com.huanchengfly.tieba.post.adapters.HeaderDelegateAdapter.Companion.NO_ICON
 import com.huanchengfly.tieba.post.adapters.SearchHistoryAdapter
 import com.huanchengfly.tieba.post.adapters.SingleLayoutDelegateAdapter
-import com.huanchengfly.tieba.post.adapters.base.BaseSingleTypeDelegateAdapter
-import com.huanchengfly.tieba.post.api.models.web.HotMessageListBean
 import com.huanchengfly.tieba.post.components.AutoLineFeedLayoutManager
 import com.huanchengfly.tieba.post.components.MyViewHolder
 import com.huanchengfly.tieba.post.components.dividers.SpacesItemDecoration
@@ -35,16 +30,13 @@ import com.huanchengfly.tieba.post.dpToPx
 import com.huanchengfly.tieba.post.fragments.SearchForumFragment
 import com.huanchengfly.tieba.post.fragments.SearchThreadFragment
 import com.huanchengfly.tieba.post.fragments.SearchUserFragment
-import com.huanchengfly.tieba.post.getColorCompat
 import com.huanchengfly.tieba.post.interfaces.ISearchFragment
 import com.huanchengfly.tieba.post.models.database.SearchHistory
 import com.huanchengfly.tieba.post.toastShort
 import com.huanchengfly.tieba.post.ui.theme.utils.ColorStateListUtils
 import com.huanchengfly.tieba.post.utils.AnimUtil
-import com.huanchengfly.tieba.post.utils.NavigationHelper
 import com.huanchengfly.tieba.post.utils.ThemeUtil
 import com.huanchengfly.tieba.post.utils.anim.animSet
-import com.huanchengfly.tieba.post.utils.getIntermixedColorBackground
 import com.huanchengfly.tieba.post.widgets.MyViewPager
 import org.litepal.LitePal
 
@@ -68,8 +60,6 @@ class NewSearchActivity : BaseActivity(), TabLayout.OnTabSelectedListener {
 
     @BindView(R.id.bottom_app_bar)
     lateinit var bottomAppBar: View
-
-    var hotMessageListBean: HotMessageListBean? = null
 
     private var keyword: String? = null
         set(value) {
@@ -256,51 +246,6 @@ class NewSearchActivity : BaseActivity(), TabLayout.OnTabSelectedListener {
                 viewHolder.getView<View>(R.id.no_data).apply {
                     visibility = View.GONE
                 }
-            }
-        }
-    }
-
-    inner class HotTopicDelegateAdapter(
-            list: List<HotMessageListBean.HotMessageRetBean>? = null
-    ) : BaseSingleTypeDelegateAdapter<HotMessageListBean.HotMessageRetBean>(
-            this,
-            LinearLayoutHelper(),
-            list
-    ) {
-        override fun convert(viewHolder: MyViewHolder, item: HotMessageListBean.HotMessageRetBean, position: Int) {
-            viewHolder.setText(R.id.hot_order, "${position + 1}")
-            viewHolder.setText(R.id.hot_title, item.mulName)
-            viewHolder.setText(R.id.hot_desc, item.topicInfo.topicDesc)
-            val textView = viewHolder.getView<TextView>(R.id.hot_order)
-            if (position > 2) {
-                TextViewCompat.setTextAppearance(textView, R.style.TextAppearance_Bold)
-                textView.setTextColor(context.getColorCompat(R.color.tieba))
-            } else {
-                TextViewCompat.setTextAppearance(textView, R.style.TextAppearance_Bold_Italic)
-                textView.setTextColor(context.getColorCompat(R.color.red_accent))
-            }
-            viewHolder.setVisibility(R.id.hot_desc, View.GONE)
-            viewHolder.itemView.background = getIntermixedColorBackground(
-                    context,
-                    position,
-                    itemCount,
-                    positionOffset = 1,
-                    colors = intArrayOf(R.color.default_color_card, R.color.default_color_divider),
-                    radius = context.resources.getDimension(R.dimen.card_radius)
-            )
-        }
-
-        override fun getItemLayoutId(): Int {
-            return R.layout.item_hot_message_list
-        }
-
-        init {
-            val navigationHelper = NavigationHelper.newInstance(context)
-            setOnItemClickListener { _, item, _ ->
-                navigationHelper.navigationByData(
-                        NavigationHelper.ACTION_URL,
-                        "https://tieba.baidu.com/mo/q/hotMessage?topic_id=${item.mulId}&topic_name=${item.mulName}"
-                )
             }
         }
     }

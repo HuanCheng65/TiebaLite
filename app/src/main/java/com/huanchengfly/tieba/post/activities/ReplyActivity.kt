@@ -113,9 +113,8 @@ class ReplyActivity : BaseActivity(), View.OnClickListener,
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setSwipeBackEnable(false)
         if (ThemeUtil.THEME_TRANSLUCENT == ThemeUtil.getTheme(this)) {
-            val constraintLayout = findViewById(R.id.activity_reply_layout) as TintConstraintLayout
+            val constraintLayout = findViewById<TintConstraintLayout>(R.id.activity_reply_layout)
             constraintLayout.setBackgroundTintResId(0)
             ThemeUtil.setTranslucentBackground(constraintLayout)
         }
@@ -278,8 +277,8 @@ class ReplyActivity : BaseActivity(), View.OnClickListener,
             }
         })
         mItemTouchHelper.attachToRecyclerView(insertView)
-        findViewById(R.id.activity_reply_root).setOnClickListener(this)
-        findViewById(R.id.activity_reply_layout).setOnClickListener(this)
+        findViewById<View>(R.id.activity_reply_root).setOnClickListener(this)
+        findViewById<View>(R.id.activity_reply_layout).setOnClickListener(this)
         toolbar.setNavigationIcon(R.drawable.ic_reply_toolbar_round_close)
         if (replyInfoBean!!.pid == null && replyInfoBean!!.floorNum == null) {
             insertImageBtn.visibility = View.VISIBLE
@@ -293,7 +292,7 @@ class ReplyActivity : BaseActivity(), View.OnClickListener,
         if (replyInfoBean!!.replyUser != null) {
             editText.hint = getString(R.string.hint_reply, replyInfoBean!!.replyUser)
         }
-        val tabLayout = findViewById(R.id.activity_reply_emotion_tab) as TabLayout
+        val tabLayout = findViewById<TabLayout>(R.id.activity_reply_emotion_tab)
         val emotionViewPagerAdapter = TabViewPagerAdapter()
         val classicEmotionGridView = GridView(this)
         val emojiEmotionGridView = GridView(this)
@@ -430,9 +429,9 @@ class ReplyActivity : BaseActivity(), View.OnClickListener,
     }
 
     private fun initListener() {
-        val undo = findViewById(R.id.activity_reply_edit_undo) as TintImageView
-        val redo = findViewById(R.id.activity_reply_edit_redo) as TintImageView
-        val clear = findViewById(R.id.activity_reply_edit_clear) as TintImageView
+        val undo = findViewById<TintImageView>(R.id.activity_reply_edit_undo)
+        val redo = findViewById<TintImageView>(R.id.activity_reply_edit_redo)
+        val clear = findViewById<TintImageView>(R.id.activity_reply_edit_clear)
         undo.setOnClickListener(this)
         setEnabled(undo, false)
         redo.setOnClickListener(this)

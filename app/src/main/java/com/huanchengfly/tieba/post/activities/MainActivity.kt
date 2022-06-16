@@ -166,7 +166,6 @@ open class MainActivity : BaseActivity(), NavigationBarView.OnItemSelectedListen
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setSwipeBackEnable(false)
         ThemeUtil.setTranslucentThemeBackground(findViewById(R.id.background))
         findView()
         initView()
