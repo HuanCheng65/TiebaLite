@@ -65,10 +65,6 @@
             android:label="@string/title_plugin_manage"
             android:windowSoftInputMode="adjustResize" />
         <activity
-            android:name=".activities.HotMessageListActivity"
-            android:configChanges="screenSize|screenLayout|orientation|smallestScreenSize|keyboardHidden"
-            android:windowSoftInputMode="adjustResize" />
-        <activity
             android:name=".activities.PhotoViewActivity"
             android:configChanges="screenSize|screenLayout|orientation|smallestScreenSize|keyboardHidden"
             android:theme="@style/AppTheme.PhotoView"

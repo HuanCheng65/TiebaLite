@@ -18,6 +18,8 @@ abstract class BaseDelegateAdapter<Item>(
     var onItemLongClickListener: OnItemLongClickListener<Item>? = null
         private set
 
+    val onItemChildClickListeners: MutableMap<Int, OnItemChildClickListener<Item>?> = mutableMapOf()
+
     fun setOnItemClickListener(listener: OnItemClickListener<Item>?) {
         onItemClickListener = listener
     }
@@ -43,6 +45,23 @@ abstract class BaseDelegateAdapter<Item>(
                     return listener(viewHolder, item, position)
                 }
                 return false
+            }
+        }
+    }
+
+    fun setOnItemChildClickListener(viewId: Int, listener: OnItemChildClickListener<Item>?) {
+        onItemChildClickListeners[viewId] = listener
+    }
+
+    fun setOnItemChildClickListener(
+        viewId: Int,
+        listener: ((viewHolder: MyViewHolder, item: Item, position: Int) -> Unit)?
+    ) {
+        onItemChildClickListeners[viewId] = object : OnItemChildClickListener<Item> {
+            override fun onItemChildClick(viewHolder: MyViewHolder, item: Item, position: Int) {
+                if (listener != null) {
+                    listener(viewHolder, item, position)
+                }
             }
         }
     }

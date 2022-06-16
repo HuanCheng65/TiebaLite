@@ -9,3 +9,7 @@ interface OnItemClickListener<Item> {
 interface OnItemLongClickListener<Item> {
     fun onLongClick(viewHolder: MyViewHolder, item: Item, position: Int): Boolean
 }
+
+interface OnItemChildClickListener<Item> {
+    fun onItemChildClick(viewHolder: MyViewHolder, item: Item, position: Int)
+}

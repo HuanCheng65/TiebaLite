@@ -1,7 +1,6 @@
 package com.huanchengfly.tieba.post.adapters.base
 
 import android.content.Context
-import android.view.ViewGroup
 import com.huanchengfly.tieba.post.components.MyViewHolder
 
 abstract class BaseMultiTypeAdapter<Item>(
@@ -9,30 +8,28 @@ abstract class BaseMultiTypeAdapter<Item>(
 ) : BaseAdapter<Item>(
     context
 ) {
-    protected abstract fun getItemLayoutId(
-        itemType: Int
-    ): Int
-
-    protected abstract fun getViewType(
-        position: Int,
-        item: Item
-    ): Int
-
-    final override fun getItemViewType(position: Int): Int {
-        return getViewType(position, getItem(position))
-    }
-
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder =
-        MyViewHolder(context, getItemLayoutId(viewType))
-
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
-        holder.setItemOnClickListener {
-            onItemClickListener?.onClick(holder, getItem(position), position)
+        if (isItemPosition(position)) {
+            val itemPosition = getItemPosition(position)
+            holder.setItemOnClickListener {
+                onItemClickListener?.onClick(holder, getItem(itemPosition), itemPosition)
+            }
+            holder.setItemOnLongClickListener {
+                onItemLongClickListener?.onLongClick(holder, getItem(itemPosition), itemPosition)
+                    ?: false
+            }
+            onItemChildClickListeners.forEach {
+                holder.setOnClickListener(it.key) { _ ->
+                    it.value?.onItemChildClick(holder, getItem(itemPosition), itemPosition)
+                }
+            }
+            convert(
+                holder,
+                getItem(itemPosition),
+                itemPosition,
+                getViewType(itemPosition, getItem(itemPosition))
+            )
         }
-        holder.setItemOnLongClickListener {
-            onItemLongClickListener?.onLongClick(holder, getItem(position), position) ?: false
-        }
-        convert(holder, getItem(position), position, getItemViewType(position))
     }
 
     protected abstract fun convert(

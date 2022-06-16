@@ -24,6 +24,11 @@ abstract class BaseSingleTypeDelegateAdapter<Item> @JvmOverloads constructor(
         holder.setItemOnLongClickListener(View.OnLongClickListener {
             onItemLongClickListener?.onLongClick(holder, getItem(position), position) ?: false
         })
+        onItemChildClickListeners.forEach {
+            holder.setOnClickListener(it.key) { _ ->
+                it.value?.onItemChildClick(holder, getItem(position), position)
+            }
+        }
         convert(holder, getItem(position), position)
     }
 
