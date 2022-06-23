@@ -36,6 +36,7 @@ public class WebViewActivity extends BaseActivity implements OnReceivedTitleList
         Uri uri = Uri.parse(url);
         if (TextUtils.equals(uri.getPath(), "/mo/q/checkurl")) {
             url = uri.getQueryParameter("url");
+            url = url.replace("http://https://", "https://");
         }
         context.startActivity(newIntent(context, url));
     }

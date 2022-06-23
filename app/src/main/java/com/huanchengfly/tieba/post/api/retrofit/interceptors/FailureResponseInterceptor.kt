@@ -1,12 +1,10 @@
 package com.huanchengfly.tieba.post.api.retrofit.interceptors
 
-import android.util.Log
 import com.google.gson.Gson
 import com.huanchengfly.tieba.post.api.models.CommonResponse
 import com.huanchengfly.tieba.post.api.retrofit.exception.TiebaApiException
 import okhttp3.Interceptor
 import okhttp3.Response
-import java.nio.charset.StandardCharsets
 
 object FailureResponseInterceptor : Interceptor {
     private val gson = Gson()
@@ -24,18 +22,9 @@ object FailureResponseInterceptor : Interceptor {
             contentType.charset(Charsets.UTF_8)!!
         }
 
-        val inputStream = body.source().also {
+        val inputStreamReader = body.source().also {
             it.request(Long.MAX_VALUE)
-        }.buffer.clone().inputStream()
-
-        val length: Int = inputStream.available()
-        val buffer = ByteArray(length)
-        inputStream.read(buffer)
-        val bodyString = String(buffer, StandardCharsets.UTF_8)
-
-        Log.i("ResponseI", bodyString)
-
-        val inputStreamReader = inputStream.reader(charset)
+        }.buffer.clone().inputStream().reader(charset)
 
         val jsonObject = try {
             gson.fromJson<CommonResponse>(

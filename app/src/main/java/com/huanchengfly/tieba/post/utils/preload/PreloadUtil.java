@@ -15,7 +15,8 @@ public final class PreloadUtil {
     }
 
     public static boolean isPreloading(Activity context) {
-        return getPreloadId(context) != -1;
+        int id = getPreloadId(context);
+        return id != -1 && PreLoader.exists(id);
     }
 
     public static int getPreloadId(Activity context) {

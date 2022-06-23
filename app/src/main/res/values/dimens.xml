@@ -9,7 +9,7 @@
     <dimen name="space_toolbar_top">45dp</dimen>
 
     <dimen name="text_size_user_name">16sp</dimen>
-    <dimen name="text_size_user_small">13sp</dimen>
+    <dimen name="text_size_user_small">12sp</dimen>
 
     <dimen name="radius">8dp</dimen>
     <dimen name="text_size_hot_title">16sp</dimen>

@@ -5,6 +5,7 @@ import com.huanchengfly.tieba.post.BaseApplication
 import com.huanchengfly.tieba.post.api.Header
 import com.huanchengfly.tieba.post.api.Param
 import com.huanchengfly.tieba.post.api.interceptors.SortAndSignInterceptor
+import com.huanchengfly.tieba.post.api.models.OAID
 import com.huanchengfly.tieba.post.api.retrofit.adapter.DeferredCallAdapterFactory
 import com.huanchengfly.tieba.post.api.retrofit.converter.gson.GsonConverterFactory
 import com.huanchengfly.tieba.post.api.retrofit.interceptors.*
@@ -12,13 +13,16 @@ import com.huanchengfly.tieba.post.api.retrofit.interfaces.MiniTiebaApi
 import com.huanchengfly.tieba.post.api.retrofit.interfaces.NewTiebaApi
 import com.huanchengfly.tieba.post.api.retrofit.interfaces.OfficialTiebaApi
 import com.huanchengfly.tieba.post.api.retrofit.interfaces.WebTiebaApi
+import com.huanchengfly.tieba.post.toJson
 import com.huanchengfly.tieba.post.utils.AccountUtil
+import com.huanchengfly.tieba.post.utils.CuidUtils
 import com.huanchengfly.tieba.post.utils.MobileInfoUtil
 import com.huanchengfly.tieba.post.utils.UIDUtil
 import okhttp3.ConnectionPool
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
+import retrofit2.converter.protobuf.ProtoConverterFactory
 
 
 object RetrofitTiebaApi {
@@ -93,21 +97,25 @@ object RetrofitTiebaApi {
 
     val OFFICIAL_TIEBA_API: OfficialTiebaApi by lazy {
         createAPI<OfficialTiebaApi>("http://c.tieba.baidu.com/",
-            defaultCommonHeaderInterceptor,
             CommonHeaderInterceptor(
                 Header.USER_AGENT to { "bdtb for Android 12.25.1.0" },
-                Header.CUID to { UIDUtil.getNewCUID() },
-                Header.CUID_GALAXY2 to { UIDUtil.getFinalCUID() },
-                Header.CUID_GID to { "" }
+                Header.CUID to { CuidUtils.getNewCuid() },
+                Header.CUID_GALAXY2 to { CuidUtils.getNewCuid() },
+                Header.CUID_GID to { "" },
+                Header.CUID_GALAXY3 to { UIDUtil.getAid() },
+                Header.CLIENT_TYPE to { "2" },
+                Header.CHARSET to { "UTF-8" },
             ),
             defaultCommonParamInterceptor,
             stParamInterceptor,
             CommonParamInterceptor(
-                Param.CUID to { UIDUtil.getNewCUID() },
-                Param.CUID_GALAXY2 to { UIDUtil.getFinalCUID() },
+                Param.CUID to { CuidUtils.getNewCuid() },
+                Param.CUID_GALAXY2 to { CuidUtils.getNewCuid() },
                 Param.CUID_GID to { "" },
                 Param.FROM to { "tieba" },
-                Param.CLIENT_VERSION to { "12.25.1.0" }
+                Param.CLIENT_VERSION to { "12.25.1.0" },
+                Param.CUID_GALAXY3 to { UIDUtil.getAid() },
+                Param.OAID to { OAID(BaseApplication.oaid).toJson() },
             ))
     }
 
@@ -119,6 +127,7 @@ object RetrofitTiebaApi {
         .addCallAdapterFactory(DeferredCallAdapterFactory.invoke())
         .addConverterFactory(NullOnEmptyConverterFactory())
         .addConverterFactory(gsonConverterFactory)
+        .addConverterFactory(ProtoConverterFactory.create())
         .client(OkHttpClient.Builder().apply {
             interceptors.forEach {
                 addInterceptor(it)

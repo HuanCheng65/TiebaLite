@@ -1,0 +1,53 @@
+package proto;
+
+option java_package = "com.huanchengfly.tieba.post.api.models.protos";
+option java_outer_classname = "PbProto";
+
+message Pb {
+  required Error error = 1;
+  required Data data = 2;
+
+  message Error {
+    required int32 errorCode = 1;
+    required string errorMsg = 2;
+  }
+
+  message Data {
+    required CurrentUser currentUser = 1;
+    optional Forum forum = 2;
+    repeated User user = 13;
+    optional Forum displayForum = 39;
+
+    message CurrentUser {
+      required int32 isLogin = 1;
+      optional int64 id = 2;
+      optional string name = 3;
+      optional string nameShow = 4;
+      optional string portrait = 5;
+      optional int32 levelId = 23;
+    }
+
+    message User {
+      required int64 id = 2;
+      optional string name = 3;
+      optional string nameShow = 4;
+      optional string portrait = 5;
+      optional int32 levelId = 23;
+      optional int32 isBawu = 25;
+      optional string bawuType = 26;
+    }
+
+    message Forum {
+      required int64 id = 1;
+      required string name = 2;
+      required int32 isExists = 3;
+      required string avatar = 4;
+      required int32 isLiked = 5;
+      required string firstClass = 7;
+      required string secondClass = 8;
+      optional int64 memberNum = 12;
+      optional int64 postNum = 13;
+      required int32 isBrandForum = 14;
+    }
+  }
+}

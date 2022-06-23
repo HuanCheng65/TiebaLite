@@ -186,6 +186,7 @@ public final class NavigationHelper {
         }
         if (path.equalsIgnoreCase("/mo/q/checkurl")) {
             url = uri.getQueryParameter("url");
+            url = url.replace("http://https://", "https://");
             uri = Uri.parse(url);
             host = uri.getHost();
             path = uri.getPath();

@@ -46,8 +46,12 @@ object Header {
     const val USER_AGENT = "User-Agent"
     const val PRAGMA = "Pragma"
     const val CUID = "cuid"
+    const val CHARSET = "Charset"
     const val CUID_GALAXY2 = "cuid_galaxy2"
+    const val CUID_GALAXY3 = "c3_aid"
     const val CUID_GID = "cuid_gid"
+    const val CLIENT_TYPE = "client_type"
+    const val X_BD_DATA_TYPE = "x_bd_data_type"
 }
 
 
@@ -59,6 +63,8 @@ object Param {
     const val PHONE_IMEI = "_phone_imei"
     const val CUID = "cuid"
     const val CUID_GALAXY2 = "cuid_galaxy2"
+    const val CUID_GALAXY3 = "c3_aid"
+    const val OAID = "oaid"
     const val CUID_GID = "cuid_gid"
     const val FROM = "from"
     const val NET_TYPE = "net_type"

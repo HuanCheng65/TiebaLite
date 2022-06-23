@@ -2,6 +2,7 @@ plugins {
     id "com.android.application"
     id "kotlin-android"
     id "kotlin-kapt"
+    id 'com.google.protobuf'
 }
 
 def keystoreProperties = new Properties()
@@ -70,9 +71,20 @@ android {
             excludes += '/META-INF/{AL2.0,LGPL2.1}'
         }
     }
+    sourceSets {
+        main {
+            proto {
+                srcDir 'src/main/proto'
+            }
+        }
+    }
 }
 
 dependencies {
+    implementation 'com.google.protobuf:protobuf-java:3.21.1'
+
+    implementation 'com.github.gzu-liyujiang:Android_CN_OAID:4.2.4'
+
     implementation 'org.jetbrains:annotations:23.0.0'
 
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
@@ -101,7 +113,6 @@ dependencies {
     implementation "androidx.window:window:1.0.0-beta03"
     implementation "androidx.startup:startup-runtime:1.1.0"
 
-
     //Test
     testImplementation "junit:junit:4.13.2"
     androidTestImplementation "androidx.test:core:1.4.0"
@@ -120,6 +131,7 @@ dependencies {
     implementation "com.squareup.okhttp3:okhttp:4.9.1"
     implementation "com.squareup.retrofit2:retrofit:$retrofit_version"
     implementation "com.squareup.retrofit2:converter-gson:$retrofit_version"
+    implementation "com.squareup.retrofit2:converter-protobuf:$retrofit_version"
 
     implementation 'com.google.code.gson:gson:2.9.0'
     implementation "cn.dreamtobe.kpswitch:library:1.6.2"
@@ -151,4 +163,21 @@ dependencies {
     implementation "com.microsoft.appcenter:appcenter-analytics:${appCenterSdkVersion}"
     implementation "com.microsoft.appcenter:appcenter-crashes:${appCenterSdkVersion}"
     implementation "com.microsoft.appcenter:appcenter-distribute:${appCenterSdkVersion}"
+}
+
+protobuf {
+    protoc {
+        artifact = 'com.google.protobuf:protoc:3.21.1'
+    }
+
+    generateProtoTasks {
+        all().each { task ->
+            task.builtins {
+                java {
+                    option "lite"
+//                    outputSubDir = "../" // 能通过该参数将生成文件从 debug / release 目录中移出
+                }
+            }
+        }
+    }
 }

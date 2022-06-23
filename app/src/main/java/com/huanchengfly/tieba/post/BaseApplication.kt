@@ -25,6 +25,9 @@ import androidx.annotation.Keep
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatDelegate
+import com.github.gzuliyujiang.oaid.DeviceID
+import com.github.gzuliyujiang.oaid.DeviceIdentifier
+import com.github.gzuliyujiang.oaid.IGetter
 import com.huanchengfly.tieba.post.activities.BaseActivity
 import com.huanchengfly.tieba.post.api.interfaces.CommonCallback
 import com.huanchengfly.tieba.post.components.dialogs.LoadingDialog
@@ -74,6 +77,18 @@ class BaseApplication : Application(), IApp {
     override fun onCreate() {
         instance = this
         super.onCreate()
+        DeviceIdentifier.register(this)
+        DeviceID.getOAID(this, object : IGetter {
+            override fun onOAIDGetComplete(result: String) {
+                oaid = UIDUtil.Encoder(
+                    "ABCDEFGHIJKLMNOPQRSTUVWXYZ234567="
+                ).encode(result.encodeToByteArray())
+            }
+
+            override fun onOAIDGetError(error: Exception) {
+                oaid = ""
+            }
+        })
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
             setWebViewPath(this)
         }
@@ -341,6 +356,9 @@ class BaseApplication : Application(), IApp {
         @JvmStatic
         lateinit var instance: BaseApplication
             private set
+
+        @JvmStatic
+        lateinit var oaid: String
 
         val isSystemNight: Boolean
             get() = nightMode == Configuration.UI_MODE_NIGHT_YES

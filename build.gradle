@@ -5,6 +5,7 @@ buildscript {
         glide_version = '4.13.2'
         retrofit_version = "2.9.0"
         kotlin_version = '1.7.0'
+        grpc_version = '1.47.0'
     }
     repositories {
         google()
@@ -14,6 +15,7 @@ buildscript {
     dependencies {
         classpath 'com.android.tools.build:gradle:7.0.3'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+        classpath 'com.google.protobuf:protobuf-gradle-plugin:0.8.18'
     }
 }
 

@@ -278,6 +278,7 @@ open class MainActivity : BaseActivity(), NavigationBarView.OnItemSelectedListen
         Log.i(TAG, "recreate: ")
     }
 
+    @SuppressLint("MissingPermission")
     override fun onStart() {
         super.onStart()
         registerReceiver(
