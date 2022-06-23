@@ -610,14 +610,18 @@ class ThreadReplyAdapter(context: Context) :
             )
         }
         initContentView(viewHolder, item)
+        var timeText = context.getString(
+            R.string.tip_thread_item,
+            item.floor,
+            getRelativeTimeString(context, item.time!!)
+        )
+        if (userInfoBean?.ipAddress?.isNotEmpty() == true) {
+            timeText += " "
+            timeText += context.getString(R.string.text_ip_location, userInfoBean.ipAddress)
+        }
         viewHolder.setText(
             R.id.thread_list_item_user_time,
-            context.getString(
-                R.string.tip_thread_item,
-                item.floor,
-                getRelativeTimeString(context, item.time!!),
-                userInfoBean?.ipAddress
-            )
+            timeText
         )
         initFloorView(viewHolder, item)
         if (isPureRead) {

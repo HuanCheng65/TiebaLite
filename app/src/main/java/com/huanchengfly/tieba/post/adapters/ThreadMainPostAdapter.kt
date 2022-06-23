@@ -200,13 +200,18 @@ class ThreadMainPostAdapter(
             ImageUtil.LOAD_TYPE_AVATAR,
             user.portrait
         )
-        holder.setText(
-            R.id.thread_list_item_user_time,
+        var timeText =
             context.getString(
                 R.string.tip_thread_item_thread,
-                DateTimeUtils.getRelativeTimeString(context, threadBean.createTime!!),
-                user.ipAddress
+                DateTimeUtils.getRelativeTimeString(context, threadBean.createTime!!)
             )
+        if (user.ipAddress?.isNotEmpty() == true) {
+            timeText += " "
+            timeText += context.getString(R.string.text_ip_location, user.ipAddress)
+        }
+        holder.setText(
+            R.id.thread_list_item_user_time,
+            timeText
         )
         holder.setText(R.id.thread_list_item_content_title, title)
         if (threadPostBean != null) {
