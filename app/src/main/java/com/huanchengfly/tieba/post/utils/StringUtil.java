@@ -4,12 +4,16 @@ import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.text.Spannable;
 import android.text.SpannableString;
+import android.text.SpannableStringBuilder;
+import android.text.Spanned;
 import android.text.TextPaint;
 import android.text.TextUtils;
+import android.text.style.ForegroundColorSpan;
 import android.widget.TextView;
 
 import com.huanchengfly.tieba.post.R;
 import com.huanchengfly.tieba.post.components.spans.EmotionSpanV2;
+import com.huanchengfly.tieba.post.ui.theme.utils.ThemeUtils;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -54,12 +58,14 @@ public class StringUtil {
         }
     }
 
-    public static String getUsernameString(Context context, String username, String nickname) {
+    public static CharSequence getUsernameString(Context context, String username, String nickname) {
         boolean showBoth = SharedPreferencesUtil.get(context, SharedPreferencesUtil.SP_SETTINGS).getBoolean("show_both_username_and_nickname", false);
         if (TextUtils.isEmpty(nickname)) {
             return TextUtils.isEmpty(username) ? "" : username;
         } else if (showBoth && !TextUtils.isEmpty(username) && !TextUtils.equals(username, nickname)) {
-            return context.getString(R.string.username_both, nickname, username);
+            SpannableStringBuilder builder = new SpannableStringBuilder(nickname);
+            builder.append("(" + username + ")", new ForegroundColorSpan(ThemeUtils.getColorByAttr(context, R.attr.color_text_disabled)), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            return builder;
         }
         return nickname;
     }

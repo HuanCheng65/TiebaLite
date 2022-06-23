@@ -560,13 +560,30 @@ class ThreadReplyAdapter(context: Context) :
             showMenu(item, position)
             true
         }
-        viewHolder.setText(
-            R.id.thread_list_item_user_name,
-            if (userInfoBean == null) item.authorId else StringUtil.getUsernameString(
+
+        var username: CharSequence =
+            if (userInfoBean == null) item.authorId ?: "" else StringUtil.getUsernameString(
                 context,
                 userInfoBean.name,
                 userInfoBean.nameShow
             )
+        if (userInfoBean != null && userInfoBean.isBawu == "1") {
+            val bawuType = if (userInfoBean.bawuType == "manager") "吧主" else "小吧主"
+            username = SpannableStringBuilder(username).apply {
+                append(" ")
+                append(
+                    bawuType, RoundBackgroundColorSpan(
+                        context,
+                        Util.alphaColor(ThemeUtils.getColorByAttr(context, R.attr.colorAccent), 30),
+                        ThemeUtils.getColorByAttr(context, R.attr.colorAccent),
+                        DisplayUtil.dp2px(context, 10f).toFloat()
+                    ), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+                )
+            }
+        }
+        viewHolder.setText(
+            R.id.thread_list_item_user_name,
+            username
         )
         if (userInfoBean != null) {
             val levelId =
