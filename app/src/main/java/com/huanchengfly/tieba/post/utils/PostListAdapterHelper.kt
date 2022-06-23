@@ -26,6 +26,7 @@ import com.huanchengfly.tieba.post.isTablet
 import com.huanchengfly.tieba.post.models.PhotoViewBean
 import com.huanchengfly.tieba.post.ui.theme.utils.ThemeUtils
 import com.huanchengfly.tieba.post.utils.BilibiliUtil.replaceVideoNumberSpan
+import com.huanchengfly.tieba.post.utils.EmotionManager.registerEmotion
 import com.huanchengfly.tieba.post.widgets.MyImageView
 import com.huanchengfly.tieba.post.widgets.VideoPlayerStandard
 import com.huanchengfly.tieba.post.widgets.VoicePlayerView
@@ -318,6 +319,10 @@ class PostListAdapterHelper(
                 }
                 "2" -> {
                     val emojiText = "#(" + contentBean.c + ")"
+                    registerEmotion(
+                        contentBean.text!!,
+                        contentBean.c!!
+                    )
                     if (appendTextToLastTextView(views, emojiText)) {
                         val textView: TextView = createTextView()
                         textView.layoutParams =

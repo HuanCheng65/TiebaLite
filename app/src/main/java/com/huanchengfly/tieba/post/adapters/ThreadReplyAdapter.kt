@@ -39,6 +39,7 @@ import com.huanchengfly.tieba.post.ui.theme.utils.ThemeUtils
 import com.huanchengfly.tieba.post.utils.*
 import com.huanchengfly.tieba.post.utils.BilibiliUtil.replaceVideoNumberSpan
 import com.huanchengfly.tieba.post.utils.DateTimeUtils.getRelativeTimeString
+import com.huanchengfly.tieba.post.utils.EmotionManager.registerEmotion
 import com.huanchengfly.tieba.post.utils.TiebaUtil.reportPost
 import com.huanchengfly.tieba.post.widgets.MyLinearLayout
 import com.huanchengfly.tieba.post.widgets.VoicePlayerView
@@ -198,6 +199,10 @@ class ThreadReplyAdapter(context: Context) :
                 )
                 "2" -> {
                     val emojiText = "#(" + contentBean.c + ")"
+                    registerEmotion(
+                        contentBean.text!!,
+                        contentBean.c!!
+                    )
                     builder.append(emojiText)
                 }
                 "4", "9" -> builder.append(contentBean.text)

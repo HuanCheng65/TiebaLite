@@ -1,6 +1,7 @@
 package com.huanchengfly.tieba.post.utils;
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.TextPaint;
@@ -8,7 +9,7 @@ import android.text.TextUtils;
 import android.widget.TextView;
 
 import com.huanchengfly.tieba.post.R;
-import com.huanchengfly.tieba.post.components.spans.EmotionSpan;
+import com.huanchengfly.tieba.post.components.spans.EmotionSpanV2;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -31,16 +32,12 @@ public class StringUtil {
             while (matcherEmotion.find()) {
                 String key = matcherEmotion.group();
                 int start = matcherEmotion.start();
-                int imgRes = EmotionUtil.getImgByName(emotion_map_type, key);
-                if (imgRes != -1) {
+                String group1 = matcherEmotion.group(1);
+                Drawable emotionDrawable = EmotionManager.INSTANCE.getEmotionDrawable(EmotionManager.INSTANCE.getEmotionIdByName(group1));
+                if (emotionDrawable != null) {
                     TextPaint paint = tv.getPaint();
                     int size = Math.round(-paint.ascent() + paint.descent());
-                    /*
-                    Bitmap bitmap = BitmapFactory.decodeResource(res, imgRes);
-                    Bitmap scaleBitmap = Bitmap.createScaledBitmap(bitmap, size, size, true);
-                    ImageSpan span = new MyImageSpan(context, scaleBitmap);
-                    */
-                    EmotionSpan span = new EmotionSpan(tv.getContext(), imgRes, size);
+                    EmotionSpanV2 span = new EmotionSpanV2(emotionDrawable, size);
                     spannableString.setSpan(span, start, start + key.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                 }
             }

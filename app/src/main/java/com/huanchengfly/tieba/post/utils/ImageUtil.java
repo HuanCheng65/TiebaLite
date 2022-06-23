@@ -136,9 +136,12 @@ public class ImageUtil {
     }
 
     public static File bitmapToFile(Bitmap bitmap, File output) {
+        return bitmapToFile(bitmap, output, Bitmap.CompressFormat.JPEG);
+    }
+
+    public static File bitmapToFile(Bitmap bitmap, File output, Bitmap.CompressFormat format) {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        int quality = 100;
-        bitmap.compress(Bitmap.CompressFormat.JPEG, quality, baos);
+        bitmap.compress(format, 100, baos);
         try {
             FileOutputStream fos = new FileOutputStream(output);
             try {
