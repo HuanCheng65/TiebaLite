@@ -15,7 +15,6 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.os.Process
-import android.util.Log
 import android.view.View
 import android.webkit.WebView
 import android.widget.FrameLayout
@@ -173,10 +172,6 @@ class BaseApplication : Application(), IApp {
 
             private fun checkClipBoard(activity: Activity) {
                 val clipBoardText = clipBoard
-                Log.i(
-                    TAG,
-                    "checkClipBoard: ${activity.clipBoardManager.hasPrimaryClip()} $clipBoardText $clipBoardHash ${getClipBoardHash()}"
-                )
                 if (clipBoardHash != getClipBoardHash() && clipBoardText != null) {
                     @RegExp val regex =
                         "((http|https)://)(([a-zA-Z0-9._-]+\\.[a-zA-Z]{2,6})|([0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}))(:[0-9]{1,4})*(/[a-zA-Z0-9&%_./-~-]*)?"

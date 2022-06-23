@@ -17,6 +17,7 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.text.TextUtils
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -38,7 +39,6 @@ import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.request.target.SimpleTarget
 import com.bumptech.glide.request.transition.Transition
 import com.google.android.material.appbar.AppBarLayout
-import com.google.android.material.appbar.AppBarLayout.OnOffsetChangedListener
 import com.google.android.material.appbar.CollapsingToolbarLayout
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -163,6 +163,8 @@ class ForumActivity : BaseActivity(), View.OnClickListener, OnRefreshedListener,
     @BindView(R.id.collapsing_toolbar)
     lateinit var collapsingToolbar: CollapsingToolbarLayout
 
+    var titleVisible = false
+
     var headerViewHeight: Int = 0
     var toolbarColor: Int = -1
     var customToolbarColorEnable = false
@@ -246,7 +248,8 @@ class ForumActivity : BaseActivity(), View.OnClickListener, OnRefreshedListener,
     }
 
     private fun initView() {
-        appbar.addOnOffsetChangedListener(OnOffsetChangedListener { _, verticalOffset ->
+        title = null
+        appbar.addOnOffsetChangedListener { _, verticalOffset ->
             val toolbarScrollOffset = 0 - (verticalOffset + headerView.height)
             if (toolbarScrollOffset >= 0) {
                 val toolbarScrollPercent = toolbarScrollOffset.toFloat() / toolbar.height
@@ -270,15 +273,19 @@ class ForumActivity : BaseActivity(), View.OnClickListener, OnRefreshedListener,
             } else {
                 if (!ThemeUtil.isTranslucentTheme(this)) customToolbarColorEnable = true
             }
-            val titleVisible =
+            val isTitleVisible =
                 mDataBean != null && forumName != null && abs(verticalOffset) >= forumInfoView.height
             val percent: Float = if (abs(verticalOffset) <= forumInfoView.height) {
                 abs(verticalOffset.toFloat()) / forumInfoView.height.toFloat()
             } else {
                 1f
             }
-            title = if (titleVisible) getString(R.string.title_forum, forumName) else null
-            toolbarEndBtn.visibility = if (titleVisible) View.VISIBLE else View.GONE
+            Log.i("OffsetChange", "changed")
+            if (titleVisible != isTitleVisible) {
+                title = if (isTitleVisible) getString(R.string.title_forum, forumName) else null
+                titleVisible = isTitleVisible
+            }
+            toolbarEndBtn.visibility = if (isTitleVisible) View.VISIBLE else View.GONE
             toolbar.backgroundTintList =
                 ColorStateList.valueOf(Util.changeAlpha(toolbarColor, percent))
             if (animated && ThemeUtil.isTranslucentTheme(this)) {
@@ -298,7 +305,7 @@ class ForumActivity : BaseActivity(), View.OnClickListener, OnRefreshedListener,
             if (ThemeUtil.isTranslucentTheme(this)) {
                 setCustomStatusColor(-1)
             }
-        })
+        }
         mAdapter = FragmentTabViewPagerAdapter(supportFragmentManager).apply {
             addFragment(
                 if (PreloadUtil.isPreloading(this@ForumActivity))
