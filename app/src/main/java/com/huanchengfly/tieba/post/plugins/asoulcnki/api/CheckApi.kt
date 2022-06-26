@@ -18,6 +18,11 @@ object CheckApi {
             .addConverterFactory(GsonConverterFactory.create())
             .client(OkHttpClient.Builder().apply {
                 connectionPool(connectionPool)
+                sslSocketFactory(
+                    SSLSocketClient.getSSLSocketFactory(),
+                    SSLSocketClient.getX509TrustManager()
+                )
+                hostnameVerifier(SSLSocketClient.getHostnameVerifier())
             }.build())
             .build()
             .create(ICheckApi::class.java)

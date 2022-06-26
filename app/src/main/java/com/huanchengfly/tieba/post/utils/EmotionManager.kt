@@ -86,7 +86,13 @@ object EmotionManager {
         contextRef = WeakReference(context)
         val emotionCache = getEmotionDataCache()
         if (emotionCache.ids.isEmpty()) {
-            for (i in 1..137) {
+            for (i in 1..50) {
+                emotionIds.add("image_emoticon$i")
+            }
+            for (i in 61..101) {
+                emotionIds.add("image_emoticon$i")
+            }
+            for (i in 125..137) {
                 emotionIds.add("image_emoticon$i")
             }
         } else {
@@ -129,18 +135,18 @@ object EmotionManager {
     }
 
     fun getEmotionCacheDir(): File {
-        return File(getContext().externalCacheDir ?: getContext().cacheDir, "emotion")
+        return File(getContext().externalCacheDir ?: getContext().cacheDir, "emotion").apply {
+            if (exists() && isFile) {
+                delete()
+                mkdirs()
+            } else if (!exists()) {
+                mkdirs()
+            }
+        }
     }
 
     fun getEmotionFile(id: String): File {
-        val emotionsCacheDir = getEmotionCacheDir()
-        if (emotionsCacheDir.exists() && emotionsCacheDir.isFile) {
-            emotionsCacheDir.delete()
-            emotionsCacheDir.mkdirs()
-        } else if (!emotionsCacheDir.exists()) {
-            emotionsCacheDir.mkdirs()
-        }
-        return File(emotionsCacheDir, "$id.png")
+        return File(getEmotionCacheDir(), "$id.png")
     }
 
     fun getEmotionIdByName(name: String): String? {
