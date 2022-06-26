@@ -6,6 +6,7 @@ import android.content.Intent
 import android.content.Intent.ACTION_VIEW
 import android.content.pm.PackageManager
 import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.net.Uri
 import android.os.Bundle
 import android.text.Editable
@@ -119,9 +120,12 @@ class ReplyActivity : BaseActivity(), View.OnClickListener,
             ThemeUtil.setTranslucentBackground(constraintLayout)
         }
         Util.setStatusBarTransparent(this)
+        val decor = window.decorView as ViewGroup
+        val decorChild = decor.getChildAt(0) as ViewGroup
+        decorChild.setBackgroundColor(Color.TRANSPARENT)
         window.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
-        window.decorView.setBackgroundColor(resources.getColor(R.color.transparent))
-        window.setBackgroundDrawableResource(R.drawable.bg_trans)
+        window.decorView.setBackgroundColor(Color.TRANSPARENT)
+        window.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
         initData()
         initView()
         if (appPreferences.postOrReplyWarning) showDialog {
