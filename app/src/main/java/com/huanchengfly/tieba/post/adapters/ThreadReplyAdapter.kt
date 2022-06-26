@@ -654,13 +654,6 @@ class ThreadReplyAdapter(context: Context) :
                 context.getString(R.string.btn_agree_post_default)
             }
         )
-        viewHolder.setText(
-            R.id.thread_list_item_reply_btn, if (item.subPostNumber != "0") {
-                context.getString(R.string.btn_reply_post, item.subPostNumber)
-            } else {
-                context.getString(R.string.btn_reply_post_default)
-            }
-        )
         viewHolder.itemView.background = getItemBackgroundDrawable(
             context,
             position,

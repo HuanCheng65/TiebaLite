@@ -17,7 +17,6 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.text.TextUtils
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -280,7 +279,6 @@ class ForumActivity : BaseActivity(), View.OnClickListener, OnRefreshedListener,
             } else {
                 1f
             }
-            Log.i("OffsetChange", "changed")
             if (titleVisible != isTitleVisible) {
                 title = if (isTitleVisible) getString(R.string.title_forum, forumName) else null
                 titleVisible = isTitleVisible

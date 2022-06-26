@@ -172,13 +172,35 @@ object MixedTiebaApiImpl : ITiebaApi {
         )
 
     override fun searchPost(
-        keyword: String, forumName: String, onlyThread: Boolean, page: Int, pageSize: Int
+        keyword: String,
+        forumName: String,
+        onlyThread: Boolean,
+        sortMode: Int,
+        page: Int,
+        pageSize: Int
     ): Call<SearchPostBean> = RetrofitTiebaApi.MINI_TIEBA_API.searchPost(
         keyword,
         forumName,
         page,
         pageSize,
-        only_thread = if (onlyThread) 1 else 0
+        only_thread = if (onlyThread) 1 else 0,
+        sortMode = sortMode
+    )
+
+    override fun searchPostAsync(
+        keyword: String,
+        forumName: String,
+        onlyThread: Boolean,
+        sortMode: Int,
+        page: Int,
+        pageSize: Int
+    ): Deferred<ApiResult<SearchPostBean>> = RetrofitTiebaApi.MINI_TIEBA_API.searchPostAsync(
+        keyword,
+        forumName,
+        page,
+        pageSize,
+        only_thread = if (onlyThread) 1 else 0,
+        sortMode = sortMode
     )
 
     override fun searchUser(keyword: String): Call<SearchUserBean> =

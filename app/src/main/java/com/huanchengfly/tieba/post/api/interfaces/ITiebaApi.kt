@@ -282,6 +282,7 @@ interface ITiebaApi {
      * @param keyword 搜索关键词
      * @param forumName 搜索吧名
      * @param onlyThread 是否仅搜索主题贴
+     * @param sortMode 排序模式（1 = 时间倒序，2 = 相关性排序）
      * @param page 分页页码（从 1 开始）
      * @param pageSize 每页贴数（默认 30）
      */
@@ -289,9 +290,29 @@ interface ITiebaApi {
         keyword: String,
         forumName: String,
         onlyThread: Boolean = false,
+        sortMode: Int = 1,
         page: Int = 1,
         pageSize: Int = 30
     ): Call<SearchPostBean>
+
+    /**
+     * 吧内搜索（异步）
+     *
+     * @param keyword 搜索关键词
+     * @param forumName 搜索吧名
+     * @param onlyThread 是否仅搜索主题贴
+     * @param sortMode 排序模式（1 = 时间倒序，2 = 相关性排序）
+     * @param page 分页页码（从 1 开始）
+     * @param pageSize 每页贴数（默认 30）
+     */
+    fun searchPostAsync(
+        keyword: String,
+        forumName: String,
+        onlyThread: Boolean = false,
+        sortMode: Int = 1,
+        page: Int = 1,
+        pageSize: Int = 30
+    ): Deferred<ApiResult<SearchPostBean>>
 
     /**
      * 搜索用户

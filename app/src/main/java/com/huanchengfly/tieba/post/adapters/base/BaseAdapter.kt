@@ -20,7 +20,7 @@ abstract class BaseAdapter<Item>(
 
     val onItemChildClickListeners: MutableMap<Int, OnItemChildClickListener<Item>?> = mutableMapOf()
 
-    val headers: MutableList<View> = mutableListOf()
+    val headers: MutableList<Layout> = mutableListOf()
 
     val footers: MutableList<View> = mutableListOf()
 
@@ -71,15 +71,19 @@ abstract class BaseAdapter<Item>(
     }
 
     fun addHeaderView(view: View) {
-        headers.add(view)
+        headers.add(Layout(view = view))
         notifyItemInserted(headers.size - 1)
     }
 
-    fun removeHeaderView(view: View) {
-        val index = headers.indexOf(view)
-        if (index >= 0) {
-            headers.removeAt(index)
-            notifyItemRemoved(index)
+    fun addHeaderView(layoutRes: Int, viewInitializer: (View.() -> Unit)?) {
+        headers.add(Layout(layoutRes = layoutRes, viewInitializer = viewInitializer))
+        notifyItemInserted(headers.size - 1)
+    }
+
+    fun removeHeaderViewAt(position: Int) {
+        if (position >= 0) {
+            headers.removeAt(position)
+            notifyItemRemoved(position)
         }
     }
 
@@ -140,7 +144,16 @@ abstract class BaseAdapter<Item>(
 
     final override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
         return if (viewType <= ITEM_TYPE_HEADER) {
-            MyViewHolder(headers[ITEM_TYPE_HEADER - viewType])
+            val headerLayout = headers[ITEM_TYPE_HEADER - viewType]
+            if (headerLayout.layoutRes != -1) {
+                MyViewHolder(context, headerLayout.layoutRes, parent).apply {
+                    headerLayout.viewInitializer?.invoke(itemView)
+                }
+            } else if (headerLayout.view != null) {
+                MyViewHolder(headerLayout.view)
+            } else {
+                throw IllegalArgumentException("Layout is empty!")
+            }
         } else if (viewType >= ITEM_TYPE_FOOTER) {
             MyViewHolder(footers[viewType - ITEM_TYPE_FOOTER])
         } else {
@@ -205,4 +218,10 @@ abstract class BaseAdapter<Item>(
         itemList.clear()
         notifyDataSetChanged()
     }
+
+    class Layout(
+        val layoutRes: Int = -1,
+        val view: View? = null,
+        val viewInitializer: (View.() -> Unit)? = null
+    )
 }

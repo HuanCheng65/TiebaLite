@@ -277,8 +277,20 @@ interface MiniTiebaApi {
         @Field("kw") forumName: String,
         @Field("pn") page: Int = 1,
         @Field("rn") pageSize: Int = 30,
-        @Field("only_thread") only_thread: Int = 0
+        @Field("only_thread") only_thread: Int = 0,
+        @Field("sm") sortMode: Int = 1
     ): Call<SearchPostBean>
+
+    @POST("/c/s/searchpost")
+    @FormUrlEncoded
+    fun searchPostAsync(
+        @Field("word") keyword: String,
+        @Field("kw") forumName: String,
+        @Field("pn") page: Int = 1,
+        @Field("rn") pageSize: Int = 30,
+        @Field("only_thread") only_thread: Int = 0,
+        @Field("sm") sortMode: Int = 1
+    ): Deferred<ApiResult<SearchPostBean>>
 
     @GET("/mo/q/search/user")
     fun searchUser(

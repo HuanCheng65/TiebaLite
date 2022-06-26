@@ -378,7 +378,7 @@
     <string name="text_no_data">这里什么都没有</string>
     <string name="title_exact_match">推荐结果</string>
     <string name="title_fuzzy_match">查询结果</string>
-    <string name="title_search_filter_only_thread">仅看主题贴</string>
+    <string name="title_search_filter_only_thread">只看主题贴</string>
     <string name="title_search_order_new">新贴在前</string>
     <string name="title_search_order_old">旧贴在前</string>
     <string name="title_search_order_relevant">相关度</string>
@@ -523,4 +523,6 @@
     <string name="title_hide_forum_intro_and_stat">精简吧页面</string>
     <string name="summary_hide_forum_intro_and_stat">开启后将隐藏吧页面的吧简介和数据（仍然可以通过“关于本吧”查看这些内容）</string>
     <string name="relative_date_today">今天 %1$s</string>
+    <string name="title_search_post_sort_by_time">时间倒序</string>
+    <string name="title_search_post_sort_by_relevant">相关性排序</string>
 </resources>

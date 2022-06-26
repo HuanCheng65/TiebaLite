@@ -1,4 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <data-extraction-rules>
-    <cloud-backup></cloud-backup>
+    <cloud-backup>
+        <exclude
+            domain="sharedpref"
+            path="crash.xml" />
+        <exclude
+            domain="sharedpref"
+            path="AppCenter.xml" />
+        <exclude
+            domain="database"
+            path="com.microsoft.appcenter.persistence" />
+        <exclude
+            domain="database"
+            path="com.microsoft.appcenter.persistence-journal" />
+        <exclude
+            domain="file"
+            path="error" />
+        <exclude
+            domain="file"
+            path="appcenter" />
+    </cloud-backup>
 </data-extraction-rules>
