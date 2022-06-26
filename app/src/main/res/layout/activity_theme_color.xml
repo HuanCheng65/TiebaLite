@@ -191,7 +191,7 @@
             android:layout_margin="8dp"
             android:layout_marginTop="0dp"
             android:background="@drawable/bg_radius_10dp"
-            android:backgroundTint="@color/default_color_card"
+            app:backgroundTint="@color/default_color_card"
             android:paddingStart="16dp"
             android:paddingEnd="16dp"
             app:layout_constraintBottom_toBottomOf="parent"

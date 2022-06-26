@@ -30,7 +30,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/bg_radius_10dp"
-            android:backgroundTint="@color/default_color_card"
+            app:backgroundTint="@color/default_color_card"
             android:gravity="center_horizontal"
             android:orientation="vertical"
             android:padding="16dp"

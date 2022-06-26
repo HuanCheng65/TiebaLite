@@ -197,7 +197,7 @@ class SettingsFragment : PreferencesFragment() {
             }
         timePickerPreference.summary = attachContext.getString(
             R.string.summary_auto_sign_time,
-            preferenceManager.sharedPreferences.getString("auto_sign_time", "09:00")
+            preferenceManager.sharedPreferences!!.getString("auto_sign_time", "09:00")
         )
         val clearCache = findPreference<Preference>("clear_cache")
         clearCache!!.summary = attachContext.getString(
@@ -216,7 +216,7 @@ class SettingsFragment : PreferencesFragment() {
                 true
             }
         val littleTaliPreference = findPreference<EditTextPreference>("little_tail")
-        val littleTali = preferenceManager.sharedPreferences.getString("little_tail", "")
+        val littleTali = preferenceManager.sharedPreferences!!.getString("little_tail", "")
         if (littleTali!!.isEmpty()) {
             littleTaliPreference!!.setSummary(R.string.tip_no_little_tail)
         } else {
@@ -238,7 +238,7 @@ class SettingsFragment : PreferencesFragment() {
         val aboutPreference = findPreference<Preference>("about")
         val useCustomTabs = findPreference<SwitchPreference>("use_custom_tabs")
         useCustomTabs!!.isEnabled =
-            !preferenceManager.sharedPreferences.getBoolean("use_webview", true)
+            !preferenceManager.sharedPreferences!!.getBoolean("use_webview", true)
         findPreference<Preference>("use_webview")!!.onPreferenceChangeListener =
             Preference.OnPreferenceChangeListener { _: Preference?, newValue: Any? ->
                 useCustomTabs.isEnabled = !(newValue as Boolean)
@@ -281,13 +281,14 @@ class SettingsFragment : PreferencesFragment() {
         switchPreference: SwitchPreference?,
         defValue: Boolean = false
     ) {
-        val value = preferenceManager.sharedPreferences.getBoolean(switchPreference!!.key, defValue)
+        val value =
+            preferenceManager.sharedPreferences!!.getBoolean(switchPreference!!.key, defValue)
         switchPreference.isChecked = value
     }
 
     private fun initListPreference(key: String, defValue: String) {
         val listPreference = findPreference<ListPreference>(key)
-        val value = preferenceManager.sharedPreferences.getString(key, defValue)
+        val value = preferenceManager.sharedPreferences!!.getString(key, defValue)
         listPreference!!.value = value
     }
 
