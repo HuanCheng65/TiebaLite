@@ -163,7 +163,7 @@ class OKSignService : IntentService(TAG), CoroutineScope, ProgressListener {
             getString(
                 R.string.title_signing_progress,
                 signDataBean.userName,
-                current,
+                current + 1,
                 total
             ),
             if (signResultBean.userInfo?.signBonusPoint != null)
