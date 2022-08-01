@@ -36,6 +36,12 @@ android {
             useSupportLibrary true
         }
     }
+    buildFeatures {
+        compose true
+    }
+    composeOptions {
+        kotlinCompilerExtensionVersion '1.2.0'
+    }
     signingConfigs {
         release {
             keyAlias keystoreProperties["releaseKeyAlias"]
@@ -65,6 +71,7 @@ android {
     }
     kotlinOptions {
         jvmTarget = '1.8'
+        freeCompilerArgs += ["-P", "plugin:androidx.compose.compiler.plugins.kotlin:suppressKotlinVersionCompatibilityCheck=true"]
     }
     packagingOptions {
         resources {
@@ -81,6 +88,19 @@ android {
 }
 
 dependencies {
+    def compose_version = '1.1.1'
+
+    // Integration with activities
+    implementation 'androidx.activity:activity-compose:1.5.0'
+    // Compose Material Design
+    implementation "androidx.compose.material:material:$compose_version"
+    // Animations
+    implementation "androidx.compose.animation:animation:$compose_version"
+    // Tooling support (Previews, etc.)
+    implementation "androidx.compose.ui:ui-tooling:$compose_version"
+    // When using a MDC theme
+    implementation "com.google.android.material:compose-theme-adapter:1.1.1"
+
     implementation 'com.google.protobuf:protobuf-java:3.21.1'
 
     implementation 'com.github.gzu-liyujiang:Android_CN_OAID:4.2.4'
