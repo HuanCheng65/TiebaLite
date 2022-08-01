@@ -18,6 +18,7 @@ import androidx.appcompat.widget.Toolbar
 import androidx.viewpager2.widget.ViewPager2
 import androidx.viewpager2.widget.ViewPager2.OnPageChangeCallback
 import butterknife.BindView
+import com.github.piasy.biv.BigImageViewer
 import com.google.android.material.bottomappbar.BottomAppBar
 import com.huanchengfly.tieba.post.BaseApplication.ScreenInfo
 import com.huanchengfly.tieba.post.R
@@ -60,11 +61,19 @@ class PhotoViewActivity : BaseActivity(), OnChangeBottomBarVisibilityListener,
     private var threadId: String? = null
     private var objType: String? = null
 
+    override fun onDestroy() {
+        super.onDestroy()
+        BigImageViewer.imageLoader().cancelAll()
+    }
+
     private fun loadMore() {
-        if (loadFinished) {
-            return
-        }
-        if (mLoading) {
+        if (loadFinished || mLoading || listOf(
+                forumId,
+                forumName,
+                threadId,
+                objType
+            ).any { it.isNullOrEmpty() }
+        ) {
             return
         }
         mLoading = true
@@ -199,8 +208,8 @@ class PhotoViewActivity : BaseActivity(), OnChangeBottomBarVisibilityListener,
         } else if (isFrs && lastIndex > 0) {
             val index = photoViewBeans[position].index
             mCounter.text = getString(
-                R.string.tip_position, (index ?: position
-                + 1).toString(), amount
+                R.string.tip_position, ((index ?: (position
+                        + 1))).toString(), amount
             )
         } else {
             mCounter.text = getString(R.string.tip_position, (position + 1).toString(), amount)

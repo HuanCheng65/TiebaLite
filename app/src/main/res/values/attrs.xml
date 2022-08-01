@@ -262,4 +262,20 @@
         <attr name="collapsedMarginEnd" format="dimension" />
         <attr name="collapsedMarginBottom" format="dimension" />
     </declare-styleable>
+
+    <declare-styleable name="CircleProgressView">
+        <attr name="progressBackgroundColor" format="color" />
+        <attr name="progressColor" format="color" />
+        <attr name="progressTextColor" format="color" />
+        <attr name="showProgressText" format="boolean" />
+        <attr name="progressTextSize" format="dimension" />
+        <attr name="progressWidth" format="dimension" />
+        <attr name="progress" format="integer" />
+    </declare-styleable>
+
+    <declare-styleable name="TintCircleProgressView">
+        <attr name="progressBackgroundColor" />
+        <attr name="progressColor" />
+        <attr name="progressTextColor" />
+    </declare-styleable>
 </resources>

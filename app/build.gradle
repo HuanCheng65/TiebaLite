@@ -156,10 +156,15 @@ dependencies {
     implementation 'com.google.code.gson:gson:2.9.0'
     implementation "cn.dreamtobe.kpswitch:library:1.6.2"
     implementation "org.litepal.android:kotlin:3.0.0"
-    implementation "com.davemorrissey.labs:subsampling-scale-image-view-androidx:3.10.0"
-    implementation "com.bm.photoview:library:2.0.7"
     implementation 'cn.jzvd:jiaozivideoplayer:7.7.2.3300'
     implementation "com.jrummyapps:colorpicker:2.1.7"
+
+    implementation "com.davemorrissey.labs:subsampling-scale-image-view-androidx:3.10.0"
+    implementation "com.bm.photoview:library:2.0.7"
+
+    implementation 'com.github.piasy:BigImageViewer:1.8.1'
+    implementation 'com.github.piasy:GlideImageLoader:1.8.1'
+    implementation 'com.github.piasy:GlideImageViewFactory:1.8.1'
 
     implementation "com.scwang.smart:refresh-layout-kernel:2.0.1"
     implementation "com.scwang.smart:refresh-header-material:2.0.1"
