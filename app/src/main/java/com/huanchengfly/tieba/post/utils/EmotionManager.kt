@@ -4,6 +4,7 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
+import androidx.appcompat.content.res.AppCompatResources
 import com.bumptech.glide.Glide
 import com.huanchengfly.tieba.post.BaseApplication
 import com.huanchengfly.tieba.post.models.EmotionCache
@@ -105,7 +106,7 @@ object EmotionManager {
         }
         updateCache()
         executor.submit {
-            fetchEmotions()
+            fetchEmotions(context)
         }
     }
 
@@ -153,12 +154,20 @@ object EmotionManager {
         return emotionMapping[name]
     }
 
-    fun getEmotionDrawable(id: String?): Drawable? {
+    fun getEmotionResId(context: Context, id: String): Int {
+        return context.resources.getIdentifier(id, "drawable", context.packageName)
+    }
+
+    fun getEmotionDrawable(context: Context, id: String?): Drawable? {
         if (id == null) {
             return null
         }
         if (drawableCache.containsKey(id)) {
             return drawableCache[id]
+        }
+        val resId = getEmotionResId(context, id)
+        if (resId != 0) {
+            return AppCompatResources.getDrawable(context, resId).also { drawableCache[id] = it!! }
         }
         val emotionFile = getEmotionFile(id)
         if (!emotionFile.exists()) {
@@ -170,10 +179,11 @@ object EmotionManager {
         ).also { drawableCache[id] = it }
     }
 
-    private fun fetchEmotions() {
+    private fun fetchEmotions(context: Context) {
         emotionIds.forEach {
+            val resId = getEmotionResId(context, it)
             val emotionFile = getEmotionFile(it)
-            if (!emotionFile.exists()) {
+            if (resId == 0 && !emotionFile.exists()) {
                 try {
                     val emotionBitmap =
                         Glide.with(getContext())

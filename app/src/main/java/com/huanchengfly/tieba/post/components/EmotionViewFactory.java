@@ -16,6 +16,6 @@ public class EmotionViewFactory {
         int spacing = DisplayUtil.dp2px(context, 12);
         int itemWidth = (screenWidth - spacing * 8) / DEFAULT_COLUMNS_NUM;
         gridView.setAdapter(new EmotionGridViewAdapter(context, type, itemWidth));
-        gridView.setOnItemClickListener(EmotionUtil.GlobalOnItemClickManagerUtil.getInstance(context).getOnItemClickListener(EmotionUtil.EMOTION_ALL_WEB_TYPE));
+        gridView.setOnItemClickListener(EmotionUtil.GlobalOnItemClickManagerUtil.getInstance().getOnItemClickListener(EmotionUtil.EMOTION_ALL_WEB_TYPE));
     }
 }

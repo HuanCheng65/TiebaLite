@@ -458,7 +458,7 @@ class ReplyActivity : BaseActivity(), View.OnClickListener,
             SubPanelAndTrigger(emotionView, emotionBtn),
             SubPanelAndTrigger(insertImageView, insertImageBtn)
         )
-        EmotionUtil.GlobalOnItemClickManagerUtil.getInstance(this).attachToEditText(editText)
+        EmotionUtil.GlobalOnItemClickManagerUtil.getInstance().attachToEditText(editText)
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {

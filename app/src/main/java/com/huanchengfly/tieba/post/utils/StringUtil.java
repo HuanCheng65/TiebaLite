@@ -37,7 +37,7 @@ public class StringUtil {
                 String key = matcherEmotion.group();
                 int start = matcherEmotion.start();
                 String group1 = matcherEmotion.group(1);
-                Drawable emotionDrawable = EmotionManager.INSTANCE.getEmotionDrawable(EmotionManager.INSTANCE.getEmotionIdByName(group1));
+                Drawable emotionDrawable = EmotionManager.INSTANCE.getEmotionDrawable(tv.getContext(), EmotionManager.INSTANCE.getEmotionIdByName(group1));
                 if (emotionDrawable != null) {
                     TextPaint paint = tv.getPaint();
                     int size = Math.round(-paint.ascent() + paint.descent());

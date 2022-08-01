@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="AppTheme.Splash" parent="AppTheme">
+        <item name="android:windowBackground">@drawable/splash</item>
+        <item name="android:statusBarColor">@color/colorSplashBg</item>
+        <item name="android:windowSplashScreenBackground">@color/colorSplashBg</item>
+        <item name="android:windowSplashScreenAnimatedIcon">@drawable/ic_splash_screen</item>
+        <item name="android:windowSplashScreenBrandingImage">@drawable/ic_splash_text</item>
+        <item name="android:windowIsTranslucent">false</item>
+        <item name="android:windowDisablePreview">false</item>
+    </style>
+</resources>
