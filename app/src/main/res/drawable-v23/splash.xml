@@ -19,7 +19,7 @@
     </item>
     <item
         android:width="200dp"
-        android:height="100dp"
+        android:height="80dp"
         android:bottom="35dp"
         android:gravity="bottom|center_horizontal">
         <bitmap android:src="@drawable/ic_splash_text" />
