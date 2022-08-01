@@ -27,6 +27,8 @@ import androidx.appcompat.app.AppCompatDelegate
 import com.github.gzuliyujiang.oaid.DeviceID
 import com.github.gzuliyujiang.oaid.DeviceIdentifier
 import com.github.gzuliyujiang.oaid.IGetter
+import com.github.piasy.biv.BigImageViewer
+import com.github.piasy.biv.loader.glide.GlideImageLoader
 import com.huanchengfly.tieba.post.activities.BaseActivity
 import com.huanchengfly.tieba.post.api.interfaces.CommonCallback
 import com.huanchengfly.tieba.post.components.dialogs.LoadingDialog
@@ -76,6 +78,7 @@ class BaseApplication : Application(), IApp {
     override fun onCreate() {
         instance = this
         super.onCreate()
+        BigImageViewer.initialize(GlideImageLoader.with(this))
         DeviceIdentifier.register(this)
         DeviceID.getOAID(this, object : IGetter {
             override fun onOAIDGetComplete(result: String) {

@@ -12,15 +12,18 @@ import androidx.annotation.CallSuper
 import androidx.fragment.app.Fragment
 import butterknife.ButterKnife
 import butterknife.Unbinder
+import com.huanchengfly.tieba.post.BaseApplication
 import com.huanchengfly.tieba.post.interfaces.BackHandledInterface
 import com.huanchengfly.tieba.post.interfaces.Refreshable
 import com.huanchengfly.tieba.post.isLandscape
 import com.huanchengfly.tieba.post.isPortrait
 import com.huanchengfly.tieba.post.isTablet
+import com.huanchengfly.tieba.post.ui.theme.utils.ThemeUtils
 import com.huanchengfly.tieba.post.utils.AppPreferencesUtils
 import com.huanchengfly.tieba.post.utils.HandleBackUtil
 import kotlinx.coroutines.*
 import kotlinx.coroutines.Dispatchers.IO
+import java.lang.ref.WeakReference
 import kotlin.coroutines.CoroutineContext
 
 /**
@@ -48,7 +51,19 @@ abstract class BaseFragment : Fragment(), BackHandledInterface, CoroutineScope {
     var isFirstVisible = false
         private set
     private var rootView: View? = null
-    lateinit var attachContext: Context
+    var attachContextWeakReference: WeakReference<Context>? = null
+    val attachContext: Context
+        get() {
+            var mContext: Context? = context
+            if (mContext == null && attachContextWeakReference != null) {
+                mContext = attachContextWeakReference!!.get()
+                ThemeUtils.getWrapperActivity(mContext)?.let { mContext = it }
+            }
+            if (mContext == null) {
+                mContext = BaseApplication.instance
+            }
+            return mContext!!
+        }
     protected val appPreferences: AppPreferencesUtils
         get() = AppPreferencesUtils(attachContext)
 
@@ -58,6 +73,7 @@ abstract class BaseFragment : Fragment(), BackHandledInterface, CoroutineScope {
         onAttachToContext(context)
     }
 
+    @Deprecated("Deprecated in Java")
     override fun onAttach(activity: Activity) {
         super.onAttach(activity)
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
@@ -67,7 +83,7 @@ abstract class BaseFragment : Fragment(), BackHandledInterface, CoroutineScope {
 
     @CallSuper
     private fun onAttachToContext(context: Context) {
-        attachContext = context
+        attachContextWeakReference = WeakReference(context)
     }
 
     override fun onBackPressed(): Boolean {
@@ -79,6 +95,7 @@ abstract class BaseFragment : Fragment(), BackHandledInterface, CoroutineScope {
     //如果Fragment从可见->不可见，那么setUserVisibleHint()也会被调用，传入isVisibleToUser = false
     //总结：setUserVisibleHint()除了Fragment的可见状态发生变化时会被回调外，在new时也会被回调
     //如果我们需要在Fragment可见与不可见时干点事，用这个的话就会有多余的回调了，那么就需要重新封装一个
+    @Deprecated("Deprecated in Java")
     override fun setUserVisibleHint(isVisibleToUser: Boolean) {
         super.setUserVisibleHint(isVisibleToUser)
         //setUserVisibleHint()有可能在fragment的生命周期外被调用

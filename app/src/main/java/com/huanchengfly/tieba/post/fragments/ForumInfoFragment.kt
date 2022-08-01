@@ -98,6 +98,7 @@ class ForumInfoFragment : BaseFragment(), Refreshable, ScrollTopable {
         super.onSaveInstanceState(outState)
     }
 
+    @Deprecated("Deprecated in Java")
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         if (savedInstanceState != null) {
             forumName = savedInstanceState.getString(ForumFragment.PARAM_FORUM_NAME)

@@ -18,7 +18,6 @@ import com.huanchengfly.tieba.post.utils.ThemeUtil
 import com.huanchengfly.tieba.post.utils.appPreferences
 import com.jrummyapps.android.colorpicker.ColorPickerDialog
 import com.jrummyapps.android.colorpicker.ColorPickerDialogListener
-import java.util.*
 
 class CustomThemeDialog(context: Context) : AlertDialog(context),
     View.OnClickListener, DialogInterface.OnClickListener, CompoundButton.OnCheckedChangeListener,
@@ -69,7 +68,7 @@ class CustomThemeDialog(context: Context) : AlertDialog(context),
                 .create()
             primaryColorPicker.setColorPickerDialogListener(this)
             primaryColorPicker.show(
-                Objects.requireNonNull(ThemeUtils.getWrapperActivity(context)).fragmentManager,
+                ThemeUtils.getWrapperActivity(context)!!.fragmentManager,
                 "ColorPicker_PrimaryColor"
             )
         }

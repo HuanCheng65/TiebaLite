@@ -89,6 +89,7 @@ public class ImageUtil {
     public static final String TAG = "ImageUtil";
 
     private static boolean isGifFile(File file) {
+        if (file == null) return false;
         try {
             return isGifFile(new FileInputStream(file));
         } catch (FileNotFoundException e) {
@@ -99,6 +100,7 @@ public class ImageUtil {
 
     //判断是否为GIF文件
     private static boolean isGifFile(InputStream inputStream) {
+        if (inputStream == null) return false;
         byte[] bytes = new byte[4];
         try {
             inputStream.read(bytes);

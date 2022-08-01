@@ -80,7 +80,11 @@ public class WebViewActivity extends BaseActivity implements OnReceivedTitleList
                         mUrl :
                         mWebViewFragment.getWebView().getUrl());
                 Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-                startActivity(intent);
+                try {
+                    startActivity(intent);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
                 break;
             case R.id.menu_copy_link:
                 TiebaUtil.copyText(this, mWebViewFragment.getWebView().getUrl());

@@ -45,9 +45,7 @@ abstract class BaseAdapter<Item>(
     fun setOnItemLongClickListener(listener: ((viewHolder: MyViewHolder, item: Item, position: Int) -> Boolean)?) {
         onItemLongClickListener = object : OnItemLongClickListener<Item> {
             override fun onLongClick(viewHolder: MyViewHolder, item: Item, position: Int): Boolean {
-                if (listener != null) {
-                    return listener(viewHolder, item, position)
-                }
+                listener?.invoke(viewHolder, item, position)
                 return false
             }
         }
@@ -63,9 +61,7 @@ abstract class BaseAdapter<Item>(
     ) {
         onItemChildClickListeners[viewId] = object : OnItemChildClickListener<Item> {
             override fun onItemChildClick(viewHolder: MyViewHolder, item: Item, position: Int) {
-                if (listener != null) {
-                    listener(viewHolder, item, position)
-                }
+                listener?.invoke(viewHolder, item, position)
             }
         }
     }

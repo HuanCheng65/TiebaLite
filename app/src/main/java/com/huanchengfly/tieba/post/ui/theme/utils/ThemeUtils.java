@@ -17,6 +17,7 @@ import android.widget.WrapperListAdapter;
 import androidx.annotation.AttrRes;
 import androidx.annotation.ColorInt;
 import androidx.annotation.ColorRes;
+import androidx.annotation.Nullable;
 import androidx.core.graphics.drawable.DrawableCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -75,6 +76,7 @@ public class ThemeUtils {
         refreshUI(context, null);
     }
 
+    @Nullable
     public static Activity getWrapperActivity(Context context) {
         if (context instanceof Activity) {
             return (Activity) context;

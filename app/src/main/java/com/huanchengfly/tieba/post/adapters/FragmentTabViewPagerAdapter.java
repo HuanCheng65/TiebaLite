@@ -2,12 +2,11 @@ package com.huanchengfly.tieba.post.adapters;
 
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentPagerAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class FragmentTabViewPagerAdapter extends FragmentPagerAdapter {
+public class FragmentTabViewPagerAdapter extends SmartFragmentStatePagerAdapter {
     public Fragment currentFragment;
     public int currentFragmentPosition;
     private List<Fragment> fragments;
