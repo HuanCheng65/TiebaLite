@@ -10,6 +10,7 @@ import com.huanchengfly.tieba.post.api.models.*
 import com.huanchengfly.tieba.post.api.retrofit.ApiResult
 import com.huanchengfly.tieba.post.utils.AccountUtil
 import kotlinx.coroutines.Deferred
+import kotlinx.coroutines.flow.Flow
 import retrofit2.Call
 import retrofit2.http.*
 
@@ -84,7 +85,7 @@ interface MiniTiebaApi {
         @Field("agree_type") agree_type: Int = 2,
         @Field("obj_type") obj_type: Int = 3,
         @Field("op_type") op_type: Int = 0,
-        @Field("tbs") tbs: String = AccountUtil.getLoginInfo(BaseApplication.instance)!!.itbTbs,
+        @Field("tbs") tbs: String = AccountUtil.getLoginInfo(BaseApplication.instance)!!.tbs,
         @Field("stoken") stoken: String = AccountUtil.getSToken(BaseApplication.instance)!!
     ): Call<AgreeBean>
 
@@ -103,7 +104,7 @@ interface MiniTiebaApi {
         @Field("agree_type") agree_type: Int = 2,
         @Field("obj_type") obj_type: Int = 3,
         @Field("op_type") op_type: Int = 1,
-        @Field("tbs") tbs: String = AccountUtil.getLoginInfo(BaseApplication.instance)!!.itbTbs,
+        @Field("tbs") tbs: String = AccountUtil.getLoginInfo(BaseApplication.instance)!!.tbs,
         @Field("stoken") stoken: String = AccountUtil.getSToken(BaseApplication.instance)!!
     ): Call<AgreeBean>
 
@@ -124,6 +125,15 @@ interface MiniTiebaApi {
         @Field("recommend") recommend: String = "0",
         @Field("topic") topic: String = "0"
     ): Deferred<ApiResult<ForumRecommend>>
+
+    @Headers("${Header.FORCE_LOGIN}: ${Header.FORCE_LOGIN_TRUE}")
+    @POST("/c/f/forum/forumrecommend")
+    @FormUrlEncoded
+    fun forumRecommendFlow(
+        @Field("like_forum") like_forum: String = "1",
+        @Field("recommend") recommend: String = "0",
+        @Field("topic") topic: String = "0"
+    ): Flow<ForumRecommend>
 
     @POST("/c/f/frs/page")
     @FormUrlEncoded
@@ -222,7 +232,7 @@ interface MiniTiebaApi {
     fun unlikeForum(
         @Field("fid") forumId: String,
         @Field("kw") forumName: String,
-        @Field("tbs") tbs: String? = AccountUtil.getLoginInfo(BaseApplication.instance)?.itbTbs
+        @Field("tbs") tbs: String? = AccountUtil.getLoginInfo(BaseApplication.instance)?.tbs
     ): Call<CommonResponse>
 
     @Headers("${Header.FORCE_LOGIN}: ${Header.FORCE_LOGIN_TRUE}")
@@ -231,7 +241,7 @@ interface MiniTiebaApi {
     fun likeForum(
         @Field("fid") forumId: String,
         @Field("kw") forumName: String,
-        @Field("tbs") tbs: String? = AccountUtil.getLoginInfo(BaseApplication.instance)?.itbTbs
+        @Field("tbs") tbs: String? = AccountUtil.getLoginInfo(BaseApplication.instance)?.tbs
     ): Call<LikeForumResultBean>
 
     @Headers("${Header.FORCE_LOGIN}: ${Header.FORCE_LOGIN_TRUE}")

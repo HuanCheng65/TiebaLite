@@ -21,6 +21,7 @@ import com.huanchengfly.tieba.post.toJson
 import com.huanchengfly.tieba.post.utils.AccountUtil
 import com.huanchengfly.tieba.post.utils.ImageUtil
 import kotlinx.coroutines.Deferred
+import kotlinx.coroutines.flow.Flow
 import retrofit2.Call
 import java.io.FileInputStream
 import java.io.IOException
@@ -55,6 +56,9 @@ object MixedTiebaApiImpl : ITiebaApi {
 
     override fun forumRecommendAsync(): Deferred<ApiResult<ForumRecommend>> =
         RetrofitTiebaApi.MINI_TIEBA_API.forumRecommendAsync()
+
+    override fun forumRecommendFlow(): Flow<ForumRecommend> =
+        RetrofitTiebaApi.MINI_TIEBA_API.forumRecommendFlow()
 
     override fun forumPage(
         forumName: String, page: Int, sortType: ForumSortType, goodClassifyId: String?
@@ -264,6 +268,34 @@ object MixedTiebaApiImpl : ITiebaApi {
         lz = if (seeLz) 1 else 0
     )
 
+    override fun threadContentAsync(
+        threadId: String,
+        page: Int,
+        seeLz: Boolean,
+        reverse: Boolean
+    ): Deferred<ApiResult<ThreadContentBean>> =
+        RetrofitTiebaApi.OFFICIAL_TIEBA_API.threadContentAsync(
+            threadId,
+            page,
+            last = if (reverse) "1" else null,
+            r = if (reverse) "1" else null,
+            lz = if (seeLz) 1 else 0
+        )
+
+    override fun threadContentAsync(
+        threadId: String,
+        postId: String?,
+        seeLz: Boolean,
+        reverse: Boolean
+    ): Deferred<ApiResult<ThreadContentBean>> =
+        RetrofitTiebaApi.OFFICIAL_TIEBA_API.threadContentAsync(
+            threadId,
+            postId,
+            last = if (reverse) "1" else null,
+            r = if (reverse) "1" else null,
+            lz = if (seeLz) 1 else 0
+        )
+
     override fun submitDislike(
         dislikeBean: DislikeBean,
         stoken: String
@@ -282,7 +314,8 @@ object MixedTiebaApiImpl : ITiebaApi {
     )
 
     override fun unfollow(
-        portrait: String, tbs: String
+        portrait: String,
+        tbs: String
     ): Call<CommonResponse> = RetrofitTiebaApi.WEB_TIEBA_API.follow(
         "https://tieba.baidu.com/i/?portrait=${
             URLEncoder.encode(
@@ -292,6 +325,16 @@ object MixedTiebaApiImpl : ITiebaApi {
         }&cuid=&auth=&uid=&ssid=&from=&uid=&pu=&bd_page_type=2&auth=&originid=&mo_device=1&tbs=${tbs}&action=follow&op=unfollow"
     )
 
+    override fun followFlow(
+        portrait: String,
+        tbs: String
+    ): Flow<FollowBean> = RetrofitTiebaApi.OFFICIAL_TIEBA_API.followFlow(portrait, tbs)
+
+    override fun unfollowFlow(
+        portrait: String,
+        tbs: String
+    ): Flow<CommonResponse> = RetrofitTiebaApi.OFFICIAL_TIEBA_API.unfollowFlow(portrait, tbs)
+
     override fun hotMessageList(): Call<HotMessageListBean> =
         RetrofitTiebaApi.WEB_TIEBA_API.hotMessageList()
 
@@ -300,6 +343,9 @@ object MixedTiebaApiImpl : ITiebaApi {
 
     override fun myInfoAsync(cookie: String): Deferred<ApiResult<MyInfoBean>> =
         RetrofitTiebaApi.WEB_TIEBA_API.myInfoAsync(cookie)
+
+    override fun myInfoFlow(cookie: String): Flow<MyInfoBean> =
+        RetrofitTiebaApi.WEB_TIEBA_API.myInfoFlow(cookie)
 
     override fun searchForum(keyword: String): Call<SearchForumBean> =
         RetrofitTiebaApi.WEB_TIEBA_API.searchForum(keyword)

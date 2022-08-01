@@ -9,7 +9,6 @@ public class Account extends LitePalSupport {
     private String nameShow;
     private String bduss;
     private String tbs;
-    private String itbTbs;
     private String portrait;
     private String sToken;
     private String cookie;
@@ -32,12 +31,12 @@ public class Account extends LitePalSupport {
         return this;
     }
 
-    public String getItbTbs() {
-        return itbTbs;
+    public String getTbs() {
+        return tbs;
     }
 
-    public Account setItbTbs(String itbTbs) {
-        this.itbTbs = itbTbs;
+    public Account setTbs(String tbs) {
+        this.tbs = tbs;
         return this;
     }
 
@@ -78,15 +77,6 @@ public class Account extends LitePalSupport {
 
     public Account setBduss(String bduss) {
         this.bduss = bduss;
-        return this;
-    }
-
-    public String getTbs() {
-        return tbs;
-    }
-
-    public Account setTbs(String tbs) {
-        this.tbs = tbs;
         return this;
     }
 

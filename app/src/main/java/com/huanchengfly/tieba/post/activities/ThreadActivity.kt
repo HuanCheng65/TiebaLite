@@ -36,7 +36,10 @@ import com.huanchengfly.tieba.post.api.models.AgreeBean
 import com.huanchengfly.tieba.post.api.models.CommonResponse
 import com.huanchengfly.tieba.post.api.models.ThreadContentBean
 import com.huanchengfly.tieba.post.api.models.ThreadContentBean.PostListItemBean
+import com.huanchengfly.tieba.post.api.retrofit.doIfFailure
+import com.huanchengfly.tieba.post.api.retrofit.doIfSuccess
 import com.huanchengfly.tieba.post.api.retrofit.exception.TiebaException
+import com.huanchengfly.tieba.post.api.retrofit.exception.getErrorMessage
 import com.huanchengfly.tieba.post.components.FillVirtualLayoutManager
 import com.huanchengfly.tieba.post.components.dialogs.EditTextDialog
 import com.huanchengfly.tieba.post.fragments.threadmenu.IThreadMenuFragment
@@ -313,20 +316,12 @@ class ThreadActivity : BaseActivity(), View.OnClickListener, IThreadMenuFragment
                 }
                 return
             }
-            TiebaApi.getInstance().threadContent(threadId!!, page, seeLz, sort)
-                .enqueue(object : Callback<ThreadContentBean> {
-                    override fun onFailure(call: Call<ThreadContentBean>, t: Throwable) {
-                        refreshLayout.finishLoadMore(false)
-                    }
-
-                    override fun onResponse(
-                        call: Call<ThreadContentBean>,
-                        response: Response<ThreadContentBean>
-                    ) {
-                        loadMoreSuccess(response.body()!!)
-                    }
-
-                })
+            launchIO {
+                TiebaApi.getInstance()
+                    .threadContentAsync(threadId!!, page, seeLz, sort)
+                    .doIfSuccess { loadMoreSuccess(it) }
+                    .doIfFailure { refreshLayout.finishLoadMore(false) }
+            }
         }
     }
 
@@ -382,24 +377,23 @@ class ThreadActivity : BaseActivity(), View.OnClickListener, IThreadMenuFragment
             recyclerView.scrollToPosition(0)
             page = if (sort) totalPage else 1
         }
-        TiebaApi.getInstance().threadContent(threadId!!, page, seeLz, sort)
-            .enqueue(object : Callback<ThreadContentBean> {
-                override fun onFailure(call: Call<ThreadContentBean>, t: Throwable) {
+        launchIO {
+            TiebaApi.getInstance()
+                .threadContentAsync(threadId!!, page, seeLz, sort)
+                .doIfSuccess { refreshSuccess(it) }
+                .doIfFailure {
                     refreshLayout.finishRefresh(false)
-                    if (t !is TiebaException) {
+                    if (it !is TiebaException) {
                         Util.showNetworkErrorSnackbar(recyclerView) { refreshLayout.autoRefresh() }
                     } else {
-                        Toast.makeText(this@ThreadActivity, t.message, Toast.LENGTH_SHORT).show()
+                        Toast.makeText(
+                            this@ThreadActivity,
+                            it.getErrorMessage(),
+                            Toast.LENGTH_SHORT
+                        ).show()
                     }
                 }
-
-                override fun onResponse(
-                    call: Call<ThreadContentBean>,
-                    response: Response<ThreadContentBean>
-                ) {
-                    refreshSuccess(response.body()!!)
-                }
-            })
+        }
     }
 
     override fun onStart() {
@@ -417,22 +411,11 @@ class ThreadActivity : BaseActivity(), View.OnClickListener, IThreadMenuFragment
     fun refresh(pid: String) {
         replyAdapter.setSeeLz(seeLz)
         threadMainPostAdapter.seeLz = seeLz
-        TiebaApi.getInstance().threadContent(threadId!!, page, seeLz, sort)
-            .enqueue(object : Callback<ThreadContentBean> {
-                override fun onFailure(call: Call<ThreadContentBean>, t: Throwable) {
-                    if (t !is TiebaException) {
-                        Util.showNetworkErrorSnackbar(recyclerView) { refreshLayout.autoRefresh() }
-                    } else {
-                        t.message?.let { toastShort(it) }
-                    }
-                }
-
-                override fun onResponse(
-                    call: Call<ThreadContentBean>,
-                    response: Response<ThreadContentBean>
-                ) {
-                    val threadContentBean = response.body()!!
-                    refreshSuccess(threadContentBean)
+        launchIO {
+            TiebaApi.getInstance()
+                .threadContentAsync(threadId!!, page, seeLz, sort)
+                .doIfSuccess {
+                    refreshSuccess(it)
                     val postListItemBean = getItemByPid(pid)
                     if (postListItemBean != null) {
                         if (!tip) {
@@ -485,7 +468,14 @@ class ThreadActivity : BaseActivity(), View.OnClickListener, IThreadMenuFragment
                         }
                     }
                 }
-            })
+                .doIfFailure {
+                    if (it !is TiebaException) {
+                        Util.showNetworkErrorSnackbar(recyclerView) { refreshLayout.autoRefresh() }
+                    } else {
+                        toastShort(it.getErrorMessage())
+                    }
+                }
+        }
     }
 
     fun getItemByPid(pid: String): PostListItemBean? {
@@ -520,27 +510,27 @@ class ThreadActivity : BaseActivity(), View.OnClickListener, IThreadMenuFragment
     private fun refreshByPid(pid: String) {
         replyAdapter.setSeeLz(seeLz)
         threadMainPostAdapter.seeLz = seeLz
-        TiebaApi.getInstance().threadContent(threadId!!, pid, seeLz, sort)
-            .enqueue(object : Callback<ThreadContentBean> {
-                override fun onFailure(call: Call<ThreadContentBean>, t: Throwable) {
-                    if (t is TiebaException) {
-                        Toast.makeText(this@ThreadActivity, t.message, Toast.LENGTH_SHORT).show()
+        launchIO {
+            TiebaApi.getInstance()
+                .threadContentAsync(threadId!!, pid, seeLz, sort)
+                .doIfSuccess {
+                    dataBean = it
+                    page = Integer.valueOf(it.page?.currentPage!!)
+                    totalPage = Integer.valueOf(it.page.totalPage!!)
+                    refresh(pid)
+                }
+                .doIfFailure {
+                    if (it is TiebaException) {
+                        Toast.makeText(
+                            this@ThreadActivity,
+                            it.getErrorMessage(),
+                            Toast.LENGTH_SHORT
+                        ).show()
                     } else {
                         Util.showNetworkErrorSnackbar(recyclerView) { refreshLayout.autoRefresh() }
                     }
                 }
-
-                override fun onResponse(
-                    call: Call<ThreadContentBean>,
-                    response: Response<ThreadContentBean>
-                ) {
-                    val threadContentBean = response.body()!!
-                    dataBean = threadContentBean
-                    page = Integer.valueOf(threadContentBean.page?.currentPage!!)
-                    totalPage = Integer.valueOf(threadContentBean.page.totalPage!!)
-                    refresh(pid)
-                }
-            })
+        }
     }
 
     private fun loadFirstData() {

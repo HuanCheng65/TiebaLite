@@ -7,6 +7,7 @@ import com.huanchengfly.tieba.post.api.Param
 import com.huanchengfly.tieba.post.api.interceptors.SortAndSignInterceptor
 import com.huanchengfly.tieba.post.api.models.OAID
 import com.huanchengfly.tieba.post.api.retrofit.adapter.DeferredCallAdapterFactory
+import com.huanchengfly.tieba.post.api.retrofit.adapter.FlowCallAdapterFactory
 import com.huanchengfly.tieba.post.api.retrofit.converter.gson.GsonConverterFactory
 import com.huanchengfly.tieba.post.api.retrofit.interceptors.*
 import com.huanchengfly.tieba.post.api.retrofit.interfaces.MiniTiebaApi
@@ -124,7 +125,8 @@ object RetrofitTiebaApi {
         vararg interceptors: Interceptor
     ) = Retrofit.Builder()
         .baseUrl(baseUrl)
-        .addCallAdapterFactory(DeferredCallAdapterFactory.invoke())
+        .addCallAdapterFactory(DeferredCallAdapterFactory())
+        .addCallAdapterFactory(FlowCallAdapterFactory.create())
         .addConverterFactory(NullOnEmptyConverterFactory())
         .addConverterFactory(gsonConverterFactory)
         .addConverterFactory(ProtoConverterFactory.create())

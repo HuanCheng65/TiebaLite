@@ -7,6 +7,7 @@ import com.huanchengfly.tieba.post.api.models.web.*
 import com.huanchengfly.tieba.post.api.retrofit.ApiResult
 import com.huanchengfly.tieba.post.models.MyInfoBean
 import kotlinx.coroutines.Deferred
+import kotlinx.coroutines.flow.Flow
 import retrofit2.Call
 import retrofit2.http.*
 
@@ -130,6 +131,14 @@ interface WebTiebaApi {
     fun myInfoAsync(
         @retrofit2.http.Header("cookie") cookie: String
     ): Deferred<ApiResult<MyInfoBean>>
+
+    @Headers(
+        "${Header.ADD_COOKIE}: ${Header.ADD_COOKIE_FALSE}"
+    )
+    @GET("/mo/q/newmoindex?need_user=1")
+    fun myInfoFlow(
+        @retrofit2.http.Header("cookie") cookie: String
+    ): Flow<MyInfoBean>
 
 
     @GET("/mo/q/search/forum")

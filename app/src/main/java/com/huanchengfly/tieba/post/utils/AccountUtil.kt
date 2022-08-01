@@ -19,6 +19,8 @@ import com.huanchengfly.tieba.post.models.database.Account
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.async
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 import org.litepal.LitePal.findAll
 import org.litepal.LitePal.where
 import retrofit2.Call
@@ -102,6 +104,27 @@ object AccountUtil {
         return false
     }
 
+    fun updateUserInfoFlow(
+        bduss: String
+    ): Flow<MyInfoBean> {
+        return TiebaApi.getInstance()
+            .myInfoFlow(getBdussCookie(bduss))
+            .map {
+                if (!it.data.isLogin()) {
+                    throw TiebaLocalException(Error.ERROR_LOGGED_IN_EXPIRED, "登录已过期")
+                }
+                val userId = it.data.getUid().toString()
+                Account().setBduss(bduss)
+                    .setPortrait(it.data.getAvatarUrl())
+                    .setUid(userId)
+                    .setTbs(it.data.getItbTbs())
+                    .setName(it.data.getName())
+                    .setNameShow(it.data.getShowName())
+                    .saveOrUpdate("uid = ? OR bduss = ?", userId, bduss)
+                it
+            }
+    }
+
     suspend fun updateUserInfoAsync(
         coroutineScope: CoroutineScope,
         bduss: String
@@ -124,8 +147,7 @@ object AccountUtil {
                 Account().setBduss(bduss)
                     .setPortrait(it.data.getAvatarUrl())
                     .setUid(userId)
-                    .setTbs(it.data.getTbs())
-                    .setItbTbs(it.data.getItbTbs())
+                    .setTbs(it.data.getItbTbs())
                     .setName(it.data.getName())
                     .setNameShow(it.data.getShowName())
                     .saveOrUpdate("uid = ? OR bduss = ?", userId, bduss)
@@ -151,8 +173,7 @@ object AccountUtil {
                 Account().setBduss(bduss)
                     .setPortrait(myInfoBean.data.getAvatarUrl())
                     .setUid(userId)
-                    .setTbs(myInfoBean.data.getTbs())
-                    .setItbTbs(myInfoBean.data.getItbTbs())
+                    .setTbs(myInfoBean.data.getItbTbs())
                     .setName(myInfoBean.data.getName())
                     .setNameShow(myInfoBean.data.getShowName())
                     .saveOrUpdate("uid = ? OR bduss = ?", userId, bduss)

@@ -17,26 +17,31 @@ import androidx.viewpager.widget.ViewPager
 import butterknife.BindView
 import butterknife.OnClick
 import com.google.android.material.appbar.AppBarLayout
-import com.google.android.material.appbar.AppBarLayout.OnOffsetChangedListener
 import com.google.android.material.appbar.CollapsingToolbarLayout
 import com.google.android.material.tabs.TabLayout
 import com.huanchengfly.tieba.post.R
 import com.huanchengfly.tieba.post.adapters.FragmentTabViewPagerAdapter
-import com.huanchengfly.tieba.post.api.TiebaApi.getInstance
-import com.huanchengfly.tieba.post.api.models.CommonResponse
+import com.huanchengfly.tieba.post.api.TiebaApi
 import com.huanchengfly.tieba.post.api.models.ProfileBean
+import com.huanchengfly.tieba.post.api.retrofit.exception.getErrorMessage
 import com.huanchengfly.tieba.post.fragments.UserLikeForumFragment
 import com.huanchengfly.tieba.post.fragments.UserPostFragment
 import com.huanchengfly.tieba.post.goToActivity
 import com.huanchengfly.tieba.post.models.PhotoViewBean
 import com.huanchengfly.tieba.post.models.database.Block
 import com.huanchengfly.tieba.post.plugins.PluginManager
+import com.huanchengfly.tieba.post.toastShort
 import com.huanchengfly.tieba.post.utils.AccountUtil
 import com.huanchengfly.tieba.post.utils.ImageUtil
 import com.huanchengfly.tieba.post.utils.StatusBarUtil
 import com.huanchengfly.tieba.post.utils.ThemeUtil
 import com.huanchengfly.tieba.post.widgets.theme.TintMaterialButton
 import com.huanchengfly.tieba.post.widgets.theme.TintToolbar
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -117,7 +122,7 @@ class UserActivity : BaseActivity() {
             ImageUtil.load(avatarView, ImageUtil.LOAD_TYPE_ALWAYS_ROUND, avatar)
             ImageUtil.initImageView(avatarView, PhotoViewBean(avatar))
         }
-        appbar.addOnOffsetChangedListener(OnOffsetChangedListener { appBarLayout: AppBarLayout, verticalOffset: Int ->
+        appbar.addOnOffsetChangedListener { appBarLayout: AppBarLayout, verticalOffset: Int ->
             val percent = abs(verticalOffset * 1.0f) / appBarLayout.totalScrollRange
             headerView.alpha = 1f - percent
             headerMaskView.alpha = percent
@@ -126,38 +131,43 @@ class UserActivity : BaseActivity() {
             } else {
                 toolbar.title = null
             }
-        })
+        }
         viewPager.adapter = adapter
         viewPager.offscreenPageLimit = 3
         tabLayout.setupWithViewPager(viewPager)
         setSupportActionBar(toolbar)
         val actionBar = supportActionBar
         actionBar?.setDisplayHomeAsUpEnabled(true)
-        getInstance().profile(uid!!).enqueue(object : Callback<ProfileBean?> {
-            override fun onResponse(call: Call<ProfileBean?>, response: Response<ProfileBean?>) {
-                val data = response.body()
-                actionBtn.visibility = View.VISIBLE
-                loadingView.visibility = View.GONE
-                profileBean = data
-                refreshHeader()
-                adapter.clear()
-                adapter.addFragment(
-                    UserPostFragment.newInstance(uid, true),
-                    "贴子 " + data!!.user!!.threadNum
-                )
-                adapter.addFragment(
-                    UserPostFragment.newInstance(uid, false),
-                    "回复 " + data.user!!.repostNum
-                )
-                adapter.addFragment(
-                    UserLikeForumFragment.newInstance(uid),
-                    "关注吧 " + data.user.myLikeNum
-                )
-                viewPager.setCurrentItem(tab, false)
-            }
+        TiebaApi.getInstance()
+            .profile(uid!!)
+            .enqueue(object : Callback<ProfileBean?> {
+                override fun onResponse(
+                    call: Call<ProfileBean?>,
+                    response: Response<ProfileBean?>
+                ) {
+                    val data = response.body()
+                    actionBtn.visibility = View.VISIBLE
+                    loadingView.visibility = View.GONE
+                    profileBean = data
+                    refreshHeader()
+                    adapter.clear()
+                    adapter.addFragment(
+                        UserPostFragment.newInstance(uid, true),
+                        "贴子 " + data!!.user!!.threadNum
+                    )
+                    adapter.addFragment(
+                        UserPostFragment.newInstance(uid, false),
+                        "回复 " + data.user!!.repostNum
+                    )
+                    adapter.addFragment(
+                        UserLikeForumFragment.newInstance(uid),
+                        "关注吧 " + data.user.myLikeNum
+                    )
+                    viewPager.setCurrentItem(tab, false)
+                }
 
-            override fun onFailure(call: Call<ProfileBean?>, t: Throwable) {}
-        })
+                override fun onFailure(call: Call<ProfileBean?>, t: Throwable) {}
+            })
         listOf(
             followStatTv,
             fansStatTv
@@ -256,43 +266,41 @@ class UserActivity : BaseActivity() {
             return
         }
         if ("1" == profileBean!!.user!!.hasConcerned) {
-            getInstance().unfollow(
-                profileBean!!.user!!.portrait!!,
-                AccountUtil.getLoginInfo(this)!!.tbs
-            ).enqueue(object : Callback<CommonResponse?> {
-                override fun onResponse(
-                    call: Call<CommonResponse?>,
-                    response: Response<CommonResponse?>
-                ) {
-                    val data = response.body()
-                    Toast.makeText(this@UserActivity, data!!.errorMsg, Toast.LENGTH_SHORT).show()
-                    profileBean!!.user!!.setHasConcerned("0")
-                    refreshHeader()
-                }
-
-                override fun onFailure(call: Call<CommonResponse?>, t: Throwable) {
-                    Toast.makeText(this@UserActivity, t.message, Toast.LENGTH_SHORT).show()
-                }
-            })
+            MainScope().launch {
+                TiebaApi.getInstance()
+                    .unfollowFlow(
+                        profileBean!!.user!!.portrait!!,
+                        AccountUtil.getLoginInfo(this@UserActivity)!!.tbs
+                    )
+                    .flowOn(Dispatchers.IO)
+                    .catch { e ->
+                        toastShort(e.getErrorMessage())
+                    }
+                    .collect {
+                        //toastShort(R.string.toast_success)
+                        profileBean!!.user!!.setHasConcerned("0")
+                        refreshHeader()
+                    }
+            }
         } else {
-            getInstance().follow(
-                profileBean!!.user!!.portrait!!,
-                AccountUtil.getLoginInfo(this)!!.tbs
-            ).enqueue(object : Callback<CommonResponse?> {
-                override fun onResponse(
-                    call: Call<CommonResponse?>,
-                    response: Response<CommonResponse?>
-                ) {
-                    val data = response.body()
-                    Toast.makeText(this@UserActivity, data!!.errorMsg, Toast.LENGTH_SHORT).show()
-                    profileBean!!.user!!.setHasConcerned("1")
-                    refreshHeader()
-                }
-
-                override fun onFailure(call: Call<CommonResponse?>, t: Throwable) {
-                    Toast.makeText(this@UserActivity, t.message, Toast.LENGTH_SHORT).show()
-                }
-            })
+            MainScope().launch {
+                TiebaApi.getInstance()
+                    .followFlow(
+                        profileBean!!.user!!.portrait!!,
+                        AccountUtil.getLoginInfo(this@UserActivity)!!.tbs
+                    )
+                    .flowOn(Dispatchers.IO)
+                    .catch { e ->
+                        toastShort(e.getErrorMessage())
+                    }
+                    .collect {
+                        if ("1" == it.info.isToast) {
+                            toastShort(it.info.toastText)
+                        }
+                        profileBean!!.user!!.setHasConcerned("1")
+                        refreshHeader()
+                    }
+            }
         }
     }
 

@@ -13,6 +13,7 @@ import com.huanchengfly.tieba.post.models.DislikeBean
 import com.huanchengfly.tieba.post.models.MyInfoBean
 import com.huanchengfly.tieba.post.models.PhotoInfoBean
 import kotlinx.coroutines.Deferred
+import kotlinx.coroutines.flow.Flow
 import retrofit2.Call
 
 interface ITiebaApi {
@@ -77,6 +78,13 @@ interface ITiebaApi {
      * **需登录**
      */
     fun forumRecommendAsync(): Deferred<ApiResult<ForumRecommend>>
+
+    /**
+     * 关注吧列表
+     *
+     * **需登录**
+     */
+    fun forumRecommendFlow(): Flow<ForumRecommend>
 
     /**
      * 吧页面
@@ -458,6 +466,36 @@ interface ITiebaApi {
     ): Call<ThreadContentBean>
 
     /**
+     * 贴页面
+     *
+     * @param threadId 贴 ID
+     * @param page 分页页码（从 1 开始）
+     * @param seeLz 是否只看楼主
+     * @param reverse 是否逆序
+     */
+    fun threadContentAsync(
+        threadId: String,
+        page: Int = 1,
+        seeLz: Boolean = false,
+        reverse: Boolean = false
+    ): Deferred<ApiResult<ThreadContentBean>>
+
+    /**
+     * 贴页面
+     *
+     * @param threadId 贴 ID
+     * @param postId 回复 ID
+     * @param seeLz 是否只看楼主
+     * @param reverse 是否逆序
+     */
+    fun threadContentAsync(
+        threadId: String,
+        postId: String?,
+        seeLz: Boolean = false,
+        reverse: Boolean = false
+    ): Deferred<ApiResult<ThreadContentBean>>
+
+    /**
      * 推荐“不感兴趣”
      *
      * **需登录**
@@ -496,6 +534,32 @@ interface ITiebaApi {
         tbs: String
     ): Call<CommonResponse>
 
+    /**
+     * 关注用户（客户端接口）
+     *
+     * **需登录**
+     *
+     * @param portrait 头像
+     * @param tbs tbs
+     */
+    fun followFlow(
+        portrait: String,
+        tbs: String
+    ): Flow<FollowBean>
+
+    /**
+     * 取关用户（客户端接口）
+     *
+     * **需登录**
+     *
+     * @param portrait 头像
+     * @param tbs tbs
+     */
+    fun unfollowFlow(
+        portrait: String,
+        tbs: String
+    ): Flow<CommonResponse>
+
     fun hotMessageList(): Call<HotMessageListBean>
 
     /**
@@ -515,6 +579,15 @@ interface ITiebaApi {
     fun myInfoAsync(
         cookie: String
     ): Deferred<ApiResult<MyInfoBean>>
+
+    /**
+     * 登录用户信息
+     *
+     * @param cookie 登录 Cookie 信息
+     */
+    fun myInfoFlow(
+        cookie: String
+    ): Flow<MyInfoBean>
 
     /**
      * 搜索吧

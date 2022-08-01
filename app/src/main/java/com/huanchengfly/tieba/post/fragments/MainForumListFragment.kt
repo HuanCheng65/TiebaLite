@@ -373,7 +373,7 @@ class MainForumListFragment : BaseFragment(), Refreshable, Toolbar.OnMenuItemCli
                             TiebaApi.getInstance().unlikeForum(
                                 item.forumId,
                                 item.forumName,
-                                AccountUtil.getLoginInfo(attachContext)!!.itbTbs
+                                AccountUtil.getLoginInfo(attachContext)!!.tbs
                             ).enqueue(object : Callback<CommonResponse> {
                                 override fun onResponse(
                                     call: Call<CommonResponse>,
