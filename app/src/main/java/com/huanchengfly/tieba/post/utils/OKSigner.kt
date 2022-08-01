@@ -3,13 +3,17 @@ package com.huanchengfly.tieba.post.utils
 import android.content.Context
 import com.huanchengfly.tieba.post.api.TiebaApi
 import com.huanchengfly.tieba.post.api.models.SignResultBean
-import com.huanchengfly.tieba.post.api.retrofit.*
+import com.huanchengfly.tieba.post.api.retrofit.ApiResult
+import com.huanchengfly.tieba.post.api.retrofit.doIfFailure
+import com.huanchengfly.tieba.post.api.retrofit.doIfSuccess
 import com.huanchengfly.tieba.post.api.retrofit.exception.getErrorCode
 import com.huanchengfly.tieba.post.api.retrofit.exception.getErrorMessage
 import com.huanchengfly.tieba.post.models.SignDataBean
 import com.huanchengfly.tieba.post.models.database.Account
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.*
 import java.lang.ref.WeakReference
 import java.util.concurrent.ThreadLocalRandom
 import kotlin.properties.Delegates
@@ -24,8 +28,6 @@ abstract class IOKSigner(
         get() = contextWeakReference.get()!!
 
     abstract suspend fun start(): Boolean
-
-    abstract suspend fun startSync(): Boolean
 
     suspend fun sign(signDataBean: SignDataBean): ApiResult<SignResultBean> {
         return TiebaApi.getInstance()
@@ -108,102 +110,70 @@ class SingleAccountSigner(
         mProgressListener = listener
     }
 
-    override suspend fun startSync(): Boolean {
-        var result = false
-        signData.clear()
-        var userName: String by Delegates.notNull()
-        var tbs: String by Delegates.notNull()
-        AccountUtil.updateUserInfoAsync(coroutineScope, account.bduss)
-            .await()
-            .fetchIfSuccess {
-                userName = it.data.name
-                tbs = it.data.itbTbs
-                TiebaApi.getInstance().forumRecommendAsync().getData()
-            }
-            .doIfSuccess { forumRecommend ->
-                signData.addAll(forumRecommend.likeForum.filter { it.isSign != "1" }
-                    .map { SignDataBean(it.forumName, userName, tbs) })
-                totalCount = signData.size
-                mProgressListener?.onStart(totalCount)
-                if (signData.isNotEmpty()) {
-                    result = sign(0)
-                } else {
-                    mProgressListener?.onFinish(true, 0, 0)
-                }
-            }
-            .doIfFailure {
-                lastFailure = it
-                mProgressListener?.onFailure(
-                    0,
-                    0,
-                    it.getErrorCode(),
-                    it.getErrorMessage()
-                )
-                throw it
-            }
-        return result
-    }
-
+    @OptIn(FlowPreview::class)
     override suspend fun start(): Boolean {
         var result = false
         signData.clear()
         var userName: String by Delegates.notNull()
         var tbs: String by Delegates.notNull()
-        AccountUtil.updateUserInfoAsync(coroutineScope, account.bduss)
-            .await()
-            .fetchIfSuccess {
-                userName = it.data.name
-                tbs = it.data.itbTbs
-                TiebaApi.getInstance().forumRecommendAsync().getData()
+        AccountUtil.updateUserInfoFlow(account.bduss)
+            .flatMapConcat { myInfoBean ->
+                userName = myInfoBean.data.name
+                tbs = myInfoBean.data.itbTbs
+                TiebaApi.getInstance().forumRecommendFlow()
             }
-            .doIfSuccess { forumRecommend ->
+            .flatMapConcat { forumRecommend ->
                 signData.addAll(forumRecommend.likeForum.filter { it.isSign != "1" }
                     .map { SignDataBean(it.forumName, userName, tbs) })
                 totalCount = signData.size
-                mProgressListener?.onStart(totalCount)
-                if (signData.isNotEmpty()) {
-                    result = sign(0)
-                } else {
-                    mProgressListener?.onFinish(true, 0, 0)
-                }
+                signData
+                    .asFlow()
+                    .onEach {
+                        position = signData.indexOf(it)
+                        mProgressListener?.onProgressStart(it, position, signData.size)
+                    }
+                    .onEmpty {
+                        mProgressListener?.onFinish(true, 0, 0)
+                    }
+                    .onStart {
+                        mProgressListener?.onStart(totalCount)
+                    }
+                    .map { data -> sign(data) }
             }
-            .doIfFailure {
-                lastFailure = it
-                mProgressListener?.onFailure(
-                    0,
-                    0,
-                    it.getErrorCode(),
-                    it.getErrorMessage()
+            .catch { e -> emit(ApiResult.Failure(e)) }
+            .onCompletion {
+                mProgressListener?.onFinish(
+                    successCount == totalCount,
+                    successCount,
+                    totalCount
                 )
+            }
+            .collect {
+                it.doIfSuccess { res ->
+                    result = true
+                    successCount += 1
+                    mProgressListener?.onProgressFinish(
+                        signData[position],
+                        res,
+                        position,
+                        totalCount
+                    )
+                }
+                it.doIfFailure { e ->
+                    result = false
+                    lastFailure = e
+                    mProgressListener?.onFailure(
+                        position,
+                        totalCount,
+                        e.getErrorCode(),
+                        e.getErrorMessage()
+                    )
+                }
+                delay(getSignDelay())
             }
         return result
     }
 
-    private suspend fun sign(position: Int): Boolean {
-        this.position = position
-        val data = signData[position]
-        mProgressListener?.onProgressStart(data, position, signData.size)
-        val result = sign(data)
-            .doIfSuccess {
-                successCount += 1
-                mProgressListener?.onProgressFinish(data, it, position, totalCount)
-            }
-            .doIfFailure {
-                mProgressListener?.onFailure(
-                    position,
-                    totalCount,
-                    it.getErrorCode(),
-                    it.getErrorMessage()
-                )
-            }
-        return if (position < signData.size - 1) {
-            delay(getSignDelay())
-            sign(position + 1)
-        } else {
-            mProgressListener?.onFinish(successCount == totalCount, successCount, totalCount)
-            result.isSuccessful
-        }
-    }
 }
 
 interface ProgressListener {

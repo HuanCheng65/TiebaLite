@@ -35,6 +35,7 @@ class OKSignService : IntentService(TAG), CoroutineScope, ProgressListener {
     private val manager: NotificationManager by lazy { getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager }
     private var position = 0
 
+    @Deprecated("Deprecated in Java")
     override fun onCreate() {
         super.onCreate()
         updateNotification(
@@ -92,6 +93,7 @@ class OKSignService : IntentService(TAG), CoroutineScope, ProgressListener {
         manager.notify(1, notification)
     }
 
+    @Deprecated("Deprecated in Java")
     override fun onHandleIntent(intent: Intent?) {
         if (ACTION_START_SIGN == intent?.action) {
             val loginInfo = AccountUtil.getLoginInfo(this@OKSignService)
@@ -120,6 +122,7 @@ class OKSignService : IntentService(TAG), CoroutineScope, ProgressListener {
         }
     }
 
+    @Deprecated("Deprecated in Java")
     override fun onDestroy() {
         super.onDestroy()
         coroutineContext.cancel()
@@ -127,7 +130,11 @@ class OKSignService : IntentService(TAG), CoroutineScope, ProgressListener {
 
     override fun onStart(total: Int) {
         updateNotification(getString(R.string.title_start_sign), null)
-        Toast.makeText(this@OKSignService, R.string.toast_oksign_start, Toast.LENGTH_SHORT).show()
+        if (total > 0) Toast.makeText(
+            this@OKSignService,
+            R.string.toast_oksign_start,
+            Toast.LENGTH_SHORT
+        ).show()
     }
 
     override fun onProgressStart(signDataBean: SignDataBean, current: Int, total: Int) {
@@ -183,12 +190,16 @@ class OKSignService : IntentService(TAG), CoroutineScope, ProgressListener {
     }
 
     override fun onFailure(current: Int, total: Int, errorCode: Int, errorMsg: String) {
-        updateNotification(
-            getString(R.string.title_oksign_fail),
-            errorMsg,
-            Intent(this, LoginActivity::class.java)
-        )
-        stopForeground(true)
+        if (total == 0) {
+            updateNotification(
+                getString(R.string.title_oksign_fail),
+                errorMsg,
+                Intent(this, LoginActivity::class.java)
+            )
+            stopForeground(true)
+        } else {
+            updateNotification(getString(R.string.title_oksign_fail), errorMsg)
+        }
     }
 
     companion object {
