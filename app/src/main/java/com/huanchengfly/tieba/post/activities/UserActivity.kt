@@ -259,7 +259,7 @@ class UserActivity : BaseActivity() {
     @OnClick(R.id.user_center_action_btn)
     fun onActionBtnClick(view: View?) {
         if (TextUtils.equals(profileBean!!.user!!.id, AccountUtil.getUid(this))) {
-            startActivity(WebViewActivity.newIntent(this, getString(R.string.url_edit_info)))
+            goToActivity<EditProfileActivity>()
             return
         }
         if ("1" == profileBean!!.user!!.hasConcerned) {

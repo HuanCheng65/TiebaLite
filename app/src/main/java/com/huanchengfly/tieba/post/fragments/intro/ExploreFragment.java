@@ -7,7 +7,7 @@ import android.view.ViewGroup;
 import androidx.annotation.Nullable;
 
 import com.huanchengfly.tieba.post.R;
-import com.huanchengfly.tieba.post.activities.SettingsActivity;
+import com.huanchengfly.tieba.post.activities.PreferencesActivity;
 import com.huanchengfly.tieba.post.ui.intro.fragments.BaseIntroFragment;
 import com.huanchengfly.tieba.post.ui.theme.utils.ThemeUtils;
 
@@ -59,7 +59,7 @@ public class ExploreFragment extends BaseIntroFragment implements View.OnClickLi
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.explore_auto_sign:
-                startActivity(new Intent(getAttachContext(), SettingsActivity.class).putExtra("scroll_to_preference", "auto_sign"));
+                startActivity(new Intent(getAttachContext(), PreferencesActivity.class).putExtra("scroll_to_preference", "auto_sign"));
                 break;
         }
     }

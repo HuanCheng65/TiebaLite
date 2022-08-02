@@ -7,10 +7,10 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.FragmentManager;
 
 import com.huanchengfly.tieba.post.R;
-import com.huanchengfly.tieba.post.fragments.SettingsFragment;
+import com.huanchengfly.tieba.post.fragments.PreferencesFragment;
 import com.huanchengfly.tieba.post.utils.ThemeUtil;
 
-public class SettingsActivity extends BaseActivity {
+public class PreferencesActivity extends BaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,12 +27,12 @@ public class SettingsActivity extends BaseActivity {
         }
         String scrollToPreference = getIntent().getStringExtra("scroll_to_preference");
         FragmentManager fragmentManager = getSupportFragmentManager();
-        SettingsFragment settingsFragment = new SettingsFragment();
+        PreferencesFragment preferencesFragment = new PreferencesFragment();
         fragmentManager.beginTransaction()
-                .add(R.id.main, settingsFragment)
+                .add(R.id.main, preferencesFragment)
                 .commit();
         if (scrollToPreference != null) {
-            settingsFragment.scrollToPreference(scrollToPreference);
+            preferencesFragment.scrollToPreference(scrollToPreference);
         }
     }
 }
