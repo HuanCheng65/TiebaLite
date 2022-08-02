@@ -25,7 +25,7 @@ object AddCookieInterceptor : Interceptor {
         if (addCookie) {
             headers = headers.newBuilder()
                 .removeAll(Header.COOKIE)
-                .add(Header.COOKIE, AccountUtil.getCookie(BaseApplication.instance) ?: "")
+                .add(Header.COOKIE, AccountUtil.getCookie(BaseApplication.INSTANCE) ?: "")
                 .build()
         }
 

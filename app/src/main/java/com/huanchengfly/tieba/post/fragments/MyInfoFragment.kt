@@ -103,6 +103,9 @@ class MyInfoFragment : BaseFragment(), View.OnClickListener, CompoundButton.OnCh
         }
         if (profileBean == null) {
             val account = AccountUtil.getLoginInfo(attachContext)!!
+            followsTextView.text = account.concernNum ?: "0"
+            fansTextView.text = account.fansNum ?: "0"
+            threadsTextView.text = account.postNum ?: "0"
             userNameTextView.text = account.nameShow
             contentTextView.text =
                 account.intro ?: attachContext.resources.getString(R.string.tip_no_intro)
@@ -182,6 +185,9 @@ class MyInfoFragment : BaseFragment(), View.OnClickListener, CompoundButton.OnCh
         AccountUtil.getLoginInfo(attachContext)?.apply {
             intro = profileBean.user?.intro
             sex = profileBean.user?.intro
+            fansNum = profileBean.user?.fansNum
+            postNum = profileBean.user?.postNum
+            concernNum = profileBean.user?.concernNum
             saveOrUpdate("uid = ?", uid)
         }
     }
@@ -323,7 +329,7 @@ class MyInfoFragment : BaseFragment(), View.OnClickListener, CompoundButton.OnCh
                 )
             }
             R.id.my_info_settings -> {
-                goToActivity<SettingsActivity>()
+                goToActivity<PreferencesActivity>()
             }
             R.id.my_info_about -> {
                 goToActivity<AboutActivity>()

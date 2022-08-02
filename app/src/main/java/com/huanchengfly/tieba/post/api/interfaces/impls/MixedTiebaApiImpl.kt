@@ -96,7 +96,7 @@ object MixedTiebaApiImpl : ITiebaApi {
     override fun userLikeForum(
         uid: String, page: Int
     ): Call<UserLikeForumBean> {
-        val myUid = AccountUtil.getUid(BaseApplication.instance)
+        val myUid = AccountUtil.getUid(BaseApplication.INSTANCE)
         return RetrofitTiebaApi.MINI_TIEBA_API.userLikeForum(
             page = page,
             uid = myUid,
@@ -219,7 +219,7 @@ object MixedTiebaApiImpl : ITiebaApi {
         RetrofitTiebaApi.NEW_TIEBA_API.threadStore(
             pageSize,
             pageSize * page,
-            AccountUtil.getUid(BaseApplication.instance)
+            AccountUtil.getUid(BaseApplication.INSTANCE)
         )
 
     override fun removeStore(threadId: String, tbs: String): Call<CommonResponse> =
@@ -369,7 +369,7 @@ object MixedTiebaApiImpl : ITiebaApi {
             base64 = ImageUtil.imageToBase64(photoInfoBean.file)
         } else {
             try {
-                BaseApplication.instance.contentResolver.openAssetFileDescriptor(
+                BaseApplication.INSTANCE.contentResolver.openAssetFileDescriptor(
                     photoInfoBean.fileUri,
                     "r"
                 )?.use { afd ->

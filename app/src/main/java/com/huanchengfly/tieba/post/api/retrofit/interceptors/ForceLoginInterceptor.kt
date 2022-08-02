@@ -23,7 +23,7 @@ object ForceLoginInterceptor : Interceptor {
             headers = headers.newBuilder().removeAll(Header.FORCE_LOGIN).build()
         }
 
-        if (forceLogin && !AccountUtil.isLoggedIn(BaseApplication.instance)) {
+        if (forceLogin && !AccountUtil.isLoggedIn(BaseApplication.INSTANCE)) {
             throw TiebaLocalException(ERROR_NOT_LOGGED_IN, "Not logged in.")
         }
 

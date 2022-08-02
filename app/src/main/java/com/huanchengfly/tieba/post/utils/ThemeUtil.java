@@ -297,7 +297,7 @@ public class ThemeUtil {
         if (view instanceof BackgroundTintable) {
             ((BackgroundTintable) view).setBackgroundTintResId(0);
         }
-        String backgroundFilePath = SharedPreferencesUtil.get(BaseApplication.getInstance(), SharedPreferencesUtil.SP_SETTINGS)
+        String backgroundFilePath = SharedPreferencesUtil.get(BaseApplication.getINSTANCE(), SharedPreferencesUtil.SP_SETTINGS)
                 .getString(SP_TRANSLUCENT_THEME_BACKGROUND_PATH, null);
         if (backgroundFilePath == null) {
             view.setBackgroundColor(Color.BLACK);
@@ -319,7 +319,7 @@ public class ThemeUtil {
         if (transformations != null && transformations.length > 0) {
             bgOptions = bgOptions.transform(transformations);
         }
-        Glide.with(BaseApplication.getInstance())
+        Glide.with(BaseApplication.getINSTANCE())
                 .asDrawable()
                 .load(new File(backgroundFilePath))
                 .apply(bgOptions)

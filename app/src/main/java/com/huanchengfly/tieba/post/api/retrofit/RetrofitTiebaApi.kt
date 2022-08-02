@@ -33,13 +33,13 @@ object RetrofitTiebaApi {
     private val connectionPool = ConnectionPool()
 
     private val defaultCommonParamInterceptor = CommonParamInterceptor(
-        Param.BDUSS to { AccountUtil.getBduss(BaseApplication.instance) },
+        Param.BDUSS to { AccountUtil.getBduss(BaseApplication.INSTANCE) },
         Param.CLIENT_ID to { clientId },
         Param.CLIENT_TYPE to { "2" },
         Param.OS_VERSION to { Build.VERSION.SDK_INT.toString() },
         Param.MODEL to { Build.MODEL },
         Param.NET_TYPE to { "1" },
-        Param.PHONE_IMEI to { MobileInfoUtil.getIMEI(BaseApplication.instance) },
+        Param.PHONE_IMEI to { MobileInfoUtil.getIMEI(BaseApplication.INSTANCE) },
         Param.TIMESTAMP to { System.currentTimeMillis().toString() }
     )
 

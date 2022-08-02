@@ -44,6 +44,7 @@
     <application
         android:name=".BaseApplication"
         android:allowBackup="true"
+        android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_descriptor"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -52,7 +53,6 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
-        android:dataExtractionRules="@xml/data_extraction_rules"
         tools:ignore="UnusedAttribute">
         <activity
             android:name=".activities.AppFontSizeActivity"
@@ -103,9 +103,9 @@
         <activity
             android:name=".activities.MainActivity"
             android:configChanges="screenSize|screenLayout|orientation|smallestScreenSize|keyboardHidden"
+            android:exported="true"
             android:resizeableActivity="true"
             android:theme="@style/AppTheme.Splash"
-            android:exported="true"
             android:windowSoftInputMode="adjustResize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -200,13 +200,13 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".activities.SettingsActivity"
+            android:name=".activities.PreferencesActivity"
             android:configChanges="screenSize|screenLayout|orientation|smallestScreenSize|keyboardHidden"
             android:windowSoftInputMode="adjustPan" />
 
         <service
-            android:exported="true"
             android:name=".services.OKSignTileService"
+            android:exported="true"
             android:icon="@drawable/ic_oksign"
             android:label="@string/title_oksign"
             android:permission="android.permission.BIND_QUICK_SETTINGS_TILE">
@@ -278,6 +278,11 @@
             android:configChanges="screenSize|screenLayout|orientation|smallestScreenSize|keyboardHidden"
             android:label="@string/title_theme_settings"
             android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".activities.EditProfileActivity"
+            android:configChanges="screenSize|screenLayout|orientation|smallestScreenSize|keyboardHidden"
+            android:label="@string/title_activity_edit_profile"
+            android:windowSoftInputMode="adjustResize" />
 
         <receiver android:name=".receivers.AutoSignAlarm" />
 
@@ -290,7 +295,6 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/file_paths_share_img" />
         </provider>
-
         <provider
             android:name="androidx.startup.InitializationProvider"
             android:authorities="com.huanchengfly.tieba.post.androidx-startup"

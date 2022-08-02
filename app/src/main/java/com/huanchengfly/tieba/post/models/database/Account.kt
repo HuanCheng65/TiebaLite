@@ -13,6 +13,9 @@ data class Account(
     var nameShow: String? = null,
     var intro: String? = null,
     var sex: String? = null,
+    var fansNum: String? = null,
+    var postNum: String? = null,
+    var concernNum: String? = null,
 ) : LitePalSupport() {
     internal constructor() : this("", "", "", "", "", "", "")
 

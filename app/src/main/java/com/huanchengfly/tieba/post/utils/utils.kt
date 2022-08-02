@@ -87,7 +87,7 @@ fun getRadiusDrawable(
     return if (ripple)
         wrapRipple(
             Util.getColorByAttr(
-                BaseApplication.instance,
+                BaseApplication.INSTANCE,
                 R.attr.colorControlHighlight,
                 R.color.transparent
             ), drawable

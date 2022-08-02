@@ -20,7 +20,7 @@ public class UIDUtil {
 
     @SuppressLint("HardwareIds")
     public static String getAndroidId(String defaultValue) {
-        String androidId = Settings.Secure.getString(BaseApplication.getInstance().getContentResolver(), Settings.Secure.ANDROID_ID);
+        String androidId = Settings.Secure.getString(BaseApplication.getINSTANCE().getContentResolver(), Settings.Secure.ANDROID_ID);
         return androidId == null ? defaultValue : androidId;
     }
 
@@ -47,7 +47,7 @@ public class UIDUtil {
 
     public static String getCUID() {
         String androidId = getAndroidId();
-        String imei = MobileInfoUtil.getIMEI(BaseApplication.getInstance());
+        String imei = MobileInfoUtil.getIMEI(BaseApplication.getINSTANCE());
         if (TextUtils.isEmpty(imei)) {
             imei = "0";
         }
@@ -55,7 +55,7 @@ public class UIDUtil {
     }
 
     public static String getFinalCUID() {
-        String imei = MobileInfoUtil.getIMEI(BaseApplication.getInstance());
+        String imei = MobileInfoUtil.getIMEI(BaseApplication.getINSTANCE());
         if (TextUtils.isEmpty(imei)) {
             imei = "0";
         }
@@ -64,11 +64,11 @@ public class UIDUtil {
 
     @SuppressLint("ApplySharedPref")
     public static String getUUID() {
-        String uuid = SharedPreferencesUtil.get(BaseApplication.getInstance(), SharedPreferencesUtil.SP_APP_DATA)
+        String uuid = SharedPreferencesUtil.get(BaseApplication.getINSTANCE(), SharedPreferencesUtil.SP_APP_DATA)
                 .getString("uuid", null);
         if (uuid == null) {
             uuid = UUID.randomUUID().toString();
-            SharedPreferencesUtil.get(BaseApplication.getInstance(), SharedPreferencesUtil.SP_APP_DATA)
+            SharedPreferencesUtil.get(BaseApplication.getINSTANCE(), SharedPreferencesUtil.SP_APP_DATA)
                     .edit()
                     .putString("uuid", uuid)
                     .apply();

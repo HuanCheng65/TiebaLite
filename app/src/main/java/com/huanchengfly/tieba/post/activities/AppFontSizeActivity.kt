@@ -85,7 +85,7 @@ class AppFontSizeActivity : BaseActivity() {
         if (!finished && oldFontSize != appPreferences.fontScale) {
             finished = true
             toastShort(R.string.toast_after_change_will_restart)
-            BaseApplication.instance.removeAllActivity()
+            BaseApplication.INSTANCE.removeAllActivity()
             goToActivity<MainActivity>()
         }
         super.finish()

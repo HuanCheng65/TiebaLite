@@ -22,8 +22,8 @@ if (isPerVersion) {
 project.ext.set("archivesBaseName",  "${applicationVersionName}(${applicationVersionCode})".toString())
 
 android {
-    compileSdkVersion 31
-    buildToolsVersion '31.0.0'
+    compileSdkVersion 32
+    buildToolsVersion '32.0.0'
     defaultConfig {
         applicationId "com.huanchengfly.tieba.post"
         minSdkVersion 21
@@ -88,18 +88,16 @@ android {
 }
 
 dependencies {
-    def compose_version = '1.1.1'
+    def compose_version = '1.2.0'
 
-    // Integration with activities
-    implementation 'androidx.activity:activity-compose:1.5.0'
-    // Compose Material Design
+    implementation "androidx.compose.ui:ui:$compose_version"
+    implementation "androidx.compose.ui:ui-tooling-preview:$compose_version"
+    androidTestImplementation "androidx.compose.ui:ui-test-junit4:$compose_version"
+    implementation 'androidx.activity:activity-compose:1.5.1'
     implementation "androidx.compose.material:material:$compose_version"
-    // Animations
     implementation "androidx.compose.animation:animation:$compose_version"
-    // Tooling support (Previews, etc.)
     implementation "androidx.compose.ui:ui-tooling:$compose_version"
-    // When using a MDC theme
-    implementation "com.google.android.material:compose-theme-adapter:1.1.1"
+    implementation "com.google.android.material:compose-theme-adapter:1.1.14"
 
     implementation 'com.google.protobuf:protobuf-java:3.21.1'
 
@@ -118,6 +116,7 @@ dependencies {
 
     //兼容 Glide
     implementation "com.android.support:support-annotations:28.0.0"
+    debugImplementation "androidx.compose.ui:ui-test-manifest:$compose_version"
     kapt "com.android.support:support-annotations:28.0.0"
 
     //AndroidX

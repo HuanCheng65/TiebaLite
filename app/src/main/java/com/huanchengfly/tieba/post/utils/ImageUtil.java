@@ -570,7 +570,7 @@ public class ImageUtil {
 
     @ImageLoadSettings
     private static int getImageLoadSettings() {
-        return Integer.parseInt(SharedPreferencesUtil.get(BaseApplication.getInstance(), SharedPreferencesUtil.SP_SETTINGS).getString("image_load_type", String.valueOf(SETTINGS_SMART_ORIGIN)));
+        return Integer.parseInt(SharedPreferencesUtil.get(BaseApplication.getINSTANCE(), SharedPreferencesUtil.SP_SETTINGS).getString("image_load_type", String.valueOf(SETTINGS_SMART_ORIGIN)));
     }
 
     public static String imageToBase64(InputStream is) {

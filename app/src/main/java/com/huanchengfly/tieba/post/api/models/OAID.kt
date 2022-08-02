@@ -10,6 +10,6 @@ data class OAID(
     @SerializedName("sc")
     val statusCode: Int = 0,
     @SerializedName("sup")
-    val support: Int = if (DeviceID.supportedOAID(BaseApplication.instance)) 1 else 0,
+    val support: Int = if (DeviceID.supportedOAID(BaseApplication.INSTANCE)) 1 else 0,
     val tl: Int = 0
 )

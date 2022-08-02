@@ -76,7 +76,7 @@ class BaseApplication : Application(), IApp {
     }
 
     override fun onCreate() {
-        instance = this
+        INSTANCE = this
         super.onCreate()
         BigImageViewer.initialize(GlideImageLoader.with(this))
         DeviceIdentifier.register(this)
@@ -350,10 +350,10 @@ class BaseApplication : Application(), IApp {
         var translucentBackground: Drawable? = null
 
         private val packageName: String
-            get() = instance.packageName
+            get() = INSTANCE.packageName
 
         @JvmStatic
-        lateinit var instance: BaseApplication
+        lateinit var INSTANCE: BaseApplication
             private set
 
         @JvmStatic
@@ -367,7 +367,7 @@ class BaseApplication : Application(), IApp {
                 .getBoolean("first", true)
 
         private val nightMode: Int
-            get() = instance.resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
+            get() = INSTANCE.resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
     }
 
     object ThemeDelegate : ThemeSwitcher {

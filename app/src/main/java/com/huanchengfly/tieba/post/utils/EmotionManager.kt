@@ -123,7 +123,7 @@ object EmotionManager {
     }
 
     private fun getContext(): Context {
-        return contextRef.get() ?: BaseApplication.instance
+        return contextRef.get() ?: BaseApplication.INSTANCE
     }
 
     fun getEmotionDataCache(): EmotionCache {

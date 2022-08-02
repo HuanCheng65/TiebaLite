@@ -29,7 +29,7 @@ import butterknife.ButterKnife
 import cn.jzvd.Jzvd
 import com.gyf.immersionbar.ImmersionBar
 import com.huanchengfly.tieba.post.BaseApplication
-import com.huanchengfly.tieba.post.BaseApplication.Companion.instance
+import com.huanchengfly.tieba.post.BaseApplication.Companion.INSTANCE
 import com.huanchengfly.tieba.post.R
 import com.huanchengfly.tieba.post.ui.slideback.SlideBack
 import com.huanchengfly.tieba.post.ui.theme.interfaces.ExtraRefreshable
@@ -104,7 +104,7 @@ abstract class BaseActivity : AppCompatActivity(), ExtraRefreshable, CoroutineSc
             .attachToActivity(this)
         fixBackground()
         getDeviceDensity()
-        instance.addActivity(this)
+        INSTANCE.addActivity(this)
         ThemeUtil.setTheme(this)
         oldTheme = ThemeUtil.getTheme(this)
         if (isNeedImmersionBar) {
@@ -165,12 +165,12 @@ abstract class BaseActivity : AppCompatActivity(), ExtraRefreshable, CoroutineSc
 
     override fun onDestroy() {
         super.onDestroy()
-        instance.removeActivity(this)
+        INSTANCE.removeActivity(this)
         job.cancel()
     }
 
     fun exitApplication() {
-        instance.removeAllActivity()
+        INSTANCE.removeAllActivity()
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -219,7 +219,7 @@ abstract class BaseActivity : AppCompatActivity(), ExtraRefreshable, CoroutineSc
     open fun setTitle(newTitle: String?) {}
     open fun setSubTitle(newTitle: String?) {}
 
-    protected fun getDeviceDensity() {
+    private fun getDeviceDensity() {
         val metrics = DisplayMetrics()
         windowManager.defaultDisplay.getMetrics(metrics)
         val width = metrics.widthPixels

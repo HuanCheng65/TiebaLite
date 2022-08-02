@@ -20,7 +20,7 @@ public class SharedPreferencesUtil {
     public static final String SP_PLUGINS = "plugins";
 
     public static SharedPreferences get(@Preferences String name) {
-        return get(BaseApplication.getInstance(), name);
+        return get(BaseApplication.getINSTANCE(), name);
     }
 
     public static SharedPreferences get(Context context, @Preferences String name) {

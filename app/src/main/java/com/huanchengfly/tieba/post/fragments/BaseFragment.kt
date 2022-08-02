@@ -60,7 +60,7 @@ abstract class BaseFragment : Fragment(), BackHandledInterface, CoroutineScope {
                 ThemeUtils.getWrapperActivity(mContext)?.let { mContext = it }
             }
             if (mContext == null) {
-                mContext = BaseApplication.instance
+                mContext = BaseApplication.INSTANCE
             }
             return mContext!!
         }

@@ -31,10 +31,7 @@ import com.huanchengfly.tieba.post.models.PhotoViewBean
 import com.huanchengfly.tieba.post.models.database.Block
 import com.huanchengfly.tieba.post.plugins.PluginManager
 import com.huanchengfly.tieba.post.toastShort
-import com.huanchengfly.tieba.post.utils.AccountUtil
-import com.huanchengfly.tieba.post.utils.ImageUtil
-import com.huanchengfly.tieba.post.utils.StatusBarUtil
-import com.huanchengfly.tieba.post.utils.ThemeUtil
+import com.huanchengfly.tieba.post.utils.*
 import com.huanchengfly.tieba.post.widgets.theme.TintMaterialButton
 import com.huanchengfly.tieba.post.widgets.theme.TintToolbar
 import kotlinx.coroutines.Dispatchers
@@ -119,7 +116,7 @@ class UserActivity : BaseActivity() {
         actionBtn.visibility = View.GONE
         if (!TextUtils.isEmpty(avatar)) {
             loadingView.visibility = View.GONE
-            ImageUtil.load(avatarView, ImageUtil.LOAD_TYPE_ALWAYS_ROUND, avatar)
+            ImageUtil.load(avatarView, ImageUtil.LOAD_TYPE_AVATAR, avatar)
             ImageUtil.initImageView(avatarView, PhotoViewBean(avatar))
         }
         appbar.addOnOffsetChangedListener { appBarLayout: AppBarLayout, verticalOffset: Int ->
@@ -185,12 +182,12 @@ class UserActivity : BaseActivity() {
         if (avatarView.tag == null) {
             ImageUtil.load(
                 avatarView,
-                ImageUtil.LOAD_TYPE_ALWAYS_ROUND,
-                "http://tb.himg.baidu.com/sys/portrait/item/" + profileBean!!.user!!.portrait
+                ImageUtil.LOAD_TYPE_AVATAR,
+                StringUtil.getAvatarUrl(profileBean!!.user!!.portrait)
             )
             ImageUtil.initImageView(
                 avatarView,
-                PhotoViewBean("http://tb.himg.baidu.com/sys/portrait/item/" + profileBean!!.user!!.portrait)
+                PhotoViewBean(StringUtil.getAvatarUrl(profileBean!!.user!!.portrait))
             )
         }
         if (TextUtils.equals(AccountUtil.getUid(this), profileBean!!.user!!.id)) {
