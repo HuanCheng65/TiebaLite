@@ -2,30 +2,15 @@ package com.huanchengfly.tieba.post.utils
 
 import android.content.Context
 import android.content.Intent
-import android.util.Log
 import android.webkit.CookieManager
 import android.widget.Toast
 import com.huanchengfly.tieba.post.R
-import com.huanchengfly.tieba.post.api.Error
 import com.huanchengfly.tieba.post.api.TiebaApi
-import com.huanchengfly.tieba.post.api.interfaces.CommonCallback
-import com.huanchengfly.tieba.post.api.retrofit.ApiResult
-import com.huanchengfly.tieba.post.api.retrofit.doIfSuccess
-import com.huanchengfly.tieba.post.api.retrofit.exception.TiebaException
-import com.huanchengfly.tieba.post.api.retrofit.exception.TiebaLocalException
-import com.huanchengfly.tieba.post.api.retrofit.isSuccessful
-import com.huanchengfly.tieba.post.models.MyInfoBean
 import com.huanchengfly.tieba.post.models.database.Account
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Deferred
-import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.zip
 import org.litepal.LitePal.findAll
 import org.litepal.LitePal.where
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 
 object AccountUtil {
     const val TAG = "AccountUtil"
@@ -43,7 +28,7 @@ object AccountUtil {
     val allAccounts: List<Account>
         get() = findAll(Account::class.java)
 
-    fun getAccountInfo(accountId: Int): Account {
+    private fun getAccountInfo(accountId: Int): Account {
         return where("id = ?", accountId.toString()).findFirst(Account::class.java)
     }
 
@@ -62,14 +47,6 @@ object AccountUtil {
         return getLoginInfo(context) != null
     }
 
-    fun newAccount(context: Context, account: Account, needSwitch: Boolean): Boolean {
-        return if (account.save()) {
-            if (needSwitch) {
-                switchUser(context, account.id)
-            } else true
-        } else false
-    }
-
     @JvmStatic
     fun switchUser(context: Context, id: Int): Boolean {
         context.sendBroadcast(Intent().setAction(ACTION_SWITCH_ACCOUNT))
@@ -77,13 +54,42 @@ object AccountUtil {
             .putInt("now", id).commit()
     }
 
-    fun updateUserInfo(context: Context, commonCallback: CommonCallback<MyInfoBean>) {
-        val account = getLoginInfo(context)
-        if (account == null) {
-            commonCallback.onFailure(Error.ERROR_NOT_LOGGED_IN, "未登录")
-            return
-        }
-        updateUserInfoByBduss(account.bduss, commonCallback)
+    fun fetchAccountFlow(context: Context): Flow<Account> {
+        return TiebaApi.getInstance()
+            .initNickNameFlow()
+            .zip(TiebaApi.getInstance().loginFlow()) { initNickNameBean, loginBean ->
+                getLoginInfo(context)!!.apply {
+                    uid = loginBean.user.id
+                    name = loginBean.user.name
+                    nameShow = initNickNameBean.userInfo.nameShow
+                    portrait = loginBean.user.portrait
+                    tbs = loginBean.anti.tbs
+                    saveOrUpdate("uid = ?", loginBean.user.id)
+                }
+            }
+    }
+
+    fun fetchAccountFlow(
+        bduss: String,
+        sToken: String,
+        cookie: String? = null
+    ): Flow<Account> {
+        return TiebaApi.getInstance()
+            .initNickNameFlow(bduss, sToken)
+            .zip(TiebaApi.getInstance().loginFlow(bduss, sToken)) { initNickNameBean, loginBean ->
+                Account(
+                    loginBean.user.id,
+                    loginBean.user.name,
+                    bduss,
+                    loginBean.anti.tbs,
+                    loginBean.user.portrait,
+                    sToken,
+                    cookie ?: getBdussCookie(bduss),
+                    initNickNameBean.userInfo.nameShow,
+                    "",
+                    "0"
+                )
+            }
     }
 
     @JvmStatic
@@ -95,107 +101,19 @@ object AccountUtil {
             val sToken = sTokenSplit[1].split(";").toTypedArray()[0]
             val account = getAccountInfoByBduss(bduss)
             if (account != null) {
-                account.setsToken(sToken)
-                    .setCookie(cookie)
-                    .update(account.id.toLong())
+                account.apply {
+                    this.sToken = sToken
+                    this.cookie = cookie
+                }.update(account.id.toLong())
                 return true
             }
         }
         return false
     }
 
-    fun updateUserInfoFlow(
-        bduss: String
-    ): Flow<MyInfoBean> {
-        return TiebaApi.getInstance()
-            .myInfoFlow(getBdussCookie(bduss))
-            .map {
-                if (!it.data.isLogin()) {
-                    throw TiebaLocalException(Error.ERROR_LOGGED_IN_EXPIRED, "登录已过期")
-                }
-                val userId = it.data.getUid().toString()
-                Account().setBduss(bduss)
-                    .setPortrait(it.data.getAvatarUrl())
-                    .setUid(userId)
-                    .setTbs(it.data.getItbTbs())
-                    .setName(it.data.getName())
-                    .setNameShow(it.data.getShowName())
-                    .saveOrUpdate("uid = ? OR bduss = ?", userId, bduss)
-                it
-            }
-    }
-
-    suspend fun updateUserInfoAsync(
-        coroutineScope: CoroutineScope,
-        bduss: String
-    ): Deferred<ApiResult<MyInfoBean>> {
-        return coroutineScope.async {
-            var result = TiebaApi.getInstance()
-                .myInfoAsync(getBdussCookie(bduss))
-                .await()
-            Log.i("AccountUtil", "updateUserInfo finish success:${result.isSuccessful}")
-            result.doIfSuccess {
-                if (!it.data.isLogin()) {
-                    result = ApiResult.Failure(
-                        TiebaLocalException(
-                            Error.ERROR_LOGGED_IN_EXPIRED,
-                            "登录已过期"
-                        )
-                    )
-                }
-                val userId = it.data.getUid().toString()
-                Account().setBduss(bduss)
-                    .setPortrait(it.data.getAvatarUrl())
-                    .setUid(userId)
-                    .setTbs(it.data.getItbTbs())
-                    .setName(it.data.getName())
-                    .setNameShow(it.data.getShowName())
-                    .saveOrUpdate("uid = ? OR bduss = ?", userId, bduss)
-            }
-            result
-        }
-    }
-
-    @JvmStatic
-    fun updateUserInfoByBduss(bduss: String, commonCallback: CommonCallback<MyInfoBean>?) {
-        TiebaApi.getInstance().myInfo(getBdussCookie(bduss)).enqueue(object : Callback<MyInfoBean> {
-            override fun onResponse(call: Call<MyInfoBean>, response: Response<MyInfoBean>) {
-                val myInfoBean = response.body()
-                if (myInfoBean == null) {
-                    commonCallback?.onFailure(Error.ERROR_UNKNOWN, "未知错误")
-                    return
-                }
-                if (!myInfoBean.data.isLogin()) {
-                    commonCallback?.onFailure(Error.ERROR_LOGGED_IN_EXPIRED, "登录已过期")
-                    return
-                }
-                val userId = myInfoBean.data.getUid().toString()
-                Account().setBduss(bduss)
-                    .setPortrait(myInfoBean.data.getAvatarUrl())
-                    .setUid(userId)
-                    .setTbs(myInfoBean.data.getItbTbs())
-                    .setName(myInfoBean.data.getName())
-                    .setNameShow(myInfoBean.data.getShowName())
-                    .saveOrUpdate("uid = ? OR bduss = ?", userId, bduss)
-                commonCallback?.onSuccess(myInfoBean)
-            }
-
-            override fun onFailure(call: Call<MyInfoBean>, t: Throwable) {
-                if (commonCallback != null) {
-                    if (t is TiebaException) {
-                        commonCallback.onFailure(t.code, t.message)
-                    } else {
-                        commonCallback.onFailure(-1, t.message)
-                    }
-                }
-            }
-        })
-    }
-
     fun exit(context: Context) {
         var accounts = allAccounts
-        var account = getLoginInfo(context)
-        if (account == null) return
+        var account = getLoginInfo(context) ?: return
         account.delete()
         CookieManager.getInstance().removeAllCookies(null)
         if (accounts.size > 1) {
@@ -212,7 +130,7 @@ object AccountUtil {
     fun getSToken(context: Context?): String? {
         if (context == null) return null
         val account = getLoginInfo(context)
-        return account?.getsToken()
+        return account?.sToken
     }
 
     fun getCookie(context: Context?): String? {

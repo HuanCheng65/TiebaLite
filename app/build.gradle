@@ -132,6 +132,7 @@ dependencies {
     implementation "androidx.palette:palette-ktx:1.0.0"
     implementation "androidx.window:window:1.0.0"
     implementation "androidx.startup:startup-runtime:1.1.1"
+    implementation "androidx.datastore:datastore-preferences:1.0.0"
 
     //Test
     testImplementation "junit:junit:4.13.2"

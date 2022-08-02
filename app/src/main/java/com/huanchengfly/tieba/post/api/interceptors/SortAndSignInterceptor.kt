@@ -1,6 +1,5 @@
 package com.huanchengfly.tieba.post.api.interceptors
 
-import android.util.Log
 import com.huanchengfly.tieba.post.api.Param
 import com.huanchengfly.tieba.post.api.containsEncodedName
 import com.huanchengfly.tieba.post.api.sortedEncodedRaw
@@ -25,7 +24,6 @@ class SortAndSignInterceptor(private val appSecret: String) : Interceptor {
 
         request = when {
             url.queryParameter("BDUSS") != null && url.queryParameter(Param.SIGN) == null -> {
-                Log.i("SortAndSign", "get")
                 val sortedQuery = url.query!!.split('&').sorted().joinToString(separator = "")
                 val sortedEncodedQuery =
                     url.encodedQuery!!.split('&').sorted().joinToString(separator = "&")
@@ -45,8 +43,9 @@ class SortAndSignInterceptor(private val appSecret: String) : Interceptor {
             }
 
             //在 FormBody 里
-            body is FormBody && body.containsEncodedName("BDUSS") && !body.containsEncodedName(Param.SIGN) -> {
-                Log.i("SortAndSign", "post")
+            body is FormBody && (body.containsEncodedName("_client_version") || body.containsEncodedName(
+                "BDUSS"
+            ) || body.containsEncodedName("bdusstoken")) && !body.containsEncodedName(Param.SIGN) -> {
                 val sortedEncodedRaw = body.sortedEncodedRaw()
                 val formBody = FormBody.Builder().apply {
                     sortedEncodedRaw.split('&').forEach {
@@ -62,7 +61,6 @@ class SortAndSignInterceptor(private val appSecret: String) : Interceptor {
 
             //不存在 accessKey
             else -> {
-                Log.i("SortAndSign", "none")
                 request
             }
         }

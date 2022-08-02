@@ -23,7 +23,7 @@ class ProfileBean : BaseBean() {
         @SerializedName("name_show")
         val nameShow: String? = null
         val portrait: String? = null
-        val intro: String? = null
+        var intro: String? = null
         val sex: String? = null
 
         @SerializedName("post_num")

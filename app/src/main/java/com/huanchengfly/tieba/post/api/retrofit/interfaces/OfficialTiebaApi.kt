@@ -5,9 +5,7 @@ import com.huanchengfly.tieba.post.BaseApplication.ScreenInfo
 import com.huanchengfly.tieba.post.api.Header
 import com.huanchengfly.tieba.post.api.getScreenHeight
 import com.huanchengfly.tieba.post.api.getScreenWidth
-import com.huanchengfly.tieba.post.api.models.CommonResponse
-import com.huanchengfly.tieba.post.api.models.FollowBean
-import com.huanchengfly.tieba.post.api.models.ThreadContentBean
+import com.huanchengfly.tieba.post.api.models.*
 import com.huanchengfly.tieba.post.api.models.protos.PbProto
 import com.huanchengfly.tieba.post.api.retrofit.ApiResult
 import com.huanchengfly.tieba.post.utils.AccountUtil
@@ -178,7 +176,61 @@ interface OfficialTiebaApi {
         @Field("authsid") authsid: String = "null",
         @Field("stoken") stoken: String = AccountUtil.getSToken(BaseApplication.instance)!!,
         @Field("from_type") fromType: Int = 2,
-        @Field("in_live") inLive: Int = 0,
-        @Field("timestamp") timestamp: Long = System.currentTimeMillis()
+        @Field("in_live") inLive: Int = 0
     ): Flow<FollowBean>
+
+    @Headers("${Header.FORCE_LOGIN}: ${Header.FORCE_LOGIN_TRUE}")
+    @POST("/c/f/forum/getforumlist")
+    @FormUrlEncoded
+    fun getForumListFlow(
+        @Field("_client_version") client_version: String = "11.10.8.6",
+        @retrofit2.http.Header(Header.USER_AGENT) user_agent: String = "bdtb for Android $client_version",
+        @Field("stoken") stoken: String = AccountUtil.getSToken(BaseApplication.instance)!!,
+        @Field("user_id") userId: String = AccountUtil.getUid(BaseApplication.instance)!!
+    ): Flow<GetForumListBean>
+
+    @Headers("${Header.FORCE_LOGIN}: ${Header.FORCE_LOGIN_TRUE}")
+    @POST("/c/c/forum/msign")
+    @FormUrlEncoded
+    fun mSignFlow(
+        @Field("forum_ids") forumIds: String,
+        @Field("tbs") tbs: String,
+        @Field("_client_version") client_version: String = "11.10.8.6",
+        @retrofit2.http.Header(Header.USER_AGENT) user_agent: String = "bdtb for Android $client_version",
+        @Field("authsid") authsid: String = "null",
+        @Field("stoken") stoken: String = AccountUtil.getSToken(BaseApplication.instance)!!,
+        @Field("user_id") userId: String = AccountUtil.getUid(BaseApplication.instance)!!
+    ): Flow<MSignBean>
+
+    @Headers(
+        "${Header.COOKIE}: ka=open",
+        "${Header.DROP_HEADERS}: ${Header.CHARSET},${Header.CLIENT_TYPE}",
+        "${Header.NO_COMMON_PARAMS}: BDUSS"
+    )
+    @POST("/c/s/initNickname")
+    @FormUrlEncoded
+    fun initNickNameFlow(
+        @Field("BDUSS") bduss: String = AccountUtil.getBduss(BaseApplication.instance)!!,
+        @Field("stoken") sToken: String = AccountUtil.getSToken(BaseApplication.instance)!!,
+        @Field("_client_version") client_version: String = "11.10.8.6",
+        @retrofit2.http.Header(Header.USER_AGENT) user_agent: String = "bdtb for Android $client_version"
+    ): Flow<InitNickNameBean>
+
+    @Headers(
+        "${Header.COOKIE}: ka=open",
+        "${Header.DROP_HEADERS}: ${Header.CHARSET},${Header.CLIENT_TYPE}",
+        "${Header.DROP_PARAMS}: BDUSS"
+    )
+    @POST("/c/s/login")
+    @FormUrlEncoded
+    fun loginFlow(
+        @Field("bdusstoken") bdusstoken: String = "${AccountUtil.getBduss(BaseApplication.instance)!!}|null",
+        @Field("stoken") sToken: String = AccountUtil.getSToken(BaseApplication.instance)!!,
+        @Field("user_id") userId: String? = AccountUtil.getUid(BaseApplication.instance),
+        @Field("channel_id") channelId: String = "",
+        @Field("channel_uid") channelUid: String = "",
+        @Field("_client_version") client_version: String = "11.10.8.6",
+        @retrofit2.http.Header(Header.USER_AGENT) user_agent: String = "bdtb for Android $client_version",
+        @Field("authsid") authsid: String = "null",
+    ): Flow<LoginBean>
 }

@@ -134,6 +134,9 @@ object MixedTiebaApiImpl : ITiebaApi {
     override fun profile(uid: String): Call<ProfileBean> =
         RetrofitTiebaApi.MINI_TIEBA_API.profile(uid)
 
+    override fun profileFlow(uid: String): Flow<ProfileBean> =
+        RetrofitTiebaApi.MINI_TIEBA_API.profileFlow(uid)
+
     override fun unlikeForum(
         forumId: String, forumName: String, tbs: String
     ): Call<CommonResponse> = RetrofitTiebaApi.MINI_TIEBA_API.unlikeForum(forumId, forumName, tbs)
@@ -575,4 +578,16 @@ object MixedTiebaApiImpl : ITiebaApi {
                 "pid" to postId
             )
         )
+
+    override fun initNickNameFlow(): Flow<InitNickNameBean> =
+        RetrofitTiebaApi.OFFICIAL_TIEBA_API.initNickNameFlow()
+
+    override fun initNickNameFlow(bduss: String, sToken: String): Flow<InitNickNameBean> =
+        RetrofitTiebaApi.OFFICIAL_TIEBA_API.initNickNameFlow(bduss, sToken)
+
+    override fun loginFlow(): Flow<LoginBean> =
+        RetrofitTiebaApi.OFFICIAL_TIEBA_API.loginFlow()
+
+    override fun loginFlow(bduss: String, sToken: String): Flow<LoginBean> =
+        RetrofitTiebaApi.OFFICIAL_TIEBA_API.loginFlow("$bduss|", sToken, null)
 }

@@ -199,6 +199,15 @@ interface ITiebaApi {
     ): Call<ProfileBean>
 
     /**
+     * 用户信息（Flow）
+     *
+     * @param uid 用户 ID
+     */
+    fun profileFlow(
+        uid: String
+    ): Flow<ProfileBean>
+
+    /**
      * 用户信息（异步）
      */
     fun myProfileAsync(): Deferred<ApiResult<Profile>>
@@ -847,4 +856,30 @@ interface ITiebaApi {
     fun checkReportPost(
         postId: String
     ): Call<CheckReportBean>
+
+    /**
+     * 获得当前用户昵称（需登录）
+     */
+    fun initNickNameFlow(): Flow<InitNickNameBean>
+
+    /**
+     * 获得用户昵称
+     */
+    fun initNickNameFlow(
+        bduss: String,
+        sToken: String
+    ): Flow<InitNickNameBean>
+
+    /**
+     * 更新登录信息（需登录）
+     */
+    fun loginFlow(): Flow<LoginBean>
+
+    /**
+     * 登录
+     */
+    fun loginFlow(
+        bduss: String,
+        sToken: String
+    ): Flow<LoginBean>
 }

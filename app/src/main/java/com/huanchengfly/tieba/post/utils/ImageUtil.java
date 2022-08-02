@@ -471,7 +471,14 @@ public class ImageUtil {
         return drawable;
     }
 
-    public static void load(ImageView imageView, @LoadType int type, String url, boolean skipNetworkCheck) {
+    @SuppressLint("CheckResult")
+    public static void load(
+            ImageView imageView,
+            @LoadType int type,
+            String url,
+            boolean skipNetworkCheck,
+            boolean noTransition
+    ) {
         if (!Util.canLoadGlide(imageView.getContext())) {
             return;
         }
@@ -516,8 +523,19 @@ public class ImageUtil {
                         .skipMemoryCache(true));
                 break;
         }
-        requestBuilder.transition(DrawableTransitionOptions.withCrossFade())
-                .into(imageView);
+        if (!noTransition) {
+            requestBuilder.transition(DrawableTransitionOptions.withCrossFade());
+        }
+        requestBuilder.into(imageView);
+    }
+
+    public static void load(
+            ImageView imageView,
+            @LoadType int type,
+            String url,
+            boolean skipNetworkCheck
+    ) {
+        load(imageView, type, url, skipNetworkCheck, false);
     }
 
     /**

@@ -53,7 +53,7 @@ class SettingsFragment : PreferencesFragment() {
         val usernameList: MutableList<String> = ArrayList()
         val idList: MutableList<String> = ArrayList()
         for (account in accounts) {
-            usernameList.add(account.nameShow)
+            usernameList.add(account.nameShow!!)
             idList.add(account.id.toString())
         }
         val accountsPreference = findPreference<ListPreference>("switch_account")

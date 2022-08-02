@@ -13,30 +13,31 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.TextView
 import android.widget.Toast
+import androidx.lifecycle.lifecycleScope
 import androidx.viewpager.widget.ViewPager.OnPageChangeListener
 import butterknife.BindView
 import com.google.android.material.navigation.NavigationBarItemView
 import com.google.android.material.navigation.NavigationBarMenuView
 import com.google.android.material.navigation.NavigationBarView
 import com.google.android.material.snackbar.Snackbar
-import com.huanchengfly.tieba.post.BaseApplication
-import com.huanchengfly.tieba.post.R
+import com.huanchengfly.tieba.post.*
 import com.huanchengfly.tieba.post.adapters.ViewPagerAdapter
-import com.huanchengfly.tieba.post.api.Error
-import com.huanchengfly.tieba.post.api.interfaces.CommonCallback
-import com.huanchengfly.tieba.post.dpToPxFloat
+import com.huanchengfly.tieba.post.api.retrofit.exception.getErrorMessage
 import com.huanchengfly.tieba.post.fragments.MainForumListFragment
 import com.huanchengfly.tieba.post.fragments.MessageFragment
 import com.huanchengfly.tieba.post.fragments.MyInfoFragment
 import com.huanchengfly.tieba.post.fragments.PersonalizedFeedFragment
-import com.huanchengfly.tieba.post.goToActivity
 import com.huanchengfly.tieba.post.interfaces.Refreshable
-import com.huanchengfly.tieba.post.models.MyInfoBean
 import com.huanchengfly.tieba.post.services.NotifyJobService
 import com.huanchengfly.tieba.post.utils.*
 import com.huanchengfly.tieba.post.widgets.MyViewPager
 import com.microsoft.appcenter.crashes.Crashes
 import com.microsoft.appcenter.distribute.Distribute
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -170,17 +171,29 @@ open class MainActivity : BaseActivity(), NavigationBarView.OnItemSelectedListen
         findView()
         initView()
         initListener()
-        Distribute.checkForUpdate()
-        Crashes.hasCrashedInLastSession().thenAccept { hasCrashed ->
-            if (hasCrashed) {
-                Crashes.getLastSessionCrashReport().thenAccept {
-                    val device = it.device
-                    showDialog {
-                        setTitle(R.string.title_dialog_crash)
-                        setMessage(R.string.message_dialog_crash)
-                        setPositiveButton(R.string.button_copy_crash) { _, _ ->
-                            TiebaUtil.copyText(
-                                this@MainActivity, """
+        lifecycleScope.launch(Dispatchers.Main) {
+            if (AccountUtil.isLoggedIn(this@MainActivity)) {
+                AccountUtil.fetchAccountFlow(this@MainActivity)
+                    .flowOn(Dispatchers.IO)
+                    .catch { e ->
+                        toastShort(e.getErrorMessage())
+                        e.printStackTrace()
+                    }
+                    .collect()
+            }
+        }
+        mViewPager.post {
+            Distribute.checkForUpdate()
+            Crashes.hasCrashedInLastSession().thenAccept { hasCrashed ->
+                if (hasCrashed) {
+                    Crashes.getLastSessionCrashReport().thenAccept {
+                        val device = it.device
+                        showDialog {
+                            setTitle(R.string.title_dialog_crash)
+                            setMessage(R.string.message_dialog_crash)
+                            setPositiveButton(R.string.button_copy_crash) { _, _ ->
+                                TiebaUtil.copyText(
+                                    this@MainActivity, """
                                         App 版本：${device.appVersion}
                                         系统版本：${device.osVersion}
                                         机型：${device.oemName} ${device.model}
@@ -188,43 +201,44 @@ open class MainActivity : BaseActivity(), NavigationBarView.OnItemSelectedListen
                                         崩溃：
                                         ${it.stackTrace}
                                     """.trimIndent()
-                            )
+                                )
+                            }
+                            setNegativeButton(R.string.button_cancel, null)
                         }
-                        setNegativeButton(R.string.button_cancel, null)
                     }
                 }
             }
-        }
-        if (!SharedPreferencesUtil.get(SharedPreferencesUtil.SP_APP_DATA)
-                .getBoolean("notice_dialog", false)
-        ) {
-            showDialog(
-                DialogUtil.build(this)
-                    .setTitle(R.string.title_dialog_notice)
-                    .setMessage(R.string.message_dialog_notice)
-                    .setPositiveButton(R.string.button_sure_default) { _, _ ->
-                        SharedPreferencesUtil.put(
-                            this,
-                            SharedPreferencesUtil.SP_APP_DATA,
-                            "notice_dialog",
-                            true
-                        )
-                    }
-                    .setCancelable(false)
-                    .create())
-        }
-        if (shouldShowSwitchSnackbar()) {
-            Util.createSnackbar(
-                mViewPager,
-                if (ThemeUtil.isNightMode(this)) R.string.snackbar_auto_switch_to_night else R.string.snackbar_auto_switch_from_night,
-                Snackbar.LENGTH_SHORT
-            )
-                .show()
-            SharedPreferencesUtil.put(
-                ThemeUtil.getSharedPreferences(this),
-                SP_SHOULD_SHOW_SNACKBAR,
-                false
-            )
+            if (!SharedPreferencesUtil.get(SharedPreferencesUtil.SP_APP_DATA)
+                    .getBoolean("notice_dialog", false)
+            ) {
+                showDialog(
+                    DialogUtil.build(this)
+                        .setTitle(R.string.title_dialog_notice)
+                        .setMessage(R.string.message_dialog_notice)
+                        .setPositiveButton(R.string.button_sure_default) { _, _ ->
+                            SharedPreferencesUtil.put(
+                                this,
+                                SharedPreferencesUtil.SP_APP_DATA,
+                                "notice_dialog",
+                                true
+                            )
+                        }
+                        .setCancelable(false)
+                        .create())
+            }
+            if (shouldShowSwitchSnackbar()) {
+                Util.createSnackbar(
+                    mViewPager,
+                    if (ThemeUtil.isNightMode(this)) R.string.snackbar_auto_switch_to_night else R.string.snackbar_auto_switch_from_night,
+                    Snackbar.LENGTH_SHORT
+                )
+                    .show()
+                SharedPreferencesUtil.put(
+                    ThemeUtil.getSharedPreferences(this),
+                    SP_SHOULD_SHOW_SNACKBAR,
+                    false
+                )
+            }
         }
         handler.postDelayed({
             try {
@@ -247,24 +261,6 @@ open class MainActivity : BaseActivity(), NavigationBarView.OnItemSelectedListen
                     .setCancelable(false)
                     .create())
             }
-            AccountUtil.updateUserInfo(this, object : CommonCallback<MyInfoBean> {
-                override fun onSuccess(data: MyInfoBean) {}
-
-                override fun onFailure(code: Int, error: String) {
-                    if (code == Error.ERROR_LOGGED_IN_EXPIRED) {
-                        showDialog(DialogUtil.build(this@MainActivity)
-                            .setTitle(R.string.title_dialog_logged_in_expired)
-                            .setMessage(R.string.message_dialog_logged_in_expired)
-                            .setPositiveButton(R.string.button_ok) { _: DialogInterface?, _: Int ->
-                                navigationHelper.navigationByData(
-                                    NavigationHelper.ACTION_LOGIN
-                                )
-                            }
-                            .setCancelable(false)
-                            .create())
-                    }
-                }
-            })
         }, 1000)
         if (BaseApplication.isFirstRun) {
             goToActivity<NewIntroActivity>()

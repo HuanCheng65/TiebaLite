@@ -116,10 +116,10 @@ class SingleAccountSigner(
         signData.clear()
         var userName: String by Delegates.notNull()
         var tbs: String by Delegates.notNull()
-        AccountUtil.updateUserInfoFlow(account.bduss)
-            .flatMapConcat { myInfoBean ->
-                userName = myInfoBean.data.name
-                tbs = myInfoBean.data.itbTbs
+        AccountUtil.fetchAccountFlow(context)
+            .flatMapConcat { account ->
+                userName = account.name
+                tbs = account.tbs
                 TiebaApi.getInstance().forumRecommendFlow()
             }
             .flatMapConcat { forumRecommend ->

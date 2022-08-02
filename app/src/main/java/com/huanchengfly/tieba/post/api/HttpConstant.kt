@@ -34,6 +34,10 @@ object Header {
     const val FORCE_LOGIN = "force_login"
     const val FORCE_LOGIN_TRUE = "true"
 
+    const val DROP_PARAMS = "drop_params"
+    const val DROP_HEADERS = "drop_headers"
+    const val NO_COMMON_PARAMS = "no_common_params"
+
     const val ADD_COOKIE = "add_cookie"
     const val ADD_COOKIE_FALSE = "false"
 

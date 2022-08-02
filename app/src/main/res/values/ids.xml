@@ -3,4 +3,5 @@
     <item name="video_player" type="id" />
     <item name="image_load_tag" type="id" />
     <item name="no_data" type="id" />
+    <item name="portrait" type="id" />
 </resources>

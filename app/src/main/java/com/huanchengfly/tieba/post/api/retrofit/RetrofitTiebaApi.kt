@@ -134,6 +134,7 @@ object RetrofitTiebaApi {
             interceptors.forEach {
                 addInterceptor(it)
             }
+            addInterceptor(DropInterceptor)
             addInterceptor(sortAndSignInterceptor)
             addInterceptor(FailureResponseInterceptor)
             addInterceptor(ForceLoginInterceptor)

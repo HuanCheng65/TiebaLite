@@ -51,8 +51,8 @@ fun FormBody.sortedEncodedRaw(separator: Boolean = true): String {
     repeat(size) {
         nameAndValue.add("${encodedName(it)}=${encodedValue(it)}")
     }
-    if (separator) return nameAndValue.sorted().joinToString(separator = "&")
-    else return nameAndValue.sorted().joinToString(separator = "")
+    return if (separator) nameAndValue.sorted().joinToString(separator = "&")
+    else nameAndValue.sorted().joinToString(separator = "")
 }
 
 fun FormBody.sortedRaw(separator: Boolean = true): String {
@@ -60,8 +60,8 @@ fun FormBody.sortedRaw(separator: Boolean = true): String {
     repeat(size) {
         nameAndValue.add("${name(it)}=${value(it)}")
     }
-    if (separator) return nameAndValue.sorted().joinToString(separator = "&")
-    else return nameAndValue.sorted().joinToString(separator = "")
+    return if (separator) nameAndValue.sorted().joinToString(separator = "&")
+    else nameAndValue.sorted().joinToString(separator = "")
 }
 
 fun FormBody.Builder.addAllEncoded(formBody: FormBody): FormBody.Builder {

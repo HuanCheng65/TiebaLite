@@ -54,8 +54,7 @@
                             android:layout_height="wrap_content"
                             android:layout_centerVertical="true"
                             android:layout_marginStart="16dp"
-                            android:layout_toEndOf="@id/my_info_avatar"
-                            android:animateLayoutChanges="true">
+                            android:layout_toEndOf="@id/my_info_avatar">
 
                             <com.huanchengfly.tieba.post.widgets.theme.TintTextView
                                 android:id="@+id/my_info_username"
@@ -85,14 +84,12 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
-                        android:animateLayoutChanges="true"
                         android:orientation="horizontal">
 
                         <RelativeLayout
                             android:layout_width="0dp"
                             android:layout_height="match_parent"
                             android:layout_weight="1"
-                            android:animateLayoutChanges="true"
                             android:background="@drawable/bg_ripple"
                             android:backgroundTint="@color/transparent"
                             android:orientation="vertical"
@@ -133,7 +130,6 @@
                             android:layout_width="0dp"
                             android:layout_height="match_parent"
                             android:layout_weight="1"
-                            android:animateLayoutChanges="true"
                             android:background="@drawable/bg_ripple"
                             android:backgroundTint="@color/transparent"
                             android:orientation="vertical"
@@ -174,7 +170,6 @@
                             android:layout_width="0dp"
                             android:layout_height="match_parent"
                             android:layout_weight="1"
-                            android:animateLayoutChanges="true"
                             android:background="@drawable/bg_ripple"
                             android:backgroundTint="@color/transparent"
                             android:orientation="vertical"

@@ -74,7 +74,7 @@ public class StringUtil {
         if (TextUtils.isEmpty(portrait)) {
             return "";
         }
-        if (portrait.startsWith("http://tb.himg.baidu.com/sys/portrait/item/")) {
+        if (portrait.startsWith("http://") || portrait.startsWith("https://")) {
             return portrait;
         }
         return "http://tb.himg.baidu.com/sys/portrait/item/" + portrait;

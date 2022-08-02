@@ -226,6 +226,13 @@ interface MiniTiebaApi {
         @Field("need_post_count") need_post_count: Int = 1
     ): Call<ProfileBean>
 
+    @POST("/c/u/user/profile")
+    @FormUrlEncoded
+    fun profileFlow(
+        @Field("uid") uid: String,
+        @Field("need_post_count") need_post_count: Int = 1
+    ): Flow<ProfileBean>
+
     @Headers("${Header.FORCE_LOGIN}: ${Header.FORCE_LOGIN_TRUE}")
     @POST("/c/c/forum/unlike")
     @FormUrlEncoded
@@ -320,6 +327,6 @@ interface MiniTiebaApi {
         @Field("category") category: String,
         @FieldMap reportParam: Map<String, String>,
         @Field("stoken") stoken: String? = AccountUtil.getLoginInfo(BaseApplication.instance)
-            ?.getsToken()
+            ?.sToken
     ): Call<CheckReportBean>
 }

@@ -4,9 +4,7 @@ import android.app.Activity
 import android.content.Intent
 import android.graphics.Typeface
 import android.os.Bundle
-import android.text.TextUtils
 import android.view.View
-import android.view.ViewGroup
 import android.widget.CompoundButton
 import android.widget.ImageView
 import android.widget.TextView
@@ -18,16 +16,22 @@ import com.bumptech.glide.Glide
 import com.gyf.immersionbar.ImmersionBar
 import com.huanchengfly.tieba.post.R
 import com.huanchengfly.tieba.post.activities.*
-import com.huanchengfly.tieba.post.api.interfaces.CommonCallback
-import com.huanchengfly.tieba.post.enableChangingLayoutTransition
+import com.huanchengfly.tieba.post.api.TiebaApi
+import com.huanchengfly.tieba.post.api.models.ProfileBean
+import com.huanchengfly.tieba.post.api.retrofit.exception.TiebaException
+import com.huanchengfly.tieba.post.api.retrofit.exception.getErrorMessage
 import com.huanchengfly.tieba.post.goToActivity
 import com.huanchengfly.tieba.post.interfaces.Refreshable
-import com.huanchengfly.tieba.post.models.MyInfoBean
+import com.huanchengfly.tieba.post.toastShort
 import com.huanchengfly.tieba.post.ui.theme.interfaces.ExtraRefreshable
 import com.huanchengfly.tieba.post.ui.theme.utils.ColorStateListUtils
 import com.huanchengfly.tieba.post.ui.theme.utils.ThemeUtils
 import com.huanchengfly.tieba.post.utils.*
 import com.huanchengfly.tieba.post.widgets.theme.TintSwitch
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.launch
 
 class MyInfoFragment : BaseFragment(), View.OnClickListener, CompoundButton.OnCheckedChangeListener,
     Refreshable {
@@ -56,14 +60,14 @@ class MyInfoFragment : BaseFragment(), View.OnClickListener, CompoundButton.OnCh
     @BindView(R.id.my_info_night_switch)
     lateinit var nightSwitch: TintSwitch
 
-    private var dataBean: MyInfoBean? = null
+    private var profileBean: ProfileBean? = null
     override fun onAccountSwitch() {
         onRefresh()
     }
 
     public override fun onFragmentVisibleChange(isVisible: Boolean) {
         if (isVisible) {
-            if (dataBean == null) {
+            if (profileBean == null) {
                 refresh(false)
             }
         }
@@ -91,45 +95,76 @@ class MyInfoFragment : BaseFragment(), View.OnClickListener, CompoundButton.OnCh
         tintStatusBar(true)
     }
 
+    private fun refreshHeader(profileBean: ProfileBean? = null) {
+        if (!AccountUtil.isLoggedIn(attachContext)) {
+            Glide.with(attachContext).clear(avatarImageView)
+            userNameTextView.setText(R.string.tip_login)
+            return
+        }
+        if (profileBean == null) {
+            val account = AccountUtil.getLoginInfo(attachContext)!!
+            userNameTextView.text = account.nameShow
+            contentTextView.text =
+                account.intro ?: attachContext.resources.getString(R.string.tip_no_intro)
+            if (Util.canLoadGlide(attachContext) &&
+                (avatarImageView.getTag(R.id.portrait) as String?) != account.portrait
+            ) {
+                Glide.with(attachContext).clear(avatarImageView)
+                avatarImageView.setTag(R.id.portrait, account.portrait)
+                ImageUtil.load(
+                    avatarImageView,
+                    ImageUtil.LOAD_TYPE_AVATAR,
+                    StringUtil.getAvatarUrl(account.portrait),
+                    false,
+                    true
+                )
+            }
+        } else {
+            followsTextView.text = profileBean.user!!.concernNum
+            fansTextView.text = profileBean.user.fansNum
+            threadsTextView.text = profileBean.user.postNum
+            userNameTextView.text = profileBean.user.nameShow
+            if (profileBean.user.intro.isNullOrBlank()) {
+                profileBean.user.intro = attachContext.resources.getString(R.string.tip_no_intro)
+            }
+            contentTextView.text = profileBean.user.intro
+            if (Util.canLoadGlide(attachContext) &&
+                (avatarImageView.getTag(R.id.portrait) as String?) != profileBean.user.portrait
+            ) {
+                Glide.with(attachContext).clear(avatarImageView)
+                avatarImageView.setTag(R.id.portrait, profileBean.user.portrait)
+                ImageUtil.load(
+                    avatarImageView,
+                    ImageUtil.LOAD_TYPE_AVATAR,
+                    StringUtil.getAvatarUrl(profileBean.user.portrait),
+                    false,
+                    true
+                )
+            }
+        }
+    }
+
     private fun refresh(needLogin: Boolean) {
         mRefreshView.isEnabled = true
         mRefreshView.isRefreshing = true
         if (AccountUtil.isLoggedIn(attachContext)) {
-            val bduss = AccountUtil.getBduss(attachContext)
-            if (bduss != null) {
-                AccountUtil.updateUserInfoByBduss(bduss, object : CommonCallback<MyInfoBean> {
-                    override fun onSuccess(myInfoBean: MyInfoBean) {
-                        if (myInfoBean.errorCode == 0) {
-                            dataBean = myInfoBean
-                            followsTextView.text = dataBean!!.data.getConcernNum()
-                            fansTextView.text = dataBean!!.data.getFansNum()
-                            threadsTextView.text = dataBean!!.data.getPostNum()
-                            userNameTextView.text = dataBean!!.data.getShowName()
-                            if (TextUtils.isEmpty(dataBean!!.data.getIntro())) {
-                                dataBean!!.data.setIntro(attachContext.resources.getString(R.string.tip_no_intro))
-                            }
-                            contentTextView.text = dataBean!!.data.getIntro()
-                            if (Util.canLoadGlide(attachContext)) {
-                                Glide.with(attachContext).clear(avatarImageView)
-                                ImageUtil.load(
-                                    avatarImageView,
-                                    ImageUtil.LOAD_TYPE_ALWAYS_ROUND,
-                                    dataBean!!.data.getAvatarUrl()
-                                )
-                            }
-                            mRefreshView.isRefreshing = false
-                        }
-                    }
-
-                    override fun onFailure(code: Int, error: String) {
+            launch {
+                TiebaApi.getInstance()
+                    .profileFlow(AccountUtil.getUid(attachContext)!!)
+                    .catch { e ->
                         mRefreshView.isRefreshing = false
-                        if (code == 0) {
+                        if (e !is TiebaException) {
                             Util.showNetworkErrorSnackbar(mRefreshView) { refresh(needLogin) }
-                            return
+                        } else {
+                            attachContext.toastShort("错误 ${e.getErrorMessage()}")
                         }
-                        Toast.makeText(attachContext, "错误 $error", Toast.LENGTH_SHORT).show()
                     }
-                })
+                    .flowOn(Dispatchers.IO)
+                    .collect {
+                        refreshHeader(it)
+                        updateAccount(it)
+                        mRefreshView.isRefreshing = false
+                    }
             }
         } else {
             if (needLogin) {
@@ -140,6 +175,14 @@ class MyInfoFragment : BaseFragment(), View.OnClickListener, CompoundButton.OnCh
             Glide.with(attachContext).clear(avatarImageView)
             userNameTextView.setText(R.string.tip_login)
             mRefreshView.isRefreshing = false
+        }
+    }
+
+    private fun updateAccount(profileBean: ProfileBean) {
+        AccountUtil.getLoginInfo(attachContext)?.apply {
+            intro = profileBean.user?.intro
+            sex = profileBean.user?.intro
+            saveOrUpdate("uid = ?", uid)
         }
     }
 
@@ -156,7 +199,6 @@ class MyInfoFragment : BaseFragment(), View.OnClickListener, CompoundButton.OnCh
             threadsTextView
         ).forEach {
             it.typeface = Typeface.createFromAsset(attachContext.assets, "bebas.ttf")
-            (it.parent as ViewGroup).enableChangingLayoutTransition()
         }
         listOf(
             R.id.my_info_collect,
@@ -168,39 +210,38 @@ class MyInfoFragment : BaseFragment(), View.OnClickListener, CompoundButton.OnCh
         ).forEach {
             view.findViewById<View>(it).setOnClickListener(this)
         }
-        view.findViewById<ViewGroup>(R.id.my_info_user).enableChangingLayoutTransition()
         (followsTextView.parent as View).setOnClickListener {
-            if (dataBean == null || dataBean!!.data == null) {
+            if (profileBean == null || profileBean!!.user == null) {
                 return@setOnClickListener
             }
             WebViewActivity.launch(
                 attachContext,
                 attachContext.resources.getString(
                     R.string.url_user_home,
-                    dataBean!!.data.getName(),
+                    profileBean!!.user!!.name,
                     2
                 )
             )
         }
         (fansTextView.parent as View).setOnClickListener {
-            if (dataBean == null || dataBean!!.data == null) {
+            if (profileBean == null || profileBean!!.user == null) {
                 return@setOnClickListener
             }
             WebViewActivity.launch(
                 attachContext,
                 attachContext.resources.getString(
                     R.string.url_user_home,
-                    dataBean!!.data.getName(),
+                    profileBean!!.user!!.name,
                     3
                 )
             )
         }
         (threadsTextView.parent as View).setOnClickListener {
-            if (dataBean == null || dataBean!!.data == null) {
+            if (profileBean == null || profileBean!!.user == null) {
                 return@setOnClickListener
             }
             goToActivity<UserActivity> {
-                putExtra(UserActivity.EXTRA_UID, "${dataBean!!.data.getUid()}")
+                putExtra(UserActivity.EXTRA_UID, "${profileBean!!.user!!.id}")
                 putExtra(UserActivity.EXTRA_TAB, UserActivity.TAB_THREAD)
             }
         }
@@ -213,23 +254,24 @@ class MyInfoFragment : BaseFragment(), View.OnClickListener, CompoundButton.OnCh
             mRefreshView.isRefreshing = true
             refresh(true)
         }
+        refreshHeader()
     }
 
     @OnClick(R.id.my_info)
     fun onMyInfoClicked(view: View) {
         if (AccountUtil.isLoggedIn(attachContext)) {
-            if (dataBean != null) {
+            if (profileBean != null) {
                 NavigationHelper.toUserSpaceWithAnim(
                     attachContext,
-                    dataBean!!.data.getUid().toString(),
-                    dataBean!!.data.getAvatarUrl(),
+                    profileBean!!.user!!.id.toString(),
+                    StringUtil.getAvatarUrl(profileBean!!.user!!.portrait),
                     avatarImageView
                 )
             } else {
                 val loginInfo = AccountUtil.getLoginInfo(attachContext)!!
                 NavigationHelper.toUserSpaceWithAnim(
                     attachContext,
-                    loginInfo.uid.toString(),
+                    loginInfo.uid,
                     loginInfo.portrait,
                     avatarImageView
                 )
@@ -306,7 +348,7 @@ class MyInfoFragment : BaseFragment(), View.OnClickListener, CompoundButton.OnCh
         }
     }
 
-    fun switchNightMode(isNightMode: Boolean) {
+    private fun switchNightMode(isNightMode: Boolean) {
         if (isNightMode) {
             ThemeUtil.switchToNightMode(attachContext as Activity)
         } else {
@@ -324,7 +366,7 @@ class MyInfoFragment : BaseFragment(), View.OnClickListener, CompoundButton.OnCh
         if (isFragmentVisible) {
             refresh(true)
         } else {
-            dataBean = null
+            profileBean = null
         }
     }
 
