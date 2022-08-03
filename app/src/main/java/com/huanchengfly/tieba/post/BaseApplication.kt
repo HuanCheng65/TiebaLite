@@ -46,12 +46,14 @@ import com.microsoft.appcenter.AppCenter
 import com.microsoft.appcenter.analytics.Analytics
 import com.microsoft.appcenter.crashes.Crashes
 import com.microsoft.appcenter.distribute.*
+import dagger.hilt.android.HiltAndroidApp
 import org.intellij.lang.annotations.RegExp
 import org.litepal.LitePal
 import java.util.*
 import java.util.regex.Pattern
 
 
+@HiltAndroidApp
 class BaseApplication : Application(), IApp {
     private val mActivityList: MutableList<Activity> = mutableListOf()
 

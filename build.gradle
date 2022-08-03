@@ -6,6 +6,7 @@ buildscript {
         retrofit_version = "2.9.0"
         kotlin_version = '1.7.10'
         grpc_version = '1.47.0'
+        hilt_version = '2.43.1'
     }
     repositories {
         google()
@@ -16,6 +17,7 @@ buildscript {
         classpath 'com.android.tools.build:gradle:7.2.1'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
         classpath 'com.google.protobuf:protobuf-gradle-plugin:0.8.18'
+        classpath "com.google.dagger:hilt-android-gradle-plugin:$hilt_version"
     }
 }
 
