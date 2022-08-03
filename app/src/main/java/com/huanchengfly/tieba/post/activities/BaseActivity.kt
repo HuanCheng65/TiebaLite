@@ -104,8 +104,6 @@ abstract class BaseActivity : AppCompatActivity(), ExtraRefreshable, CoroutineSc
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        SlideBack.create()
-            .attachToActivity(this)
         fixBackground()
         getDeviceDensity()
         INSTANCE.addActivity(this)
@@ -304,10 +302,9 @@ abstract class BaseActivity : AppCompatActivity(), ExtraRefreshable, CoroutineSc
             recreate()
             return true
         }
-        if (oldTheme?.contains(ThemeUtil.THEME_TRANSLUCENT) == true && !ThemeUtil.isTranslucentTheme(
-                this
-            ) ||
-            ThemeUtil.isTranslucentTheme(this) && oldTheme?.contains(ThemeUtil.THEME_TRANSLUCENT) == false
+        if (oldTheme.contains(ThemeUtil.THEME_TRANSLUCENT) &&
+            !ThemeUtil.isTranslucentTheme(this) || ThemeUtil.isTranslucentTheme(this) &&
+            !oldTheme.contains(ThemeUtil.THEME_TRANSLUCENT)
         ) {
             recreate()
             return true
