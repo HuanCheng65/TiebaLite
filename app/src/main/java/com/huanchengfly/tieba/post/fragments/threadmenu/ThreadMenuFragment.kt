@@ -4,8 +4,8 @@ import android.view.View
 import butterknife.BindView
 import butterknife.OnClick
 import com.huanchengfly.tieba.post.R
-import com.huanchengfly.tieba.post.ui.animation.addZoomAnimation
-import com.huanchengfly.tieba.post.ui.animation.buildPressAnimator
+import com.huanchengfly.tieba.post.ui.common.animation.addZoomAnimation
+import com.huanchengfly.tieba.post.ui.common.animation.buildPressAnimator
 import com.huanchengfly.tieba.post.widgets.theme.TintImageView
 import com.huanchengfly.tieba.post.widgets.theme.TintTextView
 

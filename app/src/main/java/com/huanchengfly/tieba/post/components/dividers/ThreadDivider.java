@@ -13,8 +13,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.huanchengfly.tieba.post.R;
 import com.huanchengfly.tieba.post.adapters.RecyclerFloorAdapter;
 import com.huanchengfly.tieba.post.adapters.ThreadReplyAdapter;
-import com.huanchengfly.tieba.post.ui.theme.interfaces.Tintable;
-import com.huanchengfly.tieba.post.ui.theme.utils.ThemeUtils;
+import com.huanchengfly.tieba.post.ui.common.theme.interfaces.Tintable;
+import com.huanchengfly.tieba.post.ui.common.theme.utils.ThemeUtils;
 import com.huanchengfly.tieba.post.utils.DisplayUtil;
 
 public class ThreadDivider extends RecyclerView.ItemDecoration implements Tintable {

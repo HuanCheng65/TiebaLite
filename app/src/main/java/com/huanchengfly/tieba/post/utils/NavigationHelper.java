@@ -27,7 +27,7 @@ import com.huanchengfly.tieba.post.activities.UserActivity;
 import com.huanchengfly.tieba.post.activities.WebViewActivity;
 import com.huanchengfly.tieba.post.components.dialogs.PermissionDialog;
 import com.huanchengfly.tieba.post.models.PermissionBean;
-import com.huanchengfly.tieba.post.ui.theme.utils.ThemeUtils;
+import com.huanchengfly.tieba.post.ui.common.theme.utils.ThemeUtils;
 
 import java.net.URISyntaxException;
 import java.util.List;

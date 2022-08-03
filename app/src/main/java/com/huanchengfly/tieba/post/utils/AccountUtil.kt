@@ -33,7 +33,7 @@ object AccountUtil {
     }
 
     @JvmStatic
-    fun getAccountInfoByUid(uid: String): Account {
+    fun getAccountInfoByUid(uid: String): Account? {
         return where("uid = ?", uid).findFirst(Account::class.java)
     }
 

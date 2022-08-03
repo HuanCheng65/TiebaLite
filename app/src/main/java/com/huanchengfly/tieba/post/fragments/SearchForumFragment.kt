@@ -83,7 +83,7 @@ class SearchForumFragment : BaseFragment(), ISearchFragment,
         recyclerView.layoutManager = layoutManager
         recyclerView.adapter = delegateAdapter
         refreshLayout!!.setOnRefreshListener { refresh() }
-        ThemeUtil.setThemeForSmartRefreshLayout(refreshLayout)
+        ThemeUtil.setThemeForSmartRefreshLayout(refreshLayout!!)
     }
 
     private fun refresh() {

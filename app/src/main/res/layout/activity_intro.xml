@@ -6,9 +6,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
-    tools:context=".ui.intro.BaseIntroActivity">
+    tools:context=".ui.common.intro.BaseIntroActivity">
 
-    <com.huanchengfly.tieba.post.ui.intro.widgets.MyViewPager
+    <com.huanchengfly.tieba.post.ui.common.intro.widgets.MyViewPager
         android:id="@+id/view_pager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

@@ -164,7 +164,7 @@ open class AppPreferencesUtils(context: Context) {
             key: String? = null
         ) = object : ReadWriteProperty<AppPreferencesUtils, String?> {
             override fun getValue(thisRef: AppPreferencesUtils, property: KProperty<*>): String? {
-                return thisRef.preferencesDataStore.getString(key ?: property.name, defaultValue)
+                return thisRef.preferencesDataStore.getString(key ?: property.name)
                     ?: defaultValue
             }
 

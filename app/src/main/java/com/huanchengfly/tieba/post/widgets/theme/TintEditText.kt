@@ -4,8 +4,8 @@ import android.content.Context
 import android.util.AttributeSet
 import androidx.appcompat.widget.AppCompatEditText
 import com.huanchengfly.tieba.post.R
-import com.huanchengfly.tieba.post.ui.theme.interfaces.Tintable
-import com.huanchengfly.tieba.post.ui.theme.utils.ColorStateListUtils
+import com.huanchengfly.tieba.post.ui.common.theme.interfaces.Tintable
+import com.huanchengfly.tieba.post.ui.common.theme.utils.ColorStateListUtils
 
 class TintEditText @JvmOverloads constructor(
     context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = R.attr.editTextStyle

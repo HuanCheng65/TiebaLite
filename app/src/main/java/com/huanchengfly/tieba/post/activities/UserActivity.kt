@@ -31,6 +31,7 @@ import com.huanchengfly.tieba.post.models.PhotoViewBean
 import com.huanchengfly.tieba.post.models.database.Block
 import com.huanchengfly.tieba.post.plugins.PluginManager
 import com.huanchengfly.tieba.post.toastShort
+import com.huanchengfly.tieba.post.ui.editprofile.view.EditProfileActivity
 import com.huanchengfly.tieba.post.utils.*
 import com.huanchengfly.tieba.post.widgets.theme.TintMaterialButton
 import com.huanchengfly.tieba.post.widgets.theme.TintToolbar

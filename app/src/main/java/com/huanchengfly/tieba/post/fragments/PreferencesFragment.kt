@@ -23,7 +23,7 @@ import com.huanchengfly.tieba.post.components.prefs.TimePickerPreference
 import com.huanchengfly.tieba.post.fragments.preference.PreferencesFragment
 import com.huanchengfly.tieba.post.models.database.Account
 import com.huanchengfly.tieba.post.models.database.Block
-import com.huanchengfly.tieba.post.ui.theme.utils.ThemeUtils
+import com.huanchengfly.tieba.post.ui.common.theme.utils.ThemeUtils
 import com.huanchengfly.tieba.post.utils.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.MainScope
@@ -356,7 +356,7 @@ class PreferencesFragment : PreferencesFragment() {
         }
 
         override fun getString(key: String, defValue: String?): String? {
-            return BaseApplication.INSTANCE.dataStore.getString(key, defValue)
+            return BaseApplication.INSTANCE.dataStore.getString(key) ?: defValue
         }
 
         override fun getStringSet(

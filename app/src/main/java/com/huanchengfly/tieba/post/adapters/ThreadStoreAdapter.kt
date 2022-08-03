@@ -10,7 +10,7 @@ import com.huanchengfly.tieba.post.adapters.base.BaseSingleTypeAdapter
 import com.huanchengfly.tieba.post.api.models.ThreadStoreBean.ThreadStoreInfo
 import com.huanchengfly.tieba.post.components.MyViewHolder
 import com.huanchengfly.tieba.post.components.spans.RoundBackgroundColorSpan
-import com.huanchengfly.tieba.post.ui.theme.utils.ThemeUtils
+import com.huanchengfly.tieba.post.ui.common.theme.utils.ThemeUtils
 import com.huanchengfly.tieba.post.utils.*
 
 class ThreadStoreAdapter(context: Context) : BaseSingleTypeAdapter<ThreadStoreInfo>(context) {

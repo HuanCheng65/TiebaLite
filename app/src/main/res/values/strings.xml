@@ -526,4 +526,5 @@
     <string name="title_search_post_sort_by_time">时间倒序</string>
     <string name="title_search_post_sort_by_relevant">相关性排序</string>
     <string name="title_activity_edit_profile">编辑资料</string>
+    <string name="button_save_profile">保存修改</string>
 </resources>

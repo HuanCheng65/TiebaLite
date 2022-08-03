@@ -13,7 +13,7 @@ import androidx.annotation.ColorInt
 import androidx.appcompat.app.AlertDialog
 import com.huanchengfly.tieba.post.BaseApplication.ThemeDelegate.getColorByAttr
 import com.huanchengfly.tieba.post.R
-import com.huanchengfly.tieba.post.ui.theme.utils.ThemeUtils
+import com.huanchengfly.tieba.post.ui.common.theme.utils.ThemeUtils
 import com.huanchengfly.tieba.post.utils.ThemeUtil
 import com.huanchengfly.tieba.post.utils.appPreferences
 import com.jrummyapps.android.colorpicker.ColorPickerDialog

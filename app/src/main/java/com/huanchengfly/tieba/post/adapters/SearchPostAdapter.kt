@@ -9,7 +9,7 @@ import com.huanchengfly.tieba.post.R
 import com.huanchengfly.tieba.post.adapters.base.BaseSingleTypeAdapter
 import com.huanchengfly.tieba.post.api.models.SearchPostBean
 import com.huanchengfly.tieba.post.components.MyViewHolder
-import com.huanchengfly.tieba.post.ui.theme.utils.ThemeUtils
+import com.huanchengfly.tieba.post.ui.common.theme.utils.ThemeUtils
 import com.huanchengfly.tieba.post.utils.DateTimeUtils.getRelativeTimeString
 
 class SearchPostAdapter(context: Context) :

@@ -17,7 +17,7 @@ import com.huanchengfly.tieba.post.plugins.interfaces.IApp
 import com.huanchengfly.tieba.post.plugins.models.PluginManifest
 import com.huanchengfly.tieba.post.plugins.registerMenuItem
 import com.huanchengfly.tieba.post.toJson
-import com.huanchengfly.tieba.post.ui.theme.utils.ThemeUtils
+import com.huanchengfly.tieba.post.ui.common.theme.utils.ThemeUtils
 import com.huanchengfly.tieba.post.utils.DisplayUtil
 import com.huanchengfly.tieba.post.utils.Util
 import kotlinx.coroutines.Dispatchers

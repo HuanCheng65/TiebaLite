@@ -4,7 +4,7 @@ import android.os.Bundle
 import android.view.View
 import androidx.preference.EditTextPreferenceDialogFragmentCompat
 import androidx.preference.PreferenceDialogFragmentCompat
-import com.huanchengfly.tieba.post.ui.theme.utils.ThemeUtils
+import com.huanchengfly.tieba.post.ui.common.theme.utils.ThemeUtils
 
 class EditTextPreferenceDialogFragment : EditTextPreferenceDialogFragmentCompat() {
     companion object {

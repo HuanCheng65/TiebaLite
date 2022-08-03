@@ -20,9 +20,9 @@ import com.huanchengfly.tieba.post.adapters.ChatBubbleStyleAdapter.Bubble.Compan
 import com.huanchengfly.tieba.post.components.MyLinearLayoutManager
 import com.huanchengfly.tieba.post.components.dialogs.CustomThemeDialog
 import com.huanchengfly.tieba.post.components.dividers.HorizontalSpacesDecoration
-import com.huanchengfly.tieba.post.ui.animation.addMaskAnimation
-import com.huanchengfly.tieba.post.ui.animation.addZoomAnimation
-import com.huanchengfly.tieba.post.ui.animation.buildPressAnimator
+import com.huanchengfly.tieba.post.ui.common.animation.addMaskAnimation
+import com.huanchengfly.tieba.post.ui.common.animation.addZoomAnimation
+import com.huanchengfly.tieba.post.ui.common.animation.buildPressAnimator
 import com.huanchengfly.tieba.post.utils.DialogUtil
 import com.huanchengfly.tieba.post.utils.ThemeUtil
 import com.huanchengfly.tieba.post.utils.ThemeUtil.THEME_CUSTOM
@@ -95,7 +95,7 @@ class AppThemeActivity : BaseActivity() {
         }
         appThemeAdapter.setOnItemClickListener { _, item, _ ->
             val theme = item.value
-            if (ThemeUtil.isNightMode(theme) != ThemeUtil.isNightMode(appPreferences.theme)) {
+            if (ThemeUtil.isNightMode(theme) != ThemeUtil.isNightMode(ThemeUtil.themeState.value)) {
                 DialogUtil.build(this)
                     .setMessage(R.string.message_dialog_follow_system_night)
                     .setPositiveButton(R.string.btn_keep_following) { _, _ ->
@@ -145,7 +145,7 @@ class AppThemeActivity : BaseActivity() {
     }
 
     private fun refreshSelectedTheme() {
-        when (appPreferences.theme) {
+        when (ThemeUtil.themeState.value) {
             THEME_CUSTOM -> {
                 customThemeSelected.visibility = View.VISIBLE
                 translucentThemeSelected.visibility = View.GONE
@@ -175,10 +175,7 @@ class AppThemeActivity : BaseActivity() {
     }
 
     private fun setTheme(theme: String) {
-        appPreferences.theme = theme
-        if (!ThemeUtil.isNightMode(theme)) {
-            appPreferences.oldTheme = theme
-        }
+        ThemeUtil.switchTheme(theme, !ThemeUtil.isNightMode(theme))
         refreshUIIfNeed()
         ThemeUtil.setTranslucentThemeBackground(findViewById(R.id.background))
         refreshSelectedTheme()

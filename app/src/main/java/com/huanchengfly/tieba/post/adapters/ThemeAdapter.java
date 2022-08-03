@@ -20,8 +20,8 @@ import com.huanchengfly.tieba.post.activities.TranslucentThemeActivity;
 import com.huanchengfly.tieba.post.components.MyViewHolder;
 import com.huanchengfly.tieba.post.components.dialogs.CustomThemeDialog;
 import com.huanchengfly.tieba.post.interfaces.OnItemClickListener;
-import com.huanchengfly.tieba.post.ui.theme.interfaces.ExtraRefreshable;
-import com.huanchengfly.tieba.post.ui.theme.utils.ThemeUtils;
+import com.huanchengfly.tieba.post.ui.common.theme.interfaces.ExtraRefreshable;
+import com.huanchengfly.tieba.post.ui.common.theme.utils.ThemeUtils;
 import com.huanchengfly.tieba.post.utils.ColorUtils;
 import com.huanchengfly.tieba.post.utils.ThemeUtil;
 
@@ -43,12 +43,12 @@ public class ThemeAdapter extends RecyclerView.Adapter<MyViewHolder> implements 
         themes = mContext.getResources().getStringArray(R.array.theme_values);
         themeNames = mContext.getResources().getStringArray(R.array.themeNames);
         List<String> themeList = Arrays.asList(themes);
-        selectedPosition = themeList.indexOf(ThemeUtil.getTheme(mContext));
+        selectedPosition = themeList.indexOf(ThemeUtil.getTheme());
     }
 
     public void refresh() {
         List<String> themeList = Arrays.asList(themes);
-        selectedPosition = themeList.indexOf(ThemeUtil.getTheme(mContext));
+        selectedPosition = themeList.indexOf(ThemeUtil.getTheme());
         notifyDataSetChanged();
     }
 

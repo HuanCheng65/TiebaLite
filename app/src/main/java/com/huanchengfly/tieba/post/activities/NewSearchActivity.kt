@@ -33,7 +33,7 @@ import com.huanchengfly.tieba.post.fragments.SearchUserFragment
 import com.huanchengfly.tieba.post.interfaces.ISearchFragment
 import com.huanchengfly.tieba.post.models.database.SearchHistory
 import com.huanchengfly.tieba.post.toastShort
-import com.huanchengfly.tieba.post.ui.theme.utils.ColorStateListUtils
+import com.huanchengfly.tieba.post.ui.common.theme.utils.ColorStateListUtils
 import com.huanchengfly.tieba.post.utils.AnimUtil
 import com.huanchengfly.tieba.post.utils.ThemeUtil
 import com.huanchengfly.tieba.post.utils.anim.animSet

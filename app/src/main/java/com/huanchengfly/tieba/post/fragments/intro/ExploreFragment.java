@@ -8,8 +8,8 @@ import androidx.annotation.Nullable;
 
 import com.huanchengfly.tieba.post.R;
 import com.huanchengfly.tieba.post.activities.PreferencesActivity;
-import com.huanchengfly.tieba.post.ui.intro.fragments.BaseIntroFragment;
-import com.huanchengfly.tieba.post.ui.theme.utils.ThemeUtils;
+import com.huanchengfly.tieba.post.ui.common.intro.fragments.BaseIntroFragment;
+import com.huanchengfly.tieba.post.ui.common.theme.utils.ThemeUtils;
 
 public class ExploreFragment extends BaseIntroFragment implements View.OnClickListener {
     @Override

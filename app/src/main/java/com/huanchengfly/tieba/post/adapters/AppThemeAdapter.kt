@@ -9,14 +9,13 @@ import com.huanchengfly.tieba.post.adapters.base.BaseSingleTypeAdapter
 import com.huanchengfly.tieba.post.components.MyViewHolder
 import com.huanchengfly.tieba.post.utils.ColorUtils
 import com.huanchengfly.tieba.post.utils.ThemeUtil
-import com.huanchengfly.tieba.post.utils.appPreferences
 
 class AppThemeAdapter private constructor(
     context: Context,
     themeList: List<AppTheme>
 ) : BaseSingleTypeAdapter<AppTheme>(context, themeList) {
     var selectedItemPosition: Int = getItemList().indexOfFirst {
-        it.value == context.appPreferences.theme
+        it.value == ThemeUtil.themeState.value
     }
         set(value) {
             val oldPosition = field + 0
@@ -90,7 +89,7 @@ class AppThemeAdapter private constructor(
 
     fun refresh() {
         selectedItemPosition = getItemList().indexOfFirst {
-            it.value == context.appPreferences.theme
+            it.value == ThemeUtil.themeState.value
         }
         notifyDataSetChanged()
     }

@@ -42,7 +42,7 @@ import com.huanchengfly.tieba.post.components.MyLinearLayoutManager
 import com.huanchengfly.tieba.post.components.dividers.HorizontalSpacesDecoration
 import com.huanchengfly.tieba.post.components.transformations.BlurTransformation
 import com.huanchengfly.tieba.post.interfaces.OnItemClickListener
-import com.huanchengfly.tieba.post.ui.theme.utils.ThemeUtils
+import com.huanchengfly.tieba.post.ui.common.theme.utils.ThemeUtils
 import com.huanchengfly.tieba.post.utils.*
 import com.huanchengfly.tieba.post.utils.ThemeUtil.TRANSLUCENT_THEME_DARK
 import com.huanchengfly.tieba.post.utils.ThemeUtil.TRANSLUCENT_THEME_LIGHT
@@ -468,7 +468,7 @@ class TranslucentThemeActivity : BaseActivity(), View.OnClickListener, OnSeekBar
                 }
                 savePic(object : SavePicCallback<File> {
                     override fun onSuccess(t: File) {
-                        appPreferences.theme = ThemeUtil.THEME_TRANSLUCENT
+                        ThemeUtil.switchTheme(ThemeUtil.THEME_TRANSLUCENT, false)
                         toastShort(R.string.toast_save_pic_success)
                         translucentBackground = null
                         mProgress.visibility = View.GONE

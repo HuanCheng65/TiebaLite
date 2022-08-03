@@ -8,7 +8,7 @@ import com.huanchengfly.tieba.post.adapters.base.BaseSingleTypeAdapter
 import com.huanchengfly.tieba.post.api.models.ForumPageBean.GoodClassifyBean
 import com.huanchengfly.tieba.post.components.MyViewHolder
 import com.huanchengfly.tieba.post.interfaces.OnSwitchListener
-import com.huanchengfly.tieba.post.ui.theme.utils.ThemeUtils
+import com.huanchengfly.tieba.post.ui.common.theme.utils.ThemeUtils
 import com.huanchengfly.tieba.post.utils.ThemeUtil
 
 class GoodClassifyAdapter(context: Context) : BaseSingleTypeAdapter<GoodClassifyBean>(context) {

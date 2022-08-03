@@ -10,16 +10,15 @@ import android.graphics.drawable.GradientDrawable
 import android.graphics.drawable.RippleDrawable
 import android.net.Uri
 import android.view.View
+import androidx.annotation.ColorInt
 import androidx.browser.customtabs.CustomTabColorSchemeParams
 import androidx.browser.customtabs.CustomTabsIntent
 import com.google.android.material.snackbar.Snackbar
-import com.huanchengfly.tieba.post.BaseApplication
-import com.huanchengfly.tieba.post.R
+import com.huanchengfly.tieba.post.*
 import com.huanchengfly.tieba.post.activities.WebViewActivity
 import com.huanchengfly.tieba.post.api.retrofit.exception.TiebaException
-import com.huanchengfly.tieba.post.dpToPxFloat
-import com.huanchengfly.tieba.post.ui.theme.utils.ColorStateListUtils
-import com.huanchengfly.tieba.post.ui.theme.utils.ThemeUtils
+import com.huanchengfly.tieba.post.ui.common.theme.utils.ColorStateListUtils
+import com.huanchengfly.tieba.post.ui.common.theme.utils.ThemeUtils
 import com.huanchengfly.tieba.post.utils.Util.createSnackbar
 
 @JvmOverloads
@@ -192,4 +191,21 @@ fun showErrorSnackBar(view: View, throwable: Throwable) {
                 .show()
         }
         .show()
+}
+
+fun calcStatusBarColorInt(context: Context, @ColorInt originColor: Int): Int {
+    var darkerStatusBar = true
+    if (ThemeUtil.THEME_CUSTOM == ThemeUtil.getTheme() && !context.dataStore.getBoolean(
+            ThemeUtil.KEY_CUSTOM_TOOLBAR_PRIMARY_COLOR,
+            true
+        )
+    ) {
+        darkerStatusBar = false
+    } else if (ThemeUtil.getTheme() == ThemeUtil.THEME_WHITE) {
+        darkerStatusBar = false
+    } else if (!context.dataStore.getBoolean("status_bar_darker", true)
+    ) {
+        darkerStatusBar = false
+    }
+    return if (darkerStatusBar) ColorUtils.getDarkerColor(originColor) else originColor
 }

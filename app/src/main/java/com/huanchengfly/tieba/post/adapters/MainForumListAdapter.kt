@@ -8,7 +8,7 @@ import com.huanchengfly.tieba.post.adapters.base.BaseMultiTypeDelegateAdapter
 import com.huanchengfly.tieba.post.api.models.ForumRecommend
 import com.huanchengfly.tieba.post.components.MyViewHolder
 import com.huanchengfly.tieba.post.dpToPx
-import com.huanchengfly.tieba.post.ui.theme.utils.ColorStateListUtils
+import com.huanchengfly.tieba.post.ui.common.theme.utils.ColorStateListUtils
 import com.huanchengfly.tieba.post.utils.*
 
 class MainForumListAdapter(

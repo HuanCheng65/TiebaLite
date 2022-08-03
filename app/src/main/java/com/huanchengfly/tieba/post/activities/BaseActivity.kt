@@ -4,7 +4,6 @@ import android.animation.ObjectAnimator
 import android.animation.ValueAnimator
 import android.app.Activity
 import android.app.Dialog
-import android.content.Context
 import android.content.res.ColorStateList
 import android.content.res.Configuration
 import android.content.res.Resources
@@ -31,10 +30,15 @@ import com.gyf.immersionbar.ImmersionBar
 import com.huanchengfly.tieba.post.BaseApplication
 import com.huanchengfly.tieba.post.BaseApplication.Companion.INSTANCE
 import com.huanchengfly.tieba.post.R
-import com.huanchengfly.tieba.post.ui.slideback.SlideBack
-import com.huanchengfly.tieba.post.ui.theme.interfaces.ExtraRefreshable
-import com.huanchengfly.tieba.post.ui.theme.utils.ThemeUtils
-import com.huanchengfly.tieba.post.utils.*
+import com.huanchengfly.tieba.post.activities.MainActivity.Companion.SP_SHOULD_SHOW_SNACKBAR
+import com.huanchengfly.tieba.post.dataStore
+import com.huanchengfly.tieba.post.putBoolean
+import com.huanchengfly.tieba.post.ui.common.theme.interfaces.ExtraRefreshable
+import com.huanchengfly.tieba.post.ui.common.theme.utils.ThemeUtils
+import com.huanchengfly.tieba.post.utils.AppPreferencesUtils
+import com.huanchengfly.tieba.post.utils.HandleBackUtil
+import com.huanchengfly.tieba.post.utils.ThemeUtil
+import com.huanchengfly.tieba.post.utils.calcStatusBarColorInt
 import com.huanchengfly.tieba.post.widgets.VoicePlayerView
 import com.huanchengfly.tieba.post.widgets.theme.TintToolbar
 import kotlinx.coroutines.*
@@ -46,7 +50,7 @@ abstract class BaseActivity : AppCompatActivity(), ExtraRefreshable, CoroutineSc
         get() = Dispatchers.Main + job
 
     private var mTintToolbar: TintToolbar? = null
-    private var oldTheme: String? = null
+    private var oldTheme: String = ""
 
     var isActivityRunning = true
         private set
@@ -106,7 +110,7 @@ abstract class BaseActivity : AppCompatActivity(), ExtraRefreshable, CoroutineSc
         getDeviceDensity()
         INSTANCE.addActivity(this)
         ThemeUtil.setTheme(this)
-        oldTheme = ThemeUtil.getTheme(this)
+        oldTheme = ThemeUtil.getTheme()
         if (isNeedImmersionBar) {
             refreshStatusBarColor()
         }
@@ -128,8 +132,8 @@ abstract class BaseActivity : AppCompatActivity(), ExtraRefreshable, CoroutineSc
     }
 
     fun refreshUIIfNeed() {
-        if (TextUtils.equals(oldTheme, ThemeUtil.getTheme(this)) &&
-            ThemeUtil.THEME_CUSTOM != ThemeUtil.getTheme(this) &&
+        if (TextUtils.equals(oldTheme, ThemeUtil.getTheme()) &&
+            ThemeUtil.THEME_CUSTOM != ThemeUtil.getTheme() &&
             !ThemeUtil.isTranslucentTheme(this)
         ) {
             return
@@ -145,18 +149,10 @@ abstract class BaseActivity : AppCompatActivity(), ExtraRefreshable, CoroutineSc
         isActivityRunning = true
         if (appPreferences.followSystemNight) {
             if (BaseApplication.isSystemNight && !ThemeUtil.isNightMode(this)) {
-                SharedPreferencesUtil.put(
-                    ThemeUtil.getSharedPreferences(this),
-                    MainActivity.SP_SHOULD_SHOW_SNACKBAR,
-                    true
-                )
+                dataStore.putBoolean(SP_SHOULD_SHOW_SNACKBAR, true)
                 ThemeUtil.switchToNightMode(this, false)
             } else if (!BaseApplication.isSystemNight && ThemeUtil.isNightMode(this)) {
-                SharedPreferencesUtil.put(
-                    ThemeUtil.getSharedPreferences(this),
-                    MainActivity.SP_SHOULD_SHOW_SNACKBAR,
-                    true
-                )
+                dataStore.putBoolean(SP_SHOULD_SHOW_SNACKBAR, true)
                 ThemeUtil.switchFromNightMode(this, false)
             }
         }
@@ -268,7 +264,7 @@ abstract class BaseActivity : AppCompatActivity(), ExtraRefreshable, CoroutineSc
                     autoStatusBarDarkModeEnable(true)
                 } else {
                     statusBarColorInt(
-                        calcStatusBarColor(
+                        calcStatusBarColorInt(
                             this@BaseActivity,
                             ThemeUtils.getColorByAttr(this@BaseActivity, R.attr.colorToolbar)
                         )
@@ -298,7 +294,7 @@ abstract class BaseActivity : AppCompatActivity(), ExtraRefreshable, CoroutineSc
         if (isNeedImmersionBar) {
             refreshStatusBarColor()
         }
-        oldTheme = ThemeUtil.getTheme(this)
+        oldTheme = ThemeUtil.getTheme()
     }
 
     private fun recreateIfNeed(): Boolean {
@@ -347,26 +343,5 @@ abstract class BaseActivity : AppCompatActivity(), ExtraRefreshable, CoroutineSc
         block: suspend CoroutineScope.() -> Unit
     ): Job {
         return launch(Dispatchers.IO + job, start, block)
-    }
-
-    companion object {
-        fun calcStatusBarColor(context: Context, @ColorInt originColor: Int): Int {
-            var darkerStatusBar = true
-            if (ThemeUtil.THEME_CUSTOM == ThemeUtil.getTheme(context) && !SharedPreferencesUtil.get(
-                    context,
-                    SharedPreferencesUtil.SP_SETTINGS
-                )
-                    .getBoolean(ThemeUtil.SP_CUSTOM_TOOLBAR_PRIMARY_COLOR, true)
-            ) {
-                darkerStatusBar = false
-            } else if (ThemeUtil.getTheme(context) == ThemeUtil.THEME_WHITE) {
-                darkerStatusBar = false
-            } else if (!SharedPreferencesUtil.get(context, SharedPreferencesUtil.SP_SETTINGS)
-                    .getBoolean("status_bar_darker", true)
-            ) {
-                darkerStatusBar = false
-            }
-            return if (darkerStatusBar) ColorUtils.getDarkerColor(originColor) else originColor
-        }
     }
 }

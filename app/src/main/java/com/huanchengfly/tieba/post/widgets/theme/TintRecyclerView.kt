@@ -4,9 +4,9 @@ import android.content.Context
 import android.util.AttributeSet
 import androidx.recyclerview.widget.RecyclerView
 import com.huanchengfly.tieba.post.R
-import com.huanchengfly.tieba.post.ui.theme.interfaces.Tintable
-import com.huanchengfly.tieba.post.ui.theme.utils.ColorStateListUtils
-import com.huanchengfly.tieba.post.ui.theme.utils.ThemeUtils
+import com.huanchengfly.tieba.post.ui.common.theme.interfaces.Tintable
+import com.huanchengfly.tieba.post.ui.common.theme.utils.ColorStateListUtils
+import com.huanchengfly.tieba.post.ui.common.theme.utils.ThemeUtils
 
 class TintRecyclerView @JvmOverloads constructor(
     context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0

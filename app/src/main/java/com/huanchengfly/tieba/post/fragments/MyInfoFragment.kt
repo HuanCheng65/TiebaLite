@@ -17,15 +17,15 @@ import com.gyf.immersionbar.ImmersionBar
 import com.huanchengfly.tieba.post.R
 import com.huanchengfly.tieba.post.activities.*
 import com.huanchengfly.tieba.post.api.TiebaApi
-import com.huanchengfly.tieba.post.api.models.ProfileBean
+import com.huanchengfly.tieba.post.api.models.Profile
 import com.huanchengfly.tieba.post.api.retrofit.exception.TiebaException
 import com.huanchengfly.tieba.post.api.retrofit.exception.getErrorMessage
 import com.huanchengfly.tieba.post.goToActivity
 import com.huanchengfly.tieba.post.interfaces.Refreshable
 import com.huanchengfly.tieba.post.toastShort
-import com.huanchengfly.tieba.post.ui.theme.interfaces.ExtraRefreshable
-import com.huanchengfly.tieba.post.ui.theme.utils.ColorStateListUtils
-import com.huanchengfly.tieba.post.ui.theme.utils.ThemeUtils
+import com.huanchengfly.tieba.post.ui.common.theme.interfaces.ExtraRefreshable
+import com.huanchengfly.tieba.post.ui.common.theme.utils.ColorStateListUtils
+import com.huanchengfly.tieba.post.ui.common.theme.utils.ThemeUtils
 import com.huanchengfly.tieba.post.utils.*
 import com.huanchengfly.tieba.post.widgets.theme.TintSwitch
 import kotlinx.coroutines.Dispatchers
@@ -60,7 +60,7 @@ class MyInfoFragment : BaseFragment(), View.OnClickListener, CompoundButton.OnCh
     @BindView(R.id.my_info_night_switch)
     lateinit var nightSwitch: TintSwitch
 
-    private var profileBean: ProfileBean? = null
+    private var profileBean: Profile? = null
     override fun onAccountSwitch() {
         onRefresh()
     }
@@ -95,13 +95,13 @@ class MyInfoFragment : BaseFragment(), View.OnClickListener, CompoundButton.OnCh
         tintStatusBar(true)
     }
 
-    private fun refreshHeader(profileBean: ProfileBean? = null) {
+    private fun refreshHeader(profile: Profile? = null) {
         if (!AccountUtil.isLoggedIn(attachContext)) {
             Glide.with(attachContext).clear(avatarImageView)
             userNameTextView.setText(R.string.tip_login)
             return
         }
-        if (profileBean == null) {
+        if (profile == null) {
             val account = AccountUtil.getLoginInfo(attachContext)!!
             followsTextView.text = account.concernNum ?: "0"
             fansTextView.text = account.fansNum ?: "0"
@@ -123,23 +123,23 @@ class MyInfoFragment : BaseFragment(), View.OnClickListener, CompoundButton.OnCh
                 )
             }
         } else {
-            followsTextView.text = profileBean.user!!.concernNum
-            fansTextView.text = profileBean.user.fansNum
-            threadsTextView.text = profileBean.user.postNum
-            userNameTextView.text = profileBean.user.nameShow
-            if (profileBean.user.intro.isNullOrBlank()) {
-                profileBean.user.intro = attachContext.resources.getString(R.string.tip_no_intro)
+            followsTextView.text = profile.user.concernNum
+            fansTextView.text = profile.user.fansNum
+            threadsTextView.text = profile.user.postNum
+            userNameTextView.text = profile.user.nameShow
+            if (profile.user.intro.isNullOrBlank()) {
+                profile.user.intro = attachContext.resources.getString(R.string.tip_no_intro)
             }
-            contentTextView.text = profileBean.user.intro
+            contentTextView.text = profile.user.intro
             if (Util.canLoadGlide(attachContext) &&
-                (avatarImageView.getTag(R.id.portrait) as String?) != profileBean.user.portrait
+                (avatarImageView.getTag(R.id.portrait) as String?) != profile.user.portrait
             ) {
                 Glide.with(attachContext).clear(avatarImageView)
-                avatarImageView.setTag(R.id.portrait, profileBean.user.portrait)
+                avatarImageView.setTag(R.id.portrait, profile.user.portrait)
                 ImageUtil.load(
                     avatarImageView,
                     ImageUtil.LOAD_TYPE_AVATAR,
-                    StringUtil.getAvatarUrl(profileBean.user.portrait),
+                    StringUtil.getAvatarUrl(profile.user.portrait),
                     false,
                     true
                 )
@@ -155,6 +155,7 @@ class MyInfoFragment : BaseFragment(), View.OnClickListener, CompoundButton.OnCh
                 TiebaApi.getInstance()
                     .profileFlow(AccountUtil.getUid(attachContext)!!)
                     .catch { e ->
+                        e.printStackTrace()
                         mRefreshView.isRefreshing = false
                         if (e !is TiebaException) {
                             Util.showNetworkErrorSnackbar(mRefreshView) { refresh(needLogin) }
@@ -181,13 +182,19 @@ class MyInfoFragment : BaseFragment(), View.OnClickListener, CompoundButton.OnCh
         }
     }
 
-    private fun updateAccount(profileBean: ProfileBean) {
+    private fun updateAccount(profile: Profile) {
         AccountUtil.getLoginInfo(attachContext)?.apply {
-            intro = profileBean.user?.intro
-            sex = profileBean.user?.intro
-            fansNum = profileBean.user?.fansNum
-            postNum = profileBean.user?.postNum
-            concernNum = profileBean.user?.concernNum
+            portrait = profile.user.portrait
+            intro = profile.user.intro
+            sex = profile.user.sex
+            fansNum = profile.user.fansNum
+            postNum = profile.user.postNum
+            concernNum = profile.user.concernNum
+            tbAge = profile.user.tbAge
+            age = profile.user.birthdayInfo.age
+            birthdayShowStatus = profile.user.birthdayInfo.birthdayShowStatus
+            birthdayTime = profile.user.birthdayInfo.birthdayTime
+            constellation = profile.user.birthdayInfo.constellation
             saveOrUpdate("uid = ?", uid)
         }
     }
@@ -217,37 +224,37 @@ class MyInfoFragment : BaseFragment(), View.OnClickListener, CompoundButton.OnCh
             view.findViewById<View>(it).setOnClickListener(this)
         }
         (followsTextView.parent as View).setOnClickListener {
-            if (profileBean == null || profileBean!!.user == null) {
+            if (profileBean == null) {
                 return@setOnClickListener
             }
             WebViewActivity.launch(
                 attachContext,
                 attachContext.resources.getString(
                     R.string.url_user_home,
-                    profileBean!!.user!!.name,
+                    profileBean!!.user.name,
                     2
                 )
             )
         }
         (fansTextView.parent as View).setOnClickListener {
-            if (profileBean == null || profileBean!!.user == null) {
+            if (profileBean == null) {
                 return@setOnClickListener
             }
             WebViewActivity.launch(
                 attachContext,
                 attachContext.resources.getString(
                     R.string.url_user_home,
-                    profileBean!!.user!!.name,
+                    profileBean!!.user.name,
                     3
                 )
             )
         }
         (threadsTextView.parent as View).setOnClickListener {
-            if (profileBean == null || profileBean!!.user == null) {
+            if (profileBean == null) {
                 return@setOnClickListener
             }
             goToActivity<UserActivity> {
-                putExtra(UserActivity.EXTRA_UID, "${profileBean!!.user!!.id}")
+                putExtra(UserActivity.EXTRA_UID, profileBean!!.user.id)
                 putExtra(UserActivity.EXTRA_TAB, UserActivity.TAB_THREAD)
             }
         }
@@ -269,8 +276,8 @@ class MyInfoFragment : BaseFragment(), View.OnClickListener, CompoundButton.OnCh
             if (profileBean != null) {
                 NavigationHelper.toUserSpaceWithAnim(
                     attachContext,
-                    profileBean!!.user!!.id.toString(),
-                    StringUtil.getAvatarUrl(profileBean!!.user!!.portrait),
+                    profileBean!!.user.id,
+                    StringUtil.getAvatarUrl(profileBean!!.user.portrait),
                     avatarImageView
                 )
             } else {

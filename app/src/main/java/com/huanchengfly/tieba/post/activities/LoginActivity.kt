@@ -94,10 +94,10 @@ class LoginActivity : BaseActivity(), WebViewListener {
         }
     }
 
-    override fun onPageStarted(view: WebView, url: String, favicon: Bitmap) {}
+    override fun onPageStarted(view: WebView, url: String, favicon: Bitmap?) {}
 
     companion object {
-        val TAG = LoginActivity::class.java.simpleName
+        val TAG: String = LoginActivity::class.java.simpleName
         private val handler = Handler()
     }
 }

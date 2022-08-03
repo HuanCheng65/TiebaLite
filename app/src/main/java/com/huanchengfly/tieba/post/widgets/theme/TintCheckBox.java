@@ -8,7 +8,7 @@ import androidx.appcompat.widget.AppCompatCheckBox;
 import androidx.core.widget.CompoundButtonCompat;
 
 import com.huanchengfly.tieba.post.R;
-import com.huanchengfly.tieba.post.ui.theme.utils.ColorStateListUtils;
+import com.huanchengfly.tieba.post.ui.common.theme.utils.ColorStateListUtils;
 
 public class TintCheckBox extends AppCompatCheckBox {
     private int mBackgroundTintResId;

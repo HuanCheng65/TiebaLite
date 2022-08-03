@@ -8,9 +8,9 @@ import com.huanchengfly.tieba.post.fragments.intro.CustomSettingsFragment;
 import com.huanchengfly.tieba.post.fragments.intro.ExploreFragment;
 import com.huanchengfly.tieba.post.fragments.intro.HabitSettingsFragment;
 import com.huanchengfly.tieba.post.fragments.intro.PermissionFragment;
-import com.huanchengfly.tieba.post.ui.intro.BaseIntroActivity;
-import com.huanchengfly.tieba.post.ui.intro.fragments.AppIntroFragment;
-import com.huanchengfly.tieba.post.ui.theme.utils.ThemeUtils;
+import com.huanchengfly.tieba.post.ui.common.intro.BaseIntroActivity;
+import com.huanchengfly.tieba.post.ui.common.intro.fragments.AppIntroFragment;
+import com.huanchengfly.tieba.post.ui.common.theme.utils.ThemeUtils;
 import com.huanchengfly.tieba.post.utils.AccountUtil;
 import com.huanchengfly.tieba.post.utils.SharedPreferencesUtil;
 

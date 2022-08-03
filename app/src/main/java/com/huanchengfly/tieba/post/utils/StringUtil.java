@@ -13,7 +13,7 @@ import android.widget.TextView;
 
 import com.huanchengfly.tieba.post.R;
 import com.huanchengfly.tieba.post.components.spans.EmotionSpanV2;
-import com.huanchengfly.tieba.post.ui.theme.utils.ThemeUtils;
+import com.huanchengfly.tieba.post.ui.common.theme.utils.ThemeUtils;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;

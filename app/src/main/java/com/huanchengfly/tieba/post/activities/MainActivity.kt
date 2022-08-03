@@ -153,7 +153,7 @@ open class MainActivity : BaseActivity(), NavigationBarView.OnItemSelectedListen
     }
 
     private fun shouldShowSwitchSnackbar(): Boolean {
-        return ThemeUtil.getSharedPreferences(this).getBoolean(SP_SHOULD_SHOW_SNACKBAR, false)
+        return dataStore.getBoolean(SP_SHOULD_SHOW_SNACKBAR, false)
     }
 
     override fun getLayoutId(): Int = R.layout.activity_main
@@ -233,11 +233,7 @@ open class MainActivity : BaseActivity(), NavigationBarView.OnItemSelectedListen
                     Snackbar.LENGTH_SHORT
                 )
                     .show()
-                SharedPreferencesUtil.put(
-                    ThemeUtil.getSharedPreferences(this),
-                    SP_SHOULD_SHOW_SNACKBAR,
-                    false
-                )
+                dataStore.putBoolean(SP_SHOULD_SHOW_SNACKBAR, false)
             }
         }
         handler.postDelayed({

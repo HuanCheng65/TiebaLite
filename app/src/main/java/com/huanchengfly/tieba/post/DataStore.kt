@@ -5,13 +5,14 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.SharedPreferencesMigration
 import androidx.datastore.preferences.core.*
 import androidx.datastore.preferences.preferencesDataStore
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 
 object DataStoreConst {
     const val DATA_STORE_NAME = "app_preferences"
-
-    val KEY_THEME = stringPreferencesKey("theme")
 }
 
 val Context.dataStore: DataStore<Preferences> by preferencesDataStore(
@@ -20,6 +21,26 @@ val Context.dataStore: DataStore<Preferences> by preferencesDataStore(
         listOf(SharedPreferencesMigration(context, "settings"))
     }
 )
+
+fun DataStore<Preferences>.putString(key: String, value: String? = null) {
+    MainScope().launch(Dispatchers.IO) {
+        BaseApplication.INSTANCE.dataStore.edit {
+            if (value == null) {
+                it.remove(stringPreferencesKey(key))
+            } else {
+                it[stringPreferencesKey(key)] = value
+            }
+        }
+    }
+}
+
+fun DataStore<Preferences>.putBoolean(key: String, value: Boolean) {
+    MainScope().launch(Dispatchers.IO) {
+        BaseApplication.INSTANCE.dataStore.edit {
+            it[booleanPreferencesKey(key)] = value
+        }
+    }
+}
 
 fun DataStore<Preferences>.getInt(key: String, defaultValue: Int): Int {
     var resultValue = defaultValue
@@ -34,7 +55,20 @@ fun DataStore<Preferences>.getInt(key: String, defaultValue: Int): Int {
     return resultValue
 }
 
-fun DataStore<Preferences>.getString(key: String, defaultValue: String? = null): String? {
+fun DataStore<Preferences>.getString(key: String): String? {
+    var resultValue: String? = null
+
+    runBlocking {
+        BaseApplication.INSTANCE.dataStore.data.first {
+            resultValue = it[stringPreferencesKey(key)]
+            true
+        }
+    }
+
+    return resultValue
+}
+
+fun DataStore<Preferences>.getString(key: String, defaultValue: String): String {
     var resultValue = defaultValue
 
     runBlocking {

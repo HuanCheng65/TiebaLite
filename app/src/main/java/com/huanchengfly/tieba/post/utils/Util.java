@@ -41,7 +41,7 @@ import com.huanchengfly.tieba.post.IntentConfig;
 import com.huanchengfly.tieba.post.R;
 import com.huanchengfly.tieba.post.components.dialogs.CopyTextDialog;
 import com.huanchengfly.tieba.post.fragments.MenuDialogFragment;
-import com.huanchengfly.tieba.post.ui.theme.utils.ThemeUtils;
+import com.huanchengfly.tieba.post.ui.common.theme.utils.ThemeUtils;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -93,7 +93,7 @@ public class Util {
         Button mButton = mView.findViewById(R.id.snackbar_action);
         TextView mTextView = mView.findViewById(R.id.snackbar_text);
         mButton.setTextAppearance(view.getContext(), R.style.TextAppearance_Bold);
-        if (ThemeUtil.THEME_TRANSLUCENT.equals(ThemeUtil.getTheme(view.getContext()))) {
+        if (ThemeUtil.THEME_TRANSLUCENT.equals(ThemeUtil.getTheme())) {
             mView.setBackgroundTintList(ColorStateList.valueOf(view.getResources().getColor(R.color.white)));
             mTextView.setTextColor(view.getResources().getColor(R.color.color_text));
         } else {

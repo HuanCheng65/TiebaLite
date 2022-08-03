@@ -10,7 +10,7 @@ import androidx.appcompat.widget.MenuPopupWindow;
 import androidx.appcompat.widget.PopupMenu;
 
 import com.huanchengfly.tieba.post.R;
-import com.huanchengfly.tieba.post.ui.theme.utils.ThemeUtils;
+import com.huanchengfly.tieba.post.ui.common.theme.utils.ThemeUtils;
 
 import java.lang.reflect.Field;
 
@@ -24,7 +24,7 @@ public class PopupUtil {
             Field contextField = ListPopupWindow.class.getDeclaredField("mContext");
             contextField.setAccessible(true);
             Context context = (Context) contextField.get(listPopupWindow);
-            if (ThemeUtil.THEME_TRANSLUCENT.equals(ThemeUtil.getTheme(context))) {
+            if (ThemeUtil.THEME_TRANSLUCENT.equals(ThemeUtil.getTheme())) {
                 listPopupWindow.setBackgroundDrawable(ThemeUtils.tintDrawable(context.getDrawable(R.drawable.bg_popup), context.getResources().getColor(R.color.theme_color_background_dark)));
             } else {
                 listPopupWindow.setBackgroundDrawable(ThemeUtils.tintDrawable(context.getDrawable(R.drawable.bg_popup), ThemeUtils.getColorByAttr(context, R.attr.colorCard)));
@@ -48,7 +48,7 @@ public class PopupUtil {
             Field popupField = obj.getClass().getDeclaredField("mPopup");
             popupField.setAccessible(true);
             MenuPopupWindow menuPopupWindow = (MenuPopupWindow) popupField.get(obj);
-            if (ThemeUtil.THEME_TRANSLUCENT.equals(ThemeUtil.getTheme(context))) {
+            if (ThemeUtil.THEME_TRANSLUCENT.equals(ThemeUtil.getTheme())) {
                 menuPopupWindow.setBackgroundDrawable(ThemeUtils.tintDrawable(context.getDrawable(R.drawable.bg_popup), context.getResources().getColor(R.color.white)));
             } else {
                 menuPopupWindow.setBackgroundDrawable(ThemeUtils.tintDrawable(context.getDrawable(R.drawable.bg_popup), ThemeUtils.getColorByAttr(context, R.attr.colorCard)));

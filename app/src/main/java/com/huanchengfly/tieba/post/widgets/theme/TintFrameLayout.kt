@@ -10,8 +10,8 @@ import android.widget.FrameLayout
 import com.huanchengfly.tieba.post.R
 import com.huanchengfly.tieba.post.getColorStateListCompat
 import com.huanchengfly.tieba.post.interfaces.BackgroundTintable
-import com.huanchengfly.tieba.post.ui.theme.interfaces.Tintable
-import com.huanchengfly.tieba.post.ui.theme.utils.ColorStateListUtils
+import com.huanchengfly.tieba.post.ui.common.theme.interfaces.Tintable
+import com.huanchengfly.tieba.post.ui.common.theme.utils.ColorStateListUtils
 
 @SuppressLint("CustomViewStyleable")
 class TintFrameLayout @JvmOverloads constructor(
