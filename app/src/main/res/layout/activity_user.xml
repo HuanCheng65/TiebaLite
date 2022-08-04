@@ -97,26 +97,11 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_vertical"
-                            android:textSize="16sp"
+                            android:textSize="18sp"
                             android:textStyle="bold"
                             app:tint="@color/color_text_translucent_light"
                             tools:text="USER" />
 
-                        <TextView
-                            android:id="@+id/user_sex"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center_vertical"
-                            android:layout_marginStart="8dp"
-                            android:background="@drawable/bg_radius_50dp"
-                            android:backgroundTint="@color/user_center_action_btn_color"
-                            android:paddingStart="12dp"
-                            android:paddingTop="1dp"
-                            android:paddingEnd="12dp"
-                            android:paddingBottom="1dp"
-                            android:textColor="@color/white"
-                            android:textSize="16sp"
-                            tools:text="♂" />
                     </LinearLayout>
 
                     <com.huanchengfly.tieba.post.widgets.theme.TintTextView
@@ -124,15 +109,15 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="16dp"
-                        android:textSize="12sp"
-                        app:tint="@color/color_text_secondary_translucent_light" />
+                        android:textSize="14sp"
+                        app:tint="@color/color_text_secondary_translucent_light"
+                        tools:text="介绍" />
 
                     <LinearLayout
                         android:id="@+id/user_center_stat"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="16dp"
-                        android:layout_marginBottom="34dp"
                         android:gravity="bottom"
                         android:orientation="horizontal">
 
@@ -174,6 +159,48 @@
                             android:textSize="14sp"
                             android:textStyle="bold"
                             app:tint="@color/color_text_translucent_light" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/user_info_chips"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:layout_marginBottom="34dp"
+                        android:orientation="horizontal"
+                        android:visibility="invisible"
+                        tools:visibility="visible">
+
+                        <TextView
+                            android:id="@+id/user_sex"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:background="@drawable/bg_radius_50dp"
+                            android:backgroundTint="@color/user_center_action_btn_color"
+                            android:paddingStart="8dp"
+                            android:paddingTop="2dp"
+                            android:paddingEnd="8dp"
+                            android:paddingBottom="2dp"
+                            android:textColor="@color/white"
+                            android:textSize="13sp"
+                            tools:text="♂" />
+
+                        <TextView
+                            android:id="@+id/user_tb_age"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:layout_marginStart="8dp"
+                            android:background="@drawable/bg_radius_50dp"
+                            android:backgroundTint="@color/user_center_action_btn_color"
+                            android:paddingStart="8dp"
+                            android:paddingTop="2dp"
+                            android:paddingEnd="8dp"
+                            android:paddingBottom="2dp"
+                            android:textColor="@color/white"
+                            android:textSize="13sp"
+                            tools:text="吧龄 10.7 年" />
                     </LinearLayout>
                 </LinearLayout>
 

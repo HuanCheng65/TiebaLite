@@ -16,6 +16,11 @@ data class Account(
     var fansNum: String? = null,
     var postNum: String? = null,
     var concernNum: String? = null,
+    var tbAge: String? = null,
+    var age: String? = null,
+    var birthdayShowStatus: String? = null,
+    var birthdayTime: String? = null,
+    var constellation: String? = null,
 ) : LitePalSupport() {
     internal constructor() : this("", "", "", "", "", "", "")
 

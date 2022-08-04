@@ -71,6 +71,9 @@ class UserActivity : BaseActivity() {
     @BindView(R.id.user_sex)
     lateinit var sexTv: TextView
 
+    @BindView(R.id.user_tb_age)
+    lateinit var tbAgeTv: TextView
+
     @BindView(R.id.user_center_action_btn)
     lateinit var actionBtn: TintMaterialButton
 
@@ -85,6 +88,9 @@ class UserActivity : BaseActivity() {
 
     @BindView(R.id.user_center_header_mask)
     lateinit var headerMaskView: View
+
+    @BindView(R.id.user_info_chips)
+    lateinit var infoChips: View
 
     private var profileBean: ProfileBean? = null
     private var uid: String? = null
@@ -117,8 +123,8 @@ class UserActivity : BaseActivity() {
         actionBtn.visibility = View.GONE
         if (!TextUtils.isEmpty(avatar)) {
             loadingView.visibility = View.GONE
-            ImageUtil.load(avatarView, ImageUtil.LOAD_TYPE_AVATAR, avatar)
-            ImageUtil.initImageView(avatarView, PhotoViewBean(avatar))
+            ImageUtil.load(avatarView, ImageUtil.LOAD_TYPE_AVATAR, StringUtil.getAvatarUrl(avatar))
+            ImageUtil.initImageView(avatarView, PhotoViewBean(StringUtil.getAvatarUrl(avatar)))
         }
         appbar.addOnOffsetChangedListener { appBarLayout: AppBarLayout, verticalOffset: Int ->
             val percent = abs(verticalOffset * 1.0f) / appBarLayout.totalScrollRange
@@ -202,6 +208,8 @@ class UserActivity : BaseActivity() {
         }
         sexTv.text =
             if (profileBean!!.user!!.sex == "1") "♂" else if (profileBean!!.user!!.sex == "2") "♀" else "?"
+        tbAgeTv.text = getString(R.string.tb_age, profileBean!!.user!!.tbAge)
+        infoChips.visibility = View.VISIBLE
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {

@@ -191,7 +191,7 @@
     <color name="icon_blue">#FF3373EE</color>
     <color name="icon_purple">#FF8E6DCA</color>
     <color name="black_trans">#50000000</color>
-    <color name="user_center_action_btn_color">#50FFFFFF</color>
+    <color name="user_center_action_btn_color">#40FFFFFF</color>
     <color name="user_center_header_mask">#90000000</color>
     <color name="default_color_on_accent">#FFFFFFFF</color>
 </resources>
