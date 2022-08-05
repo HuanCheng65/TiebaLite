@@ -145,7 +145,7 @@ class SearchThreadFragment : BaseFragment(), ISearchFragment, NewSearchActivity.
     }
 
     private fun refresh() {
-        if (keyword == null) {
+        if (keyword.isNullOrBlank()) {
             return
         }
         page = 1

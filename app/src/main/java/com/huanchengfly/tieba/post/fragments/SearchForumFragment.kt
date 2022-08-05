@@ -87,7 +87,8 @@ class SearchForumFragment : BaseFragment(), ISearchFragment,
     }
 
     private fun refresh() {
-        if (keyword == null) {
+        if (keyword.isNullOrBlank()) {
+            refreshLayout?.finishRefresh()
             return
         }
         getInstance().searchForum(keyword!!).enqueue(object : Callback<SearchForumBean> {

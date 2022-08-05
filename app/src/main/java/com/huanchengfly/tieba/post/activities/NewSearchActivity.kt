@@ -2,6 +2,7 @@ package com.huanchengfly.tieba.post.activities
 
 import android.content.Context
 import android.os.Bundle
+import android.view.KeyEvent
 import android.view.View
 import android.view.ViewGroup.LayoutParams.MATCH_PARENT
 import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
@@ -37,6 +38,7 @@ import com.huanchengfly.tieba.post.ui.common.theme.utils.ColorStateListUtils
 import com.huanchengfly.tieba.post.utils.AnimUtil
 import com.huanchengfly.tieba.post.utils.ThemeUtil
 import com.huanchengfly.tieba.post.utils.anim.animSet
+import com.huanchengfly.tieba.post.utils.bindKeyEvent
 import com.huanchengfly.tieba.post.widgets.MyViewPager
 import org.litepal.LitePal
 
@@ -64,11 +66,11 @@ class NewSearchActivity : BaseActivity(), TabLayout.OnTabSelectedListener {
     private var keyword: String? = null
         set(value) {
             field = value
-            if (value != null) {
+            if (!value.isNullOrBlank()) {
                 SearchHistory(value)
                     .saveOrUpdate("content = ?", value)
             }
-            state = if (value == null) {
+            state = if (value.isNullOrBlank()) {
                 State.INPUT
             } else {
                 State.SEARCH
@@ -115,15 +117,18 @@ class NewSearchActivity : BaseActivity(), TabLayout.OnTabSelectedListener {
         recyclerView.adapter = delegateAdapter
         editText.setOnEditorActionListener { v, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-                KeyboardUtil.hideKeyboard(v)
                 keyword = v.text.toString()
+                if (!keyword.isNullOrBlank()) KeyboardUtil.hideKeyboard(v)
                 return@setOnEditorActionListener true
             }
             return@setOnEditorActionListener false
         }
+        editText.bindKeyEvent(listOf(KeyEvent.KEYCODE_ENTER, KeyEvent.KEYCODE_NUMPAD_ENTER)) {
+            keyword = it.text.toString()
+        }
         keyword = intent.getStringExtra(EXTRA_KEYWORD)
         editText.post {
-            if (keyword == null) {
+            if (keyword.isNullOrBlank()) {
                 KeyboardUtil.showKeyboard(editText)
             }
         }

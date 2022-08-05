@@ -126,7 +126,8 @@ class SearchUserFragment : BaseFragment(), ISearchFragment,
     }
 
     private fun refresh() {
-        if (keyword == null) {
+        if (keyword.isNullOrBlank()) {
+            mRefreshLayout?.finishRefresh()
             return
         }
         TiebaApi.getInstance().searchUser(keyword!!).enqueue(object : Callback<SearchUserBean> {

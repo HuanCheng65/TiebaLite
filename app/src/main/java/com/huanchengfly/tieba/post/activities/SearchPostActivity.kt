@@ -2,6 +2,7 @@ package com.huanchengfly.tieba.post.activities
 
 import android.graphics.Color
 import android.os.Bundle
+import android.view.KeyEvent
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.LinearInterpolator
@@ -35,6 +36,7 @@ import com.huanchengfly.tieba.post.utils.PopupUtil
 import com.huanchengfly.tieba.post.utils.ThemeUtil
 import com.huanchengfly.tieba.post.utils.Util
 import com.huanchengfly.tieba.post.utils.anim.animSet
+import com.huanchengfly.tieba.post.utils.bindKeyEvent
 import com.scwang.smart.refresh.layout.SmartRefreshLayout
 import org.litepal.LitePal
 import retrofit2.Call
@@ -256,11 +258,14 @@ class SearchPostActivity : BaseActivity() {
             }
             return@setOnEditorActionListener false
         }
+        editText.bindKeyEvent(listOf(KeyEvent.KEYCODE_ENTER, KeyEvent.KEYCODE_NUMPAD_ENTER)) {
+            keyword = it.text.toString()
+        }
         editText.hint = getString(R.string.hint_search_in_ba, forumName)
     }
 
     fun refresh() {
-        if (keyword == null || keyword == null) {
+        if (keyword.isNullOrBlank()) {
             refreshLayout.finishRefresh(false)
             return
         }
@@ -284,7 +289,7 @@ class SearchPostActivity : BaseActivity() {
     }
 
     private fun loadMore() {
-        if (keyword == null || keyword == null) {
+        if (keyword.isNullOrBlank()) {
             refreshLayout.finishLoadMore(false)
             return
         }
