@@ -83,6 +83,8 @@ class MainForumListFragment : BaseFragment(), Refreshable, Toolbar.OnMenuItemCli
     private lateinit var mainForumListAdapter: MainForumListAdapter
     private lateinit var topForumListAdapter: MainForumListAdapter
 
+    var listSingle: Boolean = false
+
     fun reset() {
         if (isFragmentVisible) {
             mRefreshView.autoRefresh()
@@ -120,11 +122,12 @@ class MainForumListFragment : BaseFragment(), Refreshable, Toolbar.OnMenuItemCli
         super.onCreate(savedInstanceState)
         virtualLayoutManager = VirtualLayoutManager(attachContext)
         delegateAdapter = DelegateAdapter(virtualLayoutManager)
+        listSingle = appPreferences.listSingle
     }
 
     private val spanCount: Int
         get() = when {
-            appPreferences.listSingle -> {
+            listSingle -> {
                 1
             }
             attachContext.isTablet -> {
@@ -282,7 +285,7 @@ class MainForumListFragment : BaseFragment(), Refreshable, Toolbar.OnMenuItemCli
                 ) {
                     mData = response.body()
                     if (mData != null) {
-                        mainForumListAdapter.setData(mData!!.likeForum)
+                        mainForumListAdapter.setData(mData!!.likeForum.addFakeItems(spanCount))
                         mRefreshView.finishRefresh(false)
                     } else {
                         Toast.makeText(attachContext, R.string.error_unknown, Toast.LENGTH_SHORT)
@@ -292,6 +295,15 @@ class MainForumListFragment : BaseFragment(), Refreshable, Toolbar.OnMenuItemCli
                 }
 
             })
+    }
+
+    private fun List<ForumRecommend.LikeForum>.addFakeItems(divisor: Int): List<ForumRecommend.LikeForum> {
+        val fakeItemCount = divisor - (size % divisor)
+        return toMutableList().apply {
+            repeat(fakeItemCount) {
+                add(ForumRecommend.LikeForum("", "", "1", "0", "", isFake = true))
+            }
+        }
     }
 
     override fun onRefresh() {
@@ -310,7 +322,8 @@ class MainForumListFragment : BaseFragment(), Refreshable, Toolbar.OnMenuItemCli
                 true
             }
             R.id.menu_switch_list -> {
-                appPreferences.listSingle = !appPreferences.listSingle
+                listSingle = !listSingle
+                appPreferences.listSingle = listSingle
                 reloadAdapters()
                 true
             }
@@ -319,6 +332,7 @@ class MainForumListFragment : BaseFragment(), Refreshable, Toolbar.OnMenuItemCli
     }
 
     override fun onClick(viewHolder: MyViewHolder, item: ForumRecommend.LikeForum, position: Int) {
+        if (item.isFake) return
         PreloadUtil.startActivityWithPreload(
             attachContext,
             Intent(
@@ -334,6 +348,7 @@ class MainForumListFragment : BaseFragment(), Refreshable, Toolbar.OnMenuItemCli
         item: ForumRecommend.LikeForum,
         position: Int
     ): Boolean {
+        if (item.isFake) return false
         val popupMenu = PopupUtil.create(viewHolder.itemView).apply {
             menuInflater.inflate(R.menu.menu_forum_long_click, menu)
         }

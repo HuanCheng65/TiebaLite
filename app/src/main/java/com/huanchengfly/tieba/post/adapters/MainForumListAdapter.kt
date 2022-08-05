@@ -1,6 +1,8 @@
 package com.huanchengfly.tieba.post.adapters
 
 import android.content.Context
+import android.content.res.ColorStateList
+import android.graphics.Color
 import android.view.View
 import com.alibaba.android.vlayout.layout.GridLayoutHelper
 import com.huanchengfly.tieba.post.R
@@ -15,7 +17,7 @@ class MainForumListAdapter(
     context: Context,
     span: Int = 1
 ) : BaseMultiTypeDelegateAdapter<ForumRecommend.LikeForum>(
-    context, GridLayoutHelper(span)
+    context, GridLayoutHelper(span).apply { setAutoExpand(false) }
 ) {
     companion object {
         const val TYPE_LIST = 1
@@ -39,11 +41,16 @@ class MainForumListAdapter(
         viewType: Int
     ) {
         val cardRadius = context.resources.getDimension(R.dimen.card_radius)
+        val rippleColor = if (item.isFake) Color.TRANSPARENT else Util.getColorByAttr(
+            context,
+            R.attr.colorControlHighlight,
+            R.color.transparent
+        )
         when {
             //单列
             spanCount == 1 -> {
                 viewHolder.itemView.background = wrapRipple(
-                    Util.getColorByAttr(context, R.attr.colorControlHighlight, R.color.transparent),
+                    rippleColor,
                     if (position == getCount() - 1) {
                         getRadiusDrawable(bottomLeftPx = cardRadius, bottomRightPx = cardRadius)
                     } else {
@@ -53,10 +60,7 @@ class MainForumListAdapter(
                 if (context.appPreferences.listItemsBackgroundIntermixed) {
                     if (position % 2 == 1) {
                         viewHolder.itemView.backgroundTintList =
-                            ColorStateListUtils.createColorStateList(
-                                context,
-                                R.color.default_color_card
-                            )
+                            ColorStateList.valueOf(Color.TRANSPARENT)
                     } else {
                         viewHolder.itemView.backgroundTintList =
                             ColorStateListUtils.createColorStateList(
@@ -66,18 +70,15 @@ class MainForumListAdapter(
                     }
                 } else {
                     viewHolder.itemView.backgroundTintList =
-                        ColorStateListUtils.createColorStateList(
-                            context,
-                            R.color.default_color_card
-                        )
+                        ColorStateList.valueOf(Color.TRANSPARENT)
                 }
             }
             //多列第一个
             position % spanCount == 0 -> {
                 viewHolder.itemView.backgroundTintList =
-                    ColorStateListUtils.createColorStateList(context, R.color.default_color_card)
+                    ColorStateList.valueOf(Color.TRANSPARENT)
                 viewHolder.itemView.background = wrapRipple(
-                    Util.getColorByAttr(context, R.attr.colorControlHighlight, R.color.transparent),
+                    rippleColor,
                     when (position) {
                         //最后一行，左
                         getCount() - spanCount -> getRadiusDrawable(bottomLeftPx = cardRadius)
@@ -94,15 +95,24 @@ class MainForumListAdapter(
             //多列右
             else -> {
                 viewHolder.itemView.backgroundTintList =
-                    ColorStateListUtils.createColorStateList(context, R.color.default_color_card)
+                    ColorStateList.valueOf(Color.TRANSPARENT)
                 viewHolder.itemView.background = wrapRipple(
-                    Util.getColorByAttr(context, R.attr.colorControlHighlight, R.color.transparent),
+                    rippleColor,
                     if (position == getCount() - 1) {
                         getRadiusDrawable(bottomRightPx = cardRadius)
                     } else {
                         getRadiusDrawable()
                     }
                 )
+            }
+        }
+        if (viewType == TYPE_GRID) {
+            val visibility = if (item.isFake) View.INVISIBLE else View.VISIBLE
+            listOf(
+                R.id.forum_list_item_status,
+                R.id.forum_list_item_name
+            ).forEach {
+                viewHolder.setVisibility(it, visibility)
             }
         }
         if (spanCount > 1) {

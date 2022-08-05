@@ -20,6 +20,8 @@ data class ForumRecommend(
         var levelId: String,
         @SerializedName("is_sign")
         var isSign: String,
-        var avatar: String
+        var avatar: String,
+        @Transient
+        var isFake: Boolean = false
     )
 }
