@@ -273,7 +273,7 @@
         <Preference
             android:icon="@drawable/ic_round_offline_bolt_green"
             android:key="clear_cache"
-            android:title="@string/title_clear_cache" />
+            android:title="@string/title_clear_picture_cache" />
 
         <Preference
             android:icon="@drawable/ic_round_info"

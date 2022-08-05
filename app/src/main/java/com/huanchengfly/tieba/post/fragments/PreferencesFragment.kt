@@ -211,7 +211,7 @@ class PreferencesFragment : PreferencesFragment() {
                 GlideCacheUtil.getInstance().clearImageAllCache(attachContext)
                 if (view != null) Util.createSnackbar(
                     requireView(),
-                    R.string.toast_clear_cache_success,
+                    R.string.toast_clear_picture_cache_success,
                     Snackbar.LENGTH_SHORT
                 ).show()
                 preference.summary = attachContext.getString(R.string.tip_cache, "0.0B")

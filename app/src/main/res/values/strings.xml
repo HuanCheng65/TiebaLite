@@ -145,8 +145,8 @@
     <string name="toast_unagree_failed">取消点赞失败 %1$s</string>
     <string name="title_copy_forum_name">复制吧名</string>
     <string name="toast_error">加载失败(%1$d) %2$s</string>
-    <string name="title_clear_cache">清除缓存</string>
-    <string name="toast_clear_cache_success">清除缓存成功</string>
+    <string name="title_clear_picture_cache">清除图片缓存</string>
+    <string name="toast_clear_picture_cache_success">成功清除图片缓存</string>
     <string name="tip_cache">当前共有缓存 %1$s</string>
     <string name="toast_switch_success">切换成功</string>
     <string name="tip_no_little_tail">你还没有设置小尾巴</string>

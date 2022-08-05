@@ -177,7 +177,7 @@ public class PhotoViewFragment extends BaseFragment {
                 .setItems(strArray, (DialogInterface dialog, int which) -> {
                     switch (which) {
                         case 0:
-                            ImageUtil.download(getAttachContext(), photoViewBean.getOriginUrl(), photoViewBean.isGif());
+                            ImageUtil.download(getAttachContext(), photoViewBean.getOriginUrl());
                             break;
                     }
                 })

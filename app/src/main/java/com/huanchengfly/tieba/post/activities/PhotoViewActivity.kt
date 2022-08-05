@@ -269,8 +269,7 @@ class PhotoViewActivity : BaseActivity(), OnChangeBottomBarVisibilityListener,
             R.id.menu_save_image -> {
                 ImageUtil.download(
                     this,
-                    mAdapter.getBean(mViewPager.currentItem).originUrl,
-                    mAdapter.getBean(mViewPager.currentItem).isGif
+                    mAdapter.getBean(mViewPager.currentItem).originUrl
                 )
                 return true
             }
@@ -279,7 +278,6 @@ class PhotoViewActivity : BaseActivity(), OnChangeBottomBarVisibilityListener,
                 ImageUtil.download(
                     this,
                     mAdapter.getBean(mViewPager.currentItem).originUrl,
-                    mAdapter.getBean(mViewPager.currentItem).isGif,
                     true
                 ) { uri: Uri? ->
                     val intent = Intent(Intent.ACTION_SEND)

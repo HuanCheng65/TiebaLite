@@ -5,7 +5,7 @@ import android.os.Looper;
 import android.text.TextUtils;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.cache.ExternalCacheDiskCacheFactory;
+import com.bumptech.glide.load.engine.cache.ExternalPreferredCacheDiskCacheFactory;
 import com.bumptech.glide.load.engine.cache.InternalCacheDiskCacheFactory;
 
 import java.io.File;
@@ -95,8 +95,9 @@ public class GlideCacheUtil {
     public void clearImageAllCache(Context context) {
         clearImageDiskCache(context);
         clearImageMemoryCache(context);
-        String ImageExternalCatchDir = context.getExternalCacheDir() + ExternalCacheDiskCacheFactory.DEFAULT_DISK_CACHE_DIR;
-        deleteFolderFile(ImageExternalCatchDir, true);
+        String imageExternalCacheDir = context.getExternalCacheDir() + File.separator + ExternalPreferredCacheDiskCacheFactory.DEFAULT_DISK_CACHE_DIR;
+        deleteFolderFile(imageExternalCacheDir, false);
+        deleteFolderFile(context.getCacheDir() + File.separator + ".shareTemp", false);
     }
 
     /**
@@ -106,7 +107,9 @@ public class GlideCacheUtil {
      */
     public String getCacheSize(Context context) {
         try {
-            return getFormatSize(getFolderSize(new File(context.getCacheDir() + "/" + InternalCacheDiskCacheFactory.DEFAULT_DISK_CACHE_DIR)));
+            double glideCacheSize = getFolderSize(new File(context.getCacheDir(), InternalCacheDiskCacheFactory.DEFAULT_DISK_CACHE_DIR));
+            double shareCacheSize = getFolderSize(new File(context.getCacheDir(), ".shareTemp"));
+            return getFormatSize(glideCacheSize + shareCacheSize);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -118,9 +121,8 @@ public class GlideCacheUtil {
      *
      * @param file file
      * @return size
-     * @throws Exception
      */
-    private long getFolderSize(File file) throws Exception {
+    private long getFolderSize(File file) {
         long size = 0;
         try {
             File[] fileList = file.listFiles();
