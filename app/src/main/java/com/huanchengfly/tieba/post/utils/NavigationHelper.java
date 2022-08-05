@@ -238,11 +238,13 @@ public final class NavigationHelper {
             if (!path.contains("android_asset")) {
                 if (!(activityName.startsWith("WebViewActivity") || activityName.startsWith("LoginActivity"))) {
                     boolean isTiebaLink = host.contains("tieba.baidu.com") || host.contains("wappass.baidu.com") || host.contains("ufosdk.baidu.com") || host.contains("m.help.baidu.com");
-                    if (isTiebaLink || SharedPreferencesUtil.get(mContext, SharedPreferencesUtil.SP_SETTINGS).getBoolean("use_webview", true)) {
+                    if (isTiebaLink ||
+                            AppPreferencesUtilsKt.getAppPreferences(mContext).getUseWebView()
+                    ) {
                         startActivity(new Intent(mContext, WebViewActivity.class).putExtra("url", url));
                         return true;
                     } else {
-                        if (SharedPreferencesUtil.get(mContext, SharedPreferencesUtil.SP_SETTINGS).getBoolean("use_custom_tabs", true)) {
+                        if (AppPreferencesUtilsKt.getAppPreferences(mContext).getUseCustomTabs()) {
                             CustomTabsIntent.Builder intentBuilder = new CustomTabsIntent.Builder()
                                     .setShowTitle(true)
                                     .setToolbarColor(ThemeUtils.getColorByAttr(mContext, R.attr.colorToolbar));

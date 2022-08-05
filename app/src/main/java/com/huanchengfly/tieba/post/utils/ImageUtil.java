@@ -452,7 +452,7 @@ public class ImageUtil {
     }
 
     public static int getRadiusDp(Context context) {
-        return SharedPreferencesUtil.get(context, SharedPreferencesUtil.SP_SETTINGS).getInt("radius", 8);
+        return AppPreferencesUtilsKt.getAppPreferences(context).getRadius();
     }
 
     public static void load(ImageView imageView, @LoadType int type, String url) {
@@ -482,7 +482,7 @@ public class ImageUtil {
         if (!Util.canLoadGlide(imageView.getContext())) {
             return;
         }
-        int radius = SharedPreferencesUtil.get(imageView.getContext(), SharedPreferencesUtil.SP_SETTINGS).getInt("radius", 8);
+        int radius = getRadiusDp(imageView.getContext());
         RequestBuilder<Drawable> requestBuilder;
         if (skipNetworkCheck ||
                 type == LOAD_TYPE_AVATAR ||
@@ -570,7 +570,7 @@ public class ImageUtil {
 
     @ImageLoadSettings
     private static int getImageLoadSettings() {
-        return Integer.parseInt(SharedPreferencesUtil.get(BaseApplication.getINSTANCE(), SharedPreferencesUtil.SP_SETTINGS).getString("image_load_type", String.valueOf(SETTINGS_SMART_ORIGIN)));
+        return Integer.parseInt(AppPreferencesUtilsKt.getAppPreferences(BaseApplication.getINSTANCE()).getImageLoadType());
     }
 
     public static String imageToBase64(InputStream is) {

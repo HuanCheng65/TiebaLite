@@ -51,7 +51,7 @@ public class SharedPreferencesUtil {
         return put(get(context, preference), key, value);
     }
 
-    @StringDef({SP_APP_DATA, SP_IGNORE_VERSIONS, SP_PERMISSION, SP_SETTINGS, SP_WEBVIEW_INFO, SP_DRAFT, SP_PLUGINS})
+    @StringDef({SP_APP_DATA, SP_IGNORE_VERSIONS, SP_PERMISSION, SP_WEBVIEW_INFO, SP_DRAFT, SP_PLUGINS})
     @Retention(RetentionPolicy.SOURCE)
     public @interface Preferences {
     }

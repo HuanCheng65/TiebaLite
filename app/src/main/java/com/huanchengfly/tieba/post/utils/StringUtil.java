@@ -59,7 +59,7 @@ public class StringUtil {
     }
 
     public static CharSequence getUsernameString(Context context, String username, String nickname) {
-        boolean showBoth = SharedPreferencesUtil.get(context, SharedPreferencesUtil.SP_SETTINGS).getBoolean("show_both_username_and_nickname", false);
+        boolean showBoth = AppPreferencesUtilsKt.getAppPreferences(context).getShowBothUsernameAndNickname();
         if (TextUtils.isEmpty(nickname)) {
             return TextUtils.isEmpty(username) ? "" : username;
         } else if (showBoth && !TextUtils.isEmpty(username) && !TextUtils.equals(username, nickname)) {

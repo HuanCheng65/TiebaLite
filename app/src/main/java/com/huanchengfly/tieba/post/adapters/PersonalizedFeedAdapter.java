@@ -21,11 +21,11 @@ import com.huanchengfly.tieba.post.api.models.PersonalizedBean;
 import com.huanchengfly.tieba.post.components.MyViewHolder;
 import com.huanchengfly.tieba.post.components.dialogs.DislikeDialog;
 import com.huanchengfly.tieba.post.models.PhotoViewBean;
+import com.huanchengfly.tieba.post.utils.AppPreferencesUtilsKt;
 import com.huanchengfly.tieba.post.utils.DateTimeUtils;
 import com.huanchengfly.tieba.post.utils.DisplayUtil;
 import com.huanchengfly.tieba.post.utils.ImageUtil;
 import com.huanchengfly.tieba.post.utils.NavigationHelper;
-import com.huanchengfly.tieba.post.utils.SharedPreferencesUtil;
 import com.huanchengfly.tieba.post.utils.Util;
 import com.huanchengfly.tieba.post.widgets.MarkedImageView;
 import com.huanchengfly.tieba.post.widgets.VideoPlayerStandard;
@@ -243,7 +243,7 @@ public class PersonalizedFeedAdapter extends BaseMultiTypeAdapter<PersonalizedBe
             case TYPE_THREAD_MULTI_PIC:
                 GridLayout gridLayout = viewHolder.getView(R.id.forum_item_content_pics);
                 CardView cardView = viewHolder.getView(R.id.forum_item_content_pics_card);
-                cardView.setRadius(DisplayUtil.dp2px(getContext(), SharedPreferencesUtil.get(getContext(), SharedPreferencesUtil.SP_SETTINGS).getInt("radius", 8)));
+                cardView.setRadius(DisplayUtil.dp2px(getContext(), AppPreferencesUtilsKt.getAppPreferences(getContext()).getRadius()));
                 MarkedImageView firstImageView = viewHolder.getView(R.id.forum_item_content_pic_1);
                 MarkedImageView secondImageView = viewHolder.getView(R.id.forum_item_content_pic_2);
                 MarkedImageView thirdImageView = viewHolder.getView(R.id.forum_item_content_pic_3);

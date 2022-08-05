@@ -7,7 +7,6 @@ import androidx.annotation.Nullable;
 import com.huanchengfly.tieba.post.R;
 import com.huanchengfly.tieba.post.ui.common.intro.fragments.BaseIntroFragment;
 import com.huanchengfly.tieba.post.ui.common.theme.utils.ThemeUtils;
-import com.huanchengfly.tieba.post.utils.SharedPreferencesUtil;
 
 public class CustomSettingsFragment extends BaseIntroFragment {
     @Override
@@ -51,7 +50,7 @@ public class CustomSettingsFragment extends BaseIntroFragment {
     protected void initCustomLayout(ViewGroup container) {
         super.initCustomLayout(container);
         getChildFragmentManager().beginTransaction()
-                .replace(R.id.container, IntroSettingsFragment.newInstance(R.xml.custom_preferences, SharedPreferencesUtil.SP_SETTINGS), "IntroSettingsFragment")
+                .replace(R.id.container, IntroSettingsFragment.newInstance(R.xml.custom_preferences), "IntroSettingsFragment")
                 .commit();
     }
 }

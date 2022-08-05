@@ -33,6 +33,7 @@ import com.huanchengfly.tieba.post.components.MyViewHolder
 import com.huanchengfly.tieba.post.interfaces.Refreshable
 import com.huanchengfly.tieba.post.models.database.TopForum
 import com.huanchengfly.tieba.post.utils.*
+import com.huanchengfly.tieba.post.utils.ThemeUtil.dataStore
 import com.huanchengfly.tieba.post.utils.preload.PreloadUtil
 import com.huanchengfly.tieba.post.utils.preload.loaders.ForumLoader
 import com.scwang.smart.refresh.header.MaterialHeader
@@ -148,8 +149,7 @@ class MainForumListFragment : BaseFragment(), Refreshable, Toolbar.OnMenuItemCli
     private fun getSortType(forumName: String): ForumSortType {
         val defaultSortType = appPreferences.defaultSortType!!.toInt()
         return ForumSortType.valueOf(
-            SharedPreferencesUtil.get(attachContext, SharedPreferencesUtil.SP_SETTINGS)
-                .getInt(forumName + "_sort_type", defaultSortType)
+            dataStore.getInt(forumName + "_sort_type", defaultSortType)
         )
     }
 
