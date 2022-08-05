@@ -4,7 +4,6 @@ import android.os.Build
 import com.huanchengfly.tieba.post.BaseApplication
 import com.huanchengfly.tieba.post.api.Header
 import com.huanchengfly.tieba.post.api.Param
-import com.huanchengfly.tieba.post.api.interceptors.SortAndSignInterceptor
 import com.huanchengfly.tieba.post.api.models.OAID
 import com.huanchengfly.tieba.post.api.retrofit.adapter.DeferredCallAdapterFactory
 import com.huanchengfly.tieba.post.api.retrofit.adapter.FlowCallAdapterFactory

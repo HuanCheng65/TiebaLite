@@ -296,7 +296,7 @@ object ThemeUtil {
         view: View?,
         setFitsSystemWindow: Boolean,
         useCache: Boolean,
-        vararg transformations: BitmapTransformation?
+        vararg transformations: BitmapTransformation
     ) {
         if (view == null) {
             return
@@ -333,7 +333,7 @@ object ThemeUtil {
             (translucentBackground !is BitmapDrawable
                     || translucentBackground is BitmapDrawable &&
                     !(translucentBackground as BitmapDrawable?)!!.bitmap.isRecycled) &&
-            (transformations == null || transformations.isEmpty())
+            (transformations.isEmpty())
         ) {
             view.background = translucentBackground
             return
@@ -342,7 +342,7 @@ object ThemeUtil {
             .optionalFitCenter()
             .skipMemoryCache(true)
             .diskCacheStrategy(DiskCacheStrategy.NONE)
-        if (transformations != null && transformations.isNotEmpty()) {
+        if (transformations.isNotEmpty()) {
             bgOptions = bgOptions.transform(*transformations)
         }
         Glide.with(INSTANCE)

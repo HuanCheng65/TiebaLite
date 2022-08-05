@@ -1,9 +1,7 @@
-package com.huanchengfly.tieba.post.api.interceptors
+package com.huanchengfly.tieba.post.api.retrofit.interceptors
 
-import com.huanchengfly.tieba.post.api.Param
-import com.huanchengfly.tieba.post.api.containsEncodedName
-import com.huanchengfly.tieba.post.api.sortedEncodedRaw
-import com.huanchengfly.tieba.post.api.sortedRaw
+import com.huanchengfly.tieba.post.api.*
+import com.huanchengfly.tieba.post.api.retrofit.body.MyMultipartBody
 import com.huanchengfly.tieba.post.toMD5
 import okhttp3.FormBody
 import okhttp3.Interceptor
@@ -43,9 +41,9 @@ class SortAndSignInterceptor(private val appSecret: String) : Interceptor {
             }
 
             //在 FormBody 里
-            body is FormBody && (body.containsEncodedName("_client_version") || body.containsEncodedName(
-                "BDUSS"
-            ) || body.containsEncodedName("bdusstoken")) && !body.containsEncodedName(Param.SIGN) -> {
+            body is FormBody &&
+                    body.containsEncodedName(Param.CLIENT_VERSION) &&
+                    !body.containsEncodedName(Param.SIGN) -> {
                 val sortedEncodedRaw = body.sortedEncodedRaw()
                 val formBody = FormBody.Builder().apply {
                     sortedEncodedRaw.split('&').forEach {
@@ -56,6 +54,28 @@ class SortAndSignInterceptor(private val appSecret: String) : Interceptor {
                 }.build()
                 request.newBuilder()
                     .method(request.method, formBody)
+                    .build()
+            }
+
+            body is MyMultipartBody && body.contains(Param.CLIENT_VERSION) && !body.contains(Param.SIGN) -> {
+                val builder = body.newBuilder()
+                var fileParts = mutableListOf<MyMultipartBody.Part>()
+                body.parts.forEach {
+                    if (it.fileName() != null) {
+                        fileParts.add(it)
+                    }
+                }
+                body.parts.filterNot { it in fileParts }.sortedBy { it.name() }
+                    .forEach { builder.addPart(it) }
+                var newBody = builder.build()
+                val sortedRaw = newBody.parts.filter { it.fileName() == null }
+                    .joinToString("") { "${it.name()}=${it.readString()}" }
+                builder.addFormDataPart(Param.SIGN, calculateSign(sortedRaw, appSecret))
+                if (fileParts.isNotEmpty()) fileParts.sortedBy { it.fileName() }
+                    .forEach { builder.addPart(it) }
+                newBody = builder.build()
+                request.newBuilder()
+                    .method(request.method, newBody)
                     .build()
             }
 

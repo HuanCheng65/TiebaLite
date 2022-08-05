@@ -108,16 +108,25 @@ class BaseApplication : Application(), IApp {
         EmotionManager.init(this)
         registerActivityLifecycleCallbacks(object : ActivityLifecycleCallbacks {
             private var clipBoardHash: String? = null
+            private var lastTimestamp: Long = 0L
             private fun updateClipBoardHashCode() {
                 clipBoardHash = getClipBoardHash()
             }
 
-            private fun getClipBoardHash(): String? {
-                return "$clipBoard $clipBoardTimestamp"
+            private fun getClipBoardHash(): String {
+                return "$clipBoardTimestamp"
             }
 
             private val clipBoard: String?
-                get() = getClipBoardText()
+                get() {
+                    val timestamp = System.currentTimeMillis()
+                    return if (timestamp - lastTimestamp >= 10 * 1000L) {
+                        lastTimestamp = timestamp
+                        getClipBoardText()
+                    } else {
+                        null
+                    }
+                }
 
             private val clipBoardTimestamp: Long
                 get() = getClipBoardTimestamp()
@@ -176,8 +185,12 @@ class BaseApplication : Application(), IApp {
             }
 
             private fun checkClipBoard(activity: Activity) {
+                if (clipBoardHash == getClipBoardHash()) {
+                    return
+                }
+                updateClipBoardHashCode()
                 val clipBoardText = clipBoard
-                if (clipBoardHash != getClipBoardHash() && clipBoardText != null) {
+                if (clipBoardText != null) {
                     @RegExp val regex =
                         "((http|https)://)(([a-zA-Z0-9._-]+\\.[a-zA-Z]{2,6})|([0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}))(:[0-9]{1,4})*(/[a-zA-Z0-9&%_./-~-]*)?"
                     val pattern = Pattern.compile(regex)
@@ -239,7 +252,6 @@ class BaseApplication : Application(), IApp {
                         }
                     }
                 }
-                updateClipBoardHashCode()
             }
 
             override fun onActivityPaused(activity: Activity) {}

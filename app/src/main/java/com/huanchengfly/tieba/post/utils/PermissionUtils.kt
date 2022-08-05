@@ -188,3 +188,45 @@ object PermissionUtils {
 
     data class Permission(val permissions: List<String>, val desc: String)
 }
+
+class PermissionRequester(val context: Context) {
+    var permissions: List<String> = emptyList()
+    var description: String = ""
+    var onGranted: (() -> Unit)? = null
+    var onDenied: (() -> Unit)? = null
+
+    fun start() {
+        if (XXPermissions.isGranted(context, permissions)) {
+            onGranted?.invoke()
+        } else {
+            val dialog = RequestPermissionTipDialog(
+                context,
+                PermissionUtils.Permission(permissions, description)
+            )
+            XXPermissions.with(context)
+                .permission(permissions)
+                .request(object : OnPermissionCallback {
+                    override fun onGranted(permissions: List<String>, all: Boolean) {
+                        if (all) {
+                            onGranted?.invoke()
+                        } else {
+                            onDenied?.invoke()
+                        }
+                        dialog.dismiss()
+                    }
+
+                    override fun onDenied(permissions: List<String>, never: Boolean) {
+                        onDenied?.invoke()
+                        dialog.dismiss()
+                    }
+                })
+            dialog.show()
+        }
+    }
+}
+
+fun Context.requestPermission(
+    builder: PermissionRequester.() -> Unit
+) {
+    PermissionRequester(this).apply(builder).start()
+}

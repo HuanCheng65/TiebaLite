@@ -7,7 +7,6 @@ import com.huanchengfly.tieba.post.api.models.*
 import com.huanchengfly.tieba.post.api.models.web.ForumBean
 import com.huanchengfly.tieba.post.api.models.web.ForumHome
 import com.huanchengfly.tieba.post.api.models.web.HotMessageListBean
-import com.huanchengfly.tieba.post.api.models.web.Profile
 import com.huanchengfly.tieba.post.api.retrofit.ApiResult
 import com.huanchengfly.tieba.post.models.DislikeBean
 import com.huanchengfly.tieba.post.models.MyInfoBean
@@ -15,6 +14,7 @@ import com.huanchengfly.tieba.post.models.PhotoInfoBean
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.flow.Flow
 import retrofit2.Call
+import java.io.File
 
 interface ITiebaApi {
     /**
@@ -205,12 +205,12 @@ interface ITiebaApi {
      */
     fun profileFlow(
         uid: String
-    ): Flow<ProfileBean>
+    ): Flow<Profile>
 
     /**
      * 用户信息（异步）
      */
-    fun myProfileAsync(): Deferred<ApiResult<Profile>>
+    fun myProfileAsync(): Deferred<ApiResult<com.huanchengfly.tieba.post.api.models.web.Profile>>
 
     /**
      * 取关一个吧
@@ -882,4 +882,29 @@ interface ITiebaApi {
         bduss: String,
         sToken: String
     ): Flow<LoginBean>
+
+    /**
+     * 修改个人资料
+     *
+     * @param birthdayShowStatus 是否仅显示星座
+     * @param birthdayTime 生日时间戳 / 1000
+     * @param intro 个人简介（最多 500 字）
+     * @param sex 性别（1 = 男，2 = 女）
+     */
+    fun profileModifyFlow(
+        birthdayShowStatus: Boolean,
+        birthdayTime: String,
+        intro: String,
+        sex: String
+    ): Flow<CommonResponse>
+
+    /**
+     * 上传头像
+     *
+     * @param file 图片 File 对象
+     *
+     */
+    fun imgPortrait(
+        file: File
+    ): Flow<CommonResponse>
 }

@@ -57,7 +57,7 @@ interface WebTiebaApi {
         @Query("format") format: String,
         @Query("eqid") eqid: String,
         @Query("refer") refer: String
-    ): Deferred<ApiResult<Profile>>
+    ): Deferred<ApiResult<com.huanchengfly.tieba.post.api.models.web.Profile>>
 
     @GET("/mo/q/hotMessage/main")
     fun hotTopicMain(

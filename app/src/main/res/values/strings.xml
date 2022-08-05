@@ -164,11 +164,12 @@
     <string name="toast_no_permission_insert_photo">未授予「存储空间」权限，无法插入图片</string>
     <string name="message_need_permission">这些权限将仅用于必要的工作。\n</string>
     <string name="message_permission_desc">「%1$s」权限：%2$s\n</string>
-    <string name="tip_permission_storage">用于保存、上传图片。</string>
+    <string name="tip_permission_storage">用于保存、上传图片，更换头像。</string>
     <string name="tip_regrant_permission">请点击「%1$s」重新授权。</string>
     <string name="tip_no_permission">权限未授予，部分功能可能无法使用</string>
     <string name="tip_permission_phone">获取您的 IMEI 以用于请求百度 API。</string>
     <string name="toast_no_permission_save_photo">未授予「存储空间」权限，无法保存图片</string>
+    <string name="toast_no_permission_upload_portrait">未授予「存储空间」权限，无法上传头像</string>
     <string name="menu_save_photo">保存图片</string>
     <string name="toast_play_failed">播放失败</string>
     <string name="toast_cannot_view">抱歉，当前暂时无法浏览本吧</string>
@@ -527,4 +528,18 @@
     <string name="title_search_post_sort_by_relevant">相关性排序</string>
     <string name="title_activity_edit_profile">编辑资料</string>
     <string name="button_save_profile">保存修改</string>
+    <string name="title_username">用户名</string>
+    <string name="title_nickname">昵称</string>
+    <string name="profile_sex">性别</string>
+    <string name="profile_sex_female">女</string>
+    <string name="profile_sex_male">男</string>
+    <string name="profile_sex_unset" />
+    <string name="toast_modify_nickname_success">昵称修改成功</string>
+    <string name="tb_age">吧龄 %s 年</string>
+    <string name="upload_portrait">上传头像</string>
+    <string name="title_intro">简介</string>
+    <string name="title_modify_nickname">修改昵称</string>
+    <string name="toast_intro_length_beyond_restrict">你输入的字数超出限制</string>
+    <string name="title_modify_sex">选择性别</string>
+    <string name="checked">已选中</string>
 </resources>

@@ -165,6 +165,7 @@ class MyInfoFragment : BaseFragment(), View.OnClickListener, CompoundButton.OnCh
                     }
                     .flowOn(Dispatchers.IO)
                     .collect {
+                        profileBean = it
                         refreshHeader(it)
                         updateAccount(it)
                         mRefreshView.isRefreshing = false
@@ -221,7 +222,7 @@ class MyInfoFragment : BaseFragment(), View.OnClickListener, CompoundButton.OnCh
             R.id.my_info_settings,
             R.id.my_info_about
         ).forEach {
-            view.findViewById<View>(it).setOnClickListener(this)
+            view.findViewById<View>(it)?.setOnClickListener(this)
         }
         (followsTextView.parent as View).setOnClickListener {
             if (profileBean == null) {

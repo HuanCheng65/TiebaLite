@@ -1,10 +1,7 @@
 package com.huanchengfly.tieba.post.widgets.compose
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.RowScope
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.*
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.Text
@@ -16,7 +13,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import com.google.accompanist.insets.statusBarsHeight
 import com.huanchengfly.tieba.post.R
 import com.huanchengfly.tieba.post.ui.common.theme.compose.ExtendedTheme
 import com.huanchengfly.tieba.post.utils.compose.calcStatusBarColor
@@ -55,7 +51,7 @@ fun Toolbar(
     Column {
         Spacer(
             modifier = Modifier
-                .statusBarsHeight()
+                .windowInsetsTopHeight(WindowInsets.statusBars)
                 .fillMaxWidth()
                 .background(color = ExtendedTheme.colors.topBar.calcStatusBarColor())
         )

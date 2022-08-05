@@ -1,6 +1,7 @@
 package com.huanchengfly.tieba.post.api.retrofit.interceptors
 
 import com.huanchengfly.tieba.post.api.*
+import com.huanchengfly.tieba.post.api.retrofit.body.MyMultipartBody
 import okhttp3.FormBody
 import okhttp3.Interceptor
 import okhttp3.Response
@@ -65,9 +66,22 @@ class CommonParamInterceptor(private vararg val additionParams: ParamExpression)
                 }.build()
             }
 
-            //如果方式不为 GET 且 Body 不为空或者为 FormBody 则无法添加公共参数
-            else -> {
+            body is MyMultipartBody -> {
+                val oldBody = body
+                body = oldBody.newBuilder()
+                    .addAllParts(oldBody).apply {
+                        additionParams.forEachNonNull { name, value ->
+                            if (!oldBody.contains(name) &&
+                                !noCommonParams.contains(name)
+                            ) {
+                                addFormDataPart(name, value)
+                            }
+                        }
+                    }.build()
             }
+
+            //如果方式不为 GET 且 Body 不为空或者为 FormBody 则无法添加公共参数
+            else -> {}
         }
 
         return chain.proceed(

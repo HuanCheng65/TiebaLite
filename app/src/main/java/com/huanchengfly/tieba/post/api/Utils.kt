@@ -14,3 +14,5 @@ fun getScreenHeight(): Int =
     ScreenInfo.EXACT_SCREEN_HEIGHT - StatusBarUtil.getStatusBarHeight(BaseApplication.INSTANCE)
 
 fun getScreenWidth(): Int = ScreenInfo.EXACT_SCREEN_WIDTH
+
+fun Boolean.booleanToString(): String = if (this) "1" else "0"

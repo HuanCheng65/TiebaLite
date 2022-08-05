@@ -1,6 +1,7 @@
 package com.huanchengfly.tieba.post.ui.common.theme.compose
 
 import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.material.Colors
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.darkColors
 import androidx.compose.material.lightColors
@@ -12,6 +13,7 @@ import androidx.compose.ui.graphics.Color
 import com.huanchengfly.tieba.post.BaseApplication
 import com.huanchengfly.tieba.post.R
 import com.huanchengfly.tieba.post.utils.ThemeUtil
+import com.huanchengfly.tieba.post.utils.compose.darken
 
 @Immutable
 data class ExtendedColors(
@@ -80,16 +82,30 @@ private val LightColorPalette = lightColors(
     primary = Purple500,
     primaryVariant = Purple700,
     secondary = Teal200
-
-    /* Other default colors to override
-    background = Color.White,
-    surface = Color.White,
-    onPrimary = Color.White,
-    onSecondary = Color.Black,
-    onBackground = Color.Black,
-    onSurface = Color.Black,
-    */
 )
+
+fun getColorPalette(darkTheme: Boolean, theme: String): Colors {
+    val primaryColor = Color(
+        BaseApplication.ThemeDelegate.getColorByAttr(
+            BaseApplication.INSTANCE,
+            R.attr.colorPrimary,
+            theme
+        )
+    )
+    return if (darkTheme) {
+        darkColors(
+            primary = primaryColor,
+            primaryVariant = primaryColor.darken(),
+            secondary = primaryColor
+        )
+    } else {
+        lightColors(
+            primary = primaryColor,
+            primaryVariant = primaryColor.darken(),
+            secondary = primaryColor
+        )
+    }
+}
 
 private fun getThemeColorForTheme(theme: String): ExtendedColors =
     ExtendedColors(
@@ -265,11 +281,7 @@ private fun getThemeColorForTheme(theme: String): ExtendedColors =
 
 @Composable
 fun TiebaLiteTheme(darkTheme: Boolean = isSystemInDarkTheme(), content: @Composable () -> Unit) {
-    val colors = if (darkTheme) {
-        DarkColorPalette
-    } else {
-        LightColorPalette
-    }
+    val colors = getColorPalette(darkTheme, ThemeUtil.themeState.value)
 
     val extendedColors = getThemeColorForTheme(ThemeUtil.themeState.value)
 
