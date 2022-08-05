@@ -111,15 +111,16 @@ object EmotionManager {
     }
 
     private fun updateCache() {
-        val emotionDataCacheFile = File(getEmotionCacheDir(), "emotion_data_cache")
-        if (!emotionDataCacheFile.exists()) {
-            emotionDataCacheFile.createNewFile()
+        runCatching {
+            val emotionDataCacheFile = File(getEmotionCacheDir(), "emotion_data_cache")
+            if (emotionDataCacheFile.exists() || emotionDataCacheFile.createNewFile()) {
+                FileUtil.writeFile(
+                    emotionDataCacheFile,
+                    EmotionCache(emotionIds, emotionMapping).toJson(),
+                    false
+                )
+            }
         }
-        FileUtil.writeFile(
-            emotionDataCacheFile,
-            EmotionCache(emotionIds, emotionMapping).toJson(),
-            false
-        )
     }
 
     private fun getContext(): Context {

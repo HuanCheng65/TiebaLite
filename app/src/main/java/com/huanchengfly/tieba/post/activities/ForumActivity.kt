@@ -66,6 +66,7 @@ import com.huanchengfly.tieba.post.ui.common.theme.utils.ThemeUtils
 import com.huanchengfly.tieba.post.utils.*
 import com.huanchengfly.tieba.post.utils.ColorUtils.getDarkerColor
 import com.huanchengfly.tieba.post.utils.ColorUtils.greifyColor
+import com.huanchengfly.tieba.post.utils.StringUtil.getShortNumString
 import com.huanchengfly.tieba.post.utils.anim.animSet
 import com.huanchengfly.tieba.post.utils.preload.PreloadUtil
 import com.huanchengfly.tieba.post.widgets.MyViewPager
@@ -618,21 +619,6 @@ class ForumActivity : BaseActivity(), View.OnClickListener, OnRefreshedListener,
         }
     }
 
-    private fun getNumStr(num: String): String {
-        val long = num.toLong()
-        if (long > 9999) {
-            val longW = long * 10 / 10000L / 10F
-            if (longW > 999) {
-                val longKW = longW.toLong() / 1000L
-                return "${longKW}KW"
-            } else {
-                return "${longW}W"
-            }
-        } else {
-            return num
-        }
-    }
-
     private fun refreshHeaderView() {
         if (mDataBean != null && mDataBean!!.forum != null) {
             headerView.visibility = View.VISIBLE
@@ -688,9 +674,9 @@ class ForumActivity : BaseActivity(), View.OnClickListener, OnRefreshedListener,
                 it.typeface = Typeface.createFromAsset(assets, "bebas.ttf")
             }
             //statTitleTextView.typeface = Typeface.createFromAsset(assets, "TiebaStatFont.ttf")
-            statMembersTextView.text = getNumStr(mDataBean!!.forum!!.memberNum!!)
-            statPostsTextView.text = getNumStr(mDataBean!!.forum!!.postNum!!)
-            statThreadsTextView.text = getNumStr(mDataBean!!.forum!!.threadNum!!)
+            statMembersTextView.text = mDataBean!!.forum!!.memberNum!!.getShortNumString()
+            statPostsTextView.text = mDataBean!!.forum!!.postNum!!.getShortNumString()
+            statThreadsTextView.text = mDataBean!!.forum!!.threadNum!!.getShortNumString()
             if (mDataBean!!.forum!!.slogan.isNullOrEmpty()) {
                 (headerSloganTextView.parent as View).visibility = View.GONE
             } else {

@@ -564,7 +564,7 @@ class ThreadReplyAdapter(context: Context) :
         var username: CharSequence =
             if (userInfoBean == null) item.authorId ?: "" else StringUtil.getUsernameString(
                 context,
-                userInfoBean.name,
+                userInfoBean.name ?: "",
                 userInfoBean.nameShow
             )
         if (userInfoBean != null && userInfoBean.isBawu == "1") {

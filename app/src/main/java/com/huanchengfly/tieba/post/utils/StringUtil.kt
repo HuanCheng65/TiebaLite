@@ -1,82 +1,108 @@
-package com.huanchengfly.tieba.post.utils;
+package com.huanchengfly.tieba.post.utils
 
-import android.content.Context;
-import android.graphics.drawable.Drawable;
-import android.text.Spannable;
-import android.text.SpannableString;
-import android.text.SpannableStringBuilder;
-import android.text.Spanned;
-import android.text.TextPaint;
-import android.text.TextUtils;
-import android.text.style.ForegroundColorSpan;
-import android.widget.TextView;
+import android.content.Context
+import android.text.*
+import android.text.style.ForegroundColorSpan
+import android.widget.TextView
+import com.huanchengfly.tieba.post.R
+import com.huanchengfly.tieba.post.components.spans.EmotionSpanV2
+import com.huanchengfly.tieba.post.ui.common.theme.utils.ThemeUtils
+import com.huanchengfly.tieba.post.utils.EmotionManager.getEmotionDrawable
+import com.huanchengfly.tieba.post.utils.EmotionManager.getEmotionIdByName
+import java.util.regex.Pattern
+import kotlin.math.roundToInt
 
-import com.huanchengfly.tieba.post.R;
-import com.huanchengfly.tieba.post.components.spans.EmotionSpanV2;
-import com.huanchengfly.tieba.post.ui.common.theme.utils.ThemeUtils;
-
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-public class StringUtil {
-    public static SpannableString getEmotionContent(int emotion_map_type, final TextView tv, CharSequence source) {
-        try {
+object StringUtil {
+    @JvmStatic
+    fun getEmotionContent(
+        emotion_map_type: Int,
+        tv: TextView,
+        source: CharSequence?
+    ): SpannableString {
+        return try {
             if (source == null) {
-                return new SpannableString("");
+                return SpannableString("")
             }
-            SpannableString spannableString;
-            if (source instanceof SpannableString) {
-                spannableString = (SpannableString) source;
+            val spannableString: SpannableString = if (source is SpannableString) {
+                source
             } else {
-                spannableString = new SpannableString(source);
+                SpannableString(source)
             }
-            String regexEmotion = EmotionUtil.getRegex(emotion_map_type);
-            Pattern patternEmotion = Pattern.compile(regexEmotion);
-            Matcher matcherEmotion = patternEmotion.matcher(spannableString);
+            val regexEmotion = EmotionUtil.getRegex(emotion_map_type)
+            val patternEmotion = Pattern.compile(regexEmotion)
+            val matcherEmotion = patternEmotion.matcher(spannableString)
             while (matcherEmotion.find()) {
-                String key = matcherEmotion.group();
-                int start = matcherEmotion.start();
-                String group1 = matcherEmotion.group(1);
-                Drawable emotionDrawable = EmotionManager.INSTANCE.getEmotionDrawable(tv.getContext(), EmotionManager.INSTANCE.getEmotionIdByName(group1));
+                val key = matcherEmotion.group()
+                val start = matcherEmotion.start()
+                val group1 = matcherEmotion.group(1) ?: ""
+                val emotionDrawable = getEmotionDrawable(tv.context, getEmotionIdByName(group1))
                 if (emotionDrawable != null) {
-                    TextPaint paint = tv.getPaint();
-                    int size = Math.round(-paint.ascent() + paint.descent());
-                    EmotionSpanV2 span = new EmotionSpanV2(emotionDrawable, size);
-                    spannableString.setSpan(span, start, start + key.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    val paint = tv.paint
+                    val size = (-paint.ascent() + paint.descent()).roundToInt()
+                    val span = EmotionSpanV2(emotionDrawable, size)
+                    spannableString.setSpan(
+                        span,
+                        start,
+                        start + key.length,
+                        Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+                    )
                 }
             }
-            return spannableString;
-        } catch (Exception e) {
-            e.printStackTrace();
-            SpannableString spannableString;
-            if (source instanceof SpannableString) {
-                spannableString = (SpannableString) source;
+            spannableString
+        } catch (e: Exception) {
+            e.printStackTrace()
+            val spannableString: SpannableString = if (source is SpannableString) {
+                source
             } else {
-                spannableString = new SpannableString(source);
+                SpannableString(source)
             }
-            return spannableString;
+            spannableString
         }
     }
 
-    public static CharSequence getUsernameString(Context context, String username, String nickname) {
-        boolean showBoth = AppPreferencesUtilsKt.getAppPreferences(context).getShowBothUsernameAndNickname();
+    @JvmStatic
+    fun getUsernameString(context: Context, username: String, nickname: String?): CharSequence {
+        val showBoth = context.appPreferences.showBothUsernameAndNickname
         if (TextUtils.isEmpty(nickname)) {
-            return TextUtils.isEmpty(username) ? "" : username;
-        } else if (showBoth && !TextUtils.isEmpty(username) && !TextUtils.equals(username, nickname)) {
-            SpannableStringBuilder builder = new SpannableStringBuilder(nickname);
-            builder.append("(" + username + ")", new ForegroundColorSpan(ThemeUtils.getColorByAttr(context, R.attr.color_text_disabled)), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-            return builder;
+            return if (TextUtils.isEmpty(username)) "" else username
+        } else if (showBoth && !TextUtils.isEmpty(username) && !TextUtils.equals(
+                username,
+                nickname
+            )
+        ) {
+            val builder = SpannableStringBuilder(nickname)
+            builder.append(
+                "($username)",
+                ForegroundColorSpan(ThemeUtils.getColorByAttr(context, R.attr.color_text_disabled)),
+                Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+            )
+            return builder
         }
-        return nickname;
+        return nickname ?: ""
     }
 
-    public static String getAvatarUrl(String portrait) {
-        if (TextUtils.isEmpty(portrait)) {
-            return "";
+    @JvmStatic
+    fun getAvatarUrl(portrait: String?): String {
+        if (portrait.isNullOrEmpty()) {
+            return ""
         }
-        if (portrait.startsWith("http://") || portrait.startsWith("https://")) {
-            return portrait;
+        return if (portrait.startsWith("http://") || portrait.startsWith("https://")) {
+            portrait
+        } else "http://tb.himg.baidu.com/sys/portrait/item/$portrait"
+    }
+
+    fun String.getShortNumString(): String {
+        val long = toLongOrNull() ?: return ""
+        return if (long > 9999) {
+            val longW = long * 10 / 10000L / 10F
+            if (longW > 999) {
+                val longKW = longW.toLong() / 1000L
+                "${longKW}KW"
+            } else {
+                "${longW}W"
+            }
+        } else {
+            this
         }
-        return "http://tb.himg.baidu.com/sys/portrait/item/" + portrait;
     }
 }

@@ -19,7 +19,7 @@ class SearchUserAdapter(
     override fun convert(viewHolder: MyViewHolder, item: SearchUserBean.UserBean, position: Int) {
         viewHolder.setText(
             R.id.item_search_user_title,
-            StringUtil.getUsernameString(context, item.name, item.userNickname)
+            StringUtil.getUsernameString(context, item.name ?: "", item.userNickname)
         )
         ImageUtil.load(
             viewHolder.getView(R.id.item_search_user_avatar),

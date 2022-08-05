@@ -28,6 +28,7 @@ import com.huanchengfly.tieba.post.interfaces.Refreshable
 import com.huanchengfly.tieba.post.interfaces.ScrollTopable
 import com.huanchengfly.tieba.post.utils.AnimUtil.alphaIn
 import com.huanchengfly.tieba.post.utils.ImageUtil
+import com.huanchengfly.tieba.post.utils.StringUtil.getShortNumString
 import com.huanchengfly.tieba.post.utils.ThemeUtil
 import com.huanchengfly.tieba.post.utils.Util
 import kotlinx.coroutines.Dispatchers.IO
@@ -143,21 +144,6 @@ class ForumInfoFragment : BaseFragment(), Refreshable, ScrollTopable {
         }
     }
 
-    private fun getNumStr(num: String): String {
-        val long = num.toLong()
-        if (long > 9999) {
-            val longW = long * 10 / 10000L / 10F
-            if (longW > 999) {
-                val longKW = longW.toLong() / 1000L
-                return "${longKW}KW"
-            } else {
-                return "${longW}W"
-            }
-        } else {
-            return num
-        }
-    }
-
     private fun refresh() {
         mRefreshLayout.isRefreshing = true
         launch(IO + job) {
@@ -174,9 +160,9 @@ class ForumInfoFragment : BaseFragment(), Refreshable, ScrollTopable {
                     ImageUtil.load(avatar, ImageUtil.LOAD_TYPE_AVATAR, data.forum!!.avatar)
                     title.text = attachContext.getString(R.string.title_forum, data.forum!!.name)
                     slogan.text = data.forum!!.slogan
-                    statMembersTextView.text = getNumStr(mDataBean!!.forum!!.memberNum!!)
-                    statPostsTextView.text = getNumStr(mDataBean!!.forum!!.postNum!!)
-                    statThreadsTextView.text = getNumStr(mDataBean!!.forum!!.threadNum!!)
+                    statMembersTextView.text = mDataBean!!.forum!!.memberNum!!.getShortNumString()
+                    statPostsTextView.text = mDataBean!!.forum!!.postNum!!.getShortNumString()
+                    statThreadsTextView.text = mDataBean!!.forum!!.threadNum!!.getShortNumString()
                     if (data.forum!!.zyqDefine != null && data.forum!!.zyqDefine!!.isNotEmpty()) {
                         mFriendLinksView.visibility = View.VISIBLE
                         zyqTitle.text = data.forum!!.zyqTitle

@@ -30,7 +30,9 @@
         android:layout_below="@id/item_search_forum_title"
         android:layout_alignBottom="@id/item_search_forum_avatar"
         android:layout_toEndOf="@id/item_search_forum_avatar"
+        android:ellipsize="end"
         android:gravity="bottom"
+        android:maxLines="1"
         android:textSize="13sp"
         app:tint="@color/default_color_text_secondary"
         tools:text="Sub Title" />

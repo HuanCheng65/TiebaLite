@@ -65,7 +65,7 @@ class MessageListAdapter(
         }
         viewHolder.setText(
             R.id.message_list_item_user_name,
-            StringUtil.getUsernameString(context, item.replyer.name, item.replyer.nameShow)
+            StringUtil.getUsernameString(context, item.replyer.name ?: "", item.replyer.nameShow)
         )
         viewHolder.setText(
             R.id.message_list_item_user_time,

@@ -158,7 +158,8 @@ class ThreadMainPostAdapter(
             true
         }
         holder.setVisibility(R.id.thread_list_item_user_lz_tip, true)
-        var username: CharSequence = StringUtil.getUsernameString(context, user.name, user.nameShow)
+        var username: CharSequence =
+            StringUtil.getUsernameString(context, user.name ?: "", user.nameShow)
         if (user.isBawu == "1") {
             val bawuType = if (user.bawuType == "manager") "吧主" else "小吧主"
             username = SpannableStringBuilder(username).apply {
