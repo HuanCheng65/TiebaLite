@@ -83,7 +83,7 @@ data class Profile(
         @SerializedName("bg_pic")
         val bgPic: String,
         @SerializedName("birthday_info")
-        val birthdayInfo: BirthdayInfo,
+        val birthdayInfo: BirthdayInfo?,
         @SerializedName("bookmark_count")
         val bookmarkCount: String,
         @SerializedName("bookmark_new_count")
@@ -159,8 +159,6 @@ data class Profile(
         val newTshowIcon: List<Any>,
         @SerializedName("outer_id")
         val outerId: String,
-        @SerializedName("parr_scores")
-        val parrScores: ParrScores,
         @SerializedName("pay_member_info")
         val payMemberInfo: PayMemberInfo,
         val pendant: List<Any>,

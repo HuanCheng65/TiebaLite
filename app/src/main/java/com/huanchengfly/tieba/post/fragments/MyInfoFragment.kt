@@ -192,10 +192,10 @@ class MyInfoFragment : BaseFragment(), View.OnClickListener, CompoundButton.OnCh
             postNum = profile.user.postNum
             concernNum = profile.user.concernNum
             tbAge = profile.user.tbAge
-            age = profile.user.birthdayInfo.age
-            birthdayShowStatus = profile.user.birthdayInfo.birthdayShowStatus
-            birthdayTime = profile.user.birthdayInfo.birthdayTime
-            constellation = profile.user.birthdayInfo.constellation
+            age = profile.user.birthdayInfo?.age
+            birthdayShowStatus = profile.user.birthdayInfo?.birthdayShowStatus
+            birthdayTime = profile.user.birthdayInfo?.birthdayTime
+            constellation = profile.user.birthdayInfo?.constellation
             saveOrUpdate("uid = ?", uid)
         }
     }
