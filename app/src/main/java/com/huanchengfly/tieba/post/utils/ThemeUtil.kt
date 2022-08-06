@@ -371,7 +371,7 @@ object ThemeUtil {
     }
 
     @JvmStatic
-    fun setTranslucentThemeBackground(view: View) {
+    fun setTranslucentThemeBackground(view: View?) {
         setTranslucentThemeBackground(view, true, false)
     }
 

@@ -298,12 +298,16 @@ class MainForumListFragment : BaseFragment(), Refreshable, Toolbar.OnMenuItemCli
     }
 
     private fun List<ForumRecommend.LikeForum>.addFakeItems(divisor: Int): List<ForumRecommend.LikeForum> {
-        val fakeItemCount = divisor - (size % divisor)
-        return toMutableList().apply {
-            repeat(fakeItemCount) {
-                add(ForumRecommend.LikeForum("", "", "1", "0", "", isFake = true))
+        val mod = size % divisor
+        if (mod > 0) {
+            val fakeItemCount = divisor - mod
+            return toMutableList().apply {
+                repeat(fakeItemCount) {
+                    add(ForumRecommend.LikeForum("", "", "1", "0", "", isFake = true))
+                }
             }
         }
+        return this
     }
 
     override fun onRefresh() {
