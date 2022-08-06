@@ -683,7 +683,7 @@ class ForumActivity : BaseActivity(), View.OnClickListener, OnRefreshedListener,
                 (headerSloganTextView.parent as View).visibility = View.VISIBLE
                 headerSloganTextView.text = mDataBean!!.forum!!.slogan
             }
-            headerNameTextView.text = getString(R.string.text_forum_name, mDataBean!!.forum?.name)
+            headerNameTextView.text = getString(R.string.title_forum_name, mDataBean!!.forum?.name)
             if ("1" == mDataBean!!.forum?.isLike) {
                 if ("0" == mDataBean!!.forum?.signInInfo?.userInfo?.isSignIn) {
                     button.setText(R.string.button_sign_in)

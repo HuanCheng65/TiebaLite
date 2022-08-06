@@ -220,7 +220,7 @@ public class PersonalizedFeedAdapter extends BaseMultiTypeAdapter<PersonalizedBe
                     getContext().getString(
                             R.string.template_two_string,
                             relativeTime,
-                            getContext().getString(R.string.text_forum_name, threadBean.getForumName())
+                            getContext().getString(R.string.title_forum_name, threadBean.getForumName())
                     )
             );
         } else {

@@ -127,7 +127,7 @@ public class PhotoViewFragment extends BaseFragment {
 
                         @Override
                         public void onImageLoaded() {
-                            view.setDoubleTapZoomDpi(80);
+                            view.setDoubleTapZoomDpi(160);
                             view.setDoubleTapZoomDuration(200);
                             view.setDoubleTapZoomStyle(SubsamplingScaleImageView.ZOOM_FOCUS_FIXED);
                             view.setQuickScaleEnabled(false);

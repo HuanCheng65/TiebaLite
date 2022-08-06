@@ -147,7 +147,7 @@ class OKSignService : IntentService(TAG), CoroutineScope, ProgressListener {
                 total
             ),
             getString(
-                R.string.text_forum_name,
+                R.string.title_forum_name,
                 signDataBean.forumName
             )
         )

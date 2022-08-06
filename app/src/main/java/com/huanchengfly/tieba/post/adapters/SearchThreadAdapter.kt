@@ -44,8 +44,8 @@ class SearchThreadAdapter(
                 if (item.time != null) context.getString(
                     R.string.template_two_string,
                     DateTimeUtils.getRelativeTimeString(context, item.time),
-                    context.getString(R.string.text_forum_name, item.forumName)
-                ) else context.getString(R.string.text_forum_name, item.forumName)
+                    context.getString(R.string.title_forum_name, item.forumName)
+                ) else context.getString(R.string.title_forum_name, item.forumName)
             )
         }
         viewHolder.itemView.background = getItemBackgroundDrawable(

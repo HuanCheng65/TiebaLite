@@ -112,7 +112,7 @@
                                 android:layout_below="@id/my_info_grid_follows"
                                 android:layout_centerHorizontal="true"
                                 android:layout_marginTop="8dp"
-                                android:text="关注"
+                                android:text="@string/title_follow_num"
                                 android:textSize="14sp"
                                 app:tint="@color/default_color_text_secondary" />
 
@@ -152,7 +152,7 @@
                                 android:layout_below="@id/my_info_grid_fans"
                                 android:layout_centerHorizontal="true"
                                 android:layout_marginTop="8dp"
-                                android:text="粉丝"
+                                android:text="@string/title_fans_num"
                                 android:textSize="14sp"
                                 app:tint="@color/default_color_text_secondary" />
 
@@ -191,7 +191,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="center_horizontal"
                                 android:layout_marginTop="8dp"
-                                android:text="贴子"
+                                android:text="@string/title_posts_num"
                                 android:textSize="14sp"
                                 app:tint="@color/default_color_text_secondary" />
                         </LinearLayout>

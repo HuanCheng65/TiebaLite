@@ -35,7 +35,7 @@ fun <ItemValue> SingleSelector(
     selectedIndicator: @Composable () -> Unit = {
         Icon(
             imageVector = Icons.Rounded.Check,
-            contentDescription = stringResource(id = R.string.checked)
+            contentDescription = stringResource(id = R.string.desc_checked)
         )
     },
     colors: SelectorColors = SelectorDefaults.selectorColors(),

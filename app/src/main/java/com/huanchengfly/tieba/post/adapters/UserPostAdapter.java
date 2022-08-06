@@ -63,7 +63,7 @@ public class UserPostAdapter extends BaseMultiTypeDelegateAdapter<UserPostBean.P
                         getContext().getString(
                                 R.string.template_two_string,
                                 relativeTime,
-                                getContext().getString(R.string.text_forum_name, postBean.getForumName())
+                                getContext().getString(R.string.title_forum_name, postBean.getForumName())
                         )
                 );
             } else {
@@ -77,7 +77,7 @@ public class UserPostAdapter extends BaseMultiTypeDelegateAdapter<UserPostBean.P
                     R.id.message_list_item_user_time,
                     getContext().getString(R.string.template_two_string,
                             DateTimeUtils.getRelativeTimeString(getContext(), postBean.getCreateTime()),
-                            getContext().getString(R.string.text_forum_name, postBean.getForumName())
+                            getContext().getString(R.string.title_forum_name, postBean.getForumName())
                     )
             );
             TextView contentTextView = viewHolder.getView(R.id.message_list_item_content);

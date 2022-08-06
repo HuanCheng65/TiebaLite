@@ -15,7 +15,7 @@
     <string name="shortcut_my_message">我的消息</string>
     <string name="shortcut_search">搜索</string>
     <string name="forum_list_title">关注</string>
-    <string name="title_login">登录</string>
+    <string name="title_activity_login">登录</string>
     <string name="title_refresh">刷新</string>
     <string name="title_copy_link">复制链接</string>
     <string name="toast_copy_success">已复制到剪贴板</string>
@@ -126,7 +126,7 @@
     <string name="tip_store_deleted">贴子已被删除</string>
     <string name="content_top">置顶</string>
     <string name="tip_forum_header_liked">LV%1$s %2$s</string>
-    <string name="text_forum_name">%1$s吧</string>
+    <string name="title_forum_name">%1$s吧</string>
     <string name="toast_sign_success">签到成功， 经验 +%1$s。你是今天第 %2$s 个签到的。</string>
     <string name="button_sign_in">签到</string>
     <string name="button_signed">已签到</string>
@@ -541,5 +541,8 @@
     <string name="title_modify_nickname">修改昵称</string>
     <string name="toast_intro_length_beyond_restrict">你输入的字数超出限制</string>
     <string name="title_modify_sex">选择性别</string>
-    <string name="checked">已选中</string>
+    <string name="desc_checked">已选中</string>
+    <string name="title_follow_num">关注</string>
+    <string name="title_fans_num">粉丝</string>
+    <string name="title_posts_num">贴子</string>
 </resources>
