@@ -189,7 +189,7 @@ open class MainActivity : BaseActivity(), NavigationBarView.OnItemSelectedListen
                     Crashes.getLastSessionCrashReport().thenAccept {
                         val device = it.device
                         showDialog {
-                            setTitle(R.string.title_dialog_crash)
+                            setTitle(R.string.title_dialog_copy_crash_report)
                             setMessage(R.string.message_dialog_crash)
                             setPositiveButton(R.string.button_copy_crash) { _, _ ->
                                 TiebaUtil.copyText(

@@ -275,7 +275,7 @@ public final class NavigationHelper {
                         PackageManager pManager = mContext.getPackageManager();
                         appName = resolveInfo.loadLabel(pManager).toString();
                     } else {
-                        appName = mContext.getString(R.string.name_multiapp);
+                        appName = mContext.getString(R.string.name_multi_app);
                     }
                     new PermissionDialog(mContext,
                             new PermissionBean(PermissionDialog.CustomPermission.PERMISSION_START_APP,
@@ -303,7 +303,7 @@ public final class NavigationHelper {
                         PackageManager pManager = mContext.getPackageManager();
                         appName = resolveInfo.loadLabel(pManager).toString();
                     } else {
-                        appName = mContext.getString(R.string.name_multiapp);
+                        appName = mContext.getString(R.string.name_multi_app);
                     }
                     new PermissionDialog(mContext,
                             new PermissionBean(PermissionDialog.CustomPermission.PERMISSION_START_APP,

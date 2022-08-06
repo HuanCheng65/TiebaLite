@@ -208,11 +208,19 @@
     <androidx.preference.PreferenceCategory android:title="@string/title_sign_preference">
         <SwitchPreference
             android:defaultValue="true"
-            android:icon="@drawable/ic_round_speed"
+            android:icon="@drawable/ic_round_browse_gallery_24"
             android:key="oksign_slow_mode"
             android:summaryOff="@string/summary_oksign_slow_mode"
             android:summaryOn="@string/summary_oksign_slow_mode_on"
             android:title="@string/title_oksign_slow_mode" />
+
+        <SwitchPreference
+            android:defaultValue="false"
+            android:icon="@drawable/ic_round_speed"
+            android:key="oksign_use_official_oksign"
+            android:summary="@string/summary_oksign_use_official_oksign"
+            android:title="@string/title_oksign_use_official_oksign"
+            app:isPreferenceVisible="false" />
 
         <SwitchPreference
             android:defaultValue="false"

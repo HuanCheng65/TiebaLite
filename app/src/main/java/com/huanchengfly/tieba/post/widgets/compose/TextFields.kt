@@ -6,10 +6,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.ContentAlpha
-import androidx.compose.material.LocalContentColor
-import androidx.compose.material.LocalTextStyle
-import androidx.compose.material.Text
+import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -171,9 +168,13 @@ fun PlaceholderDecoration(
 @Composable
 fun ProvideContentColor(
     color: Color,
+    alpha: Float = color.alpha,
     content: @Composable () -> Unit
 ) {
-    CompositionLocalProvider(LocalContentColor provides color) {
+    CompositionLocalProvider(
+        LocalContentColor provides color,
+        LocalContentAlpha provides alpha
+    ) {
         content()
     }
 }

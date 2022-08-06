@@ -455,7 +455,10 @@ fun PageEditProfile(
                     ) {
                         Box(modifier = Modifier
                             .fillMaxSize()
-                            .clickable {
+                            .clickable(
+                                interactionSource = remember { MutableInteractionSource() },
+                                indication = null
+                            ) {
                                 showDialog = false
                             }
                         ) {
@@ -474,46 +477,50 @@ fun PageEditProfile(
                                     indication = null
                                 ) {}
                             ) {
-                                Text(
-                                    text = stringResource(id = R.string.title_modify_sex),
-                                    style = MaterialTheme.typography.h6,
-                                    modifier = Modifier
-                                        .padding(horizontal = 24.dp)
-                                        .padding(bottom = 16.dp)
-                                        .align(Alignment.CenterHorizontally)
-                                )
-                                Spacer(modifier = Modifier.height(16.dp))
-                                SingleSelector(
-                                    itemTitles = listOf(
-                                        stringResource(id = R.string.profile_sex_male),
-                                        stringResource(id = R.string.profile_sex_female)
-                                    ),
-                                    itemValues = listOf(1, 2),
-                                    selectedPosition = if (sex == 1) 0 else if (sex == 2) 1 else -1,
-                                    onItemSelected = { _, _, value, _ ->
-                                        sex = value
-                                        showDialog = false
-                                    }
-                                )
-                                Column(
-                                    modifier = Modifier
-                                        .padding(horizontal = 24.dp)
-                                        .padding(top = 16.dp)
-                                ) {
-                                    TextButton(
-                                        onClick = { showDialog = false },
-                                        modifier = Modifier.fillMaxWidth(),
-                                        shape = RoundedCornerShape(100),
-                                        colors = ButtonDefaults.textButtonColors(
-                                            backgroundColor = ExtendedTheme.colors.text.copy(alpha = 0.1f),
-                                            contentColor = ExtendedTheme.colors.text
+                                ProvideContentColor(color = ExtendedTheme.colors.text) {
+                                    Text(
+                                        text = stringResource(id = R.string.title_modify_sex),
+                                        style = MaterialTheme.typography.h6,
+                                        modifier = Modifier
+                                            .padding(horizontal = 24.dp)
+                                            .padding(bottom = 16.dp)
+                                            .align(Alignment.CenterHorizontally)
+                                    )
+                                    Spacer(modifier = Modifier.height(16.dp))
+                                    SingleSelector(
+                                        itemTitles = listOf(
+                                            stringResource(id = R.string.profile_sex_male),
+                                            stringResource(id = R.string.profile_sex_female)
                                         ),
-                                        contentPadding = PaddingValues(vertical = 12.dp)
+                                        itemValues = listOf(1, 2),
+                                        selectedPosition = if (sex == 1) 0 else if (sex == 2) 1 else -1,
+                                        onItemSelected = { _, _, value, _ ->
+                                            sex = value
+                                            showDialog = false
+                                        }
+                                    )
+                                    Column(
+                                        modifier = Modifier
+                                            .padding(horizontal = 24.dp)
+                                            .padding(top = 16.dp)
                                     ) {
-                                        Text(
-                                            text = stringResource(id = R.string.button_cancel),
-                                            fontSize = 16.sp
-                                        )
+                                        TextButton(
+                                            onClick = { showDialog = false },
+                                            modifier = Modifier.fillMaxWidth(),
+                                            shape = RoundedCornerShape(100),
+                                            colors = ButtonDefaults.textButtonColors(
+                                                backgroundColor = ExtendedTheme.colors.text.copy(
+                                                    alpha = 0.1f
+                                                ),
+                                                contentColor = ExtendedTheme.colors.text
+                                            ),
+                                            contentPadding = PaddingValues(vertical = 12.dp)
+                                        ) {
+                                            Text(
+                                                text = stringResource(id = R.string.button_cancel),
+                                                fontSize = 16.sp
+                                            )
+                                        }
                                     }
                                 }
                             }

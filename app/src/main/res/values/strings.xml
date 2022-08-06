@@ -214,7 +214,7 @@
     <string name="title_ask_permission">要允许 %1$s 访问您的%2$s吗？</string>
     <string name="title_ask_permission_clipboard_copy">要允许 %1$s 写入您的剪贴板吗？</string>
     <string name="title_start_app_permission">要允许 %1$s 打开您的%2$s吗？</string>
-    <string name="name_multiapp">应用</string>
+    <string name="name_multi_app">应用</string>
     <string name="settings_status_bar_darker">状态栏遮罩</string>
     <string name="tip_status_bar_darker">开启后非白色主题状态栏将略微变暗</string>
     <string name="summary_change_need_restart">更改将于下次启动时生效</string>
@@ -477,7 +477,7 @@
     <string name="text_size_large">大</string>
     <string name="text_size_very_large">极大</string>
     <string name="toast_after_change_will_restart">修改已保存，即将重启 App 以应用设置</string>
-    <string name="title_dialog_crash">崩溃了！</string>
+    <string name="title_dialog_copy_crash_report">崩溃了！</string>
     <string name="message_dialog_crash">非常抱歉，应用在使用中发生了崩溃。\n您可以复制崩溃报告链接来向开发者反馈。</string>
     <string name="button_copy_crash_link">复制报告链接</string>
     <string name="toast_get_link_failed">获取链接失败</string>
@@ -545,4 +545,6 @@
     <string name="title_follow_num">关注</string>
     <string name="title_fans_num">粉丝</string>
     <string name="title_posts_num">贴子</string>
+    <string name="title_oksign_use_official_oksign">使用官方一键签到</string>
+    <string name="summary_oksign_use_official_oksign">（实验性特性）先使用官方一键签到减少需签到吧数量，以加快签到速度</string>
 </resources>
