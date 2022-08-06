@@ -136,8 +136,8 @@
             android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".activities.LoginActivity"
-            android:label="@string/title_activity_login"
             android:configChanges="screenSize|screenLayout|orientation|smallestScreenSize|keyboardHidden"
+            android:label="@string/title_activity_login"
             android:windowSoftInputMode="adjustResize" />
 
         <service
