@@ -20,7 +20,6 @@ if (buildId != null) {
 if (isPerVersion) {
     applicationVersionName = applicationVersionName + ".${applicationProperties["preReleaseName"]}-${applicationProperties["preReleaseVer"]}"
 }
-project.ext.set("archivesBaseName",  "${applicationVersionName}(${applicationVersionCode})".toString())
 
 android {
     compileSdkVersion 32
@@ -84,6 +83,13 @@ android {
             proto {
                 srcDir 'src/main/proto'
             }
+        }
+    }
+    applicationVariants.all { variant ->
+        variant.outputs.each { output ->
+            def outputFile = output.outputFile
+            def fileName = "${variant.buildType.name}-${applicationVersionName}(${applicationVersionCode}).apk"
+            output.outputFileName = new File(outputFile.parent, fileName).name
         }
     }
 }
@@ -189,14 +195,15 @@ dependencies {
     implementation 'com.github.getActivity:XXPermissions:13.6'
     implementation "com.gyf.immersionbar:immersionbar:3.0.0"
 
-    implementation "com.github.yalantis:ucrop:2.2.7"
+    implementation "com.github.yalantis:ucrop:2.2.8"
 
     implementation "com.billy.android:pre-loader:2.1.0"
 
     implementation "com.jakewharton:butterknife:10.2.3"
     kapt "com.jakewharton:butterknife-compiler:10.2.3"
 
-    implementation ('com.alibaba.android:vlayout:1.3.0@aar') {
+    //noinspection GradleDependency
+    implementation ('com.alibaba.android:vlayout:1.2.40@aar') {
         transitive = true
     }
 

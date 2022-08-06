@@ -6,58 +6,23 @@
 -dontskipnonpubliclibraryclasses
 # 不做预校验，preverify是proguard的四个步骤之一，Android不需要preverify，去掉这一步能够加快混淆速度。
 -dontpreverify
--dontoptimize
 -verbose
-# 避免混淆泛型
--keepattributes Signature
 
-# 保留Annotation不混淆
--keepattributes *Annotation*,InnerClasses
 #google推荐算法
 -optimizations !code/simplification/arithmetic,!code/simplification/cast,!field/*,!class/merging/*
 # 避免混淆Annotation、内部类、泛型、匿名类
--keepattributes *Annotation*,InnerClasses,Signature,EnclosingMethod
+-keepattributes *Annotation*,InnerClasses,Signature,EnclosingMethod,Exceptions
 # 重命名抛出异常时的文件名称
-# -renamesourcefileattribute SourceFile
+-renamesourcefileattribute Source
 # 抛出异常时保留代码行号
 -keepattributes SourceFile,LineNumberTable
-# 处理support包
--dontnote android.support.**
--dontwarn android.support.**
-# 保留继承的
--keep public class * extends android.support.v4.**
--keep public class * extends android.support.v7.**
--keep public class * extends android.support.annotation.**
-
-# 处理AndroidX
--keep class com.google.android.material.** {*;}
--keep class androidx.** {*;}
--keep public class * extends androidx.**
--keep interface androidx.** {*;}
--dontwarn com.google.android.material.**
--dontnote com.google.android.material.**
--dontwarn androidx.**
-
--keepclasseswithmembers class * {
-    public <init>(android.content.Context, android.util.AttributeSet);
-}
-
--keepclasseswithmembers class * {
-    public <init>(android.content.Context, android.util.AttributeSet, int);
-}
-
-# 保持自定义控件类不被混淆，指定格式的构造方法不去混淆
--keepclasseswithmembers class * {
-    public <init>(android.content.Context);
-    public <init>(android.content.Context, android.util.AttributeSet);
-    public <init>(android.content.Context, android.util.AttributeSet, int);
-}
 
 # 保持自定义控件类不被混淆
--keep public class * extends android.view.View {
+-keepclassmembers class * extends android.view.View {
     public <init>(android.content.Context);
     public <init>(android.content.Context, android.util.AttributeSet);
     public <init>(android.content.Context, android.util.AttributeSet, int);
+    public <init>(android.content.Context, android.util.AttributeSet, int, int);
     public void set*(...);
     *** get*();
 }
@@ -65,14 +30,13 @@
 # 保留R下面的资源
 -keep class **.R$* {*;}
 # 保留四大组件，自定义的Application等这些类不被混淆
--keep public class * extends android.app.Fragment
+# -keep public class * extends android.app.Fragment
 -keep public class * extends android.app.Activity
--keep public class * extends android.app.Appliction
+-keep public class * extends android.app.Application
 -keep public class * extends android.app.Service
 -keep public class * extends android.content.BroadcastReceiver
 -keep public class * extends android.content.ContentProvider
 -keep public class * extends android.preference.Preference
--keep public class com.android.vending.licensing.ILicensingService
 
 # 保留在Activity中的方法参数是view的方法，
 # 这样以来我们在layout中写的onClick就不会被影响
@@ -108,6 +72,7 @@
    java.lang.Object writeReplace();
    java.lang.Object readResolve();
 }
+
 #assume no side effects:删除android.util.Log输出的日志
 -assumenosideeffects class android.util.Log {
     public static *** v(...);
@@ -116,12 +81,6 @@
     public static *** w(...);
     public static *** e(...);
 }
-#保留Keep注解的类名和方法
--keep,allowobfuscation @interface android.support.annotation.Keep
--keep @android.support.annotation.Keep class *
--keepclassmembers class * {
-    @android.support.annotation.Keep *;
-}
 
 # WebView
 -keepclassmembers class * extends android.webkit.WebViewClient {
@@ -129,11 +88,8 @@
     public boolean *(android.webkit.WebView, java.lang.String);
 }
 -keepclassmembers class * extends android.webkit.WebViewClient {
-    public void *(android.webkit.WebView, jav.lang.String);
+    public void *(android.webkit.WebView, java.lang.String);
 }
-
-# Retain generic type information for use by reflection by converters and adapters.
--keepattributes Signature
 
 # Retain service method parameters when optimizing.
 -keepclassmembers,allowshrinking,allowobfuscation interface * {
@@ -146,10 +102,6 @@
 -dontnote retrofit2.Platform$IOS$MainThreadExecutor
 # Platform used when running on Java 8 VMs. Will not be used at runtime.
 -dontwarn retrofit2.Platform$Java8
-# Retain generic type information for use by reflection by converters and adapters.
--keepattributes Signature
-# Retain declared checked exceptions for use by a Proxy instance.
--keepattributes Exceptions
 
 # Ignore annotation used for build tooling.
 -dontwarn org.codehaus.mojo.animal_sniffer.IgnoreJRERequirement
@@ -188,16 +140,8 @@
   public *;
 }
 
-# Rhino
--keep class org.mozilla.javascript.** {*;}
--dontwarn org.mozilla.javascript.tools.**
-
 # LitePal相关
 -keep class org.litepal.** {
-    *;
-}
-
--keep class * extends org.litepal.crud.DataSupport {
     *;
 }
 
@@ -244,13 +188,11 @@
 # Retrofit
 -dontwarn retrofit2.**
 -keep class retrofit2.** { *; }
--keepattributes Signature
--keepattributes Exceptions
-
--keepattributes InnerClasses
 -keep class com.alibaba.android.vlayout.ExposeLinearLayoutManagerEx { *; }
+-keep class androidx.recyclerview.widget.RecyclerView$LayoutManager { *; }
 -keep class androidx.recyclerview.widget.RecyclerView$LayoutParams { *; }
 -keep class androidx.recyclerview.widget.RecyclerView$ViewHolder { *; }
--keep class androidx.recyclerview.widget.RecyclerView$LayoutManager { *; }
+-keep class androidx.recyclerview.widget.ChildHelper { *; }
+-keep class androidx.recyclerview.widget.ChildHelper$Bucket { *; }
 
 -keep class com.huanchengfly.tieba.post.plugins.** { *; }
