@@ -31,7 +31,7 @@ class LoginActivity : BaseActivity(), WebViewListener {
         val actionBar = supportActionBar
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true)
-            actionBar.setTitle(R.string.title_login)
+            actionBar.setTitle(R.string.title_activity_login)
         }
         if (savedInstanceState == null) {
             val mWebViewFragment = WebViewFragment.newInstance(
