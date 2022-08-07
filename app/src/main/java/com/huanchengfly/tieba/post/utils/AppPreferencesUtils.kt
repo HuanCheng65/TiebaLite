@@ -1,7 +1,9 @@
 package com.huanchengfly.tieba.post.utils
 
 import android.content.Context
-import android.content.SharedPreferences
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.*
 import com.huanchengfly.tieba.post.*
@@ -14,9 +16,6 @@ import kotlin.reflect.KProperty
 
 
 open class AppPreferencesUtils(context: Context) {
-    private val preferences: SharedPreferences =
-        context.getSharedPreferences("settings", Context.MODE_PRIVATE)
-
     private val preferencesDataStore: DataStore<Preferences> = context.dataStore
 
     var autoSign by DataStoreDelegates.boolean(defaultValue = false, key = "auto_sign")
@@ -42,8 +41,8 @@ open class AppPreferencesUtils(context: Context) {
         key = "custom_status_bar_font_dark"
     )
 
-    var customToolbarPrimaryColor by DataStoreDelegates.boolean(
-        defaultValue = true,
+    var toolbarPrimaryColor by DataStoreDelegates.boolean(
+        defaultValue = false,
         key = "custom_toolbar_primary_color"
     )
 
@@ -112,7 +111,7 @@ open class AppPreferencesUtils(context: Context) {
         key = "status_bar_darker"
     )
 
-    var theme by DataStoreDelegates.string(defaultValue = ThemeUtil.THEME_WHITE)
+    var theme by DataStoreDelegates.string(defaultValue = ThemeUtil.THEME_BLUE)
 
     var translucentBackgroundAlpha by DataStoreDelegates.int(
         defaultValue = 255,
@@ -142,8 +141,15 @@ open class AppPreferencesUtils(context: Context) {
             defaultValue: Int = 0,
             key: String? = null
         ) = object : ReadWriteProperty<AppPreferencesUtils, Int> {
+            private var state by mutableStateOf(defaultValue)
+            private var stateInitialized = false
+
             override fun getValue(thisRef: AppPreferencesUtils, property: KProperty<*>): Int {
-                return thisRef.preferencesDataStore.getInt(key ?: property.name, defaultValue)
+                if (!stateInitialized) {
+                    stateInitialized = true
+                    state = thisRef.preferencesDataStore.getInt(key ?: property.name, defaultValue)
+                }
+                return state
             }
 
             override fun setValue(
@@ -151,6 +157,7 @@ open class AppPreferencesUtils(context: Context) {
                 property: KProperty<*>,
                 value: Int
             ) {
+                state = value
                 MainScope().launch(Dispatchers.IO) {
                     thisRef.preferencesDataStore.edit {
                         it[intPreferencesKey(key ?: property.name)] = value
@@ -163,9 +170,16 @@ open class AppPreferencesUtils(context: Context) {
             defaultValue: String? = null,
             key: String? = null
         ) = object : ReadWriteProperty<AppPreferencesUtils, String?> {
+            private var state by mutableStateOf(defaultValue)
+            private var stateInitialized = false
+
             override fun getValue(thisRef: AppPreferencesUtils, property: KProperty<*>): String? {
-                return thisRef.preferencesDataStore.getString(key ?: property.name)
-                    ?: defaultValue
+                if (!stateInitialized) {
+                    stateInitialized = true
+                    state = thisRef.preferencesDataStore.getString(key ?: property.name)
+                        ?: defaultValue
+                }
+                return state
             }
 
             override fun setValue(
@@ -173,6 +187,7 @@ open class AppPreferencesUtils(context: Context) {
                 property: KProperty<*>,
                 value: String?
             ) {
+                state = value
                 MainScope().launch(Dispatchers.IO) {
                     thisRef.preferencesDataStore.edit {
                         if (value == null) {
@@ -189,8 +204,16 @@ open class AppPreferencesUtils(context: Context) {
             defaultValue: Float = 0F,
             key: String? = null
         ) = object : ReadWriteProperty<AppPreferencesUtils, Float> {
+            private var state by mutableStateOf(defaultValue)
+            private var stateInitialized = false
+
             override fun getValue(thisRef: AppPreferencesUtils, property: KProperty<*>): Float {
-                return thisRef.preferencesDataStore.getFloat(key ?: property.name, defaultValue)
+                if (!stateInitialized) {
+                    stateInitialized = true
+                    state =
+                        thisRef.preferencesDataStore.getFloat(key ?: property.name, defaultValue)
+                }
+                return state
             }
 
             override fun setValue(
@@ -198,6 +221,7 @@ open class AppPreferencesUtils(context: Context) {
                 property: KProperty<*>,
                 value: Float
             ) {
+                state = value
                 MainScope().launch(Dispatchers.IO) {
                     thisRef.preferencesDataStore.edit {
                         it[floatPreferencesKey(key ?: property.name)] = value
@@ -210,8 +234,16 @@ open class AppPreferencesUtils(context: Context) {
             defaultValue: Boolean = false,
             key: String? = null
         ) = object : ReadWriteProperty<AppPreferencesUtils, Boolean> {
+            private var state by mutableStateOf(defaultValue)
+            private var stateInitialized = false
+
             override fun getValue(thisRef: AppPreferencesUtils, property: KProperty<*>): Boolean {
-                return thisRef.preferencesDataStore.getBoolean(key ?: property.name, defaultValue)
+                if (!stateInitialized) {
+                    stateInitialized = true
+                    state =
+                        thisRef.preferencesDataStore.getBoolean(key ?: property.name, defaultValue)
+                }
+                return state
             }
 
             override fun setValue(
@@ -219,6 +251,7 @@ open class AppPreferencesUtils(context: Context) {
                 property: KProperty<*>,
                 value: Boolean
             ) {
+                state = value
                 MainScope().launch(Dispatchers.IO) {
                     thisRef.preferencesDataStore.edit {
                         it[booleanPreferencesKey(key ?: property.name)] = value
@@ -228,120 +261,6 @@ open class AppPreferencesUtils(context: Context) {
         }
     }
 
-    private object SharedPreferenceDelegates {
-        fun int(
-            defaultValue: Int = 0,
-            key: String? = null
-        ) = object : ReadWriteProperty<AppPreferencesUtils, Int> {
-            override fun getValue(thisRef: AppPreferencesUtils, property: KProperty<*>): Int {
-                return thisRef.preferences.getInt(key ?: property.name, defaultValue)
-            }
-
-            override fun setValue(
-                thisRef: AppPreferencesUtils,
-                property: KProperty<*>,
-                value: Int
-            ) {
-                thisRef.preferences.edit().putInt(key ?: property.name, value).apply()
-            }
-        }
-
-        fun long(defaultValue: Long = 0L) =
-            object : ReadWriteProperty<AppPreferencesUtils, Long> {
-                override fun getValue(
-                    thisRef: AppPreferencesUtils,
-                    property: KProperty<*>
-                ): Long {
-                    return thisRef.preferences.getLong(property.name, defaultValue)
-                }
-
-                override fun setValue(
-                    thisRef: AppPreferencesUtils,
-                    property: KProperty<*>,
-                    value: Long
-                ) {
-                    thisRef.preferences.edit().putLong(property.name, value).apply()
-                }
-            }
-
-        fun boolean(
-            defaultValue: Boolean = false,
-            key: String? = null
-        ) =
-            object : ReadWriteProperty<AppPreferencesUtils, Boolean> {
-                override fun getValue(
-                    thisRef: AppPreferencesUtils,
-                    property: KProperty<*>
-                ): Boolean {
-                    return thisRef.preferences.getBoolean(key ?: property.name, defaultValue)
-                }
-
-                override fun setValue(
-                    thisRef: AppPreferencesUtils,
-                    property: KProperty<*>,
-                    value: Boolean
-                ) {
-                    thisRef.preferences.edit().putBoolean(key ?: property.name, value).apply()
-                }
-            }
-
-        fun float(defaultValue: Float = 0.0f) =
-            object : ReadWriteProperty<AppPreferencesUtils, Float> {
-                override fun getValue(
-                    thisRef: AppPreferencesUtils,
-                    property: KProperty<*>
-                ): Float {
-                    return thisRef.preferences.getFloat(property.name, defaultValue)
-                }
-
-                override fun setValue(
-                    thisRef: AppPreferencesUtils,
-                    property: KProperty<*>,
-                    value: Float
-                ) {
-                    thisRef.preferences.edit().putFloat(property.name, value).apply()
-                }
-            }
-
-        fun string(
-            defaultValue: String? = null,
-            key: String? = null
-        ) =
-            object : ReadWriteProperty<AppPreferencesUtils, String?> {
-                override fun getValue(
-                    thisRef: AppPreferencesUtils,
-                    property: KProperty<*>
-                ): String? {
-                    return thisRef.preferences.getString(key ?: property.name, defaultValue)
-                }
-
-                override fun setValue(
-                    thisRef: AppPreferencesUtils,
-                    property: KProperty<*>,
-                    value: String?
-                ) {
-                    thisRef.preferences.edit().putString(key ?: property.name, value).apply()
-                }
-            }
-
-        fun stringSet(defaultValue: Set<String>? = null) =
-            object : ReadWriteProperty<AppPreferencesUtils, Set<String>?> {
-                override fun getValue(
-                    thisRef: AppPreferencesUtils,
-                    property: KProperty<*>
-                ): Set<String>? {
-                    return thisRef.preferences.getStringSet(property.name, defaultValue)
-                }
-
-                override fun setValue(
-                    thisRef: AppPreferencesUtils,
-                    property: KProperty<*>,
-                    value: Set<String>?
-                ) {
-                    thisRef.preferences.edit().putStringSet(property.name, value).apply()
-                }
-            }
-    }
 }
 
 val Context.appPreferences: AppPreferencesUtils

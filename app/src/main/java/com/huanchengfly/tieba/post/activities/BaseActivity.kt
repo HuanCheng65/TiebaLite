@@ -132,7 +132,7 @@ abstract class BaseActivity : AppCompatActivity(), ExtraRefreshable, CoroutineSc
     fun refreshUIIfNeed() {
         if (TextUtils.equals(oldTheme, ThemeUtil.getTheme()) &&
             ThemeUtil.THEME_CUSTOM != ThemeUtil.getTheme() &&
-            !ThemeUtil.isTranslucentTheme(this)
+            !ThemeUtil.isTranslucentTheme()
         ) {
             return
         }
@@ -146,10 +146,10 @@ abstract class BaseActivity : AppCompatActivity(), ExtraRefreshable, CoroutineSc
         super.onResume()
         isActivityRunning = true
         if (appPreferences.followSystemNight) {
-            if (BaseApplication.isSystemNight && !ThemeUtil.isNightMode(this)) {
+            if (BaseApplication.isSystemNight && !ThemeUtil.isNightMode()) {
                 dataStore.putBoolean(SP_SHOULD_SHOW_SNACKBAR, true)
                 ThemeUtil.switchToNightMode(this, false)
-            } else if (!BaseApplication.isSystemNight && ThemeUtil.isNightMode(this)) {
+            } else if (!BaseApplication.isSystemNight && ThemeUtil.isNightMode()) {
                 dataStore.putBoolean(SP_SHOULD_SHOW_SNACKBAR, true)
                 ThemeUtil.switchFromNightMode(this, false)
             }
@@ -243,7 +243,7 @@ abstract class BaseActivity : AppCompatActivity(), ExtraRefreshable, CoroutineSc
     }
 
     fun setCustomStatusColor(customStatusColor: Int) {
-        if (ThemeUtil.isTranslucentTheme(this)) {
+        if (ThemeUtil.isTranslucentTheme()) {
             return
         }
         this.customStatusColor = customStatusColor
@@ -251,7 +251,7 @@ abstract class BaseActivity : AppCompatActivity(), ExtraRefreshable, CoroutineSc
     }
 
     open fun refreshStatusBarColor() {
-        if (ThemeUtil.isTranslucentTheme(this)) {
+        if (ThemeUtil.isTranslucentTheme()) {
             ImmersionBar.with(this)
                 .transparentBar()
                 .init()
@@ -267,7 +267,7 @@ abstract class BaseActivity : AppCompatActivity(), ExtraRefreshable, CoroutineSc
                             ThemeUtils.getColorByAttr(this@BaseActivity, R.attr.colorToolbar)
                         )
                     )
-                    statusBarDarkFont(ThemeUtil.isStatusBarFontDark(this@BaseActivity))
+                    statusBarDarkFont(ThemeUtil.isStatusBarFontDark())
                 }
                 fitsSystemWindowsInt(
                     true,
@@ -279,7 +279,7 @@ abstract class BaseActivity : AppCompatActivity(), ExtraRefreshable, CoroutineSc
                         R.attr.colorNavBar
                     )
                 )
-                navigationBarDarkIcon(ThemeUtil.isNavigationBarFontDark(this@BaseActivity))
+                navigationBarDarkIcon(ThemeUtil.isNavigationBarFontDark())
             }.init()
         }
         if (!statusBarTinted) {
@@ -296,14 +296,14 @@ abstract class BaseActivity : AppCompatActivity(), ExtraRefreshable, CoroutineSc
     }
 
     private fun recreateIfNeed(): Boolean {
-        if (ThemeUtil.isNightMode(this) && !ThemeUtil.isNightMode(oldTheme) ||
-            !ThemeUtil.isNightMode(this) && ThemeUtil.isNightMode(oldTheme)
+        if (ThemeUtil.isNightMode() && !ThemeUtil.isNightMode(oldTheme) ||
+            !ThemeUtil.isNightMode() && ThemeUtil.isNightMode(oldTheme)
         ) {
             recreate()
             return true
         }
         if (oldTheme.contains(ThemeUtil.THEME_TRANSLUCENT) &&
-            !ThemeUtil.isTranslucentTheme(this) || ThemeUtil.isTranslucentTheme(this) &&
+            !ThemeUtil.isTranslucentTheme() || ThemeUtil.isTranslucentTheme() &&
             !oldTheme.contains(ThemeUtil.THEME_TRANSLUCENT)
         ) {
             recreate()

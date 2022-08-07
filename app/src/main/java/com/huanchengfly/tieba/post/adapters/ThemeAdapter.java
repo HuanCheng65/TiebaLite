@@ -3,6 +3,7 @@ package com.huanchengfly.tieba.post.adapters;
 import static com.huanchengfly.tieba.post.utils.ThemeUtil.THEME_CUSTOM;
 import static com.huanchengfly.tieba.post.utils.ThemeUtil.THEME_TRANSLUCENT;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.ColorStateList;
@@ -68,7 +69,7 @@ public class ThemeAdapter extends RecyclerView.Adapter<MyViewHolder> implements 
     }
 
     private int getToolbarColor(String theme) {
-        if (ThemeUtil.THEME_WHITE.equals(theme) || ThemeUtil.isNightMode(theme)) {
+        if (ThemeUtil.isNightMode(theme)) {
             return BaseApplication.ThemeDelegate.INSTANCE.getColorByAttr(mContext, R.attr.colorToolbar, theme);
         } else if (ThemeUtil.isTranslucentTheme(theme)) {
             return ColorUtils.alpha(BaseApplication.ThemeDelegate.INSTANCE.getColorByAttr(mContext, R.attr.colorPrimary, ThemeUtil.THEME_TRANSLUCENT_LIGHT), 150);
@@ -77,7 +78,7 @@ public class ThemeAdapter extends RecyclerView.Adapter<MyViewHolder> implements 
     }
 
     @Override
-    public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull MyViewHolder holder, @SuppressLint("RecyclerView") int position) {
         int type = getItemViewType(position);
         View previewView = holder.getView(R.id.theme_preview);
         TextView themeName = holder.getView(R.id.theme_name);

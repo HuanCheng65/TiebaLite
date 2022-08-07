@@ -77,7 +77,7 @@ class MyInfoFragment : BaseFragment(), View.OnClickListener, CompoundButton.OnCh
     private fun tintStatusBar(visible: Boolean) {
         if (visible) {
             ImmersionBar.with(this)
-                .statusBarDarkFont(!ThemeUtil.isNightMode(attachContext))
+                .statusBarDarkFont(!ThemeUtil.isNightMode())
                 .statusBarColorInt(
                     ThemeUtils.getColorByAttr(
                         attachContext,
@@ -261,7 +261,7 @@ class MyInfoFragment : BaseFragment(), View.OnClickListener, CompoundButton.OnCh
         }
         nightSwitch.apply {
             setOnCheckedChangeListener(null)
-            isChecked = ThemeUtil.isNightMode(attachContext)
+            isChecked = ThemeUtil.isNightMode()
             setOnCheckedChangeListener(this@MyInfoFragment)
         }
         mRefreshView.setOnRefreshListener {
@@ -372,7 +372,7 @@ class MyInfoFragment : BaseFragment(), View.OnClickListener, CompoundButton.OnCh
 
     private fun refreshNightModeStatus() {
         nightSwitch.setOnCheckedChangeListener(null)
-        nightSwitch.isChecked = ThemeUtil.isNightMode(attachContext)
+        nightSwitch.isChecked = ThemeUtil.isNightMode()
         nightSwitch.setOnCheckedChangeListener(this)
     }
 

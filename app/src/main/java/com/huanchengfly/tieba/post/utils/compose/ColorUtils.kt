@@ -15,13 +15,9 @@ fun Color.darken(i: Float = 0.1F): Color {
 fun Color.calcStatusBarColor(): Color {
     val context = BaseApplication.INSTANCE
     var darkerStatusBar = true
-    if (ThemeUtil.THEME_CUSTOM == ThemeUtil.getTheme() && !context.dataStore.getBoolean(
-            ThemeUtil.KEY_CUSTOM_TOOLBAR_PRIMARY_COLOR,
-            true
-        )
-    ) {
-        darkerStatusBar = false
-    } else if (ThemeUtil.getTheme() == ThemeUtil.THEME_WHITE) {
+    val isToolbarPrimaryColor =
+        context.dataStore.getBoolean(ThemeUtil.KEY_CUSTOM_TOOLBAR_PRIMARY_COLOR, false)
+    if (!ThemeUtil.isTranslucentTheme() && !ThemeUtil.isNightMode() && !isToolbarPrimaryColor) {
         darkerStatusBar = false
     } else if (!context.dataStore.getBoolean("status_bar_darker", true)) {
         darkerStatusBar = false

@@ -80,7 +80,7 @@ class InsertPhotoAdapter(private val mContext: Context) : RecyclerView.Adapter<M
                                 .choose(MimeType.ofImage())
                                 .countable(true)
                                 .maxSelectable(10 - fileList.size)
-                                .theme(if (ThemeUtil.isNightMode(mContext)) R.style.Matisse_Dracula else R.style.Matisse_Zhihu)
+                                .theme(if (ThemeUtil.isNightMode()) R.style.Matisse_Dracula else R.style.Matisse_Zhihu)
                                 .imageEngine(GlideEngine())
                                 .forResult(mContext.getMatisseLauncher())
                         }

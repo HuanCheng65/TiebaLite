@@ -67,7 +67,7 @@ open class MainActivity : BaseActivity(), NavigationBarView.OnItemSelectedListen
     public override fun onResume() {
         super.onResume()
         ThemeUtil.setTranslucentThemeBackground(findViewById(R.id.background))
-        navigationView.elevation = if (ThemeUtil.isTranslucentTheme(this)) {
+        navigationView.elevation = if (ThemeUtil.isTranslucentTheme()) {
             0f
         } else {
             4f.dpToPxFloat()
@@ -229,7 +229,7 @@ open class MainActivity : BaseActivity(), NavigationBarView.OnItemSelectedListen
             if (shouldShowSwitchSnackbar()) {
                 Util.createSnackbar(
                     mViewPager,
-                    if (ThemeUtil.isNightMode(this)) R.string.snackbar_auto_switch_to_night else R.string.snackbar_auto_switch_from_night,
+                    if (ThemeUtil.isNightMode()) R.string.snackbar_auto_switch_to_night else R.string.snackbar_auto_switch_from_night,
                     Snackbar.LENGTH_SHORT
                 )
                     .show()

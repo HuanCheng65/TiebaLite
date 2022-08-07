@@ -167,7 +167,7 @@ class ForumActivity : BaseActivity(), View.OnClickListener, OnRefreshedListener,
     var customToolbarColorEnable = false
         set(value) {
             if (field != value) {
-                if (!ThemeUtil.isTranslucentTheme(this)) setCustomStatusColor(if (value) toolbarColor else -1)
+                if (!ThemeUtil.isTranslucentTheme()) setCustomStatusColor(if (value) toolbarColor else -1)
             }
             field = value
         }
@@ -261,10 +261,10 @@ class ForumActivity : BaseActivity(), View.OnClickListener, OnRefreshedListener,
                         topRightPx = radius
                     )
                 }
-                if (!ThemeUtil.isTranslucentTheme(this)) customToolbarColorEnable =
+                if (!ThemeUtil.isTranslucentTheme()) customToolbarColorEnable =
                     toolbarScrollPercent < 1f
             } else {
-                if (!ThemeUtil.isTranslucentTheme(this)) customToolbarColorEnable = true
+                if (!ThemeUtil.isTranslucentTheme()) customToolbarColorEnable = true
             }
             val isTitleVisible =
                 mDataBean != null && forumName != null && abs(verticalOffset) >= forumInfoView.height
@@ -280,7 +280,7 @@ class ForumActivity : BaseActivity(), View.OnClickListener, OnRefreshedListener,
             toolbarEndBtn.visibility = if (isTitleVisible) View.VISIBLE else View.GONE
             toolbar.backgroundTintList =
                 ColorStateList.valueOf(Util.changeAlpha(toolbarColor, percent))
-            if (animated && ThemeUtil.isTranslucentTheme(this)) {
+            if (animated && ThemeUtil.isTranslucentTheme()) {
                 if (abs(verticalOffset) >= headerViewHeight) {
                     if (headerView.visibility != View.INVISIBLE) {
                         AnimUtil.alphaOut(headerView)
@@ -294,7 +294,7 @@ class ForumActivity : BaseActivity(), View.OnClickListener, OnRefreshedListener,
                     if (headerView.visibility != View.VISIBLE) AnimUtil.alphaIn(headerView).start()
                 }
             }
-            if (ThemeUtil.isTranslucentTheme(this)) {
+            if (ThemeUtil.isTranslucentTheme()) {
                 setCustomStatusColor(-1)
             }
         }
@@ -622,7 +622,7 @@ class ForumActivity : BaseActivity(), View.OnClickListener, OnRefreshedListener,
     private fun refreshHeaderView() {
         if (mDataBean != null && mDataBean!!.forum != null) {
             headerView.visibility = View.VISIBLE
-            if (!ThemeUtil.isTranslucentTheme(this)) {
+            if (!ThemeUtil.isTranslucentTheme()) {
                 try {
                     val color = getDarkerColor(
                         greifyColor(

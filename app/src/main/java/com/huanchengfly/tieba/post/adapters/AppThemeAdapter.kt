@@ -54,7 +54,7 @@ class AppThemeAdapter private constructor(
     }
 
     private fun getThemeColor(theme: String): Int {
-        if (ThemeUtil.THEME_WHITE == theme || ThemeUtil.isNightMode(theme)) {
+        if (ThemeUtil.isNightMode(theme)) {
             return getColorByAttr(context, R.attr.colorToolbar, theme)
         } else if (ThemeUtil.isTranslucentTheme(theme)) {
             return ColorUtils.alpha(

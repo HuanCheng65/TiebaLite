@@ -295,7 +295,7 @@ class TranslucentThemeActivity : BaseActivity(), View.OnClickListener, OnSeekBar
         mTranslucentThemeColorAdapter.onItemClickListener =
             OnItemClickListener { _: View?, themeColor: Int, _: Int, _: Int ->
                 appPreferences.translucentPrimaryColor = toString(themeColor)
-                ThemeUtils.refreshUI(this)
+                maskView.post { ThemeUtils.refreshUI(this) }
             }
         (findViewById<RecyclerView>(R.id.select_color_recycler_view)).apply {
             addItemDecoration(HorizontalSpacesDecoration(0, 0, 12.dpToPx(), 12.dpToPx(), false))
@@ -373,6 +373,13 @@ class TranslucentThemeActivity : BaseActivity(), View.OnClickListener, OnSeekBar
     }
 
     private fun savePic(callback: SavePicCallback<File>) {
+        runCatching {
+            val oldFilePath = appPreferences.translucentThemeBackgroundPath
+            if (oldFilePath != null) {
+                val oldFile = File(oldFilePath)
+                oldFile.delete()
+            }
+        }
         mProgress.visibility = View.VISIBLE
         var bgOptions = RequestOptions.centerCropTransform()
             .skipMemoryCache(true)
@@ -391,7 +398,10 @@ class TranslucentThemeActivity : BaseActivity(), View.OnClickListener, OnSeekBar
                 ) {
                     resource.alpha = alpha
                     val bitmap = ImageUtil.drawableToBitmap(resource)
-                    val file = ImageUtil.compressImage(bitmap, File(filesDir, "background.jpg"))
+                    val file = ImageUtil.compressImage(
+                        bitmap,
+                        File(filesDir, "background_${System.currentTimeMillis()}.jpg")
+                    )
                     mPalette = Palette.from(bitmap).generate()
                     appPreferences.translucentThemeBackgroundPath = file.absolutePath
                     ThemeUtils.refreshUI(
@@ -459,6 +469,11 @@ class TranslucentThemeActivity : BaseActivity(), View.OnClickListener, OnSeekBar
         }
     }
 
+    override fun finish() {
+        GlideCacheUtil.getInstance().clearImageMemoryCache(this)
+        super.finish()
+    }
+
     override fun onClick(v: View) {
         when (v.id) {
             R.id.button_finish -> {
@@ -482,7 +497,7 @@ class TranslucentThemeActivity : BaseActivity(), View.OnClickListener, OnSeekBar
             R.id.select_pic -> askPermission {
                 Matisse.from(this)
                     .choose(MimeType.ofImage())
-                    .theme(if (ThemeUtil.isNightMode(this)) R.style.Matisse_Dracula else R.style.Matisse_Zhihu)
+                    .theme(if (ThemeUtil.isNightMode()) R.style.Matisse_Dracula else R.style.Matisse_Zhihu)
                     .imageEngine(GlideEngine())
                     .forResult(REQUEST_CODE_CHOOSE)
             }
@@ -510,22 +525,19 @@ class TranslucentThemeActivity : BaseActivity(), View.OnClickListener, OnSeekBar
     }
 
     private fun askPermission(granted: () -> Unit) {
-        PermissionUtils.askPermission(
-            this,
-            PermissionUtils.Permission(
-                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
-                    listOf(
-                        PermissionUtils.READ_EXTERNAL_STORAGE,
-                        PermissionUtils.WRITE_EXTERNAL_STORAGE
-                    )
-                } else {
-                    listOf(PermissionUtils.READ_EXTERNAL_STORAGE)
-                },
-                getString(R.string.tip_permission_storage)
-            ),
-            R.string.toast_no_permission_insert_photo,
-            granted
-        )
+        requestPermission {
+            permissions = if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
+                listOf(
+                    PermissionUtils.READ_EXTERNAL_STORAGE,
+                    PermissionUtils.WRITE_EXTERNAL_STORAGE
+                )
+            } else {
+                listOf(PermissionUtils.READ_EXTERNAL_STORAGE)
+            }
+            description = getString(R.string.tip_permission_storage)
+            onGranted = granted
+            onDenied = { toastShort(R.string.toast_no_permission_insert_photo) }
+        }
     }
 
     interface SavePicCallback<T> {

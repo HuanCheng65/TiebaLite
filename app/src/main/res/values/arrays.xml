@@ -25,7 +25,6 @@
     </string-array>
 
     <string-array name="theme_values">
-        <item>white</item>
         <item>tieba</item>
         <item>black</item>
         <item>pink</item>
@@ -37,7 +36,6 @@
     </string-array>
 
     <string-array name="themeNames">
-        <item>素雅白</item>
         <item>深海蓝</item>
         <item>高级黑</item>
         <item>少女粉</item>

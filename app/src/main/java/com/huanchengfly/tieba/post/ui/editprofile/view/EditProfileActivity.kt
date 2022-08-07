@@ -172,11 +172,11 @@ class EditProfileActivity : BaseActivity() {
                     systemUiController.apply {
                         setStatusBarColor(
                             Color.Transparent,
-                            darkIcons = ThemeUtil.isStatusBarFontDark(this@EditProfileActivity)
+                            darkIcons = ThemeUtil.isStatusBarFontDark()
                         )
                         setNavigationBarColor(
                             Color.Transparent,
-                            darkIcons = ThemeUtil.isNavigationBarFontDark(this@EditProfileActivity)
+                            darkIcons = ThemeUtil.isNavigationBarFontDark()
                         )
                     }
                 }
@@ -223,7 +223,7 @@ class EditProfileActivity : BaseActivity() {
                     onGranted = {
                         Matisse.from(this@EditProfileActivity)
                             .choose(MimeType.ofImage())
-                            .theme(if (ThemeUtil.isNightMode(context)) R.style.Matisse_Dracula else R.style.Matisse_Zhihu)
+                            .theme(if (ThemeUtil.isNightMode()) R.style.Matisse_Dracula else R.style.Matisse_Zhihu)
                             .imageEngine(GlideEngine())
                             .forResult(matisseLauncher)
                     }

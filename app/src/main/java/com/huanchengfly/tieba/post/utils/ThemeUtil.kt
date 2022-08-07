@@ -39,7 +39,7 @@ import java.util.*
 
 object ThemeUtil {
     val themeState: MutableState<String> by lazy(mode = LazyThreadSafetyMode.SYNCHRONIZED) {
-        mutableStateOf(dataStore.getString(KEY_THEME, THEME_WHITE))
+        mutableStateOf(dataStore.getString(KEY_THEME, THEME_BLUE))
     }
 
     const val TAG = "ThemeUtil"
@@ -57,8 +57,7 @@ object ThemeUtil {
     const val THEME_TRANSLUCENT_LIGHT = "translucent_light"
     const val THEME_TRANSLUCENT_DARK = "translucent_dark"
     const val THEME_CUSTOM = "custom"
-    const val THEME_WHITE = "white"
-    const val THEME_TIEBA = "tieba"
+    const val THEME_BLUE = "tieba"
     const val THEME_BLACK = "black"
     const val THEME_PURPLE = "purple"
     const val THEME_PINK = "pink"
@@ -73,12 +72,6 @@ object ThemeUtil {
     val dataStore: DataStore<Preferences>
         get() = INSTANCE.dataStore
 
-    fun fixColorForTranslucentTheme(color: Int): Int {
-        return if (Color.alpha(color) == 0) {
-            ColorUtils.alpha(color, 255)
-        } else color
-    }
-
     fun getTextColor(context: Context?): Int {
         return ThemeUtils.getColorByAttr(context, R.attr.colorText)
     }
@@ -92,7 +85,7 @@ object ThemeUtil {
         switchToNightMode(context, true)
     }
 
-    fun refreshUI(activity: Activity?) {
+    private fun refreshUI(activity: Activity?) {
         if (activity is BaseActivity) {
             activity.refreshUIIfNeed()
             return
@@ -118,7 +111,7 @@ object ThemeUtil {
 
     @JvmOverloads
     fun switchFromNightMode(context: Activity, recreate: Boolean = true) {
-        switchTheme(dataStore.getString(KEY_OLD_THEME, THEME_WHITE), recordOldTheme = false)
+        switchTheme(dataStore.getString(KEY_OLD_THEME, THEME_BLUE), recordOldTheme = false)
         if (recreate) {
             refreshUI(context)
         }
@@ -184,7 +177,7 @@ object ThemeUtil {
     }
 
     @JvmStatic
-    fun isNightMode(context: Context): Boolean {
+    fun isNightMode(): Boolean {
         return isNightMode(getTheme())
     }
 
@@ -193,7 +186,7 @@ object ThemeUtil {
         return theme.lowercase(Locale.getDefault()).contains("dark")
     }
 
-    fun isTranslucentTheme(context: Context): Boolean {
+    fun isTranslucentTheme(): Boolean {
         return isTranslucentTheme(getTheme())
     }
 
@@ -202,32 +195,37 @@ object ThemeUtil {
         return theme.equals(
             THEME_TRANSLUCENT,
             ignoreCase = true
-        ) || theme.lowercase(Locale.getDefault()).contains(
-            THEME_TRANSLUCENT
+        ) || theme.contains(
+            THEME_TRANSLUCENT,
+            ignoreCase = true
         )
     }
 
-    fun isStatusBarFontDark(context: Context): Boolean {
-        var isDark = false
-        when (getTheme()) {
-            THEME_WHITE -> isDark = true
-            THEME_CUSTOM -> isDark = dataStore.getBoolean(KEY_CUSTOM_STATUS_BAR_FONT_DARK, false)
+    fun isStatusBarFontDark(): Boolean {
+        val theme = getTheme()
+        val isToolbarPrimaryColor: Boolean =
+            dataStore.getBoolean(KEY_CUSTOM_TOOLBAR_PRIMARY_COLOR, false)
+        return if (theme == THEME_CUSTOM) {
+            dataStore.getBoolean(KEY_CUSTOM_STATUS_BAR_FONT_DARK, false)
+        } else if (!isToolbarPrimaryColor) {
+            !isNightMode(theme)
+        } else {
+            false
         }
-        return isDark
     }
 
-    fun isNavigationBarFontDark(context: Context): Boolean {
-        return !isNightMode(context)
+    fun isNavigationBarFontDark(): Boolean {
+        return !isNightMode()
     }
 
     fun setTheme(context: Activity) {
-        val nowTheme = getThemeTranslucent(context)
+        val nowTheme = getThemeTranslucent()
         context.setTheme(getThemeByName(nowTheme))
     }
 
-    fun getThemeTranslucent(context: Context): String {
+    fun getThemeTranslucent(): String {
         var nowTheme = getTheme()
-        if (isTranslucentTheme(context)) {
+        if (isTranslucentTheme()) {
             val colorTheme =
                 dataStore.getInt("translucent_background_theme", TRANSLUCENT_THEME_LIGHT)
             nowTheme = if (colorTheme == TRANSLUCENT_THEME_DARK) {
@@ -244,13 +242,13 @@ object ThemeUtil {
         if (webView == null) {
             return
         }
-        if (!isTranslucentTheme(webView.context)) {
+        if (!isTranslucentTheme()) {
             return
         }
         webView.setBackgroundColor(Color.WHITE)
     }
 
-    fun setAppBarFitsSystemWindow(view: View?, appBarFitsSystemWindow: Boolean) {
+    private fun setAppBarFitsSystemWindow(view: View?, appBarFitsSystemWindow: Boolean) {
         if (view == null) return
         if (view is AppBarLayout) {
             view.setFitsSystemWindows(appBarFitsSystemWindow)
@@ -268,7 +266,7 @@ object ThemeUtil {
         if (view == null) {
             return
         }
-        if (!isTranslucentTheme(view.context)) {
+        if (!isTranslucentTheme()) {
             return
         }
         view.backgroundTintList = null
@@ -280,7 +278,7 @@ object ThemeUtil {
         if (view == null) {
             return
         }
-        if (!isTranslucentTheme(view.context)) {
+        if (!isTranslucentTheme()) {
             return
         }
         view.backgroundTintList = null
@@ -301,7 +299,7 @@ object ThemeUtil {
         if (view == null) {
             return
         }
-        if (!isTranslucentTheme(view.context)) {
+        if (!isTranslucentTheme()) {
             if (setFitsSystemWindow) {
                 setAppBarFitsSystemWindow(view, false)
                 view.fitsSystemWindows = false
@@ -340,7 +338,6 @@ object ThemeUtil {
         }
         var bgOptions = RequestOptions.centerCropTransform()
             .optionalFitCenter()
-            .skipMemoryCache(true)
             .diskCacheStrategy(DiskCacheStrategy.NONE)
         if (transformations.isNotEmpty()) {
             bgOptions = bgOptions.transform(*transformations)
@@ -380,7 +377,7 @@ object ThemeUtil {
         return when (themeName.lowercase(Locale.getDefault())) {
             THEME_TRANSLUCENT, THEME_TRANSLUCENT_LIGHT -> R.style.TiebaLite_Translucent_Light
             THEME_TRANSLUCENT_DARK -> R.style.TiebaLite_Translucent_Dark
-            THEME_TIEBA -> R.style.TiebaLite_Tieba
+            THEME_BLUE -> R.style.TiebaLite_Tieba
             THEME_BLACK -> R.style.TiebaLite_Black
             THEME_PURPLE -> R.style.TiebaLite_Purple
             THEME_PINK -> R.style.TiebaLite_Pink
@@ -389,8 +386,7 @@ object ThemeUtil {
             THEME_GREY_DARK -> R.style.TiebaLite_Dark_Grey
             THEME_AMOLED_DARK -> R.style.TiebaLite_Dark_Amoled
             THEME_CUSTOM -> R.style.TiebaLite_Custom
-            THEME_WHITE -> R.style.TiebaLite_White
-            else -> R.style.TiebaLite_White
+            else -> R.style.TiebaLite_Tieba
         }
     }
 
@@ -398,10 +394,10 @@ object ThemeUtil {
     fun getTheme(): String {
         val theme = themeState.value
         return when (theme.lowercase(Locale.getDefault())) {
-            THEME_TRANSLUCENT, THEME_TRANSLUCENT_LIGHT, THEME_TRANSLUCENT_DARK, THEME_CUSTOM, THEME_WHITE, THEME_TIEBA, THEME_BLACK, THEME_PURPLE, THEME_PINK, THEME_RED, THEME_BLUE_DARK, THEME_GREY_DARK, THEME_AMOLED_DARK -> theme.lowercase(
+            THEME_TRANSLUCENT, THEME_TRANSLUCENT_LIGHT, THEME_TRANSLUCENT_DARK, THEME_CUSTOM, THEME_BLUE, THEME_BLACK, THEME_PURPLE, THEME_PINK, THEME_RED, THEME_BLUE_DARK, THEME_GREY_DARK, THEME_AMOLED_DARK -> theme.lowercase(
                 Locale.getDefault()
             )
-            else -> THEME_WHITE
+            else -> THEME_BLUE
         }
     }
 }

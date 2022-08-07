@@ -195,16 +195,11 @@ fun showErrorSnackBar(view: View, throwable: Throwable) {
 
 fun calcStatusBarColorInt(context: Context, @ColorInt originColor: Int): Int {
     var darkerStatusBar = true
-    if (ThemeUtil.THEME_CUSTOM == ThemeUtil.getTheme() && !context.dataStore.getBoolean(
-            ThemeUtil.KEY_CUSTOM_TOOLBAR_PRIMARY_COLOR,
-            true
-        )
-    ) {
+    val isToolbarPrimaryColor =
+        context.dataStore.getBoolean(ThemeUtil.KEY_CUSTOM_TOOLBAR_PRIMARY_COLOR, false)
+    if (!ThemeUtil.isTranslucentTheme() && !ThemeUtil.isNightMode() && !isToolbarPrimaryColor) {
         darkerStatusBar = false
-    } else if (ThemeUtil.getTheme() == ThemeUtil.THEME_WHITE) {
-        darkerStatusBar = false
-    } else if (!context.dataStore.getBoolean("status_bar_darker", true)
-    ) {
+    } else if (!context.dataStore.getBoolean("status_bar_darker", true)) {
         darkerStatusBar = false
     }
     return if (darkerStatusBar) ColorUtils.getDarkerColor(originColor) else originColor

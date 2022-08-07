@@ -150,7 +150,7 @@ class WebViewActivity : BaseActivity(), OnReceivedTitleListener, OnOverrideUrlLo
         override fun createIntent(context: Context, input: Nothing?): Intent =
             newIntent(
                 context,
-                "https://tieba.baidu.com/n/interact/modifyname${if (ThemeUtil.isNightMode(context)) "?isNightModel=1" else ""}"
+                "https://tieba.baidu.com/n/interact/modifyname${if (ThemeUtil.isNightMode()) "?isNightModel=1" else ""}"
             ).putExtra("is_modify_nickname", true)
                 .putExtra("title", context.getString(R.string.title_modify_nickname))
 

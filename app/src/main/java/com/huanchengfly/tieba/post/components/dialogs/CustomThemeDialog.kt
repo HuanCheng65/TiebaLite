@@ -44,7 +44,7 @@ class CustomThemeDialog(context: Context) : AlertDialog(context),
         setView(contentView)
         primaryColor = getColorByAttr(context, R.attr.colorPrimary, ThemeUtil.THEME_CUSTOM)
         statusBarFontDark = context.appPreferences.customStatusBarFontDark
-        toolbarPrimary = context.appPreferences.customToolbarPrimaryColor
+        toolbarPrimary = context.appPreferences.toolbarPrimaryColor
         refreshView()
     }
 
@@ -80,7 +80,7 @@ class CustomThemeDialog(context: Context) : AlertDialog(context),
         context.appPreferences.apply {
             customPrimaryColor = toString(primaryColor)
             customStatusBarFontDark = (statusBarFontDark || !toolbarPrimary)
-            customToolbarPrimaryColor = toolbarPrimary
+            toolbarPrimaryColor = toolbarPrimary
         }
         dialog.dismiss()
     }

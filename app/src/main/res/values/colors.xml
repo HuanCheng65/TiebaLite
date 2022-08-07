@@ -87,12 +87,14 @@
     <color name="theme_color_toolbar_dark">#FF15202B</color>
     <color name="theme_color_toolbar_grey_dark">#FF181818</color>
     <color name="theme_color_toolbar_amoled_dark">@color/black</color>
+    <color name="theme_color_toolbar_translucent_light">#00FFFFFF</color>
+    <color name="theme_color_toolbar_translucent_dark">#00000000</color>
 
     <color name="theme_color_toolbar_item_light">#FF474B54</color>
-    <color name="theme_color_toolbar_item_translucent_light">#DFFFFFFF</color>
-    <color name="theme_color_toolbar_item_translucent_dark">#FF000000</color>
     <color name="theme_color_toolbar_item_dark">@color/white</color>
     <color name="theme_color_toolbar_item_night">#FFE6E7EE</color>
+    <color name="theme_color_toolbar_item_translucent_light">#DFFFFFFF</color>
+    <color name="theme_color_toolbar_item_translucent_dark">#FF000000</color>
 
     <color name="theme_color_toolbar_item_secondary_white">#DD545967</color>
     <color name="theme_color_toolbar_item_secondary_light">#99FFFFFF</color>

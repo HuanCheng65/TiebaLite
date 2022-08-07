@@ -460,7 +460,7 @@ public class ImageUtil {
 
     private static Drawable getPlaceHolder(Context context, int radius) {
         GradientDrawable drawable = new GradientDrawable();
-        int color = ThemeUtil.isNightMode(context) ? context.getResources().getColor(R.color.color_place_holder_night) : context.getResources().getColor(R.color.color_place_holder);
+        int color = ThemeUtil.isNightMode() ? context.getResources().getColor(R.color.color_place_holder_night) : context.getResources().getColor(R.color.color_place_holder);
         drawable.setColor(color);
         drawable.setCornerRadius(DisplayUtil.dp2px(context, radius));
         return drawable;
@@ -490,7 +490,7 @@ public class ImageUtil {
             imageView.setTag(R.id.image_load_tag, false);
             requestBuilder = Glide.with(imageView).load(getPlaceHolder(imageView.getContext(), type == LOAD_TYPE_SMALL_PIC ? radius : 0));
         }
-        if (ThemeUtil.isNightMode(imageView.getContext())) {
+        if (ThemeUtil.isNightMode()) {
             changeBrightness(imageView, -35);
         } else {
             imageView.clearColorFilter();
