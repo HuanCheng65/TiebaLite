@@ -79,11 +79,11 @@ inline fun <reified T : Activity> Fragment.goToActivity(pre: Intent.() -> Unit) 
 }
 
 fun Context.toastShort(text: String) {
-    Toast.makeText(this, text, Toast.LENGTH_SHORT).show()
+    runCatching { Toast.makeText(this, text, Toast.LENGTH_SHORT).show() }
 }
 
 fun Context.toastShort(resId: Int, vararg args: Any) {
-    Toast.makeText(this, getString(resId, *args), Toast.LENGTH_SHORT).show()
+    toastShort(getString(resId, *args))
 }
 
 fun ViewGroup.enableChangingLayoutTransition() {

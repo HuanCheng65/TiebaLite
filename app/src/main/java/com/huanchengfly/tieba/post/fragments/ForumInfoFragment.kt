@@ -91,6 +91,8 @@ class ForumInfoFragment : BaseFragment(), Refreshable, ScrollTopable {
         val bundle = arguments
         if (savedInstanceState == null && bundle != null) {
             forumName = bundle.getString(ForumFragment.PARAM_FORUM_NAME)
+        } else if (savedInstanceState != null) {
+            forumName = savedInstanceState.getString(ForumFragment.PARAM_FORUM_NAME)
         }
     }
 
@@ -99,13 +101,12 @@ class ForumInfoFragment : BaseFragment(), Refreshable, ScrollTopable {
         super.onSaveInstanceState(outState)
     }
 
-    @Deprecated("Deprecated in Java")
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        if (savedInstanceState != null) {
-            forumName = savedInstanceState.getString(ForumFragment.PARAM_FORUM_NAME)
-        }
-        super.onActivityCreated(savedInstanceState)
+    override fun onViewStateRestored(savedInstanceState: Bundle?) {
+        super.onViewStateRestored(savedInstanceState)
+        if (savedInstanceState != null) forumName =
+            savedInstanceState.getString(ForumFragment.PARAM_FORUM_NAME)
     }
+
 
     override fun getLayoutId(): Int {
         return R.layout.fragment_forum_info
@@ -145,6 +146,7 @@ class ForumInfoFragment : BaseFragment(), Refreshable, ScrollTopable {
     }
 
     private fun refresh() {
+        forumName ?: return
         mRefreshLayout.isRefreshing = true
         launch(IO + job) {
             TiebaApi.getInstance()
