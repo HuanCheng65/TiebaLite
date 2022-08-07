@@ -13,7 +13,7 @@ data class MSignBean(
     val info: List<Info>,
     @SerializedName("is_timeout")
     val isTimeout: String,
-    val logid: Int,
+    val logid: Long,
     @SerializedName("server_time")
     val serverTime: String,
     @SerializedName("show_dialog")

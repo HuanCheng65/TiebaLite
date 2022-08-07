@@ -206,7 +206,7 @@ class MessageFragment : BaseFragment(), Refreshable, OnTabSelectedListener,
         }
 
         private fun loadMore() {
-            if (dataBean!!.page!!.hasMore == "1") {
+            if (dataBean?.page?.hasMore == "1") {
                 page += 1
                 load(false)
             } else {

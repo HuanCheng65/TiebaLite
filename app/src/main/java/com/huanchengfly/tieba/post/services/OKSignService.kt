@@ -36,8 +36,8 @@ class OKSignService : IntentService(TAG), CoroutineScope, ProgressListener {
     private var position = 0
 
     @Deprecated("Deprecated in Java")
-    override fun onCreate() {
-        super.onCreate()
+    override fun onStart(intent: Intent?, startId: Int) {
+        super.onStart(intent, startId)
         updateNotification(
             getString(R.string.title_fetching_forum_list),
             getString(R.string.text_please_wait)
@@ -67,6 +67,7 @@ class OKSignService : IntentService(TAG), CoroutineScope, ProgressListener {
             .setSubText(getString(R.string.title_oksign))
             .setSmallIcon(R.drawable.ic_oksign)
             .setAutoCancel(true)
+            .setStyle(NotificationCompat.BigTextStyle())
             .setColor(ThemeUtils.getColorByAttr(this, R.attr.colorPrimary))
     }
 

@@ -161,7 +161,11 @@ class PhotoViewActivity : BaseActivity(), OnChangeBottomBarVisibilityListener,
         isFrs = intent.getBooleanExtra(EXTRA_IS_FRS, false)
         photoViewBeans = mutableListOf()
         startPosition = intent.getIntExtra(EXTRA_POSITION, 0)
-        val parcelables = intent.getParcelableArrayExtra(EXTRA_BEANS)!!
+        val parcelables = intent.getParcelableArrayExtra(EXTRA_BEANS)
+        if (parcelables == null) {
+            finish()
+            return
+        }
         photoViewBeans.addAll(parcelables.map { it as PhotoViewBean })
         amount = photoViewBeans.size.toString()
         mAdapter = PhotoViewAdapter(this, photoViewBeans)

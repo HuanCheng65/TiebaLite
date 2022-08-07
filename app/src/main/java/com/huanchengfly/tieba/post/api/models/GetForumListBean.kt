@@ -6,8 +6,6 @@ import com.google.gson.annotations.SerializedName
 
 @Keep
 data class GetForumListBean(
-    @SerializedName("anti_info")
-    val antiInfo: List<Any>,
     @SerializedName("button_content")
     val buttonContent: String,
     @SerializedName("can_use")
@@ -20,7 +18,7 @@ data class GetForumListBean(
     @SerializedName("forum_info")
     val forumInfo: List<ForumInfo>,
     val level: String,
-    val logid: Int,
+    val logid: Long,
     @SerializedName("msign_step_num")
     val msignStepNum: String,
     @SerializedName("num_notice")

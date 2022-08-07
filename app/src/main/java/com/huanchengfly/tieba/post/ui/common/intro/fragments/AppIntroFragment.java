@@ -4,6 +4,7 @@ import android.content.Context;
 
 import androidx.annotation.ColorInt;
 import androidx.annotation.ColorRes;
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import java.lang.ref.WeakReference;
@@ -16,7 +17,7 @@ public class AppIntroFragment extends BaseIntroFragment {
     private CharSequence title;
     private CharSequence subtitle;
 
-    private AppIntroFragment(Builder builder) {
+    private AppIntroFragment(@NonNull Builder builder) {
         this.iconRes = builder.getIconRes();
         this.title = builder.getTitle();
         this.subtitle = builder.getSubtitle();

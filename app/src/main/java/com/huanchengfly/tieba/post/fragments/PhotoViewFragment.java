@@ -74,10 +74,17 @@ public class PhotoViewFragment extends BaseFragment {
     @SuppressLint("ClickableViewAccessibility")
     private void loadByBigImageView() {
         if (!canLoad()) return;
+        String url = photoViewBean.getOriginUrl();
+        if (url == null) {
+            url = photoViewBean.getUrl();
+        }
+        if (url == null) {
+            return;
+        }
         bigImageView.setVisibility(View.VISIBLE);
         bigImageView.setImageViewFactory(new GlideImageViewFactory());
         bigImageView.setProgressIndicator(new CircleProgressIndicator());
-        bigImageView.showImage(Uri.parse(photoViewBean.getOriginUrl()));
+        bigImageView.showImage(Uri.parse(url));
         bigImageView.setOnTouchListener((view, event) -> {
             showBottomBar(true);
             return false;
