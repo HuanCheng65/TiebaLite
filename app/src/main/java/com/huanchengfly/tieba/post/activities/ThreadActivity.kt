@@ -31,7 +31,7 @@ import com.huanchengfly.tieba.post.adapters.ThreadHeaderAdapter
 import com.huanchengfly.tieba.post.adapters.ThreadMainPostAdapter
 import com.huanchengfly.tieba.post.adapters.ThreadReplyAdapter
 import com.huanchengfly.tieba.post.api.TiebaApi
-import com.huanchengfly.tieba.post.api.interfaces.CommonAPICallback
+import com.huanchengfly.tieba.post.api.interfaces.CommonCallback
 import com.huanchengfly.tieba.post.api.models.AgreeBean
 import com.huanchengfly.tieba.post.api.models.CommonResponse
 import com.huanchengfly.tieba.post.api.models.ThreadContentBean
@@ -616,7 +616,7 @@ class ThreadActivity : BaseActivity(), View.OnClickListener, IThreadMenuFragment
             }
         }
 
-    private fun collect(commonAPICallback: CommonAPICallback<CommonResponse>?, update: Boolean) {
+    private fun collect(commonCallback: CommonCallback<CommonResponse>?, update: Boolean) {
         if (dataBean == null || threadId == null) return
         val postListItemBean = firstVisibleItem ?: return
         TiebaApi.getInstance()
@@ -624,9 +624,9 @@ class ThreadActivity : BaseActivity(), View.OnClickListener, IThreadMenuFragment
             .enqueue(object : Callback<CommonResponse> {
                 override fun onFailure(call: Call<CommonResponse>, t: Throwable) {
                     if (t is TiebaException) {
-                        commonAPICallback?.onFailure(t.code, t.message)
+                        commonCallback?.onFailure(t.code, t.message)
                     } else {
-                        commonAPICallback?.onFailure(-1, t.message)
+                        commonCallback?.onFailure(-1, t.message)
                     }
                 }
 
@@ -634,7 +634,7 @@ class ThreadActivity : BaseActivity(), View.OnClickListener, IThreadMenuFragment
                     call: Call<CommonResponse>,
                     response: Response<CommonResponse>
                 ) {
-                    commonAPICallback?.onSuccess(response.body()!!)
+                    commonCallback?.onSuccess(response.body()!!)
                 }
 
             })
@@ -686,7 +686,7 @@ class ThreadActivity : BaseActivity(), View.OnClickListener, IThreadMenuFragment
             DialogUtil.build(this)
                 .setMessage(R.string.message_update_store_floor)
                 .setPositiveButton(R.string.button_yes) { dialog: DialogInterface, _ ->
-                    collect(object : CommonAPICallback<CommonResponse> {
+                    collect(object : CommonCallback<CommonResponse> {
                         override fun onSuccess(data: CommonResponse) {
                             Toast.makeText(
                                 this@ThreadActivity,
@@ -994,7 +994,7 @@ class ThreadActivity : BaseActivity(), View.OnClickListener, IThreadMenuFragment
 
                     })
             } else {
-                collect(object : CommonAPICallback<CommonResponse> {
+                collect(object : CommonCallback<CommonResponse> {
                     override fun onSuccess(data: CommonResponse) {
                         Toast.makeText(
                             this@ThreadActivity,

@@ -20,13 +20,7 @@ private class KeyEventManager<V : View> : View.OnKeyListener {
 }
 
 fun <V : View> V.bindKeyEvent(keyCode: Int, action: (V) -> Unit) {
-    val keyEventManager: KeyEventManager<V>
-    if (onKeyListener !is KeyEventManager<*>) {
-        keyEventManager = KeyEventManager()
-        setOnKeyListener(keyEventManager)
-    } else {
-        keyEventManager = onKeyListener as KeyEventManager<V>
-    }
+    val keyEventManager = getKeyEventManager()
     keyEventManager.bindKeyEvent(keyCode, action)
 }
 

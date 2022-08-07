@@ -4,10 +4,10 @@ import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
-interface ApiResult<Data> {
-    class Success<Data>(val data: Data) : ApiResult<Data>
+sealed interface ApiResult<Data> {
+    data class Success<Data>(val data: Data) : ApiResult<Data>
 
-    class Failure<Data>(val error: Throwable) : ApiResult<Data>
+    data class Failure<Data>(val error: Throwable) : ApiResult<Data>
 }
 
 val ApiResult<*>.isSuccessful: Boolean
