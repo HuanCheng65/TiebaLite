@@ -253,6 +253,7 @@ open class AppPreferencesUtils(context: Context) {
             ) {
                 state = value
                 MainScope().launch(Dispatchers.IO) {
+                    state = value
                     thisRef.preferencesDataStore.edit {
                         it[booleanPreferencesKey(key ?: property.name)] = value
                     }

@@ -16,6 +16,7 @@ public class TintSwitch extends SwitchCompat implements Tintable {
     private int mBackgroundTintResId;
     private int mThumbTintResId;
     private int mTrackTintListResId;
+    private int mTextColorResId;
 
     public TintSwitch(Context context) {
         this(context, null);
@@ -41,6 +42,7 @@ public class TintSwitch extends SwitchCompat implements Tintable {
         mBackgroundTintResId = array.getResourceId(R.styleable.TintSwitch_switchBackgroundTint, R.color.transparent);
         mThumbTintResId = array.getResourceId(R.styleable.TintSwitch_thumbTint, R.color.white);
         mTrackTintListResId = array.getResourceId(R.styleable.TintSwitch_trackTintList, R.color.selector_switch_track);
+        mTextColorResId = array.getResourceId(R.styleable.TintSwitch_textColor, 0);
         array.recycle();
         applyTintColor();
     }
@@ -54,6 +56,9 @@ public class TintSwitch extends SwitchCompat implements Tintable {
         }
         setThumbTintList(ColorStateList.valueOf(ThemeUtils.getColorById(getContext(), mThumbTintResId)));
         setTrackTintList(ColorStateListUtils.createColorStateList(getContext(), mTrackTintListResId));
+        if (mTextColorResId != 0) {
+            setTextColor(ColorStateListUtils.createColorStateList(getContext(), mTextColorResId));
+        }
     }
 
     private void fixColor() {

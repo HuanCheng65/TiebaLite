@@ -11,6 +11,7 @@
         android:layout_height="wrap_content"
         android:background="@drawable/bg_radius_10dp"
         android:orientation="vertical"
+        android:padding="16dp"
         app:backgroundTint="@color/default_color_card">
 
         <com.huanchengfly.tieba.post.widgets.theme.TintTextView
@@ -18,14 +19,12 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:maxWidth="250dp"
-            android:padding="16dp"
             android:textSize="15sp" />
 
         <FrameLayout
             android:id="@+id/chat_bubble_custom_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
             android:visibility="gone" />
 
     </com.huanchengfly.tieba.post.widgets.theme.TintLinearLayout>

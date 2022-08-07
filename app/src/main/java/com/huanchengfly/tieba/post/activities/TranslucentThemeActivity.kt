@@ -295,7 +295,7 @@ class TranslucentThemeActivity : BaseActivity(), View.OnClickListener, OnSeekBar
         mTranslucentThemeColorAdapter.onItemClickListener =
             OnItemClickListener { _: View?, themeColor: Int, _: Int, _: Int ->
                 appPreferences.translucentPrimaryColor = toString(themeColor)
-                maskView.post { ThemeUtils.refreshUI(this) }
+                maskView.post { ThemeUtils.refreshUI(this, this) }
             }
         (findViewById<RecyclerView>(R.id.select_color_recycler_view)).apply {
             addItemDecoration(HorizontalSpacesDecoration(0, 0, 12.dpToPx(), 12.dpToPx(), false))
@@ -360,7 +360,7 @@ class TranslucentThemeActivity : BaseActivity(), View.OnClickListener, OnSeekBar
 
     override fun onColorSelected(dialogId: Int, color: Int) {
         appPreferences.translucentPrimaryColor = toString(color)
-        ThemeUtils.refreshUI(this)
+        ThemeUtils.refreshUI(this, this)
     }
 
     override fun onDialogDismissed(dialogId: Int) {}

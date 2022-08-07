@@ -112,6 +112,7 @@
         <attr name="switchBackgroundTint" format="color" />
         <attr name="thumbTint" format="color" />
         <attr name="trackTintList" format="color" />
+        <attr name="textColor" />
     </declare-styleable>
 
     <declare-styleable name="TintMaterialCardView">

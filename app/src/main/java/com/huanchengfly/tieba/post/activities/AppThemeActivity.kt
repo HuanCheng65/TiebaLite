@@ -2,6 +2,7 @@ package com.huanchengfly.tieba.post.activities
 
 import android.os.Build
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
 import android.widget.ImageView
 import androidx.appcompat.widget.Toolbar
@@ -23,10 +24,12 @@ import com.huanchengfly.tieba.post.components.dividers.HorizontalSpacesDecoratio
 import com.huanchengfly.tieba.post.ui.common.animation.addMaskAnimation
 import com.huanchengfly.tieba.post.ui.common.animation.addZoomAnimation
 import com.huanchengfly.tieba.post.ui.common.animation.buildPressAnimator
+import com.huanchengfly.tieba.post.ui.common.theme.utils.ThemeUtils
 import com.huanchengfly.tieba.post.utils.DialogUtil
 import com.huanchengfly.tieba.post.utils.ThemeUtil
 import com.huanchengfly.tieba.post.utils.ThemeUtil.THEME_CUSTOM
 import com.huanchengfly.tieba.post.utils.ThemeUtil.THEME_TRANSLUCENT
+import com.huanchengfly.tieba.post.widgets.theme.TintSwitch
 import java.io.File
 
 class AppThemeActivity : BaseActivity() {
@@ -138,7 +141,24 @@ class AppThemeActivity : BaseActivity() {
                         getString(R.string.bubble_want_colored_toolbar),
                         POSITION_RIGHT
                     ),
-                    ChatBubbleStyleAdapter.Bubble(getString(R.string.bubble_not_completed))
+                    ChatBubbleStyleAdapter.Bubble { context, _, parent ->
+                        val view = LayoutInflater.from(context)
+                            .inflate(R.layout.layout_bubble_toolbar_primary_color, parent, false)
+                        view.findViewById<TintSwitch>(R.id.theme_toolbar_primary_color).apply {
+                            setOnCheckedChangeListener(null)
+                            isChecked = appPreferences.toolbarPrimaryColor
+                            setOnCheckedChangeListener { _, isChecked ->
+                                appPreferences.toolbarPrimaryColor = isChecked
+                                postDelayed({
+                                    ThemeUtils.refreshUI(
+                                        this@AppThemeActivity,
+                                        this@AppThemeActivity
+                                    )
+                                }, 10)
+                            }
+                        }
+                        view
+                    }
                 )
             )
         }
