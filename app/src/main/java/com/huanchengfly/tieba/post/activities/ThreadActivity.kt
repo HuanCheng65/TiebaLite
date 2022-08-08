@@ -43,7 +43,7 @@ import com.huanchengfly.tieba.post.api.retrofit.exception.getErrorMessage
 import com.huanchengfly.tieba.post.components.FillVirtualLayoutManager
 import com.huanchengfly.tieba.post.components.dialogs.EditTextDialog
 import com.huanchengfly.tieba.post.fragments.threadmenu.IThreadMenuFragment
-import com.huanchengfly.tieba.post.fragments.threadmenu.MIUIThreadMenuFragment
+import com.huanchengfly.tieba.post.fragments.threadmenu.ThreadMenuFragment
 import com.huanchengfly.tieba.post.goToActivity
 import com.huanchengfly.tieba.post.models.ReplyInfoBean
 import com.huanchengfly.tieba.post.models.ThreadHistoryInfoBean
@@ -745,7 +745,7 @@ class ThreadActivity : BaseActivity(), View.OnClickListener, IThreadMenuFragment
             }
             R.id.toolbar -> recyclerView.scrollToPosition(0)
             R.id.thread_bottom_bar_more_btn -> {
-                MIUIThreadMenuFragment(
+                ThreadMenuFragment(
                     seeLz,
                     collect,
                     replyAdapter.isPureRead,

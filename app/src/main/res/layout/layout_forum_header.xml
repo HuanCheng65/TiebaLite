@@ -164,6 +164,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:layout_marginBottom="8dp"
+            android:baselineAligned="false"
             android:orientation="horizontal">
 
             <LinearLayout
@@ -187,7 +188,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
                     android:layout_marginTop="8dp"
-                    android:text="关注"
+                    android:text="@string/title_stat_concerns_num"
                     android:textSize="14sp"
                     app:tint="@color/color_text_secondary_translucent_light" />
             </LinearLayout>
@@ -213,7 +214,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
                     android:layout_marginTop="8dp"
-                    android:text="贴子"
+                    android:text="@string/title_stat_threads_num"
                     android:textSize="14sp"
                     app:tint="@color/color_text_secondary_translucent_light" />
             </LinearLayout>
@@ -239,7 +240,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
                     android:layout_marginTop="8dp"
-                    android:text="回贴"
+                    android:text="@string/title_stat_posts_num"
                     android:textSize="14sp"
                     app:tint="@color/color_text_secondary_translucent_light" />
             </LinearLayout>

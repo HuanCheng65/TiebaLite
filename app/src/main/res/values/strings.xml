@@ -547,4 +547,7 @@
     <string name="title_posts_num">贴子</string>
     <string name="title_oksign_use_official_oksign">使用官方一键签到</string>
     <string name="summary_oksign_use_official_oksign">（实验性特性）先使用官方一键签到减少需签到吧数量，以加快签到速度</string>
+    <string name="title_stat_threads_num">贴子</string>
+    <string name="title_stat_posts_num">回贴</string>
+    <string name="title_stat_concerns_num">关注</string>
 </resources>
