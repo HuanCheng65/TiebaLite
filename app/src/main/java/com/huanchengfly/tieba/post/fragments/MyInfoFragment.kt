@@ -105,7 +105,7 @@ class MyInfoFragment : BaseFragment(), View.OnClickListener, CompoundButton.OnCh
             val account = AccountUtil.getLoginInfo(attachContext)!!
             followsTextView.text = account.concernNum ?: "0"
             fansTextView.text = account.fansNum ?: "0"
-            threadsTextView.text = account.postNum ?: "0"
+            threadsTextView.text = account.threadNum ?: "0"
             userNameTextView.text = account.nameShow
             contentTextView.text =
                 account.intro ?: attachContext.resources.getString(R.string.tip_no_intro)
@@ -125,7 +125,7 @@ class MyInfoFragment : BaseFragment(), View.OnClickListener, CompoundButton.OnCh
         } else {
             followsTextView.text = profile.user.concernNum
             fansTextView.text = profile.user.fansNum
-            threadsTextView.text = profile.user.postNum
+            threadsTextView.text = profile.user.threadNum
             userNameTextView.text = profile.user.nameShow
             if (profile.user.intro.isNullOrBlank()) {
                 profile.user.intro = attachContext.resources.getString(R.string.tip_no_intro)
@@ -190,6 +190,7 @@ class MyInfoFragment : BaseFragment(), View.OnClickListener, CompoundButton.OnCh
             sex = profile.user.sex
             fansNum = profile.user.fansNum
             postNum = profile.user.postNum
+            threadNum = profile.user.threadNum
             concernNum = profile.user.concernNum
             tbAge = profile.user.tbAge
             age = profile.user.birthdayInfo?.age

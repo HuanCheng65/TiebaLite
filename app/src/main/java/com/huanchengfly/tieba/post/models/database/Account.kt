@@ -15,6 +15,7 @@ data class Account(
     var sex: String? = null,
     var fansNum: String? = null,
     var postNum: String? = null,
+    var threadNum: String? = null,
     var concernNum: String? = null,
     var tbAge: String? = null,
     var age: String? = null,
