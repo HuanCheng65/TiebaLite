@@ -5,21 +5,13 @@ import android.app.ActivityManager
 import android.app.Application
 import android.app.Dialog
 import android.content.Context
-import android.content.Intent
-import android.content.res.ColorStateList
 import android.content.res.Configuration
 import android.content.res.Resources
 import android.graphics.Color
 import android.graphics.drawable.Drawable
-import android.net.Uri
 import android.os.Build
-import android.os.Bundle
 import android.os.Process
-import android.view.View
 import android.webkit.WebView
-import android.widget.FrameLayout
-import android.widget.ImageView
-import android.widget.TextView
 import androidx.annotation.Keep
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
@@ -30,35 +22,37 @@ import com.github.gzuliyujiang.oaid.IGetter
 import com.github.piasy.biv.BigImageViewer
 import com.github.piasy.biv.loader.glide.GlideImageLoader
 import com.huanchengfly.tieba.post.activities.BaseActivity
-import com.huanchengfly.tieba.post.api.interfaces.CommonCallback
+import com.huanchengfly.tieba.post.components.ClipBoardLinkDetector
 import com.huanchengfly.tieba.post.components.dialogs.LoadingDialog
 import com.huanchengfly.tieba.post.plugins.PluginManager
 import com.huanchengfly.tieba.post.plugins.interfaces.IApp
 import com.huanchengfly.tieba.post.ui.common.theme.interfaces.ThemeSwitcher
 import com.huanchengfly.tieba.post.ui.common.theme.utils.ThemeUtils
 import com.huanchengfly.tieba.post.utils.*
-import com.huanchengfly.tieba.post.utils.QuickPreviewUtil.PreviewInfo
-import com.huanchengfly.tieba.post.utils.QuickPreviewUtil.getForumName
-import com.huanchengfly.tieba.post.utils.QuickPreviewUtil.getPreviewInfo
-import com.huanchengfly.tieba.post.utils.QuickPreviewUtil.isForumUrl
-import com.huanchengfly.tieba.post.utils.QuickPreviewUtil.isThreadUrl
 import com.microsoft.appcenter.AppCenter
 import com.microsoft.appcenter.analytics.Analytics
 import com.microsoft.appcenter.crashes.Crashes
 import com.microsoft.appcenter.distribute.*
 import dagger.hilt.android.HiltAndroidApp
-import org.intellij.lang.annotations.RegExp
 import org.litepal.LitePal
-import java.util.*
-import java.util.regex.Pattern
 
 
 @HiltAndroidApp
-class BaseApplication : Application(), IApp {
+class BaseApplication : Application(), IApp, IGetter {
     private val mActivityList: MutableList<Activity> = mutableListOf()
 
+    override fun onOAIDGetComplete(result: String) {
+        oaid = UIDUtil.Encoder(
+            "ABCDEFGHIJKLMNOPQRSTUVWXYZ234567="
+        ).encode(result.encodeToByteArray())
+    }
+
+    override fun onOAIDGetError(error: Exception) {
+        oaid = ""
+    }
+
     @RequiresApi(api = 28)
-    fun setWebViewPath(context: Context) {
+    private fun setWebViewPath(context: Context) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
             val processName = getProcessName(context)
             if (applicationContext.packageName != processName) { //判断不等于默认进程名称
@@ -82,185 +76,26 @@ class BaseApplication : Application(), IApp {
         super.onCreate()
         BigImageViewer.initialize(GlideImageLoader.with(this))
         DeviceIdentifier.register(this)
-        DeviceID.getOAID(this, object : IGetter {
-            override fun onOAIDGetComplete(result: String) {
-                oaid = UIDUtil.Encoder(
-                    "ABCDEFGHIJKLMNOPQRSTUVWXYZ234567="
-                ).encode(result.encodeToByteArray())
-            }
-
-            override fun onOAIDGetError(error: Exception) {
-                oaid = ""
-            }
-        })
+        DeviceID.getOAID(this, this)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
             setWebViewPath(this)
         }
-        Distribute.setUpdateTrack(if (appPreferences.checkCIUpdate) UpdateTrack.PRIVATE else UpdateTrack.PUBLIC)
-        Distribute.setListener(MyDistributeListener())
-        AppCenter.start(
-            this, "b56debcc-264b-4368-a2cd-8c20213f6433",
-            Analytics::class.java, Crashes::class.java, Distribute::class.java
-        )
+        val isSelfBuild = applicationMetaData.getBoolean("is_self_build")
+        if (!isSelfBuild) {
+            Distribute.setUpdateTrack(if (appPreferences.checkCIUpdate) UpdateTrack.PRIVATE else UpdateTrack.PUBLIC)
+            Distribute.setListener(MyDistributeListener())
+            AppCenter.start(
+                this, "b56debcc-264b-4368-a2cd-8c20213f6433",
+                Analytics::class.java, Crashes::class.java, Distribute::class.java
+            )
+        }
         ThemeUtils.init(ThemeDelegate)
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
+        registerActivityLifecycleCallbacks(ClipBoardLinkDetector)
         LitePal.initialize(this)
         EmotionManager.init(this)
-        registerActivityLifecycleCallbacks(object : ActivityLifecycleCallbacks {
-            private var clipBoardHash: String? = null
-            private var lastTimestamp: Long = 0L
-            private fun updateClipBoardHashCode() {
-                clipBoardHash = getClipBoardHash()
-            }
-
-            private fun getClipBoardHash(): String {
-                return "$clipBoardTimestamp"
-            }
-
-            private val clipBoard: String?
-                get() {
-                    val timestamp = System.currentTimeMillis()
-                    return if (timestamp - lastTimestamp >= 10 * 1000L) {
-                        lastTimestamp = timestamp
-                        getClipBoardText()
-                    } else {
-                        null
-                    }
-                }
-
-            private val clipBoardTimestamp: Long
-                get() = getClipBoardTimestamp()
-
-            private fun isTiebaDomain(host: String?): Boolean {
-                return host != null && (host.equals("wapp.baidu.com", ignoreCase = true) ||
-                        host.equals("tieba.baidu.com", ignoreCase = true) ||
-                        host.equals("tiebac.baidu.com", ignoreCase = true))
-            }
-
-            override fun onActivityCreated(activity: Activity, savedInstanceState: Bundle?) {}
-            override fun onActivityStarted(activity: Activity) {}
-            private fun updatePreviewView(context: Context, previewView: View, data: PreviewInfo?) {
-                if (data == null) {
-                    previewView.visibility = View.GONE
-                    return
-                }
-                previewView.visibility = View.VISIBLE
-                val iconView =
-                    Objects.requireNonNull(previewView).findViewById<ImageView>(R.id.icon)
-                val title = previewView.findViewById<TextView>(R.id.title)
-                val subtitle = previewView.findViewById<TextView>(R.id.subtitle)
-                title.text = data.title
-                subtitle.text = data.subtitle
-                if (data.icon != null) when (data.icon!!.type) {
-                    QuickPreviewUtil.Icon.TYPE_DRAWABLE_RES -> {
-                        iconView.setImageResource(data.icon!!.res)
-                        val iconLayoutParams = iconView.layoutParams as FrameLayout.LayoutParams
-                        run {
-                            iconLayoutParams.height = 24f.dpToPx()
-                            iconLayoutParams.width = iconLayoutParams.height
-                        }
-                        iconView.layoutParams = iconLayoutParams
-                        iconView.imageTintList = ColorStateList.valueOf(
-                            ThemeUtils.getColorByAttr(
-                                context,
-                                R.attr.colorAccent
-                            )
-                        )
-                    }
-                    QuickPreviewUtil.Icon.TYPE_URL -> {
-                        ImageUtil.load(iconView, ImageUtil.LOAD_TYPE_AVATAR, data.icon!!.url)
-                        val avatarLayoutParams = iconView.layoutParams as FrameLayout.LayoutParams
-                        run {
-                            avatarLayoutParams.height = 24f.dpToPx()
-                            avatarLayoutParams.width = avatarLayoutParams.height
-                        }
-                        iconView.layoutParams = avatarLayoutParams
-                        iconView.imageTintList = null
-                    }
-                }
-            }
-
-            override fun onActivityResumed(activity: Activity) {
-                activity.window.decorView.post { checkClipBoard(activity) }
-            }
-
-            private fun checkClipBoard(activity: Activity) {
-                if (clipBoardHash == getClipBoardHash()) {
-                    return
-                }
-                updateClipBoardHashCode()
-                val clipBoardText = clipBoard
-                if (clipBoardText != null) {
-                    @RegExp val regex =
-                        "((http|https)://)(([a-zA-Z0-9._-]+\\.[a-zA-Z]{2,6})|([0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}))(:[0-9]{1,4})*(/[a-zA-Z0-9&%_./-~-]*)?"
-                    val pattern = Pattern.compile(regex)
-                    val matcher = pattern.matcher(clipBoardText)
-                    if (matcher.find()) {
-                        val url = matcher.group()
-                        val uri = Uri.parse(url)
-                        if (isTiebaDomain(uri.host)) {
-                            val previewView = Util.inflate(activity, R.layout.preview_url)
-                            if (isForumUrl(uri)) {
-                                updatePreviewView(
-                                    activity, previewView, PreviewInfo()
-                                        .setIconRes(R.drawable.ic_round_forum)
-                                        .setTitle(
-                                            activity.getString(
-                                                R.string.title_forum,
-                                                getForumName(uri)
-                                            )
-                                        )
-                                        .setSubtitle(activity.getString(R.string.text_loading))
-                                        .setUrl(url)
-                                )
-                            } else if (isThreadUrl(uri)) {
-                                updatePreviewView(
-                                    activity, previewView, PreviewInfo()
-                                        .setIconRes(R.drawable.ic_round_mode_comment)
-                                        .setTitle(url)
-                                        .setSubtitle(activity.getString(R.string.text_loading))
-                                        .setUrl(url)
-                                )
-                            }
-                            getPreviewInfo(activity, url, object : CommonCallback<PreviewInfo> {
-                                override fun onSuccess(data: PreviewInfo) {
-                                    updatePreviewView(activity, previewView, data)
-                                }
-
-                                override fun onFailure(code: Int, error: String) {
-                                    updatePreviewView(
-                                        activity, previewView, PreviewInfo()
-                                            .setUrl(url)
-                                            .setTitle(url)
-                                            .setSubtitle(activity.getString(R.string.subtitle_link))
-                                            .setIconRes(R.drawable.ic_link)
-                                    )
-                                }
-                            })
-                            DialogUtil.build(activity)
-                                .setTitle(R.string.title_dialog_clip_board_tieba_url)
-                                .setPositiveButton(R.string.button_yes) { _, _ ->
-                                    startActivity(
-                                        Intent("com.huanchengfly.tieba.post.ACTION_JUMP", uri)
-                                            .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                                            .addCategory(Intent.CATEGORY_DEFAULT)
-                                    )
-                                }
-                                .setView(previewView)
-                                .setNegativeButton(R.string.button_no, null)
-                                .show()
-                        }
-                    }
-                }
-            }
-
-            override fun onActivityPaused(activity: Activity) {}
-            override fun onActivityStopped(activity: Activity) {}
-            override fun onActivitySaveInstanceState(activity: Activity, outState: Bundle) {}
-            override fun onActivityDestroyed(activity: Activity) {}
-        })
-        if (BuildConfig.DEBUG) CrashUtil.CrashHandler.getInstance().init(this)
         PluginManager.init(this)
+        if (BuildConfig.DEBUG) CrashUtil.CrashHandler.getInstance().init(this)
     }
 
     //解决魅族 Flyme 系统夜间模式强制反色

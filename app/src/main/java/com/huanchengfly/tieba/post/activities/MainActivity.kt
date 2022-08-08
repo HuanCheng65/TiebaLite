@@ -32,14 +32,11 @@ import com.huanchengfly.tieba.post.services.NotifyJobService
 import com.huanchengfly.tieba.post.utils.*
 import com.huanchengfly.tieba.post.widgets.MyViewPager
 import com.microsoft.appcenter.crashes.Crashes
-import com.microsoft.appcenter.distribute.Distribute
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.launch
-import java.text.SimpleDateFormat
-import java.util.*
 
 open class MainActivity : BaseActivity(), NavigationBarView.OnItemSelectedListener,
     NavigationBarView.OnItemReselectedListener {
@@ -152,18 +149,11 @@ open class MainActivity : BaseActivity(), NavigationBarView.OnItemSelectedListen
         })
     }
 
-    private fun shouldShowSwitchSnackbar(): Boolean {
+    private fun shouldShowSwitchSnackBar(): Boolean {
         return dataStore.getBoolean(SP_SHOULD_SHOW_SNACKBAR, false)
     }
 
     override fun getLayoutId(): Int = R.layout.activity_main
-
-    private fun formatDateTime(
-        pattern: String,
-        timestamp: Long = System.currentTimeMillis()
-    ): String {
-        return SimpleDateFormat(pattern, Locale.getDefault()).format(Date(timestamp))
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -183,7 +173,6 @@ open class MainActivity : BaseActivity(), NavigationBarView.OnItemSelectedListen
             }
         }
         mViewPager.post {
-            Distribute.checkForUpdate()
             Crashes.hasCrashedInLastSession().thenAccept { hasCrashed ->
                 if (hasCrashed) {
                     Crashes.getLastSessionCrashReport().thenAccept {
@@ -226,7 +215,7 @@ open class MainActivity : BaseActivity(), NavigationBarView.OnItemSelectedListen
                         .setCancelable(false)
                         .create())
             }
-            if (shouldShowSwitchSnackbar()) {
+            if (shouldShowSwitchSnackBar()) {
                 Util.createSnackbar(
                     mViewPager,
                     if (ThemeUtil.isNightMode()) R.string.snackbar_auto_switch_to_night else R.string.snackbar_auto_switch_from_night,

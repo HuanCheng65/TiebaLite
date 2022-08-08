@@ -6,12 +6,12 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.RelativeLayout
 import androidx.appcompat.widget.Toolbar
+import com.huanchengfly.tieba.post.BuildConfig
 import com.huanchengfly.tieba.post.R
 import com.huanchengfly.tieba.post.toastShort
 import com.huanchengfly.tieba.post.ui.common.about.AboutPage
 import com.huanchengfly.tieba.post.ui.common.theme.utils.ThemeUtils
 import com.huanchengfly.tieba.post.utils.ThemeUtil
-import com.huanchengfly.tieba.post.utils.VersionUtil
 
 class AboutActivity : BaseActivity() {
     var lastClickTime: Long = 0
@@ -40,7 +40,7 @@ class AboutActivity : BaseActivity() {
             .addItem(
                 AboutPage.Item(
                     "当前版本",
-                    VersionUtil.getVersionName(this),
+                    BuildConfig.VERSION_NAME,
                     R.drawable.ic_round_info,
                     colorIcon
                 ).setOnClickListener {

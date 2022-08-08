@@ -17,6 +17,7 @@ import androidx.preference.ListPreference
 import androidx.preference.Preference
 import androidx.preference.SwitchPreference
 import com.google.android.material.snackbar.Snackbar
+import com.huanchengfly.tieba.post.BuildConfig
 import com.huanchengfly.tieba.post.DataStorePreference
 import com.huanchengfly.tieba.post.R
 import com.huanchengfly.tieba.post.activities.BlockListActivity
@@ -248,7 +249,7 @@ class PreferencesFragment : PreferencesFragment() {
             }
         initListPreference("dark_theme", "dark")
         aboutPreference!!.summary =
-            getString(R.string.tip_about, VersionUtil.getVersionName(attachContext))
+            getString(R.string.tip_about, BuildConfig.VERSION_NAME)
         refresh()
         /*
         try {

@@ -11,10 +11,11 @@ keystoreProperties.load(new FileInputStream(rootProject.file("keystore.propertie
 def applicationProperties = new Properties()
 applicationProperties.load(new FileInputStream(rootProject.file("application.properties")))
 def buildId = System.getenv("APPCENTER_BUILD_ID")
+def isSelfBuild = buildId == null
 def applicationVersionCode = applicationProperties["versionCode"].toInteger()
 def applicationVersionName = applicationProperties["versionName"]
 def isPerVersion = applicationProperties["isPerRelease"] == "true"
-if (buildId != null) {
+if (!isSelfBuild) {
     applicationVersionName = applicationVersionName + ".${buildId}"
 }
 if (isPerVersion) {
@@ -35,6 +36,9 @@ android {
         vectorDrawables {
             useSupportLibrary true
         }
+        manifestPlaceholders  = [
+                is_self_build: "$isSelfBuild"
+        ]
     }
     buildFeatures {
         compose true

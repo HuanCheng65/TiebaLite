@@ -99,6 +99,9 @@
         <meta-data
             android:name="ScopedStorage"
             android:value="true" />
+        <meta-data
+            android:name="is_self_build"
+            android:value="${is_self_build}" />
 
         <activity
             android:name=".activities.MainActivity"
