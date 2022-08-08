@@ -10,7 +10,6 @@ import com.huanchengfly.tieba.post.api.retrofit.exception.getErrorCode
 import com.huanchengfly.tieba.post.api.retrofit.exception.getErrorMessage
 import com.huanchengfly.tieba.post.models.SignDataBean
 import com.huanchengfly.tieba.post.models.database.Account
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.*
@@ -19,7 +18,6 @@ import java.util.concurrent.ThreadLocalRandom
 import kotlin.properties.Delegates
 
 abstract class IOKSigner(
-    val coroutineScope: CoroutineScope,
     context: Context
 ) {
     private val contextWeakReference: WeakReference<Context> = WeakReference(context)
@@ -89,10 +87,9 @@ class MultiAccountSigner(
 */
 
 class SingleAccountSigner(
-    coroutineScope: CoroutineScope,
     context: Context,
     private val account: Account
-) : IOKSigner(coroutineScope, context) {
+) : IOKSigner(context) {
     companion object {
         const val TAG = "SingleAccountSigner"
     }

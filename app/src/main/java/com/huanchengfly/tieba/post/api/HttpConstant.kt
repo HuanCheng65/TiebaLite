@@ -19,14 +19,6 @@ object Error {
     const val ERROR_UPDATE_NOT_ENABLE = 100
 }
 
-
-object Url {
-    const val UPDATE_INFO = "https://huancheng65.github.io/TiebaLite/update_v2.json"
-    const val CHECK_UPDATE = "https://tblite.huanchengfly.tk/api/update"
-    const val CHANGELOG = "https://tblite.huanchengfly.tk/api/changelog/"
-}
-
-
 object Header {
     const val FORCE_PARAM = "force_param"
     const val FORCE_PARAM_QUERY = "query"

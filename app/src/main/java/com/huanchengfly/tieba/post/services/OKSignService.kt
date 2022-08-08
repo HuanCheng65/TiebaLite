@@ -101,7 +101,6 @@ class OKSignService : IntentService(TAG), CoroutineScope, ProgressListener {
             if (loginInfo != null) {
                 runBlocking {
                     SingleAccountSigner(
-                        this,
                         this@OKSignService,
                         AccountUtil.getLoginInfo(this@OKSignService)!!
                     )
