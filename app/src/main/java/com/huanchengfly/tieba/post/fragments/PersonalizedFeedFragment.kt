@@ -35,13 +35,9 @@ import com.huanchengfly.tieba.post.utils.ThemeUtil
 import com.huanchengfly.tieba.post.utils.TiebaUtil
 import com.huanchengfly.tieba.post.utils.Util
 import com.huanchengfly.tieba.post.utils.anim.animSet
-import com.huanchengfly.tieba.post.widgets.ShadowLayout
 import com.huanchengfly.tieba.post.widgets.VideoPlayerStandard
 import com.scwang.smart.refresh.header.MaterialHeader
 import com.scwang.smart.refresh.layout.SmartRefreshLayout
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 
 class PersonalizedFeedFragment : BaseFragment(), PersonalizedFeedAdapter.OnRefreshListener,
     Refreshable, Toolbar.OnMenuItemClickListener {
@@ -68,7 +64,7 @@ class PersonalizedFeedFragment : BaseFragment(), PersonalizedFeedAdapter.OnRefre
     lateinit var recyclerView: RecyclerView
 
     @BindView(R.id.refresh_tip)
-    lateinit var refreshTip: ShadowLayout
+    lateinit var refreshTip: View
 
     @BindView(R.id.refresh_tip_text)
     lateinit var refreshTipText: TextView
@@ -226,27 +222,19 @@ class PersonalizedFeedFragment : BaseFragment(), PersonalizedFeedAdapter.OnRefre
     }
 
     private fun loadMore() {
-        TiebaApi.getInstance().personalized(2, page + 1)
-            .enqueue(object : Callback<PersonalizedBean> {
-                override fun onFailure(call: Call<PersonalizedBean>, t: Throwable) {
-                    refreshLayout.finishLoadMore(false)
-                }
-
-                override fun onResponse(
-                    call: Call<PersonalizedBean>,
-                    response: Response<PersonalizedBean>
-                ) {
-                    val personalizedBean = response.body()!!
-                    this@PersonalizedFeedFragment.personalizedBean = personalizedBean
-                    personalizedBean.threadList?.forEachIndexed { index, threadBean ->
+        launchIO {
+            TiebaApi.getInstance().personalizedAsync(2, page + 1)
+                .doIfSuccess {
+                    this@PersonalizedFeedFragment.personalizedBean = it
+                    it.threadList?.forEachIndexed { index, threadBean ->
                         threadBean.threadPersonalizedBean =
-                            personalizedBean.threadPersonalized?.get(index)
+                            it.threadPersonalized?.get(index)
                     }
                     val newThreadBeans: List<PersonalizedBean.ThreadBean> =
-                        personalizedBean.threadList?.filterNot {
-                            (it.abstractBeans?.size!! > 0 && BlockUtil.needBlock(it.abstractBeans[0].text)) || BlockUtil.needBlock(
-                                it.author?.nameShow,
-                                it.author?.id
+                        it.threadList?.filterNot { threadBean ->
+                            (threadBean.abstractBeans?.size!! > 0 && BlockUtil.needBlock(threadBean.abstractBeans[0].text)) || BlockUtil.needBlock(
+                                threadBean.author?.nameShow,
+                                threadBean.author?.id
                             )
                         }!!
                     adapter.apply {
@@ -255,7 +243,10 @@ class PersonalizedFeedFragment : BaseFragment(), PersonalizedFeedAdapter.OnRefre
                     page += 1
                     refreshLayout.finishLoadMore(true)
                 }
-            })
+                .doIfFailure {
+                    refreshLayout.finishLoadMore(false)
+                }
+        }
     }
 
     override fun onFragmentVisibleChange(isVisible: Boolean) {

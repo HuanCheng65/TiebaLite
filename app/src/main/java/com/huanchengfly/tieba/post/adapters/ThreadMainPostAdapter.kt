@@ -92,6 +92,9 @@ class ThreadMainPostAdapter(
     }
 
     private fun showMenu() {
+        if (threadPostBean == null) {
+            return
+        }
         val userInfoBean: ThreadContentBean.UserInfoBean = user
         MenuDialogFragment.newInstance(R.menu.menu_thread_item, null)
             .setOnNavigationItemSelectedListener { item: MenuItem ->

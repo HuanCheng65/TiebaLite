@@ -185,7 +185,11 @@ class SearchThreadFragment : BaseFragment(), ISearchFragment, NewSearchActivity.
                         call: Call<SearchThreadBean>,
                         response: Response<SearchThreadBean>
                     ) {
-                        val searchThreadBean = response.body()!!
+                        val searchThreadBean = response.body()
+                        if (searchThreadBean == null) {
+                            refreshLayout?.finishLoadMore(false)
+                            return
+                        }
                         mData = searchThreadBean.data
                         mData!!.postList?.let {
                             searchThreadAdapter!!.insert(it)
