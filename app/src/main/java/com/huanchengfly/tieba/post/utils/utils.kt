@@ -139,6 +139,22 @@ fun launchUrl(context: Context, url: String) {
     if (host == null || scheme == null || path == null) {
         return
     }
+    if (scheme == "tiebaclient") {
+        val action = uri.getQueryParameter("action")
+        when (action) {
+            "preview_file" -> {
+                val realUrl = uri.getQueryParameter("url")
+                if (realUrl.isNullOrEmpty()) {
+                    return
+                }
+                launchUrl(context, realUrl)
+            }
+            else -> {
+                context.toastShort(R.string.toast_feature_unavailable)
+            }
+        }
+        return
+    }
     if (!path.contains("android_asset")) {
         val isTiebaLink =
             host.contains("tieba.baidu.com") || host.contains("wappass.baidu.com") || host.contains(

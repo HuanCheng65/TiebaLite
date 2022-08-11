@@ -181,35 +181,40 @@ class UserActivity : BaseActivity() {
     }
 
     fun refreshHeader() {
-        titleView.text = profileBean!!.user!!.nameShow
-        sloganView.text = profileBean!!.user!!.intro
-        followStatTv.text = "${profileBean!!.user!!.concernNum}"
-        fansStatTv.text = "${profileBean!!.user!!.fansNum}"
-        //getString(R.string.tip_stat, profileBean!!.user!!.concernNum, profileBean!!.user!!.fansNum)
-        if (avatarView.tag == null) {
-            ImageUtil.load(
-                avatarView,
-                ImageUtil.LOAD_TYPE_AVATAR,
-                StringUtil.getAvatarUrl(profileBean!!.user!!.portrait)
-            )
-            ImageUtil.initImageView(
-                avatarView,
-                PhotoViewBean(StringUtil.getAvatarUrl(profileBean!!.user!!.portrait))
-            )
-        }
-        if (TextUtils.equals(AccountUtil.getUid(this), profileBean!!.user!!.id)) {
-            actionBtn.setText(R.string.menu_edit_info)
-        } else {
-            if ("1" == profileBean!!.user!!.hasConcerned) {
-                actionBtn.setText(R.string.button_unfollow)
-            } else {
-                actionBtn.setText(R.string.button_follow)
+        profileBean?.let {
+            if (it.user == null) {
+                return
             }
+            titleView.text = it.user.nameShow
+            sloganView.text = it.user.intro
+            followStatTv.text = "${it.user.concernNum}"
+            fansStatTv.text = "${it.user.fansNum}"
+            //getString(R.string.tip_stat, profileBean!!.user!!.concernNum, profileBean!!.user!!.fansNum)
+            if (avatarView.tag == null) {
+                ImageUtil.load(
+                    avatarView,
+                    ImageUtil.LOAD_TYPE_AVATAR,
+                    StringUtil.getAvatarUrl(it.user.portrait)
+                )
+                ImageUtil.initImageView(
+                    avatarView,
+                    PhotoViewBean(StringUtil.getAvatarUrl(it.user.portrait))
+                )
+            }
+            if (TextUtils.equals(AccountUtil.getUid(this), it.user.id)) {
+                actionBtn.setText(R.string.menu_edit_info)
+            } else {
+                if ("1" == it.user.hasConcerned) {
+                    actionBtn.setText(R.string.button_unfollow)
+                } else {
+                    actionBtn.setText(R.string.button_follow)
+                }
+            }
+            sexTv.text =
+                if (it.user.sex == "1") "♂" else if (it.user.sex == "2") "♀" else "?"
+            tbAgeTv.text = getString(R.string.tb_age, it.user.tbAge)
+            infoChips.visibility = View.VISIBLE
         }
-        sexTv.text =
-            if (profileBean!!.user!!.sex == "1") "♂" else if (profileBean!!.user!!.sex == "2") "♀" else "?"
-        tbAgeTv.text = getString(R.string.tb_age, profileBean!!.user!!.tbAge)
-        infoChips.visibility = View.VISIBLE
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {

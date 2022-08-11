@@ -550,4 +550,6 @@
     <string name="title_stat_threads_num">贴子</string>
     <string name="title_stat_posts_num">回贴</string>
     <string name="title_stat_concerns_num">关注</string>
+    <string name="toast_data_error">数据错误</string>
+    <string name="toast_feature_unavailable">该功能尚未实现</string>
 </resources>

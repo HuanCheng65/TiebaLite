@@ -201,7 +201,7 @@ class ReplyActivity : BaseActivity(), View.OnClickListener,
         val intent = intent
         val jsonData = intent.getStringExtra("data")
         replyInfoBean = GsonUtil.getGson().fromJson(jsonData, ReplyInfoBean::class.java)
-        val draft = where("hash = ?", replyInfoBean?.hash())
+        val draft = where("hash = ?", replyInfoBean?.hash() ?: "")
             .findFirst(Draft::class.java)
         if (draft != null) {
             content = draft.content
@@ -502,6 +502,10 @@ class ReplyActivity : BaseActivity(), View.OnClickListener,
 
 
     private fun realReply( /*String code, String md5*/) {
+        if (replyInfoBean == null && replyInfoBean!!.forumId == null) {
+            toastShort(R.string.toast_data_error)
+            return
+        }
         loadingDialog = LoadingDialog(this)
         loadingDialog!!.show()
         getImageInfo(object : ReplyContentCallback {

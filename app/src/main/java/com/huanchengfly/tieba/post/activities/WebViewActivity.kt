@@ -45,18 +45,23 @@ class WebViewActivity : BaseActivity(), OnReceivedTitleListener, OnOverrideUrlLo
         if (title != null) {
             setTitle(title)
         }
-        mUrl = intent.getStringExtra(EXTRA_URL)
-        mWebViewFragment = WebViewFragment.newInstance(
-            mUrl,
-            TAG,
-            title,
-            false,
-            true,
-            mUrl!!.contains(DOMAIN_SAPI)
-        ).also {
-            supportFragmentManager.beginTransaction()
-                .replace(R.id.main, it, TAG)
-                .commit()
+        mUrl = intent.getStringExtra(EXTRA_URL).also { url ->
+            if (url != null) {
+                mWebViewFragment = WebViewFragment.newInstance(
+                    url,
+                    TAG,
+                    title,
+                    false,
+                    true,
+                    url.contains(DOMAIN_SAPI)
+                ).also {
+                    supportFragmentManager.beginTransaction()
+                        .replace(R.id.main, it, TAG)
+                        .commit()
+                }
+            } else {
+                finish()
+            }
         }
     }
 

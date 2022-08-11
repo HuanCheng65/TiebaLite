@@ -52,6 +52,7 @@ public class UserLikeForumFragment extends BaseFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        userLikeForumAdapter = new UserLikeForumAdapter(getAttachContext());
         Bundle args = getArguments();
         if (args != null) {
             uid = args.getString(PARAM_UID, null);
@@ -72,7 +73,9 @@ public class UserLikeForumFragment extends BaseFragment {
         refreshLayout.setOnLoadMoreListener(refreshLayout -> load());
         recyclerView.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
         recyclerView.addItemDecoration(new StaggeredDividerItemDecoration(getAttachContext(), 16));
-        userLikeForumAdapter = new UserLikeForumAdapter(getAttachContext());
+        if (userLikeForumAdapter == null) {
+            userLikeForumAdapter = new UserLikeForumAdapter(getAttachContext());
+        }
         userLikeForumAdapter.setOnItemChildClickListener(
                 R.id.forum_item_card,
                 (OnItemChildClickListener<UserLikeForumBean.ForumBean>)

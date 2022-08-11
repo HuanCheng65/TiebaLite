@@ -123,13 +123,13 @@ class UserPostFragment : BaseFragment() {
                     response: Response<UserPostBean>
                 ) {
                     page += 1
-                    val data = response.body()
+                    val data = response.body() ?: return
                     userPostBean = data
                     refreshLayout.finishLoadMore()
-                    if (data!!.postList.isNullOrEmpty()) {
+                    if (data.postList.isNullOrEmpty()) {
                         refreshLayout.setNoMoreData(true)
                     } else {
-                        userPostAdapter.insert(data.postList!!)
+                        userPostAdapter.insert(data.postList)
                     }
                 }
 

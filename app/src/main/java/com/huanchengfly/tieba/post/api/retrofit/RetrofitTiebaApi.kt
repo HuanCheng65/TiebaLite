@@ -23,13 +23,19 @@ import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.protobuf.ProtoConverterFactory
+import java.util.concurrent.TimeUnit
+import kotlin.math.roundToInt
 
 
 object RetrofitTiebaApi {
+    private const val READ_TIMEOUT = 60L
+    private const val CONNECT_TIMEOUT = 60L
+    private const val WRITE_TIMEOUT = 60L
+
     private val initTime = System.currentTimeMillis()
-    private val clientId = "wappc_${initTime}_${Math.round(Math.random() * 1000).toInt()}"
+    private val clientId = "wappc_${initTime}_${(Math.random() * 1000).roundToInt()}"
     private val stParamInterceptor = StParamInterceptor()
-    private val connectionPool = ConnectionPool()
+    private val connectionPool = ConnectionPool(32, 5, TimeUnit.MINUTES)
 
     private val defaultCommonParamInterceptor = CommonParamInterceptor(
         Param.BDUSS to { AccountUtil.getBduss(BaseApplication.INSTANCE) },
@@ -130,15 +136,19 @@ object RetrofitTiebaApi {
         .addConverterFactory(gsonConverterFactory)
         .addConverterFactory(ProtoConverterFactory.create())
         .client(OkHttpClient.Builder().apply {
+            readTimeout(READ_TIMEOUT, TimeUnit.SECONDS)
+            connectTimeout(CONNECT_TIMEOUT, TimeUnit.SECONDS)
+            writeTimeout(WRITE_TIMEOUT, TimeUnit.SECONDS)
             interceptors.forEach {
                 addInterceptor(it)
             }
             addInterceptor(DropInterceptor)
-            addInterceptor(sortAndSignInterceptor)
             addInterceptor(FailureResponseInterceptor)
             addInterceptor(ForceLoginInterceptor)
+            addInterceptor(sortAndSignInterceptor)
             connectionPool(connectionPool)
         }.build())
         .build()
         .create(T::class.java)
+
 }

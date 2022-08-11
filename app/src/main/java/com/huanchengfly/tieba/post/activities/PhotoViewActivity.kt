@@ -88,13 +88,13 @@ class PhotoViewActivity : BaseActivity(), OnChangeBottomBarVisibilityListener,
             false
         ).enqueue(object : Callback<PicPageBean?> {
             override fun onResponse(call: Call<PicPageBean?>, response: Response<PicPageBean?>) {
-                val data = response.body()!!
                 mLoading = false
-                amount = data.picAmount ?: "${photoViewBeans.size}"
+                val data = response.body()
+                amount = data?.picAmount ?: "${photoViewBeans.size}"
                 updateCounter(mViewPager.currentItem)
                 val picBeans: MutableList<PicPageBean.PicBean> = ArrayList()
                 val imgInfoBeans: MutableList<ImgInfoBean> = ArrayList()
-                if (data.picList?.isNotEmpty()!!) {
+                if (data?.picList?.isNotEmpty() == true) {
                     val index = data.picList.last().overAllIndex?.toInt()
                     if (index != null) {
                         loadFinished = index >= amount!!.toInt()

@@ -591,12 +591,13 @@ class ForumActivity : BaseActivity(), View.OnClickListener, OnRefreshedListener,
                                 call: Call<LikeForumResultBean>,
                                 response: Response<LikeForumResultBean>
                             ) {
+                                val data = response.body() ?: return
                                 mDataBean!!.forum?.isLike = "1"
                                 Toast.makeText(
                                     this@ForumActivity,
                                     getString(
                                         R.string.toast_like_success,
-                                        response.body()!!.info?.memberSum
+                                        data.info?.memberSum
                                     ),
                                     Toast.LENGTH_SHORT
                                 ).show()
