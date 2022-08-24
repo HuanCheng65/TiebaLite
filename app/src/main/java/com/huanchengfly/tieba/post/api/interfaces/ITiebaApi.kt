@@ -907,4 +907,17 @@ interface ITiebaApi {
     fun imgPortrait(
         file: File
     ): Flow<CommonResponse>
+
+    /**
+     * 获取吧列表
+     */
+    fun getForumListFlow(): Flow<GetForumListBean>
+
+    /**
+     * 一键签到（官方）
+     */
+    fun mSign(
+        forumIds: String,
+        tbs: String
+    ): Flow<MSignBean>
 }

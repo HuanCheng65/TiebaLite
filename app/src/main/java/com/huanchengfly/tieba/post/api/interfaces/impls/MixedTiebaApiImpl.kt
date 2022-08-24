@@ -613,4 +613,13 @@ object MixedTiebaApiImpl : ITiebaApi {
             }.build()
         )
     }
+
+    override fun getForumListFlow(): Flow<GetForumListBean> =
+        RetrofitTiebaApi.OFFICIAL_TIEBA_API.getForumListFlow()
+
+    override fun mSign(
+        forumIds: String,
+        tbs: String
+    ): Flow<MSignBean> =
+        RetrofitTiebaApi.OFFICIAL_TIEBA_API.mSignFlow(forumIds, tbs)
 }

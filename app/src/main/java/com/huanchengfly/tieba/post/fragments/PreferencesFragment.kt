@@ -50,6 +50,12 @@ class PreferencesFragment : PreferencesFragment() {
     }
 
     private fun refresh() {
+        val experimentalFeatures =
+            attachContext.resources.getStringArray(R.array.experimental_features)
+        experimentalFeatures.forEach {
+            findPreference<Preference>(it)?.isVisible =
+                attachContext.appPreferences.showExperimentalFeatures
+        }
         loginInfo = AccountUtil.getLoginInfo(attachContext)
         val accounts = AccountUtil.allAccounts
         val usernameList: MutableList<String> = ArrayList()

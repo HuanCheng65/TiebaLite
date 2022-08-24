@@ -219,8 +219,7 @@
             android:icon="@drawable/ic_round_speed"
             android:key="oksign_use_official_oksign"
             android:summary="@string/summary_oksign_use_official_oksign"
-            android:title="@string/title_oksign_use_official_oksign"
-            app:isPreferenceVisible="false" />
+            android:title="@string/title_oksign_use_official_oksign" />
 
         <SwitchPreference
             android:defaultValue="false"
@@ -253,14 +252,12 @@
     </androidx.preference.PreferenceCategory>
 
     <androidx.preference.PreferenceCategory android:title="@string/title_settings_about">
-        <!--
         <SwitchPreference
             android:defaultValue="false"
             android:icon="@drawable/ic_round_bug_report_blue"
-            android:key="check_beta_update"
-            android:summary="@string/tip_check_beta_update"
-            android:title="@string/title_check_beta_update" />
-        -->
+            android:key="checkCIUpdate"
+            android:summary="@string/tip_check_ci_update"
+            android:title="@string/title_check_ci_update" />
 
         <SwitchPreference
             android:defaultValue="true"

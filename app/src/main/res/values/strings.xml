@@ -485,8 +485,8 @@
     <string name="title_dialog_error_detail">错误详情</string>
     <string name="button_copy_detail">复制详情</string>
     <string name="snackbar_error">出现了一点小问题(%1$d)</string>
-    <string name="toast_ci_version_enabled">已启用接收自动构建版本更新（需要 App Center 账号）</string>
-    <string name="toast_ci_version_disabled">已禁用接收自动构建版本更新（需要 App Center 账号）</string>
+    <string name="toast_experimental_features_enabled">已启用实验性特性</string>
+    <string name="toast_experimental_features_disabled">已禁用实验性特性</string>
     <string name="title_thread_post_recommend">建议使用官方途径发贴</string>
     <string name="message_thread_post_recommend">使用本 App 发贴可能会出现发贴失败、被吞等问题，甚至导致账户永久封禁等严重后果。\n我们建议你使用官方途径进行回贴。</string>
     <string name="button_official_client_post">使用官方客户端发贴</string>
@@ -557,4 +557,6 @@
     <string name="title_dialog_block_info">该账号封禁中</string>
     <string name="button_appeal">申诉</string>
     <string name="btn_hide_tip">隐藏该提示</string>
+    <string name="title_check_ci_update">接收自动构建版本更新</string>
+    <string name="tip_check_ci_update">需要 App Center 账号且已加入测试，如果你没有，请不要开启此选项！</string>
 </resources>

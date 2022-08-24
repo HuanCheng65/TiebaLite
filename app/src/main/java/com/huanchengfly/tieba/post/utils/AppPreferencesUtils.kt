@@ -88,6 +88,11 @@ open class AppPreferencesUtils(context: Context) {
         key = "oksign_slow_mode"
     )
 
+    var oksignUseOfficialOksign by DataStoreDelegates.boolean(
+        defaultValue = false,
+        key = "oksign_use_official_oksign"
+    )
+
     var postOrReplyWarning by DataStoreDelegates.boolean(defaultValue = true)
 
     var radius by DataStoreDelegates.int(defaultValue = 8)
@@ -100,6 +105,8 @@ open class AppPreferencesUtils(context: Context) {
         defaultValue = false,
         key = "show_both_username_and_nickname"
     )
+
+    var showExperimentalFeatures by DataStoreDelegates.boolean(defaultValue = false)
 
     var showShortcutInThread by DataStoreDelegates.boolean(defaultValue = true)
 

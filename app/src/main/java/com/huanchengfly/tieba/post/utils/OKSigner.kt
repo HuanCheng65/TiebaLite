@@ -2,6 +2,7 @@ package com.huanchengfly.tieba.post.utils
 
 import android.content.Context
 import com.huanchengfly.tieba.post.api.TiebaApi
+import com.huanchengfly.tieba.post.api.models.MSignBean
 import com.huanchengfly.tieba.post.api.models.SignResultBean
 import com.huanchengfly.tieba.post.api.retrofit.ApiResult
 import com.huanchengfly.tieba.post.api.retrofit.doIfFailure
@@ -98,6 +99,7 @@ class SingleAccountSigner(
     private var position = 0
     private var successCount = 0
     private var totalCount = 0
+    private var mSignCount = 0
 
     var lastFailure: Throwable? = null
 
@@ -113,12 +115,70 @@ class SingleAccountSigner(
         signData.clear()
         var userName: String by Delegates.notNull()
         var tbs: String by Delegates.notNull()
-        AccountUtil.fetchAccountFlow(context)
+        AccountUtil.fetchAccountFlow(account)
             .flatMapConcat { account ->
                 userName = account.name
                 tbs = account.tbs
-                TiebaApi.getInstance().forumRecommendFlow()
+                TiebaApi.getInstance().getForumListFlow()
             }
+            .flatMapConcat { getForumListBean ->
+                val useMSign = context.appPreferences.oksignUseOfficialOksign
+                val mSignLevel = getForumListBean.level.toInt()
+                signData.addAll(getForumListBean.forumInfo
+                    .filter { it.isSignIn != "1" }
+                    .map {
+                        SignDataBean(
+                            it.forumName,
+                            it.forumId,
+                            userName,
+                            tbs,
+                            it.userLevel.toInt() >= mSignLevel
+                        )
+                    })
+                totalCount = signData.size
+                mSignCount = 0
+                if (useMSign) {
+                    val mSignData = signData.filter { it.canUseMSign }
+                    TiebaApi.getInstance().mSign(mSignData.joinToString(",") { it.forumId }, tbs)
+                        .map { it.info }
+                } else {
+                    flow { emit(emptyList()) }
+                }
+                    .onStart {
+                        mProgressListener?.onStart(totalCount)
+                    }
+                    .catch { emit(emptyList()) }
+            }
+            .flatMapConcat { mSignInfo ->
+                val newSignData = if (mSignInfo.isNotEmpty()) {
+                    val mSignInfoMap = mutableMapOf<String, MSignBean.Info>()
+                    mSignInfo.forEach {
+                        mSignInfoMap[it.forumId] = it
+                    }
+                    val signedCount = mSignInfo.filter { it.signed == "1" }.size
+                    successCount += signedCount
+                    signData
+                        .filter { !it.canUseMSign || mSignInfoMap[it.forumId]?.signed != "1" }
+                } else {
+                    signData.toList()
+                }
+                mSignCount = totalCount - newSignData.size
+                newSignData
+                    .asFlow()
+                    .onEach {
+                        position = signData.indexOf(it)
+                        mProgressListener?.onProgressStart(it, position + mSignCount, signData.size)
+                    }
+                    .onEmpty {
+                        mProgressListener?.onFinish(
+                            successCount == totalCount,
+                            successCount,
+                            totalCount
+                        )
+                    }
+                    .map { data -> sign(data) }
+            }
+            /*
             .flatMapConcat { forumRecommend ->
                 signData.addAll(forumRecommend.likeForum.filter { it.isSign != "1" }
                     .map { SignDataBean(it.forumName, userName, tbs) })
@@ -137,6 +197,7 @@ class SingleAccountSigner(
                     }
                     .map { data -> sign(data) }
             }
+            */
             .catch { e -> emit(ApiResult.Failure(e)) }
             .onCompletion {
                 mProgressListener?.onFinish(

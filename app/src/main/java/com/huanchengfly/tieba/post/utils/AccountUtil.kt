@@ -69,6 +69,29 @@ object AccountUtil {
             }
     }
 
+    fun fetchAccountFlow(account: Account): Flow<Account> {
+        return TiebaApi.getInstance()
+            .initNickNameFlow(
+                account.bduss,
+                account.sToken
+            )
+            .zip(
+                TiebaApi.getInstance().loginFlow(
+                    account.bduss,
+                    account.sToken
+                )
+            ) { initNickNameBean, loginBean ->
+                account.apply {
+                    uid = loginBean.user.id
+                    name = loginBean.user.name
+                    nameShow = initNickNameBean.userInfo.nameShow
+                    portrait = loginBean.user.portrait
+                    tbs = loginBean.anti.tbs
+                    saveOrUpdate("uid = ?", loginBean.user.id)
+                }
+            }
+    }
+
     fun fetchAccountFlow(
         bduss: String,
         sToken: String,

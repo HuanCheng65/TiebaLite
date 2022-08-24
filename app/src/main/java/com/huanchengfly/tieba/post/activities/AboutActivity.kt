@@ -49,13 +49,13 @@ class AboutActivity : BaseActivity() {
                     } else {
                         clickCount++
                     }
-                    if (clickCount > 5) {
-                        if (appPreferences.checkCIUpdate) {
-                            toastShort(R.string.toast_ci_version_disabled)
-                            appPreferences.checkCIUpdate = false
+                    if (clickCount >= 7) {
+                        if (appPreferences.showExperimentalFeatures) {
+                            toastShort(R.string.toast_experimental_features_disabled)
+                            appPreferences.showExperimentalFeatures = false
                         } else {
-                            toastShort(R.string.toast_ci_version_enabled)
-                            appPreferences.checkCIUpdate = true
+                            toastShort(R.string.toast_experimental_features_enabled)
+                            appPreferences.showExperimentalFeatures = true
                         }
                         clickCount = 0
                     }

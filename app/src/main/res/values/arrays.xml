@@ -17,6 +17,11 @@
         <item>3</item>
     </string-array>
 
+    <string-array name="experimental_features">
+        <item>oksign_use_official_oksign</item>
+        <item>checkCIUpdate</item>
+    </string-array>
+
     <string-array name="image_load_type_entries">
         <item>@string/title_image_load_type_smart_origin</item>
         <item>@string/title_image_load_type_smart_load</item>
