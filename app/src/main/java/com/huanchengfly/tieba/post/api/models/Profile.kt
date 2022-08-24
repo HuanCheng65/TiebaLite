@@ -123,8 +123,6 @@ data class Profile(
         val postNum: String,
         @SerializedName("priv_sets")
         val privSets: PrivSets,
-        @SerializedName("profit_list")
-        val profitList: String,
         @SerializedName("repost_num")
         val repostNum: String,
         @SerializedName("seal_prefix")
