@@ -552,4 +552,9 @@
     <string name="title_stat_concerns_num">关注</string>
     <string name="toast_data_error">数据错误</string>
     <string name="toast_feature_unavailable">该功能尚未实现</string>
+    <string name="title_account_blocked_forever">该账号已被永久封禁</string>
+    <string name="title_account_blocked">该账号封禁中，剩余 %s 天</string>
+    <string name="title_dialog_block_info">该账号封禁中</string>
+    <string name="button_appeal">申诉</string>
+    <string name="btn_hide_tip">隐藏该提示</string>
 </resources>

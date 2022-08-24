@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    tools:background="@color/default_color_background"
     tools:context=".fragments.MyInfoFragment">
 
     <com.huanchengfly.tieba.post.widgets.theme.TintSwipeRefreshLayout
@@ -198,6 +199,46 @@
                     </LinearLayout>
                 </com.huanchengfly.tieba.post.widgets.theme.TintLinearLayout>
 
+                <com.huanchengfly.tieba.post.widgets.theme.TintLinearLayout
+                    android:id="@+id/my_info_block_tip"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/card_margin"
+                    android:layout_marginEnd="@dimen/card_margin"
+                    android:layout_marginBottom="@dimen/card_margin"
+                    android:background="@drawable/bg_radius_10dp_ripple"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:padding="16dp"
+                    android:paddingStart="24dp"
+                    android:paddingEnd="24dp"
+                    app:backgroundTint="@color/red">
+
+                    <com.huanchengfly.tieba.post.widgets.theme.TintImageView
+                        android:layout_width="16dp"
+                        android:layout_height="16dp"
+                        android:layout_marginEnd="16dp"
+                        app:srcCompat="@drawable/ic_round_warning"
+                        app:tint="@color/default_color_background" />
+
+                    <com.huanchengfly.tieba.post.widgets.theme.TintTextView
+                        android:id="@+id/my_info_block_tip_text"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:textSize="14sp"
+                        android:textStyle="bold"
+                        app:tint="@color/default_color_background"
+                        tools:text="@string/title_account_blocked_forever" />
+
+                    <com.huanchengfly.tieba.post.widgets.theme.TintImageView
+                        android:layout_width="16dp"
+                        android:layout_height="16dp"
+                        android:layout_marginStart="16dp"
+                        android:alpha="0.7"
+                        app:srcCompat="@drawable/ic_round_help_green"
+                        app:tint="@color/default_color_background" />
+                </com.huanchengfly.tieba.post.widgets.theme.TintLinearLayout>
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

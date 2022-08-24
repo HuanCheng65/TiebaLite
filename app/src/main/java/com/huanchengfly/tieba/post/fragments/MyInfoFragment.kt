@@ -42,6 +42,12 @@ class MyInfoFragment : BaseFragment(), View.OnClickListener, CompoundButton.OnCh
     @BindView(R.id.my_info_username)
     lateinit var userNameTextView: TextView
 
+    @BindView(R.id.my_info_block_tip)
+    lateinit var blockTip: View
+
+    @BindView(R.id.my_info_block_tip_text)
+    lateinit var blockTipTextView: TextView
+
     @BindView(R.id.my_info_content)
     lateinit var contentTextView: TextView
 
@@ -99,9 +105,11 @@ class MyInfoFragment : BaseFragment(), View.OnClickListener, CompoundButton.OnCh
         if (!AccountUtil.isLoggedIn(attachContext)) {
             Glide.with(attachContext).clear(avatarImageView)
             userNameTextView.setText(R.string.tip_login)
+            blockTip.visibility = View.GONE
             return
         }
         if (profile == null) {
+            blockTip.visibility = View.GONE
             val account = AccountUtil.getLoginInfo(attachContext)!!
             followsTextView.text = account.concernNum ?: "0"
             fansTextView.text = account.fansNum ?: "0"
@@ -123,6 +131,18 @@ class MyInfoFragment : BaseFragment(), View.OnClickListener, CompoundButton.OnCh
                 )
             }
         } else {
+            val isBlocked = profile.antiStat.blockStat == "1"
+            if (appPreferences.showBlockTip && isBlocked) {
+                blockTip.visibility = View.VISIBLE
+                val isForever = (profile.antiStat.daysTofree.toIntOrNull() ?: 0) >= 36500
+                blockTipTextView.text = if (isForever) {
+                    getString(R.string.title_account_blocked_forever)
+                } else {
+                    getString(R.string.title_account_blocked, profile.antiStat.daysTofree)
+                }
+            } else {
+                blockTip.visibility = View.GONE
+            }
             followsTextView.text = profile.user.concernNum
             fansTextView.text = profile.user.fansNum
             threadsTextView.text = profile.user.threadNum
@@ -185,6 +205,7 @@ class MyInfoFragment : BaseFragment(), View.OnClickListener, CompoundButton.OnCh
 
     private fun updateAccount(profile: Profile) {
         AccountUtil.getLoginInfo(attachContext)?.apply {
+            tbs = profile.anti.tbs
             portrait = profile.user.portrait
             intro = profile.user.intro
             sex = profile.user.sex
@@ -221,7 +242,8 @@ class MyInfoFragment : BaseFragment(), View.OnClickListener, CompoundButton.OnCh
             R.id.my_info_history,
             R.id.my_info_service_center,
             R.id.my_info_settings,
-            R.id.my_info_about
+            R.id.my_info_about,
+            R.id.my_info_block_tip
         ).forEach {
             view.findViewById<View>(it)?.setOnClickListener(this)
         }
@@ -322,6 +344,22 @@ class MyInfoFragment : BaseFragment(), View.OnClickListener, CompoundButton.OnCh
 
     override fun onClick(v: View) {
         when (v.id) {
+            R.id.my_info_block_tip -> {
+                showDialog {
+                    setTitle(R.string.title_dialog_block_info)
+                    setPositiveButton(R.string.button_appeal) { _, _ ->
+                        WebViewActivity.launch(
+                            attachContext,
+                            "http://c.tieba.baidu.com/mo/q/userappeal"
+                        )
+                    }
+                    setNeutralButton(R.string.btn_hide_tip) { _, _ ->
+                        appPreferences.showBlockTip = false
+                        refreshHeader(profileBean)
+                    }
+                    setNegativeButton(R.string.button_cancel, null)
+                }
+            }
             R.id.my_info_collect -> {
                 goToActivity<UserCollectActivity>()
             }
@@ -334,7 +372,7 @@ class MyInfoFragment : BaseFragment(), View.OnClickListener, CompoundButton.OnCh
             R.id.my_info_service_center -> {
                 WebViewActivity.launch(
                     attachContext,
-                    "http://tieba.baidu.com/n/apage-runtime/page/ueg_service_center"
+                    "https://tieba.baidu.com/mo/q/hybrid-main-service/uegServiceCenter?cuid=${CuidUtils.getNewCuid()}&cuid_galaxy2=${CuidUtils.getNewCuid()}&cuid_gid=&timestamp=${System.currentTimeMillis()}&_client_version=11.10.8.6&nohead=1"
                 )
             }
             R.id.my_info_settings -> {

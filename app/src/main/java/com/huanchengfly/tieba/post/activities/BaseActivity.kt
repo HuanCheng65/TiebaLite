@@ -35,10 +35,7 @@ import com.huanchengfly.tieba.post.dataStore
 import com.huanchengfly.tieba.post.putBoolean
 import com.huanchengfly.tieba.post.ui.common.theme.interfaces.ExtraRefreshable
 import com.huanchengfly.tieba.post.ui.common.theme.utils.ThemeUtils
-import com.huanchengfly.tieba.post.utils.AppPreferencesUtils
-import com.huanchengfly.tieba.post.utils.HandleBackUtil
-import com.huanchengfly.tieba.post.utils.ThemeUtil
-import com.huanchengfly.tieba.post.utils.calcStatusBarColorInt
+import com.huanchengfly.tieba.post.utils.*
 import com.huanchengfly.tieba.post.widgets.VoicePlayerView
 import com.huanchengfly.tieba.post.widgets.theme.TintToolbar
 import kotlinx.coroutines.*
@@ -86,7 +83,7 @@ abstract class BaseActivity : AppCompatActivity(), ExtraRefreshable, CoroutineSc
     }
 
     fun showDialog(builder: AlertDialog.Builder.() -> Unit): AlertDialog {
-        val dialog = AlertDialog.Builder(this)
+        val dialog = DialogUtil.build(this)
             .apply(builder)
             .create()
         if (isActivityRunning) {

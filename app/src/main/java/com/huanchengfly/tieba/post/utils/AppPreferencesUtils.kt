@@ -94,6 +94,8 @@ open class AppPreferencesUtils(context: Context) {
 
     var signDay by DataStoreDelegates.int(defaultValue = -1, key = "sign_day")
 
+    var showBlockTip by DataStoreDelegates.boolean(defaultValue = true)
+
     var showBothUsernameAndNickname by DataStoreDelegates.boolean(
         defaultValue = false,
         key = "show_both_username_and_nickname"

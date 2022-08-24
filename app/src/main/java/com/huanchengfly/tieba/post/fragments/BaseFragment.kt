@@ -9,6 +9,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.CallSuper
+import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import butterknife.ButterKnife
 import butterknife.Unbinder
@@ -20,6 +21,7 @@ import com.huanchengfly.tieba.post.isPortrait
 import com.huanchengfly.tieba.post.isTablet
 import com.huanchengfly.tieba.post.ui.common.theme.utils.ThemeUtils
 import com.huanchengfly.tieba.post.utils.AppPreferencesUtils
+import com.huanchengfly.tieba.post.utils.DialogUtil
 import com.huanchengfly.tieba.post.utils.HandleBackUtil
 import kotlinx.coroutines.*
 import kotlinx.coroutines.Dispatchers.IO
@@ -218,6 +220,14 @@ abstract class BaseFragment : Fragment(), BackHandledInterface, CoroutineScope {
 
     open fun hasOwnAppbar(): Boolean {
         return false
+    }
+
+    fun showDialog(builder: AlertDialog.Builder.() -> Unit): AlertDialog {
+        val dialog = DialogUtil.build(attachContext)
+            .apply(builder)
+            .create()
+        dialog.show()
+        return dialog
     }
 
     fun launchIO(
