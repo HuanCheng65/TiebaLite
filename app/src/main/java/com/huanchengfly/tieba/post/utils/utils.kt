@@ -9,12 +9,14 @@ import android.graphics.drawable.Drawable
 import android.graphics.drawable.GradientDrawable
 import android.graphics.drawable.RippleDrawable
 import android.net.Uri
+import android.util.Log
 import android.view.View
 import androidx.annotation.ColorInt
 import androidx.browser.customtabs.CustomTabColorSchemeParams
 import androidx.browser.customtabs.CustomTabsIntent
 import com.google.android.material.snackbar.Snackbar
 import com.huanchengfly.tieba.post.*
+import com.huanchengfly.tieba.post.activities.ThreadActivity
 import com.huanchengfly.tieba.post.activities.WebViewActivity
 import com.huanchengfly.tieba.post.api.retrofit.exception.TiebaException
 import com.huanchengfly.tieba.post.ui.common.theme.utils.ColorStateListUtils
@@ -132,6 +134,7 @@ fun getIntermixedColorBackground(
 }
 
 fun launchUrl(context: Context, url: String) {
+    Log.i("launchUrl", url)
     val uri = Uri.parse(url)
     val host = uri.host
     val path = uri.path
@@ -156,6 +159,12 @@ fun launchUrl(context: Context, url: String) {
         return
     }
     if (!path.contains("android_asset")) {
+        if (host == "tieba.baidu.com" && path.startsWith("/p/")) {
+            context.goToActivity<ThreadActivity> {
+                putExtra("url", url)
+            }
+            return
+        }
         val isTiebaLink =
             host.contains("tieba.baidu.com") || host.contains("wappass.baidu.com") || host.contains(
                 "ufosdk.baidu.com"

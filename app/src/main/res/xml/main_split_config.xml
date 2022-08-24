@@ -16,7 +16,7 @@
             window:secondaryActivityName="*/*" />
         <SplitPairFilter
             window:primaryActivityName=".activities.ThreadActivity"
-            window:secondaryActivityName="*/*" />
+            window:secondaryActivityName=".activities.WebViewActivity" />
         <SplitPairFilter
             window:primaryActivityName=".activities.MessageActivity"
             window:secondaryActivityName=".activities.FloorActivity" />

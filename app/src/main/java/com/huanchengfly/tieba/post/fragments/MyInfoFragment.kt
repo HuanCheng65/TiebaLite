@@ -158,7 +158,7 @@ class MyInfoFragment : BaseFragment(), View.OnClickListener, CompoundButton.OnCh
                         e.printStackTrace()
                         mRefreshView.isRefreshing = false
                         if (e !is TiebaException) {
-                            Util.showNetworkErrorSnackbar(mRefreshView) { refresh(needLogin) }
+                            showErrorSnackBar(mRefreshView, e)
                         } else {
                             attachContext.toastShort("错误 ${e.getErrorMessage()}")
                         }
