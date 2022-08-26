@@ -77,8 +77,7 @@ data class GetForumListBean(
         @SerializedName("pay_member_info")
         val payMemberInfo: PayMemberInfo,
         @SerializedName("unsign_info")
-        val unsignInfo: List<UnsignInfo>,
-        val vipInfo: String
+        val unsignInfo: List<UnsignInfo>
     ) {
         @Keep
         data class PayMemberInfo(
