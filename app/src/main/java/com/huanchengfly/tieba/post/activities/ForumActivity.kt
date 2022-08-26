@@ -496,9 +496,9 @@ class ForumActivity : BaseActivity(), View.OnClickListener, OnRefreshedListener,
                         refresh()
                     }
                     "back_to_top" -> {
-                        mAdapter?.currentFragment?.apply {
+                        mAdapter?.getItem(headerTabView.selectedTabPosition)?.apply {
                             if (this is ScrollTopable) {
-                                scrollToTop()
+                                this.scrollToTop()
                             }
                         }
                     }

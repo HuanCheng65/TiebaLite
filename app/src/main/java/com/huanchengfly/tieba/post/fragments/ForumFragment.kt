@@ -253,7 +253,9 @@ class ForumFragment : BaseFragment(), Refreshable, OnSwitchListener, ScrollTopab
     }
 
     override fun scrollToTop() {
-        virtualLayoutManager.scrollToPosition(0)
+        mRecyclerView.post {
+            virtualLayoutManager.scrollToPosition(0)
+        }
     }
 
     interface OnRefreshedListener {
