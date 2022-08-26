@@ -768,7 +768,7 @@ class ForumActivity : BaseActivity(), View.OnClickListener, OnRefreshedListener,
         refreshHeaderView()
         if (!animated) {
             AnimUtil.alphaOut(loadingView).setListener(object : AnimatorListenerAdapter() {
-                override fun onAnimationEnd(animation: Animator?) {
+                override fun onAnimationEnd(animation: Animator) {
                     loadingView.visibility = View.GONE
                 }
             })

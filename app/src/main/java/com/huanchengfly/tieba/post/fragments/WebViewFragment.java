@@ -38,6 +38,7 @@ import com.google.android.material.snackbar.Snackbar;
 import com.hjq.permissions.Permission;
 import com.huanchengfly.tieba.post.R;
 import com.huanchengfly.tieba.post.components.dialogs.PermissionDialog;
+import com.huanchengfly.tieba.post.interfaces.BackHandledInterface;
 import com.huanchengfly.tieba.post.interfaces.OnOverrideUrlLoadingListener;
 import com.huanchengfly.tieba.post.interfaces.OnReceivedTitleListener;
 import com.huanchengfly.tieba.post.interfaces.WebViewListener;
@@ -57,7 +58,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Arrays;
 
 //TODO: 代码太烂，需要重写
-public class WebViewFragment extends BaseFragment implements DownloadListener {
+public class WebViewFragment extends BaseFragment implements DownloadListener, BackHandledInterface {
     public static final String TAG = WebViewFragment.class.getSimpleName();
     private static final String DEFAULT_TITLE = "";
     private final static int FILE_CHOOSER_RESULT_CODE = 1;
@@ -245,9 +246,9 @@ public class WebViewFragment extends BaseFragment implements DownloadListener {
         webSettings.setDisplayZoomControls(false);
         webSettings.setDomStorageEnabled(true);
         String appCachePath = getAttachContext().getCacheDir().getAbsolutePath();
-        webSettings.setAppCachePath(appCachePath);
+        //webSettings.setAppCachePath(appCachePath);
+        //webSettings.setAppCacheEnabled(true);
         webSettings.setAllowFileAccess(true);
-        webSettings.setAppCacheEnabled(true);
         webSettings.setDomStorageEnabled(true);
         webSettings.setMixedContentMode(WebSettings.MIXED_CONTENT_ALWAYS_ALLOW);
         mWebView.setWebChromeClient(new ChromeClient());

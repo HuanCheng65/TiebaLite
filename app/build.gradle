@@ -122,7 +122,6 @@ dependencies {
 
     implementation 'androidx.activity:activity-compose:1.5.1'
     implementation "com.google.android.material:compose-theme-adapter:1.1.15"
-    implementation 'androidx.lifecycle:lifecycle-viewmodel-compose:2.5.1'
     implementation "androidx.constraintlayout:constraintlayout-compose:1.0.1"
 
     implementation 'com.google.protobuf:protobuf-java:3.21.1'
@@ -139,6 +138,7 @@ dependencies {
 
     implementation "androidx.lifecycle:lifecycle-runtime-ktx:$lifecycle_version"
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version"
+    implementation "androidx.lifecycle:lifecycle-viewmodel-compose:$lifecycle_version"
 
     //Local Files
     implementation fileTree(include: ["*.jar"], dir: "libs")

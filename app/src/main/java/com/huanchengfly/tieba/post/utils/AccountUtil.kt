@@ -100,7 +100,7 @@ object AccountUtil {
         return TiebaApi.getInstance()
             .initNickNameFlow(bduss, sToken)
             .zip(TiebaApi.getInstance().loginFlow(bduss, sToken)) { initNickNameBean, loginBean ->
-                Account(
+                getAccountInfoByUid(loginBean.user.id) ?: Account(
                     loginBean.user.id,
                     loginBean.user.name,
                     bduss,
