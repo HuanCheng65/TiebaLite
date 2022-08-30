@@ -22,7 +22,7 @@ import okhttp3.ConnectionPool
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
-import retrofit2.converter.protobuf.ProtoConverterFactory
+import retrofit2.converter.wire.WireConverterFactory
 import java.util.concurrent.TimeUnit
 import kotlin.math.roundToInt
 
@@ -134,7 +134,7 @@ object RetrofitTiebaApi {
         .addCallAdapterFactory(FlowCallAdapterFactory.create())
         .addConverterFactory(NullOnEmptyConverterFactory())
         .addConverterFactory(gsonConverterFactory)
-        .addConverterFactory(ProtoConverterFactory.create())
+        .addConverterFactory(WireConverterFactory.create())
         .client(OkHttpClient.Builder().apply {
             readTimeout(READ_TIMEOUT, TimeUnit.SECONDS)
             connectTimeout(CONNECT_TIMEOUT, TimeUnit.SECONDS)

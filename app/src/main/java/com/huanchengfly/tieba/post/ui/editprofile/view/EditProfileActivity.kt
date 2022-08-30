@@ -46,7 +46,6 @@ import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.huanchengfly.tieba.post.R
 import com.huanchengfly.tieba.post.activities.BaseActivity
 import com.huanchengfly.tieba.post.activities.WebViewActivity
-import com.huanchengfly.tieba.post.adapters.InsertPhotoAdapter
 import com.huanchengfly.tieba.post.arch.collectIn
 import com.huanchengfly.tieba.post.toastShort
 import com.huanchengfly.tieba.post.ui.common.theme.compose.ExtendedTheme
@@ -58,9 +57,6 @@ import com.huanchengfly.tieba.post.ui.editprofile.viewmodel.EditProfileViewModel
 import com.huanchengfly.tieba.post.utils.*
 import com.huanchengfly.tieba.post.widgets.compose.*
 import com.yalantis.ucrop.UCrop
-import com.zhihu.matisse.Matisse
-import com.zhihu.matisse.MimeType
-import com.zhihu.matisse.engine.impl.GlideEngine
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.launchIn
@@ -75,8 +71,8 @@ class EditProfileActivity : BaseActivity() {
             viewModel.send(EditProfileIntent.ModifyNicknameFinish(result))
         }
 
-    private val matisseLauncher =
-        registerForActivityResult(InsertPhotoAdapter.MatisseResultContract()) {
+    private val pickMediasLauncher =
+        registerPickMediasLauncher {
             if (it.isNotEmpty()) {
                 val sourceUri = it[0]
                 Glide.with(this)
@@ -210,25 +206,29 @@ class EditProfileActivity : BaseActivity() {
                 if (event.result.isClose == 1) toastShort(R.string.toast_modify_nickname_success)
             }
             EditProfileEvent.UploadPortrait.Pick -> {
-                requestPermission {
-                    permissions = if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
-                        listOf(
-                            PermissionUtils.READ_EXTERNAL_STORAGE,
-                            PermissionUtils.WRITE_EXTERNAL_STORAGE
-                        )
-                    } else {
-                        listOf(PermissionUtils.READ_EXTERNAL_STORAGE)
-                    }
-                    description = context.getString(R.string.tip_permission_storage)
-                    onGranted = {
-                        Matisse.from(this@EditProfileActivity)
-                            .choose(MimeType.ofImage())
-                            .theme(if (ThemeUtil.isNightMode()) R.style.Matisse_Dracula else R.style.Matisse_Zhihu)
-                            .imageEngine(GlideEngine())
-                            .forResult(matisseLauncher)
-                    }
-                    onDenied = {
-                        toastShort(R.string.toast_no_permission_upload_portrait)
+                if (isPhotoPickerAvailable()) {
+                    pickMediasLauncher.launch(PickMediasRequest(mediaType = PickMediasRequest.ImageOnly))
+                } else {
+                    requestPermission {
+                        permissions = if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
+                            listOf(
+                                PermissionUtils.READ_EXTERNAL_STORAGE,
+                                PermissionUtils.WRITE_EXTERNAL_STORAGE
+                            )
+                        } else if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) {
+                            listOf(
+                                PermissionUtils.READ_EXTERNAL_STORAGE
+                            )
+                        } else {
+                            listOf(PermissionUtils.READ_MEDIA_IMAGES)
+                        }
+                        description = context.getString(R.string.tip_permission_storage)
+                        onGranted = {
+                            pickMediasLauncher.launch(PickMediasRequest(mediaType = PickMediasRequest.ImageOnly))
+                        }
+                        onDenied = {
+                            toastShort(R.string.toast_no_permission_upload_portrait)
+                        }
                     }
                 }
             }

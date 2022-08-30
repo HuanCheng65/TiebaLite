@@ -5,7 +5,7 @@ buildscript {
         glide_version = '4.13.2'
         retrofit_version = "2.9.0"
         kotlin_version = '1.7.10'
-        grpc_version = '1.47.0'
+        wire_version = '4.4.1'
         hilt_version = '2.43.1'
     }
     repositories {
@@ -16,8 +16,8 @@ buildscript {
     dependencies {
         classpath 'com.android.tools.build:gradle:7.2.2'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-        classpath 'com.google.protobuf:protobuf-gradle-plugin:0.8.18'
         classpath "com.google.dagger:hilt-android-gradle-plugin:$hilt_version"
+        classpath "com.squareup.wire:wire-gradle-plugin:$wire_version"
     }
 }
 

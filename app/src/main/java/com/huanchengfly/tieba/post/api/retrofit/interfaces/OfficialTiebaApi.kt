@@ -7,7 +7,6 @@ import com.huanchengfly.tieba.post.api.Param
 import com.huanchengfly.tieba.post.api.getScreenHeight
 import com.huanchengfly.tieba.post.api.getScreenWidth
 import com.huanchengfly.tieba.post.api.models.*
-import com.huanchengfly.tieba.post.api.models.protos.PbProto
 import com.huanchengfly.tieba.post.api.retrofit.ApiResult
 import com.huanchengfly.tieba.post.api.retrofit.body.MyMultipartBody
 import com.huanchengfly.tieba.post.utils.AccountUtil
@@ -101,44 +100,6 @@ interface OfficialTiebaApi {
         @retrofit2.http.Header("thread_id") threadIdHeader: String = threadId,
         @retrofit2.http.Header("client_logid") clientLogidHeader: String = "${System.currentTimeMillis()}",
     ): Deferred<ApiResult<ThreadContentBean>>
-
-    @POST("/c/f/pb/page")
-    @FormUrlEncoded
-    fun pbPageAsync(
-        @Field("kz") threadId: String,
-        @Field("pn") page: Int,
-        @Field("last") last: String?,
-        @Field("r") r: String?,
-        @Field("lz") lz: Int,
-        @Field("st_type") st_type: String = "tb_frslist",
-        @Field("back") back: String = "0",
-        @Field("floor_rn") floor_rn: String = "3",
-        @Field("mark") mark: String = "0",
-        @Field("rn") rn: String = "30",
-        @Field("with_floor") with_floor: String = "1",
-        @Field("scr_dip") scr_dip: String = ScreenInfo.DENSITY.toString(),
-        @Field("scr_h") scr_h: String = getScreenHeight().toString(),
-        @Field("scr_w") scr_w: String = getScreenWidth().toString()
-    ): Deferred<ApiResult<PbProto.Pb>>
-
-    @POST("/c/f/pb/page")
-    @FormUrlEncoded
-    fun pbPageAsync(
-        @Field("kz") threadId: String,
-        @Field("pid") postId: String?,
-        @Field("last") last: String?,
-        @Field("r") r: String?,
-        @Field("lz") lz: Int,
-        @Field("st_type") st_type: String = "tb_frslist",
-        @Field("back") back: String = "0",
-        @Field("floor_rn") floor_rn: String = "3",
-        @Field("mark") mark: String = "0",
-        @Field("rn") rn: String = "30",
-        @Field("with_floor") with_floor: String = "1",
-        @Field("scr_dip") scr_dip: String = ScreenInfo.DENSITY.toString(),
-        @Field("scr_h") scr_h: String = getScreenHeight().toString(),
-        @Field("scr_w") scr_w: String = getScreenWidth().toString()
-    ): Deferred<ApiResult<PbProto.Pb>>
 
     @Headers("${Header.FORCE_LOGIN}: ${Header.FORCE_LOGIN_TRUE}")
     @POST("/c/c/excellent/submitDislike")

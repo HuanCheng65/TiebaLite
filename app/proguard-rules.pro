@@ -196,3 +196,5 @@
 -keep class androidx.recyclerview.widget.ChildHelper$Bucket { *; }
 
 -keep class com.huanchengfly.tieba.post.plugins.** { *; }
+
+-keep class com.squareup.wire.** { *; }

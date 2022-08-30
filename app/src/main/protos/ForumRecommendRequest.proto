@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+package protos;
+
+option java_package = "com.huanchengfly.tieba.post.api.models.protos";
+
+import "CommonRequest.proto";
+
+message ForumRecommendRequest {
+  CommonRequest common = 4;
+}

@@ -62,7 +62,7 @@ class FloorActivity : BaseActivity() {
         super.onStart()
         val filter = IntentFilter()
         filter.addAction(ThreadActivity.ACTION_REPLY_SUCCESS)
-        registerReceiver(replyReceiver, filter)
+        registerReceiver(replyReceiver, filter, RECEIVER_NOT_EXPORTED)
     }
 
     override fun onStop() {

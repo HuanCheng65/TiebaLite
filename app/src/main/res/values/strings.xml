@@ -518,6 +518,7 @@
     <string name="permission_name_activity_recognition">健身运动</string>
     <string name="permission_name_sms">短信</string>
     <string name="permission_name_storage">存储空间</string>
+    <string name="permission_name_images">媒体图片</string>
     <string name="title_request_permission_tip_dialog">贴吧 Lite 正在请求“%1$s”权限</string>
     <string name="message_request_permission_tip_dialog">授权后，将%1$s</string>
     <string name="usage_webview_location_permission">用于向当前访问的网页提供你的位置信息，以便该网页向你提供相关服务。</string>
@@ -559,4 +560,6 @@
     <string name="btn_hide_tip">隐藏该提示</string>
     <string name="title_check_ci_update">接收自动构建版本更新</string>
     <string name="tip_check_ci_update">需要 App Center 账号且已加入测试，如果你没有，请不要开启此选项！</string>
+    <string name="permission_name_post_notifications">通知</string>
+    <string name="desc_permission_post_notifications">用于发送消息通知、显示一键签到进度</string>
 </resources>

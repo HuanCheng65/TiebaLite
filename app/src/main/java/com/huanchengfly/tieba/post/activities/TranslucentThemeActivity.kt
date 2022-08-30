@@ -50,9 +50,6 @@ import com.huanchengfly.tieba.post.widgets.theme.TintMaterialButton
 import com.jrummyapps.android.colorpicker.ColorPickerDialog
 import com.jrummyapps.android.colorpicker.ColorPickerDialogListener
 import com.yalantis.ucrop.UCrop
-import com.zhihu.matisse.Matisse
-import com.zhihu.matisse.MimeType
-import com.zhihu.matisse.engine.impl.GlideEngine
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch
 import java.io.File
@@ -99,6 +96,13 @@ class TranslucentThemeActivity : BaseActivity(), View.OnClickListener, OnSeekBar
 
     @BindView(R.id.color_theme)
     lateinit var colorTheme: ViewGroup
+
+    private val selectImageLauncher = registerPickMediasLauncher {
+        if (it.isNotEmpty()) {
+            val sourceUri = it[0]
+            launchUCrop(sourceUri)
+        }
+    }
 
     var wallpapers: List<String>? = null
         set(value) {
@@ -181,10 +185,7 @@ class TranslucentThemeActivity : BaseActivity(), View.OnClickListener, OnSeekBar
     @Deprecated("Deprecated in Java")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == REQUEST_CODE_CHOOSE && resultCode == Activity.RESULT_OK) {
-            val sourceUri = Matisse.obtainResult(data)[0]
-            launchUCrop(sourceUri)
-        } else if (resultCode == Activity.RESULT_OK && requestCode == UCrop.REQUEST_CROP) {
+        if (resultCode == Activity.RESULT_OK && requestCode == UCrop.REQUEST_CROP) {
             mUri = UCrop.getOutput(data!!)
             invalidateFinishBtn()
             refreshBackground()
@@ -495,11 +496,7 @@ class TranslucentThemeActivity : BaseActivity(), View.OnClickListener, OnSeekBar
                 finish()
             }
             R.id.select_pic -> askPermission {
-                Matisse.from(this)
-                    .choose(MimeType.ofImage())
-                    .theme(if (ThemeUtil.isNightMode()) R.style.Matisse_Dracula else R.style.Matisse_Zhihu)
-                    .imageEngine(GlideEngine())
-                    .forResult(REQUEST_CODE_CHOOSE)
+                selectImageLauncher.launch(PickMediasRequest(mediaType = PickMediasRequest.ImageOnly))
             }
             R.id.custom_color -> {
                 val primaryColorPicker = ColorPickerDialog.newBuilder()
@@ -525,14 +522,23 @@ class TranslucentThemeActivity : BaseActivity(), View.OnClickListener, OnSeekBar
     }
 
     private fun askPermission(granted: () -> Unit) {
+        if (isPhotoPickerAvailable()) {
+            granted()
+            return
+        }
         requestPermission {
+            unchecked = true
             permissions = if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
                 listOf(
                     PermissionUtils.READ_EXTERNAL_STORAGE,
                     PermissionUtils.WRITE_EXTERNAL_STORAGE
                 )
+            } else if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) {
+                listOf(
+                    PermissionUtils.READ_EXTERNAL_STORAGE
+                )
             } else {
-                listOf(PermissionUtils.READ_EXTERNAL_STORAGE)
+                listOf(PermissionUtils.READ_MEDIA_IMAGES)
             }
             description = getString(R.string.tip_permission_storage)
             onGranted = granted

@@ -11,14 +11,12 @@ data class GetForumListBean(
     @SerializedName("can_use")
     val canUse: String,
     val content: String,
-    val ctime: Int,
     val error: Error,
     @SerializedName("error_code")
     val errorCode: String,
     @SerializedName("forum_info")
     val forumInfo: List<ForumInfo>,
     val level: String,
-    val logid: Long,
     @SerializedName("msign_step_num")
     val msignStepNum: String,
     @SerializedName("num_notice")

@@ -2,8 +2,8 @@ plugins {
     id "com.android.application"
     id "kotlin-android"
     id "kotlin-kapt"
-    id 'com.google.protobuf'
     id 'dagger.hilt.android.plugin'
+    id 'com.squareup.wire'
 }
 
 def keystoreProperties = new Properties()
@@ -23,13 +23,13 @@ if (isPerVersion) {
 }
 
 android {
-    compileSdkVersion 32
-    buildToolsVersion '32.0.0'
+    compileSdkVersion 33
+    buildToolsVersion '33.0.0'
     defaultConfig {
         applicationId "com.huanchengfly.tieba.post"
         minSdkVersion 21
         //noinspection OldTargetApi
-        targetSdkVersion 32
+        targetSdkVersion 33
         versionCode applicationVersionCode
         versionName applicationVersionName
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -82,13 +82,6 @@ android {
             excludes += '/META-INF/{AL2.0,LGPL2.1}'
         }
     }
-    sourceSets {
-        main {
-            proto {
-                srcDir 'src/main/proto'
-            }
-        }
-    }
     applicationVariants.all { variant ->
         variant.outputs.each { output ->
             def outputFile = output.outputFile
@@ -98,7 +91,19 @@ android {
     }
 }
 
+wire {
+    sourcePath {
+        srcDir 'src/main/protos'
+    }
+
+    kotlin {
+        android = true
+    }
+}
+
 dependencies {
+    api "com.squareup.wire:wire-runtime:$wire_version"
+
     implementation "com.google.dagger:hilt-android:$hilt_version"
     kapt "com.google.dagger:hilt-android-compiler:$hilt_version"
 
@@ -121,10 +126,13 @@ dependencies {
     implementation "androidx.compose.animation:animation:$compose_version"
 
     implementation 'androidx.activity:activity-compose:1.5.1'
-    implementation "com.google.android.material:compose-theme-adapter:1.1.15"
+    implementation "com.google.android.material:compose-theme-adapter:1.1.16"
     implementation "androidx.constraintlayout:constraintlayout-compose:1.0.1"
 
-    implementation 'com.google.protobuf:protobuf-java:3.21.1'
+    def activity_version = "1.6.0-rc01"
+
+    implementation "androidx.activity:activity-ktx:$activity_version"
+    implementation "androidx.activity:activity-compose:$activity_version"
 
     implementation 'com.github.gzu-liyujiang:Android_CN_OAID:4.2.4'
 
@@ -149,7 +157,7 @@ dependencies {
     kapt "com.android.support:support-annotations:28.0.0"
 
     //AndroidX
-    implementation "androidx.appcompat:appcompat:1.4.2"
+    implementation "androidx.appcompat:appcompat:1.5.0"
     implementation "androidx.core:core-ktx:1.8.0"
     implementation "androidx.annotation:annotation:1.4.0"
     implementation "androidx.constraintlayout:constraintlayout:2.1.4"
@@ -180,7 +188,7 @@ dependencies {
     implementation "com.squareup.okhttp3:okhttp:4.9.3"
     implementation "com.squareup.retrofit2:retrofit:$retrofit_version"
     implementation "com.squareup.retrofit2:converter-gson:$retrofit_version"
-    implementation "com.squareup.retrofit2:converter-protobuf:$retrofit_version"
+    implementation "com.squareup.retrofit2:converter-wire:$retrofit_version"
 
     implementation 'com.google.code.gson:gson:2.9.1'
     implementation "cn.dreamtobe.kpswitch:library:1.6.2"
@@ -199,7 +207,7 @@ dependencies {
     implementation "com.scwang.smart:refresh-header-material:2.0.1"
 
     implementation 'com.github.lwj1994:Matisse:0.5.3-20220115'
-    implementation 'com.github.getActivity:XXPermissions:13.6'
+    implementation 'com.github.getActivity:XXPermissions:16.0'
     implementation "com.gyf.immersionbar:immersionbar:3.0.0"
 
     implementation "com.github.yalantis:ucrop:2.2.8"
@@ -218,21 +226,4 @@ dependencies {
     implementation "com.microsoft.appcenter:appcenter-analytics:${appCenterSdkVersion}"
     implementation "com.microsoft.appcenter:appcenter-crashes:${appCenterSdkVersion}"
     implementation "com.microsoft.appcenter:appcenter-distribute:${appCenterSdkVersion}"
-}
-
-protobuf {
-    protoc {
-        artifact = 'com.google.protobuf:protoc:3.21.1'
-    }
-
-    generateProtoTasks {
-        all().each { task ->
-            task.builtins {
-                java {
-                    option "lite"
-//                    outputSubDir = "../" // 能通过该参数将生成文件从 debug / release 目录中移出
-                }
-            }
-        }
-    }
 }

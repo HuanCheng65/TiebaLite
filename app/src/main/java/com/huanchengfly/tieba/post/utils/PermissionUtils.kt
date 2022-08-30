@@ -48,6 +48,9 @@ object PermissionUtils {
     const val READ_EXTERNAL_STORAGE = "android.permission.READ_EXTERNAL_STORAGE"
     const val WRITE_EXTERNAL_STORAGE = "android.permission.WRITE_EXTERNAL_STORAGE"
 
+    const val READ_MEDIA_IMAGES = "android.permission.READ_MEDIA_IMAGES"
+    const val POST_NOTIFICATIONS = "android.permission.POST_NOTIFICATIONS"
+
     /**
      * Turn permissions into text.
      */
@@ -123,6 +126,18 @@ object PermissionUtils {
                         textList.add(message)
                     }
                 }
+                READ_MEDIA_IMAGES -> {
+                    val message = context.getString(R.string.permission_name_images)
+                    if (!textList.contains(message)) {
+                        textList.add(message)
+                    }
+                }
+                POST_NOTIFICATIONS -> {
+                    val message = context.getString(R.string.permission_name_post_notifications)
+                    if (!textList.contains(message)) {
+                        textList.add(message)
+                    }
+                }
             }
         }
         return textList
@@ -192,6 +207,7 @@ object PermissionUtils {
 class PermissionRequester(val context: Context) {
     var permissions: List<String> = emptyList()
     var description: String = ""
+    var unchecked: Boolean = false
     var onGranted: (() -> Unit)? = null
     var onDenied: (() -> Unit)? = null
 
@@ -205,6 +221,11 @@ class PermissionRequester(val context: Context) {
             )
             XXPermissions.with(context)
                 .permission(permissions)
+                .apply {
+                    if (unchecked) {
+                        unchecked()
+                    }
+                }
                 .request(object : OnPermissionCallback {
                     override fun onGranted(permissions: List<String>, all: Boolean) {
                         if (all) {

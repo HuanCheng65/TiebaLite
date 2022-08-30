@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.app.job.JobInfo
 import android.app.job.JobScheduler
 import android.content.*
+import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -224,6 +225,12 @@ open class MainActivity : BaseActivity(), NavigationBarView.OnItemSelectedListen
                     .show()
                 dataStore.putBoolean(SP_SHOULD_SHOW_SNACKBAR, false)
             }
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                requestPermission {
+                    permissions = listOf(PermissionUtils.POST_NOTIFICATIONS)
+                    description = getString(R.string.desc_permission_post_notifications)
+                }
+            }
         }
         handler.postDelayed({
             try {
@@ -264,11 +271,13 @@ open class MainActivity : BaseActivity(), NavigationBarView.OnItemSelectedListen
         super.onStart()
         registerReceiver(
             newMessageReceiver,
-            ReceiverUtil.createIntentFilter(NotifyJobService.ACTION_NEW_MESSAGE)
+            ReceiverUtil.createIntentFilter(NotifyJobService.ACTION_NEW_MESSAGE),
+            RECEIVER_NOT_EXPORTED
         )
         registerReceiver(
             accountSwitchReceiver,
-            ReceiverUtil.createIntentFilter(AccountUtil.ACTION_SWITCH_ACCOUNT)
+            ReceiverUtil.createIntentFilter(AccountUtil.ACTION_SWITCH_ACCOUNT),
+            RECEIVER_NOT_EXPORTED
         )
         try {
             startService(Intent(this, NotifyJobService::class.java))

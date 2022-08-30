@@ -55,7 +55,7 @@ import com.huanchengfly.tieba.post.widgets.theme.TintImageView
 import org.litepal.LitePal.where
 
 class ReplyActivity : BaseActivity(), View.OnClickListener,
-    InsertPhotoAdapter.MatisseLauncherProvider {
+    InsertPhotoAdapter.PickMediasLauncherProvider {
     @BindView(R.id.activity_reply_edit_text)
     lateinit var editText: UndoableEditText
 
@@ -98,7 +98,7 @@ class ReplyActivity : BaseActivity(), View.OnClickListener,
         get() = false
 
     @JvmField
-    val matisseLauncher = registerForActivityResult(InsertPhotoAdapter.MatisseResultContract()) {
+    val pickMediasLauncher = registerPickMediasLauncher {
         val photoInfoBeans = insertPhotoAdapter.getFileList().toMutableList()
         for (uri in it) {
             photoInfoBeans.add(PhotoInfoBean(this, uri))
@@ -106,7 +106,8 @@ class ReplyActivity : BaseActivity(), View.OnClickListener,
         insertPhotoAdapter.setFileList(photoInfoBeans)
     }
 
-    override fun getMatisseLauncher(): ActivityResultLauncher<Intent> = matisseLauncher
+    override fun getPickMediasLauncher(): ActivityResultLauncher<PickMediasRequest> =
+        pickMediasLauncher
 
     override fun getLayoutId(): Int {
         return R.layout.activity_reply
@@ -607,7 +608,6 @@ class ReplyActivity : BaseActivity(), View.OnClickListener,
     }
 
     companion object {
-        const val REQUEST_CODE_CHOOSE = 2
         const val TAG = "ReplyActivity"
     }
 }

@@ -400,7 +400,7 @@ class ThreadActivity : BaseActivity(), View.OnClickListener, IThreadMenuFragment
         super.onStart()
         registerReceiver(replyReceiver, IntentFilter().apply {
             addAction(ACTION_REPLY_SUCCESS)
-        })
+        }, RECEIVER_NOT_EXPORTED)
     }
 
     override fun onStop() {
