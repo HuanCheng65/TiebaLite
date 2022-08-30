@@ -1,14 +1,13 @@
 package com.huanchengfly.tieba.post.services
 
 import android.app.IntentService
-import android.app.NotificationChannel
-import android.app.NotificationManager
 import android.app.PendingIntent
-import android.content.Context
 import android.content.Intent
-import android.os.Build
 import android.widget.Toast
+import androidx.core.app.NotificationChannelCompat
 import androidx.core.app.NotificationCompat
+import androidx.core.app.NotificationManagerCompat
+import androidx.core.app.NotificationManagerCompat.IMPORTANCE_LOW
 import com.huanchengfly.tieba.post.R
 import com.huanchengfly.tieba.post.activities.LoginActivity
 import com.huanchengfly.tieba.post.activities.MainActivity
@@ -27,19 +26,20 @@ import kotlinx.coroutines.cancel
 import kotlinx.coroutines.runBlocking
 import kotlin.coroutines.CoroutineContext
 
+@Deprecated("用 WorkManager 替代")
 class OKSignService : IntentService(TAG), CoroutineScope, ProgressListener {
     private val job = Job()
     override val coroutineContext: CoroutineContext
         get() = Main + job
 
-    private val manager: NotificationManager by lazy { getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager }
+    private val manager: NotificationManagerCompat by lazy { NotificationManagerCompat.from(this) }
     private var position = 0
 
     @Deprecated("Deprecated in Java")
     override fun onStart(intent: Intent?, startId: Int) {
         super.onStart(intent, startId)
         updateNotification(
-            getString(R.string.title_fetching_forum_list),
+            getString(R.string.title_loading_data),
             getString(R.string.text_please_wait)
         )
         startForeground(
@@ -51,16 +51,18 @@ class OKSignService : IntentService(TAG), CoroutineScope, ProgressListener {
         )
     }
 
+    private fun createNotificationChannel() {
+        manager.createNotificationChannel(
+            NotificationChannelCompat.Builder(NOTIFICATION_CHANNEL_ID, IMPORTANCE_LOW)
+                .setName(getString(R.string.title_oksign))
+                .setLightsEnabled(false)
+                .setShowBadge(false)
+                .build()
+        )
+    }
+
     private fun buildNotification(title: String, text: String?): NotificationCompat.Builder {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val channel = NotificationChannel(
-                NOTIFICATION_CHANNEL_ID,
-                getString(R.string.title_oksign), NotificationManager.IMPORTANCE_LOW
-            )
-            channel.enableLights(false)
-            channel.setShowBadge(false)
-            manager.createNotificationChannel(channel)
-        }
+        createNotificationChannel()
         return NotificationCompat.Builder(this, NOTIFICATION_CHANNEL_ID)
             .setContentText(text)
             .setContentTitle(title)
@@ -115,10 +117,10 @@ class OKSignService : IntentService(TAG), CoroutineScope, ProgressListener {
                     getString(R.string.text_login_first),
                     Intent(this, LoginActivity::class.java)
                 )
-                stopForeground(true)
+                stopForeground(STOP_FOREGROUND_REMOVE)
             }
         } else {
-            stopForeground(true)
+            stopForeground(STOP_FOREGROUND_REMOVE)
         }
     }
 
@@ -193,10 +195,9 @@ class OKSignService : IntentService(TAG), CoroutineScope, ProgressListener {
         if (total == 0) {
             updateNotification(
                 getString(R.string.title_oksign_fail),
-                errorMsg,
-                Intent(this, LoginActivity::class.java)
+                errorMsg
             )
-            stopForeground(true)
+            stopForeground(STOP_FOREGROUND_REMOVE)
         } else {
             updateNotification(getString(R.string.title_oksign_fail), errorMsg)
         }

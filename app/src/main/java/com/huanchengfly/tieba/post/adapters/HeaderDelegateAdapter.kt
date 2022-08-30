@@ -194,7 +194,7 @@ class HeaderDelegateAdapter @JvmOverloads constructor(
     )
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder =
-        MyViewHolder(context, R.layout.item_header_delegate)
+        MyViewHolder(context, R.layout.item_header_delegate, parent)
 
     override fun getItemCount(): Int = 1
 

@@ -83,6 +83,8 @@ open class AppPreferencesUtils(context: Context) {
 
     var oldTheme by DataStoreDelegates.string(key = "old_theme")
 
+    var oksignWorkId by DataStoreDelegates.string()
+
     var oksignSlowMode by DataStoreDelegates.boolean(
         defaultValue = true,
         key = "oksign_slow_mode"

@@ -16,10 +16,11 @@ open class SingleLayoutDelegateAdapter(
     constructor(
         context: Context,
         @LayoutRes
-        layoutResId: Int
+        layoutResId: Int,
+        initView: ((View) -> Unit)? = null
     ) : this(
         context,
-        View.inflate(context, layoutResId, null)
+        View.inflate(context, layoutResId, null).apply { initView?.invoke(this) }
     )
 
     constructor(

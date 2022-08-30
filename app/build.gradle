@@ -102,6 +102,11 @@ wire {
 }
 
 dependencies {
+    def work_version = "2.7.1"
+
+    implementation "androidx.work:work-runtime-ktx:$work_version"
+    //implementation "androidx.work:work-multiprocess:$work_version"
+
     api "com.squareup.wire:wire-runtime:$wire_version"
 
     implementation "com.google.dagger:hilt-android:$hilt_version"

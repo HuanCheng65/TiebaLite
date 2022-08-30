@@ -11,6 +11,6 @@ class AutoSignAlarm : BroadcastReceiver() {
     }
 
     companion object {
-        val TAG = AutoSignAlarm::class.java.simpleName
+        val TAG: String = AutoSignAlarm::class.java.simpleName
     }
 }

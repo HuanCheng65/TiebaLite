@@ -6,15 +6,18 @@ import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
 import android.content.Intent
-import android.os.Build
+import androidx.work.ExistingWorkPolicy
+import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.OutOfQuotaPolicy
+import androidx.work.WorkManager
 import com.huanchengfly.tieba.post.R
 import com.huanchengfly.tieba.post.activities.WebViewActivity
 import com.huanchengfly.tieba.post.api.TiebaApi
 import com.huanchengfly.tieba.post.api.models.CheckReportBean
 import com.huanchengfly.tieba.post.components.dialogs.LoadingDialog
+import com.huanchengfly.tieba.post.components.workers.OKSignWork
 import com.huanchengfly.tieba.post.pendingIntentFlagImmutable
 import com.huanchengfly.tieba.post.receivers.AutoSignAlarm
-import com.huanchengfly.tieba.post.services.OKSignService
 import com.huanchengfly.tieba.post.toastShort
 import retrofit2.Call
 import retrofit2.Callback
@@ -68,31 +71,36 @@ object TiebaUtil {
     @JvmStatic
     fun startSign(context: Context) {
         context.appPreferences.signDay = Calendar.getInstance()[Calendar.DAY_OF_MONTH]
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            try {
-                context.startForegroundService(
-                    Intent()
-                        .setClassName(
-                            context.packageName,
-                            "${context.packageName}.services.OKSignService"
-                        )
-                        .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                        .setAction(OKSignService.ACTION_START_SIGN)
-                )
-            } catch (e: IllegalStateException) {
-                e.printStackTrace()
-            }
-        } else {
-            context.startService(
-                Intent()
-                    .setClassName(
-                        context.packageName,
-                        "${context.packageName}.services.OKSignService"
-                    )
-                    .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                    .setAction(OKSignService.ACTION_START_SIGN)
-            )
-        }
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+//            try {
+//                context.startForegroundService(
+//                    Intent()
+//                        .setClassName(
+//                            context.packageName,
+//                            "${context.packageName}.services.OKSignService"
+//                        )
+//                        .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+//                        .setAction(OKSignService.ACTION_START_SIGN)
+//                )
+//            } catch (e: IllegalStateException) {
+//                e.printStackTrace()
+//            }
+//        } else {
+//            context.startService(
+//                Intent()
+//                    .setClassName(
+//                        context.packageName,
+//                        "${context.packageName}.services.OKSignService"
+//                    )
+//                    .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+//                    .setAction(OKSignService.ACTION_START_SIGN)
+//            )
+//        }
+        val okSignWork = OneTimeWorkRequestBuilder<OKSignWork>()
+            .setExpedited(OutOfQuotaPolicy.RUN_AS_NON_EXPEDITED_WORK_REQUEST)
+            .build()
+        WorkManager.getInstance(context)
+            .enqueueUniqueWork("OKSign", ExistingWorkPolicy.KEEP, okSignWork)
     }
 
     @JvmStatic

@@ -10,16 +10,19 @@ import android.widget.Toast
 import androidx.appcompat.widget.Toolbar
 import androidx.constraintlayout.motion.widget.MotionLayout
 import androidx.recyclerview.widget.RecyclerView
+import androidx.work.Data
+import androidx.work.WorkManager
+import androidx.work.hasKeyWithValueOfType
 import butterknife.BindView
 import com.alibaba.android.vlayout.DelegateAdapter
 import com.alibaba.android.vlayout.VirtualLayoutManager
 import com.google.android.material.appbar.AppBarLayout
-import com.google.android.material.appbar.AppBarLayout.OnOffsetChangedListener
 import com.huanchengfly.tieba.post.*
 import com.huanchengfly.tieba.post.activities.ForumActivity
 import com.huanchengfly.tieba.post.activities.NewSearchActivity
 import com.huanchengfly.tieba.post.adapters.HeaderDelegateAdapter
 import com.huanchengfly.tieba.post.adapters.MainForumListAdapter
+import com.huanchengfly.tieba.post.adapters.OKSignProgressAdapter
 import com.huanchengfly.tieba.post.adapters.base.OnItemClickListener
 import com.huanchengfly.tieba.post.adapters.base.OnItemLongClickListener
 import com.huanchengfly.tieba.post.api.Error
@@ -30,6 +33,7 @@ import com.huanchengfly.tieba.post.api.models.ForumRecommend
 import com.huanchengfly.tieba.post.api.retrofit.exception.TiebaException
 import com.huanchengfly.tieba.post.api.retrofit.exception.TiebaLocalException
 import com.huanchengfly.tieba.post.components.MyViewHolder
+import com.huanchengfly.tieba.post.components.workers.OKSignWork.Companion.DATA_SUCCESS
 import com.huanchengfly.tieba.post.interfaces.Refreshable
 import com.huanchengfly.tieba.post.models.database.TopForum
 import com.huanchengfly.tieba.post.utils.*
@@ -38,6 +42,8 @@ import com.huanchengfly.tieba.post.utils.preload.PreloadUtil
 import com.huanchengfly.tieba.post.utils.preload.loaders.ForumLoader
 import com.scwang.smart.refresh.header.MaterialHeader
 import com.scwang.smart.refresh.layout.SmartRefreshLayout
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import org.litepal.LitePal
 import retrofit2.Call
 import retrofit2.Callback
@@ -85,6 +91,15 @@ class MainForumListFragment : BaseFragment(), Refreshable, Toolbar.OnMenuItemCli
 
     var listSingle: Boolean = false
 
+    private var okSignProgressData: Data? = null
+        set(value) {
+            field = value
+            okSignProgressAdapter.data = value
+            okSignProgressAdapter.notifyDataSetChanged()
+            reloadAdapters()
+        }
+    private lateinit var okSignProgressAdapter: OKSignProgressAdapter
+
     fun reset() {
         if (isFragmentVisible) {
             mRefreshView.autoRefresh()
@@ -102,6 +117,7 @@ class MainForumListFragment : BaseFragment(), Refreshable, Toolbar.OnMenuItemCli
             mRecyclerView.recycledViewPool.clear()
             reloadAdapters()
         }
+        refreshOKSignProgress()
     }
 
     override fun onAccountSwitch() {
@@ -160,9 +176,45 @@ class MainForumListFragment : BaseFragment(), Refreshable, Toolbar.OnMenuItemCli
 
     override fun getLayoutId(): Int = R.layout.fragment_main_forum_list
 
+    private fun startSign() {
+        TiebaUtil.startSign(attachContext)
+        refreshOKSignProgress()
+    }
+
+    private fun refreshOKSignProgress() {
+        launchIO {
+            val workInfos =
+                withContext(Dispatchers.IO) {
+                    WorkManager.getInstance(attachContext).getWorkInfosForUniqueWork("OKSign").get()
+                }
+            if (workInfos.isNotEmpty()) {
+                val workInfo = workInfos[0]
+                val id = workInfo.id
+                if (appPreferences.oksignWorkId != id.toString()) {
+                    appPreferences.oksignWorkId = id.toString()
+                    okSignProgressAdapter.data = null
+                    okSignProgressAdapter.closed = false
+                }
+                val workInfoLiveData =
+                    WorkManager.getInstance(attachContext).getWorkInfoByIdLiveData(id)
+                workInfoLiveData.observe(viewLifecycleOwner) {
+                    if (it.progress.getBoolean(DATA_SUCCESS, false)) {
+                        workInfoLiveData.removeObservers(viewLifecycleOwner)
+                    }
+                    if (it.progress.hasKeyWithValueOfType<Boolean>(DATA_SUCCESS)) {
+                        okSignProgressData = it.progress
+                    }
+                }
+            } else {
+                okSignProgressData = null
+            }
+        }
+    }
+
     @SuppressLint("ApplySharedPref")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        okSignProgressAdapter = OKSignProgressAdapter(attachContext, okSignProgressData)
         topForumListAdapter = MainForumListAdapter(
             attachContext,
             spanCount
@@ -183,9 +235,9 @@ class MainForumListFragment : BaseFragment(), Refreshable, Toolbar.OnMenuItemCli
             attachContext.goToActivity<NewSearchActivity>()
         }
         btnOkSign.setOnClickListener {
-            TiebaUtil.startSign(attachContext)
+            startSign()
         }
-        appBar.addOnOffsetChangedListener(OnOffsetChangedListener { appBarLayout: AppBarLayout, verticalOffset: Int ->
+        appBar.addOnOffsetChangedListener { appBarLayout: AppBarLayout, verticalOffset: Int ->
             val offset = abs(verticalOffset * 1.0f)
             if (offset >= MOTION_START_OFFSET) {
                 val percent =
@@ -194,7 +246,7 @@ class MainForumListFragment : BaseFragment(), Refreshable, Toolbar.OnMenuItemCli
             } else {
                 searchBarMotionLayout.progress = 0f
             }
-        })
+        }
         mRecyclerView.apply {
             setHasFixedSize(true)
             layoutManager = virtualLayoutManager
@@ -224,6 +276,7 @@ class MainForumListFragment : BaseFragment(), Refreshable, Toolbar.OnMenuItemCli
         delegateAdapter.clear()
         topForumListAdapter.spanCount = spanCount
         mainForumListAdapter.spanCount = spanCount
+        delegateAdapter.addAdapter(okSignProgressAdapter)
         if (topForumItems.isNotEmpty()) {
             delegateAdapter.addAdapter(HeaderDelegateAdapter(
                 attachContext,
@@ -322,7 +375,7 @@ class MainForumListFragment : BaseFragment(), Refreshable, Toolbar.OnMenuItemCli
     override fun onMenuItemClick(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.menu_sign -> {
-                TiebaUtil.startSign(attachContext)
+                startSign()
                 true
             }
             R.id.menu_switch_list -> {

@@ -11,9 +11,11 @@ import com.huanchengfly.tieba.post.api.retrofit.exception.getErrorCode
 import com.huanchengfly.tieba.post.api.retrofit.exception.getErrorMessage
 import com.huanchengfly.tieba.post.models.SignDataBean
 import com.huanchengfly.tieba.post.models.database.Account
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.withContext
 import java.lang.ref.WeakReference
 import java.util.concurrent.ThreadLocalRandom
 import kotlin.properties.Delegates
@@ -105,8 +107,9 @@ class SingleAccountSigner(
 
     private var mProgressListener: ProgressListener? = null
 
-    fun setProgressListener(listener: ProgressListener?) {
+    fun setProgressListener(listener: ProgressListener?): SingleAccountSigner {
         mProgressListener = listener
+        return this
     }
 
     @OptIn(FlowPreview::class)
@@ -121,34 +124,41 @@ class SingleAccountSigner(
                 tbs = account.tbs
                 TiebaApi.getInstance().getForumListFlow()
             }
-            .flatMapConcat { getForumListBean ->
+            .zip(
+                TiebaApi.getInstance().forumRecommendFlow()
+            ) { getForumListBean, forumRecommendBean ->
                 val useMSign = context.appPreferences.oksignUseOfficialOksign
                 val mSignLevel = getForumListBean.level.toInt()
-                signData.addAll(getForumListBean.forumInfo
-                    .filter { it.isSignIn != "1" }
-                    .map {
-                        SignDataBean(
-                            it.forumName,
-                            it.forumId,
-                            userName,
-                            tbs,
-                            it.userLevel.toInt() >= mSignLevel
-                        )
-                    })
+                val mSignMax = getForumListBean.msignStepNum.toInt()
+                signData.addAll(
+                    forumRecommendBean.likeForum
+                        .filter { it.isSign != "1" }
+                        .map {
+                            SignDataBean(
+                                it.forumName,
+                                it.forumId,
+                                userName,
+                                tbs,
+                                it.levelId.toInt() >= mSignLevel && signData.size < mSignMax
+                            )
+                        }
+                )
                 totalCount = signData.size
                 mSignCount = 0
-                if (useMSign) {
+                (if (useMSign) {
                     val mSignData = signData.filter { it.canUseMSign }
                     TiebaApi.getInstance().mSign(mSignData.joinToString(",") { it.forumId }, tbs)
                         .map { it.info }
                 } else {
                     flow { emit(emptyList()) }
-                }
-                    .onStart {
+                }).onStart {
+                    withContext(Dispatchers.Main) {
                         mProgressListener?.onStart(totalCount)
                     }
+                }
                     .catch { emit(emptyList()) }
             }
+            .flattenConcat()
             .flatMapConcat { mSignInfo ->
                 val newSignData = if (mSignInfo.isNotEmpty()) {
                     val mSignInfoMap = mutableMapOf<String, MSignBean.Info>()
@@ -167,14 +177,23 @@ class SingleAccountSigner(
                     .asFlow()
                     .onEach {
                         position = signData.indexOf(it)
-                        mProgressListener?.onProgressStart(it, position + mSignCount, signData.size)
+                        withContext(Dispatchers.Main) {
+                            mProgressListener?.onProgressStart(
+                                it,
+                                position + mSignCount,
+                                signData.size
+                            )
+                        }
                     }
                     .onEmpty {
-                        mProgressListener?.onFinish(
-                            successCount == totalCount,
-                            successCount,
-                            totalCount
-                        )
+                        withContext(Dispatchers.Main) {
+                            mProgressListener?.onFinish(
+                                successCount == totalCount,
+                                successCount,
+                                totalCount
+                            )
+                        }
+                        result = true
                     }
                     .map { data -> sign(data) }
             }
@@ -200,11 +219,13 @@ class SingleAccountSigner(
             */
             .catch { e -> emit(ApiResult.Failure(e)) }
             .onCompletion {
-                mProgressListener?.onFinish(
-                    successCount == totalCount,
-                    successCount,
-                    totalCount
-                )
+                withContext(Dispatchers.Main) {
+                    mProgressListener?.onFinish(
+                        successCount == totalCount,
+                        successCount,
+                        totalCount
+                    )
+                }
             }
             .collect {
                 it.doIfSuccess { res ->
@@ -216,8 +237,7 @@ class SingleAccountSigner(
                         position,
                         totalCount
                     )
-                }
-                it.doIfFailure { e ->
+                }.doIfFailure { e ->
                     result = false
                     lastFailure = e
                     mProgressListener?.onFailure(
@@ -231,7 +251,6 @@ class SingleAccountSigner(
             }
         return result
     }
-
 }
 
 interface ProgressListener {
