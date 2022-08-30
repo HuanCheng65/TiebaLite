@@ -16,7 +16,9 @@ import com.huanchengfly.tieba.post.components.workers.OKSignWork.Companion.DATA_
 import com.huanchengfly.tieba.post.components.workers.OKSignWork.Companion.DATA_ERROR_MESSAGE
 import com.huanchengfly.tieba.post.components.workers.OKSignWork.Companion.DATA_STARTED
 import com.huanchengfly.tieba.post.components.workers.OKSignWork.Companion.DATA_SUCCESS
+import com.huanchengfly.tieba.post.components.workers.OKSignWork.Companion.DATA_TIMESTAMP
 import com.huanchengfly.tieba.post.components.workers.OKSignWork.Companion.DATA_TOTAL_COUNT
+import com.huanchengfly.tieba.post.utils.DateTimeUtils
 import com.huanchengfly.tieba.post.widgets.CircleProgressView
 
 class OKSignProgressAdapter(
@@ -54,6 +56,7 @@ class OKSignProgressAdapter(
             val currentPosition = it.getInt(DATA_CURRENT_POSITION, 0)
             val totalCount = it.getInt(DATA_TOTAL_COUNT, 0)
             val accountNickname = it.getString(DATA_ACCOUNT_NICKNAME)
+            val timestamp = it.getLong(DATA_TIMESTAMP, System.currentTimeMillis())
             if (success) {
                 holder.setVisibility(R.id.oksign_progress_close_btn, true)
                 holder.setVisibility(R.id.oksign_progress_progress, false)
@@ -63,7 +66,10 @@ class OKSignProgressAdapter(
                 holder.setImageResource(R.id.oksign_progress_icon, R.drawable.ic_round_check)
                 holder.setText(
                     R.id.oksign_progress_title,
-                    context.getString(R.string.title_oksign_finish)
+                    context.getString(
+                        R.string.title_oksign_finish_time,
+                        DateTimeUtils.getRelativeTimeString(context, timestamp)
+                    )
                 )
                 holder.setText(
                     R.id.oksign_progress_content,

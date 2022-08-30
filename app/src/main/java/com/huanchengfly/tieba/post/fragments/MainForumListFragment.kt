@@ -34,6 +34,7 @@ import com.huanchengfly.tieba.post.api.retrofit.exception.TiebaException
 import com.huanchengfly.tieba.post.api.retrofit.exception.TiebaLocalException
 import com.huanchengfly.tieba.post.components.MyViewHolder
 import com.huanchengfly.tieba.post.components.workers.OKSignWork.Companion.DATA_SUCCESS
+import com.huanchengfly.tieba.post.components.workers.OKSignWork.Companion.DATA_TIMESTAMP
 import com.huanchengfly.tieba.post.interfaces.Refreshable
 import com.huanchengfly.tieba.post.models.database.TopForum
 import com.huanchengfly.tieba.post.utils.*
@@ -187,26 +188,38 @@ class MainForumListFragment : BaseFragment(), Refreshable, Toolbar.OnMenuItemCli
                 withContext(Dispatchers.IO) {
                     WorkManager.getInstance(attachContext).getWorkInfosForUniqueWork("OKSign").get()
                 }
-            if (workInfos.isNotEmpty()) {
-                val workInfo = workInfos[0]
-                val id = workInfo.id
-                if (appPreferences.oksignWorkId != id.toString()) {
-                    appPreferences.oksignWorkId = id.toString()
-                    okSignProgressAdapter.data = null
-                    okSignProgressAdapter.closed = false
-                }
-                val workInfoLiveData =
-                    WorkManager.getInstance(attachContext).getWorkInfoByIdLiveData(id)
-                workInfoLiveData.observe(viewLifecycleOwner) {
-                    if (it.progress.getBoolean(DATA_SUCCESS, false)) {
-                        workInfoLiveData.removeObservers(viewLifecycleOwner)
+            withContext(Dispatchers.Main) {
+                if (workInfos.isNotEmpty()) {
+                    val workInfo = workInfos[0]
+                    val id = workInfo.id
+                    if (appPreferences.oksignWorkId != id.toString()) {
+                        appPreferences.oksignWorkId = id.toString()
+                        okSignProgressAdapter.data = null
+                        okSignProgressAdapter.closed = false
                     }
-                    if (it.progress.hasKeyWithValueOfType<Boolean>(DATA_SUCCESS)) {
-                        okSignProgressData = it.progress
+                    val workInfoLiveData =
+                        WorkManager.getInstance(attachContext).getWorkInfoByIdLiveData(id)
+                    workInfoLiveData.observe(viewLifecycleOwner) {
+                        if (it == null) {
+                            workInfoLiveData.removeObservers(viewLifecycleOwner)
+                            return@observe
+                        }
+                        if (it.progress.getBoolean(DATA_SUCCESS, false)) {
+                            workInfoLiveData.removeObservers(viewLifecycleOwner)
+                        }
+                        if (DateTimeUtils.isToday(
+                                it.progress.getLong(
+                                    DATA_TIMESTAMP,
+                                    System.currentTimeMillis()
+                                )
+                            ) && it.progress.hasKeyWithValueOfType<Boolean>(DATA_SUCCESS)
+                        ) {
+                            okSignProgressData = it.progress
+                        }
                     }
+                } else {
+                    okSignProgressData = null
                 }
-            } else {
-                okSignProgressData = null
             }
         }
     }

@@ -31,10 +31,14 @@ object DateTimeUtils {
                 ) {
                     if (calendar.get(Calendar.HOUR_OF_DAY) == currentCalendar.get(Calendar.HOUR_OF_DAY)) {
                         if (calendar.get(Calendar.MINUTE) == currentCalendar.get(Calendar.MINUTE)) {
-                            context.getString(
-                                R.string.relative_date_second,
-                                currentCalendar.get(Calendar.SECOND) - calendar.get(Calendar.SECOND)
-                            )
+                            if (calendar.get(Calendar.SECOND) == currentCalendar.get(Calendar.SECOND)) {
+                                calendar.format(context.getString(R.string.relative_date_after))
+                            } else {
+                                context.getString(
+                                    R.string.relative_date_second,
+                                    currentCalendar.get(Calendar.SECOND) - calendar.get(Calendar.SECOND)
+                                )
+                            }
                         } else {
                             context.getString(
                                 R.string.relative_date_minute,

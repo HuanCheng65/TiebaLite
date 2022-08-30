@@ -391,10 +391,10 @@
     <string name="my_info_about">关于</string>
     <string name="pattern_date_long">yyyy-MM-dd</string>
     <string name="pattern_date_short">M月dd日</string>
-    <string name="relative_date_month">%d天前</string>
-    <string name="relative_date_hour">%d小时前</string>
-    <string name="relative_date_minute">%d分钟前</string>
-    <string name="relative_date_second">%d秒前</string>
+    <string name="relative_date_month">%d 天前</string>
+    <string name="relative_date_hour">%d 小时前</string>
+    <string name="relative_date_minute">%d 分钟前</string>
+    <string name="relative_date_second">%d 秒前</string>
     <string name="relative_date_after">刚刚</string>
     <string name="title_forum_stat">贴吧数据</string>
     <string name="title_forum_tops">置顶贴</string>
@@ -562,4 +562,5 @@
     <string name="tip_check_ci_update">需要 App Center 账号且已加入测试，如果你没有，请不要开启此选项！</string>
     <string name="permission_name_post_notifications">通知</string>
     <string name="desc_permission_post_notifications">用于发送消息通知、显示一键签到进度</string>
+    <string name="title_oksign_finish_time">%s签到完成</string>
 </resources>
