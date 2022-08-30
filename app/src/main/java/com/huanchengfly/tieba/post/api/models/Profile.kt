@@ -75,8 +75,8 @@ data class Profile(
         val canModifyAvatar: String,
         @SerializedName("concern_num")
         val concernNum: String,
-        @SerializedName("creation_data")
-        val creationData: CreationData,
+//        @SerializedName("creation_data")
+//        val creationData: CreationData,
         @SerializedName("display_auth_type")
         val displayAuthType: String,
         @SerializedName("each_other_friend")
