@@ -118,7 +118,9 @@ class MainForumListFragment : BaseFragment(), Refreshable, Toolbar.OnMenuItemCli
             mRecyclerView.recycledViewPool.clear()
             reloadAdapters()
         }
-        refreshOKSignProgress()
+        if (view != null) {
+            refreshOKSignProgress()
+        }
     }
 
     override fun onAccountSwitch() {
@@ -196,6 +198,8 @@ class MainForumListFragment : BaseFragment(), Refreshable, Toolbar.OnMenuItemCli
                         appPreferences.oksignWorkId = id.toString()
                         okSignProgressAdapter.data = null
                         okSignProgressAdapter.closed = false
+                    } else {
+                        okSignProgressData = workInfo.progress
                     }
                     val workInfoLiveData =
                         WorkManager.getInstance(attachContext).getWorkInfoByIdLiveData(id)

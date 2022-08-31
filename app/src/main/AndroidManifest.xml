@@ -146,11 +146,6 @@
             android:label="@string/title_activity_login"
             android:windowSoftInputMode="adjustResize" />
 
-        <service
-            android:name=".services.OKSignService"
-            android:exported="false"
-            android:process=":oksign" />
-
         <activity
             android:name=".activities.HistoryActivity"
             android:configChanges="screenSize|screenLayout|orientation|smallestScreenSize|keyboardHidden"
