@@ -190,7 +190,7 @@ class FloorActivity : BaseActivity() {
     private fun loadMore() {
         if (!hasMore) return
         TiebaApi.getInstance()
-            .floor(tid!!, pn, pid, spid)
+            .floor(tid!!, pn + 1, pid, spid)
             .enqueue(object : Callback<SubFloorListBean> {
                 override fun onFailure(call: Call<SubFloorListBean>, t: Throwable) {
                     refreshLayout.finishLoadMore(false)
