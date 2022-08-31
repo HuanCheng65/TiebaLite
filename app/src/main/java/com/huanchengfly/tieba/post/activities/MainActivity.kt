@@ -225,7 +225,7 @@ open class MainActivity : BaseActivity(), NavigationBarView.OnItemSelectedListen
                     .show()
                 dataStore.putBoolean(SP_SHOULD_SHOW_SNACKBAR, false)
             }
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU && AccountUtil.isLoggedIn(this)) {
                 requestPermission {
                     permissions = listOf(PermissionUtils.POST_NOTIFICATIONS)
                     description = getString(R.string.desc_permission_post_notifications)

@@ -144,7 +144,7 @@ class AppThemeActivity : BaseActivity() {
                     ChatBubbleStyleAdapter.Bubble { context, _, parent ->
                         val view = LayoutInflater.from(context)
                             .inflate(R.layout.layout_bubble_toolbar_primary_color, parent, false)
-                        view.findViewById<TintSwitch>(R.id.theme_toolbar_primary_color).apply {
+                        view.findViewById<TintSwitch>(R.id.theme_toolbar_primary_color)?.apply {
                             setOnCheckedChangeListener(null)
                             isChecked = appPreferences.toolbarPrimaryColor
                             setOnCheckedChangeListener { _, isChecked ->
