@@ -4,6 +4,7 @@ import android.content.Context
 import android.util.Log
 import android.view.ViewGroup
 import androidx.work.Data
+import androidx.work.hasKeyWithValueOfType
 import com.alibaba.android.vlayout.DelegateAdapter
 import com.alibaba.android.vlayout.LayoutHelper
 import com.alibaba.android.vlayout.layout.SingleLayoutHelper
@@ -42,7 +43,7 @@ class OKSignProgressAdapter(
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
         Log.i("OKSignProgressAdapter", "${holder.itemView}")
         data.let {
-            if (it == null || closed) {
+            if (it == null || !it.hasKeyWithValueOfType<Boolean>(DATA_SUCCESS) || closed) {
                 holder.setVisibility(R.id.oksign_progress, false)
                 return@let
             }

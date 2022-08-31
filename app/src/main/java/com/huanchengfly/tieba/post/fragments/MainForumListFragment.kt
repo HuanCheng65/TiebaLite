@@ -198,9 +198,14 @@ class MainForumListFragment : BaseFragment(), Refreshable, Toolbar.OnMenuItemCli
                         appPreferences.oksignWorkId = id.toString()
                         okSignProgressAdapter.data = null
                         okSignProgressAdapter.closed = false
-                    } else {
-                        okSignProgressData = workInfo.progress
                     }
+                    val progressData = workInfo.progress
+                    okSignProgressData =
+                        if (progressData.hasKeyWithValueOfType<Boolean>(DATA_SUCCESS)) {
+                            progressData
+                        } else {
+                            null
+                        }
                     val workInfoLiveData =
                         WorkManager.getInstance(attachContext).getWorkInfoByIdLiveData(id)
                     workInfoLiveData.observe(viewLifecycleOwner) {
