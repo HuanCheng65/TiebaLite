@@ -2,10 +2,9 @@ package com.huanchengfly.tieba.post.utils
 
 import android.app.AlarmManager
 import android.app.PendingIntent
-import android.content.ClipData
-import android.content.ClipboardManager
-import android.content.Context
-import android.content.Intent
+import android.content.*
+import android.os.Build
+import android.os.PersistableBundle
 import androidx.work.ExistingWorkPolicy
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.OutOfQuotaPolicy
@@ -25,17 +24,27 @@ import retrofit2.Response
 import java.util.*
 
 object TiebaUtil {
+    private fun ClipData.setIsSensitive(isSensitive: Boolean): ClipData {
+        description.extras = PersistableBundle().apply {
+            putBoolean(ClipDescription.EXTRA_IS_SENSITIVE, isSensitive)
+        }
+        return this
+    }
+
     @JvmStatic
     @JvmOverloads
     fun copyText(
         context: Context,
         text: String?,
-        toast: String = context.getString(R.string.toast_copy_success)
+        toast: String = context.getString(R.string.toast_copy_success),
+        isSensitive: Boolean = false
     ) {
         val cm = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
-        val clipData = ClipData.newPlainText("Tieba Lite", text)
+        val clipData = ClipData.newPlainText("Tieba Lite", text).setIsSensitive(isSensitive)
         cm.setPrimaryClip(clipData)
-        context.toastShort(toast)
+        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.S_V2) {
+            context.toastShort(toast)
+        }
     }
 
     fun initAutoSign(context: Context) {
