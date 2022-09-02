@@ -208,22 +208,28 @@ class MainForumListFragment : BaseFragment(), Refreshable, Toolbar.OnMenuItemCli
                         }
                     val workInfoLiveData =
                         WorkManager.getInstance(attachContext).getWorkInfoByIdLiveData(id)
-                    workInfoLiveData.observe(viewLifecycleOwner) {
-                        if (it == null) {
-                            workInfoLiveData.removeObservers(viewLifecycleOwner)
-                            return@observe
-                        }
-                        if (it.progress.getBoolean(DATA_SUCCESS, false)) {
-                            workInfoLiveData.removeObservers(viewLifecycleOwner)
-                        }
-                        if (DateTimeUtils.isToday(
-                                it.progress.getLong(
-                                    DATA_TIMESTAMP,
-                                    System.currentTimeMillis()
-                                )
-                            ) && it.progress.hasKeyWithValueOfType<Boolean>(DATA_SUCCESS)
-                        ) {
-                            okSignProgressData = it.progress
+                    if (view != null) {
+                        runCatching {
+                            workInfoLiveData.observe(viewLifecycleOwner) {
+                                runCatching {
+                                    if (it == null) {
+                                        workInfoLiveData.removeObservers(viewLifecycleOwner)
+                                        return@observe
+                                    }
+                                    if (it.progress.getBoolean(DATA_SUCCESS, false)) {
+                                        workInfoLiveData.removeObservers(viewLifecycleOwner)
+                                    }
+                                }
+                                if (DateTimeUtils.isToday(
+                                        it.progress.getLong(
+                                            DATA_TIMESTAMP,
+                                            System.currentTimeMillis()
+                                        )
+                                    ) && it.progress.hasKeyWithValueOfType<Boolean>(DATA_SUCCESS)
+                                ) {
+                                    okSignProgressData = it.progress
+                                }
+                            }
                         }
                     }
                 } else {
