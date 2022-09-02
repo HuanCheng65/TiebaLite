@@ -119,7 +119,7 @@ class MainForumListFragment : BaseFragment(), Refreshable, Toolbar.OnMenuItemCli
             reloadAdapters()
         }
         if (view != null) {
-            refreshOKSignProgress()
+            runCatching { refreshOKSignProgress() }
         }
     }
 
@@ -181,7 +181,7 @@ class MainForumListFragment : BaseFragment(), Refreshable, Toolbar.OnMenuItemCli
 
     private fun startSign() {
         TiebaUtil.startSign(attachContext)
-        refreshOKSignProgress()
+        runCatching { refreshOKSignProgress() }
     }
 
     private fun refreshOKSignProgress() {
