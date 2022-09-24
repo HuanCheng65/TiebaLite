@@ -34,7 +34,7 @@
                 android:background="@drawable/bg_radius_50dp"
                 tools:backgroundTint="@color/default_color_primary" />
 
-            <com.huanchengfly.tieba.post.widgets.theme.TintTextView
+            <com.huanchengfly.tieba.post.ui.widgets.theme.TintTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
@@ -88,7 +88,7 @@
         android:text="@string/tip_has_accent_color" />
         -->
 
-    <com.huanchengfly.tieba.post.widgets.theme.TintCheckBox
+    <com.huanchengfly.tieba.post.ui.widgets.theme.TintCheckBox
         android:id="@+id/custom_theme_toolbar_primary_color"
         style="@style/Widget.AppCompat.CompoundButton.CheckBox"
         android:layout_width="wrap_content"
@@ -101,7 +101,7 @@
         app:buttonTint="@color/tint_checkbox"
         app:textColor="@color/default_color_text_secondary" />
 
-    <com.huanchengfly.tieba.post.widgets.theme.TintCheckBox
+    <com.huanchengfly.tieba.post.ui.widgets.theme.TintCheckBox
         android:id="@+id/custom_theme_status_bar_font"
         style="@style/Widget.AppCompat.CompoundButton.CheckBox"
         android:layout_width="wrap_content"

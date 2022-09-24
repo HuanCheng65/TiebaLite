@@ -11,9 +11,9 @@ import com.huanchengfly.tieba.post.dpToPxFloat
 import com.huanchengfly.tieba.post.ui.common.animation.addMaskAnimation
 import com.huanchengfly.tieba.post.ui.common.animation.addZoomAnimation
 import com.huanchengfly.tieba.post.ui.common.animation.buildPressAnimator
-import com.huanchengfly.tieba.post.widgets.theme.TintImageView
-import com.huanchengfly.tieba.post.widgets.theme.TintLinearLayout
-import com.huanchengfly.tieba.post.widgets.theme.TintTextView
+import com.huanchengfly.tieba.post.ui.widgets.theme.TintImageView
+import com.huanchengfly.tieba.post.ui.widgets.theme.TintLinearLayout
+import com.huanchengfly.tieba.post.ui.widgets.theme.TintTextView
 
 class ThreadMenuFragment(
     seeLz: Boolean,

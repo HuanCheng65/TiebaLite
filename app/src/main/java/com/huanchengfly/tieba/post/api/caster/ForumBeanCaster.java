@@ -2,7 +2,7 @@ package com.huanchengfly.tieba.post.api.caster;
 
 import android.webkit.URLUtil;
 
-import com.huanchengfly.tieba.post.BaseApplication;
+import com.huanchengfly.tieba.post.App;
 import com.huanchengfly.tieba.post.api.models.ForumPageBean;
 import com.huanchengfly.tieba.post.api.models.web.ForumBean;
 
@@ -151,7 +151,7 @@ public class ForumBeanCaster extends ICaster<ForumBean, ForumPageBean> {
                     .setType("3")
                     .setSrcPic(mediaBean.getStaticImg())
                     .setIsGif(mediaBean.isGif() ? "1" : "0")
-                    .setIsLongPic(mediaBean.getHeight() > BaseApplication.ScreenInfo.EXACT_SCREEN_HEIGHT ? "1" : "0")
+                    .setIsLongPic(mediaBean.getHeight() > App.ScreenInfo.EXACT_SCREEN_HEIGHT ? "1" : "0")
                     .setOriginPic(origin);
             return mediaInfoBean;
         }

@@ -47,6 +47,8 @@ object Header {
     const val CUID_GALAXY3 = "c3_aid"
     const val CUID_GID = "cuid_gid"
     const val CLIENT_TYPE = "client_type"
+    const val CLIENT_USER_TOKEN = "client_user_token"
+    const val CLIENT_LOG_ID = "client_logid"
     const val X_BD_DATA_TYPE = "x_bd_data_type"
 }
 
@@ -69,4 +71,5 @@ object Param {
     const val TIMESTAMP = "timestamp"
     const val SIGN = "sign"
     const val SUBAPP_TYPE = "subapp_type"
+    const val STOKEN = "stoken"
 }

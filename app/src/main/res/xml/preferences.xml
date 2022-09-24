@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?><!--suppress AndroidElementNotAllowed -->
 <androidx.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
-    <androidx.preference.PreferenceCategory android:title="@string/title_account">
+    <androidx.preference.PreferenceCategory android:title="@string/title_account_manage">
         <ListPreference
             android:icon="@drawable/ic_round_account_circle"
             android:key="switch_account"
@@ -154,7 +154,7 @@
         </Preference>
 
         <ListPreference
-            android:defaultValue="dark"
+            android:defaultValue="grey_dark"
             android:entries="@array/dark_theme_names"
             android:entryValues="@array/dark_theme_values"
             android:icon="@drawable/ic_round_brightness_2_green"

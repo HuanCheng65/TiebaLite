@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="ic_launcher_background">#2E60B0</color>
+    <color name="ic_launcher_new_background">#FF5588D7</color>
+    <color name="ic_launcher_new_invert_background">#FFFFFFFF</color>
+    <color name="ic_launcher_background">#FF2E60B0</color>
 
-    <color name="colorPrimary">#FFFFFF</color>
-    <color name="colorAccent">#4477E0</color>
-    <color name="colorUnselected">#FF6E7486</color>
-    <color name="colorToolbarText">#474b54</color>
+    <color name="colorPrimary">#FFFFFFFF</color>
+    <color name="colorAccent">#FF4477E0</color>
+    <color name="colorUnselected">#FFCCCCCC</color>
+    <color name="colorToolbarText">#FF474b54</color>
     <color name="transparent">#00000000</color>
     <color name="color_place_holder">#FFF0F0F0</color>
     <color name="color_place_holder_night">#99000000</color>
@@ -22,8 +24,8 @@
     <color name="black">#000</color>
     <color name="tieba">#4477E0</color>
 
-    <color name="color_text">#FF31343C</color>
-    <color name="color_text_secondary">#FF545967</color>
+    <color name="color_text">#FF000000</color>
+    <color name="color_text_secondary">#FF808080</color>
     <color name="color_text_disabled">#FF65696C</color>
 
     <color name="color_text_night">#FFE6E7EE</color>
@@ -83,6 +85,20 @@
     <color name="theme_color_accent_grey_dark">@color/tieba</color>
     <color name="theme_color_accent_amoled_dark">@color/tieba</color>
 
+    <color name="theme_color_accent_light">#FF000000</color>
+    <color name="theme_color_accent_night">#FF5588D7</color>
+
+    <color name="theme_color_chip_light">#FFF8F8F8</color>
+    <color name="theme_color_chip_night">#FF1E1E1E</color>
+
+    <color name="theme_color_on_chip_light">#FF808080</color>
+    <color name="theme_color_on_chip_night">#FF808080</color>
+
+    <color name="theme_color_window_background_light">#FFF8F8F8</color>
+    <color name="theme_color_window_background_dark">#FF10171F</color>
+    <color name="theme_color_window_background_grey_dark">#FF212121</color>
+    <color name="theme_color_window_background_amoled_dark">#FF1E1E1E</color>
+
     <color name="theme_color_toolbar_white">@color/white</color>
     <color name="theme_color_toolbar_dark">#FF15202B</color>
     <color name="theme_color_toolbar_grey_dark">#FF181818</color>
@@ -90,9 +106,9 @@
     <color name="theme_color_toolbar_translucent_light">#00FFFFFF</color>
     <color name="theme_color_toolbar_translucent_dark">#00000000</color>
 
-    <color name="theme_color_toolbar_item_light">#FF474B54</color>
+    <color name="theme_color_toolbar_item_light">#FF000000</color>
     <color name="theme_color_toolbar_item_dark">@color/white</color>
-    <color name="theme_color_toolbar_item_night">#FFE6E7EE</color>
+    <color name="theme_color_toolbar_item_night">#FFEEEEEE</color>
     <color name="theme_color_toolbar_item_translucent_light">#DFFFFFFF</color>
     <color name="theme_color_toolbar_item_translucent_dark">#FF000000</color>
 
@@ -111,13 +127,13 @@
     <color name="theme_color_toolbar_item_active_grey_dark">@color/white</color>
     <color name="theme_color_toolbar_item_active_amoled_dark">@color/white</color>
 
-    <color name="theme_color_toolbar_bar_light">#E6F2F7FB</color>
-    <color name="theme_color_toolbar_bar_dark">#A110161C</color>
+    <color name="theme_color_toolbar_bar_light">#F8F8F8</color>
+    <color name="theme_color_toolbar_bar_dark">#1E1E1E</color>
     <color name="theme_color_toolbar_bar_translucent_light">#10FFFFFF</color>
     <color name="theme_color_toolbar_bar_translucent_dark">#20000000</color>
 
-    <color name="theme_color_on_toolbar_bar_light">#6654585B</color>
-    <color name="theme_color_on_toolbar_bar_dark">#FF8C96A0</color>
+    <color name="theme_color_on_toolbar_bar_light">#BFBFBF</color>
+    <color name="theme_color_on_toolbar_bar_dark">#5C5C5C</color>
 
     <color name="theme_color_nav_bar_surface_light">#FFF3F7F9</color>
     <color name="theme_color_nav_bar_surface_dark">#A110161C</color>
@@ -137,22 +153,17 @@
     <color name="theme_color_on_accent_translucent_light">#FFFFFFFF</color>
     <color name="theme_color_on_accent_translucent_dark">#FF212121</color>
 
-    <color name="theme_color_window_background_light">#FFF3F7F9</color>
-    <color name="theme_color_window_background_dark">#FF10171F</color>
-    <color name="theme_color_window_background_grey_dark">#FF212121</color>
-    <color name="theme_color_window_background_amoled_dark">#FF000000</color>
-
     <color name="theme_color_nav_light">@color/white</color>
     <color name="theme_color_nav_dark">#FF15202B</color>
     <color name="theme_color_nav_grey_dark">#FF151515</color>
-    <color name="theme_color_nav_amoled_dark">@color/black</color>
+    <color name="theme_color_nav_amoled_dark">#FF171717</color>
 
     <color name="theme_color_unselected_day">@color/colorUnselected</color>
     <color name="theme_color_unselected_translucent_light">#43FFFFFF</color>
     <color name="theme_color_unselected_translucent_dark">#4D000000</color>
     <color name="theme_color_unselected_dark">#FF415C68</color>
     <color name="theme_color_unselected_grey_dark">#FF5C5C5C</color>
-    <color name="theme_color_unselected_amoled_dark">#FF415C68</color>
+    <color name="theme_color_unselected_amoled_dark">#FF808080</color>
 
     <color name="theme_color_floor_card_light">#FFF3F7F9</color>
     <color name="theme_color_floor_card_translucent_light">#15FFFFFF</color>
@@ -175,12 +186,12 @@
     <color name="theme_color_swipe_refresh_view_background_grey_dark">#FF252525</color>
     <color name="theme_color_swipe_refresh_view_background_amoled_dark">#FF1C1C1C</color>
 
-    <color name="theme_color_divider_light">#FFF7FBFE</color>
+    <color name="theme_color_divider_light">#FFF5F5F5</color>
     <color name="theme_color_divider_translucent_light">#10FFFFFF</color>
     <color name="theme_color_divider_translucent_dark">#15000000</color>
     <color name="theme_color_divider_dark">#FF10171D</color>
     <color name="theme_color_divider_grey_dark">#FF151515</color>
-    <color name="theme_color_divider_amoled_dark">#FF101010</color>
+    <color name="theme_color_divider_amoled_dark">#FF1E1E1E</color>
 
     <color name="theme_color_shadow_day">@color/color_shadow</color>
     <color name="theme_color_shadow_night">#FE191919</color>

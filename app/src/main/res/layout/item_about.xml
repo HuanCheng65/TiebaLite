@@ -4,14 +4,14 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <com.huanchengfly.tieba.post.widgets.theme.TintView
+    <com.huanchengfly.tieba.post.ui.widgets.theme.TintView
         android:id="@+id/item_about_divider"
         android:layout_width="match_parent"
         android:layout_height="8dp"
         android:layout_marginTop="16dp"
         android:visibility="gone" />
 
-    <com.huanchengfly.tieba.post.widgets.theme.TintRelativeLayout
+    <com.huanchengfly.tieba.post.ui.widgets.theme.TintRelativeLayout
         android:id="@+id/item_about_root"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -42,7 +42,7 @@
             android:layout_centerVertical="true"
             android:layout_toEndOf="@id/item_about_icon_holder">
 
-            <com.huanchengfly.tieba.post.widgets.theme.TintTextView
+            <com.huanchengfly.tieba.post.ui.widgets.theme.TintTextView
                 android:id="@+id/item_about_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -50,7 +50,7 @@
                 android:textStyle="bold"
                 app:tint="@color/default_color_text" />
 
-            <com.huanchengfly.tieba.post.widgets.theme.TintTextView
+            <com.huanchengfly.tieba.post.ui.widgets.theme.TintTextView
                 android:id="@+id/item_about_subtitle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -60,5 +60,5 @@
                 android:textSize="14sp"
                 app:tint="@color/default_color_text_secondary" />
         </RelativeLayout>
-    </com.huanchengfly.tieba.post.widgets.theme.TintRelativeLayout>
+    </com.huanchengfly.tieba.post.ui.widgets.theme.TintRelativeLayout>
 </RelativeLayout>

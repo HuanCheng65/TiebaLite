@@ -19,8 +19,8 @@ import com.huanchengfly.tieba.post.components.workers.OKSignWork.Companion.DATA_
 import com.huanchengfly.tieba.post.components.workers.OKSignWork.Companion.DATA_SUCCESS
 import com.huanchengfly.tieba.post.components.workers.OKSignWork.Companion.DATA_TIMESTAMP
 import com.huanchengfly.tieba.post.components.workers.OKSignWork.Companion.DATA_TOTAL_COUNT
+import com.huanchengfly.tieba.post.ui.widgets.CircleProgressView
 import com.huanchengfly.tieba.post.utils.DateTimeUtils
-import com.huanchengfly.tieba.post.widgets.CircleProgressView
 
 class OKSignProgressAdapter(
     val context: Context,

@@ -9,7 +9,9 @@ import android.graphics.drawable.Drawable
 import android.graphics.drawable.GradientDrawable
 import android.graphics.drawable.RippleDrawable
 import android.net.Uri
-import android.util.Log
+import android.os.Build
+import android.os.PowerManager
+import android.provider.Settings
 import android.view.View
 import androidx.annotation.ColorInt
 import androidx.browser.customtabs.CustomTabColorSchemeParams
@@ -88,7 +90,7 @@ fun getRadiusDrawable(
     return if (ripple)
         wrapRipple(
             Util.getColorByAttr(
-                BaseApplication.INSTANCE,
+                App.INSTANCE,
                 R.attr.colorControlHighlight,
                 R.color.transparent
             ), drawable
@@ -134,7 +136,6 @@ fun getIntermixedColorBackground(
 }
 
 fun launchUrl(context: Context, url: String) {
-    Log.i("launchUrl", url)
     val uri = Uri.parse(url)
     val host = uri.host
     val path = uri.path
@@ -229,3 +230,17 @@ fun calcStatusBarColorInt(context: Context, @ColorInt originColor: Int): Int {
     }
     return if (darkerStatusBar) ColorUtils.getDarkerColor(originColor) else originColor
 }
+
+val Context.powerManager: PowerManager
+    get() = getSystemService(Context.POWER_SERVICE) as PowerManager
+fun Context.ignoreBatteryOptimization() {
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+        if (!powerManager.isIgnoringBatteryOptimizations(packageName)) {
+            val intent = Intent(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS)
+            intent.data = Uri.parse("package:${packageName}")
+            startActivity(intent)
+        }
+    }
+}
+
+fun Context.isIgnoringBatteryOptimizations(): Boolean = powerManager.isIgnoringBatteryOptimizations(packageName)

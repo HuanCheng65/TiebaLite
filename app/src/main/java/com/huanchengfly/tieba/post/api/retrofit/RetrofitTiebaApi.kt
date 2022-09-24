@@ -1,7 +1,7 @@
 package com.huanchengfly.tieba.post.api.retrofit
 
 import android.os.Build
-import com.huanchengfly.tieba.post.BaseApplication
+import com.huanchengfly.tieba.post.App
 import com.huanchengfly.tieba.post.api.Header
 import com.huanchengfly.tieba.post.api.Param
 import com.huanchengfly.tieba.post.api.models.OAID
@@ -9,10 +9,7 @@ import com.huanchengfly.tieba.post.api.retrofit.adapter.DeferredCallAdapterFacto
 import com.huanchengfly.tieba.post.api.retrofit.adapter.FlowCallAdapterFactory
 import com.huanchengfly.tieba.post.api.retrofit.converter.gson.GsonConverterFactory
 import com.huanchengfly.tieba.post.api.retrofit.interceptors.*
-import com.huanchengfly.tieba.post.api.retrofit.interfaces.MiniTiebaApi
-import com.huanchengfly.tieba.post.api.retrofit.interfaces.NewTiebaApi
-import com.huanchengfly.tieba.post.api.retrofit.interfaces.OfficialTiebaApi
-import com.huanchengfly.tieba.post.api.retrofit.interfaces.WebTiebaApi
+import com.huanchengfly.tieba.post.api.retrofit.interfaces.*
 import com.huanchengfly.tieba.post.toJson
 import com.huanchengfly.tieba.post.utils.AccountUtil
 import com.huanchengfly.tieba.post.utils.CuidUtils
@@ -33,18 +30,18 @@ object RetrofitTiebaApi {
     private const val WRITE_TIMEOUT = 60L
 
     private val initTime = System.currentTimeMillis()
-    private val clientId = "wappc_${initTime}_${(Math.random() * 1000).roundToInt()}"
+    internal val clientId = "wappc_${initTime}_${(Math.random() * 1000).roundToInt()}"
     private val stParamInterceptor = StParamInterceptor()
     private val connectionPool = ConnectionPool(32, 5, TimeUnit.MINUTES)
 
     private val defaultCommonParamInterceptor = CommonParamInterceptor(
-        Param.BDUSS to { AccountUtil.getBduss(BaseApplication.INSTANCE) },
+        Param.BDUSS to { AccountUtil.getBduss(App.INSTANCE) },
         Param.CLIENT_ID to { clientId },
         Param.CLIENT_TYPE to { "2" },
         Param.OS_VERSION to { Build.VERSION.SDK_INT.toString() },
         Param.MODEL to { Build.MODEL },
         Param.NET_TYPE to { "1" },
-        Param.PHONE_IMEI to { MobileInfoUtil.getIMEI(BaseApplication.INSTANCE) },
+        Param.PHONE_IMEI to { MobileInfoUtil.getIMEI(App.INSTANCE) },
         Param.TIMESTAMP to { System.currentTimeMillis().toString() }
     )
 
@@ -57,7 +54,7 @@ object RetrofitTiebaApi {
     private val sortAndSignInterceptor = SortAndSignInterceptor("tiebaclient!!!")
 
     val NEW_TIEBA_API: NewTiebaApi by lazy {
-        createAPI<NewTiebaApi>("http://c.tieba.baidu.com/",
+        createJsonApi<NewTiebaApi>("http://c.tieba.baidu.com/",
             defaultCommonHeaderInterceptor,
             CommonHeaderInterceptor(
                 Header.USER_AGENT to { "bdtb for Android 8.2.2" },
@@ -73,7 +70,7 @@ object RetrofitTiebaApi {
     }
 
     val WEB_TIEBA_API: WebTiebaApi by lazy {
-        createAPI<WebTiebaApi>("https://tieba.baidu.com/",
+        createJsonApi<WebTiebaApi>("https://tieba.baidu.com/",
             CommonHeaderInterceptor(
                 Header.ACCEPT_LANGUAGE to { Header.ACCEPT_LANGUAGE_VALUE },
                 Header.HOST to { "tieba.baidu.com" },
@@ -83,7 +80,7 @@ object RetrofitTiebaApi {
     }
 
     val MINI_TIEBA_API: MiniTiebaApi by lazy {
-        createAPI<MiniTiebaApi>("http://c.tieba.baidu.com/",
+        createJsonApi<MiniTiebaApi>("http://c.tieba.baidu.com/",
             defaultCommonHeaderInterceptor,
             CommonHeaderInterceptor(
                 Header.USER_AGENT to { "bdtb for Android 7.2.0.0" },
@@ -102,7 +99,7 @@ object RetrofitTiebaApi {
     }
 
     val OFFICIAL_TIEBA_API: OfficialTiebaApi by lazy {
-        createAPI<OfficialTiebaApi>("http://c.tieba.baidu.com/",
+        createJsonApi<OfficialTiebaApi>("http://c.tieba.baidu.com/",
             CommonHeaderInterceptor(
                 Header.USER_AGENT to { "bdtb for Android 12.25.1.0" },
                 Header.CUID to { CuidUtils.getNewCuid() },
@@ -121,11 +118,38 @@ object RetrofitTiebaApi {
                 Param.FROM to { "tieba" },
                 Param.CLIENT_VERSION to { "12.25.1.0" },
                 Param.CUID_GALAXY3 to { UIDUtil.getAid() },
-                Param.OAID to { OAID(BaseApplication.oaid).toJson() },
+                Param.OAID to { OAID(App.oaid).toJson() },
             ))
     }
 
-    private inline fun <reified T : Any> createAPI(
+    val OFFICIAL_PROTOBUF_TIEBA_API: OfficialProtobufTiebaApi by lazy {
+        createProtobufApi<OfficialProtobufTiebaApi>("http://c.tieba.baidu.com/",
+            CommonHeaderInterceptor(
+                Header.CHARSET to { "UTF-8" },
+                Header.CLIENT_TYPE to { "2" },
+                Header.CLIENT_USER_TOKEN to { AccountUtil.getUid(App.INSTANCE) },
+                Header.COOKIE to { "CUID=${CuidUtils.getNewCuid()};ka=open;TBBRAND=${Build.MODEL};" },
+                Header.CUID to { CuidUtils.getNewCuid() },
+                Header.CUID_GALAXY2 to { CuidUtils.getNewCuid() },
+                Header.CUID_GID to { "" },
+                Header.CUID_GALAXY3 to { UIDUtil.getAid() },
+                Header.USER_AGENT to { "bdtb for Android 11.10.8.6" },
+                Header.X_BD_DATA_TYPE to { "protobuf" },
+            ),
+            defaultCommonParamInterceptor,
+            stParamInterceptor,
+            CommonParamInterceptor(
+                Param.CUID to { CuidUtils.getNewCuid() },
+                Param.CUID_GALAXY2 to { CuidUtils.getNewCuid() },
+                Param.CUID_GID to { "" },
+                Param.FROM to { "1024324o" },
+                Param.CLIENT_VERSION to { "11.10.8.6" },
+                Param.CUID_GALAXY3 to { UIDUtil.getAid() },
+                Param.OAID to { OAID(App.oaid).toJson() },
+            ))
+    }
+
+    private inline fun <reified T : Any> createJsonApi(
         baseUrl: String,
         vararg interceptors: Interceptor
     ) = Retrofit.Builder()
@@ -134,7 +158,6 @@ object RetrofitTiebaApi {
         .addCallAdapterFactory(FlowCallAdapterFactory.create())
         .addConverterFactory(NullOnEmptyConverterFactory())
         .addConverterFactory(gsonConverterFactory)
-        .addConverterFactory(WireConverterFactory.create())
         .client(OkHttpClient.Builder().apply {
             readTimeout(READ_TIMEOUT, TimeUnit.SECONDS)
             connectTimeout(CONNECT_TIMEOUT, TimeUnit.SECONDS)
@@ -151,4 +174,28 @@ object RetrofitTiebaApi {
         .build()
         .create(T::class.java)
 
+    private inline fun <reified T : Any> createProtobufApi(
+        baseUrl: String,
+        vararg interceptors: Interceptor
+    ) = Retrofit.Builder()
+        .baseUrl(baseUrl)
+        .addCallAdapterFactory(DeferredCallAdapterFactory())
+        .addCallAdapterFactory(FlowCallAdapterFactory.create())
+        .addConverterFactory(NullOnEmptyConverterFactory())
+        .addConverterFactory(WireConverterFactory.create())
+        .client(OkHttpClient.Builder().apply {
+            readTimeout(READ_TIMEOUT, TimeUnit.SECONDS)
+            connectTimeout(CONNECT_TIMEOUT, TimeUnit.SECONDS)
+            writeTimeout(WRITE_TIMEOUT, TimeUnit.SECONDS)
+            interceptors.forEach {
+                addInterceptor(it)
+            }
+            addInterceptor(DropInterceptor)
+            addInterceptor(ProtoFailureResponseInterceptor)
+            addInterceptor(ForceLoginInterceptor)
+            addInterceptor(sortAndSignInterceptor)
+            connectionPool(connectionPool)
+        }.build())
+        .build()
+        .create(T::class.java)
 }

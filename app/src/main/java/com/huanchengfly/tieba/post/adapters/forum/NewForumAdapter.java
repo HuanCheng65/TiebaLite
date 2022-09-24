@@ -19,7 +19,7 @@ import com.alibaba.android.vlayout.LayoutHelper;
 import com.alibaba.android.vlayout.layout.LinearLayoutHelper;
 import com.alibaba.android.vlayout.layout.StaggeredGridLayoutHelper;
 import com.bumptech.glide.Glide;
-import com.huanchengfly.tieba.post.BaseApplication;
+import com.huanchengfly.tieba.post.App;
 import com.huanchengfly.tieba.post.ExtensionsKt;
 import com.huanchengfly.tieba.post.R;
 import com.huanchengfly.tieba.post.activities.ThreadActivity;
@@ -27,6 +27,8 @@ import com.huanchengfly.tieba.post.adapters.base.BaseMultiTypeDelegateAdapter;
 import com.huanchengfly.tieba.post.api.models.ForumPageBean;
 import com.huanchengfly.tieba.post.components.MyViewHolder;
 import com.huanchengfly.tieba.post.models.PhotoViewBean;
+import com.huanchengfly.tieba.post.ui.widgets.MarkedImageView;
+import com.huanchengfly.tieba.post.ui.widgets.VideoPlayerStandard;
 import com.huanchengfly.tieba.post.utils.AppPreferencesUtilsKt;
 import com.huanchengfly.tieba.post.utils.BlockUtil;
 import com.huanchengfly.tieba.post.utils.DateTimeUtils;
@@ -37,8 +39,6 @@ import com.huanchengfly.tieba.post.utils.StringUtil;
 import com.huanchengfly.tieba.post.utils.Util;
 import com.huanchengfly.tieba.post.utils.preload.PreloadUtil;
 import com.huanchengfly.tieba.post.utils.preload.loaders.ThreadContentLoader;
-import com.huanchengfly.tieba.post.widgets.MarkedImageView;
-import com.huanchengfly.tieba.post.widgets.VideoPlayerStandard;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -86,7 +86,7 @@ public class NewForumAdapter extends BaseMultiTypeDelegateAdapter<ForumPageBean.
     }
 
     private int getMaxWidth() {
-        int maxWidth = BaseApplication.ScreenInfo.EXACT_SCREEN_WIDTH - DisplayUtil.dp2px(getContext(), 40);
+        int maxWidth = App.ScreenInfo.EXACT_SCREEN_WIDTH - DisplayUtil.dp2px(getContext(), 40);
         if (ExtensionsKt.isTablet(getContext())) {
             return maxWidth / 2;
         }
@@ -94,7 +94,7 @@ public class NewForumAdapter extends BaseMultiTypeDelegateAdapter<ForumPageBean.
     }
 
     private int getGridHeight() {
-        int maxWidth = BaseApplication.ScreenInfo.EXACT_SCREEN_WIDTH - DisplayUtil.dp2px(getContext(), 70);
+        int maxWidth = App.ScreenInfo.EXACT_SCREEN_WIDTH - DisplayUtil.dp2px(getContext(), 70);
         if (ExtensionsKt.isTablet(getContext())) {
             maxWidth = maxWidth / 2;
         }
@@ -160,9 +160,13 @@ public class NewForumAdapter extends BaseMultiTypeDelegateAdapter<ForumPageBean.
     private void setListenerForImageView(List<ForumPageBean.MediaInfoBean> mediaInfoBeans, ImageView imageView, int position, ForumPageBean.ThreadBean threadBean) {
         List<PhotoViewBean> photoViewBeans = new ArrayList<>();
         for (ForumPageBean.MediaInfoBean media : mediaInfoBeans) {
-            photoViewBeans.add(new PhotoViewBean(ImageUtil.getNonNullString(media.getBigPic(), media.getSrcPic(), media.getOriginPic()),
-                    ImageUtil.getNonNullString(media.getOriginPic(), media.getSrcPic(), media.getBigPic()),
-                    "1".equals(media.isLongPic())));
+            photoViewBeans.add(
+                    new PhotoViewBean(
+                            ImageUtil.getNonNullString(media.getBigPic(), media.getSrcPic(), media.getOriginPic()),
+                            ImageUtil.getNonNullString(media.getOriginPic(), media.getSrcPic(), media.getBigPic()),
+                            "1".equals(media.isLongPic())
+                    )
+            );
         }
         ImageUtil.initImageView(imageView,
                 photoViewBeans,

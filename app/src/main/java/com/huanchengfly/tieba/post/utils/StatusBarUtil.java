@@ -1,5 +1,6 @@
 package com.huanchengfly.tieba.post.utils;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
@@ -53,6 +54,7 @@ public class StatusBarUtil {
         }
     }
 
+    @SuppressLint({"InternalInsetResource", "DiscouragedApi"})
     public static int getStatusBarHeight(Context context) {
         int result = DisplayUtil.dp2px(context, 20);
         int resourceId = context.getResources().getIdentifier("status_bar_height", "dimen", "android");

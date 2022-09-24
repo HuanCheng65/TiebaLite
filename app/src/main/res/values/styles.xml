@@ -329,6 +329,19 @@
 
     <style name="Base" />
 
+    <style name="Theme.NewAppTheme" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <item name="android:windowIsTranslucent">true</item>
+    </style>
+
+    <style name="Theme.Splash" parent="Theme.SplashScreen">
+        <item name="android:windowBackground">@drawable/splash</item>
+        <item name="android:statusBarColor">@color/colorSplashBg</item>
+        <item name="windowSplashScreenBackground">@color/colorSplashBg</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/ic_splash_screen_anim</item>
+        <item name="windowSplashScreenAnimationDuration">1000</item>
+        <item name="postSplashScreenTheme">@style/Theme.NewAppTheme</item>
+    </style>
+
     <style name="Base.AppTheme" parent="Theme.MaterialComponents.Light.NoActionBar">
         <item name="windowActionModeOverlay">true</item>
         <item name="android:windowActionModeOverlay">true</item>
@@ -415,7 +428,7 @@
         <item name="colorTextSecondary">@color/color_text_secondary</item>
         <item name="colorDivider">@color/color_divider</item>
         <item name="colorBg">@color/theme_color_background_light</item>
-        <item name="colorWindowBackground">@color/theme_color_window_background_light</item>
+        <item name="colorChip">@color/theme_color_window_background_light</item>
         <item name="colorUnselected">@color/colorUnselected</item>
         <item name="colorNavBar">@color/white</item>
         <item name="colorFloorCard">@color/default_color_floor_card</item>
@@ -445,7 +458,7 @@
         <item name="colorText">@color/color_text_night</item>
         <item name="colorTextSecondary">@color/color_text_secondary_night</item>
         <item name="colorBg">@color/theme_color_background_dark</item>
-        <item name="colorWindowBackground">@color/theme_color_window_background_dark</item>
+        <item name="colorChip">@color/theme_color_window_background_dark</item>
         <item name="colorUnselected">#415c68</item>
         <item name="colorFloorCard">#FF1A2A39</item>
         <item name="colorCard">#15202B</item>
@@ -511,7 +524,7 @@
         <item name="colorOnAccent">@color/theme_color_on_accent_translucent_light</item>
         <item name="colorToolbar">@color/transparent</item>
         <item name="colorBg">@color/transparent</item>
-        <item name="colorWindowBackground">@color/transparent</item>
+        <item name="colorChip">@color/transparent</item>
         <item name="colorNavBar">@color/transparent</item>
         <item name="colorToolbarItem">@color/theme_color_toolbar_item_translucent_light</item>
         <item name="colorToolbarItemActive">
@@ -587,7 +600,7 @@
         <item name="colorToolbarItemActive">@color/white</item>
         <item name="color_toolbar_item_secondary">#CCE6E7EE</item>
         <item name="colorBg">@color/theme_color_background_dark</item>
-        <item name="colorWindowBackground">@color/theme_color_window_background_dark</item>
+        <item name="colorChip">@color/theme_color_window_background_dark</item>
         <item name="colorNavBar">#FF15202B</item>
         <item name="colorDivider">#FF10171D</item>
     </style>
@@ -604,7 +617,7 @@
             @color/theme_color_toolbar_item_secondary_grey_dark
         </item>
         <item name="colorBg">@color/theme_color_background_grey_dark</item>
-        <item name="colorWindowBackground">@color/theme_color_window_background_grey_dark</item>
+        <item name="colorChip">@color/theme_color_window_background_grey_dark</item>
         <item name="colorNavBar">@color/theme_color_nav_grey_dark</item>
         <item name="colorDivider">@color/theme_color_divider_grey_dark</item>
     </style>
@@ -620,7 +633,7 @@
         <item name="colorFloorCard">#FF151515</item>
         <item name="colorCard">#FF101010</item>
         <item name="colorBg">@color/theme_color_background_amoled_dark</item>
-        <item name="colorWindowBackground">@color/theme_color_window_background_amoled_dark</item>
+        <item name="colorChip">@color/theme_color_window_background_amoled_dark</item>
         <item name="colorNavBar">@color/black</item>
         <item name="colorDivider">#FF101010</item>
     </style>

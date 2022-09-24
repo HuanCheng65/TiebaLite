@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.huanchengfly.tieba.post.widgets.theme.TintRelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.huanchengfly.tieba.post.ui.widgets.theme.TintRelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -27,7 +27,7 @@
             android:contentDescription="@string/tip_avatar"
             app:srcCompat="@drawable/bg_placeholder_circle" />
 
-        <com.huanchengfly.tieba.post.widgets.theme.TintTextView
+        <com.huanchengfly.tieba.post.ui.widgets.theme.TintTextView
             android:id="@+id/message_list_item_user_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -40,7 +40,7 @@
             app:tint="@color/default_color_text"
             tools:text="幻了个城fly" />
 
-        <com.huanchengfly.tieba.post.widgets.theme.TintTextView
+        <com.huanchengfly.tieba.post.ui.widgets.theme.TintTextView
             android:id="@+id/message_list_item_user_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -60,7 +60,7 @@
         android:layout_below="@id/message_list_item_user"
         android:layout_marginTop="8dp">
 
-        <com.huanchengfly.tieba.post.widgets.theme.TintTextView
+        <com.huanchengfly.tieba.post.ui.widgets.theme.TintTextView
             android:id="@+id/message_list_item_content"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -72,7 +72,7 @@
             app:tint="@color/default_color_text"
             tools:text="消息内容" />
 
-        <com.huanchengfly.tieba.post.widgets.theme.TintTextView
+        <com.huanchengfly.tieba.post.ui.widgets.theme.TintTextView
             android:id="@+id/message_list_item_quote"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -89,4 +89,4 @@
             app:tint="@color/default_color_text_secondary"
             tools:text="原内容" />
     </RelativeLayout>
-</com.huanchengfly.tieba.post.widgets.theme.TintRelativeLayout>
+</com.huanchengfly.tieba.post.ui.widgets.theme.TintRelativeLayout>

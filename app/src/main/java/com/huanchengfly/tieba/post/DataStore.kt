@@ -1,6 +1,9 @@
 package com.huanchengfly.tieba.post
 
 import android.content.Context
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.State
+import androidx.compose.runtime.collectAsState
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.SharedPreferencesMigration
 import androidx.datastore.preferences.core.*
@@ -9,6 +12,7 @@ import androidx.preference.PreferenceDataStore
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 
@@ -23,9 +27,14 @@ val Context.dataStore: DataStore<Preferences> by preferencesDataStore(
     }
 )
 
+@Composable
+fun <T> DataStore<Preferences>.collectPreferenceAsState(key: Preferences.Key<T>, defaultValue: T): State<T> {
+    return data.map { it[key] ?: defaultValue }.collectAsState(initial = defaultValue)
+}
+
 fun DataStore<Preferences>.putString(key: String, value: String? = null) {
     MainScope().launch(Dispatchers.IO) {
-        BaseApplication.INSTANCE.dataStore.edit {
+        edit {
             if (value == null) {
                 it.remove(stringPreferencesKey(key))
             } else {
@@ -37,7 +46,7 @@ fun DataStore<Preferences>.putString(key: String, value: String? = null) {
 
 fun DataStore<Preferences>.putBoolean(key: String, value: Boolean) {
     MainScope().launch(Dispatchers.IO) {
-        BaseApplication.INSTANCE.dataStore.edit {
+        edit {
             it[booleanPreferencesKey(key)] = value
         }
     }
@@ -45,7 +54,7 @@ fun DataStore<Preferences>.putBoolean(key: String, value: Boolean) {
 
 fun DataStore<Preferences>.putInt(key: String, value: Int) {
     MainScope().launch(Dispatchers.IO) {
-        BaseApplication.INSTANCE.dataStore.edit {
+        edit {
             it[intPreferencesKey(key)] = value
         }
     }
@@ -55,7 +64,7 @@ fun DataStore<Preferences>.getInt(key: String, defaultValue: Int): Int {
     var resultValue = defaultValue
 
     runBlocking {
-        BaseApplication.INSTANCE.dataStore.data.first {
+        data.first {
             resultValue = it[intPreferencesKey(key)] ?: resultValue
             true
         }
@@ -68,7 +77,7 @@ fun DataStore<Preferences>.getString(key: String): String? {
     var resultValue: String? = null
 
     runBlocking {
-        BaseApplication.INSTANCE.dataStore.data.first {
+        data.first {
             resultValue = it[stringPreferencesKey(key)]
             true
         }
@@ -81,7 +90,7 @@ fun DataStore<Preferences>.getString(key: String, defaultValue: String): String 
     var resultValue = defaultValue
 
     runBlocking {
-        BaseApplication.INSTANCE.dataStore.data.first {
+        data.first {
             resultValue = it[stringPreferencesKey(key)] ?: resultValue
             true
         }
@@ -97,7 +106,7 @@ fun DataStore<Preferences>.getStringSet(
     var resultValue = defaultValues
 
     runBlocking {
-        BaseApplication.INSTANCE.dataStore.data.first {
+        data.first {
             resultValue = it[stringSetPreferencesKey(key)]?.toMutableSet() ?: resultValue
             true
         }
@@ -110,7 +119,7 @@ fun DataStore<Preferences>.getBoolean(key: String, defaultValue: Boolean): Boole
     var resultValue = defaultValue
 
     runBlocking {
-        BaseApplication.INSTANCE.dataStore.data.first {
+        data.first {
             resultValue = it[booleanPreferencesKey(key)] ?: resultValue
             true
         }
@@ -123,7 +132,7 @@ fun DataStore<Preferences>.getFloat(key: String, defaultValue: Float): Float {
     var resultValue = defaultValue
 
     runBlocking {
-        BaseApplication.INSTANCE.dataStore.data.first {
+        data.first {
             resultValue = it[floatPreferencesKey(key)] ?: resultValue
             true
         }
@@ -136,7 +145,7 @@ fun DataStore<Preferences>.getLong(key: String, defaultValue: Long): Long {
     var resultValue = defaultValue
 
     runBlocking {
-        BaseApplication.INSTANCE.dataStore.data.first {
+        data.first {
             resultValue = it[longPreferencesKey(key)] ?: resultValue
             true
         }
@@ -148,7 +157,7 @@ fun DataStore<Preferences>.getLong(key: String, defaultValue: Long): Long {
 class DataStorePreference : PreferenceDataStore() {
     override fun putString(key: String, value: String?) {
         MainScope().launch(Dispatchers.IO) {
-            BaseApplication.INSTANCE.dataStore.edit {
+            App.INSTANCE.dataStore.edit {
                 if (value == null) {
                     it.remove(stringPreferencesKey(key))
                 } else {
@@ -160,7 +169,7 @@ class DataStorePreference : PreferenceDataStore() {
 
     override fun putStringSet(key: String, values: MutableSet<String>?) {
         MainScope().launch(Dispatchers.IO) {
-            BaseApplication.INSTANCE.dataStore.edit {
+            App.INSTANCE.dataStore.edit {
                 if (values == null) {
                     it.remove(stringSetPreferencesKey(key))
                 } else {
@@ -172,7 +181,7 @@ class DataStorePreference : PreferenceDataStore() {
 
     override fun putInt(key: String, value: Int) {
         MainScope().launch(Dispatchers.IO) {
-            BaseApplication.INSTANCE.dataStore.edit {
+            App.INSTANCE.dataStore.edit {
                 it[intPreferencesKey(key)] = value
             }
         }
@@ -180,7 +189,7 @@ class DataStorePreference : PreferenceDataStore() {
 
     override fun putLong(key: String, value: Long) {
         MainScope().launch(Dispatchers.IO) {
-            BaseApplication.INSTANCE.dataStore.edit {
+            App.INSTANCE.dataStore.edit {
                 it[longPreferencesKey(key)] = value
             }
         }
@@ -188,7 +197,7 @@ class DataStorePreference : PreferenceDataStore() {
 
     override fun putFloat(key: String, value: Float) {
         MainScope().launch(Dispatchers.IO) {
-            BaseApplication.INSTANCE.dataStore.edit {
+            App.INSTANCE.dataStore.edit {
                 it[floatPreferencesKey(key)] = value
             }
         }
@@ -196,36 +205,36 @@ class DataStorePreference : PreferenceDataStore() {
 
     override fun putBoolean(key: String, value: Boolean) {
         MainScope().launch(Dispatchers.IO) {
-            BaseApplication.INSTANCE.dataStore.edit {
+            App.INSTANCE.dataStore.edit {
                 it[booleanPreferencesKey(key)] = value
             }
         }
     }
 
     override fun getString(key: String, defValue: String?): String? {
-        return BaseApplication.INSTANCE.dataStore.getString(key) ?: defValue
+        return App.INSTANCE.dataStore.getString(key) ?: defValue
     }
 
     override fun getStringSet(
         key: String,
         defValues: MutableSet<String>?
     ): MutableSet<String>? {
-        return BaseApplication.INSTANCE.dataStore.getStringSet(key, defValues)
+        return App.INSTANCE.dataStore.getStringSet(key, defValues)
     }
 
     override fun getInt(key: String, defValue: Int): Int {
-        return BaseApplication.INSTANCE.dataStore.getInt(key, defValue)
+        return App.INSTANCE.dataStore.getInt(key, defValue)
     }
 
     override fun getLong(key: String, defValue: Long): Long {
-        return BaseApplication.INSTANCE.dataStore.getLong(key, defValue)
+        return App.INSTANCE.dataStore.getLong(key, defValue)
     }
 
     override fun getFloat(key: String, defValue: Float): Float {
-        return BaseApplication.INSTANCE.dataStore.getFloat(key, defValue)
+        return App.INSTANCE.dataStore.getFloat(key, defValue)
     }
 
     override fun getBoolean(key: String, defValue: Boolean): Boolean {
-        return BaseApplication.INSTANCE.dataStore.getBoolean(key, defValue)
+        return App.INSTANCE.dataStore.getBoolean(key, defValue)
     }
 }

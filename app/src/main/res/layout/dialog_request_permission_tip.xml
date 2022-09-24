@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.huanchengfly.tieba.post.widgets.theme.TintConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.huanchengfly.tieba.post.ui.widgets.theme.TintConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -19,7 +19,7 @@
         app:layout_constraintVertical_bias="0.0"
         app:srcCompat="@mipmap/ic_launcher_round" />
 
-    <com.huanchengfly.tieba.post.widgets.theme.TintTextView
+    <com.huanchengfly.tieba.post.ui.widgets.theme.TintTextView
         android:id="@+id/request_permission_tip_dialog_title"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -34,7 +34,7 @@
         app:tint="@color/default_color_text"
         tools:text="贴吧 Lite 正在请求“存储空间”权限" />
 
-    <com.huanchengfly.tieba.post.widgets.theme.TintTextView
+    <com.huanchengfly.tieba.post.ui.widgets.theme.TintTextView
         android:id="@+id/request_permission_tip_dialog_message"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -48,4 +48,4 @@
         app:tint="@color/default_color_text_secondary"
         tools:text="授权后，将用于保存图片" />
 
-</com.huanchengfly.tieba.post.widgets.theme.TintConstraintLayout>
+</com.huanchengfly.tieba.post.ui.widgets.theme.TintConstraintLayout>

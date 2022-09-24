@@ -27,7 +27,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <com.huanchengfly.tieba.post.widgets.theme.TintTextView
+            <com.huanchengfly.tieba.post.ui.widgets.theme.TintTextView
                 android:id="@+id/history_item_user"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -40,7 +40,7 @@
                 app:tint="@color/default_color_text"
                 tools:text="吧" />
 
-            <com.huanchengfly.tieba.post.widgets.theme.TintTextView
+            <com.huanchengfly.tieba.post.ui.widgets.theme.TintTextView
                 android:id="@+id/history_item_header_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

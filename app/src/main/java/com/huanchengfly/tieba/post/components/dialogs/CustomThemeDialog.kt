@@ -11,7 +11,7 @@ import android.widget.CompoundButton
 import android.widget.LinearLayout
 import androidx.annotation.ColorInt
 import androidx.appcompat.app.AlertDialog
-import com.huanchengfly.tieba.post.BaseApplication.ThemeDelegate.getColorByAttr
+import com.huanchengfly.tieba.post.App.ThemeDelegate.getColorByAttr
 import com.huanchengfly.tieba.post.R
 import com.huanchengfly.tieba.post.ui.common.theme.utils.ThemeUtils
 import com.huanchengfly.tieba.post.utils.ThemeUtil

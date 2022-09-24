@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.huanchengfly.tieba.post.widgets.theme.TintRelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.huanchengfly.tieba.post.ui.widgets.theme.TintRelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/classify_item"
     android:layout_width="match_parent"
@@ -8,7 +8,7 @@
     android:padding="6dp"
     app:backgroundTint="@color/default_color_floor_card">
 
-    <com.huanchengfly.tieba.post.widgets.theme.TintTextView
+    <com.huanchengfly.tieba.post.ui.widgets.theme.TintTextView
         android:id="@+id/classify_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -18,4 +18,4 @@
         android:maxLines="1"
         android:textStyle="bold"
         app:tint="@color/default_color_text_secondary" />
-</com.huanchengfly.tieba.post.widgets.theme.TintRelativeLayout>
+</com.huanchengfly.tieba.post.ui.widgets.theme.TintRelativeLayout>

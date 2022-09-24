@@ -1,6 +1,5 @@
 package com.huanchengfly.tieba.post.api.retrofit.interceptors
 
-import com.huanchengfly.tieba.post.BaseApplication
 import com.huanchengfly.tieba.post.api.Error.ERROR_NOT_LOGGED_IN
 import com.huanchengfly.tieba.post.api.Header
 import com.huanchengfly.tieba.post.api.retrofit.exception.TiebaLocalException
@@ -23,7 +22,7 @@ object ForceLoginInterceptor : Interceptor {
             headers = headers.newBuilder().removeAll(Header.FORCE_LOGIN).build()
         }
 
-        if (forceLogin && !AccountUtil.isLoggedIn(BaseApplication.INSTANCE)) {
+        if (forceLogin && !AccountUtil.isLoggedIn()) {
             throw TiebaLocalException(ERROR_NOT_LOGGED_IN, "Not logged in.")
         }
 

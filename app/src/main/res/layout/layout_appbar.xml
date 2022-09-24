@@ -7,7 +7,7 @@
     android:background="@color/transparent"
     android:stateListAnimator="@animator/appbar_elevation">
 
-    <com.huanchengfly.tieba.post.widgets.theme.TintToolbar
+    <com.huanchengfly.tieba.post.ui.widgets.theme.TintToolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"

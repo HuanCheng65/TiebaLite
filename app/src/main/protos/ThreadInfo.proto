@@ -1,0 +1,92 @@
+syntax = "proto3";
+
+package protos;
+
+option java_package = "com.huanchengfly.tieba.post.api.models.protos";
+
+import "Common.proto";
+import "Pb.proto";
+
+message ThreadInfo {
+  int64 id = 1;
+  int64 threadId = 2;
+  string title = 3;
+  int32 replyNum = 4;
+  int32 viewNum = 5;
+  string lastTime = 6;
+  int32 lastTimeInt = 7;
+  int32 threadTypes = 8;
+  int32 isGood = 10;
+  User author = 18;
+  User lastReplyer = 19;
+  int32 commentNum = 20;
+  repeated Abstract _abstract = 21;
+  repeated Media media = 22;
+  int64 forumId = 27;
+  string forumName = 28;
+  int32 isNoTitle = 38;
+  int64 firstPostId = 40;
+  int32 createTime = 45;
+  int32 collectStatus = 50;
+  string collectMarkPid = 51;
+  int32 isMemberTop = 54;
+  optional VideoInfo videoInfo = 79;
+  repeated PbContent richTitle = 111;
+  repeated PbContent richAbstract = 112;
+  repeated DislikeInfo dislikeInfo = 120;
+  int32 agreeNum = 124;
+  Agree agree = 126;
+  int64 shareNum = 135;
+  repeated PbContent firstPostContent = 142;
+  int32 isTopic = 148;
+  string topicUserName = 149;
+  string topicH5Url = 150;
+  SimpleForum forumInfo = 155;
+  string tShareImg = 159;
+  string nid = 164;
+  int32 isDeleted = 181;
+}
+
+message Abstract {
+  int32 type = 1;
+  string text = 2;
+  string link = 3;
+  string src = 4;
+  string un = 5;
+  string duringTime = 6;
+  string voiceMD5 = 7;
+}
+
+message Media {
+  int32 type = 1;
+  string bigPic = 3;
+  string srcPic = 8;
+  uint32 width = 10;
+  uint32 height = 11;
+  string originPic = 15;
+  uint32 originSize = 16;
+  int64 postId = 17;
+  string dynamicPic = 18;
+  uint32 isLongPic = 19;
+  uint32 showOriginalBtn = 20;
+}
+
+message VideoInfo {
+  string videoMD5 = 1;
+  string videoUrl = 2;
+  uint32 videoDuration = 3;
+  uint32 videoWidth = 4;
+  uint32 videoHeight = 5;
+  string thumbnailUrl = 6;
+  uint32 thumbnailWidth = 7;
+  uint32 thumbnailHeight = 8;
+  string mediaSubtitle = 11;
+}
+
+message Agree {
+  int64 agreeNum = 1;
+  int32 hasAgree = 2;
+  int32 agreeType = 3;
+  int64 disagreeNum = 4;
+  int64 diffAgreeNum = 5;
+}

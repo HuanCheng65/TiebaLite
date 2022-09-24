@@ -1,0 +1,36 @@
+syntax = "proto3";
+
+package protos;
+
+option java_package = "com.huanchengfly.tieba.post.api.models.protos";
+
+import "Common.proto";
+
+message PbContent {
+  int32 type = 1;
+  string text = 2;
+  string link = 3;
+  string src = 4;
+  string bsize = 5;
+  string bigSrc = 6;
+  string bigSize = 7;
+  string cdnSrc = 8;
+  string bigCdnSrc = 9;
+  string imgType = 10;
+  string c = 11;
+  string voiceMD5 = 12;
+  uint32 duringTime = 13;
+  int64 uid = 15;
+  string dynamic = 16;
+  string _static = 17;
+  uint32 width = 18;
+  uint32 height = 19;
+  string originSrc = 25;
+  uint32 originSize = 27;
+  string mediaSubtitle = 31;
+  int32 urlType = 32;
+  MemeInfo memeInfo = 33;
+  uint32 isLongPic = 34;
+  uint32 showOriginalBtn = 35;
+  string cdnSrcActive = 36;
+}

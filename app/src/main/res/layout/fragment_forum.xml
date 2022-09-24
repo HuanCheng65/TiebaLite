@@ -11,7 +11,7 @@
     app:srlEnableOverScrollDrag="true"
     tools:context=".fragments.ForumFragment">
 
-    <com.huanchengfly.tieba.post.widgets.theme.TintMaterialHeader
+    <com.huanchengfly.tieba.post.ui.widgets.theme.TintMaterialHeader
         android:id="@+id/refresh_header"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />

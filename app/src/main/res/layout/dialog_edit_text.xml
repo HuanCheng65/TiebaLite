@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <com.huanchengfly.tieba.post.widgets.theme.TintTextInputLayout
+    <com.huanchengfly.tieba.post.ui.widgets.theme.TintTextInputLayout
         android:id="@+id/dialog_edit_text_layout"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
         android:layout_width="0dp"
@@ -31,9 +31,9 @@
             <requestFocus />
         </com.google.android.material.textfield.TextInputEditText>
 
-    </com.huanchengfly.tieba.post.widgets.theme.TintTextInputLayout>
+    </com.huanchengfly.tieba.post.ui.widgets.theme.TintTextInputLayout>
 
-    <com.huanchengfly.tieba.post.widgets.theme.TintMaterialButton
+    <com.huanchengfly.tieba.post.ui.widgets.theme.TintMaterialButton
         android:id="@+id/dialog_edit_text_cancel"
         style="@style/Widget.Button.Flat.Dense"
         android:layout_width="0dp"
@@ -46,7 +46,7 @@
         app:layout_constraintEnd_toStartOf="@+id/dialog_edit_text_submit"
         app:layout_constraintTop_toBottomOf="@+id/dialog_edit_text_layout" />
 
-    <com.huanchengfly.tieba.post.widgets.theme.TintMaterialButton
+    <com.huanchengfly.tieba.post.ui.widgets.theme.TintMaterialButton
         android:id="@+id/dialog_edit_text_submit"
         style="@style/Widget.Button"
         android:layout_width="0dp"

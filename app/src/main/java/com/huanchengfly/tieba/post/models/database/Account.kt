@@ -22,6 +22,7 @@ data class Account(
     var birthdayShowStatus: String? = null,
     var birthdayTime: String? = null,
     var constellation: String? = null,
+    var loadSuccess: Boolean = false,
 ) : LitePalSupport() {
     internal constructor() : this("", "", "", "", "", "", "")
 

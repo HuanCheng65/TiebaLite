@@ -24,7 +24,7 @@
                 android:layout_height="wrap_content"
                 android:padding="12dp">
 
-                <com.huanchengfly.tieba.post.widgets.theme.TintImageView
+                <com.huanchengfly.tieba.post.ui.widgets.theme.TintImageView
                     android:id="@+id/button_back"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -35,7 +35,7 @@
                     app:srcCompat="@drawable/ic_round_arrow_back"
                     app:tint="@color/color_text" />
 
-                <com.huanchengfly.tieba.post.widgets.theme.TintImageView
+                <com.huanchengfly.tieba.post.ui.widgets.theme.TintImageView
                     android:id="@+id/button_finish"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -57,7 +57,7 @@
             android:background="#60000000"
             android:visibility="invisible" />
 
-        <com.huanchengfly.tieba.post.widgets.theme.TintLinearLayout
+        <com.huanchengfly.tieba.post.ui.widgets.theme.TintLinearLayout
             android:id="@+id/bottom_sheet"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -71,14 +71,14 @@
             app:behavior_peekHeight="120dp"
             app:layout_behavior="@string/bottom_sheet_behavior">
 
-            <com.huanchengfly.tieba.post.widgets.theme.TintView
+            <com.huanchengfly.tieba.post.ui.widgets.theme.TintView
                 android:layout_width="64dp"
                 android:layout_height="4dp"
                 android:layout_gravity="center_horizontal"
                 android:background="@drawable/bg_radius_50dp"
                 app:backgroundTint="@color/default_color_on_toolbar_bar" />
 
-            <com.huanchengfly.tieba.post.widgets.theme.TintTextView
+            <com.huanchengfly.tieba.post.ui.widgets.theme.TintTextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
@@ -87,7 +87,7 @@
                 android:textStyle="bold"
                 app:tint="@color/color_text" />
 
-            <com.huanchengfly.tieba.post.widgets.theme.TintMaterialButton
+            <com.huanchengfly.tieba.post.ui.widgets.theme.TintMaterialButton
                 android:id="@+id/select_pic"
                 style="@style/Widget.Button"
                 android:layout_width="match_parent"
@@ -110,7 +110,7 @@
                 android:gravity="center_vertical"
                 android:orientation="horizontal">
 
-                <com.huanchengfly.tieba.post.widgets.theme.TintMaterialButton
+                <com.huanchengfly.tieba.post.ui.widgets.theme.TintMaterialButton
                     android:id="@+id/dark_color"
                     style="@style/Widget.Button"
                     android:layout_width="0dp"
@@ -126,7 +126,7 @@
                     tools:backgroundTint="@color/color_divider"
                     tools:textColor="@color/color_text_secondary" />
 
-                <com.huanchengfly.tieba.post.widgets.theme.TintMaterialButton
+                <com.huanchengfly.tieba.post.ui.widgets.theme.TintMaterialButton
                     android:id="@+id/light_color"
                     style="@style/Widget.Button"
                     android:layout_width="0dp"
@@ -152,7 +152,7 @@
                 android:visibility="gone"
                 tools:visibility="visible">
 
-                <com.huanchengfly.tieba.post.widgets.theme.TintTextView
+                <com.huanchengfly.tieba.post.ui.widgets.theme.TintTextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/title_select_color"
@@ -173,7 +173,7 @@
                         android:layout_marginEnd="16dp"
                         android:clipToPadding="false">
 
-                        <com.huanchengfly.tieba.post.widgets.theme.TintImageView
+                        <com.huanchengfly.tieba.post.ui.widgets.theme.TintImageView
                             android:id="@+id/custom_color_preview"
                             android:layout_width="48dp"
                             android:layout_height="48dp"
@@ -192,7 +192,7 @@
                 </LinearLayout>
             </LinearLayout>
 
-            <com.huanchengfly.tieba.post.widgets.theme.TintTextView
+            <com.huanchengfly.tieba.post.ui.widgets.theme.TintTextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
@@ -201,7 +201,7 @@
                 android:textStyle="bold"
                 app:tint="@color/color_text" />
 
-            <com.huanchengfly.tieba.post.widgets.theme.TintSeekBar
+            <com.huanchengfly.tieba.post.ui.widgets.theme.TintSeekBar
                 android:id="@+id/alpha"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -213,7 +213,7 @@
                 app:progressBackgroundTint="@color/color_divider"
                 app:progressTint="@color/default_color_primary" />
 
-            <com.huanchengfly.tieba.post.widgets.theme.TintTextView
+            <com.huanchengfly.tieba.post.ui.widgets.theme.TintTextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
@@ -222,7 +222,7 @@
                 android:textStyle="bold"
                 app:tint="@color/color_text" />
 
-            <com.huanchengfly.tieba.post.widgets.theme.TintSeekBar
+            <com.huanchengfly.tieba.post.ui.widgets.theme.TintSeekBar
                 android:id="@+id/blur"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -240,7 +240,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
-                <com.huanchengfly.tieba.post.widgets.theme.TintTextView
+                <com.huanchengfly.tieba.post.ui.widgets.theme.TintTextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
@@ -267,7 +267,7 @@
                 android:orientation="horizontal"
                 android:padding="12dp">
 
-                <com.huanchengfly.tieba.post.widgets.theme.TintImageView
+                <com.huanchengfly.tieba.post.ui.widgets.theme.TintImageView
                     android:layout_width="12dp"
                     android:layout_height="12dp"
                     android:src="@drawable/ic_round_warning"
@@ -283,14 +283,14 @@
                     android:textSize="12sp"
                     android:textStyle="bold" />
 
-                <com.huanchengfly.tieba.post.widgets.theme.TintImageView
+                <com.huanchengfly.tieba.post.ui.widgets.theme.TintImageView
                     android:layout_width="12dp"
                     android:layout_height="12dp"
                     android:layout_marginStart="8dp"
                     android:src="@drawable/ic_round_help_green"
                     app:tint="@color/color_text_secondary" />
             </LinearLayout>
-        </com.huanchengfly.tieba.post.widgets.theme.TintLinearLayout>
+        </com.huanchengfly.tieba.post.ui.widgets.theme.TintLinearLayout>
 
         <FrameLayout
             android:id="@+id/progress"
@@ -298,7 +298,7 @@
             android:layout_height="match_parent"
             tools:visibility="gone">
 
-            <com.huanchengfly.tieba.post.widgets.theme.TintProgressBar
+            <com.huanchengfly.tieba.post.ui.widgets.theme.TintProgressBar
                 style="@style/Widget.AppCompat.ProgressBar"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

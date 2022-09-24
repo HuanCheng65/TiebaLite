@@ -7,6 +7,7 @@ import com.huanchengfly.tieba.post.api.models.MsgBean
 import com.huanchengfly.tieba.post.api.models.ThreadStoreBean
 import com.huanchengfly.tieba.post.api.retrofit.ApiResult
 import kotlinx.coroutines.Deferred
+import kotlinx.coroutines.flow.Flow
 import retrofit2.Call
 import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded
@@ -21,6 +22,13 @@ interface NewTiebaApi {
     fun msg(
         @Field("bookmark") bookmark: Int = 1
     ): Call<MsgBean>
+
+    @Headers("${Header.FORCE_LOGIN}: ${Header.FORCE_LOGIN_TRUE}")
+    @POST("/c/s/msg")
+    @FormUrlEncoded
+    fun msgFlow(
+        @Field("bookmark") bookmark: Int = 1
+    ): Flow<MsgBean>
 
     @Headers("${Header.FORCE_LOGIN}: ${Header.FORCE_LOGIN_TRUE}")
     @POST("/c/f/post/threadstore")
@@ -62,6 +70,13 @@ interface NewTiebaApi {
     ): Deferred<ApiResult<MessageListBean>>
 
     @Headers("${Header.FORCE_LOGIN}: ${Header.FORCE_LOGIN_TRUE}")
+    @POST("/c/u/feed/replyme")
+    @FormUrlEncoded
+    fun replyMeFlow(
+        @Field("pn") page: Int = 0
+    ): Flow<MessageListBean>
+
+    @Headers("${Header.FORCE_LOGIN}: ${Header.FORCE_LOGIN_TRUE}")
     @POST("/c/u/feed/atme")
     @FormUrlEncoded
     fun atMe(
@@ -74,6 +89,13 @@ interface NewTiebaApi {
     fun atMeAsync(
         @Field("pn") page: Int = 0
     ): Deferred<ApiResult<MessageListBean>>
+
+    @Headers("${Header.FORCE_LOGIN}: ${Header.FORCE_LOGIN_TRUE}")
+    @POST("/c/u/feed/atme")
+    @FormUrlEncoded
+    fun atMeFlow(
+        @Field("pn") page: Int = 0
+    ): Flow<MessageListBean>
 
     @Headers("${Header.FORCE_LOGIN}: ${Header.FORCE_LOGIN_TRUE}")
     @POST("/c/u/feed/agreeme")

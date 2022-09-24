@@ -20,8 +20,8 @@ import com.huanchengfly.tieba.post.R
 import com.huanchengfly.tieba.post.components.MyViewHolder
 import com.huanchengfly.tieba.post.dpToPx
 import com.huanchengfly.tieba.post.ui.common.theme.utils.ColorStateListUtils
-import com.huanchengfly.tieba.post.widgets.theme.TintImageView
-import com.huanchengfly.tieba.post.widgets.theme.TintTextView
+import com.huanchengfly.tieba.post.ui.widgets.theme.TintImageView
+import com.huanchengfly.tieba.post.ui.widgets.theme.TintTextView
 
 class HeaderDelegateAdapter @JvmOverloads constructor(
     val context: Context,

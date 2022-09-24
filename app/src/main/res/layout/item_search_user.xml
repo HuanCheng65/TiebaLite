@@ -21,7 +21,7 @@
         android:layout_toEndOf="@id/item_search_user_avatar"
         android:orientation="vertical">
 
-        <com.huanchengfly.tieba.post.widgets.theme.TintTextView
+        <com.huanchengfly.tieba.post.ui.widgets.theme.TintTextView
             android:id="@+id/item_search_user_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -30,7 +30,7 @@
             app:tint="@color/default_color_text"
             tools:text="Title" />
 
-        <com.huanchengfly.tieba.post.widgets.theme.TintTextView
+        <com.huanchengfly.tieba.post.ui.widgets.theme.TintTextView
             android:id="@+id/item_search_user_subtitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

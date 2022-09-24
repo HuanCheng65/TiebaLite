@@ -18,9 +18,8 @@ import androidx.appcompat.widget.Toolbar
 import androidx.viewpager2.widget.ViewPager2
 import androidx.viewpager2.widget.ViewPager2.OnPageChangeCallback
 import butterknife.BindView
-import com.github.piasy.biv.BigImageViewer
 import com.google.android.material.bottomappbar.BottomAppBar
-import com.huanchengfly.tieba.post.BaseApplication.ScreenInfo
+import com.huanchengfly.tieba.post.App.ScreenInfo
 import com.huanchengfly.tieba.post.R
 import com.huanchengfly.tieba.post.adapters.PhotoViewAdapter
 import com.huanchengfly.tieba.post.api.TiebaApi.getInstance
@@ -61,11 +60,6 @@ class PhotoViewActivity : BaseActivity(), OnChangeBottomBarVisibilityListener,
     private var threadId: String? = null
     private var objType: String? = null
 
-    override fun onDestroy() {
-        super.onDestroy()
-        BigImageViewer.imageLoader().cancelAll()
-    }
-
     private fun loadMore() {
         if (loadFinished || mLoading || listOf(
                 forumId,
@@ -95,15 +89,15 @@ class PhotoViewActivity : BaseActivity(), OnChangeBottomBarVisibilityListener,
                 val picBeans: MutableList<PicPageBean.PicBean> = ArrayList()
                 val imgInfoBeans: MutableList<ImgInfoBean> = ArrayList()
                 if (data?.picList?.isNotEmpty() == true) {
-                    val index = data.picList.last().overAllIndex?.toInt()
+                    val index = data.picList.last().overAllIndex.toInt()
                     if (index != null) {
                         loadFinished = index >= amount!!.toInt()
                     }
                     picBeans.addAll(data.picList)
                     picBeans.forEach {
-                        it.img?.original?.let { it1 -> imgInfoBeans.add(it1) }
+                        it.img.original?.let { it1 -> imgInfoBeans.add(it1) }
                     }
-                    lastIndex = picBeans.first().overAllIndex?.toInt()!!
+                    lastIndex = picBeans.first().overAllIndex.toInt()
                     for (photoViewBean in photoViewBeans) {
                         val ind = lastIndex - (photoViewBeans.size - 1 - photoViewBeans.indexOf(
                             photoViewBean

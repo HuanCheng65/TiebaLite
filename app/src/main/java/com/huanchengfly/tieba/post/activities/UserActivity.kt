@@ -31,10 +31,10 @@ import com.huanchengfly.tieba.post.models.PhotoViewBean
 import com.huanchengfly.tieba.post.models.database.Block
 import com.huanchengfly.tieba.post.plugins.PluginManager
 import com.huanchengfly.tieba.post.toastShort
-import com.huanchengfly.tieba.post.ui.editprofile.view.EditProfileActivity
+import com.huanchengfly.tieba.post.ui.page.editprofile.view.EditProfileActivity
+import com.huanchengfly.tieba.post.ui.widgets.theme.TintMaterialButton
+import com.huanchengfly.tieba.post.ui.widgets.theme.TintToolbar
 import com.huanchengfly.tieba.post.utils.*
-import com.huanchengfly.tieba.post.widgets.theme.TintMaterialButton
-import com.huanchengfly.tieba.post.widgets.theme.TintToolbar
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.flow.catch
@@ -124,7 +124,7 @@ class UserActivity : BaseActivity() {
         if (!TextUtils.isEmpty(avatar)) {
             loadingView.visibility = View.GONE
             ImageUtil.load(avatarView, ImageUtil.LOAD_TYPE_AVATAR, StringUtil.getAvatarUrl(avatar))
-            ImageUtil.initImageView(avatarView, PhotoViewBean(StringUtil.getAvatarUrl(avatar)))
+            ImageUtil.initImageView(avatarView, PhotoViewBean(StringUtil.getAvatarUrl(avatar), null))
         }
         appbar.addOnOffsetChangedListener { appBarLayout: AppBarLayout, verticalOffset: Int ->
             val percent = abs(verticalOffset * 1.0f) / appBarLayout.totalScrollRange
@@ -198,7 +198,7 @@ class UserActivity : BaseActivity() {
                 )
                 ImageUtil.initImageView(
                     avatarView,
-                    PhotoViewBean(StringUtil.getAvatarUrl(it.user.portrait))
+                    PhotoViewBean(StringUtil.getAvatarUrl(it.user.portrait), null)
                 )
             }
             if (TextUtils.equals(AccountUtil.getUid(this), it.user.id)) {
@@ -219,7 +219,7 @@ class UserActivity : BaseActivity() {
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.menu_user_space, menu)
-        val account = AccountUtil.getLoginInfo(this)
+        val account = AccountUtil.getLoginInfo()
         if (account != null && TextUtils.equals(account.uid, uid)) {
             menu.findItem(R.id.menu_block).isVisible = false
             menu.findItem(R.id.menu_edit_info).isVisible = true
@@ -239,12 +239,12 @@ class UserActivity : BaseActivity() {
                 }
                 val category =
                     if (item.itemId == R.id.menu_block_black) Block.CATEGORY_BLACK_LIST else Block.CATEGORY_WHITE_LIST
-                Block()
-                    .setUid(profileBean!!.user!!.id)
-                    .setUsername(profileBean!!.user!!.name)
-                    .setType(Block.TYPE_USER)
-                    .setCategory(category)
-                    .saveAsync()
+                Block(
+                    category = category,
+                    type = Block.TYPE_USER,
+                    username = profileBean!!.user!!.name,
+                    uid = profileBean!!.user!!.id
+                ).saveAsync()
                     .listen { success: Boolean ->
                         if (success) {
                             Toast.makeText(this, R.string.toast_add_success, Toast.LENGTH_SHORT)
@@ -281,7 +281,7 @@ class UserActivity : BaseActivity() {
                 TiebaApi.getInstance()
                     .unfollowFlow(
                         profileBean!!.user!!.portrait!!,
-                        AccountUtil.getLoginInfo(this@UserActivity)!!.tbs
+                        AccountUtil.getLoginInfo()!!.tbs
                     )
                     .flowOn(Dispatchers.IO)
                     .catch { e ->
@@ -298,7 +298,7 @@ class UserActivity : BaseActivity() {
                 TiebaApi.getInstance()
                     .followFlow(
                         profileBean!!.user!!.portrait!!,
-                        AccountUtil.getLoginInfo(this@UserActivity)!!.tbs
+                        AccountUtil.getLoginInfo()!!.tbs
                     )
                     .flowOn(Dispatchers.IO)
                     .catch { e ->
@@ -324,9 +324,15 @@ class UserActivity : BaseActivity() {
         const val TAB_REPLY = 1
         const val TAB_LIKE_FORUM = 2
 
-        fun launch(context: Context, userId: String) {
+        @JvmOverloads
+        fun launch(
+            context: Context,
+            userId: String,
+            avatarUrl: String? = null,
+        ) {
             context.goToActivity<UserActivity> {
                 putExtra(EXTRA_UID, userId)
+                putExtra(EXTRA_AVATAR, avatarUrl)
             }
         }
     }

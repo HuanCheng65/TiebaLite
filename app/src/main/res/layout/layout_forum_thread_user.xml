@@ -14,7 +14,7 @@
         android:layout_centerVertical="true"
         tools:ignore="ContentDescription" />
 
-    <com.huanchengfly.tieba.post.widgets.theme.TintTextView
+    <com.huanchengfly.tieba.post.ui.widgets.theme.TintTextView
         android:id="@+id/forum_item_user_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -28,7 +28,7 @@
         app:tint="@color/default_color_text"
         tools:text="幻了个城fly" />
 
-    <com.huanchengfly.tieba.post.widgets.theme.TintTextView
+    <com.huanchengfly.tieba.post.ui.widgets.theme.TintTextView
         android:id="@+id/forum_item_user_time"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

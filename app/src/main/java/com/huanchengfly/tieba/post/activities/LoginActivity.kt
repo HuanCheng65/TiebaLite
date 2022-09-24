@@ -69,7 +69,7 @@ class LoginActivity : BaseActivity(), WebViewListener {
                             }
                             .flowOn(Dispatchers.IO)
                             .collect { account ->
-                                account.saveOrUpdateAsync("uid = ?", account.uid).listen {
+                                AccountUtil.newAccount(account.uid, account) {
                                     if (it) {
                                         AccountUtil.switchUser(this@LoginActivity, account.id)
                                         snackBar.setText("登录成功，即将跳转")

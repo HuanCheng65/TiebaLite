@@ -2,7 +2,7 @@ package com.huanchengfly.tieba.post.utils.compose
 
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
-import com.huanchengfly.tieba.post.BaseApplication
+import com.huanchengfly.tieba.post.App
 import com.huanchengfly.tieba.post.dataStore
 import com.huanchengfly.tieba.post.getBoolean
 import com.huanchengfly.tieba.post.utils.ColorUtils
@@ -13,7 +13,7 @@ fun Color.darken(i: Float = 0.1F): Color {
 }
 
 fun Color.calcStatusBarColor(): Color {
-    val context = BaseApplication.INSTANCE
+    val context = App.INSTANCE
     var darkerStatusBar = true
     val isToolbarPrimaryColor =
         context.dataStore.getBoolean(ThemeUtil.KEY_CUSTOM_TOOLBAR_PRIMARY_COLOR, false)

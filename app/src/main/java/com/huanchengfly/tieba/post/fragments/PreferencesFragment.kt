@@ -56,7 +56,7 @@ class PreferencesFragment : PreferencesFragment() {
             findPreference<Preference>(it)?.isVisible =
                 attachContext.appPreferences.showExperimentalFeatures
         }
-        loginInfo = AccountUtil.getLoginInfo(attachContext)
+        loginInfo = AccountUtil.getLoginInfo()
         val accounts = AccountUtil.allAccounts
         val usernameList: MutableList<String> = ArrayList()
         val idList: MutableList<String> = ArrayList()
@@ -126,14 +126,14 @@ class PreferencesFragment : PreferencesFragment() {
         }
         findPreference<Preference>("copy_bduss")!!.onPreferenceClickListener =
             Preference.OnPreferenceClickListener {
-                val account = AccountUtil.getLoginInfo(attachContext)
+                val account = AccountUtil.getLoginInfo()
                 if (account != null) {
-                    TiebaUtil.copyText(attachContext, account.bduss)
+                    TiebaUtil.copyText(attachContext, account.bduss, isSensitive = true)
                 }
                 true
             }
         findPreference<Preference>("exit_account")!!.isEnabled =
-            AccountUtil.isLoggedIn(attachContext)
+            AccountUtil.isLoggedIn()
         findPreference<Preference>("exit_account")!!.onPreferenceClickListener =
             Preference.OnPreferenceClickListener {
                 DialogUtil.build(attachContext)
@@ -141,7 +141,7 @@ class PreferencesFragment : PreferencesFragment() {
                     .setPositiveButton(R.string.button_sure_default) { _: DialogInterface?, _: Int ->
                         AccountUtil.exit(attachContext)
                         refresh()
-                        if (AccountUtil.getLoginInfo(attachContext) == null) {
+                        if (AccountUtil.getLoginInfo() == null) {
                             attachContext.startActivity(
                                 Intent(
                                     attachContext,

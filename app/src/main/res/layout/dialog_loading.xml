@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <com.huanchengfly.tieba.post.widgets.theme.TintProgressBar
+    <com.huanchengfly.tieba.post.ui.widgets.theme.TintProgressBar
         android:id="@+id/progressBar"
         style="?android:attr/progressBarStyle"
         android:layout_width="wrap_content"
@@ -19,7 +19,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:progressTint="@color/default_color_primary" />
 
-    <com.huanchengfly.tieba.post.widgets.theme.TintTextView
+    <com.huanchengfly.tieba.post.ui.widgets.theme.TintTextView
         android:id="@+id/dialog_loading_tip"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

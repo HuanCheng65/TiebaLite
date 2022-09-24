@@ -83,7 +83,7 @@ class FloorFragment : BaseBottomSheetDialogFragment() {
                     dataBean!!.post!!.id,
                     dataBean!!.post!!.floor,
                     dataBean!!.post!!.author.nameShow,
-                    AccountUtil.getLoginInfo(attachContext)!!.nameShow
+                    AccountUtil.getLoginInfo()!!.nameShow
                 ).setPn(pn.toString()).toString()
             )
         )

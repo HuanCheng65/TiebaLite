@@ -63,14 +63,14 @@ import com.huanchengfly.tieba.post.ui.common.animation.addMaskAnimation
 import com.huanchengfly.tieba.post.ui.common.animation.addZoomAnimation
 import com.huanchengfly.tieba.post.ui.common.animation.buildPressAnimator
 import com.huanchengfly.tieba.post.ui.common.theme.utils.ThemeUtils
+import com.huanchengfly.tieba.post.ui.widgets.MyViewPager
+import com.huanchengfly.tieba.post.ui.widgets.theme.TintToolbar
 import com.huanchengfly.tieba.post.utils.*
 import com.huanchengfly.tieba.post.utils.ColorUtils.getDarkerColor
 import com.huanchengfly.tieba.post.utils.ColorUtils.greifyColor
 import com.huanchengfly.tieba.post.utils.StringUtil.getShortNumString
 import com.huanchengfly.tieba.post.utils.anim.animSet
 import com.huanchengfly.tieba.post.utils.preload.PreloadUtil
-import com.huanchengfly.tieba.post.widgets.MyViewPager
-import com.huanchengfly.tieba.post.widgets.theme.TintToolbar
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch
 import retrofit2.Call
@@ -651,7 +651,7 @@ class ForumActivity : BaseActivity(), View.OnClickListener, OnRefreshedListener,
                 ImageUtil.load(avatarView, ImageUtil.LOAD_TYPE_AVATAR, mDataBean!!.forum!!.avatar)
                 ImageUtil.initImageView(
                     avatarView,
-                    PhotoViewBean(mDataBean!!.forum!!.avatar, false)
+                    PhotoViewBean(mDataBean!!.forum!!.avatar, null)
                 )
             }
             try {

@@ -11,7 +11,7 @@ import android.view.View
 import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.TextView
-import com.huanchengfly.tieba.post.BaseApplication
+import com.huanchengfly.tieba.post.App
 import com.huanchengfly.tieba.post.R
 import com.huanchengfly.tieba.post.api.interfaces.CommonCallback
 import com.huanchengfly.tieba.post.dpToPx
@@ -37,14 +37,14 @@ object ClipBoardLinkDetector : Application.ActivityLifecycleCallbacks {
             val timestamp = System.currentTimeMillis()
             return if (timestamp - lastTimestamp >= 10 * 1000L) {
                 lastTimestamp = timestamp
-                BaseApplication.INSTANCE.getClipBoardText()
+                App.INSTANCE.getClipBoardText()
             } else {
                 null
             }
         }
 
     private val clipBoardTimestamp: Long
-        get() = BaseApplication.INSTANCE.getClipBoardTimestamp()
+        get() = App.INSTANCE.getClipBoardTimestamp()
 
     private fun isTiebaDomain(host: String?): Boolean {
         return host != null && (host.equals("wapp.baidu.com", ignoreCase = true) ||

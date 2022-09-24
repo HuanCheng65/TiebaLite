@@ -6,14 +6,14 @@
     android:layout_height="match_parent"
     tools:context=".fragments.MessageFragment">
 
-    <com.huanchengfly.tieba.post.widgets.theme.TintAppBarLayout
+    <com.huanchengfly.tieba.post.ui.widgets.theme.TintAppBarLayout
         android:id="@+id/appbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:stateListAnimator="@animator/appbar_elevation"
         app:backgroundTint="@color/default_color_toolbar">
 
-        <com.huanchengfly.tieba.post.widgets.theme.TintToolbar
+        <com.huanchengfly.tieba.post.ui.widgets.theme.TintToolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -28,7 +28,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent">
 
-                <com.huanchengfly.tieba.post.widgets.theme.TintTextView
+                <com.huanchengfly.tieba.post.ui.widgets.theme.TintTextView
                     android:id="@+id/title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -37,9 +37,9 @@
                     android:textAppearance="@style/Toolbar.Title.Expanded"
                     app:tint="@color/default_color_toolbar_item" />
             </FrameLayout>
-        </com.huanchengfly.tieba.post.widgets.theme.TintToolbar>
+        </com.huanchengfly.tieba.post.ui.widgets.theme.TintToolbar>
 
-        <com.huanchengfly.tieba.post.widgets.theme.TintFrameLayout
+        <com.huanchengfly.tieba.post.ui.widgets.theme.TintFrameLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
@@ -49,7 +49,7 @@
             android:background="@drawable/bg_radius_8dp"
             app:backgroundTint="@color/default_color_toolbar_bar">
 
-            <com.huanchengfly.tieba.post.widgets.theme.TintTabLayout
+            <com.huanchengfly.tieba.post.ui.widgets.theme.TintTabLayout
                 android:id="@+id/fragment_message_tab"
                 style="@style/Widget.TabLayout.Toolbar.Fixed"
                 android:layout_width="match_parent"
@@ -57,10 +57,10 @@
                 android:layout_marginStart="5dp"
                 android:layout_marginEnd="5dp"
                 android:background="@color/transparent" />
-        </com.huanchengfly.tieba.post.widgets.theme.TintFrameLayout>
-    </com.huanchengfly.tieba.post.widgets.theme.TintAppBarLayout>
+        </com.huanchengfly.tieba.post.ui.widgets.theme.TintFrameLayout>
+    </com.huanchengfly.tieba.post.ui.widgets.theme.TintAppBarLayout>
 
-    <com.huanchengfly.tieba.post.widgets.MyViewPager
+    <com.huanchengfly.tieba.post.ui.widgets.MyViewPager
         android:id="@+id/fragment_message_vp"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

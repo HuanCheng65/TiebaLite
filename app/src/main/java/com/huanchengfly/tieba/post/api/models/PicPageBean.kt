@@ -1,64 +1,63 @@
 package com.huanchengfly.tieba.post.api.models
 
+import com.google.gson.annotations.JsonAdapter
 import com.google.gson.annotations.SerializedName
+import com.huanchengfly.tieba.post.api.adapters.StringToBooleanAdapter
 import com.huanchengfly.tieba.post.models.BaseBean
 
-class PicPageBean : BaseBean() {
+data class PicPageBean(
     @SerializedName("error_code")
-    val errorCode: String? = null
-    val forum: ForumBean? = null
-
+    val errorCode: String,
+    val forum: ForumBean,
     @SerializedName("pic_amount")
-    val picAmount: String? = null
-
+    val picAmount: String,
     @SerializedName("pic_list")
-    val picList: List<PicBean>? = null
+    val picList: List<PicBean>,
+) : BaseBean() {
+    data class ForumBean(
+        val name: String,
+        val id: String
+    )
 
-    class ForumBean {
-        val name: String? = null
-        val id: String? = null
-
-    }
-
-    class PicBean {
+    data class PicBean(
         @SerializedName("overall_index")
-        val overAllIndex: String? = null
-        val img: ImgBean? = null
-
+        val overAllIndex: String,
+        @SerializedName("is_long_pic")
+        @JsonAdapter(StringToBooleanAdapter::class)
+        val isLongPic: Boolean,
+        @SerializedName("show_original_btn")
+        @JsonAdapter(StringToBooleanAdapter::class)
+        val showOriginalBtn: Boolean,
+        @SerializedName("is_blocked_pic")
+        @JsonAdapter(StringToBooleanAdapter::class)
+        val isBlockedPic: Boolean,
+        val img: ImgBean,
         @SerializedName("post_id")
-        val postId: String? = null
-
+        val postId: String?,
         @SerializedName("user_id")
-        val userId: String? = null
-
+        val userId: String?,
         @SerializedName("user_name")
-        val userName: String? = null
+        val userName: String?,
+    )
 
-    }
+    data class ImgBean(
+        val original: ImgInfoBean,
+        val medium: ImgInfoBean?,
+        val screen: ImgInfoBean?,
+    )
 
-    class ImgBean {
-        val original: ImgInfoBean? = null
-        val medium: ImgInfoBean? = null
-        val screen: ImgInfoBean? = null
-
-    }
-
-    class ImgInfoBean {
-        val id: String? = null
-        val width: String? = null
-        val height: String? = null
-        val size: String? = null
-        val format: String? = null
-
+    data class ImgInfoBean(
+        val id: String,
+        val width: String?,
+        val height: String?,
+        val size: String,
+        val format: String,
         @SerializedName("waterurl")
-        val waterUrl: String? = null
-
+        val waterUrl: String,
         @SerializedName("big_cdn_src")
-        val bigCdnSrc: String? = null
-        val url: String? = null
-
+        val bigCdnSrc: String,
+        val url: String,
         @SerializedName("original_src")
-        val originalSrc: String? = null
-
-    }
+        val originalSrc: String,
+    )
 }

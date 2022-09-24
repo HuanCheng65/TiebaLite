@@ -47,6 +47,9 @@ class PersonalizedBean {
         @SerializedName("reply_num")
         val replyNum: String? = null
 
+        @SerializedName("share_num")
+        val shareNum: String? = null
+
         @SerializedName("view_num")
         val viewNum: String? = null
 

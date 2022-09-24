@@ -7,7 +7,7 @@
     android:orientation="vertical"
     android:padding="16dp">
 
-    <com.huanchengfly.tieba.post.widgets.theme.TintTextView
+    <com.huanchengfly.tieba.post.ui.widgets.theme.TintTextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/title_search_order"
@@ -21,7 +21,7 @@
         android:layout_marginTop="8dp"
         tools:checkedButton="@id/search_order_new">
 
-        <com.huanchengfly.tieba.post.widgets.theme.TintMaterialRadioButton
+        <com.huanchengfly.tieba.post.ui.widgets.theme.TintMaterialRadioButton
             android:id="@+id/search_order_new"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -31,7 +31,7 @@
             app:radioButtonTint="@color/tint_checkbox"
             app:tint="@color/default_color_text" />
 
-        <com.huanchengfly.tieba.post.widgets.theme.TintMaterialRadioButton
+        <com.huanchengfly.tieba.post.ui.widgets.theme.TintMaterialRadioButton
             android:id="@+id/search_order_old"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -41,7 +41,7 @@
             app:radioButtonTint="@color/tint_checkbox"
             app:tint="@color/default_color_text" />
 
-        <com.huanchengfly.tieba.post.widgets.theme.TintMaterialRadioButton
+        <com.huanchengfly.tieba.post.ui.widgets.theme.TintMaterialRadioButton
             android:id="@+id/search_order_relevant"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -52,7 +52,7 @@
             app:tint="@color/default_color_text" />
     </RadioGroup>
 
-    <com.huanchengfly.tieba.post.widgets.theme.TintTextView
+    <com.huanchengfly.tieba.post.ui.widgets.theme.TintTextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
@@ -60,7 +60,7 @@
         android:textStyle="bold"
         app:tint="@color/default_color_primary" />
 
-    <com.huanchengfly.tieba.post.widgets.theme.TintCheckBox
+    <com.huanchengfly.tieba.post.ui.widgets.theme.TintCheckBox
         android:id="@+id/search_filter_only_thread"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

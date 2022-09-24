@@ -1,12 +1,13 @@
 package com.huanchengfly.tieba.post.api.retrofit.interfaces
 
-import com.huanchengfly.tieba.post.BaseApplication
-import com.huanchengfly.tieba.post.BaseApplication.ScreenInfo
+import com.huanchengfly.tieba.post.App
+import com.huanchengfly.tieba.post.App.ScreenInfo
 import com.huanchengfly.tieba.post.api.Header
 import com.huanchengfly.tieba.post.api.Param
 import com.huanchengfly.tieba.post.api.getScreenHeight
 import com.huanchengfly.tieba.post.api.getScreenWidth
 import com.huanchengfly.tieba.post.api.models.*
+import com.huanchengfly.tieba.post.api.models.protos.personalized.PersonalizedResponse
 import com.huanchengfly.tieba.post.api.retrofit.ApiResult
 import com.huanchengfly.tieba.post.api.retrofit.body.MyMultipartBody
 import com.huanchengfly.tieba.post.utils.AccountUtil
@@ -107,8 +108,17 @@ interface OfficialTiebaApi {
     fun submitDislike(
         @Field("dislike") dislike: String,
         @Field("dislike_from") dislike_from: String = "homepage",
-        @Field("stoken") stoken: String = AccountUtil.getSToken(BaseApplication.INSTANCE)!!
+        @Field("stoken") stoken: String = AccountUtil.getSToken(App.INSTANCE)!!
     ): Call<CommonResponse>
+
+    @Headers("${Header.FORCE_LOGIN}: ${Header.FORCE_LOGIN_TRUE}")
+    @POST("/c/c/excellent/submitDislike")
+    @FormUrlEncoded
+    fun submitDislikeFlow(
+        @Field("dislike") dislike: String,
+        @Field("dislike_from") dislike_from: String = "homepage",
+        @Field("stoken") stoken: String? = AccountUtil.getSToken(App.INSTANCE)
+    ): Flow<CommonResponse>
 
     @Headers("${Header.FORCE_LOGIN}: ${Header.FORCE_LOGIN_TRUE}")
     @POST("/c/c/user/unfollow")
@@ -119,7 +129,7 @@ interface OfficialTiebaApi {
         @Field("_client_version") client_version: String = "11.10.8.6",
         @retrofit2.http.Header(Header.USER_AGENT) user_agent: String = "bdtb for Android $client_version",
         @Field("authsid") authsid: String = "null",
-        @Field("stoken") stoken: String = AccountUtil.getSToken(BaseApplication.INSTANCE)!!,
+        @Field("stoken") stoken: String = AccountUtil.getSToken(App.INSTANCE)!!,
         @Field("from_type") fromType: Int = 2,
         @Field("in_live") inLive: Int = 0,
         @Field("timestamp") timestamp: Long = System.currentTimeMillis()
@@ -134,7 +144,7 @@ interface OfficialTiebaApi {
         @Field("_client_version") client_version: String = "11.10.8.6",
         @retrofit2.http.Header(Header.USER_AGENT) user_agent: String = "bdtb for Android $client_version",
         @Field("authsid") authsid: String = "null",
-        @Field("stoken") stoken: String = AccountUtil.getSToken(BaseApplication.INSTANCE)!!,
+        @Field("stoken") stoken: String = AccountUtil.getSToken(App.INSTANCE)!!,
         @Field("from_type") fromType: Int = 2,
         @Field("in_live") inLive: Int = 0
     ): Flow<FollowBean>
@@ -146,9 +156,9 @@ interface OfficialTiebaApi {
     @POST("/c/f/forum/getforumlist")
     @FormUrlEncoded
     fun getForumListFlow(
-        @Field("BDUSS") bduss: String = AccountUtil.getBduss(BaseApplication.INSTANCE)!!,
-        @Field("stoken") stoken: String = AccountUtil.getSToken(BaseApplication.INSTANCE)!!,
-        @Field("user_id") userId: String = AccountUtil.getUid(BaseApplication.INSTANCE)!!,
+        @Field("BDUSS") bduss: String = AccountUtil.getBduss(App.INSTANCE)!!,
+        @Field("stoken") stoken: String = AccountUtil.getSToken(App.INSTANCE)!!,
+        @Field("user_id") userId: String = AccountUtil.getUid(App.INSTANCE)!!,
         @Field("_client_version") client_version: String = "11.10.8.6",
         @retrofit2.http.Header(Header.USER_AGENT) user_agent: String = "bdtb for Android $client_version",
     ): Flow<GetForumListBean>
@@ -162,8 +172,8 @@ interface OfficialTiebaApi {
         @Field("_client_version") client_version: String = "11.10.8.6",
         @retrofit2.http.Header(Header.USER_AGENT) user_agent: String = "bdtb for Android $client_version",
         @Field("authsid") authsid: String = "null",
-        @Field("stoken") stoken: String = AccountUtil.getSToken(BaseApplication.INSTANCE)!!,
-        @Field("user_id") userId: String = AccountUtil.getUid(BaseApplication.INSTANCE)!!
+        @Field("stoken") stoken: String = AccountUtil.getSToken(App.INSTANCE)!!,
+        @Field("user_id") userId: String = AccountUtil.getUid(App.INSTANCE)!!
     ): Flow<MSignBean>
 
     @Headers(
@@ -174,8 +184,8 @@ interface OfficialTiebaApi {
     @POST("/c/s/initNickname")
     @FormUrlEncoded
     fun initNickNameFlow(
-        @Field("BDUSS") bduss: String = AccountUtil.getBduss(BaseApplication.INSTANCE)!!,
-        @Field("stoken") sToken: String = AccountUtil.getSToken(BaseApplication.INSTANCE)!!,
+        @Field("BDUSS") bduss: String = AccountUtil.getBduss(App.INSTANCE)!!,
+        @Field("stoken") sToken: String = AccountUtil.getSToken(App.INSTANCE)!!,
         @Field("_client_version") client_version: String = "11.10.8.6",
         @retrofit2.http.Header(Header.USER_AGENT) user_agent: String = "bdtb for Android $client_version"
     ): Flow<InitNickNameBean>
@@ -188,9 +198,9 @@ interface OfficialTiebaApi {
     @POST("/c/s/login")
     @FormUrlEncoded
     fun loginFlow(
-        @Field("bdusstoken") bdusstoken: String = "${AccountUtil.getBduss(BaseApplication.INSTANCE)!!}|null",
-        @Field("stoken") sToken: String = AccountUtil.getSToken(BaseApplication.INSTANCE)!!,
-        @Field("user_id") userId: String? = AccountUtil.getUid(BaseApplication.INSTANCE),
+        @Field("bdusstoken") bdusstoken: String = "${AccountUtil.getBduss(App.INSTANCE)!!}|null",
+        @Field("stoken") sToken: String = AccountUtil.getSToken(App.INSTANCE)!!,
+        @Field("user_id") userId: String? = AccountUtil.getUid(App.INSTANCE),
         @Field("channel_id") channelId: String = "",
         @Field("channel_uid") channelUid: String = "",
         @Field("_client_version") client_version: String = "11.10.8.6",
@@ -205,9 +215,9 @@ interface OfficialTiebaApi {
     @POST("/c/u/user/profile")
     @FormUrlEncoded
     fun profileFlow(
-        @Field("stoken") sToken: String = AccountUtil.getSToken(BaseApplication.INSTANCE)!!,
-        @Field("tbs") tbs: String = AccountUtil.getLoginInfo(BaseApplication.INSTANCE)!!.tbs,
-        @Field("uid") userId: String? = AccountUtil.getUid(BaseApplication.INSTANCE),
+        @Field("stoken") sToken: String = AccountUtil.getSToken(App.INSTANCE)!!,
+        @Field("tbs") tbs: String = AccountUtil.getLoginInfo()!!.tbs,
+        @Field("uid") userId: String? = AccountUtil.getUid(App.INSTANCE),
         @Field("is_from_usercenter") isFromUserCenter: String = "1",
         @Field("need_post_count") needPostCount: String = "1",
         @Field("page") page: String = "1",
@@ -227,7 +237,7 @@ interface OfficialTiebaApi {
         @Field("birthday_time") birthdayTime: String,
         @Field("intro") intro: String,
         @Field("sex") sex: String,
-        @Field("stoken") sToken: String = AccountUtil.getSToken(BaseApplication.INSTANCE)!!,
+        @Field("stoken") sToken: String = AccountUtil.getSToken(App.INSTANCE)!!,
         @Field("_client_version") client_version: String = "11.10.8.6",
         @retrofit2.http.Header(Header.USER_AGENT) user_agent: String = "bdtb for Android $client_version",
     ): Flow<CommonResponse>
@@ -243,4 +253,41 @@ interface OfficialTiebaApi {
         @Body body: MyMultipartBody,
         @retrofit2.http.Header(Header.USER_AGENT) user_agent: String = "bdtb for Android 11.10.8.6",
     ): Flow<CommonResponse>
+
+    @POST("/c/f/excellent/personalized")
+    @FormUrlEncoded
+    fun personalizedFlow(
+        @Field("load_type") load_type: Int,
+        @Field("pn") page: Int = 1,
+        @retrofit2.http.Header("client_user_token") client_user_token: String? = AccountUtil.getUid(
+            App.INSTANCE
+        ),
+        @Field("_client_version") client_version: String = "11.10.8.6",
+        @retrofit2.http.Header(Header.USER_AGENT) user_agent: String = "bdtb for Android $client_version",
+        @Field("cuid_gid") cuid_gid: String = "",
+        @Field("need_tags") need_tags: Int = 0,
+        @Field("page_thread_count") page_thread_count: Int = 15,
+        @Field("pre_ad_thread_count") pre_ad_thread_count: Int = 0,
+        @Field("sug_count") sug_count: Int = 0,
+        @Field("tag_code") tag_code: Int = 0,
+        @Field("q_type") q_type: Int = 1,
+        @Field("need_forumlist") need_forumlist: Int = 0,
+        @Field("new_net_type") new_net_type: Int = 1,
+        @Field("new_install") new_install: Int = 0,
+        @Field("request_time") request_time: Long = System.currentTimeMillis(),
+        @Field("invoke_source") invoke_source: String = "",
+        @Field("scr_dip") scr_dip: String = ScreenInfo.DENSITY.toString(),
+        @Field("scr_h") scr_h: String = getScreenHeight().toString(),
+        @Field("scr_w") scr_w: String = getScreenWidth().toString()
+    ): Flow<PersonalizedBean>
+
+    @Headers(
+        "x_bd_data_type: protobuf"
+    )
+    @POST("/c/f/excellent/personalized?cmd=309264")
+    fun personalizedProtoFlow(
+        @Body body: MyMultipartBody,
+        @retrofit2.http.Header("client_user_token") client_user_token: String? = AccountUtil.getUid(App.INSTANCE),
+        @retrofit2.http.Header(Header.USER_AGENT) user_agent: String = "bdtb for Android 11.10.8.6",
+    ): Flow<PersonalizedResponse>
 }

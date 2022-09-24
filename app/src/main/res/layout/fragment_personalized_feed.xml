@@ -6,14 +6,14 @@
     android:layout_height="match_parent"
     tools:context=".fragments.PersonalizedFeedFragment">
 
-    <com.huanchengfly.tieba.post.widgets.theme.TintAppBarLayout
+    <com.huanchengfly.tieba.post.ui.widgets.theme.TintAppBarLayout
         android:id="@+id/appbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:stateListAnimator="@animator/appbar_elevation"
         app:backgroundTint="@color/default_color_toolbar">
 
-        <com.huanchengfly.tieba.post.widgets.theme.TintToolbar
+        <com.huanchengfly.tieba.post.ui.widgets.theme.TintToolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -29,7 +29,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent">
 
-                <com.huanchengfly.tieba.post.widgets.theme.TintTextView
+                <com.huanchengfly.tieba.post.ui.widgets.theme.TintTextView
                     android:id="@+id/title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -38,9 +38,9 @@
                     android:textAppearance="@style/Toolbar.Title.Expanded"
                     app:tint="@color/default_color_toolbar_item" />
             </FrameLayout>
-        </com.huanchengfly.tieba.post.widgets.theme.TintToolbar>
+        </com.huanchengfly.tieba.post.ui.widgets.theme.TintToolbar>
 
-    </com.huanchengfly.tieba.post.widgets.theme.TintAppBarLayout>
+    </com.huanchengfly.tieba.post.ui.widgets.theme.TintAppBarLayout>
 
     <com.scwang.smart.refresh.layout.SmartRefreshLayout
         android:id="@+id/refresh"
@@ -51,7 +51,7 @@
         app:srlEnableOverScrollBounce="true"
         app:srlEnableOverScrollDrag="true">
 
-        <com.huanchengfly.tieba.post.widgets.theme.TintMaterialHeader
+        <com.huanchengfly.tieba.post.ui.widgets.theme.TintMaterialHeader
             android:id="@+id/refresh_header"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
@@ -73,7 +73,7 @@
             android:layout_marginBottom="@dimen/card_margin" />
     </com.scwang.smart.refresh.layout.SmartRefreshLayout>
 
-    <com.huanchengfly.tieba.post.widgets.theme.TintRelativeLayout
+    <com.huanchengfly.tieba.post.ui.widgets.theme.TintRelativeLayout
         android:id="@+id/refresh_tip"
         android:layout_gravity="top|center_horizontal"
         android:layout_marginTop="8dp"
@@ -88,7 +88,7 @@
         tools:backgroundTint="@color/default_color_accent"
         tools:visibility="visible">
 
-        <com.huanchengfly.tieba.post.widgets.theme.TintTextView
+        <com.huanchengfly.tieba.post.ui.widgets.theme.TintTextView
             android:id="@+id/refresh_tip_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -96,5 +96,5 @@
             android:textSize="@dimen/text_size_refresh_tip"
             android:textStyle="bold"
             tools:text="更新了 12 条动态" />
-    </com.huanchengfly.tieba.post.widgets.theme.TintRelativeLayout>
+    </com.huanchengfly.tieba.post.ui.widgets.theme.TintRelativeLayout>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

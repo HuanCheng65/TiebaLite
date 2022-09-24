@@ -13,7 +13,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import butterknife.ButterKnife
 import butterknife.Unbinder
-import com.huanchengfly.tieba.post.BaseApplication
+import com.huanchengfly.tieba.post.App
 import com.huanchengfly.tieba.post.interfaces.BackHandledInterface
 import com.huanchengfly.tieba.post.interfaces.Refreshable
 import com.huanchengfly.tieba.post.isLandscape
@@ -62,7 +62,7 @@ abstract class BaseFragment : Fragment(), BackHandledInterface, CoroutineScope {
                 ThemeUtils.getWrapperActivity(mContext)?.let { mContext = it }
             }
             if (mContext == null) {
-                mContext = BaseApplication.INSTANCE
+                mContext = App.INSTANCE
             }
             return mContext!!
         }

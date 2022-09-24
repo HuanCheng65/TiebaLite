@@ -6,7 +6,7 @@
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
-    <com.huanchengfly.tieba.post.widgets.theme.TintLinearLayout
+    <com.huanchengfly.tieba.post.ui.widgets.theme.TintLinearLayout
         android:id="@+id/oksign_progress"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -17,7 +17,7 @@
         android:padding="16dp"
         app:backgroundTint="@color/default_color_card">
 
-        <com.huanchengfly.tieba.post.widgets.theme.TintCircleProgressView
+        <com.huanchengfly.tieba.post.ui.widgets.theme.TintCircleProgressView
             android:id="@+id/oksign_progress_progress"
             android:layout_width="24dp"
             android:layout_height="24dp"
@@ -28,7 +28,7 @@
             app:showProgressText="false"
             tools:progress="50" />
 
-        <com.huanchengfly.tieba.post.widgets.theme.TintProgressBar
+        <com.huanchengfly.tieba.post.ui.widgets.theme.TintProgressBar
             android:id="@+id/oksign_progress_progress_indeterminate"
             style="?android:attr/progressBarStyleSmallInverse"
             android:layout_width="24dp"
@@ -37,7 +37,7 @@
             android:visibility="gone"
             app:progressTint="@color/default_color_primary" />
 
-        <com.huanchengfly.tieba.post.widgets.theme.TintImageView
+        <com.huanchengfly.tieba.post.ui.widgets.theme.TintImageView
             android:id="@+id/oksign_progress_icon"
             android:layout_width="24dp"
             android:layout_height="24dp"
@@ -51,7 +51,7 @@
             android:layout_weight="1"
             android:orientation="vertical">
 
-            <com.huanchengfly.tieba.post.widgets.theme.TintTextView
+            <com.huanchengfly.tieba.post.ui.widgets.theme.TintTextView
                 android:id="@+id/oksign_progress_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -60,7 +60,7 @@
                 app:tint="@color/default_color_text"
                 tools:text="标题" />
 
-            <com.huanchengfly.tieba.post.widgets.theme.TintTextView
+            <com.huanchengfly.tieba.post.ui.widgets.theme.TintTextView
                 android:id="@+id/oksign_progress_content"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -71,11 +71,11 @@
                 tools:visibility="visible" />
         </LinearLayout>
 
-        <com.huanchengfly.tieba.post.widgets.theme.TintImageView
+        <com.huanchengfly.tieba.post.ui.widgets.theme.TintImageView
             android:id="@+id/oksign_progress_close_btn"
             android:layout_width="24dp"
             android:layout_height="24dp"
             app:srcCompat="@drawable/ic_round_close"
             app:tint="@color/default_color_text_secondary" />
-    </com.huanchengfly.tieba.post.widgets.theme.TintLinearLayout>
+    </com.huanchengfly.tieba.post.ui.widgets.theme.TintLinearLayout>
 </LinearLayout>

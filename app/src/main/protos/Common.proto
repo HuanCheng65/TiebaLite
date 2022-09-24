@@ -1,0 +1,77 @@
+syntax = "proto3";
+
+package protos;
+
+option java_package = "com.huanchengfly.tieba.post.api.models.protos";
+
+message AppPosInfo {
+  int64 addr_timestamp = 6;
+  bool ap_connected = 2;
+  string ap_mac = 1;
+  string asp_shown_info = 7;
+  string coordinate_type = 3;
+}
+
+message Error {
+  string error_msg = 2;
+  int32 error_code = 1;
+  string user_msg = 3;
+}
+
+message ProtoCommonResponse {
+  Error error = 1;
+}
+
+message User {
+  int64 id = 2;
+  string name = 3;
+  string nameShow = 4;
+  string portrait = 5;
+  int32 type = 7;
+  int32 has_concerned = 35;
+  int32 gender = 42;
+  PrivSets privSets = 45;
+  string fansNickname = 57;
+  int32 isDefaultAvatar = 106;
+}
+
+message PrivSets {
+  int32 like = 2;
+  int32 group = 3;
+  int32 post = 4;
+  int32 live = 6;
+}
+
+message DislikeInfo {
+  string dislikeReason = 1;
+  uint32 dislikeId = 2;
+  string extra = 3;
+}
+
+message SimpleForum {
+  int64 id = 1;
+  string name = 2;
+  string avatar = 4;
+  int32 memberNum = 12;
+  int32 postNum = 13;
+}
+
+message MemeInfo {
+  uint32 pckId = 1;
+  uint64 picId = 2;
+  string picUrl = 3;
+  string thumbnail = 4;
+  uint32 width = 5;
+  uint32 height = 6;
+  string detailLink = 7;
+}
+
+message RecommendTopicList {
+  uint64 topicId = 1;
+  string topicName = 2;
+  uint32 type = 3;
+  uint64 discussNum = 4;
+  uint32 tag = 5;
+  string topicDesc = 6;
+  string topicPic = 7;
+}

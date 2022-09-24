@@ -1,15 +1,15 @@
 package com.huanchengfly.tieba.post.utils
 
 import android.content.Context
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.*
 import com.huanchengfly.tieba.post.*
 import com.huanchengfly.tieba.post.utils.ThemeUtil.TRANSLUCENT_THEME_LIGHT
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import kotlin.properties.ReadWriteProperty
 import kotlin.reflect.KProperty
@@ -17,6 +17,9 @@ import kotlin.reflect.KProperty
 
 open class AppPreferencesUtils(context: Context) {
     private val preferencesDataStore: DataStore<Preferences> = context.dataStore
+    private val coroutineScope: CoroutineScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
+
+    var userLikeLastRequestUnix by DataStoreDelegates.long(defaultValue = 0L)
 
     var autoSign by DataStoreDelegates.boolean(defaultValue = false, key = "auto_sign")
 
@@ -152,15 +155,24 @@ open class AppPreferencesUtils(context: Context) {
             defaultValue: Int = 0,
             key: String? = null
         ) = object : ReadWriteProperty<AppPreferencesUtils, Int> {
-            private var state by mutableStateOf(defaultValue)
-            private var stateInitialized = false
+            private var prefValue = defaultValue
+            private var initialized = false
 
             override fun getValue(thisRef: AppPreferencesUtils, property: KProperty<*>): Int {
-                if (!stateInitialized) {
-                    stateInitialized = true
-                    state = thisRef.preferencesDataStore.getInt(key ?: property.name, defaultValue)
+                val finalKey = key ?: property.name
+                if (!initialized) {
+                    initialized = true
+                    prefValue = thisRef.preferencesDataStore.getInt(finalKey, defaultValue)
+                    thisRef.coroutineScope.launch {
+                        thisRef.preferencesDataStore.data
+                            .map { it[intPreferencesKey(finalKey)] }
+                            .distinctUntilChanged()
+                            .collect {
+                                prefValue = it ?: defaultValue
+                            }
+                    }
                 }
-                return state
+                return prefValue
             }
 
             override fun setValue(
@@ -168,8 +180,8 @@ open class AppPreferencesUtils(context: Context) {
                 property: KProperty<*>,
                 value: Int
             ) {
-                state = value
-                MainScope().launch(Dispatchers.IO) {
+                prefValue = value
+                thisRef.coroutineScope.launch {
                     thisRef.preferencesDataStore.edit {
                         it[intPreferencesKey(key ?: property.name)] = value
                     }
@@ -181,16 +193,25 @@ open class AppPreferencesUtils(context: Context) {
             defaultValue: String? = null,
             key: String? = null
         ) = object : ReadWriteProperty<AppPreferencesUtils, String?> {
-            private var state by mutableStateOf(defaultValue)
-            private var stateInitialized = false
+            private var prefValue = defaultValue
+            private var initialized = false
 
             override fun getValue(thisRef: AppPreferencesUtils, property: KProperty<*>): String? {
-                if (!stateInitialized) {
-                    stateInitialized = true
-                    state = thisRef.preferencesDataStore.getString(key ?: property.name)
+                val finalKey = key ?: property.name
+                if (!initialized) {
+                    initialized = true
+                    prefValue = thisRef.preferencesDataStore.getString(finalKey)
                         ?: defaultValue
+                    thisRef.coroutineScope.launch {
+                        thisRef.preferencesDataStore.data
+                            .map { it[stringPreferencesKey(finalKey)] }
+                            .distinctUntilChanged()
+                            .collect {
+                                prefValue = it ?: defaultValue
+                            }
+                    }
                 }
-                return state
+                return prefValue
             }
 
             override fun setValue(
@@ -198,8 +219,8 @@ open class AppPreferencesUtils(context: Context) {
                 property: KProperty<*>,
                 value: String?
             ) {
-                state = value
-                MainScope().launch(Dispatchers.IO) {
+                prefValue = value
+                thisRef.coroutineScope.launch {
                     thisRef.preferencesDataStore.edit {
                         if (value == null) {
                             it.remove(stringPreferencesKey(key ?: property.name))
@@ -215,16 +236,25 @@ open class AppPreferencesUtils(context: Context) {
             defaultValue: Float = 0F,
             key: String? = null
         ) = object : ReadWriteProperty<AppPreferencesUtils, Float> {
-            private var state by mutableStateOf(defaultValue)
-            private var stateInitialized = false
+            private var prefValue = defaultValue
+            private var initialized = false
 
             override fun getValue(thisRef: AppPreferencesUtils, property: KProperty<*>): Float {
-                if (!stateInitialized) {
-                    stateInitialized = true
-                    state =
-                        thisRef.preferencesDataStore.getFloat(key ?: property.name, defaultValue)
+                val finalKey = key ?: property.name
+                if (!initialized) {
+                    initialized = true
+                    prefValue =
+                        thisRef.preferencesDataStore.getFloat(finalKey, defaultValue)
+                    thisRef.coroutineScope.launch {
+                        thisRef.preferencesDataStore.data
+                            .map { it[floatPreferencesKey(finalKey)] }
+                            .distinctUntilChanged()
+                            .collect {
+                                prefValue = it ?: defaultValue
+                            }
+                    }
                 }
-                return state
+                return prefValue
             }
 
             override fun setValue(
@@ -232,10 +262,49 @@ open class AppPreferencesUtils(context: Context) {
                 property: KProperty<*>,
                 value: Float
             ) {
-                state = value
-                MainScope().launch(Dispatchers.IO) {
+                prefValue = value
+                thisRef.coroutineScope.launch {
                     thisRef.preferencesDataStore.edit {
                         it[floatPreferencesKey(key ?: property.name)] = value
+                    }
+                }
+            }
+        }
+
+        fun long(
+            defaultValue: Long = 0L,
+            key: String? = null
+        ) = object : ReadWriteProperty<AppPreferencesUtils, Long> {
+            private var prefValue = defaultValue
+            private var initialized = false
+
+            override fun getValue(thisRef: AppPreferencesUtils, property: KProperty<*>): Long {
+                val finalKey = key ?: property.name
+                if (!initialized) {
+                    initialized = true
+                    prefValue =
+                        thisRef.preferencesDataStore.getLong(finalKey, defaultValue)
+                    thisRef.coroutineScope.launch {
+                        thisRef.preferencesDataStore.data
+                            .map { it[longPreferencesKey(finalKey)] }
+                            .distinctUntilChanged()
+                            .collect {
+                                prefValue = it ?: defaultValue
+                            }
+                    }
+                }
+                return prefValue
+            }
+
+            override fun setValue(
+                thisRef: AppPreferencesUtils,
+                property: KProperty<*>,
+                value: Long
+            ) {
+                prefValue = value
+                thisRef.coroutineScope.launch {
+                    thisRef.preferencesDataStore.edit {
+                        it[longPreferencesKey(key ?: property.name)] = value
                     }
                 }
             }
@@ -245,16 +314,25 @@ open class AppPreferencesUtils(context: Context) {
             defaultValue: Boolean = false,
             key: String? = null
         ) = object : ReadWriteProperty<AppPreferencesUtils, Boolean> {
-            private var state by mutableStateOf(defaultValue)
-            private var stateInitialized = false
+            private var prefValue = defaultValue
+            private var initialized = false
 
             override fun getValue(thisRef: AppPreferencesUtils, property: KProperty<*>): Boolean {
-                if (!stateInitialized) {
-                    stateInitialized = true
-                    state =
-                        thisRef.preferencesDataStore.getBoolean(key ?: property.name, defaultValue)
+                val finalKey = key ?: property.name
+                if (!initialized) {
+                    initialized = true
+                    prefValue =
+                        thisRef.preferencesDataStore.getBoolean(finalKey, defaultValue)
+                    thisRef.coroutineScope.launch {
+                        thisRef.preferencesDataStore.data
+                            .map { it[booleanPreferencesKey(finalKey)] }
+                            .distinctUntilChanged()
+                            .collect {
+                                prefValue = it ?: defaultValue
+                            }
+                    }
                 }
-                return state
+                return prefValue
             }
 
             override fun setValue(
@@ -262,9 +340,8 @@ open class AppPreferencesUtils(context: Context) {
                 property: KProperty<*>,
                 value: Boolean
             ) {
-                state = value
-                MainScope().launch(Dispatchers.IO) {
-                    state = value
+                prefValue = value
+                thisRef.coroutineScope.launch {
                     thisRef.preferencesDataStore.edit {
                         it[booleanPreferencesKey(key ?: property.name)] = value
                     }

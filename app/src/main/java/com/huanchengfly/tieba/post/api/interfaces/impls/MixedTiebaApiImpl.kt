@@ -2,10 +2,16 @@ package com.huanchengfly.tieba.post.api.interfaces.impls
 
 import android.os.Build
 import android.text.TextUtils
-import com.huanchengfly.tieba.post.BaseApplication
+import com.huanchengfly.tieba.post.App
 import com.huanchengfly.tieba.post.api.*
 import com.huanchengfly.tieba.post.api.interfaces.ITiebaApi
 import com.huanchengfly.tieba.post.api.models.*
+import com.huanchengfly.tieba.post.api.models.protos.personalized.PersonalizedRequest
+import com.huanchengfly.tieba.post.api.models.protos.personalized.PersonalizedRequestData
+import com.huanchengfly.tieba.post.api.models.protos.personalized.PersonalizedResponse
+import com.huanchengfly.tieba.post.api.models.protos.userLike.UserLikeRequest
+import com.huanchengfly.tieba.post.api.models.protos.userLike.UserLikeRequestData
+import com.huanchengfly.tieba.post.api.models.protos.userLike.UserLikeResponse
 import com.huanchengfly.tieba.post.api.models.web.ForumBean
 import com.huanchengfly.tieba.post.api.models.web.ForumHome
 import com.huanchengfly.tieba.post.api.models.web.HotMessageListBean
@@ -28,6 +34,8 @@ import java.io.IOException
 import java.net.URLEncoder
 
 object MixedTiebaApiImpl : ITiebaApi {
+    const val BOUNDARY = "--------7da3d81520810*"
+
     override fun personalized(loadType: Int, page: Int): Call<PersonalizedBean> =
         RetrofitTiebaApi.MINI_TIEBA_API.personalized(loadType, page)
 
@@ -37,19 +45,67 @@ object MixedTiebaApiImpl : ITiebaApi {
     ): Deferred<ApiResult<PersonalizedBean>> =
         RetrofitTiebaApi.MINI_TIEBA_API.personalizedAsync(loadType, page)
 
+    override fun personalizedFlow(loadType: Int, page: Int): Flow<PersonalizedBean> {
+        return RetrofitTiebaApi.OFFICIAL_TIEBA_API.personalizedFlow(loadType, page)
+    }
+
+    override fun personalizedProtoFlow(loadType: Int, page: Int): Flow<PersonalizedResponse> {
+        return RetrofitTiebaApi.OFFICIAL_PROTOBUF_TIEBA_API.personalizedFlow(
+            buildProtobufRequestBody(
+                data = PersonalizedRequest(
+                    PersonalizedRequestData(
+                        app_pos = buildAppPosInfo(),
+                        common = buildCommonRequest(),
+                        load_type = loadType,
+                        pn = page,
+                        need_tags = 0,
+                        page_thread_count = 11,
+                        pre_ad_thread_count = 0,
+                        sug_count = 0,
+                        tag_code = 0,
+                        q_type = 1,
+                        need_forumlist = 0,
+                        new_net_type = 1,
+                        new_install = 0,
+                        request_times = 0,
+                        invoke_source = "",
+                        scr_dip = App.ScreenInfo.DENSITY.toDouble(),
+                        scr_h = getScreenHeight(),
+                        scr_w = getScreenWidth()
+                    )
+                )
+            )
+        )
+    }
+
     override fun myProfileAsync(): Deferred<ApiResult<com.huanchengfly.tieba.post.api.models.web.Profile>> =
         RetrofitTiebaApi.WEB_TIEBA_API.myProfileAsync("json", "", "")
 
-    override fun agree(
+    override fun opAgree(
         threadId: String,
-        postId: String
+        postId: String,
+        opType: Int
     ): Call<AgreeBean> =
-        RetrofitTiebaApi.MINI_TIEBA_API.agree(postId, threadId)
+        RetrofitTiebaApi.MINI_TIEBA_API.agree(postId, threadId, op_type = opType)
 
     override fun disagree(
         threadId: String,
-        postId: String
-    ): Call<AgreeBean> = RetrofitTiebaApi.MINI_TIEBA_API.disagree(postId, threadId)
+        postId: String,
+        opType: Int
+    ): Call<AgreeBean> = RetrofitTiebaApi.MINI_TIEBA_API.disagree(postId, threadId, op_type = opType)
+
+    override fun opAgreeFlow(
+        threadId: String,
+        postId: String,
+        opType: Int
+    ): Flow<AgreeBean> =
+        RetrofitTiebaApi.MINI_TIEBA_API.agreeFlow(postId, threadId, op_type = opType)
+
+    override fun disagreeFlow(
+        threadId: String,
+        postId: String,
+        opType: Int
+    ): Flow<AgreeBean> = RetrofitTiebaApi.MINI_TIEBA_API.disagreeFlow(postId, threadId, op_type = opType)
 
     override fun forumRecommend(): Call<ForumRecommend> =
         RetrofitTiebaApi.MINI_TIEBA_API.forumRecommend()
@@ -96,7 +152,7 @@ object MixedTiebaApiImpl : ITiebaApi {
     override fun userLikeForum(
         uid: String, page: Int
     ): Call<UserLikeForumBean> {
-        val myUid = AccountUtil.getUid(BaseApplication.INSTANCE)
+        val myUid = AccountUtil.getUid(App.INSTANCE)
         return RetrofitTiebaApi.MINI_TIEBA_API.userLikeForum(
             page = page,
             uid = myUid,
@@ -127,7 +183,29 @@ object MixedTiebaApiImpl : ITiebaApi {
         picId,
         picIndex,
         objType,
-        prev = if (prev) 1 else 0,
+        prev = if (prev) 10 else 0,
+        next = if (prev) 0 else 10,
+        not_see_lz = if (seeLz) 0 else 1
+    )
+
+    override fun picPageFlow(
+        forumId: String,
+        forumName: String,
+        threadId: String,
+        seeLz: Boolean,
+        picId: String,
+        picIndex: String,
+        objType: String,
+        prev: Boolean
+    ): Flow<PicPageBean> = RetrofitTiebaApi.MINI_TIEBA_API.picPageFlow(
+        forumId,
+        forumName,
+        threadId,
+        picId,
+        picIndex,
+        objType,
+        prev = if (prev) 10 else 0,
+        next = if (prev) 0 else 10,
         not_see_lz = if (seeLz) 0 else 1
     )
 
@@ -138,8 +216,16 @@ object MixedTiebaApiImpl : ITiebaApi {
         RetrofitTiebaApi.OFFICIAL_TIEBA_API.profileFlow(uid)
 
     override fun unlikeForum(
-        forumId: String, forumName: String, tbs: String
+        forumId: String,
+        forumName: String,
+        tbs: String
     ): Call<CommonResponse> = RetrofitTiebaApi.MINI_TIEBA_API.unlikeForum(forumId, forumName, tbs)
+
+    override fun unlikeForumFlow(
+        forumId: String,
+        forumName: String,
+        tbs: String
+    ): Flow<CommonResponse> = RetrofitTiebaApi.MINI_TIEBA_API.unlikeForumFlow(forumId, forumName, tbs)
 
     override fun likeForum(
         forumId: String, forumName: String, tbs: String
@@ -215,11 +301,13 @@ object MixedTiebaApiImpl : ITiebaApi {
 
     override fun msg(): Call<MsgBean> = RetrofitTiebaApi.NEW_TIEBA_API.msg()
 
+    override fun msgFlow(): Flow<MsgBean> = RetrofitTiebaApi.NEW_TIEBA_API.msgFlow()
+
     override fun threadStore(page: Int, pageSize: Int): Call<ThreadStoreBean> =
         RetrofitTiebaApi.NEW_TIEBA_API.threadStore(
             pageSize,
             pageSize * page,
-            AccountUtil.getUid(BaseApplication.INSTANCE)
+            AccountUtil.getUid(App.INSTANCE)
         )
 
     override fun removeStore(threadId: String, tbs: String): Call<CommonResponse> =
@@ -243,10 +331,15 @@ object MixedTiebaApiImpl : ITiebaApi {
     override fun replyMeAsync(page: Int): Deferred<ApiResult<MessageListBean>> =
         RetrofitTiebaApi.NEW_TIEBA_API.replyMeAsync(page)
 
+    override fun replyMeFlow(page: Int): Flow<MessageListBean> =
+        RetrofitTiebaApi.NEW_TIEBA_API.replyMeFlow(page)
+
     override fun atMe(page: Int): Call<MessageListBean> = RetrofitTiebaApi.NEW_TIEBA_API.atMe(page)
 
     override fun atMeAsync(page: Int): Deferred<ApiResult<MessageListBean>> =
         RetrofitTiebaApi.NEW_TIEBA_API.atMeAsync(page)
+
+    override fun atMeFlow(page: Int): Flow<MessageListBean> = RetrofitTiebaApi.NEW_TIEBA_API.atMeFlow(page)
 
     override fun agreeMe(page: Int): Call<MessageListBean> =
         RetrofitTiebaApi.NEW_TIEBA_API.agreeMe(page)
@@ -303,7 +396,10 @@ object MixedTiebaApiImpl : ITiebaApi {
         dislikeBean: DislikeBean,
         stoken: String
     ): Call<CommonResponse> =
-        RetrofitTiebaApi.OFFICIAL_TIEBA_API.submitDislike(listOf(dislikeBean).toJson(), stoken)
+        RetrofitTiebaApi.OFFICIAL_TIEBA_API.submitDislike(listOf(dislikeBean).toJson(), stoken = stoken)
+
+    override fun submitDislikeFlow(dislikeBean: DislikeBean): Flow<CommonResponse> =
+        RetrofitTiebaApi.OFFICIAL_TIEBA_API.submitDislikeFlow(listOf(dislikeBean).toJson())
 
     override fun follow(
         portrait: String, tbs: String
@@ -369,7 +465,7 @@ object MixedTiebaApiImpl : ITiebaApi {
             base64 = ImageUtil.imageToBase64(photoInfoBean.file)
         } else {
             try {
-                BaseApplication.INSTANCE.contentResolver.openAssetFileDescriptor(
+                App.INSTANCE.contentResolver.openAssetFileDescriptor(
                     photoInfoBean.fileUri,
                     "r"
                 )?.use { afd ->
@@ -622,4 +718,24 @@ object MixedTiebaApiImpl : ITiebaApi {
         tbs: String
     ): Flow<MSignBean> =
         RetrofitTiebaApi.OFFICIAL_TIEBA_API.mSignFlow(forumIds, tbs)
+
+    override fun userLikeFlow(
+        pageTag: String,
+        lastRequestUnix: Long,
+        loadType: Int
+    ): Flow<UserLikeResponse> {
+        return RetrofitTiebaApi.OFFICIAL_PROTOBUF_TIEBA_API.userLikeFlow(
+            buildProtobufRequestBody(
+                UserLikeRequest(
+                    UserLikeRequestData(
+                        common = buildCommonRequest(),
+                        pageTag = pageTag,
+                        lastRequestUnix = lastRequestUnix,
+                        followType = 1,
+                        loadType = loadType
+                    )
+                )
+            )
+        )
+    }
 }

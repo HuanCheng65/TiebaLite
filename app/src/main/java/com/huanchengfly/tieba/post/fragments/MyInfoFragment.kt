@@ -26,8 +26,8 @@ import com.huanchengfly.tieba.post.toastShort
 import com.huanchengfly.tieba.post.ui.common.theme.interfaces.ExtraRefreshable
 import com.huanchengfly.tieba.post.ui.common.theme.utils.ColorStateListUtils
 import com.huanchengfly.tieba.post.ui.common.theme.utils.ThemeUtils
+import com.huanchengfly.tieba.post.ui.widgets.theme.TintSwitch
 import com.huanchengfly.tieba.post.utils.*
-import com.huanchengfly.tieba.post.widgets.theme.TintSwitch
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flowOn
@@ -87,7 +87,7 @@ class MyInfoFragment : BaseFragment(), View.OnClickListener, CompoundButton.OnCh
                 .statusBarColorInt(
                     ThemeUtils.getColorByAttr(
                         attachContext,
-                        R.attr.colorWindowBackground
+                        R.attr.colorChip
                     )
                 )
                 .init()
@@ -102,7 +102,7 @@ class MyInfoFragment : BaseFragment(), View.OnClickListener, CompoundButton.OnCh
     }
 
     private fun refreshHeader(profile: Profile? = null) {
-        if (!AccountUtil.isLoggedIn(attachContext)) {
+        if (!AccountUtil.isLoggedIn()) {
             Glide.with(attachContext).clear(avatarImageView)
             userNameTextView.setText(R.string.tip_login)
             blockTip.visibility = View.GONE
@@ -110,7 +110,7 @@ class MyInfoFragment : BaseFragment(), View.OnClickListener, CompoundButton.OnCh
         }
         if (profile == null) {
             blockTip.visibility = View.GONE
-            val account = AccountUtil.getLoginInfo(attachContext)!!
+            val account = AccountUtil.getLoginInfo()!!
             followsTextView.text = account.concernNum ?: "0"
             fansTextView.text = account.fansNum ?: "0"
             threadsTextView.text = account.threadNum ?: "0"
@@ -170,7 +170,7 @@ class MyInfoFragment : BaseFragment(), View.OnClickListener, CompoundButton.OnCh
     private fun refresh(needLogin: Boolean) {
         mRefreshView.isEnabled = true
         mRefreshView.isRefreshing = true
-        if (AccountUtil.isLoggedIn(attachContext)) {
+        if (AccountUtil.isLoggedIn()) {
             launch {
                 TiebaApi.getInstance()
                     .profileFlow(AccountUtil.getUid(attachContext)!!)
@@ -204,7 +204,7 @@ class MyInfoFragment : BaseFragment(), View.OnClickListener, CompoundButton.OnCh
     }
 
     private fun updateAccount(profile: Profile) {
-        AccountUtil.getLoginInfo(attachContext)?.apply {
+        AccountUtil.getLoginInfo()?.apply {
             tbs = profile.anti.tbs
             portrait = profile.user.portrait
             intro = profile.user.intro
@@ -218,7 +218,8 @@ class MyInfoFragment : BaseFragment(), View.OnClickListener, CompoundButton.OnCh
             birthdayShowStatus = profile.user.birthdayInfo?.birthdayShowStatus
             birthdayTime = profile.user.birthdayInfo?.birthdayTime
             constellation = profile.user.birthdayInfo?.constellation
-            saveOrUpdate("uid = ?", uid)
+            loadSuccess = true
+            updateAll("uid = ?", uid)
         }
     }
 
@@ -296,7 +297,7 @@ class MyInfoFragment : BaseFragment(), View.OnClickListener, CompoundButton.OnCh
 
     @OnClick(R.id.my_info)
     fun onMyInfoClicked(view: View) {
-        if (AccountUtil.isLoggedIn(attachContext)) {
+        if (AccountUtil.isLoggedIn()) {
             if (profileBean != null) {
                 NavigationHelper.toUserSpaceWithAnim(
                     attachContext,
@@ -305,7 +306,7 @@ class MyInfoFragment : BaseFragment(), View.OnClickListener, CompoundButton.OnCh
                     avatarImageView
                 )
             } else {
-                val loginInfo = AccountUtil.getLoginInfo(attachContext)!!
+                val loginInfo = AccountUtil.getLoginInfo()!!
                 NavigationHelper.toUserSpaceWithAnim(
                     attachContext,
                     loginInfo.uid,

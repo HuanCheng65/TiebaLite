@@ -132,11 +132,7 @@ public class BlockListActivity extends BaseActivity {
                     if (content.contains(" ")) {
                         strings = content.split(" ");
                     }
-                    new Block()
-                            .setKeywords(GsonUtil.getGson().toJson(strings))
-                            .setType(Block.TYPE_KEYWORD)
-                            .setCategory(this.type)
-                            .save();
+                    new Block(type, Block.TYPE_KEYWORD, GsonUtil.getGson().toJson(strings)).save();
                     blockListAdapter.refresh();
                 }).show();
                 break;

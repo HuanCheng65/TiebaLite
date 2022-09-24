@@ -24,7 +24,7 @@
                 android:layout_alignParentTop="true"
                 android:layout_centerVertical="true">
 
-                <com.huanchengfly.tieba.post.widgets.theme.TintProgressBar
+                <com.huanchengfly.tieba.post.ui.widgets.theme.TintProgressBar
                     android:id="@+id/header_progress"
                     style="?android:attr/progressBarStyleSmallInverse"
                     android:layout_width="wrap_content"
@@ -33,7 +33,7 @@
                     app:progressTint="@color/default_color_primary" />
             </RelativeLayout>
 
-            <com.huanchengfly.tieba.post.widgets.theme.TintTextView
+            <com.huanchengfly.tieba.post.ui.widgets.theme.TintTextView
                 android:id="@+id/header_tip"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"

@@ -60,7 +60,7 @@ class DislikeDialog(
             }
             TiebaApi.getInstance().submitDislike(
                 DislikeBean(
-                    threadPersonalizedBean.tid,
+                    threadPersonalizedBean.tid!!,
                     selectIds.joinToString(","),
                     fid,
                     clickTime,

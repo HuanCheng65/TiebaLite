@@ -9,4 +9,14 @@
         <item name="android:windowIsTranslucent">false</item>
         <item name="android:windowDisablePreview">false</item>
     </style>
+
+    <style name="Theme.Splash" parent="Theme.SplashScreen">
+        <item name="android:windowBackground">@drawable/splash</item>
+        <item name="android:statusBarColor">@color/colorSplashBg</item>
+        <item name="windowSplashScreenBackground">@color/colorSplashBg</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/ic_splash_screen_anim</item>
+        <item name="windowSplashScreenAnimationDuration">1000</item>
+        <item name="android:windowSplashScreenBrandingImage">@drawable/ic_splash_text</item>
+        <item name="postSplashScreenTheme">@style/Theme.NewAppTheme</item>
+    </style>
 </resources>

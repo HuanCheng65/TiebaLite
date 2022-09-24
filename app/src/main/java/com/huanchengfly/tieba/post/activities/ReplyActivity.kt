@@ -40,7 +40,7 @@ import com.huanchengfly.tieba.post.adapters.TextWatcherAdapter
 import com.huanchengfly.tieba.post.api.TiebaApi
 import com.huanchengfly.tieba.post.api.retrofit.doIfFailure
 import com.huanchengfly.tieba.post.api.retrofit.doIfSuccess
-import com.huanchengfly.tieba.post.components.EmotionViewFactory
+import com.huanchengfly.tieba.post.components.EmoticonViewFactory
 import com.huanchengfly.tieba.post.components.dialogs.LoadingDialog
 import com.huanchengfly.tieba.post.interfaces.ReplyContentCallback
 import com.huanchengfly.tieba.post.interfaces.UploadCallback
@@ -48,10 +48,10 @@ import com.huanchengfly.tieba.post.models.PhotoInfoBean
 import com.huanchengfly.tieba.post.models.ReplyInfoBean
 import com.huanchengfly.tieba.post.models.database.Draft
 import com.huanchengfly.tieba.post.toastShort
+import com.huanchengfly.tieba.post.ui.widgets.edittext.widget.UndoableEditText
+import com.huanchengfly.tieba.post.ui.widgets.theme.TintConstraintLayout
+import com.huanchengfly.tieba.post.ui.widgets.theme.TintImageView
 import com.huanchengfly.tieba.post.utils.*
-import com.huanchengfly.tieba.post.widgets.edittext.widget.UndoableEditText
-import com.huanchengfly.tieba.post.widgets.theme.TintConstraintLayout
-import com.huanchengfly.tieba.post.widgets.theme.TintImageView
 import org.litepal.LitePal.where
 
 class ReplyActivity : BaseActivity(), View.OnClickListener,
@@ -62,20 +62,20 @@ class ReplyActivity : BaseActivity(), View.OnClickListener,
     @BindView(R.id.activity_reply_panel_root)
     lateinit var panelFrameLayout: KPSwitchFSPanelFrameLayout
 
-    @BindView(R.id.activity_reply_emotion)
-    lateinit var emotionView: RelativeLayout
+    @BindView(R.id.activity_reply_emoticon)
+    lateinit var emoticonView: RelativeLayout
 
     @BindView(R.id.activity_reply_insert_photo)
     lateinit var insertImageView: FrameLayout
 
-    @BindView(R.id.activity_reply_edit_emotion)
-    lateinit var emotionBtn: TintImageView
+    @BindView(R.id.activity_reply_edit_emoticon)
+    lateinit var emoticonBtn: TintImageView
 
     @BindView(R.id.activity_reply_edit_insert_photo)
     lateinit var insertImageBtn: TintImageView
 
-    @BindView(R.id.activity_reply_emotion_view_pager)
-    lateinit var emotionViewPager: ViewPager
+    @BindView(R.id.activity_reply_emoticon_view_pager)
+    lateinit var emoticonViewPager: ViewPager
 
     @BindView(R.id.activity_reply_insert_photo_view)
     lateinit var insertView: RecyclerView
@@ -297,35 +297,35 @@ class ReplyActivity : BaseActivity(), View.OnClickListener,
         if (replyInfoBean!!.replyUser != null) {
             editText.hint = getString(R.string.hint_reply, replyInfoBean!!.replyUser)
         }
-        val tabLayout = findViewById<TabLayout>(R.id.activity_reply_emotion_tab)
-        val emotionViewPagerAdapter = TabViewPagerAdapter()
-        val classicEmotionGridView = GridView(this)
-        val emojiEmotionGridView = GridView(this)
-        EmotionViewFactory.initGridView(
+        val tabLayout = findViewById<TabLayout>(R.id.activity_reply_emoticon_tab)
+        val emoticonViewPagerAdapter = TabViewPagerAdapter()
+        val classicEmoticonGridView = GridView(this)
+        val emojiEmoticonGridView = GridView(this)
+        EmoticonViewFactory.initGridView(
             this,
-            EmotionUtil.EMOTION_CLASSIC_WEB_TYPE,
-            classicEmotionGridView
+            EmoticonUtil.EMOTICON_CLASSIC_WEB_TYPE,
+            classicEmoticonGridView
         )
-        EmotionViewFactory.initGridView(
+        EmoticonViewFactory.initGridView(
             this,
-            EmotionUtil.EMOTION_EMOJI_WEB_TYPE,
-            emojiEmotionGridView
+            EmoticonUtil.EMOTICON_EMOJI_WEB_TYPE,
+            emojiEmoticonGridView
         )
-        emotionViewPagerAdapter.addView(
-            classicEmotionGridView,
-            getString(R.string.title_emotion_classic)
+        emoticonViewPagerAdapter.addView(
+            classicEmoticonGridView,
+            getString(R.string.title_emoticon_classic)
         )
-        emotionViewPagerAdapter.addView(
-            emojiEmotionGridView,
-            getString(R.string.title_emotion_emoji)
+        emoticonViewPagerAdapter.addView(
+            emojiEmoticonGridView,
+            getString(R.string.title_emoticon_emoji)
         )
-        emotionViewPager.adapter = emotionViewPagerAdapter
-        tabLayout.setupWithViewPager(emotionViewPager)
+        emoticonViewPager.adapter = emoticonViewPagerAdapter
+        tabLayout.setupWithViewPager(emoticonViewPager)
         if (content != null) {
             editText.mgr.disable()
             editText.setText(
-                StringUtil.getEmotionContent(
-                    EmotionUtil.EMOTION_ALL_WEB_TYPE,
+                StringUtil.getEmoticonContent(
+                    EmoticonUtil.EMOTICON_ALL_WEB_TYPE,
                     editText,
                     content
                 )
@@ -456,10 +456,10 @@ class ReplyActivity : BaseActivity(), View.OnClickListener,
         KPSwitchConflictUtil.attach(
             panelFrameLayout,
             editText,
-            SubPanelAndTrigger(emotionView, emotionBtn),
+            SubPanelAndTrigger(emoticonView, emoticonBtn),
             SubPanelAndTrigger(insertImageView, insertImageBtn)
         )
-        EmotionUtil.GlobalOnItemClickManagerUtil.getInstance().attachToEditText(editText)
+        EmoticonUtil.GlobalOnItemClickManagerUtil.attachToEditText(editText)
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {

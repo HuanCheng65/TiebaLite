@@ -41,7 +41,7 @@ class OKSignWork(
 
     override suspend fun doWork(): Result {
         return withContext(Dispatchers.IO) {
-            val account = AccountUtil.getLoginInfo(context).also { currentAccount = it }
+            val account = AccountUtil.getLoginInfo().also { currentAccount = it }
                 ?: return@withContext Result.failure()
             updateNotification(
                 context.getString(R.string.title_loading_data),

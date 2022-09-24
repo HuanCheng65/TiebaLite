@@ -29,7 +29,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <com.huanchengfly.tieba.post.widgets.theme.TintTextView
+        <com.huanchengfly.tieba.post.ui.widgets.theme.TintTextView
             android:id="@+id/forum_header_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -47,7 +47,7 @@
             app:tint="@color/color_text_translucent_light"
             tools:text="minecraft吧" />
 
-        <com.huanchengfly.tieba.post.widgets.theme.TintProgressBar
+        <com.huanchengfly.tieba.post.ui.widgets.theme.TintProgressBar
             android:id="@+id/forum_header_progress"
             style="@android:style/Widget.DeviceDefault.Light.ProgressBar.Horizontal"
             android:layout_width="0dp"
@@ -66,7 +66,7 @@
             tools:max="100"
             tools:progress="50" />
 
-        <com.huanchengfly.tieba.post.widgets.theme.TintTextView
+        <com.huanchengfly.tieba.post.ui.widgets.theme.TintTextView
             android:id="@+id/forum_header_tip"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -79,7 +79,7 @@
             app:tint="@color/color_text_secondary_translucent_light"
             tools:text="LV9 大水逼" />
 
-        <com.huanchengfly.tieba.post.widgets.theme.TintMaterialButton
+        <com.huanchengfly.tieba.post.ui.widgets.theme.TintMaterialButton
             android:id="@+id/forum_header_button"
             style="@style/Widget.Button"
             android:layout_width="wrap_content"
@@ -107,7 +107,7 @@
         app:layout_constraintBottom_toBottomOf="@+id/tintImageView"
         app:layout_constraintTop_toBottomOf="@+id/tintImageView">
 
-        <com.huanchengfly.tieba.post.widgets.theme.TintTextView
+        <com.huanchengfly.tieba.post.ui.widgets.theme.TintTextView
             android:id="@+id/forum_header_slogan"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -124,7 +124,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <com.huanchengfly.tieba.post.widgets.theme.TintImageView
+        <com.huanchengfly.tieba.post.ui.widgets.theme.TintImageView
             android:id="@+id/tintImageView"
             android:layout_width="48dp"
             android:layout_height="48dp"
@@ -173,7 +173,7 @@
                 android:layout_weight="1"
                 android:orientation="vertical">
 
-                <com.huanchengfly.tieba.post.widgets.theme.TintTextView
+                <com.huanchengfly.tieba.post.ui.widgets.theme.TintTextView
                     android:id="@+id/forum_header_stat_members"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -183,7 +183,7 @@
                     app:tint="@color/color_text_translucent_light"
                     tools:text="241W" />
 
-                <com.huanchengfly.tieba.post.widgets.theme.TintTextView
+                <com.huanchengfly.tieba.post.ui.widgets.theme.TintTextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
@@ -199,7 +199,7 @@
                 android:layout_weight="1"
                 android:orientation="vertical">
 
-                <com.huanchengfly.tieba.post.widgets.theme.TintTextView
+                <com.huanchengfly.tieba.post.ui.widgets.theme.TintTextView
                     android:id="@+id/forum_header_stat_threads"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -209,7 +209,7 @@
                     app:tint="@color/color_text_translucent_light"
                     tools:text="55W" />
 
-                <com.huanchengfly.tieba.post.widgets.theme.TintTextView
+                <com.huanchengfly.tieba.post.ui.widgets.theme.TintTextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
@@ -225,7 +225,7 @@
                 android:layout_weight="1"
                 android:orientation="vertical">
 
-                <com.huanchengfly.tieba.post.widgets.theme.TintTextView
+                <com.huanchengfly.tieba.post.ui.widgets.theme.TintTextView
                     android:id="@+id/forum_header_stat_posts"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -235,7 +235,7 @@
                     app:tint="@color/color_text_translucent_light"
                     tools:text="3KW" />
 
-                <com.huanchengfly.tieba.post.widgets.theme.TintTextView
+                <com.huanchengfly.tieba.post.ui.widgets.theme.TintTextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"

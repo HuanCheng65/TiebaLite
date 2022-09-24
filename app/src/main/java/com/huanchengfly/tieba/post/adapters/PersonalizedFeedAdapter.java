@@ -12,7 +12,7 @@ import androidx.cardview.widget.CardView;
 import androidx.gridlayout.widget.GridLayout;
 
 import com.bumptech.glide.Glide;
-import com.huanchengfly.tieba.post.BaseApplication;
+import com.huanchengfly.tieba.post.App;
 import com.huanchengfly.tieba.post.ExtensionsKt;
 import com.huanchengfly.tieba.post.R;
 import com.huanchengfly.tieba.post.adapters.base.BaseMultiTypeAdapter;
@@ -21,14 +21,14 @@ import com.huanchengfly.tieba.post.api.models.PersonalizedBean;
 import com.huanchengfly.tieba.post.components.MyViewHolder;
 import com.huanchengfly.tieba.post.components.dialogs.DislikeDialog;
 import com.huanchengfly.tieba.post.models.PhotoViewBean;
+import com.huanchengfly.tieba.post.ui.widgets.MarkedImageView;
+import com.huanchengfly.tieba.post.ui.widgets.VideoPlayerStandard;
 import com.huanchengfly.tieba.post.utils.AppPreferencesUtilsKt;
 import com.huanchengfly.tieba.post.utils.DateTimeUtils;
 import com.huanchengfly.tieba.post.utils.DisplayUtil;
 import com.huanchengfly.tieba.post.utils.ImageUtil;
 import com.huanchengfly.tieba.post.utils.NavigationHelper;
 import com.huanchengfly.tieba.post.utils.Util;
-import com.huanchengfly.tieba.post.widgets.MarkedImageView;
-import com.huanchengfly.tieba.post.widgets.VideoPlayerStandard;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -70,7 +70,7 @@ public class PersonalizedFeedAdapter extends BaseMultiTypeAdapter<PersonalizedBe
     }
 
     private int getMaxWidth() {
-        int maxWidth = BaseApplication.ScreenInfo.EXACT_SCREEN_WIDTH - DisplayUtil.dp2px(getContext(), 56);
+        int maxWidth = App.ScreenInfo.EXACT_SCREEN_WIDTH - DisplayUtil.dp2px(getContext(), 56);
         if (ExtensionsKt.isTablet(getContext())) {
             if (ExtensionsKt.isLandscape(getContext().getResources().getConfiguration())) {
                 return maxWidth / 3;

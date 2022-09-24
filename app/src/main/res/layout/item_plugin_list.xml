@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.huanchengfly.tieba.post.widgets.theme.TintLinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.huanchengfly.tieba.post.ui.widgets.theme.TintLinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -21,7 +21,7 @@
             android:layout_weight="1"
             android:orientation="vertical">
 
-            <com.huanchengfly.tieba.post.widgets.theme.TintTextView
+            <com.huanchengfly.tieba.post.ui.widgets.theme.TintTextView
                 android:id="@+id/plugin_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -31,7 +31,7 @@
                 app:tint="@color/default_color_text"
                 tools:text="插件名称" />
 
-            <com.huanchengfly.tieba.post.widgets.theme.TintTextView
+            <com.huanchengfly.tieba.post.ui.widgets.theme.TintTextView
                 android:id="@+id/plugin_info"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -43,7 +43,7 @@
 
         </LinearLayout>
 
-        <com.huanchengfly.tieba.post.widgets.theme.TintSwitch
+        <com.huanchengfly.tieba.post.ui.widgets.theme.TintSwitch
             android:id="@+id/plugin_status"
             style="@style/Widget.Switch"
             android:layout_width="wrap_content"
@@ -51,7 +51,7 @@
             android:minHeight="0dp" />
     </LinearLayout>
 
-    <com.huanchengfly.tieba.post.widgets.theme.TintTextView
+    <com.huanchengfly.tieba.post.ui.widgets.theme.TintTextView
         android:id="@+id/plugin_desc"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -60,4 +60,4 @@
         app:tint="@color/default_color_text_secondary"
         tools:text="这是一个示例插件" />
 
-</com.huanchengfly.tieba.post.widgets.theme.TintLinearLayout>
+</com.huanchengfly.tieba.post.ui.widgets.theme.TintLinearLayout>

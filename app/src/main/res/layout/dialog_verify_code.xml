@@ -40,7 +40,7 @@
 
     </com.google.android.material.textfield.TextInputLayout>
 
-    <com.huanchengfly.tieba.post.widgets.theme.TintMaterialButton
+    <com.huanchengfly.tieba.post.ui.widgets.theme.TintMaterialButton
         android:id="@+id/dialog_vertify_code_submit"
         style="@style/Widget.AppCompat.Button.Colored"
         android:layout_width="0dp"

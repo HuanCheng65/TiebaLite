@@ -6,7 +6,7 @@
     android:gravity="center_vertical"
     android:orientation="horizontal">
 
-    <com.huanchengfly.tieba.post.widgets.theme.TintSwitch
+    <com.huanchengfly.tieba.post.ui.widgets.theme.TintSwitch
         android:id="@+id/theme_toolbar_primary_color"
         style="@style/Widget.Switch"
         android:layout_width="wrap_content"

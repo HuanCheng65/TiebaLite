@@ -27,17 +27,17 @@ import androidx.appcompat.widget.Toolbar
 import butterknife.ButterKnife
 import cn.jzvd.Jzvd
 import com.gyf.immersionbar.ImmersionBar
-import com.huanchengfly.tieba.post.BaseApplication
-import com.huanchengfly.tieba.post.BaseApplication.Companion.INSTANCE
+import com.huanchengfly.tieba.post.App
+import com.huanchengfly.tieba.post.App.Companion.INSTANCE
 import com.huanchengfly.tieba.post.R
 import com.huanchengfly.tieba.post.activities.MainActivity.Companion.SP_SHOULD_SHOW_SNACKBAR
 import com.huanchengfly.tieba.post.dataStore
 import com.huanchengfly.tieba.post.putBoolean
 import com.huanchengfly.tieba.post.ui.common.theme.interfaces.ExtraRefreshable
 import com.huanchengfly.tieba.post.ui.common.theme.utils.ThemeUtils
+import com.huanchengfly.tieba.post.ui.widgets.VoicePlayerView
+import com.huanchengfly.tieba.post.ui.widgets.theme.TintToolbar
 import com.huanchengfly.tieba.post.utils.*
-import com.huanchengfly.tieba.post.widgets.VoicePlayerView
-import com.huanchengfly.tieba.post.widgets.theme.TintToolbar
 import kotlinx.coroutines.*
 import kotlin.coroutines.CoroutineContext
 
@@ -98,13 +98,15 @@ abstract class BaseActivity : AppCompatActivity(), ExtraRefreshable, CoroutineSc
     }
 
     open val isNeedImmersionBar: Boolean = true
+    open val isNeedFixBg: Boolean = true
+    open val isNeedSetTheme: Boolean = true
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        fixBackground()
+        if (isNeedFixBg) fixBackground()
         getDeviceDensity()
         INSTANCE.addActivity(this)
-        ThemeUtil.setTheme(this)
+        if (isNeedSetTheme) ThemeUtil.setTheme(this)
         oldTheme = ThemeUtil.getTheme()
         if (isNeedImmersionBar) {
             refreshStatusBarColor()
@@ -143,10 +145,10 @@ abstract class BaseActivity : AppCompatActivity(), ExtraRefreshable, CoroutineSc
         super.onResume()
         isActivityRunning = true
         if (appPreferences.followSystemNight) {
-            if (BaseApplication.isSystemNight && !ThemeUtil.isNightMode()) {
+            if (App.isSystemNight && !ThemeUtil.isNightMode()) {
                 dataStore.putBoolean(SP_SHOULD_SHOW_SNACKBAR, true)
                 ThemeUtil.switchToNightMode(this, false)
-            } else if (!BaseApplication.isSystemNight && ThemeUtil.isNightMode()) {
+            } else if (!App.isSystemNight && ThemeUtil.isNightMode()) {
                 dataStore.putBoolean(SP_SHOULD_SHOW_SNACKBAR, true)
                 ThemeUtil.switchFromNightMode(this, false)
             }
@@ -215,12 +217,12 @@ abstract class BaseActivity : AppCompatActivity(), ExtraRefreshable, CoroutineSc
         windowManager.defaultDisplay.getMetrics(metrics)
         val width = metrics.widthPixels
         val height = metrics.heightPixels
-        BaseApplication.ScreenInfo.EXACT_SCREEN_HEIGHT = height
-        BaseApplication.ScreenInfo.EXACT_SCREEN_WIDTH = width
+        App.ScreenInfo.EXACT_SCREEN_HEIGHT = height
+        App.ScreenInfo.EXACT_SCREEN_WIDTH = width
         val density = metrics.density
-        BaseApplication.ScreenInfo.DENSITY = metrics.density
-        BaseApplication.ScreenInfo.SCREEN_HEIGHT = (height / density).toInt()
-        BaseApplication.ScreenInfo.SCREEN_WIDTH = (width / density).toInt()
+        App.ScreenInfo.DENSITY = metrics.density
+        App.ScreenInfo.SCREEN_HEIGHT = (height / density).toInt()
+        App.ScreenInfo.SCREEN_WIDTH = (width / density).toInt()
     }
 
     protected fun colorAnim(view: ImageView, vararg value: Int): ValueAnimator {

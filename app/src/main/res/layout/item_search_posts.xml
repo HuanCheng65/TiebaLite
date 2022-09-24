@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.huanchengfly.tieba.post.widgets.theme.TintRelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.huanchengfly.tieba.post.ui.widgets.theme.TintRelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/item_search_thread"
@@ -10,7 +10,7 @@
     android:padding="16dp"
     app:backgroundTint="@color/default_color_card">
 
-    <com.huanchengfly.tieba.post.widgets.theme.TintTextView
+    <com.huanchengfly.tieba.post.ui.widgets.theme.TintTextView
         android:id="@+id/item_search_thread_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -22,7 +22,7 @@
         app:tint="@color/default_color_text"
         tools:text="Title" />
 
-    <com.huanchengfly.tieba.post.widgets.theme.TintTextView
+    <com.huanchengfly.tieba.post.ui.widgets.theme.TintTextView
         android:id="@+id/item_search_thread_content"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -34,7 +34,7 @@
         app:tint="@color/default_color_text_secondary"
         tools:text="Content" />
 
-    <com.huanchengfly.tieba.post.widgets.theme.TintTextView
+    <com.huanchengfly.tieba.post.ui.widgets.theme.TintTextView
         android:id="@+id/item_search_thread_user"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -43,7 +43,7 @@
         app:tint="@color/default_color_text_disabled"
         tools:text="幻了个城fly" />
 
-    <com.huanchengfly.tieba.post.widgets.theme.TintTextView
+    <com.huanchengfly.tieba.post.ui.widgets.theme.TintTextView
         android:id="@+id/item_search_thread_info"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -55,4 +55,4 @@
         android:textSize="12sp"
         app:tint="@color/default_color_text_disabled"
         tools:text="minecraft吧 · 刚刚" />
-</com.huanchengfly.tieba.post.widgets.theme.TintRelativeLayout>
+</com.huanchengfly.tieba.post.ui.widgets.theme.TintRelativeLayout>

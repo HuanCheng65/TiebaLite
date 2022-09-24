@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <com.huanchengfly.tieba.post.widgets.theme.TintMaterialCardView
+    <com.huanchengfly.tieba.post.ui.widgets.theme.TintMaterialCardView
         android:id="@+id/header_update_tip_card"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -31,7 +31,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
-                <com.huanchengfly.tieba.post.widgets.theme.TintImageView
+                <com.huanchengfly.tieba.post.ui.widgets.theme.TintImageView
                     android:id="@+id/header_update_tip_icon"
                     android:layout_width="24dp"
                     android:layout_height="24dp"
@@ -40,7 +40,7 @@
                     app:tint="@color/default_color_primary"
                     tools:ignore="ContentDescription" />
 
-                <com.huanchengfly.tieba.post.widgets.theme.TintTextView
+                <com.huanchengfly.tieba.post.ui.widgets.theme.TintTextView
                     android:id="@+id/header_update_tip_header_title"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -66,7 +66,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
 
-                    <com.huanchengfly.tieba.post.widgets.theme.TintProgressBar
+                    <com.huanchengfly.tieba.post.ui.widgets.theme.TintProgressBar
                         android:id="@+id/header_update_tip_progress"
                         style="@style/Widget.AppCompat.ProgressBar"
                         android:layout_width="24dp"
@@ -75,7 +75,7 @@
                         android:layout_marginEnd="8dp"
                         android:visibility="gone" />
 
-                    <com.huanchengfly.tieba.post.widgets.theme.TintTextView
+                    <com.huanchengfly.tieba.post.ui.widgets.theme.TintTextView
                         android:id="@+id/header_update_tip_title"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -89,7 +89,7 @@
                         tools:text="发现新版 4.0.0" />
                 </RelativeLayout>
 
-                <com.huanchengfly.tieba.post.widgets.theme.TintTextView
+                <com.huanchengfly.tieba.post.ui.widgets.theme.TintTextView
                     android:id="@+id/header_update_tip_content"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -100,7 +100,7 @@
                     tools:text="这里是更新内容" />
             </LinearLayout>
 
-            <com.huanchengfly.tieba.post.widgets.theme.TintMaterialButton
+            <com.huanchengfly.tieba.post.ui.widgets.theme.TintMaterialButton
                 android:id="@+id/header_update_tip_button_dismiss"
                 style="@style/Widget.Button.Flat.Dense"
                 android:layout_width="wrap_content"
@@ -111,7 +111,7 @@
                 android:layout_toStartOf="@id/header_update_tip_button_download"
                 android:text="@string/button_next_time" />
 
-            <com.huanchengfly.tieba.post.widgets.theme.TintMaterialButton
+            <com.huanchengfly.tieba.post.ui.widgets.theme.TintMaterialButton
                 android:id="@+id/header_update_tip_button_download"
                 style="@style/Widget.Button"
                 android:layout_width="wrap_content"
@@ -121,5 +121,5 @@
                 android:layout_marginTop="8dp"
                 android:text="@string/button_go_to_download" />
         </RelativeLayout>
-    </com.huanchengfly.tieba.post.widgets.theme.TintMaterialCardView>
+    </com.huanchengfly.tieba.post.ui.widgets.theme.TintMaterialCardView>
 </RelativeLayout>

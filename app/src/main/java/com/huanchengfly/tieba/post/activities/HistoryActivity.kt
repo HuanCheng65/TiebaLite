@@ -78,7 +78,7 @@ class HistoryActivity : BaseActivity() {
         return when (item.itemId) {
             R.id.menu_delete -> {
                 HistoryUtil.deleteAll()
-                Toast.makeText(this, R.string.toast_delete_success, Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, R.string.toast_clear_success, Toast.LENGTH_SHORT).show()
                 refreshData()
                 true
             }

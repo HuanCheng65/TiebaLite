@@ -25,11 +25,11 @@ import com.huanchengfly.tieba.post.ui.common.animation.addMaskAnimation
 import com.huanchengfly.tieba.post.ui.common.animation.addZoomAnimation
 import com.huanchengfly.tieba.post.ui.common.animation.buildPressAnimator
 import com.huanchengfly.tieba.post.ui.common.theme.utils.ThemeUtils
+import com.huanchengfly.tieba.post.ui.widgets.theme.TintSwitch
 import com.huanchengfly.tieba.post.utils.DialogUtil
 import com.huanchengfly.tieba.post.utils.ThemeUtil
 import com.huanchengfly.tieba.post.utils.ThemeUtil.THEME_CUSTOM
 import com.huanchengfly.tieba.post.utils.ThemeUtil.THEME_TRANSLUCENT
-import com.huanchengfly.tieba.post.widgets.theme.TintSwitch
 import java.io.File
 
 class AppThemeActivity : BaseActivity() {
@@ -185,7 +185,7 @@ class AppThemeActivity : BaseActivity() {
                 .into(translucentThemePreviewIv)
         }
         customThemePreview.setCardBackgroundColor(
-            BaseApplication.ThemeDelegate.getColorByAttr(
+            App.ThemeDelegate.getColorByAttr(
                 this,
                 R.attr.colorPrimary,
                 THEME_CUSTOM

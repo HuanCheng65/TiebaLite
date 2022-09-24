@@ -4,6 +4,8 @@ import android.content.Context
 import android.content.Intent
 import android.webkit.CookieManager
 import android.widget.Toast
+import androidx.compose.runtime.*
+import com.huanchengfly.tieba.post.App
 import com.huanchengfly.tieba.post.R
 import com.huanchengfly.tieba.post.api.TiebaApi
 import com.huanchengfly.tieba.post.models.database.Account
@@ -16,17 +18,55 @@ object AccountUtil {
     const val TAG = "AccountUtil"
     const val ACTION_SWITCH_ACCOUNT = "com.huanchengfly.tieba.post.action.SWITCH_ACCOUNT"
 
-    @JvmStatic
-    fun getLoginInfo(context: Context): Account? {
-        val loginUser =
-            context.getSharedPreferences("accountData", Context.MODE_PRIVATE).getInt("now", -1)
-        return if (loginUser == -1) {
-            null
-        } else getAccountInfo(loginUser)
+    val LocalAccount = staticCompositionLocalOf<Account?> { null }
+    val AllAccounts = staticCompositionLocalOf<List<Account>> { emptyList() }
+
+    @Composable
+    fun LocalAccountProvider(content: @Composable () -> Unit) {
+        val account by mutableCurrentAccountState
+        val allAccounts by mutableAllAccountsState
+        CompositionLocalProvider(
+            LocalAccount provides account,
+            AllAccounts provides allAccounts
+        ) {
+            content()
+        }
     }
 
+    @set:Synchronized
+    private var mutableCurrentAccountState: MutableState<Account?> = mutableStateOf(null)
+
+    private var mutableAllAccountsState: MutableState<List<Account>> = mutableStateOf(emptyList())
+
+    val currentAccount
+        get() = mutableCurrentAccountState.value
+
     val allAccounts: List<Account>
-        get() = findAll(Account::class.java)
+        get() = mutableAllAccountsState.value
+
+    fun init(context: Context) {
+        val account = runCatching {
+            val loginUser =
+                context.getSharedPreferences("accountData", Context.MODE_PRIVATE).getInt("now", -1)
+            if (loginUser == -1) {
+                null
+            } else getAccountInfo(loginUser)
+        }.getOrNull()
+        mutableCurrentAccountState.value = account
+        mutableAllAccountsState.value = findAll(Account::class.java)
+    }
+
+    @JvmStatic
+    fun getLoginInfo(): Account? {
+        return currentAccount
+    }
+
+    fun newAccount(uid: String, account: Account, callback: (Boolean) -> Unit) {
+        account.saveOrUpdateAsync("uid = ?", uid).listen {
+            mutableAllAccountsState.value = findAll(Account::class.java)
+            callback(it)
+        }
+    }
 
     private fun getAccountInfo(accountId: Int): Account {
         return where("id = ?", accountId.toString()).findFirst(Account::class.java)
@@ -43,28 +83,31 @@ object AccountUtil {
     }
 
     @JvmStatic
-    fun isLoggedIn(context: Context): Boolean {
-        return getLoginInfo(context) != null
+    fun isLoggedIn(): Boolean {
+        return getLoginInfo() != null
     }
 
     @JvmStatic
     fun switchUser(context: Context, id: Int): Boolean {
         context.sendBroadcast(Intent().setAction(ACTION_SWITCH_ACCOUNT))
+        val account = runCatching { getAccountInfo(id) }.getOrNull() ?: return false
+        mutableCurrentAccountState.value = account
         return context.getSharedPreferences("accountData", Context.MODE_PRIVATE).edit()
             .putInt("now", id).commit()
     }
 
-    fun fetchAccountFlow(context: Context): Flow<Account> {
+    fun fetchAccountFlow(): Flow<Account> {
         return TiebaApi.getInstance()
             .initNickNameFlow()
             .zip(TiebaApi.getInstance().loginFlow()) { initNickNameBean, loginBean ->
-                getLoginInfo(context)!!.apply {
+                getLoginInfo()!!.apply {
                     uid = loginBean.user.id
                     name = loginBean.user.name
                     nameShow = initNickNameBean.userInfo.nameShow
                     portrait = loginBean.user.portrait
                     tbs = loginBean.anti.tbs
                     saveOrUpdate("uid = ?", loginBean.user.id)
+                    mutableAllAccountsState.value = findAll(Account::class.java)
                 }
             }
     }
@@ -88,6 +131,7 @@ object AccountUtil {
                     portrait = loginBean.user.portrait
                     tbs = loginBean.anti.tbs
                     saveOrUpdate("uid = ?", loginBean.user.id)
+                    mutableAllAccountsState.value = findAll(Account::class.java)
                 }
             }
     }
@@ -136,7 +180,7 @@ object AccountUtil {
 
     fun exit(context: Context) {
         var accounts = allAccounts
-        var account = getLoginInfo(context) ?: return
+        var account = getLoginInfo() ?: return
         account.delete()
         CookieManager.getInstance().removeAllCookies(null)
         if (accounts.size > 1) {
@@ -146,31 +190,32 @@ object AccountUtil {
             Toast.makeText(context, "退出登录成功，已切换至账号 " + account.nameShow, Toast.LENGTH_SHORT).show()
             return
         }
+        mutableCurrentAccountState.value = null
         context.getSharedPreferences("accountData", Context.MODE_PRIVATE).edit().clear().commit()
         Toast.makeText(context, R.string.toast_exit_account_success, Toast.LENGTH_SHORT).show()
     }
 
-    fun getSToken(context: Context?): String? {
+    fun getSToken(context: Context? = App.INSTANCE): String? {
         if (context == null) return null
-        val account = getLoginInfo(context)
+        val account = getLoginInfo()
         return account?.sToken
     }
 
     fun getCookie(context: Context?): String? {
         if (context == null) return null
-        val account = getLoginInfo(context)
+        val account = getLoginInfo()
         return account?.cookie
     }
 
     fun getUid(context: Context?): String? {
         if (context == null) return null
-        val account = getLoginInfo(context)
+        val account = getLoginInfo()
         return account?.uid
     }
 
     fun getBduss(context: Context?): String? {
         if (context == null) return null
-        val account = getLoginInfo(context)
+        val account = getLoginInfo()
         return account?.bduss
     }
 

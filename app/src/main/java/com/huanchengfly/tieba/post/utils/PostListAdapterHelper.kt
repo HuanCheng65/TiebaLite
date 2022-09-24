@@ -11,7 +11,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
-import com.huanchengfly.tieba.post.BaseApplication
+import com.huanchengfly.tieba.post.App
 import com.huanchengfly.tieba.post.R
 import com.huanchengfly.tieba.post.activities.PhotoViewActivity.Companion.OBJ_TYPE_THREAD_PAGE
 import com.huanchengfly.tieba.post.activities.WebViewActivity
@@ -25,12 +25,12 @@ import com.huanchengfly.tieba.post.dpToPx
 import com.huanchengfly.tieba.post.isTablet
 import com.huanchengfly.tieba.post.models.PhotoViewBean
 import com.huanchengfly.tieba.post.ui.common.theme.utils.ThemeUtils
+import com.huanchengfly.tieba.post.ui.widgets.MyImageView
+import com.huanchengfly.tieba.post.ui.widgets.VideoPlayerStandard
+import com.huanchengfly.tieba.post.ui.widgets.VoicePlayerView
+import com.huanchengfly.tieba.post.ui.widgets.theme.TintMySpannableTextView
 import com.huanchengfly.tieba.post.utils.BilibiliUtil.replaceVideoNumberSpan
-import com.huanchengfly.tieba.post.utils.EmotionManager.registerEmotion
-import com.huanchengfly.tieba.post.widgets.MyImageView
-import com.huanchengfly.tieba.post.widgets.VideoPlayerStandard
-import com.huanchengfly.tieba.post.widgets.VoicePlayerView
-import com.huanchengfly.tieba.post.widgets.theme.TintMySpannableTextView
+import com.huanchengfly.tieba.post.utils.EmoticonManager.registerEmoticon
 import java.util.*
 import kotlin.math.roundToInt
 
@@ -114,7 +114,7 @@ class PostListAdapterHelper(
         mySpannableTextView.setTintResId(R.color.default_color_text)
         mySpannableTextView.setLinkTouchMovementMethod(LinkTouchMovementMethod.getInstance())
         textView = mySpannableTextView
-        textView.setFocusable(false)
+        textView.isFocusable = false
         textView.setClickable(false)
         textView.setLongClickable(false)
         textView.setTextIsSelectable(false)
@@ -133,16 +133,16 @@ class PostListAdapterHelper(
     private fun setText(textView: TextView, content: CharSequence?) {
         var text = content
         text = replaceVideoNumberSpan(context, text)
-        text = StringUtil.getEmotionContent(EmotionUtil.EMOTION_ALL_TYPE, textView, text)
+        text = StringUtil.getEmoticonContent(EmoticonUtil.EMOTICON_ALL_TYPE, textView, text)
         textView.text = text
     }
 
     private fun getMaxWidth(floor: String): Float {
         var maxWidth: Float =
-            BaseApplication.ScreenInfo.EXACT_SCREEN_WIDTH.toFloat() - (24 * 2 + 38).dpToPx()
+            App.ScreenInfo.EXACT_SCREEN_WIDTH.toFloat() - (24 * 2 + 38).dpToPx()
         if (pureRead || "1" == floor) {
             maxWidth =
-                BaseApplication.ScreenInfo.EXACT_SCREEN_WIDTH.toFloat() - (16 * 2 + 4).dpToPx()
+                App.ScreenInfo.EXACT_SCREEN_WIDTH.toFloat() - (16 * 2 + 4).dpToPx()
         }
         if (context.isTablet) {
             return maxWidth / 2
@@ -319,7 +319,7 @@ class PostListAdapterHelper(
                 }
                 "2" -> {
                     val emojiText = "#(" + contentBean.c + ")"
-                    registerEmotion(
+                    registerEmoticon(
                         contentBean.text!!,
                         contentBean.c!!
                     )

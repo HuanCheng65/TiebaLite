@@ -350,7 +350,7 @@ class MainForumListFragment : BaseFragment(), Refreshable, Toolbar.OnMenuItemCli
                     if (t is TiebaException) {
                         if (t !is TiebaLocalException || t.code != Error.ERROR_NOT_LOGGED_IN) {
                             Toast.makeText(attachContext, t.message, Toast.LENGTH_SHORT).show()
-                        } else if (!BaseApplication.isFirstRun) {
+                        } else if (!App.isFirstRun) {
                             Toast.makeText(
                                 attachContext,
                                 R.string.toast_please_login,
@@ -473,7 +473,7 @@ class MainForumListFragment : BaseFragment(), Refreshable, Toolbar.OnMenuItemCli
                             TiebaApi.getInstance().unlikeForum(
                                 item.forumId,
                                 item.forumName,
-                                AccountUtil.getLoginInfo(attachContext)!!.tbs
+                                AccountUtil.getLoginInfo()!!.tbs
                             ).enqueue(object : Callback<CommonResponse> {
                                 override fun onResponse(
                                     call: Call<CommonResponse>,

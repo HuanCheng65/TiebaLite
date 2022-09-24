@@ -26,12 +26,12 @@ import com.bumptech.glide.request.target.CustomViewTarget
 import com.bumptech.glide.request.transition.Transition
 import com.google.android.material.appbar.AppBarLayout
 import com.huanchengfly.tieba.post.*
-import com.huanchengfly.tieba.post.BaseApplication.Companion.INSTANCE
-import com.huanchengfly.tieba.post.BaseApplication.Companion.translucentBackground
+import com.huanchengfly.tieba.post.App.Companion.INSTANCE
+import com.huanchengfly.tieba.post.App.Companion.translucentBackground
 import com.huanchengfly.tieba.post.activities.BaseActivity
 import com.huanchengfly.tieba.post.interfaces.BackgroundTintable
 import com.huanchengfly.tieba.post.ui.common.theme.utils.ThemeUtils
-import com.huanchengfly.tieba.post.widgets.theme.TintSwipeRefreshLayout
+import com.huanchengfly.tieba.post.ui.widgets.theme.TintSwipeRefreshLayout
 import com.scwang.smart.refresh.header.MaterialHeader
 import com.scwang.smart.refresh.layout.SmartRefreshLayout
 import java.io.File
@@ -100,6 +100,14 @@ object ThemeUtil {
         }
         dataStore.putString(KEY_THEME, newTheme)
         themeState.value = newTheme
+    }
+
+    fun switchNightMode() {
+        if (isNightMode()) {
+            switchTheme(dataStore.getString(KEY_OLD_THEME, THEME_BLUE), recordOldTheme = false)
+        } else {
+            switchTheme(dataStore.getString(KEY_DARK_THEME, THEME_BLUE_DARK))
+        }
     }
 
     fun switchToNightMode(context: Activity, recreate: Boolean) {

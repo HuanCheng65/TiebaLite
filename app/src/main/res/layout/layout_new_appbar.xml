@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.huanchengfly.tieba.post.widgets.theme.TintAppBarLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.huanchengfly.tieba.post.ui.widgets.theme.TintAppBarLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/appbar"
     android:layout_width="match_parent"
@@ -9,4 +9,4 @@
 
     <include layout="@layout/layout_new_toolbar" />
 
-</com.huanchengfly.tieba.post.widgets.theme.TintAppBarLayout>
+</com.huanchengfly.tieba.post.ui.widgets.theme.TintAppBarLayout>

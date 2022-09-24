@@ -4,18 +4,25 @@ import android.content.Context
 import android.text.*
 import android.text.style.ForegroundColorSpan
 import android.widget.TextView
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.withStyle
 import com.huanchengfly.tieba.post.R
-import com.huanchengfly.tieba.post.components.spans.EmotionSpanV2
+import com.huanchengfly.tieba.post.components.spans.EmoticonSpanV2
+import com.huanchengfly.tieba.post.ui.common.theme.compose.ExtendedTheme
 import com.huanchengfly.tieba.post.ui.common.theme.utils.ThemeUtils
-import com.huanchengfly.tieba.post.utils.EmotionManager.getEmotionDrawable
-import com.huanchengfly.tieba.post.utils.EmotionManager.getEmotionIdByName
+import com.huanchengfly.tieba.post.utils.EmoticonManager.getEmoticonDrawable
+import com.huanchengfly.tieba.post.utils.EmoticonManager.getEmoticonIdByName
 import java.util.regex.Pattern
 import kotlin.math.roundToInt
 
 object StringUtil {
     @JvmStatic
-    fun getEmotionContent(
-        emotion_map_type: Int,
+    fun getEmoticonContent(
+        emoticon_map_type: Int,
         tv: TextView,
         source: CharSequence?
     ): SpannableString {
@@ -28,18 +35,18 @@ object StringUtil {
             } else {
                 SpannableString(source)
             }
-            val regexEmotion = EmotionUtil.getRegex(emotion_map_type)
-            val patternEmotion = Pattern.compile(regexEmotion)
-            val matcherEmotion = patternEmotion.matcher(spannableString)
-            while (matcherEmotion.find()) {
-                val key = matcherEmotion.group()
-                val start = matcherEmotion.start()
-                val group1 = matcherEmotion.group(1) ?: ""
-                val emotionDrawable = getEmotionDrawable(tv.context, getEmotionIdByName(group1))
-                if (emotionDrawable != null) {
+            val regexEmoticon = EmoticonUtil.getRegex(emoticon_map_type)
+            val patternEmoticon = Pattern.compile(regexEmoticon)
+            val matcherEmoticon = patternEmoticon.matcher(spannableString)
+            while (matcherEmoticon.find()) {
+                val key = matcherEmoticon.group()
+                val start = matcherEmoticon.start()
+                val group1 = matcherEmoticon.group(1) ?: ""
+                val emoticonDrawable = getEmoticonDrawable(tv.context, getEmoticonIdByName(group1))
+                if (emoticonDrawable != null) {
                     val paint = tv.paint
                     val size = (-paint.ascent() + paint.descent()).roundToInt()
-                    val span = EmotionSpanV2(emotionDrawable, size)
+                    val span = EmoticonSpanV2(emoticonDrawable, size)
                     spannableString.setSpan(
                         span,
                         start,
@@ -79,6 +86,23 @@ object StringUtil {
             return builder
         }
         return nickname ?: ""
+    }
+
+    @Composable
+    fun getUsernameAnnotatedString(username: String, nickname: String?): AnnotatedString {
+        val showBoth = LocalContext.current.appPreferences.showBothUsernameAndNickname
+        return buildAnnotatedString {
+            if (nickname.isNullOrEmpty()) {
+                append(username)
+            } else if (showBoth && username.isNotEmpty() && username != nickname) {
+                append(nickname)
+                withStyle(SpanStyle(color = ExtendedTheme.colors.textDisabled)) {
+                    append("(${username})")
+                }
+            } else {
+                append(nickname)
+            }
+        }
     }
 
     @JvmStatic

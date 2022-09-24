@@ -377,6 +377,10 @@ class ForumPageBean : ErrorBean() {
         var bigPic: String? = null
             private set
 
+        @SerializedName("dynamic_pic")
+        var dynamicPic: String? = null
+            private set
+
         @SerializedName("src_pic")
         var srcPic: String? = null
             private set

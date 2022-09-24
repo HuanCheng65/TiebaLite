@@ -46,7 +46,7 @@ class ThreadStoreFragment : BaseFragment() {
     private var tbs: String? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val account = getLoginInfo(attachContext)
+        val account = getLoginInfo()
         if (account != null) tbs = account.tbs
         threadStoreAdapter.setOnItemClickListener(object : OnItemClickListener<ThreadStoreInfo> {
             override fun onClick(viewHolder: MyViewHolder, item: ThreadStoreInfo, position: Int) {

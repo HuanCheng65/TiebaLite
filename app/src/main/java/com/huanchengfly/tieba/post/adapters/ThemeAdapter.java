@@ -15,7 +15,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.huanchengfly.tieba.post.BaseApplication;
+import com.huanchengfly.tieba.post.App;
 import com.huanchengfly.tieba.post.R;
 import com.huanchengfly.tieba.post.activities.TranslucentThemeActivity;
 import com.huanchengfly.tieba.post.components.MyViewHolder;
@@ -70,11 +70,11 @@ public class ThemeAdapter extends RecyclerView.Adapter<MyViewHolder> implements 
 
     private int getToolbarColor(String theme) {
         if (ThemeUtil.isNightMode(theme)) {
-            return BaseApplication.ThemeDelegate.INSTANCE.getColorByAttr(mContext, R.attr.colorToolbar, theme);
+            return App.ThemeDelegate.INSTANCE.getColorByAttr(mContext, R.attr.colorToolbar, theme);
         } else if (ThemeUtil.isTranslucentTheme(theme)) {
-            return ColorUtils.alpha(BaseApplication.ThemeDelegate.INSTANCE.getColorByAttr(mContext, R.attr.colorPrimary, ThemeUtil.THEME_TRANSLUCENT_LIGHT), 150);
+            return ColorUtils.alpha(App.ThemeDelegate.INSTANCE.getColorByAttr(mContext, R.attr.colorPrimary, ThemeUtil.THEME_TRANSLUCENT_LIGHT), 150);
         }
-        return BaseApplication.ThemeDelegate.INSTANCE.getColorByAttr(mContext, R.attr.colorPrimary, theme);
+        return App.ThemeDelegate.INSTANCE.getColorByAttr(mContext, R.attr.colorPrimary, theme);
     }
 
     @Override

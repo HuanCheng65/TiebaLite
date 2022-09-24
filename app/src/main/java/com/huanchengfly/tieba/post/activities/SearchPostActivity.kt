@@ -348,7 +348,7 @@ class SearchPostActivity : BaseActivity() {
                 .addItemDecoration(SpacesItemDecoration(0, 0, 8.dpToPx(), 8.dpToPx()))
             view.findViewById<View>(R.id.end_icon).setOnClickListener {
                 LitePal.deleteAllAsync(SearchPostHistory::class.java).listen {
-                    toastShort(R.string.toast_delete_success)
+                    toastShort(R.string.toast_clear_success)
                     recyclerView.post {
                         loadHistory()
                     }

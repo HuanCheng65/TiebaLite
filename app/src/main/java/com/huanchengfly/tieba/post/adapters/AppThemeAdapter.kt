@@ -3,7 +3,7 @@ package com.huanchengfly.tieba.post.adapters
 import android.content.Context
 import android.os.Build
 import com.google.android.material.card.MaterialCardView
-import com.huanchengfly.tieba.post.BaseApplication.ThemeDelegate.getColorByAttr
+import com.huanchengfly.tieba.post.App.ThemeDelegate.getColorByAttr
 import com.huanchengfly.tieba.post.R
 import com.huanchengfly.tieba.post.adapters.base.BaseSingleTypeAdapter
 import com.huanchengfly.tieba.post.components.MyViewHolder

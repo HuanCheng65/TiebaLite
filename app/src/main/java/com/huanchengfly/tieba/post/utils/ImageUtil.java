@@ -40,7 +40,7 @@ import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.bumptech.glide.request.FutureTarget;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.Target;
-import com.huanchengfly.tieba.post.BaseApplication;
+import com.huanchengfly.tieba.post.App;
 import com.huanchengfly.tieba.post.ExtensionsKt;
 import com.huanchengfly.tieba.post.R;
 import com.huanchengfly.tieba.post.activities.PhotoViewActivity;
@@ -366,12 +366,13 @@ public class ImageUtil {
         }
     }
 
+    @NonNull
     public static String getPicId(String picUrl) {
         String fileName = URLUtil.guessFileName(picUrl, null, MimeType.JPEG.toString());
         return fileName.replace(".jpg", "");
     }
 
-    public static void initImageView(ImageView view, List<PhotoViewBean> photoViewBeans, int position, String forumName, String forumId, String threadId, boolean seeLz, String objType) {
+    public static void initImageView(@NonNull ImageView view, List<PhotoViewBean> photoViewBeans, int position, String forumName, String forumId, String threadId, boolean seeLz, String objType) {
         view.setOnClickListener(v -> {
             Object tag = view.getTag(R.id.image_load_tag);
             if (tag != null) {
@@ -458,7 +459,8 @@ public class ImageUtil {
         Glide.with(imageView).clear(imageView);
     }
 
-    private static Drawable getPlaceHolder(Context context, int radius) {
+    @NonNull
+    public static Drawable getPlaceHolder(Context context, int radius) {
         GradientDrawable drawable = new GradientDrawable();
         int color = ThemeUtil.isNightMode() ? context.getResources().getColor(R.color.color_place_holder_night) : context.getResources().getColor(R.color.color_place_holder);
         drawable.setColor(color);
@@ -565,7 +567,7 @@ public class ImageUtil {
 
     @ImageLoadSettings
     private static int getImageLoadSettings() {
-        return Integer.parseInt(AppPreferencesUtilsKt.getAppPreferences(BaseApplication.getINSTANCE()).getImageLoadType());
+        return Integer.parseInt(AppPreferencesUtilsKt.getAppPreferences(App.getINSTANCE()).getImageLoadType());
     }
 
     public static String imageToBase64(InputStream is) {

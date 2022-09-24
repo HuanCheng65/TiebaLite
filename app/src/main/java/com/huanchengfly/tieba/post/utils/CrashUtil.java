@@ -15,7 +15,7 @@ import android.text.TextUtils;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.huanchengfly.tieba.post.BaseApplication;
+import com.huanchengfly.tieba.post.App;
 import com.huanchengfly.tieba.post.activities.MainActivity;
 
 public class CrashUtil {
@@ -121,7 +121,7 @@ public class CrashUtil {
             mAlarmManager.set(AlarmManager.RTC, System.currentTimeMillis() + 1000,
                     restartIntent);
         }
-        ((BaseApplication) context.getApplicationContext()).removeAllActivity();
+        ((App) context.getApplicationContext()).removeAllActivity();
         android.os.Process.killProcess(android.os.Process.myPid());
     }
 

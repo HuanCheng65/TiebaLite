@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.huanchengfly.tieba.post.widgets.theme.TintRelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.huanchengfly.tieba.post.ui.widgets.theme.TintRelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="16dp"
     app:backgroundTint="@color/default_color_background">
 
-    <com.huanchengfly.tieba.post.widgets.theme.TintTextView
+    <com.huanchengfly.tieba.post.ui.widgets.theme.TintTextView
         android:id="@+id/dialog_copy_text"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -18,7 +18,7 @@
         android:gravity="center"
         app:tint="@color/default_color_text" />
 
-    <com.huanchengfly.tieba.post.widgets.theme.TintTextView
+    <com.huanchengfly.tieba.post.ui.widgets.theme.TintTextView
         android:id="@+id/dialog_copy_tip"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -27,4 +27,4 @@
         android:text="@string/tip_copy_text"
         android:textStyle="bold"
         app:tint="@color/default_color_primary" />
-</com.huanchengfly.tieba.post.widgets.theme.TintRelativeLayout>
+</com.huanchengfly.tieba.post.ui.widgets.theme.TintRelativeLayout>

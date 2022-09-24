@@ -5,7 +5,7 @@ import android.content.SharedPreferences;
 
 import androidx.annotation.StringDef;
 
-import com.huanchengfly.tieba.post.BaseApplication;
+import com.huanchengfly.tieba.post.App;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -20,7 +20,7 @@ public class SharedPreferencesUtil {
     public static final String SP_PLUGINS = "plugins";
 
     public static SharedPreferences get(@Preferences String name) {
-        return get(BaseApplication.getINSTANCE(), name);
+        return get(App.getINSTANCE(), name);
     }
 
     public static SharedPreferences get(Context context, @Preferences String name) {

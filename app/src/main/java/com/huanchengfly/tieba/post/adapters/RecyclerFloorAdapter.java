@@ -34,21 +34,21 @@ import com.huanchengfly.tieba.post.fragments.MenuDialogFragment;
 import com.huanchengfly.tieba.post.models.PhotoViewBean;
 import com.huanchengfly.tieba.post.models.ReplyInfoBean;
 import com.huanchengfly.tieba.post.plugins.PluginManager;
+import com.huanchengfly.tieba.post.ui.widgets.MyLinearLayout;
+import com.huanchengfly.tieba.post.ui.widgets.VoicePlayerView;
+import com.huanchengfly.tieba.post.ui.widgets.theme.TintMySpannableTextView;
+import com.huanchengfly.tieba.post.ui.widgets.theme.TintTextView;
 import com.huanchengfly.tieba.post.utils.AccountUtil;
 import com.huanchengfly.tieba.post.utils.BilibiliUtil;
 import com.huanchengfly.tieba.post.utils.DateTimeUtils;
-import com.huanchengfly.tieba.post.utils.EmotionManager;
-import com.huanchengfly.tieba.post.utils.EmotionUtil;
+import com.huanchengfly.tieba.post.utils.EmoticonManager;
+import com.huanchengfly.tieba.post.utils.EmoticonUtil;
 import com.huanchengfly.tieba.post.utils.ImageUtil;
 import com.huanchengfly.tieba.post.utils.NavigationHelper;
 import com.huanchengfly.tieba.post.utils.StringUtil;
 import com.huanchengfly.tieba.post.utils.ThemeUtil;
 import com.huanchengfly.tieba.post.utils.TiebaUtil;
 import com.huanchengfly.tieba.post.utils.Util;
-import com.huanchengfly.tieba.post.widgets.MyLinearLayout;
-import com.huanchengfly.tieba.post.widgets.VoicePlayerView;
-import com.huanchengfly.tieba.post.widgets.theme.TintMySpannableTextView;
-import com.huanchengfly.tieba.post.widgets.theme.TintTextView;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -81,7 +81,7 @@ public class RecyclerFloorAdapter extends BaseSingleTypeAdapter<SubFloorListBean
                             postInfo.getId(),
                             dataBean.getPost().getFloor(),
                             userInfoBean != null ? userInfoBean.getNameShow() : "",
-                            AccountUtil.getLoginInfo(getContext()).getNameShow()).setPn(String.valueOf(pn)).toString()));
+                            AccountUtil.getLoginInfo().getNameShow()).setPn(String.valueOf(pn)).toString()));
         });
         DisplayMetrics dm = getContext().getResources().getDisplayMetrics();
         maxWidth = (float) dm.widthPixels;
@@ -116,7 +116,7 @@ public class RecyclerFloorAdapter extends BaseSingleTypeAdapter<SubFloorListBean
                                     postInfo.getId(),
                                     dataBean.getPost().getFloor(),
                                     userInfoBean != null ? userInfoBean.getNameShow() : "",
-                                    AccountUtil.getLoginInfo(getContext()).getNameShow()).setPn(String.valueOf(pn)).toString();
+                                    AccountUtil.getLoginInfo().getNameShow()).setPn(String.valueOf(pn)).toString();
                             Log.i(TAG, "convert: " + replyData);
                             getContext().startActivity(new Intent(getContext(), ReplyActivity.class)
                                     .putExtra("data", replyData));
@@ -130,7 +130,7 @@ public class RecyclerFloorAdapter extends BaseSingleTypeAdapter<SubFloorListBean
                                 switch (contentBean.getType()) {
                                     case "2":
                                         contentBean.setText("#(" + contentBean.getC() + ")");
-                                        EmotionManager.INSTANCE.registerEmotion(contentBean.getText(), contentBean.getC());
+                                        EmoticonManager.INSTANCE.registerEmoticon(contentBean.getText(), contentBean.getC());
                                         break;
                                     case "3":
                                     case "20":
@@ -147,7 +147,7 @@ public class RecyclerFloorAdapter extends BaseSingleTypeAdapter<SubFloorListBean
                             Util.showCopyDialog((BaseActivity) getContext(), stringBuilder.toString(), postInfo.getId());
                             return true;
                         case R.id.menu_delete:
-                            if (TextUtils.equals(AccountUtil.getLoginInfo(getContext()).getUid(), postInfo.getAuthor().getId())) {
+                            if (TextUtils.equals(AccountUtil.getLoginInfo().getUid(), postInfo.getAuthor().getId())) {
                                 ConfirmDialogFragment.newInstance(getContext().getString(R.string.title_dialog_del_post))
                                         .setOnConfirmListener(() -> {
                                             TiebaApi.getInstance()
@@ -173,7 +173,7 @@ public class RecyclerFloorAdapter extends BaseSingleTypeAdapter<SubFloorListBean
                 })
                 .setInitMenuCallback(menu -> {
                     PluginManager.INSTANCE.initPluginMenu(menu, PluginManager.MENU_SUB_POST_ITEM);
-                    if (TextUtils.equals(AccountUtil.getLoginInfo(getContext()).getUid(), postInfo.getAuthor().getId())) {
+                    if (TextUtils.equals(AccountUtil.getLoginInfo().getUid(), postInfo.getAuthor().getId())) {
                         menu.findItem(R.id.menu_delete).setVisible(true);
                     }
                 })
@@ -256,7 +256,7 @@ public class RecyclerFloorAdapter extends BaseSingleTypeAdapter<SubFloorListBean
 
     private void setText(TextView textView, CharSequence content) {
         content = BilibiliUtil.replaceVideoNumberSpan(getContext(), content);
-        content = StringUtil.getEmotionContent(EmotionUtil.EMOTION_ALL_TYPE, textView, content);
+        content = StringUtil.getEmoticonContent(EmoticonUtil.EMOTICON_ALL_TYPE, textView, content);
         textView.setText(content);
     }
 
@@ -366,7 +366,7 @@ public class RecyclerFloorAdapter extends BaseSingleTypeAdapter<SubFloorListBean
                     break;
                 case "2":
                     String emojiText = "#(" + contentBean.getC() + ")";
-                    EmotionManager.INSTANCE.registerEmotion(contentBean.getText(), contentBean.getC());
+                    EmoticonManager.INSTANCE.registerEmoticon(contentBean.getText(), contentBean.getC());
                     if (appendTextToLastTextView(views, emojiText)) {
                         TextView textView = createTextView(TEXT_VIEW_TYPE_CONTENT);
                         textView.setLayoutParams(getLayoutParams(contentBean));

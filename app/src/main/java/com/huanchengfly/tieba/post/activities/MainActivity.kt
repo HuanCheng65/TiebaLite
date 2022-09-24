@@ -8,7 +8,6 @@ import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -30,8 +29,8 @@ import com.huanchengfly.tieba.post.fragments.MyInfoFragment
 import com.huanchengfly.tieba.post.fragments.PersonalizedFeedFragment
 import com.huanchengfly.tieba.post.interfaces.Refreshable
 import com.huanchengfly.tieba.post.services.NotifyJobService
+import com.huanchengfly.tieba.post.ui.widgets.MyViewPager
 import com.huanchengfly.tieba.post.utils.*
-import com.huanchengfly.tieba.post.widgets.MyViewPager
 import com.microsoft.appcenter.crashes.Crashes
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.catch
@@ -163,8 +162,8 @@ open class MainActivity : BaseActivity(), NavigationBarView.OnItemSelectedListen
         initView()
         initListener()
         lifecycleScope.launch(Dispatchers.Main) {
-            if (AccountUtil.isLoggedIn(this@MainActivity)) {
-                AccountUtil.fetchAccountFlow(this@MainActivity)
+            if (AccountUtil.isLoggedIn()) {
+                AccountUtil.fetchAccountFlow()
                     .flowOn(Dispatchers.IO)
                     .catch { e ->
                         toastShort(e.getErrorMessage())
@@ -225,20 +224,20 @@ open class MainActivity : BaseActivity(), NavigationBarView.OnItemSelectedListen
                     .show()
                 dataStore.putBoolean(SP_SHOULD_SHOW_SNACKBAR, false)
             }
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU && AccountUtil.isLoggedIn(this)) {
+        }
+        handler.postDelayed({
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU && AccountUtil.isLoggedIn()) {
                 requestPermission {
                     permissions = listOf(PermissionUtils.POST_NOTIFICATIONS)
                     description = getString(R.string.desc_permission_post_notifications)
                 }
             }
-        }
-        handler.postDelayed({
             try {
                 TiebaUtil.initAutoSign(this)
             } catch (e: Exception) {
                 e.printStackTrace()
             }
-            if (AccountUtil.isLoggedIn(this) && AccountUtil.getCookie(this) == null) {
+            if (AccountUtil.isLoggedIn() && AccountUtil.getCookie(this) == null) {
                 showDialog(DialogUtil.build(this)
                     .setTitle(R.string.title_dialog_update_stoken)
                     .setMessage(R.string.message_dialog_update_stoken)
@@ -254,16 +253,11 @@ open class MainActivity : BaseActivity(), NavigationBarView.OnItemSelectedListen
                     .create())
             }
         }, 1000)
-        if (BaseApplication.isFirstRun) {
+        if (App.isFirstRun) {
             goToActivity<NewIntroActivity>()
-        } else if (!AccountUtil.isLoggedIn(this)) {
+        } else if (!AccountUtil.isLoggedIn()) {
             navigationHelper.navigationByData(NavigationHelper.ACTION_LOGIN)
         }
-    }
-
-    override fun recreate() {
-        super.recreate()
-        Log.i(TAG, "recreate: ")
     }
 
     @SuppressLint("MissingPermission")
@@ -290,8 +284,7 @@ open class MainActivity : BaseActivity(), NavigationBarView.OnItemSelectedListen
                 .setRequiredNetworkType(JobInfo.NETWORK_TYPE_ANY)
             val jobScheduler = getSystemService(Context.JOB_SCHEDULER_SERVICE) as JobScheduler
             jobScheduler.schedule(builder.build())
-        } catch (ignored: Exception) {
-        }
+        } catch (ignored: Exception) {}
     }
 
     override fun onStop() {

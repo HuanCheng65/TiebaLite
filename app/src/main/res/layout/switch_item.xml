@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <com.huanchengfly.tieba.post.widgets.theme.TintTextView
+    <com.huanchengfly.tieba.post.ui.widgets.theme.TintTextView
         android:id="@+id/my_info_night_tv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -14,7 +14,7 @@
         android:textStyle="bold"
         app:tint="@color/default_color_text_secondary" />
 
-    <com.huanchengfly.tieba.post.widgets.theme.TintSwitch
+    <com.huanchengfly.tieba.post.ui.widgets.theme.TintSwitch
         android:id="@+id/my_info_night_switch"
         style="@style/Widget.Switch"
         android:layout_width="wrap_content"

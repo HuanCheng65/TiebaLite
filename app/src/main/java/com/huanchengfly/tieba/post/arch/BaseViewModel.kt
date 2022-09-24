@@ -1,18 +1,14 @@
 package com.huanchengfly.tieba.post.arch
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 
-interface IntentTransformer<Intent : UiIntent, PC : PartialChange<State>, State : UiState> {
+interface PartialChangeProducer<Intent : UiIntent, PC : PartialChange<State>, State : UiState> {
     fun toPartialChangeFlow(intentFlow: Flow<Intent>): Flow<PC>
-}
-
-interface StateInitializer<State : UiState> {
-    fun createInitialState(): State
 }
 
 abstract class BaseViewModel<
@@ -20,31 +16,44 @@ abstract class BaseViewModel<
         PC : PartialChange<State>,
         State : UiState,
         Event : UiEvent
-        >(transformer: IntentTransformer<Intent, PC, State>, initializer: StateInitializer<State>) :
+        > :
     ViewModel() {
 
-    private val eventChannel = Channel<Event>()
+    var initialized = false
 
-    val eventFlow = eventChannel.receiveAsFlow()
+    private val _internalUiEventFlow: MutableSharedFlow<UiEvent> = MutableSharedFlow()
+
+    val uiEventFlow: Flow<UiEvent> = _internalUiEventFlow
 
     private val _intentFlow = MutableSharedFlow<Intent>()
 
-    private val initialState = initializer.createInitialState()
+    private val initialState: State by lazy { createInitialState() }
 
-    val uiState = transformer.toPartialChangeFlow(_intentFlow)
+    private val partialChangeProducer: PartialChangeProducer<Intent, PC, State> by lazy { createPartialChangeProducer() }
+
+    protected abstract fun createInitialState(): State
+    protected abstract fun createPartialChangeProducer(): PartialChangeProducer<Intent, PC, State>
+
+    val uiState = partialChangeProducer.toPartialChangeFlow(_intentFlow)
         .onEach {
-            val event = dispatchEvent(it) ?: return@onEach
-            eventChannel.send(event)
+            Log.i("ViewModel", "partialChange $it")
+            val event = dispatchEvent(it)
+            if (event != null) {
+                Log.i("ViewModel", "event $event")
+                _internalUiEventFlow.emit(event)
+            }
         }
         .scan(initialState) { oldState, partialChange ->
             partialChange.reduce(oldState)
         }
+        .distinctUntilChanged()
         .flowOn(Dispatchers.IO)
         .stateIn(viewModelScope, SharingStarted.Eagerly, initialState)
 
-    abstract fun dispatchEvent(partialChange: PC): Event?
+    protected open fun dispatchEvent(partialChange: PC): UiEvent? = null
 
     fun send(intent: Intent) {
+        Log.i("ViewModel", "send $intent")
         viewModelScope.launch {
             _intentFlow.emit(intent)
         }

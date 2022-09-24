@@ -59,7 +59,7 @@ class SortAndSignInterceptor(private val appSecret: String) : Interceptor {
 
             body is MyMultipartBody && body.contains(Param.CLIENT_VERSION) && !body.contains(Param.SIGN) -> {
                 val builder = body.newBuilder()
-                var fileParts = mutableListOf<MyMultipartBody.Part>()
+                val fileParts = mutableListOf<MyMultipartBody.Part>()
                 body.parts.forEach {
                     if (it.fileName() != null) {
                         fileParts.add(it)

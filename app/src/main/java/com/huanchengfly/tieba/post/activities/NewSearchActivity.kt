@@ -35,11 +35,11 @@ import com.huanchengfly.tieba.post.interfaces.ISearchFragment
 import com.huanchengfly.tieba.post.models.database.SearchHistory
 import com.huanchengfly.tieba.post.toastShort
 import com.huanchengfly.tieba.post.ui.common.theme.utils.ColorStateListUtils
+import com.huanchengfly.tieba.post.ui.widgets.MyViewPager
 import com.huanchengfly.tieba.post.utils.AnimUtil
 import com.huanchengfly.tieba.post.utils.ThemeUtil
 import com.huanchengfly.tieba.post.utils.anim.animSet
 import com.huanchengfly.tieba.post.utils.bindKeyEvent
-import com.huanchengfly.tieba.post.widgets.MyViewPager
 import org.litepal.LitePal
 
 class NewSearchActivity : BaseActivity(), TabLayout.OnTabSelectedListener {
@@ -173,7 +173,7 @@ class NewSearchActivity : BaseActivity(), TabLayout.OnTabSelectedListener {
                 endPadding = 16.dpToPx()
                 setOnEndIconClickListener {
                     LitePal.deleteAllAsync(SearchHistory::class.java).listen {
-                        toastShort(R.string.toast_delete_success)
+                        toastShort(R.string.toast_clear_success)
                         recyclerView.post {
                             reloadAdapters()
                         }

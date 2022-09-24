@@ -1,6 +1,6 @@
 package com.huanchengfly.tieba.post.api.retrofit.interceptors
 
-import com.huanchengfly.tieba.post.BaseApplication
+import com.huanchengfly.tieba.post.App
 import com.huanchengfly.tieba.post.api.Header
 import com.huanchengfly.tieba.post.utils.AccountUtil
 import okhttp3.Interceptor
@@ -25,7 +25,7 @@ object AddCookieInterceptor : Interceptor {
         if (addCookie) {
             headers = headers.newBuilder()
                 .removeAll(Header.COOKIE)
-                .add(Header.COOKIE, AccountUtil.getCookie(BaseApplication.INSTANCE) ?: "")
+                .add(Header.COOKIE, AccountUtil.getCookie(App.INSTANCE) ?: "")
                 .build()
         }
 

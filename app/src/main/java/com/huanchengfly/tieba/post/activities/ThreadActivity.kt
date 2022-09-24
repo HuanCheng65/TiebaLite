@@ -50,10 +50,10 @@ import com.huanchengfly.tieba.post.models.ThreadHistoryInfoBean
 import com.huanchengfly.tieba.post.models.database.History
 import com.huanchengfly.tieba.post.toastShort
 import com.huanchengfly.tieba.post.ui.common.theme.utils.ThemeUtils
+import com.huanchengfly.tieba.post.ui.widgets.VideoPlayerStandard
 import com.huanchengfly.tieba.post.utils.*
 import com.huanchengfly.tieba.post.utils.preload.PreloadUtil
 import com.huanchengfly.tieba.post.utils.preload.loaders.ThreadContentLoader
-import com.huanchengfly.tieba.post.widgets.VideoPlayerStandard
 import com.scwang.smart.refresh.layout.SmartRefreshLayout
 import retrofit2.Call
 import retrofit2.Callback
@@ -760,9 +760,10 @@ class ThreadActivity : BaseActivity(), View.OnClickListener, IThreadMenuFragment
                 if (!agree) {
                     agree = true
                     agreeNum += 1
-                    TiebaApi.getInstance().agree(
+                    TiebaApi.getInstance().opAgree(
                         dataBean!!.thread?.threadInfo?.threadId!!,
-                        dataBean!!.thread?.threadInfo?.firstPostId!!
+                        dataBean!!.thread?.threadInfo?.firstPostId!!,
+                        0
                     ).enqueue(object : Callback<AgreeBean> {
                         override fun onFailure(call: Call<AgreeBean>, t: Throwable) {
                             agree = false
@@ -786,9 +787,10 @@ class ThreadActivity : BaseActivity(), View.OnClickListener, IThreadMenuFragment
                 } else {
                     agree = false
                     agreeNum -= 1
-                    TiebaApi.getInstance().disagree(
+                    TiebaApi.getInstance().opAgree(
                         dataBean!!.thread?.threadInfo?.threadId!!,
-                        dataBean!!.thread?.threadInfo?.firstPostId!!
+                        dataBean!!.thread?.threadInfo?.firstPostId!!,
+                        1
                     ).enqueue(object : Callback<AgreeBean> {
                         override fun onFailure(call: Call<AgreeBean>, t: Throwable) {
                             agree = true

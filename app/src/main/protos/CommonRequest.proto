@@ -5,14 +5,14 @@ package protos;
 option java_package = "com.huanchengfly.tieba.post.api.models.protos";
 
 message CommonRequest {
-  string BDUSS = 10;
+  optional string BDUSS = 10;
   string _client_id = 3;
   int32  _client_type = 1;
   string _client_version = 2;
   string _os_version = 25;
   string _phone_imei = 5;
   string _phone_newimei = 14;
-  int64 timestamp = 8;
+  int64 _timestamp = 8;
   string brand = 26;
   string c3_aid = 35;
   string cuid = 7;
@@ -25,9 +25,9 @@ message CommonRequest {
   string net_type = 12;
   string oaid = 34;
   string pversion = 24;
-  string sample_id = 36;
-  string sign = 23;
-  string stoken = 30;
-  string tbs = 11;
-  string z_id = 31;
+  optional string sample_id = 36;
+  optional string sign = 23;
+  optional string stoken = 30;
+  optional string tbs = 11;
+  optional string z_id = 31;
 }

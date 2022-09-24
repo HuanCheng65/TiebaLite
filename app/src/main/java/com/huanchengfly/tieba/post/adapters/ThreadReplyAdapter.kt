@@ -36,14 +36,14 @@ import com.huanchengfly.tieba.post.fragments.MenuDialogFragment
 import com.huanchengfly.tieba.post.models.ReplyInfoBean
 import com.huanchengfly.tieba.post.plugins.PluginManager
 import com.huanchengfly.tieba.post.ui.common.theme.utils.ThemeUtils
+import com.huanchengfly.tieba.post.ui.widgets.MyLinearLayout
+import com.huanchengfly.tieba.post.ui.widgets.VoicePlayerView
+import com.huanchengfly.tieba.post.ui.widgets.theme.TintTextView
 import com.huanchengfly.tieba.post.utils.*
 import com.huanchengfly.tieba.post.utils.BilibiliUtil.replaceVideoNumberSpan
 import com.huanchengfly.tieba.post.utils.DateTimeUtils.getRelativeTimeString
-import com.huanchengfly.tieba.post.utils.EmotionManager.registerEmotion
+import com.huanchengfly.tieba.post.utils.EmoticonManager.registerEmoticon
 import com.huanchengfly.tieba.post.utils.TiebaUtil.reportPost
-import com.huanchengfly.tieba.post.widgets.MyLinearLayout
-import com.huanchengfly.tieba.post.widgets.VoicePlayerView
-import com.huanchengfly.tieba.post.widgets.theme.TintTextView
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -199,7 +199,7 @@ class ThreadReplyAdapter(context: Context) :
                 )
                 "2" -> {
                     val emojiText = "#(" + contentBean.c + ")"
-                    registerEmotion(
+                    registerEmoticon(
                         contentBean.text!!,
                         contentBean.c!!
                     )
@@ -212,7 +212,7 @@ class ThreadReplyAdapter(context: Context) :
         }
         textView.text = replaceVideoNumberSpan(
             context,
-            StringUtil.getEmotionContent(EmotionUtil.EMOTION_ALL_TYPE, textView, builder)
+            StringUtil.getEmoticonContent(EmoticonUtil.EMOTICON_ALL_TYPE, textView, builder)
         )
         textView.setPadding(
             DisplayUtil.dp2px(context, 8f),

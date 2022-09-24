@@ -33,7 +33,7 @@ import com.bumptech.glide.request.transition.Transition
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.gyf.immersionbar.ImmersionBar
 import com.huanchengfly.tieba.post.*
-import com.huanchengfly.tieba.post.BaseApplication.Companion.translucentBackground
+import com.huanchengfly.tieba.post.App.Companion.translucentBackground
 import com.huanchengfly.tieba.post.adapters.TranslucentThemeColorAdapter
 import com.huanchengfly.tieba.post.adapters.WallpaperAdapter
 import com.huanchengfly.tieba.post.api.LiteApi
@@ -43,10 +43,10 @@ import com.huanchengfly.tieba.post.components.dividers.HorizontalSpacesDecoratio
 import com.huanchengfly.tieba.post.components.transformations.BlurTransformation
 import com.huanchengfly.tieba.post.interfaces.OnItemClickListener
 import com.huanchengfly.tieba.post.ui.common.theme.utils.ThemeUtils
+import com.huanchengfly.tieba.post.ui.widgets.theme.TintMaterialButton
 import com.huanchengfly.tieba.post.utils.*
 import com.huanchengfly.tieba.post.utils.ThemeUtil.TRANSLUCENT_THEME_DARK
 import com.huanchengfly.tieba.post.utils.ThemeUtil.TRANSLUCENT_THEME_LIGHT
-import com.huanchengfly.tieba.post.widgets.theme.TintMaterialButton
 import com.jrummyapps.android.colorpicker.ColorPickerDialog
 import com.jrummyapps.android.colorpicker.ColorPickerDialogListener
 import com.yalantis.ucrop.UCrop
@@ -131,8 +131,8 @@ class TranslucentThemeActivity : BaseActivity(), View.OnClickListener, OnSeekBar
                         ImageUtil.bitmapToFile(resource, File(cacheDir, "origin_background.jpg"))
                     val sourceFileUri = Uri.fromFile(file)
                     val destUri = Uri.fromFile(File(filesDir, "cropped_background.jpg"))
-                    val height = BaseApplication.ScreenInfo.EXACT_SCREEN_HEIGHT.toFloat()
-                    val width = BaseApplication.ScreenInfo.EXACT_SCREEN_WIDTH.toFloat()
+                    val height = App.ScreenInfo.EXACT_SCREEN_HEIGHT.toFloat()
+                    val width = App.ScreenInfo.EXACT_SCREEN_WIDTH.toFloat()
                     UCrop.of(sourceFileUri, destUri)
                         .withAspectRatio(width / height, 1f)
                         .withOptions(UCrop.Options().apply {

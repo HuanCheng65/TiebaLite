@@ -72,14 +72,14 @@ class MessageListAdapter(
             DateTimeUtils.getRelativeTimeString(context, item.time!!)
         )
         val contentTextView = viewHolder.getView<TextView>(R.id.message_list_item_content)
-        contentTextView.text = StringUtil.getEmotionContent(
-            EmotionUtil.EMOTION_ALL_TYPE,
+        contentTextView.text = StringUtil.getEmoticonContent(
+            EmoticonUtil.EMOTICON_ALL_TYPE,
             contentTextView,
             item.content
         )
         val textView = viewHolder.getView<TextView>(R.id.message_list_item_quote)
-        textView.text = StringUtil.getEmotionContent(
-            EmotionUtil.EMOTION_ALL_TYPE,
+        textView.text = StringUtil.getEmoticonContent(
+            EmoticonUtil.EMOTICON_ALL_TYPE,
             textView,
             if (type == MessageFragment.TYPE_REPLY_ME) {
                 if ("1" == item.isFloor) {

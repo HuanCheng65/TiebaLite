@@ -3,6 +3,7 @@
     <declare-styleable name="Theme">
         <attr name="colorPrimary" format="color" />
         <attr name="colorAccent" format="color" />
+        <attr name="colorNewAccent" format="color" />
         <attr name="colorOnAccent" format="color" />
         <attr name="colorToolbar" format="color" />
         <attr name="colorToolbarItem" format="color" />
@@ -17,7 +18,8 @@
         <attr name="colorTextSecondary" format="color" />
         <attr name="color_text_disabled" format="color" />
         <attr name="colorBg" format="color" />
-        <attr name="colorWindowBackground" format="color" />
+        <attr name="colorChip" format="color" />
+        <attr name="colorOnChip" format="color" />
         <attr name="colorUnselected" format="color" />
         <attr name="colorNavBar" format="color" />
         <attr name="colorFloorCard" format="color" />

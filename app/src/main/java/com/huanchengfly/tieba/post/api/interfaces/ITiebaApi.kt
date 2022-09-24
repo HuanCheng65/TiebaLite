@@ -4,6 +4,8 @@ import com.huanchengfly.tieba.post.api.ForumSortType
 import com.huanchengfly.tieba.post.api.SearchThreadFilter
 import com.huanchengfly.tieba.post.api.SearchThreadOrder
 import com.huanchengfly.tieba.post.api.models.*
+import com.huanchengfly.tieba.post.api.models.protos.personalized.PersonalizedResponse
+import com.huanchengfly.tieba.post.api.models.protos.userLike.UserLikeResponse
 import com.huanchengfly.tieba.post.api.models.web.ForumBean
 import com.huanchengfly.tieba.post.api.models.web.ForumHome
 import com.huanchengfly.tieba.post.api.models.web.HotMessageListBean
@@ -40,16 +42,70 @@ interface ITiebaApi {
     ): Deferred<ApiResult<PersonalizedBean>>
 
     /**
+     * 个性推荐（每页 15 贴）
+     *
+     * @param loadType 加载类型（1 - 下拉刷新 2 - 加载更多）
+     * @param page 分页页码
+     */
+    fun personalizedFlow(
+        loadType: Int,
+        page: Int = 1
+    ): Flow<PersonalizedBean>
+
+    /**
+     * 个性推荐（每页 15 贴）
+     *
+     * @param loadType 加载类型（1 - 下拉刷新 2 - 加载更多）
+     * @param page 分页页码
+     */
+    fun personalizedProtoFlow(
+        loadType: Int,
+        page: Int = 1
+    ): Flow<PersonalizedResponse>
+
+    /**
      * 给贴子/回复点赞
      *
      * **需登录**
      *
      * @param threadId 贴子 ID
      * @param postId 回复 ID
+     * @param opType 操作 0 = 点赞 1 = 取消点赞
      */
-    fun agree(
+    fun opAgree(
         threadId: String,
-        postId: String
+        postId: String,
+        opType: Int
+    ): Call<AgreeBean>
+
+    /**
+     * 给贴子/回复点赞/取消点赞
+     *
+     * **需登录**
+     *
+     * @param threadId 贴子 ID
+     * @param postId 回复 ID
+     * @param opType 操作 0 = 点赞 1 = 取消点赞
+     */
+    fun opAgreeFlow(
+        threadId: String,
+        postId: String,
+        opType: Int
+    ): Flow<AgreeBean>
+
+    /**
+     * 给贴子/回复点踩
+     *
+     * **需登录**
+     *
+     * @param threadId 贴子 ID
+     * @param postId 回复 ID
+     * @param opType 操作 0 = 点踩 1 = 取消点踩
+     */
+    fun disagree(
+        threadId: String,
+        postId: String,
+        opType: Int
     ): Call<AgreeBean>
 
     /**
@@ -59,11 +115,13 @@ interface ITiebaApi {
      *
      * @param threadId 贴子 ID
      * @param postId 回复 ID
+     * @param opType 操作 0 = 点踩 1 = 取消点踩
      */
-    fun disagree(
+    fun disagreeFlow(
         threadId: String,
-        postId: String
-    ): Call<AgreeBean>
+        postId: String,
+        opType: Int
+    ): Flow<AgreeBean>
 
     /**
      * 关注吧列表
@@ -175,8 +233,8 @@ interface ITiebaApi {
      * @param seeLz 是否只看楼主
      * @param picId 图片 ID
      * @param picIndex 图片索引
-     * @param objType 原页面类型（pb - 贴页面 frs - 吧页面）
-     * @param prev 不明，默认为 false
+     * @param objType 原页面类型（pb - 贴页面 frs - 吧页面 index - 首页推荐）
+     * @param prev 是否向前加载
      */
     fun picPage(
         forumId: String,
@@ -188,6 +246,29 @@ interface ITiebaApi {
         objType: String,
         prev: Boolean
     ): Call<PicPageBean>
+
+    /**
+     * 查看图片
+     *
+     * @param forumId 吧 ID
+     * @param forumName 吧名
+     * @param threadId 贴 ID
+     * @param seeLz 是否只看楼主
+     * @param picId 图片 ID
+     * @param picIndex 图片索引
+     * @param objType 原页面类型（pb - 贴页面 frs - 吧页面 index - 首页推荐）
+     * @param prev 是否向前加载
+     */
+    fun picPageFlow(
+        forumId: String,
+        forumName: String,
+        threadId: String,
+        seeLz: Boolean,
+        picId: String,
+        picIndex: String,
+        objType: String,
+        prev: Boolean
+    ): Flow<PicPageBean>
 
     /**
      * 用户信息
@@ -226,6 +307,21 @@ interface ITiebaApi {
         forumName: String,
         tbs: String
     ): Call<CommonResponse>
+
+    /**
+     * 取关一个吧
+     *
+     * **需登录**
+     *
+     * @param forumId 吧 ID
+     * @param forumName 吧名
+     * @param tbs tbs（长）
+     */
+    fun unlikeForumFlow(
+        forumId: String,
+        forumName: String,
+        tbs: String
+    ): Flow<CommonResponse>
 
     /**
      * 关注一个吧
@@ -349,6 +445,13 @@ interface ITiebaApi {
     fun msg(): Call<MsgBean>
 
     /**
+     * 消息提醒数
+     *
+     * **需登录**
+     */
+    fun msgFlow(): Flow<MsgBean>
+
+    /**
      * 查看收藏贴列表
      *
      * **需登录**
@@ -412,6 +515,18 @@ interface ITiebaApi {
     ): Deferred<ApiResult<MessageListBean>>
 
     /**
+     * 回复我的消息列表
+     *
+     * **需登录**
+     *
+     * @param page 分页页码（从 1 开始）
+     * @return Flow
+     */
+    fun replyMeFlow(
+        page: Int = 1
+    ): Flow<MessageListBean>
+
+    /**
      * 提到我的消息列表
      *
      * **需登录**
@@ -432,6 +547,18 @@ interface ITiebaApi {
     fun atMeAsync(
         page: Int = 1
     ): Deferred<ApiResult<MessageListBean>>
+
+    /**
+     * 提到我的消息列表
+     *
+     * **需登录**
+     *
+     * @param page 分页页码（从 1 开始）
+     * @return Flow
+     */
+    fun atMeFlow(
+        page: Int = 1
+    ): Flow<MessageListBean>
 
     /**
      * 赞我的消息列表
@@ -516,6 +643,18 @@ interface ITiebaApi {
         dislikeBean: DislikeBean,
         stoken: String
     ): Call<CommonResponse>
+
+    /**
+     * 推荐“不感兴趣”
+     *
+     * **需登录**
+     *
+     * @param dislikeBean “不感兴趣”信息 [com.huanchengfly.tieba.post.models.DislikeBean]
+     * @param stoken stoken
+     */
+    fun submitDislikeFlow(
+        dislikeBean: DislikeBean
+    ): Flow<CommonResponse>
 
     /**
      * 关注用户（web 接口）
@@ -920,4 +1059,17 @@ interface ITiebaApi {
         forumIds: String,
         tbs: String
     ): Flow<MSignBean>
+
+    /**
+     * 关注动态
+     *
+     * @param pageTag 页码
+     * @param lastRequestUnix 上次请求的时间戳（10位）
+     * @param loadType 加载类型（1 = 下拉刷新，2 = 加载更多）
+     */
+    fun userLikeFlow(
+        pageTag: String,
+        lastRequestUnix: Long,
+        loadType: Int
+    ): Flow<UserLikeResponse>
 }

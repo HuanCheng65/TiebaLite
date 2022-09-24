@@ -10,7 +10,7 @@ class NullOnEmptyConverterFactory : Converter.Factory() {
         type: Type,
         annotations: Array<Annotation>,
         retrofit: Retrofit
-    ): Converter<ResponseBody, *>? {
+    ): Converter<ResponseBody, *> {
         val delegate: Converter<ResponseBody, *> =
             retrofit.nextResponseBodyConverter<Any>(this, type, annotations)
         return (Converter<ResponseBody, Any?> { body: ResponseBody ->

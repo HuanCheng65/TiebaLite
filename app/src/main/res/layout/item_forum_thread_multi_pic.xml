@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <com.huanchengfly.tieba.post.widgets.theme.TintMaterialCardView
+    <com.huanchengfly.tieba.post.ui.widgets.theme.TintMaterialCardView
         android:id="@+id/forum_item"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -50,7 +50,7 @@
                         app:orientation="vertical"
                         app:rowCount="1">
 
-                        <com.huanchengfly.tieba.post.widgets.MarkedImageView
+                        <com.huanchengfly.tieba.post.ui.widgets.MarkedImageView
                             android:id="@+id/forum_item_content_pic_1"
                             android:layout_width="0dp"
                             android:layout_height="match_parent"
@@ -60,7 +60,7 @@
                             app:layout_columnWeight="1"
                             tools:ignore="ContentDescription" />
 
-                        <com.huanchengfly.tieba.post.widgets.MarkedImageView
+                        <com.huanchengfly.tieba.post.ui.widgets.MarkedImageView
                             android:id="@+id/forum_item_content_pic_2"
                             android:layout_width="0dp"
                             android:layout_height="match_parent"
@@ -71,7 +71,7 @@
                             app:layout_columnWeight="1"
                             tools:ignore="ContentDescription" />
 
-                        <com.huanchengfly.tieba.post.widgets.MarkedImageView
+                        <com.huanchengfly.tieba.post.ui.widgets.MarkedImageView
                             android:id="@+id/forum_item_content_pic_3"
                             android:layout_width="0dp"
                             android:layout_height="match_parent"
@@ -135,7 +135,7 @@
                 android:layout_below="@id/forum_item_content"
                 android:layout_marginTop="@dimen/forum_card_inner_gap" />
         </RelativeLayout>
-    </com.huanchengfly.tieba.post.widgets.theme.TintMaterialCardView>
+    </com.huanchengfly.tieba.post.ui.widgets.theme.TintMaterialCardView>
 
     <include
         android:id="@+id/feed_refresh_tip"

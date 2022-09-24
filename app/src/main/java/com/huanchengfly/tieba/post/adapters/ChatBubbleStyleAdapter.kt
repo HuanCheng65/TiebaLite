@@ -12,8 +12,8 @@ import com.huanchengfly.tieba.post.R
 import com.huanchengfly.tieba.post.adapters.ChatBubbleStyleAdapter.Bubble.Companion.POSITION_RIGHT
 import com.huanchengfly.tieba.post.adapters.base.BaseSingleTypeAdapter
 import com.huanchengfly.tieba.post.components.MyViewHolder
-import com.huanchengfly.tieba.post.widgets.theme.TintLinearLayout
-import com.huanchengfly.tieba.post.widgets.theme.TintTextView
+import com.huanchengfly.tieba.post.ui.widgets.theme.TintLinearLayout
+import com.huanchengfly.tieba.post.ui.widgets.theme.TintTextView
 
 class ChatBubbleStyleAdapter(
     context: Context,

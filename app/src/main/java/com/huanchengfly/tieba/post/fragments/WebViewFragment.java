@@ -353,7 +353,7 @@ public class WebViewFragment extends BaseFragment implements DownloadListener, B
                 ((WebViewListener) getAttachContext()).onPageStarted(view, url, favicon);
             }
             if (enableSwipeRefresh) swipeRefreshLayout.setRefreshing(true);
-            if (AccountUtil.isLoggedIn(getAttachContext()) && !activityName.startsWith("LoginActivity") && !activityName.startsWith("UpdateInfoActivity")) {
+            if (AccountUtil.isLoggedIn() && !activityName.startsWith("LoginActivity") && !activityName.startsWith("UpdateInfoActivity")) {
                 String cookieStr = AccountUtil.getBdussCookie(getAttachContext());
                 CookieManager.getInstance().setCookie(url, cookieStr);
             }

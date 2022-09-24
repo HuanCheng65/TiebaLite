@@ -22,7 +22,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <com.huanchengfly.tieba.post.widgets.theme.TintImageView
+            <com.huanchengfly.tieba.post.ui.widgets.theme.TintImageView
                 android:id="@+id/theme_icon"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -46,7 +46,7 @@
         android:visibility="gone"
         tools:visibility="visible">
 
-        <com.huanchengfly.tieba.post.widgets.theme.TintImageView
+        <com.huanchengfly.tieba.post.ui.widgets.theme.TintImageView
             android:layout_width="12dp"
             android:layout_height="12dp"
             android:layout_margin="1dp"

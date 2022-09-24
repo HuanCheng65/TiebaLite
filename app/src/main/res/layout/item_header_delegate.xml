@@ -8,14 +8,14 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <com.huanchengfly.tieba.post.widgets.theme.TintImageView
+        <com.huanchengfly.tieba.post.ui.widgets.theme.TintImageView
             android:id="@+id/icon"
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:layout_alignParentStart="true"
             android:layout_centerVertical="true" />
 
-        <com.huanchengfly.tieba.post.widgets.theme.TintTextView
+        <com.huanchengfly.tieba.post.ui.widgets.theme.TintTextView
             android:id="@+id/title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -26,7 +26,7 @@
             android:layout_toEndOf="@id/icon"
             android:textStyle="bold" />
 
-        <com.huanchengfly.tieba.post.widgets.theme.TintImageView
+        <com.huanchengfly.tieba.post.ui.widgets.theme.TintImageView
             android:id="@+id/end_icon"
             android:layout_width="24dp"
             android:layout_height="24dp"

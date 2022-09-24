@@ -24,7 +24,7 @@
             android:layout_marginBottom="48dp"
             android:textColor="?android:attr/textColorSecondary" />
 
-        <com.huanchengfly.tieba.post.widgets.theme.TintTextInputLayout
+        <com.huanchengfly.tieba.post.ui.widgets.theme.TintTextInputLayout
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -43,7 +43,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textCursorDrawable="@null" />
-        </com.huanchengfly.tieba.post.widgets.theme.TintTextInputLayout>
+        </com.huanchengfly.tieba.post.ui.widgets.theme.TintTextInputLayout>
 
     </LinearLayout>
 </ScrollView>

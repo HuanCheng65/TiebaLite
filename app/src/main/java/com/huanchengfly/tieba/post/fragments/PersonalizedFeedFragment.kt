@@ -30,12 +30,12 @@ import com.huanchengfly.tieba.post.goToActivity
 import com.huanchengfly.tieba.post.interfaces.Refreshable
 import com.huanchengfly.tieba.post.isLandscape
 import com.huanchengfly.tieba.post.isPortrait
+import com.huanchengfly.tieba.post.ui.widgets.VideoPlayerStandard
 import com.huanchengfly.tieba.post.utils.BlockUtil
 import com.huanchengfly.tieba.post.utils.ThemeUtil
 import com.huanchengfly.tieba.post.utils.TiebaUtil
 import com.huanchengfly.tieba.post.utils.Util
 import com.huanchengfly.tieba.post.utils.anim.animSet
-import com.huanchengfly.tieba.post.widgets.VideoPlayerStandard
 import com.scwang.smart.refresh.header.MaterialHeader
 import com.scwang.smart.refresh.layout.SmartRefreshLayout
 

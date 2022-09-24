@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.huanchengfly.tieba.post.widgets.theme.TintRelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.huanchengfly.tieba.post.ui.widgets.theme.TintRelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/feed_refresh_tip"
@@ -21,7 +21,7 @@
         android:layout_height="wrap_content"
         android:layout_centerInParent="true">
 
-        <com.huanchengfly.tieba.post.widgets.theme.TintImageView
+        <com.huanchengfly.tieba.post.ui.widgets.theme.TintImageView
             android:id="@+id/refresh_tip_icon"
             android:layout_width="18dp"
             android:layout_height="18dp"
@@ -29,7 +29,7 @@
             app:srcCompat="@drawable/ic_round_refresh"
             app:tint="@color/default_color_primary" />
 
-        <com.huanchengfly.tieba.post.widgets.theme.TintTextView
+        <com.huanchengfly.tieba.post.ui.widgets.theme.TintTextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
@@ -40,4 +40,4 @@
             android:textStyle="bold"
             app:tint="@color/default_color_primary" />
     </RelativeLayout>
-</com.huanchengfly.tieba.post.widgets.theme.TintRelativeLayout>
+</com.huanchengfly.tieba.post.ui.widgets.theme.TintRelativeLayout>

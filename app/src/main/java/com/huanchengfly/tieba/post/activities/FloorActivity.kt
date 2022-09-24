@@ -148,7 +148,7 @@ class FloorActivity : BaseActivity() {
                         dataBean!!.post!!.id,
                         dataBean!!.post!!.floor,
                         dataBean!!.post!!.author.nameShow,
-                        AccountUtil.getLoginInfo(this)!!.nameShow
+                        AccountUtil.getLoginInfo()!!.nameShow
                     ).setPn(pn.toString()).toString()
                 )
         )
