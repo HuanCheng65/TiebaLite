@@ -1,7 +1,11 @@
 package com.huanchengfly.tieba.post.utils
 
 import android.content.Context
-import android.text.*
+import android.text.Spannable
+import android.text.SpannableString
+import android.text.SpannableStringBuilder
+import android.text.Spanned
+import android.text.TextUtils
 import android.text.style.ForegroundColorSpan
 import android.widget.TextView
 import androidx.compose.runtime.Composable
@@ -117,16 +121,25 @@ object StringUtil {
 
     fun String.getShortNumString(): String {
         val long = toLongOrNull() ?: return ""
+        return long.getShortNumString()
+    }
+
+    fun Int.getShortNumString(): String {
+        return toLong().getShortNumString()
+    }
+
+    fun Long.getShortNumString(): String {
+        val long = this
         return if (long > 9999) {
             val longW = long * 10 / 10000L / 10F
             if (longW > 999) {
-                val longKW = longW.toLong() / 1000L
+                val longKW = longW.toLong() * 10 / 1000L / 10F
                 "${longKW}KW"
             } else {
                 "${longW}W"
             }
         } else {
-            this
+            "$this"
         }
     }
 }

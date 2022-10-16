@@ -1,5 +1,12 @@
 package com.huanchengfly.tieba.post
 
+import android.annotation.SuppressLint
+import android.app.job.JobInfo
+import android.app.job.JobScheduler
+import android.content.BroadcastReceiver
+import android.content.ComponentName
+import android.content.Context
+import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
@@ -15,11 +22,14 @@ import com.google.accompanist.navigation.material.ExperimentalMaterialNavigation
 import com.google.accompanist.systemuicontroller.SystemUiController
 import com.huanchengfly.tieba.post.api.retrofit.exception.getErrorMessage
 import com.huanchengfly.tieba.post.arch.BaseComposeActivity
+import com.huanchengfly.tieba.post.services.NotifyJobService
 import com.huanchengfly.tieba.post.ui.common.theme.compose.ExtendedTheme
 import com.huanchengfly.tieba.post.ui.page.NavGraphs
 import com.huanchengfly.tieba.post.ui.page.destinations.MainPageDestination
 import com.huanchengfly.tieba.post.utils.AccountUtil
+import com.huanchengfly.tieba.post.utils.JobServiceUtil
 import com.huanchengfly.tieba.post.utils.PermissionUtils
+import com.huanchengfly.tieba.post.utils.ReceiverUtil
 import com.huanchengfly.tieba.post.utils.TiebaUtil
 import com.huanchengfly.tieba.post.utils.requestPermission
 import com.ramcosta.composedestinations.DestinationsNavHost
@@ -36,6 +46,7 @@ import kotlinx.coroutines.launch
 @AndroidEntryPoint
 class MainActivityV2 : BaseComposeActivity() {
     private val handler = Handler(Looper.getMainLooper())
+    private val newMessageReceiver: BroadcastReceiver = NewMessageReceiver()
 
     private fun fetchAccount() {
         lifecycleScope.launch(Dispatchers.Main) {
@@ -68,6 +79,23 @@ class MainActivityV2 : BaseComposeActivity() {
 
     override fun onStart() {
         super.onStart()
+        runCatching {
+            registerReceiver(
+                newMessageReceiver,
+                ReceiverUtil.createIntentFilter(NotifyJobService.ACTION_NEW_MESSAGE),
+                RECEIVER_NOT_EXPORTED
+            )
+            startService(Intent(this, NotifyJobService::class.java))
+            val builder = JobInfo.Builder(
+                JobServiceUtil.getJobId(this),
+                ComponentName(this, NotifyJobService::class.java)
+            )
+                .setPersisted(true)
+                .setPeriodic(30 * 60 * 1000L)
+                .setRequiredNetworkType(JobInfo.NETWORK_TYPE_ANY)
+            val jobScheduler = getSystemService(Context.JOB_SCHEDULER_SERVICE) as JobScheduler
+            jobScheduler.schedule(builder.build())
+        }
         handler.postDelayed({
             requestNotificationPermission()
         }, 100)
@@ -114,6 +142,19 @@ class MainActivityV2 : BaseComposeActivity() {
                     dependency(MainPageDestination) { this@MainActivityV2 }
                 }
             )
+        }
+    }
+
+    private inner class NewMessageReceiver : BroadcastReceiver() {
+        @SuppressLint("RestrictedApi")
+        override fun onReceive(context: Context, intent: Intent) {
+            if (intent.action == NotifyJobService.ACTION_NEW_MESSAGE) {
+                val channel = intent.getStringExtra("channel")
+                val count = intent.getIntExtra("count", 0)
+                if (channel != null && channel == NotifyJobService.CHANNEL_TOTAL) {
+
+                }
+            }
         }
     }
 }

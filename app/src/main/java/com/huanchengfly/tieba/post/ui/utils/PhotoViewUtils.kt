@@ -12,7 +12,6 @@ fun getPhotoViewData(
 ): PhotoViewData {
     val media = threadInfo.media[index]
     return PhotoViewData(
-        url = media.originPic,
         data_ = LoadPicPageData(
             forumId = threadInfo.forumId,
             forumName = threadInfo.forumName,
@@ -26,7 +25,7 @@ fun getPhotoViewData(
         picItems = threadInfo.media.mapIndexed { mediaIndex, mediaItem ->
             PicItem(
                 picId = ImageUtil.getPicId(mediaItem.originPic),
-                picIndex = mediaIndex,
+                picIndex = mediaIndex + 1,
                 url = mediaItem.bigPic,
                 originUrl = mediaItem.originPic,
                 showOriginBtn = mediaItem.showOriginalBtn == 1,

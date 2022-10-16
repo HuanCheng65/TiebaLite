@@ -1,5 +1,6 @@
 package com.huanchengfly.tieba.post.api.retrofit.interfaces
 
+import com.huanchengfly.tieba.post.api.models.protos.hotThreadList.HotThreadListResponse
 import com.huanchengfly.tieba.post.api.models.protos.personalized.PersonalizedResponse
 import com.huanchengfly.tieba.post.api.models.protos.userLike.UserLikeResponse
 import com.huanchengfly.tieba.post.api.retrofit.body.MyMultipartBody
@@ -17,4 +18,9 @@ interface OfficialProtobufTiebaApi {
     fun userLikeFlow(
         @Body body: MyMultipartBody,
     ): Flow<UserLikeResponse>
+
+    @POST("/c/f/forum/hotThreadList?cmd=309661")
+    fun hotThreadListFlow(
+        @Body body: MyMultipartBody,
+    ): Flow<HotThreadListResponse>
 }

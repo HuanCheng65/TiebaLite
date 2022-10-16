@@ -6,14 +6,18 @@ import android.os.Parcelable
 import android.widget.Toast
 import androidx.activity.compose.setContent
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.SideEffect
+import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.graphics.Color
 import androidx.core.view.WindowCompat
 import com.google.accompanist.systemuicontroller.SystemUiController
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.huanchengfly.tieba.post.activities.BaseActivity
 import com.huanchengfly.tieba.post.ui.common.theme.compose.TiebaLiteTheme
+import com.huanchengfly.tieba.post.ui.common.windowsizeclass.WindowSizeClass
+import com.huanchengfly.tieba.post.ui.common.windowsizeclass.calculateWindowSizeClass
 import com.huanchengfly.tieba.post.utils.AccountUtil.LocalAccountProvider
 import com.huanchengfly.tieba.post.utils.ThemeUtil
 
@@ -74,7 +78,11 @@ abstract class BaseComposeActivity : BaseActivity() {
                 }
 
                 LocalAccountProvider {
-                    createContent()
+                    CompositionLocalProvider(
+                        LocalWindowSizeClass provides calculateWindowSizeClass(activity = this)
+                    ) {
+                        createContent()
+                    }
                 }
             }
         }
@@ -98,6 +106,11 @@ abstract class BaseComposeActivity : BaseActivity() {
                 Toast.makeText(this, event.message, event.length).show()
             }
         }
+    }
+
+    companion object {
+        val LocalWindowSizeClass =
+            staticCompositionLocalOf<WindowSizeClass> { error("not initialized") }
     }
 }
 

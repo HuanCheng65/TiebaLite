@@ -4,7 +4,7 @@ buildscript {
     ext {
         glide_version = '4.13.2'
         retrofit_version = "2.9.0"
-        kotlin_version = '1.7.10'
+        kotlin_version = '1.7.20'
         wire_version = '4.4.1'
         hilt_version = '2.43.1'
     }
@@ -14,7 +14,7 @@ buildscript {
         maven { url "https://maven.aliyun.com/repository/public" }
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:7.3.0'
+        classpath 'com.android.tools.build:gradle:7.3.1'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
         classpath "org.jetbrains.kotlin:kotlin-serialization:$kotlin_version"
         classpath "com.google.dagger:hilt-android-gradle-plugin:$hilt_version"

@@ -13,6 +13,7 @@ import com.huanchengfly.tieba.post.goToActivity
 import com.huanchengfly.tieba.post.models.protos.PhotoViewData
 import com.huanchengfly.tieba.post.ui.page.photoview.PhotoViewActivity
 import com.huanchengfly.tieba.post.ui.page.photoview.PhotoViewActivity.Companion.EXTRA_PHOTO_VIEW_DATA
+import com.huanchengfly.tieba.post.utils.ImageUtil
 
 @Composable
 fun NetworkImage(
@@ -40,5 +41,7 @@ fun NetworkImage(
         contentDescription = contentDescription,
         modifier = modifier.then(clickableModifier),
         contentScale = contentScale,
-    )
+    ) {
+        placeholder(ImageUtil.getPlaceHolder(context, 0))
+    }
 }

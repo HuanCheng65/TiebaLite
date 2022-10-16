@@ -25,17 +25,22 @@ import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.request.target.CustomViewTarget
 import com.bumptech.glide.request.transition.Transition
 import com.google.android.material.appbar.AppBarLayout
-import com.huanchengfly.tieba.post.*
 import com.huanchengfly.tieba.post.App.Companion.INSTANCE
 import com.huanchengfly.tieba.post.App.Companion.translucentBackground
+import com.huanchengfly.tieba.post.R
 import com.huanchengfly.tieba.post.activities.BaseActivity
+import com.huanchengfly.tieba.post.dataStore
+import com.huanchengfly.tieba.post.getBoolean
+import com.huanchengfly.tieba.post.getInt
+import com.huanchengfly.tieba.post.getString
 import com.huanchengfly.tieba.post.interfaces.BackgroundTintable
+import com.huanchengfly.tieba.post.putString
 import com.huanchengfly.tieba.post.ui.common.theme.utils.ThemeUtils
 import com.huanchengfly.tieba.post.ui.widgets.theme.TintSwipeRefreshLayout
 import com.scwang.smart.refresh.header.MaterialHeader
 import com.scwang.smart.refresh.layout.SmartRefreshLayout
 import java.io.File
-import java.util.*
+import java.util.Locale
 
 object ThemeUtil {
     val themeState: MutableState<String> by lazy(mode = LazyThreadSafetyMode.SYNCHRONIZED) {
@@ -62,7 +67,6 @@ object ThemeUtil {
     const val THEME_PURPLE = "purple"
     const val THEME_PINK = "pink"
     const val THEME_RED = "red"
-    const val THEME_BLUE_DARK = "dark"
     const val THEME_GREY_DARK = "grey_dark"
     const val THEME_AMOLED_DARK = "amoled_dark"
 
@@ -106,12 +110,12 @@ object ThemeUtil {
         if (isNightMode()) {
             switchTheme(dataStore.getString(KEY_OLD_THEME, THEME_BLUE), recordOldTheme = false)
         } else {
-            switchTheme(dataStore.getString(KEY_DARK_THEME, THEME_BLUE_DARK))
+            switchTheme(dataStore.getString(KEY_DARK_THEME, THEME_AMOLED_DARK))
         }
     }
 
     fun switchToNightMode(context: Activity, recreate: Boolean) {
-        switchTheme(dataStore.getString(KEY_DARK_THEME, THEME_BLUE_DARK))
+        switchTheme(dataStore.getString(KEY_DARK_THEME, THEME_AMOLED_DARK))
         if (recreate) {
             refreshUI(context)
         }
@@ -390,7 +394,6 @@ object ThemeUtil {
             THEME_PURPLE -> R.style.TiebaLite_Purple
             THEME_PINK -> R.style.TiebaLite_Pink
             THEME_RED -> R.style.TiebaLite_Red
-            THEME_BLUE_DARK -> R.style.TiebaLite_Dark
             THEME_GREY_DARK -> R.style.TiebaLite_Dark_Grey
             THEME_AMOLED_DARK -> R.style.TiebaLite_Dark_Amoled
             THEME_CUSTOM -> R.style.TiebaLite_Custom
@@ -402,9 +405,18 @@ object ThemeUtil {
     fun getTheme(): String {
         val theme = themeState.value
         return when (theme.lowercase(Locale.getDefault())) {
-            THEME_TRANSLUCENT, THEME_TRANSLUCENT_LIGHT, THEME_TRANSLUCENT_DARK, THEME_CUSTOM, THEME_BLUE, THEME_BLACK, THEME_PURPLE, THEME_PINK, THEME_RED, THEME_BLUE_DARK, THEME_GREY_DARK, THEME_AMOLED_DARK -> theme.lowercase(
-                Locale.getDefault()
-            )
+            THEME_TRANSLUCENT,
+            THEME_TRANSLUCENT_LIGHT,
+            THEME_TRANSLUCENT_DARK,
+            THEME_CUSTOM,
+            THEME_BLUE,
+            THEME_BLACK,
+            THEME_PURPLE,
+            THEME_PINK,
+            THEME_RED,
+            THEME_GREY_DARK,
+            THEME_AMOLED_DARK -> theme.lowercase(Locale.getDefault())
+
             else -> THEME_BLUE
         }
     }

@@ -115,8 +115,8 @@ class PostListAdapterHelper(
         mySpannableTextView.setLinkTouchMovementMethod(LinkTouchMovementMethod.getInstance())
         textView = mySpannableTextView
         textView.isFocusable = false
-        textView.setClickable(false)
-        textView.setLongClickable(false)
+        textView.isClickable = false
+        textView.isLongClickable = false
         textView.setTextIsSelectable(false)
         textView.setOnClickListener(null)
         textView.setOnLongClickListener(null)
@@ -302,7 +302,7 @@ class PostListAdapterHelper(
         val views: MutableList<View> = ArrayList()
         for (contentBean in postListItemBean.content!!) {
             when (contentBean.type) {
-                "0", "9" -> {
+                "0", "9", "27" -> {
                     if (appendTextToLastTextView(views, contentBean.text)) {
                         val textView: TextView = createTextView()
                         textView.layoutParams =
@@ -311,6 +311,7 @@ class PostListAdapterHelper(
                         views.add(textView)
                     }
                 }
+
                 "1" -> if (appendLinkToLastTextView(views, contentBean.text, contentBean.link!!)) {
                     val textView: TextView = createTextView()
                     textView.layoutParams = getLayoutParams(contentBean, postListItemBean.floor!!)

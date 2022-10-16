@@ -278,10 +278,8 @@ public class WebViewFragment extends BaseFragment implements DownloadListener, B
                     mWebView.evaluateJavascript("tblite.init();tblite.theme.init('" + nowTheme + "');", null);
             });
         }
-        if (nowTheme.equalsIgnoreCase(ThemeUtil.THEME_AMOLED_DARK)) {
+        if (nowTheme.contains("dark")) {
             mWebView.evaluateJavascript(aNightJs, null);
-        } else if (nowTheme.equalsIgnoreCase(ThemeUtil.THEME_BLUE_DARK)) {
-            mWebView.evaluateJavascript(nightJs, null);
         }
     }
 

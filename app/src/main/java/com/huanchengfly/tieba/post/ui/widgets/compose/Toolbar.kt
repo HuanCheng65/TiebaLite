@@ -2,9 +2,31 @@ package com.huanchengfly.tieba.post.ui.widgets.compose
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ColumnScope
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.RowScope
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.statusBars
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.windowInsetsTopHeight
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.*
+import androidx.compose.material.Divider
+import androidx.compose.material.DropdownMenuItem
+import androidx.compose.material.Icon
+import androidx.compose.material.IconButton
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.ProvideTextStyle
+import androidx.compose.material.Text
+import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Add
 import androidx.compose.material.icons.rounded.CheckCircle
@@ -18,34 +40,43 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
 import com.huanchengfly.tieba.post.R
 import com.huanchengfly.tieba.post.activities.LoginActivity
+import com.huanchengfly.tieba.post.arch.BaseComposeActivity.Companion.LocalWindowSizeClass
 import com.huanchengfly.tieba.post.goToActivity
 import com.huanchengfly.tieba.post.ui.common.theme.compose.ExtendedTheme
+import com.huanchengfly.tieba.post.ui.common.windowsizeclass.WindowWidthSizeClass.Companion.Compact
 import com.huanchengfly.tieba.post.utils.AccountUtil
 import com.huanchengfly.tieba.post.utils.AccountUtil.LocalAccount
 import com.huanchengfly.tieba.post.utils.ImageUtil
 import com.huanchengfly.tieba.post.utils.StringUtil
 import com.huanchengfly.tieba.post.utils.compose.calcStatusBarColor
 
+@Composable
+fun AccountNavIconIfCompact(): (@Composable () -> Unit)? =
+    if (LocalWindowSizeClass.current.widthSizeClass == Compact) (@Composable { AccountNavIcon() })
+    else null
 
 @Composable
 fun AccountNavIcon(
-    onClick: (() -> Unit)? = null
+    onClick: (() -> Unit)? = null,
+    spacer: Boolean = true,
+    size: Dp = Sizes.Small
 ) {
     val currentAccount = LocalAccount.current
-    Spacer(modifier = Modifier.width(12.dp))
+    if (spacer) Spacer(modifier = Modifier.width(12.dp))
     if (currentAccount == null) {
         AsyncImage(
             model = R.drawable.ic_launcher_new_round,
             contentDescription = null,
             modifier = Modifier
                 .clip(CircleShape)
-                .size(32.dp)
+                .size(size)
         )
     } else {
         val context = LocalContext.current
@@ -119,7 +150,7 @@ fun AccountNavIcon(
                 contentDescription = stringResource(id = R.string.title_switch_account_long_press),
                 modifier = Modifier
                     .clip(CircleShape)
-                    .size(36.dp),
+                    .size(size),
             )
         }
     }
@@ -206,7 +237,9 @@ fun TitleCentredToolbar(
             }
         }
         Column(
-            modifier = Modifier.fillMaxWidth().background(color = ExtendedTheme.colors.topBar)
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(color = ExtendedTheme.colors.topBar)
         ) {
             content()
         }
@@ -240,7 +273,9 @@ fun Toolbar(
             elevation = 0.dp
         )
         Column(
-            modifier = Modifier.fillMaxWidth().background(color = ExtendedTheme.colors.topBar),
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(color = ExtendedTheme.colors.topBar),
         ) {
             content()
         }

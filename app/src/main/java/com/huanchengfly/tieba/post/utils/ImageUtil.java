@@ -388,10 +388,9 @@ public class ImageUtil {
             PopupMenu popupMenu = PopupUtil.create(view);
             popupMenu.getMenuInflater().inflate(R.menu.menu_image_long_click, popupMenu.getMenu());
             popupMenu.setOnMenuItemClickListener(item -> {
-                switch (item.getItemId()) {
-                    case R.id.menu_save_image:
-                        download(view.getContext(), photoViewBeans.get(position).getOriginUrl());
-                        return true;
+                if (item.getItemId() == R.id.menu_save_image) {
+                    download(view.getContext(), photoViewBeans.get(position).getOriginUrl());
+                    return true;
                 }
                 return false;
             });
@@ -416,10 +415,9 @@ public class ImageUtil {
             PopupMenu popupMenu = PopupUtil.create(view);
             popupMenu.getMenuInflater().inflate(R.menu.menu_image_long_click, popupMenu.getMenu());
             popupMenu.setOnMenuItemClickListener(item -> {
-                switch (item.getItemId()) {
-                    case R.id.menu_save_image:
-                        download(view.getContext(), photoViewBeans.get(position).getOriginUrl());
-                        return true;
+                if (item.getItemId() == R.id.menu_save_image) {
+                    download(view.getContext(), photoViewBeans.get(position).getOriginUrl());
+                    return true;
                 }
                 return false;
             });
@@ -462,7 +460,9 @@ public class ImageUtil {
     @NonNull
     public static Drawable getPlaceHolder(Context context, int radius) {
         GradientDrawable drawable = new GradientDrawable();
-        int color = ThemeUtil.isNightMode() ? context.getResources().getColor(R.color.color_place_holder_night) : context.getResources().getColor(R.color.color_place_holder);
+        int color = ThemeUtil.isNightMode() ?
+                context.getResources().getColor(R.color.color_place_holder_night) :
+                context.getResources().getColor(R.color.color_place_holder);
         drawable.setColor(color);
         drawable.setCornerRadius(DisplayUtil.dp2px(context, radius));
         return drawable;

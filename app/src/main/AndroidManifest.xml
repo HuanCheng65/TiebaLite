@@ -132,7 +132,7 @@
 
         <activity
             android:name=".MainActivityV2"
-            android:configChanges="screenSize|screenLayout|orientation|smallestScreenSize|keyboardHidden"
+            android:configChanges="screenSize|screenLayout|orientation|smallestScreenSize|keyboard|navigation|keyboardHidden"
             android:exported="true"
             android:enabled="true"
             android:resizeableActivity="true"

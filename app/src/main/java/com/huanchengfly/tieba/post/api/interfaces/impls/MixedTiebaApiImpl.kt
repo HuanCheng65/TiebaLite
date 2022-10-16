@@ -3,9 +3,50 @@ package com.huanchengfly.tieba.post.api.interfaces.impls
 import android.os.Build
 import android.text.TextUtils
 import com.huanchengfly.tieba.post.App
-import com.huanchengfly.tieba.post.api.*
+import com.huanchengfly.tieba.post.api.ForumSortType
+import com.huanchengfly.tieba.post.api.Param
+import com.huanchengfly.tieba.post.api.SearchThreadFilter
+import com.huanchengfly.tieba.post.api.SearchThreadOrder
+import com.huanchengfly.tieba.post.api.booleanToString
+import com.huanchengfly.tieba.post.api.buildAppPosInfo
+import com.huanchengfly.tieba.post.api.buildCommonRequest
+import com.huanchengfly.tieba.post.api.buildProtobufRequestBody
+import com.huanchengfly.tieba.post.api.getScreenHeight
+import com.huanchengfly.tieba.post.api.getScreenWidth
 import com.huanchengfly.tieba.post.api.interfaces.ITiebaApi
-import com.huanchengfly.tieba.post.api.models.*
+import com.huanchengfly.tieba.post.api.models.AgreeBean
+import com.huanchengfly.tieba.post.api.models.CheckReportBean
+import com.huanchengfly.tieba.post.api.models.CollectDataBean
+import com.huanchengfly.tieba.post.api.models.CommonResponse
+import com.huanchengfly.tieba.post.api.models.FollowBean
+import com.huanchengfly.tieba.post.api.models.ForumPageBean
+import com.huanchengfly.tieba.post.api.models.ForumRecommend
+import com.huanchengfly.tieba.post.api.models.GetForumListBean
+import com.huanchengfly.tieba.post.api.models.InitNickNameBean
+import com.huanchengfly.tieba.post.api.models.LikeForumResultBean
+import com.huanchengfly.tieba.post.api.models.LoginBean
+import com.huanchengfly.tieba.post.api.models.MSignBean
+import com.huanchengfly.tieba.post.api.models.MessageListBean
+import com.huanchengfly.tieba.post.api.models.MsgBean
+import com.huanchengfly.tieba.post.api.models.PersonalizedBean
+import com.huanchengfly.tieba.post.api.models.PicPageBean
+import com.huanchengfly.tieba.post.api.models.Profile
+import com.huanchengfly.tieba.post.api.models.ProfileBean
+import com.huanchengfly.tieba.post.api.models.SearchForumBean
+import com.huanchengfly.tieba.post.api.models.SearchPostBean
+import com.huanchengfly.tieba.post.api.models.SearchThreadBean
+import com.huanchengfly.tieba.post.api.models.SearchUserBean
+import com.huanchengfly.tieba.post.api.models.SignResultBean
+import com.huanchengfly.tieba.post.api.models.SubFloorListBean
+import com.huanchengfly.tieba.post.api.models.ThreadContentBean
+import com.huanchengfly.tieba.post.api.models.ThreadStoreBean
+import com.huanchengfly.tieba.post.api.models.UserLikeForumBean
+import com.huanchengfly.tieba.post.api.models.UserPostBean
+import com.huanchengfly.tieba.post.api.models.WebReplyResultBean
+import com.huanchengfly.tieba.post.api.models.WebUploadPicBean
+import com.huanchengfly.tieba.post.api.models.protos.hotThreadList.HotThreadListRequest
+import com.huanchengfly.tieba.post.api.models.protos.hotThreadList.HotThreadListRequestData
+import com.huanchengfly.tieba.post.api.models.protos.hotThreadList.HotThreadListResponse
 import com.huanchengfly.tieba.post.api.models.protos.personalized.PersonalizedRequest
 import com.huanchengfly.tieba.post.api.models.protos.personalized.PersonalizedRequestData
 import com.huanchengfly.tieba.post.api.models.protos.personalized.PersonalizedResponse
@@ -733,6 +774,20 @@ object MixedTiebaApiImpl : ITiebaApi {
                         lastRequestUnix = lastRequestUnix,
                         followType = 1,
                         loadType = loadType
+                    )
+                )
+            )
+        )
+    }
+
+    override fun hotThreadListFlow(tabCode: String): Flow<HotThreadListResponse> {
+        return RetrofitTiebaApi.OFFICIAL_PROTOBUF_TIEBA_API.hotThreadListFlow(
+            buildProtobufRequestBody(
+                HotThreadListRequest(
+                    HotThreadListRequestData(
+                        common = buildCommonRequest(),
+                        tabCode = tabCode,
+                        tabId = "1"
                     )
                 )
             )

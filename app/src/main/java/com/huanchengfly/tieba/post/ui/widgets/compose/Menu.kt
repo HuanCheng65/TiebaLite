@@ -1,5 +1,6 @@
 package com.huanchengfly.tieba.post.ui.widgets.compose
 
+import android.util.Log
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.LocalIndication
 import androidx.compose.foundation.background
@@ -12,10 +13,17 @@ import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.DropdownMenu
 import androidx.compose.material.MaterialTheme
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.Stable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.Saver
 import androidx.compose.runtime.saveable.listSaver
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Offset
@@ -92,7 +100,7 @@ fun ClickMenu(
     }
 }
 
-@OptIn(ExperimentalFoundationApi::class)
+@OptIn(ExperimentalFoundationApi::class, ExperimentalComposeUiApi::class)
 @Composable
 fun LongClickMenu(
     menuState: MenuState = rememberMenuState(),
@@ -112,8 +120,15 @@ fun LongClickMenu(
                 menuState.offset = it.pressPosition
             }
     }
+    coroutineScope.launch {
+        interactionSource.interactions
+            .collect {
+                Log.i("Indication", "$it")
+            }
+    }
     Box(
         modifier = Modifier
+            .clip(shape)
             .combinedClickable(
                 interactionSource = interactionSource,
                 indication = indication,
@@ -133,7 +148,6 @@ fun LongClickMenu(
                         menuState.offset.y.roundToInt()
                     )
                 }
-                .clip(shape)
         ) {
             DropdownMenu(
                 expanded = menuState.expanded,

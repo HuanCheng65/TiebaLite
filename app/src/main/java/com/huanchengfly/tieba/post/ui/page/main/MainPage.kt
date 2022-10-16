@@ -34,18 +34,22 @@ import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.rememberPagerState
 import com.huanchengfly.tieba.post.MainActivityV2
 import com.huanchengfly.tieba.post.R
+import com.huanchengfly.tieba.post.arch.BaseComposeActivity.Companion.LocalWindowSizeClass
 import com.huanchengfly.tieba.post.arch.collectPartialAsState
 import com.huanchengfly.tieba.post.arch.pageViewModel
 import com.huanchengfly.tieba.post.ui.common.theme.compose.ExtendedTheme
 import com.huanchengfly.tieba.post.ui.common.windowsizeclass.WindowHeightSizeClass
 import com.huanchengfly.tieba.post.ui.common.windowsizeclass.WindowWidthSizeClass
-import com.huanchengfly.tieba.post.ui.common.windowsizeclass.calculateWindowSizeClass
 import com.huanchengfly.tieba.post.ui.page.ProvideNavigator
 import com.huanchengfly.tieba.post.ui.page.main.explore.ExplorePage
 import com.huanchengfly.tieba.post.ui.page.main.home.HomePage
 import com.huanchengfly.tieba.post.ui.page.main.notifications.NotificationsPage
 import com.huanchengfly.tieba.post.ui.page.main.user.UserPage
-import com.huanchengfly.tieba.post.ui.utils.*
+import com.huanchengfly.tieba.post.ui.utils.DevicePosture
+import com.huanchengfly.tieba.post.ui.utils.MainNavigationContentPosition
+import com.huanchengfly.tieba.post.ui.utils.MainNavigationType
+import com.huanchengfly.tieba.post.ui.utils.isBookPosture
+import com.huanchengfly.tieba.post.ui.utils.isSeparating
 import com.huanchengfly.tieba.post.utils.appPreferences
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.annotation.RootNavGraph
@@ -98,7 +102,7 @@ fun MainPage(
     activity: MainActivityV2,
     viewModel: MainViewModel = pageViewModel<MainUiIntent, MainViewModel>(emptyList()),
 ) {
-    val windowSizeClass = calculateWindowSizeClass(activity = activity)
+    val windowSizeClass = LocalWindowSizeClass.current
     val devicePostureFlow = WindowInfoTracker.getOrCreate(activity).windowLayoutInfo(activity)
         .flowWithLifecycle(activity.lifecycle)
         .map { layoutInfo ->

@@ -2,7 +2,12 @@ package com.huanchengfly.tieba.post.ui.widgets.compose
 
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.LocalContentColor
 import androidx.compose.material.TabPosition
@@ -46,6 +51,29 @@ fun PagerTabIndicator(
                 .wrapContentSize(Alignment.BottomStart)
                 .offset(x = animatedIndicatorOffset, y = (-8).dp)
                 .width(16.dp)
+                .height(3.dp)
+                .clip(RoundedCornerShape(100))
+                .background(color = LocalContentColor.current)
+        )
+    }
+}
+
+@Composable
+fun TabIndicator(
+    selectedTabIndex: Int,
+    tabPositions: List<TabPosition>
+) {
+    if (tabPositions.isNotEmpty()) {
+        val tabIndicatorWidth = 16.dp
+        val currentTab = tabPositions[selectedTabIndex]
+        val currentTabLeft = currentTab.left + (currentTab.width / 2 - tabIndicatorWidth / 2)
+        val animatedIndicatorOffset by animateDpAsState(targetValue = currentTabLeft)
+        Box(
+            Modifier
+                .fillMaxWidth()
+                .wrapContentSize(Alignment.BottomStart)
+                .offset(x = animatedIndicatorOffset, y = (-8).dp)
+                .width(tabIndicatorWidth)
                 .height(3.dp)
                 .clip(RoundedCornerShape(100))
                 .background(color = LocalContentColor.current)

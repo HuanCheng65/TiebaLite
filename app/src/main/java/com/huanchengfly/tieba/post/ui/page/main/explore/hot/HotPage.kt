@@ -1,0 +1,395 @@
+package com.huanchengfly.tieba.post.ui.page.main.explore.hot
+
+import android.graphics.Typeface
+import androidx.compose.animation.animateColorAsState
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.ContentAlpha
+import androidx.compose.material.Divider
+import androidx.compose.material.Icon
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Text
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.KeyboardArrowRight
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import com.google.accompanist.placeholder.material.placeholder
+import com.google.accompanist.swiperefresh.SwipeRefresh
+import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
+import com.huanchengfly.tieba.post.R
+import com.huanchengfly.tieba.post.api.models.protos.ThreadInfo
+import com.huanchengfly.tieba.post.arch.collectPartialAsState
+import com.huanchengfly.tieba.post.arch.pageViewModel
+import com.huanchengfly.tieba.post.ui.common.theme.compose.ExtendedTheme
+import com.huanchengfly.tieba.post.ui.common.theme.compose.OrangeA700
+import com.huanchengfly.tieba.post.ui.common.theme.compose.RedA700
+import com.huanchengfly.tieba.post.ui.common.theme.compose.White
+import com.huanchengfly.tieba.post.ui.common.theme.compose.Yellow
+import com.huanchengfly.tieba.post.ui.widgets.compose.*
+import com.huanchengfly.tieba.post.utils.StringUtil.getShortNumString
+import com.ramcosta.composedestinations.annotation.Destination
+
+@OptIn(ExperimentalFoundationApi::class)
+@Destination
+@Composable
+fun HotPage(
+    viewModel: HotViewModel = pageViewModel()
+) {
+    LazyLoad(loaded = viewModel.initialized) {
+        viewModel.send(HotUiIntent.Load)
+        viewModel.initialized = true
+    }
+    val isLoading by viewModel.uiState.collectPartialAsState(
+        prop1 = HotUiState::isRefreshing,
+        initial = true
+    )
+    val topicList by viewModel.uiState.collectPartialAsState(
+        prop1 = HotUiState::topicList,
+        initial = emptyList()
+    )
+    val threadList by viewModel.uiState.collectPartialAsState(
+        prop1 = HotUiState::threadList,
+        initial = emptyList()
+    )
+    val tabList by viewModel.uiState.collectPartialAsState(
+        prop1 = HotUiState::tabList,
+        initial = emptyList()
+    )
+    val currentTabCode by viewModel.uiState.collectPartialAsState(
+        prop1 = HotUiState::currentTabCode,
+        initial = "all"
+    )
+    val isLoadingThreadList by viewModel.uiState.collectPartialAsState(
+        prop1 = HotUiState::isLoadingThreadList,
+        initial = false
+    )
+    val swipeRefreshState = rememberSwipeRefreshState(isRefreshing = isLoading)
+    SwipeRefresh(state = swipeRefreshState, onRefresh = { viewModel.send(HotUiIntent.Load) }) {
+        LazyColumn(
+            modifier = Modifier
+                .fillMaxWidth(),
+        ) {
+            if (topicList.isNotEmpty()) {
+                item(key = "TopicHeader") {
+                    Box(
+                        modifier = Modifier
+                            .padding(bottom = 8.dp)
+                            .padding(horizontal = 16.dp)
+                    ) { ChipHeader(text = stringResource(id = R.string.hot_topic_rank)) }
+                }
+                item(key = "TopicList") {
+                    VerticalGrid(
+                        column = 2,
+                        horizontalArrangement = Arrangement.spacedBy(16.dp),
+                        modifier = Modifier.padding(horizontal = 16.dp)
+                    ) {
+                        itemsIndexed(
+                            items = topicList,
+                        ) { index, item ->
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                                modifier = Modifier.padding(vertical = 8.dp)
+                            ) {
+                                Text(
+                                    text = "${index + 1}",
+                                    fontWeight = FontWeight.Bold,
+                                    color = when (index) {
+                                        0 -> RedA700
+                                        1 -> OrangeA700
+                                        2 -> Yellow
+                                        else -> MaterialTheme.colors.onBackground.copy(ContentAlpha.medium)
+                                    },
+                                    fontFamily = FontFamily(
+                                        Typeface.createFromAsset(
+                                            LocalContext.current.assets,
+                                            "bebas.ttf"
+                                        )
+                                    ),
+                                    modifier = Modifier.padding(bottom = 2.dp)
+                                )
+                                Text(
+                                    text = item.topicName,
+                                    maxLines = 1,
+                                    overflow = TextOverflow.Ellipsis,
+                                    modifier = Modifier.weight(1f)
+                                )
+                                when (item.tag) {
+                                    2 -> Text(
+                                        text = stringResource(id = R.string.topic_tag_hot),
+                                        fontSize = 10.sp,
+                                        color = White,
+                                        modifier = Modifier
+                                            .clip(RoundedCornerShape(4.dp))
+                                            .background(RedA700)
+                                            .padding(vertical = 2.dp, horizontal = 4.dp)
+                                    )
+
+                                    1 -> Text(
+                                        text = stringResource(id = R.string.topic_tag_new),
+                                        fontSize = 10.sp,
+                                        color = White,
+                                        modifier = Modifier
+                                            .clip(RoundedCornerShape(4.dp))
+                                            .background(OrangeA700)
+                                            .padding(vertical = 2.dp, horizontal = 4.dp)
+                                    )
+                                }
+                            }
+                        }
+                        item {
+                            ProvideContentColor(color = ExtendedTheme.colors.accent) {
+                                Row(
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(vertical = 8.dp)
+                                ) {
+                                    Text(
+                                        text = stringResource(id = R.string.tip_more_topic),
+                                        fontWeight = FontWeight.Bold
+                                    )
+                                    Icon(
+                                        imageVector = Icons.Rounded.KeyboardArrowRight,
+                                        contentDescription = null,
+                                        modifier = Modifier.size(16.dp)
+                                    )
+                                }
+                            }
+                        }
+                    }
+                }
+                item(key = "TopicDivider") {
+                    Divider(
+                        color = ExtendedTheme.colors.divider,
+                        modifier = Modifier
+                            .padding(top = 16.dp, bottom = 8.dp)
+                            .padding(horizontal = 16.dp),
+                        thickness = 2.dp
+                    )
+                }
+            }
+            if (threadList.isNotEmpty()) {
+                if (tabList.isNotEmpty()) {
+                    stickyHeader(key = "ThreadTabs") {
+                        VerticalGrid(
+                            column = 5,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .background(ExtendedTheme.colors.background)
+                                .padding(vertical = 8.dp)
+                                .padding(horizontal = 16.dp),
+                            horizontalArrangement = Arrangement.spacedBy(16.dp),
+                        ) {
+                            item {
+                                ThreadListTab(
+                                    text = stringResource(id = R.string.tab_all_hot_thread),
+                                    selected = currentTabCode == "all",
+                                    onSelected = { viewModel.send(HotUiIntent.RefreshThreadList("all")) }
+                                )
+                            }
+                            items(tabList) {
+                                ThreadListTab(
+                                    text = it.tabName,
+                                    selected = currentTabCode == it.tabCode,
+                                    onSelected = { viewModel.send(HotUiIntent.RefreshThreadList(it.tabCode)) }
+                                )
+                            }
+                        }
+                    }
+                }
+                item(key = "ThreadListTip") {
+                    Column(
+                        modifier = Modifier
+                            .padding(bottom = 8.dp)
+                            .padding(horizontal = 16.dp)
+                    ) {
+                        Text(
+                            text = stringResource(id = R.string.hot_thread_rank_rule),
+                            color = ExtendedTheme.colors.textSecondary,
+                            fontSize = 12.sp,
+                            fontWeight = FontWeight.Normal,
+                        )
+                    }
+                }
+                if (isLoadingThreadList) {
+                    items(10) { ThreadListItemPlaceholder() }
+                } else {
+                    itemsIndexed(
+                        items = threadList,
+                        key = { _, item -> "Thread_${item.threadId}" }) { index, item ->
+                        ThreadListItem(index = index, item = item)
+                    }
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun ThreadListItemPlaceholder() {
+    Row(modifier = Modifier.padding(all = 16.dp)) {
+        Row(
+            modifier = Modifier.weight(1f),
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+            verticalAlignment = Alignment.Top
+        ) {
+            Text(
+                text = "1",
+                fontWeight = FontWeight.Bold,
+                fontSize = 10.sp,
+                color = ExtendedTheme.colors.background,
+                modifier = Modifier
+                    .padding(top = 3.dp)
+                    .clip(RoundedCornerShape(4.dp))
+                    .wrapContentSize()
+                    .placeholder(visible = true)
+                    .padding(vertical = 1.dp, horizontal = 4.dp)
+            )
+            Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
+                Text(
+                    text = "",
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .placeholder(visible = true)
+                )
+                Text(
+                    text = stringResource(id = R.string.hot_num, "666"),
+                    style = MaterialTheme.typography.caption,
+                    color = ExtendedTheme.colors.textSecondary,
+                    modifier = Modifier.placeholder(visible = true)
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun ThreadListItem(
+    index: Int,
+    item: ThreadInfo,
+    onClick: () -> Unit = {}
+) {
+    val heightModifier = if (item.media.isEmpty()) Modifier else Modifier.height(80.dp)
+    Row(
+        modifier = Modifier
+            .clickable(onClick = onClick)
+            .padding(all = 16.dp),
+        horizontalArrangement = Arrangement.spacedBy(16.dp)
+    ) {
+        Row(
+            modifier = heightModifier.weight(1f),
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+            verticalAlignment = Alignment.Top
+        ) {
+            Text(
+                text = "${index + 1}",
+                fontWeight = FontWeight.Bold,
+                fontSize = 10.sp,
+                color = ExtendedTheme.colors.background,
+                modifier = Modifier
+                    .padding(top = 2.dp)
+                    .clip(RoundedCornerShape(4.dp))
+                    .wrapContentSize()
+                    .background(
+                        color = when (index) {
+                            0 -> RedA700
+                            1 -> OrangeA700
+                            2 -> Yellow
+                            else -> MaterialTheme.colors.onBackground.copy(
+                                ContentAlpha.medium
+                            )
+                        }
+                    )
+                    .padding(vertical = 1.dp, horizontal = 4.dp)
+            )
+            Column(verticalArrangement = Arrangement.SpaceBetween, modifier = heightModifier) {
+                Text(text = item.title, maxLines = 2, overflow = TextOverflow.Ellipsis)
+                Spacer(modifier = Modifier.height(16.dp))
+                Text(
+                    text = stringResource(id = R.string.hot_num, item.hotNum.getShortNumString()),
+                    style = MaterialTheme.typography.caption,
+                    color = ExtendedTheme.colors.textSecondary
+                )
+            }
+        }
+        if (item.media.isNotEmpty()) {
+            NetworkImage(
+                imageUri = item.media.first().dynamicPic,
+                contentDescription = null,
+                modifier = heightModifier.aspectRatio(16f / 9)
+            )
+        }
+    }
+}
+
+@Composable
+private fun ThreadListTab(
+    text: String,
+    selected: Boolean,
+    onSelected: () -> Unit
+) {
+    val textColor by animateColorAsState(targetValue = if (selected) ExtendedTheme.colors.onAccent else ExtendedTheme.colors.onChip)
+    val backgroundColor by animateColorAsState(targetValue = if (selected) ExtendedTheme.colors.accent else ExtendedTheme.colors.chip)
+    Text(
+        text = text,
+        textAlign = TextAlign.Center,
+        color = textColor,
+        maxLines = 1,
+        modifier = Modifier
+            .fillMaxWidth()
+            .clip(RoundedCornerShape(100))
+            .background(backgroundColor)
+            .clickable(onClick = onSelected)
+            .padding(horizontal = 16.dp, vertical = 4.dp),
+        fontSize = 12.sp,
+        fontWeight = FontWeight.Bold
+    )
+}
+
+
+@Composable
+private fun ChipHeader(
+    text: String,
+    invert: Boolean = false,
+    modifier: Modifier = Modifier
+) {
+    Text(
+        color = if (invert) MaterialTheme.colors.onSecondary else ExtendedTheme.colors.onChip,
+        fontSize = 12.sp,
+        fontWeight = FontWeight.Bold,
+        text = text,
+        modifier = Modifier
+            .clip(RoundedCornerShape(100))
+            .then(modifier)
+            .background(color = if (invert) MaterialTheme.colors.secondary else ExtendedTheme.colors.chip)
+            .padding(horizontal = 16.dp, vertical = 4.dp)
+    )
+}

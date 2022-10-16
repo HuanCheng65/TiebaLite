@@ -1,6 +1,11 @@
 package com.huanchengfly.tieba.post.ui.widgets.compose
 
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
 import androidx.compose.ui.Alignment
@@ -21,6 +26,18 @@ fun <T> GridScope.items(
     items.forEach {
         item(span(it)) {
             content(it)
+        }
+    }
+}
+
+fun <T> GridScope.itemsIndexed(
+    items: List<T>,
+    span: (index: Int, item: T) -> Int = { _, _ -> 1 },
+    content: @Composable (index: Int, item: T) -> Unit
+) {
+    items.forEachIndexed { index, item ->
+        item(span(index, item)) {
+            content(index, item)
         }
     }
 }

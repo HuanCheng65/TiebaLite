@@ -8,22 +8,40 @@ import com.huanchengfly.tieba.post.api.models.protos.personalized.DislikeReason
 import com.huanchengfly.tieba.post.api.models.protos.personalized.PersonalizedResponse
 import com.huanchengfly.tieba.post.api.models.protos.personalized.ThreadPersonalized
 import com.huanchengfly.tieba.post.api.retrofit.exception.getErrorMessage
-import com.huanchengfly.tieba.post.arch.*
+import com.huanchengfly.tieba.post.arch.BaseViewModel
+import com.huanchengfly.tieba.post.arch.CommonUiEvent
+import com.huanchengfly.tieba.post.arch.PartialChange
+import com.huanchengfly.tieba.post.arch.PartialChangeProducer
+import com.huanchengfly.tieba.post.arch.UiEvent
+import com.huanchengfly.tieba.post.arch.UiIntent
+import com.huanchengfly.tieba.post.arch.UiState
 import com.huanchengfly.tieba.post.models.DislikeBean
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.FlowPreview
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.filterIsInstance
+import kotlinx.coroutines.flow.flatMapConcat
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.merge
+import kotlinx.coroutines.flow.onStart
+import javax.inject.Inject
 
-class PersonalizedViewModel :
+@HiltViewModel
+class PersonalizedViewModel @Inject constructor() :
     BaseViewModel<PersonalizedUiIntent, PersonalizedPartialChange, PersonalizedUiState, PersonalizedUiEvent>() {
     override fun createInitialState(): PersonalizedUiState = PersonalizedUiState()
 
-    override fun createPartialChangeProducer(): PartialChangeProducer<PersonalizedUiIntent, PersonalizedPartialChange, PersonalizedUiState> = ExplorePartialChangeProducer
+    override fun createPartialChangeProducer(): PartialChangeProducer<PersonalizedUiIntent, PersonalizedPartialChange, PersonalizedUiState> =
+        ExplorePartialChangeProducer
 
     override fun dispatchEvent(partialChange: PersonalizedPartialChange): UiEvent? =
         when (partialChange) {
             is PersonalizedPartialChange.Refresh.Failure -> CommonUiEvent.Toast(partialChange.error.getErrorMessage())
             is PersonalizedPartialChange.LoadMore.Failure -> CommonUiEvent.Toast(partialChange.error.getErrorMessage())
-            is PersonalizedPartialChange.Refresh.Success -> PersonalizedUiEvent.RefreshSuccess(partialChange.data.size)
+            is PersonalizedPartialChange.Refresh.Success -> PersonalizedUiEvent.RefreshSuccess(
+                partialChange.data.size
+            )
             else -> null
         }
 

@@ -5,7 +5,6 @@ package protos;
 option java_package = "com.huanchengfly.tieba.post.models.protos";
 
 message PhotoViewData {
-  string url = 1;
   optional LoadPicPageData data = 2;
   repeated PicItem picItems = 3;
   uint32 index = 4;

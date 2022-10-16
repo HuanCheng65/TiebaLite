@@ -587,4 +587,13 @@
     <string name="block_type_user">用户</string>
     <string name="tip_add_block">可用空格分隔多个关键词，含有全部关键词的内容将会被屏蔽</string>
     <string name="desc_download_pic">下载图片</string>
+    <string name="hot_topic_rank">话题榜</string>
+    <string name="topic_tag_hot">热</string>
+    <string name="topic_tag_new">新</string>
+    <string name="title_hot">热榜</string>
+    <string name="tip_more_topic">更多话题</string>
+    <string name="hot_thread_rank">热贴榜</string>
+    <string name="hot_thread_rank_rule">(按内容热度排序，每小时更新一次)</string>
+    <string name="tab_all_hot_thread">总榜</string>
+    <string name="hot_num">热度 %s</string>
 </resources>

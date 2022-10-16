@@ -24,8 +24,9 @@ import com.huanchengfly.tieba.post.activities.NewSearchActivity
 import com.huanchengfly.tieba.post.goToActivity
 import com.huanchengfly.tieba.post.ui.common.theme.compose.ExtendedTheme
 import com.huanchengfly.tieba.post.ui.page.main.explore.concern.ConcernPage
+import com.huanchengfly.tieba.post.ui.page.main.explore.hot.HotPage
 import com.huanchengfly.tieba.post.ui.page.main.explore.personalized.PersonalizedPage
-import com.huanchengfly.tieba.post.ui.widgets.compose.AccountNavIcon
+import com.huanchengfly.tieba.post.ui.widgets.compose.AccountNavIconIfCompact
 import com.huanchengfly.tieba.post.ui.widgets.compose.ActionItem
 import com.huanchengfly.tieba.post.ui.widgets.compose.PagerTabIndicator
 import com.huanchengfly.tieba.post.ui.widgets.compose.Toolbar
@@ -42,7 +43,10 @@ fun ExplorePage() {
         },
         stringResource(id = R.string.title_personalized) to @Composable {
             PersonalizedPage()
-        }
+        },
+        stringResource(id = R.string.title_hot) to @Composable {
+            HotPage()
+        },
     )
     val pagerState = rememberPagerState(initialPage = 1)
     val coroutineScope = rememberCoroutineScope()
@@ -51,7 +55,7 @@ fun ExplorePage() {
         topBar = {
             Toolbar(
                 title = stringResource(id = R.string.title_explore),
-                navigationIcon = { AccountNavIcon() },
+                navigationIcon = AccountNavIconIfCompact(),
                 actions = {
                     ActionItem(
                         icon = Icons.Rounded.Search,
@@ -72,7 +76,9 @@ fun ExplorePage() {
                     divider = {},
                     backgroundColor = ExtendedTheme.colors.topBar,
                     contentColor = ExtendedTheme.colors.onTopBar,
-                    modifier = Modifier.align(Alignment.CenterHorizontally).width(76.dp * pages.size),
+                    modifier = Modifier
+                        .align(Alignment.CenterHorizontally)
+                        .width(76.dp * pages.size),
                 ) {
                     pages.forEachIndexed { index, pair ->
                         Tab(

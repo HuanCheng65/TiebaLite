@@ -3,16 +3,32 @@ package com.huanchengfly.tieba.post.ui.page.photoview
 import android.content.Intent
 import android.net.Uri
 import android.os.Build
-import android.util.Log
 import android.view.MotionEvent
 import androidx.activity.viewModels
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
-import androidx.compose.material.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.material.CircularProgressIndicator
+import androidx.compose.material.Icon
+import androidx.compose.material.IconButton
+import androidx.compose.material.Surface
+import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Download
 import androidx.compose.material.icons.rounded.Share
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
@@ -51,7 +67,11 @@ object MyReadModeDecider : ReadModeDecider {
     ): Boolean {
         val imageAspectRatio = imageHeight.toFloat() / imageWidth
         val viewAspectRatio = viewHeight.toFloat() / viewWidth
-        return imageAspectRatio >= viewAspectRatio * 1.25f
+        return if (viewAspectRatio > 1f) {
+            imageAspectRatio >= viewAspectRatio * 1.25f
+        } else {
+            imageAspectRatio >= (1f / viewAspectRatio) * 3f
+        }
     }
 }
 
@@ -119,14 +139,6 @@ class PhotoViewActivity : BaseComposeActivityWithParcelable<PhotoViewData>() {
 
     override val dataExtraKey: String = EXTRA_PHOTO_VIEW_DATA
 
-    private fun getItemIndex(hasPrev: Boolean, pageIndex: Int): Int {
-        return if (hasPrev) pageIndex - 1 else pageIndex
-    }
-
-    private fun getPageIndex(hasPrev: Boolean, itemIndex: Int): Int {
-        return if (hasPrev) itemIndex + 1 else itemIndex
-    }
-
     @OptIn(ExperimentalPagerApi::class)
     @Composable
     override fun createContent(data: PhotoViewData) {
@@ -138,7 +150,7 @@ class PhotoViewActivity : BaseComposeActivityWithParcelable<PhotoViewData>() {
             prop1 = PhotoViewUiState::data,
             initial = emptyList()
         )
-        val initialItemIndex by viewModel.uiState.collectPartialAsState(
+        val initialIndex by viewModel.uiState.collectPartialAsState(
             prop1 = PhotoViewUiState::initialIndex,
             initial = 0
         )
@@ -155,104 +167,117 @@ class PhotoViewActivity : BaseComposeActivityWithParcelable<PhotoViewData>() {
             initial = false
         )
         val pageCount by derivedStateOf {
-            items.size + if (hasPrev) 1 else 0 + if (hasNext) 1 else 0
+            items.size
         }
-        Log.i("PhotoView", "pageCount = $pageCount, itemsCount = ${items.size}, hasPrev = $hasPrev, hasNext = $hasNext")
-        val pagerState = rememberPagerState(initialPage = getPageIndex(hasPrev, initialItemIndex))
-        val coroutineScope = rememberCoroutineScope()
         Surface(color = Color.Black) {
-            Box(modifier = Modifier.fillMaxSize()) {
-                HorizontalPager(
-                    count = pageCount,
-                    state = pagerState,
-                    key = {
-                        if (hasPrev && it == 0) {
-                            "PrevLoader"
-                        } else {
-                            items[getItemIndex(hasPrev, it)].originUrl
-                        }
-                    }
-                ) {
-                    if (hasPrev && it == 0) {
-                        return@HorizontalPager
-                    }
-                    val item = items[getItemIndex(hasPrev, it)]
-                    ViewPhoto(
-                        imageUri = item.originUrl,
-                        modifier = Modifier.fillMaxSize(),
-                        onDrag = { dx, dy, isAtEdge ->
-                            if (abs(dy) < 15 && abs(dx) > 25 && isAtEdge) {
-                                val prevPage = it - 1
-                                val nextPage = it + 1
-                                if (dx > 0 && prevPage >= 0) {
-                                    coroutineScope.launch {
-                                        pagerState.animateScrollToPage(prevPage)
-                                    }
-                                } else if (dx < 0 && nextPage < items.size) {
-                                    coroutineScope.launch {
-                                        pagerState.animateScrollToPage(nextPage)
-                                    }
-                                }
-                            }
-//                            coroutineScope.launch {
-//                                pagerState.animateScrollBy(-dx)
-//                            }
-                        }
-                    )
+            if (items.isNotEmpty()) {
+                val coroutineScope = rememberCoroutineScope()
+                val pagerState = rememberPagerState(initialPage = initialIndex)
+                LaunchedEffect(initialIndex) {
+                    if (pagerState.currentPage != initialIndex) pagerState.scrollToPage(initialIndex)
                 }
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .background(
-                            Brush.verticalGradient(
-                                listOf(
-                                    Color.Black.copy(alpha = 0.0f),
-                                    Color.Black.copy(alpha = 0.5f)
-                                )
-                            )
-                        )
-                        .padding(horizontal = 16.dp)
-                        .align(Alignment.BottomCenter),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    val itemIndex = getItemIndex(hasPrev, pagerState.currentPage)
-                    if (totalAmount > 1) {
-                        val picIndex = items[itemIndex].overallIndex ?: (itemIndex + 1)
-                        Text(text = "$picIndex / $totalAmount", modifier = Modifier.weight(1f))
-                    } else {
-                        Spacer(modifier = Modifier.weight(1f))
-                    }
-                    IconButton(onClick = {
-                        toastShort(R.string.toast_preparing_share_pic)
-                        ImageUtil.download(
-                            this@PhotoViewActivity,
-                            items[itemIndex].originUrl,
-                            true
-                        ) { uri: Uri ->
-                            val chooser = Intent(Intent.ACTION_SEND).apply {
-                                type = Intent.normalizeMimeType("image/jpeg")
-                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                                    putExtra(Intent.EXTRA_STREAM, uri)
-                                    addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-                                } else {
-                                    putExtra(Intent.EXTRA_STREAM, uri)
+                Box(modifier = Modifier.fillMaxSize()) {
+                    HorizontalPager(
+                        count = pageCount,
+                        state = pagerState,
+                        key = {
+                            items[it].originUrl
+                        }
+                    ) {
+                        val item = items[it]
+                        ViewPhoto(
+                            imageUri = item.originUrl,
+                            modifier = Modifier.fillMaxSize(),
+                            onDrag = { dx, dy, isAtEdge ->
+                                if (abs(dy) < 15 && abs(dx) > 25 && isAtEdge) {
+                                    val prevPage = it - 1
+                                    val nextPage = it + 1
+                                    if (dx > 0 && prevPage >= 0) {
+                                        coroutineScope.launch {
+                                            pagerState.animateScrollToPage(prevPage)
+                                        }
+                                    } else if (dx < 0 && nextPage < items.size) {
+                                        coroutineScope.launch {
+                                            pagerState.animateScrollToPage(nextPage)
+                                        }
+                                    }
                                 }
-                            }.let { Intent.createChooser(it, getString(R.string.title_share_pic)) }
-                            runCatching {
-                                startActivity(chooser)
+                            }
+                        )
+                    }
+                    Box(
+                        contentAlignment = Alignment.Center,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .align(Alignment.BottomCenter)
+                    ) {
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .background(
+                                    Brush.verticalGradient(
+                                        listOf(
+                                            Color.Black.copy(alpha = 0.0f),
+                                            Color.Black.copy(alpha = 0.5f)
+                                        )
+                                    )
+                                )
+                                .padding(horizontal = 16.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            val index = pagerState.currentPage
+                            if (totalAmount > 1) {
+                                val picIndex = items[index].overallIndex ?: (index + 1)
+                                Text(
+                                    text = "$picIndex / $totalAmount",
+                                    modifier = Modifier.weight(1f)
+                                )
+                            } else {
+                                Spacer(modifier = Modifier.weight(1f))
+                            }
+                            IconButton(onClick = {
+                                toastShort(R.string.toast_preparing_share_pic)
+                                ImageUtil.download(
+                                    this@PhotoViewActivity,
+                                    items[index].originUrl,
+                                    true
+                                ) { uri: Uri ->
+                                    val chooser = Intent(Intent.ACTION_SEND).apply {
+                                        type = Intent.normalizeMimeType("image/jpeg")
+                                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                                            putExtra(Intent.EXTRA_STREAM, uri)
+                                            addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                                        } else {
+                                            putExtra(Intent.EXTRA_STREAM, uri)
+                                        }
+                                    }.let {
+                                        Intent.createChooser(
+                                            it,
+                                            getString(R.string.title_share_pic)
+                                        )
+                                    }
+                                    runCatching {
+                                        startActivity(chooser)
+                                    }
+                                }
+                            }) {
+                                Icon(
+                                    imageVector = Icons.Rounded.Share,
+                                    contentDescription = stringResource(id = R.string.title_share_pic)
+                                )
+                            }
+                            IconButton(onClick = {
+                                ImageUtil.download(
+                                    this@PhotoViewActivity,
+                                    items[index].originUrl
+                                )
+                            }) {
+                                Icon(
+                                    imageVector = Icons.Rounded.Download,
+                                    contentDescription = stringResource(id = R.string.desc_download_pic)
+                                )
                             }
                         }
-                    }) {
-                        Icon(
-                            imageVector = Icons.Rounded.Share,
-                            contentDescription = stringResource(id = R.string.title_share_pic)
-                        )
-                    }
-                    IconButton(onClick = { ImageUtil.download(this@PhotoViewActivity, items[itemIndex].originUrl) }) {
-                        Icon(
-                            imageVector = Icons.Rounded.Download,
-                            contentDescription = stringResource(id = R.string.desc_download_pic)
-                        )
                     }
                 }
             }

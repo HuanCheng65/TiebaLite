@@ -45,6 +45,7 @@ message ThreadInfo {
   string tShareImg = 159;
   string nid = 164;
   int32 isDeleted = 181;
+  int32 hotNum = 182;
 }
 
 message Abstract {

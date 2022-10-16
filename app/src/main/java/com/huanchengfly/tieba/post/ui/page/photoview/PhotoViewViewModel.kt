@@ -2,10 +2,21 @@ package com.huanchengfly.tieba.post.ui.page.photoview
 
 import com.huanchengfly.tieba.post.api.TiebaApi
 import com.huanchengfly.tieba.post.api.models.PicPageBean
-import com.huanchengfly.tieba.post.arch.*
+import com.huanchengfly.tieba.post.arch.BaseViewModel
+import com.huanchengfly.tieba.post.arch.PartialChange
+import com.huanchengfly.tieba.post.arch.PartialChangeProducer
+import com.huanchengfly.tieba.post.arch.UiEvent
+import com.huanchengfly.tieba.post.arch.UiIntent
+import com.huanchengfly.tieba.post.arch.UiState
 import com.huanchengfly.tieba.post.models.protos.PhotoViewData
 import kotlinx.coroutines.FlowPreview
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.filterIsInstance
+import kotlinx.coroutines.flow.flatMapConcat
+import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.merge
 
 class PhotoViewViewModel :
     BaseViewModel<PhotoViewUiIntent, PhotoViewPartialChange, PhotoViewUiState, PhotoViewUiEvent>() {
@@ -21,10 +32,16 @@ class PhotoViewViewModel :
             )
 
         private fun PhotoViewUiIntent.Init.producePartialChange(): Flow<PhotoViewPartialChange.Init> {
-            val flow: Flow<PhotoViewPartialChange.Init> = if (data.data_ == null) {
+            val flow = if (data.data_ == null) {
                 flowOf(
                     PhotoViewPartialChange.Init.Success(
-                        items = data.picItems.map { PhotoViewItem(originUrl = it.originUrl, url = if (it.showOriginBtn) it.url else null, overallIndex = null) },
+                        items = data.picItems.map {
+                            PhotoViewItem(
+                                originUrl = it.originUrl,
+                                url = if (it.showOriginBtn) it.url else null,
+                                overallIndex = null
+                            )
+                        },
                         hasNext = false,
                         hasPrev = false,
                         totalAmount = data.picItems.size,
@@ -32,33 +49,52 @@ class PhotoViewViewModel :
                     )
                 )
             } else {
-                TiebaApi.getInstance().picPageFlow(
-                    forumId = data.data_.forumId.toString(),
-                    forumName = data.data_.forumName,
-                    threadId = data.data_.threadId.toString(),
-                    seeLz = data.data_.seeLz,
-                    picId = data.data_.picId,
-                    picIndex = data.data_.picIndex.toString(),
-                    objType = data.data_.objType,
-                    prev = false
-                ).map<PicPageBean, PhotoViewPartialChange.Init> { picPageBean ->
-                    val picAmount = picPageBean.picAmount.toInt()
-                    val hasNext = picPageBean.picList.last().overAllIndex.toInt() < picAmount
-                    val hasPrev = picPageBean.picList.first().overAllIndex.toInt() > 1
-                    PhotoViewPartialChange.Init.Success(
-                        hasPrev = hasPrev,
-                        hasNext = hasNext,
-                        totalAmount = picAmount,
-                        items = picPageBean.picList.map {
+                TiebaApi.getInstance()
+                    .picPageFlow(
+                        forumId = data.data_.forumId.toString(),
+                        forumName = data.data_.forumName,
+                        threadId = data.data_.threadId.toString(),
+                        seeLz = data.data_.seeLz,
+                        picId = data.data_.picId,
+                        picIndex = data.data_.picIndex.toString(),
+                        objType = data.data_.objType,
+                        prev = false
+                    )
+                    .map<PicPageBean, PhotoViewPartialChange.Init> { picPageBean ->
+                        val picAmount = picPageBean.picAmount.toInt()
+                        val fetchedItems = picPageBean.picList.map {
                             PhotoViewItem(
                                 originUrl = it.img.original.originalSrc,
                                 url = if (it.showOriginalBtn) it.img.original.bigCdnSrc else null,
                                 overallIndex = it.overAllIndex.toInt()
                             )
-                        },
-                        initialIndex = data.data_.picIndex
-                    )
-                }.catch { emit(PhotoViewPartialChange.Init.Failure(data, it)) }
+                        }
+                        val firstItemIndex = fetchedItems.first().overallIndex!!
+                        val localItems =
+                            if (data.data_.picIndex == 1) emptyList() else data.picItems.subList(
+                                0,
+                                data.data_.picIndex - 1
+                            ).mapIndexed { index, item ->
+                                PhotoViewItem(
+                                    originUrl = item.originUrl,
+                                    url = if (item.showOriginBtn) item.url else null,
+                                    overallIndex = firstItemIndex - (data.data_.picIndex - 1 - index)
+                                )
+                            }
+                        val items = localItems + fetchedItems
+                        val hasNext = items.last().overallIndex!! < picAmount
+                        val hasPrev = items.first().overallIndex!! > 1
+                        PhotoViewPartialChange.Init.Success(
+                            hasPrev = hasPrev,
+                            hasNext = hasNext,
+                            totalAmount = picAmount,
+                            items = items,
+                            initialIndex = data.data_.picIndex - 1
+                        )
+                    }
+                    .catch {
+                        emit(PhotoViewPartialChange.Init.Failure(data, it))
+                    }
             }
             return flow
         }
@@ -78,15 +114,26 @@ sealed interface PhotoViewPartialChange : PartialChange<PhotoViewUiState> {
                     hasNext = hasNext,
                     hasPrev = hasPrev,
                     totalAmount = totalAmount,
+                    initialIndex = initialIndex,
                     isLoading = false
                 )
-                is Failure -> oldState.copy(
-                    data = listOf(PhotoViewItem(data.url, null, null)),
-                    totalAmount = 1,
-                    isLoading = false,
-                    hasPrev = false,
-                    hasNext = false,
-                )
+
+                is Failure -> {
+                    oldState.copy(
+                        data = data.picItems.map {
+                            PhotoViewItem(
+                                originUrl = it.originUrl,
+                                url = if (it.showOriginBtn) it.url else null,
+                                overallIndex = null
+                            )
+                        },
+                        hasNext = false,
+                        hasPrev = false,
+                        totalAmount = data.picItems.size,
+                        initialIndex = data.index,
+                        isLoading = false,
+                    )
+                }
             }
 
         data class Success(

@@ -2,11 +2,33 @@ package com.huanchengfly.tieba.post.ui.page.main
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.navigationBarsPadding
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.*
+import androidx.compose.material.BottomNavigation
+import androidx.compose.material.BottomNavigationItem
+import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.Icon
+import androidx.compose.material.LocalContentColor
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.NavigationRail
+import androidx.compose.material.NavigationRailItem
+import androidx.compose.material.Surface
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.remember
@@ -29,8 +51,10 @@ import com.huanchengfly.tieba.post.ui.common.theme.compose.ExtendedColors
 import com.huanchengfly.tieba.post.ui.common.theme.compose.ExtendedTheme
 import com.huanchengfly.tieba.post.ui.common.theme.compose.White
 import com.huanchengfly.tieba.post.ui.utils.MainNavigationContentPosition
+import com.huanchengfly.tieba.post.ui.widgets.compose.AccountNavIcon
 import com.huanchengfly.tieba.post.ui.widgets.compose.Avatar
 import com.huanchengfly.tieba.post.ui.widgets.compose.Sizes
+import com.huanchengfly.tieba.post.utils.AccountUtil.LocalAccount
 
 enum class LayoutType {
     HEADER, CONTENT
@@ -115,27 +139,47 @@ fun NavigationDrawerContent(
             .padding(16.dp),
         content = {
             Column(
-                modifier = Modifier.layoutId(LayoutType.HEADER),
+                modifier = Modifier
+                    .layoutId(LayoutType.HEADER)
+                    .statusBarsPadding(),
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.spacedBy(4.dp) // NavigationRailVerticalPadding
             ) {
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(16.dp),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Avatar(
-                        data = R.drawable.ic_launcher_new_round,
-                        size = Sizes.Small,
-                        contentDescription = stringResource(id = R.string.app_name)
-                    )
-                    Text(
-                        text = stringResource(id = R.string.app_name).uppercase(),
-                        style = MaterialTheme.typography.h6,
-                        color = MaterialTheme.colors.secondary
-                    )
+                val account = LocalAccount.current
+                if (account != null) {
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.spacedBy(16.dp),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(top = 16.dp)
+                    ) {
+                        AccountNavIcon(spacer = false, size = Sizes.Large)
+                        Text(
+                            text = account.nameShow ?: account.name,
+                            style = MaterialTheme.typography.subtitle1,
+                            color = ExtendedTheme.colors.text
+                        )
+                    }
+                } else {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(16.dp),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Avatar(
+                            data = R.drawable.ic_launcher_new_round,
+                            size = Sizes.Small,
+                            contentDescription = stringResource(id = R.string.app_name)
+                        )
+                        Text(
+                            text = stringResource(id = R.string.app_name).uppercase(),
+                            style = MaterialTheme.typography.h6,
+                            color = ExtendedTheme.colors.accent
+                        )
+                    }
                 }
             }
             Column(
@@ -237,14 +281,12 @@ fun NavigationRail(
     NavigationRail(
         backgroundColor = ExtendedTheme.colors.bottomBar,
         contentColor = ExtendedTheme.colors.unselected,
-        modifier = Modifier.fillMaxHeight(),
+        modifier = Modifier
+            .fillMaxHeight()
+            .statusBarsPadding(),
         elevation = 0.dp,
         header = {
-            Avatar(
-                data = R.drawable.ic_launcher_new_round,
-                size = Sizes.Small,
-                contentDescription = stringResource(id = R.string.app_name)
-            )
+            AccountNavIcon(spacer = false)
         }
     ) {
         Column(
