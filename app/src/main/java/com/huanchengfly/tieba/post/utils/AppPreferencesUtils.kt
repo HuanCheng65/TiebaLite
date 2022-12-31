@@ -70,7 +70,7 @@ open class AppPreferencesUtils(context: Context) {
         defaultValue = "0"
     )
 
-    var darkTheme by DataStoreDelegates.string(key = "dark_theme", defaultValue = "dark")
+    var darkTheme by DataStoreDelegates.string(key = "dark_theme", defaultValue = "grey_dark")
 
     var followSystemNight by DataStoreDelegates.boolean(
         defaultValue = true,
@@ -365,7 +365,6 @@ open class AppPreferencesUtils(context: Context) {
             }
         }
     }
-
 }
 
 val Context.appPreferences: AppPreferencesUtils

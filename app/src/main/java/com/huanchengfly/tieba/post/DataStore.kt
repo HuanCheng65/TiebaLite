@@ -1,9 +1,11 @@
 package com.huanchengfly.tieba.post
 
+import android.annotation.SuppressLint
 import android.content.Context
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
+import androidx.datastore.core.DataMigration
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.SharedPreferencesMigration
 import androidx.datastore.preferences.core.*
@@ -23,10 +25,26 @@ object DataStoreConst {
 val Context.dataStore: DataStore<Preferences> by preferencesDataStore(
     name = DataStoreConst.DATA_STORE_NAME,
     produceMigrations = { context ->
-        listOf(SharedPreferencesMigration(context, "settings"))
+        listOf(
+            SharedPreferencesMigration(context, "settings"),
+            object : DataMigration<Preferences> {
+                override suspend fun cleanUp() {}
+
+                override suspend fun migrate(currentData: Preferences): Preferences {
+                    return currentData.toMutablePreferences().apply {
+                        set(stringPreferencesKey("dark_theme"), "grey_dark")
+                    }.toPreferences()
+                }
+
+                override suspend fun shouldMigrate(currentData: Preferences): Boolean {
+                    return currentData[stringPreferencesKey("dark_theme")] == "dark"
+                }
+            }
+        )
     }
 )
 
+@SuppressLint("FlowOperatorInvokedInComposition")
 @Composable
 fun <T> DataStore<Preferences>.collectPreferenceAsState(key: Preferences.Key<T>, defaultValue: T): State<T> {
     return data.map { it[key] ?: defaultValue }.collectAsState(initial = defaultValue)
