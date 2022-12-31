@@ -756,14 +756,13 @@ class ThreadActivity : BaseActivity(), View.OnClickListener, IThreadMenuFragment
                     show(supportFragmentManager, "Menu")
                 }
             }
-
             R.id.thread_bottom_bar_agree -> if (dataBean?.thread?.threadInfo?.threadId != null && dataBean?.thread?.threadInfo?.firstPostId != null) {
                 if (!agree) {
                     agree = true
                     agreeNum += 1
                     TiebaApi.getInstance().opAgree(
-                        dataBean!!.thread?.threadInfo?.threadId!!,
-                        dataBean!!.thread?.threadInfo?.firstPostId!!,
+                        dataBean?.thread?.threadInfo?.threadId!!,
+                        dataBean?.thread?.threadInfo?.firstPostId!!,
                         0
                     ).enqueue(object : Callback<AgreeBean> {
                         override fun onFailure(call: Call<AgreeBean>, t: Throwable) {
@@ -789,8 +788,8 @@ class ThreadActivity : BaseActivity(), View.OnClickListener, IThreadMenuFragment
                     agree = false
                     agreeNum -= 1
                     TiebaApi.getInstance().opAgree(
-                        dataBean!!.thread?.threadInfo?.threadId!!,
-                        dataBean!!.thread?.threadInfo?.firstPostId!!,
+                        dataBean?.thread?.threadInfo?.threadId!!,
+                        dataBean?.thread?.threadInfo?.firstPostId!!,
                         1
                     ).enqueue(object : Callback<AgreeBean> {
                         override fun onFailure(call: Call<AgreeBean>, t: Throwable) {

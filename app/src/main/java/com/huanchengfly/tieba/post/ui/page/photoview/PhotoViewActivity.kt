@@ -37,11 +37,10 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
-import com.github.panpf.sketch.Sketch
 import com.github.panpf.sketch.displayImage
+import com.github.panpf.sketch.zoom.Edge
 import com.github.panpf.sketch.zoom.ReadModeDecider
 import com.github.panpf.sketch.zoom.SketchZoomImageView
-import com.github.panpf.sketch.zoom.internal.Edge
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.rememberPagerState
@@ -59,7 +58,6 @@ import kotlin.math.roundToInt
 
 object MyReadModeDecider : ReadModeDecider {
     override fun should(
-        sketch: Sketch,
         imageWidth: Int,
         imageHeight: Int,
         viewWidth: Int,

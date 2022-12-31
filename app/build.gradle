@@ -5,7 +5,7 @@ plugins {
     id 'kotlinx-serialization'
     id 'dagger.hilt.android.plugin'
     id 'com.squareup.wire'
-    id 'com.google.devtools.ksp' version "$kotlin_version-1.0.6"
+    id 'com.google.devtools.ksp' version "$kotlin_version-1.0.8"
 }
 
 def keystoreProperties = new Properties()
@@ -110,35 +110,34 @@ wire {
 }
 
 dependencies {
-    implementation "org.jetbrains.kotlinx:kotlinx-serialization-json:1.4.0"
+    implementation "io.coil-kt:coil:2.2.2"
+    implementation "io.coil-kt:coil-compose:2.2.2"
 
-    def media3_version = "1.0.0-beta02"
+    implementation 'org.jetbrains.kotlinx:kotlinx-serialization-json:1.4.1'
+//    implementation 'androidx.compose.material3:material3:1.0.0'
 
+    def media3_version = "1.0.0-beta03"
     implementation "androidx.media3:media3-exoplayer:$media3_version"
     implementation "androidx.media3:media3-ui:$media3_version"
 
-    def compose_destinations_version = "1.7.22-beta"
-
+    def compose_destinations_version = '1.7.23-beta'
     implementation "io.github.raamcosta.compose-destinations:animations-core:$compose_destinations_version"
     ksp "io.github.raamcosta.compose-destinations:ksp:$compose_destinations_version"
 
-    implementation "androidx.navigation:navigation-compose:2.5.2"
+    implementation "androidx.navigation:navigation-compose:2.5.3"
 
     def work_version = "2.7.1"
-
     implementation "androidx.work:work-runtime-ktx:$work_version"
 
     api "com.squareup.wire:wire-runtime:$wire_version"
 
     def hilt_androidx_version = "1.0.0"
-
     implementation "com.google.dagger:hilt-android:$hilt_version"
     kapt "com.google.dagger:hilt-android-compiler:$hilt_version"
     implementation "androidx.hilt:hilt-navigation-compose:$hilt_androidx_version"
     kapt "androidx.hilt:hilt-compiler:$hilt_androidx_version"
 
-    def accompanist_version = "0.26.5-rc"
-
+    def accompanist_version = '0.27.0'
     implementation "com.google.accompanist:accompanist-drawablepainter:$accompanist_version"
     implementation "com.google.accompanist:accompanist-insets-ui:$accompanist_version"
     implementation "com.google.accompanist:accompanist-systemuicontroller:$accompanist_version"
@@ -148,18 +147,16 @@ dependencies {
     implementation "com.google.accompanist:accompanist-swiperefresh:$accompanist_version"
     implementation "com.google.accompanist:accompanist-webview:$accompanist_version"
 
-    def coil_version = '2.2.1'
-    implementation "io.coil-kt:coil:$coil_version"
-    implementation "io.coil-kt:coil-compose:$coil_version"
-
-    def sketch_version = "3.1.0-beta01"
+    def sketch_version = "3.1.0"
     implementation "io.github.panpf.sketch3:sketch:$sketch_version"
     implementation "io.github.panpf.sketch3:sketch-compose:$sketch_version"
     implementation "io.github.panpf.sketch3:sketch-extensions:$sketch_version"
     implementation "io.github.panpf.sketch3:sketch-gif-movie:$sketch_version"
     implementation "io.github.panpf.sketch3:sketch-zoom:$sketch_version"
+    implementation "io.github.panpf.sketch3:sketch-okhttp:$sketch_version"
 
-    def compose_version = '1.3.0-rc01'
+
+    def compose_version = '1.3.1'
     implementation "androidx.compose.animation:animation:$compose_version"
     implementation "androidx.compose.ui:ui:$compose_version"
     implementation "androidx.compose.ui:ui-tooling:$compose_version"
@@ -169,13 +166,11 @@ dependencies {
     implementation "androidx.compose.material:material:$compose_version"
     implementation "androidx.compose.material:material-icons-extended:$compose_version"
 
-    implementation "com.github.JamalMulla:ComposePrefs:1.0.5"
-
-    implementation 'androidx.activity:activity-compose:1.6.0'
-    implementation "com.google.android.material:compose-theme-adapter:1.1.20"
+    implementation 'androidx.activity:activity-compose:1.6.1'
+    implementation "com.google.android.material:compose-theme-adapter:1.2.1"
     implementation "androidx.constraintlayout:constraintlayout-compose:1.0.1"
 
-    def activity_version = "1.6.0"
+    def activity_version = "1.6.1"
 
     implementation "androidx.activity:activity-ktx:$activity_version"
     implementation "androidx.activity:activity-compose:$activity_version"
@@ -219,25 +214,25 @@ dependencies {
 
     //Test
     testImplementation "junit:junit:4.13.2"
-    androidTestImplementation "androidx.test:core:1.4.0"
-    androidTestImplementation "androidx.test.ext:junit:1.1.3"
-    androidTestImplementation "androidx.test:rules:1.4.0"
-    androidTestImplementation "androidx.test:runner:1.4.0"
-    androidTestImplementation "androidx.test.espresso:espresso-core:3.4.0"
+    androidTestImplementation "androidx.test:core:1.5.0"
+    androidTestImplementation "androidx.test.ext:junit:1.1.4"
+    androidTestImplementation "androidx.test:rules:1.5.0"
+    androidTestImplementation "androidx.test:runner:1.5.1"
+    androidTestImplementation "androidx.test.espresso:espresso-core:3.5.0"
 
     //Glide
     implementation "com.github.bumptech.glide:glide:$glide_version"
     kapt "com.github.bumptech.glide:compiler:$glide_version"
     implementation "com.github.bumptech.glide:okhttp3-integration:$glide_version"
 
-    implementation "com.google.android.material:material:1.6.1"
+    implementation "com.google.android.material:material:1.7.0"
 
     implementation "com.squareup.okhttp3:okhttp:4.10.0"
     implementation "com.squareup.retrofit2:retrofit:$retrofit_version"
     implementation "com.squareup.retrofit2:converter-gson:$retrofit_version"
     implementation "com.squareup.retrofit2:converter-wire:$retrofit_version"
 
-    implementation 'com.google.code.gson:gson:2.9.1'
+    implementation 'com.google.code.gson:gson:2.10'
     implementation "cn.dreamtobe.kpswitch:library:1.6.2"
     implementation "org.litepal.android:kotlin:3.0.0"
     implementation 'cn.jzvd:jiaozivideoplayer:7.7.2.3300'
@@ -250,7 +245,7 @@ dependencies {
     implementation "com.scwang.smart:refresh-header-material:2.0.1"
 
     implementation 'com.github.lwj1994:Matisse:0.5.3-20220115'
-    implementation 'com.github.getActivity:XXPermissions:16.0'
+    implementation 'com.github.getActivity:XXPermissions:16.5'
     implementation "com.gyf.immersionbar:immersionbar:3.0.0"
 
     implementation "com.github.yalantis:ucrop:2.2.8"

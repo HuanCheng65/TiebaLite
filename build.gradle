@@ -2,11 +2,11 @@
 
 buildscript {
     ext {
-        glide_version = '4.13.2'
+        glide_version = '4.14.2'
         retrofit_version = "2.9.0"
-        kotlin_version = '1.7.20'
+        kotlin_version = '1.7.21'
         wire_version = '4.4.1'
-        hilt_version = '2.43.1'
+        hilt_version = '2.44'
     }
     repositories {
         google()
