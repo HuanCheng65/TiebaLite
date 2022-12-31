@@ -180,7 +180,7 @@ class SingleAccountSigner(
                         withContext(Dispatchers.Main) {
                             mProgressListener?.onProgressStart(
                                 it,
-                                position + mSignCount,
+                                position,
                                 signData.size
                             )
                         }

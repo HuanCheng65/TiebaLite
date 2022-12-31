@@ -13,6 +13,7 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.TextView
 import android.widget.Toast
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
 import androidx.viewpager.widget.ViewPager.OnPageChangeListener
 import butterknife.BindView
@@ -263,15 +264,17 @@ open class MainActivity : BaseActivity(), NavigationBarView.OnItemSelectedListen
     @SuppressLint("MissingPermission")
     override fun onStart() {
         super.onStart()
-        registerReceiver(
+        ContextCompat.registerReceiver(
+            this,
             newMessageReceiver,
             ReceiverUtil.createIntentFilter(NotifyJobService.ACTION_NEW_MESSAGE),
-            RECEIVER_NOT_EXPORTED
+            ContextCompat.RECEIVER_NOT_EXPORTED
         )
-        registerReceiver(
+        ContextCompat.registerReceiver(
+            this,
             accountSwitchReceiver,
             ReceiverUtil.createIntentFilter(AccountUtil.ACTION_SWITCH_ACCOUNT),
-            RECEIVER_NOT_EXPORTED
+            ContextCompat.RECEIVER_NOT_EXPORTED
         )
         try {
             startService(Intent(this, NotifyJobService::class.java))

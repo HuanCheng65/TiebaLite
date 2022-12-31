@@ -1,9 +1,12 @@
 package com.huanchengfly.tieba.post.components.workers
 
+import android.Manifest
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.widget.Toast
+import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationChannelCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
@@ -98,6 +101,13 @@ class OKSignWork(
     }
 
     private fun updateNotification(title: String, text: String, intent: Intent) {
+        if (ActivityCompat.checkSelfPermission(
+                context,
+                Manifest.permission.POST_NOTIFICATIONS
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            return
+        }
         notificationManager.notify(
             1,
             buildNotification(title, text)
@@ -114,6 +124,13 @@ class OKSignWork(
     }
 
     private fun updateNotification(title: String, text: String?) {
+        if (ActivityCompat.checkSelfPermission(
+                context,
+                Manifest.permission.POST_NOTIFICATIONS
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            return
+        }
         val notification = buildNotification(title, text)
             .build()
         notification.flags = notification.flags.addFlag(NotificationCompat.FLAG_ONGOING_EVENT)

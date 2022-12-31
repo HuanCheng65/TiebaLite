@@ -32,11 +32,26 @@ import com.huanchengfly.tieba.post.plugins.PluginManager
 import com.huanchengfly.tieba.post.plugins.interfaces.IApp
 import com.huanchengfly.tieba.post.ui.common.theme.interfaces.ThemeSwitcher
 import com.huanchengfly.tieba.post.ui.common.theme.utils.ThemeUtils
-import com.huanchengfly.tieba.post.utils.*
+import com.huanchengfly.tieba.post.utils.AccountUtil
+import com.huanchengfly.tieba.post.utils.AppIconUtil
+import com.huanchengfly.tieba.post.utils.CrashUtil
+import com.huanchengfly.tieba.post.utils.EmoticonManager
+import com.huanchengfly.tieba.post.utils.SharedPreferencesUtil
+import com.huanchengfly.tieba.post.utils.ThemeUtil
+import com.huanchengfly.tieba.post.utils.TiebaUtil
+import com.huanchengfly.tieba.post.utils.UIDUtil
+import com.huanchengfly.tieba.post.utils.Util
+import com.huanchengfly.tieba.post.utils.appPreferences
+import com.huanchengfly.tieba.post.utils.applicationMetaData
+import com.huanchengfly.tieba.post.utils.launchUrl
 import com.microsoft.appcenter.AppCenter
 import com.microsoft.appcenter.analytics.Analytics
 import com.microsoft.appcenter.crashes.Crashes
-import com.microsoft.appcenter.distribute.*
+import com.microsoft.appcenter.distribute.Distribute
+import com.microsoft.appcenter.distribute.DistributeListener
+import com.microsoft.appcenter.distribute.ReleaseDetails
+import com.microsoft.appcenter.distribute.UpdateAction
+import com.microsoft.appcenter.distribute.UpdateTrack
 import dagger.hilt.android.HiltAndroidApp
 import org.litepal.LitePal
 
@@ -94,8 +109,9 @@ class App : Application(), IApp, IGetter, SketchFactory {
                 Analytics::class.java, Crashes::class.java, Distribute::class.java
             )
         }
-        ThemeUtils.init(ThemeDelegate)
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
+        ThemeUtils.init(ThemeDelegate)
+        if (BuildConfig.DEBUG) AppIconUtil.setIcon()
         registerActivityLifecycleCallbacks(ClipBoardLinkDetector)
         EmoticonManager.init(this)
         PluginManager.init(this)
@@ -108,7 +124,7 @@ class App : Application(), IApp, IGetter, SketchFactory {
 
     //禁止app字体大小跟随系统字体大小调节
     override fun getResources(): Resources {
-        INSTANCE = this
+        //INSTANCE = this
         val fontScale = appPreferences.fontScale
         val resources = super.getResources()
         if (resources.configuration.fontScale != fontScale) {
@@ -118,8 +134,6 @@ class App : Application(), IApp, IGetter, SketchFactory {
         }
         return resources
     }
-
-
 
     /**
      * 添加Activity
@@ -353,6 +367,22 @@ class App : Application(), IApp, IGetter, SketchFactory {
                         )
                     } else context.getColorCompat(R.color.theme_color_background_light)
                 }
+
+                R.attr.colorWindowBackground -> {
+                    if (ThemeUtil.isTranslucentTheme(theme)) {
+                        return context.getColorCompat(R.color.transparent)
+                    }
+                    return if (ThemeUtil.isNightMode()) {
+                        context.getColorCompat(
+                            resources.getIdentifier(
+                                "theme_color_window_background_$theme",
+                                "color",
+                                packageName
+                            )
+                        )
+                    } else context.getColorCompat(R.color.theme_color_window_background_light)
+                }
+
                 R.attr.colorChip -> {
                     if (ThemeUtil.isTranslucentTheme(theme)) {
                         return context.getColorCompat(R.color.transparent)
@@ -537,10 +567,15 @@ class App : Application(), IApp, IGetter, SketchFactory {
                     context,
                     R.attr.colorOnAccent
                 )
-                R.color.default_color_background,
-                R.color.default_color_window_background -> return getColorByAttr(
+
+                R.color.default_color_background -> return getColorByAttr(
                     context,
                     R.attr.colorBg
+                )
+
+                R.color.default_color_window_background -> return getColorByAttr(
+                    context,
+                    R.attr.colorWindowBackground
                 )
                 R.color.default_color_toolbar -> return getColorByAttr(context, R.attr.colorToolbar)
                 R.color.default_color_toolbar_item -> return getColorByAttr(

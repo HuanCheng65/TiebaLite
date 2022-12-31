@@ -31,7 +31,7 @@ import com.huanchengfly.tieba.post.ui.widgets.VoicePlayerView
 import com.huanchengfly.tieba.post.ui.widgets.theme.TintMySpannableTextView
 import com.huanchengfly.tieba.post.utils.BilibiliUtil.replaceVideoNumberSpan
 import com.huanchengfly.tieba.post.utils.EmoticonManager.registerEmoticon
-import java.util.*
+import java.util.TreeMap
 import kotlin.math.roundToInt
 
 class PostListAdapterHelper(
@@ -300,7 +300,7 @@ class PostListAdapterHelper(
 
     fun getContentViews(postListItemBean: PostListItemBean): List<View> {
         val views: MutableList<View> = ArrayList()
-        for (contentBean in postListItemBean.content!!) {
+        for (contentBean in postListItemBean.content ?: emptyList()) {
             when (contentBean.type) {
                 "0", "9", "27" -> {
                     if (appendTextToLastTextView(views, contentBean.text)) {

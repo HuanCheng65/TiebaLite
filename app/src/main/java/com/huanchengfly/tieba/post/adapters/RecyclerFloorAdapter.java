@@ -69,6 +69,7 @@ public class RecyclerFloorAdapter extends BaseSingleTypeAdapter<SubFloorListBean
     public RecyclerFloorAdapter(Context context) {
         super(context, null);
         setOnItemClickListener((viewHolder, postInfo, position) -> {
+            if (!AccountUtil.isLoggedIn()) return;
             int floor = Integer.parseInt(dataBean.getPost().getFloor());
             int pn = floor - (floor % 30);
             ThreadContentBean.UserInfoBean userInfoBean = postInfo.getAuthor();

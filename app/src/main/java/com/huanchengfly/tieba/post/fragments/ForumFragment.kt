@@ -40,8 +40,9 @@ class ForumFragment : BaseFragment(), Refreshable, OnSwitchListener, ScrollTopab
     private var forumName: String? = null
     private var mDataBean: ForumPageBean? = null
 
+    @JvmField
     @BindView(R.id.recycler_view)
-    lateinit var mRecyclerView: RecyclerView
+    var mRecyclerView: RecyclerView? = null
 
     @JvmField
     @BindView(R.id.refresh)
@@ -149,7 +150,7 @@ class ForumFragment : BaseFragment(), Refreshable, OnSwitchListener, ScrollTopab
         super.onViewCreated(view, savedInstanceState)
         refreshLayout?.setOnRefreshListener { refresh() }
         refreshLayout?.setOnLoadMoreListener { loadMore() }
-        mRecyclerView.apply {
+        mRecyclerView?.apply {
             layoutManager = virtualLayoutManager
             adapter = delegateAdapter
             addItemDecoration(ForumDivider(attachContext, RecyclerView.VERTICAL))
@@ -253,7 +254,7 @@ class ForumFragment : BaseFragment(), Refreshable, OnSwitchListener, ScrollTopab
     }
 
     override fun scrollToTop() {
-        mRecyclerView.post {
+        mRecyclerView?.post {
             virtualLayoutManager.scrollToPosition(0)
         }
     }
