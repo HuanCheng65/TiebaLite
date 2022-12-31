@@ -26,7 +26,8 @@ import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.RequestBody.Companion.toRequestBody
 import java.text.NumberFormat
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Date
+import java.util.Locale
 
 class PluginAsoulCnki(app: IApp, manifest: PluginManifest) : IPlugin(app, manifest) {
     override fun onEnable() {
@@ -153,7 +154,7 @@ class PluginAsoulCnki(app: IApp, manifest: PluginManifest) : IPlugin(app, manife
 
     fun getPostTextContent(item: ThreadContentBean.PostListItemBean): String {
         val stringBuilder = StringBuilder()
-        for (contentBean in item.content!!) {
+        for (contentBean in item.content ?: emptyList()) {
             when (contentBean.type) {
                 "2" -> contentBean.setText("#(" + contentBean.c + ")")
                 "3", "20" -> contentBean.setText("[图片]\n")

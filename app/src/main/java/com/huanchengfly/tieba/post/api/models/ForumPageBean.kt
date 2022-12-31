@@ -350,7 +350,7 @@ class ForumPageBean : ErrorBean() {
             return this
         }
 
-        fun setAbstractBeans(abstractBeans: List<AbstractBean>?): ThreadBean {
+        fun setAbstractBeans(abstractBeans: List<AbstractBean?>?): ThreadBean {
             this.abstractBeans = abstractBeans
             return this
         }

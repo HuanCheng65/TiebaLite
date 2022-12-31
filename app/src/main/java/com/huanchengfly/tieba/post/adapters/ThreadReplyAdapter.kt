@@ -134,7 +134,7 @@ class ThreadReplyAdapter(context: Context) :
             }
             builder.append(":")
         }
-        if (subPostListItemBean.content!!.isNotEmpty() && "10" == subPostListItemBean.content[0].type) {
+        if (!subPostListItemBean.content.isNullOrEmpty() && "10" == subPostListItemBean.content[0].type) {
             val voiceUrl =
                 "http://c.tieba.baidu.com/c/p/voice?voice_md5=" + subPostListItemBean.content[0].voiceMD5 + "&play_from=pb_voice_play"
             val container = RelativeLayout(context)
@@ -184,7 +184,7 @@ class ThreadReplyAdapter(context: Context) :
         }
         val textView = createTextView()
         textView.layoutParams = defaultLayoutParamsWithNoMargins
-        for (contentBean in subPostListItemBean.content) {
+        for (contentBean in subPostListItemBean.content ?: emptyList()) {
             when (contentBean.type) {
                 "0" -> {
                     if (BlockUtil.needBlock(contentBean.text) || BlockUtil.needBlock(userInfoBean)) {
@@ -192,6 +192,7 @@ class ThreadReplyAdapter(context: Context) :
                     }
                     builder.append(contentBean.text)
                 }
+
                 "1" -> builder.append(
                     contentBean.text,
                     MyURLSpan(context, contentBean.link),
@@ -336,7 +337,7 @@ class ThreadReplyAdapter(context: Context) :
                     }
                     R.id.menu_copy -> {
                         val stringBuilder = StringBuilder()
-                        for (contentBean in subPostListItemBean.content!!) {
+                        for (contentBean in subPostListItemBean.content ?: emptyList()) {
                             when (contentBean.type) {
                                 "2" -> contentBean.setText("#(" + contentBean.c + ")")
                                 "3", "20" -> contentBean.setText("[图片]\n")
@@ -456,7 +457,7 @@ class ThreadReplyAdapter(context: Context) :
                     }
                     R.id.menu_copy -> {
                         val stringBuilder = StringBuilder()
-                        for (contentBean in postListItemBean.content!!) {
+                        for (contentBean in postListItemBean.content ?: emptyList()) {
                             when (contentBean.type) {
                                 "2" -> contentBean.setText("#(" + contentBean.c + ")")
                                 "3", "20" -> contentBean.setText("[图片]\n")
@@ -694,7 +695,7 @@ class ThreadReplyAdapter(context: Context) :
             blockCacheMap[postListItemBean.floor] = true
             return true
         }
-        for (contentBean in postListItemBean.content!!) {
+        for (contentBean in postListItemBean.content ?: emptyList()) {
             if ("0" == contentBean.type) {
                 if (BlockUtil.needBlock(contentBean.text)) {
                     blockCacheMap[postListItemBean.floor] = true
@@ -714,7 +715,7 @@ class ThreadReplyAdapter(context: Context) :
     }
 
     companion object {
-        val TAG = ThreadReplyAdapter::class.java.simpleName
+        const val TAG = "ThreadReplyAdapter"
         const val TYPE_REPLY = 1000
         const val TYPE_THREAD = 1001
         const val MAX_SUB_POST_SHOW = 3

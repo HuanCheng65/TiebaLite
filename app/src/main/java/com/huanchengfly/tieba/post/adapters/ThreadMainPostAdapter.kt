@@ -26,8 +26,16 @@ import com.huanchengfly.tieba.post.models.ReplyInfoBean
 import com.huanchengfly.tieba.post.plugins.PluginManager
 import com.huanchengfly.tieba.post.ui.common.theme.utils.ThemeUtils
 import com.huanchengfly.tieba.post.ui.widgets.MyLinearLayout
-import com.huanchengfly.tieba.post.utils.*
+import com.huanchengfly.tieba.post.utils.DateTimeUtils
+import com.huanchengfly.tieba.post.utils.DisplayUtil
+import com.huanchengfly.tieba.post.utils.ImageUtil
+import com.huanchengfly.tieba.post.utils.NavigationHelper
+import com.huanchengfly.tieba.post.utils.PostListAdapterHelper
+import com.huanchengfly.tieba.post.utils.StringUtil
+import com.huanchengfly.tieba.post.utils.ThemeUtil
 import com.huanchengfly.tieba.post.utils.TiebaUtil.reportPost
+import com.huanchengfly.tieba.post.utils.Util
+import com.huanchengfly.tieba.post.utils.appPreferences
 
 
 class ThreadMainPostAdapter(
@@ -123,7 +131,7 @@ class ThreadMainPostAdapter(
                     }
                     R.id.menu_copy -> {
                         val stringBuilder = StringBuilder()
-                        for (contentBean in threadPostBean!!.content!!) {
+                        for (contentBean in threadPostBean!!.content ?: emptyList()) {
                             when (contentBean.type) {
                                 "2" -> contentBean.setText("#(" + contentBean.c + ")")
                                 "3", "20" -> contentBean.setText("[图片]\n")
