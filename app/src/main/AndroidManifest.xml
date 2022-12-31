@@ -142,6 +142,8 @@
             android:configChanges="screenSize|screenLayout|orientation|smallestScreenSize|keyboard|navigation|keyboardHidden"
             android:enabled="false"
             android:exported="true"
+            android:icon="@mipmap/ic_launcher_new"
+            android:roundIcon="@mipmap/ic_launcher_new_round"
             android:launchMode="singleTop"
             android:resizeableActivity="true"
             android:theme="@style/Theme.Splash"

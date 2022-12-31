@@ -251,7 +251,7 @@ class ForumPageBean : ErrorBean() {
             private set
 
         @SerializedName("abstract")
-        var abstractBeans: List<AbstractBean>? = null
+        var abstractBeans: List<AbstractBean?>? = null
             private set
         private var abstractString: String? = null
 
@@ -336,7 +336,8 @@ class ForumPageBean : ErrorBean() {
             }
             if (abstractBeans != null) {
                 val stringBuilder = StringBuilder()
-                for (abstractBean in abstractBeans!!) {
+                for (abstractBean in abstractBeans ?: emptyList()) {
+                    if (abstractBean == null) continue
                     stringBuilder.append(abstractBean.text)
                 }
                 return stringBuilder.toString()
