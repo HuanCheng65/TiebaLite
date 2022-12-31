@@ -756,7 +756,8 @@ class ThreadActivity : BaseActivity(), View.OnClickListener, IThreadMenuFragment
                     show(supportFragmentManager, "Menu")
                 }
             }
-            R.id.thread_bottom_bar_agree -> if (dataBean != null && dataBean!!.thread != null) {
+
+            R.id.thread_bottom_bar_agree -> if (dataBean?.thread?.threadInfo?.threadId != null && dataBean?.thread?.threadInfo?.firstPostId != null) {
                 if (!agree) {
                     agree = true
                     agreeNum += 1

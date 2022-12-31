@@ -62,12 +62,13 @@ class LoginActivity : BaseActivity(), WebViewListener {
                     snackBar.show()
                     launch {
                         AccountUtil.fetchAccountFlow(bduss, sToken, cookies)
+                            .flowOn(Dispatchers.IO)
                             .catch { e ->
                                 snackBar.setText("登录失败 ${e.getErrorMessage()}")
                                 view.loadUrl("https://wappass.baidu.com/passport?login&u=https%3A%2F%2Ftieba.baidu.com%2Findex%2Ftbwise%2Fmine")
                                 handler.postDelayed({ snackBar.dismiss() }, 1500)
                             }
-                            .flowOn(Dispatchers.IO)
+                            .flowOn(Dispatchers.Main)
                             .collect { account ->
                                 AccountUtil.newAccount(account.uid, account) {
                                     if (it) {
