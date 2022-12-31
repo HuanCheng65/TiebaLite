@@ -2,8 +2,19 @@ package com.huanchengfly.tieba.post.utils
 
 import android.content.Context
 import androidx.datastore.core.DataStore
-import androidx.datastore.preferences.core.*
-import com.huanchengfly.tieba.post.*
+import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.core.booleanPreferencesKey
+import androidx.datastore.preferences.core.edit
+import androidx.datastore.preferences.core.floatPreferencesKey
+import androidx.datastore.preferences.core.intPreferencesKey
+import androidx.datastore.preferences.core.longPreferencesKey
+import androidx.datastore.preferences.core.stringPreferencesKey
+import com.huanchengfly.tieba.post.dataStore
+import com.huanchengfly.tieba.post.getBoolean
+import com.huanchengfly.tieba.post.getFloat
+import com.huanchengfly.tieba.post.getInt
+import com.huanchengfly.tieba.post.getLong
+import com.huanchengfly.tieba.post.getString
 import com.huanchengfly.tieba.post.utils.ThemeUtil.TRANSLUCENT_THEME_LIGHT
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -20,6 +31,11 @@ open class AppPreferencesUtils(context: Context) {
     private val coroutineScope: CoroutineScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
 
     var userLikeLastRequestUnix by DataStoreDelegates.long(defaultValue = 0L)
+
+    var appIcon by DataStoreDelegates.string(
+        defaultValue = Icons.DEFAULT_ICON,
+        key = AppIconUtil.PREF_KEY_APP_ICON
+    )
 
     var autoSign by DataStoreDelegates.boolean(defaultValue = false, key = "auto_sign")
 

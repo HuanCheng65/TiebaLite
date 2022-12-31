@@ -27,6 +27,7 @@
     <uses-permission android:name="com.android.launcher.permission.READ_SETTINGS" />
     <uses-permission android:name="com.miui.personalassistant.permission.FAVORITE" />
     <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
 
     <supports-screens
         android:anyDensity="true"
@@ -57,6 +58,13 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
         tools:ignore="UnusedAttribute">
+        <service
+            android:name=".services.OKSignService"
+            android:exported="true"
+            android:enabled="true"
+            android:permission="android.permission.BIND_JOB_SERVICE"
+            android:process=":oksign" />
+
         <activity
             android:name=".activities.AppFontSizeActivity"
             android:configChanges="screenSize|screenLayout|orientation|smallestScreenSize|keyboardHidden"
@@ -77,6 +85,7 @@
             android:configChanges="screenSize|screenLayout|orientation|smallestScreenSize|keyboardHidden"
             android:theme="@style/AppTheme.PhotoView"
             android:windowSoftInputMode="adjustResize" />
+
         <receiver
             android:name=".receivers.BootCompleteSignReceiver"
             android:enabled="true"
@@ -150,11 +159,11 @@
         </activity>
 
         <activity-alias
-            android:name=".MainActivityIconOld"
+            android:name=".MainActivityIconInvert"
             android:enabled="false"
             android:exported="true"
-            android:icon="@mipmap/ic_launcher"
-            android:roundIcon="@mipmap/ic_launcher_round"
+            android:icon="@mipmap/ic_launcher_new_invert"
+            android:roundIcon="@mipmap/ic_launcher_new_invert_round"
             android:targetActivity=".MainActivityV2">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -167,11 +176,11 @@
                 android:resource="@xml/shortcut" />
         </activity-alias>
         <activity-alias
-            android:name=".MainActivityIconInvert"
+            android:name=".MainActivityIconOld"
             android:enabled="false"
             android:exported="true"
-            android:icon="@mipmap/ic_launcher_new_invert"
-            android:roundIcon="@mipmap/ic_launcher_new_invert_round"
+            android:icon="@mipmap/ic_launcher"
+            android:roundIcon="@mipmap/ic_launcher_round"
             android:targetActivity=".MainActivityV2">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

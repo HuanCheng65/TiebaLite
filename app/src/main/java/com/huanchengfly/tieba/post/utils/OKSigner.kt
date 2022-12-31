@@ -1,6 +1,7 @@
 package com.huanchengfly.tieba.post.utils
 
 import android.content.Context
+import android.util.Log
 import com.huanchengfly.tieba.post.api.TiebaApi
 import com.huanchengfly.tieba.post.api.models.MSignBean
 import com.huanchengfly.tieba.post.api.models.SignResultBean
@@ -118,6 +119,7 @@ class SingleAccountSigner(
         signData.clear()
         var userName: String by Delegates.notNull()
         var tbs: String by Delegates.notNull()
+        Log.i(TAG, "start")
         AccountUtil.fetchAccountFlow(account)
             .flatMapConcat { account ->
                 userName = account.name
