@@ -1,7 +1,9 @@
 package com.huanchengfly.tieba.post.utils
 
+import android.app.Activity
 import android.content.Context
 import android.os.Build
+import androidx.core.app.ActivityCompat
 import com.hjq.permissions.OnPermissionCallback
 import com.hjq.permissions.XXPermissions
 import com.huanchengfly.tieba.post.R
@@ -215,6 +217,17 @@ class PermissionRequester(val context: Context) {
         if (XXPermissions.isGranted(context, permissions)) {
             onGranted?.invoke()
         } else {
+            val isFirstRequest = permissions.any {
+                !SharedPreferencesUtil.get(SharedPreferencesUtil.SP_PERMISSION)
+                    .getBoolean("tried_request_${it}", false)
+            }
+            val showRationale = (context !is Activity) || permissions.any {
+                ActivityCompat.shouldShowRequestPermissionRationale(
+                    context,
+                    it
+                )
+            }
+            val showDialog = isFirstRequest || showRationale
             val dialog = RequestPermissionTipDialog(
                 context,
                 PermissionUtils.Permission(permissions, description)
@@ -233,15 +246,15 @@ class PermissionRequester(val context: Context) {
                         } else {
                             onDenied?.invoke()
                         }
-                        dialog.dismiss()
+                        if (showDialog) dialog.dismiss()
                     }
 
                     override fun onDenied(permissions: List<String>, never: Boolean) {
                         onDenied?.invoke()
-                        dialog.dismiss()
+                        if (showDialog) dialog.dismiss()
                     }
                 })
-            dialog.show()
+            if (showDialog) dialog.show()
         }
     }
 }
