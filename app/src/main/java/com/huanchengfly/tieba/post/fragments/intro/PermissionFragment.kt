@@ -32,7 +32,7 @@ class PermissionFragment : BaseIntroFragment() {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
             PermissionUtils.askPermission(
                 attachContext,
-                PermissionUtils.Permission(
+                PermissionUtils.PermissionData(
                     listOf(PermissionUtils.READ_PHONE_STATE),
                     getString(R.string.tip_permission_phone)
                 )

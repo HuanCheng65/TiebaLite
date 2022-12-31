@@ -19,7 +19,7 @@ import com.huanchengfly.tieba.post.models.PhotoInfoBean
 import com.huanchengfly.tieba.post.utils.PermissionUtils
 import com.huanchengfly.tieba.post.utils.PickMediasRequest
 import com.huanchengfly.tieba.post.utils.isPhotoPickerAvailable
-import java.util.*
+import java.util.Collections
 
 class InsertPhotoAdapter(private val mContext: Context) : RecyclerView.Adapter<MyViewHolder>() {
     private var fileList: MutableList<PhotoInfoBean> = ArrayList<PhotoInfoBean>()
@@ -90,7 +90,7 @@ class InsertPhotoAdapter(private val mContext: Context) : RecyclerView.Adapter<M
         }
         PermissionUtils.askPermission(
             mContext,
-            PermissionUtils.Permission(
+            PermissionUtils.PermissionData(
                 if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
                     listOf(
                         PermissionUtils.READ_EXTERNAL_STORAGE,

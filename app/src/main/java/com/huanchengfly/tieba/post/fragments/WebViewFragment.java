@@ -391,12 +391,12 @@ public class WebViewFragment extends BaseFragment implements DownloadListener, B
                 new PermissionDialog(getAttachContext(),
                         new PermissionBean(PermissionDialog.CustomPermission.PERMISSION_LOCATION,
                                 uri.getHost(),
-                                getAttachContext().getString(R.string.title_ask_permission, uri.getHost(), getAttachContext().getString(R.string.permission_name_location)),
+                                getAttachContext().getString(R.string.title_ask_permission, uri.getHost(), getAttachContext().getString(R.string.common_permission_location)),
                                 R.drawable.ic_round_location_on))
                         .setOnGrantedCallback(isForever -> {
                             PermissionUtils.INSTANCE.askPermission(
                                     getAttachContext(),
-                                    new PermissionUtils.Permission(
+                                    new PermissionUtils.PermissionData(
                                             Arrays.asList(Permission.ACCESS_COARSE_LOCATION, Permission.ACCESS_FINE_LOCATION),
                                             getAttachContext().getString(R.string.usage_webview_location_permission)
                                     ),

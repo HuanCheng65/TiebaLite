@@ -199,7 +199,7 @@ public class FileUtil {
         }
         PermissionUtils.INSTANCE.askPermission(
                 context,
-                new PermissionUtils.Permission(
+                new PermissionUtils.PermissionData(
                         Arrays.asList(PermissionUtils.READ_EXTERNAL_STORAGE, PermissionUtils.WRITE_EXTERNAL_STORAGE),
                         context.getString(R.string.tip_permission_storage_download)
                 ),

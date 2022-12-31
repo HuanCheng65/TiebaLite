@@ -32,7 +32,7 @@
                 android:layout_marginStart="16dp"
                 android:layout_marginBottom="4dp"
                 android:layout_toEndOf="@+id/permission_icon_storage"
-                android:text="@string/permission_name_storage"
+                android:text="@string/common_permission_storage"
                 android:textColor="@color/default_color_text"
                 android:textSize="15sp"
                 android:textStyle="bold" />
@@ -78,7 +78,7 @@
                 android:layout_marginStart="16dp"
                 android:layout_marginBottom="4dp"
                 android:layout_toEndOf="@+id/permission_icon_phone"
-                android:text="@string/permission_name_phone"
+                android:text="@string/common_permission_phone"
                 android:textColor="@color/default_color_text"
                 android:textSize="15sp"
                 android:textStyle="bold" />
