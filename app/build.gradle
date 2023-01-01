@@ -126,9 +126,6 @@ dependencies {
 
     implementation "androidx.navigation:navigation-compose:2.5.3"
 
-    def work_version = "2.7.1"
-    implementation "androidx.work:work-runtime-ktx:$work_version"
-
     api "com.squareup.wire:wire-runtime:$wire_version"
 
     def hilt_androidx_version = "1.0.0"
@@ -260,7 +257,7 @@ dependencies {
         transitive = true
     }
 
-    def appCenterSdkVersion = '4.4.5'
+    def appCenterSdkVersion = '5.0.0'
     implementation "com.microsoft.appcenter:appcenter-analytics:${appCenterSdkVersion}"
     implementation "com.microsoft.appcenter:appcenter-crashes:${appCenterSdkVersion}"
     implementation "com.microsoft.appcenter:appcenter-distribute:${appCenterSdkVersion}"

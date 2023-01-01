@@ -102,11 +102,6 @@ object TiebaUtil {
                 .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                 .setAction(OKSignService.ACTION_START_SIGN)
         )
-//        val okSignWork = OneTimeWorkRequestBuilder<OKSignWork>()
-//            .setExpedited(OutOfQuotaPolicy.RUN_AS_NON_EXPEDITED_WORK_REQUEST)
-//            .build()
-//        WorkManager.getInstance(context)
-//            .enqueueUniqueWork("OKSign", ExistingWorkPolicy.KEEP, okSignWork)
     }
 
     @JvmStatic
