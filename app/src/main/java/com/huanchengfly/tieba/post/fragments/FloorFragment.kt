@@ -7,8 +7,8 @@ import android.content.IntentFilter
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import butterknife.BindView
@@ -97,9 +97,11 @@ class FloorFragment : BaseBottomSheetDialogFragment() {
         super.onStart()
         val filter = IntentFilter()
         filter.addAction(ThreadActivity.ACTION_REPLY_SUCCESS)
-        attachContext.registerReceiver(
-            replyReceiver, filter,
-            AppCompatActivity.RECEIVER_NOT_EXPORTED
+        ContextCompat.registerReceiver(
+            attachContext,
+            replyReceiver,
+            filter,
+            ContextCompat.RECEIVER_NOT_EXPORTED
         )
     }
 

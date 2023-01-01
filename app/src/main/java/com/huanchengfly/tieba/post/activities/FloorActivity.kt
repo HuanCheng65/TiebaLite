@@ -10,6 +10,7 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.widget.Toolbar
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import butterknife.BindView
 import butterknife.OnClick
@@ -62,7 +63,12 @@ class FloorActivity : BaseActivity() {
         super.onStart()
         val filter = IntentFilter()
         filter.addAction(ThreadActivity.ACTION_REPLY_SUCCESS)
-        registerReceiver(replyReceiver, filter, RECEIVER_NOT_EXPORTED)
+        ContextCompat.registerReceiver(
+            this,
+            replyReceiver,
+            filter,
+            ContextCompat.RECEIVER_NOT_EXPORTED
+        )
     }
 
     override fun onStop() {

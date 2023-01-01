@@ -16,6 +16,7 @@ import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.material.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
+import androidx.core.content.ContextCompat
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.lifecycleScope
 import com.google.accompanist.navigation.material.ExperimentalMaterialNavigationApi
@@ -80,10 +81,11 @@ class MainActivityV2 : BaseComposeActivity() {
     override fun onStart() {
         super.onStart()
         runCatching {
-            registerReceiver(
+            ContextCompat.registerReceiver(
+                this,
                 newMessageReceiver,
                 ReceiverUtil.createIntentFilter(NotifyJobService.ACTION_NEW_MESSAGE),
-                RECEIVER_NOT_EXPORTED
+                ContextCompat.RECEIVER_NOT_EXPORTED
             )
             startService(Intent(this, NotifyJobService::class.java))
             val builder = JobInfo.Builder(

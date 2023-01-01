@@ -17,6 +17,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.widget.Toolbar
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.OnChildAttachStateChangeListener
 import butterknife.BindView
@@ -398,9 +399,9 @@ class ThreadActivity : BaseActivity(), View.OnClickListener, IThreadMenuFragment
 
     override fun onStart() {
         super.onStart()
-        registerReceiver(replyReceiver, IntentFilter().apply {
+        ContextCompat.registerReceiver(this, replyReceiver, IntentFilter().apply {
             addAction(ACTION_REPLY_SUCCESS)
-        }, RECEIVER_NOT_EXPORTED)
+        }, ContextCompat.RECEIVER_NOT_EXPORTED)
     }
 
     override fun onStop() {
