@@ -15,7 +15,7 @@ import com.huanchengfly.tieba.post.activities.WebViewActivity
 import com.huanchengfly.tieba.post.api.TiebaApi
 import com.huanchengfly.tieba.post.api.models.CheckReportBean
 import com.huanchengfly.tieba.post.components.dialogs.LoadingDialog
-import com.huanchengfly.tieba.post.pendingIntentFlagImmutable
+import com.huanchengfly.tieba.post.pendingIntentFlagMutable
 import com.huanchengfly.tieba.post.receivers.AutoSignAlarm
 import com.huanchengfly.tieba.post.services.OKSignService
 import com.huanchengfly.tieba.post.toastShort
@@ -56,18 +56,18 @@ object TiebaUtil {
             context,
             0,
             Intent(context, AutoSignAlarm::class.java),
-            pendingIntentFlagImmutable()
+            pendingIntentFlagMutable()
         )
         if (autoSign) {
             val autoSignTimeStr = context.appPreferences.autoSignTime!!
-            val time = autoSignTimeStr.split(":".toRegex()).toTypedArray()
+            val time = autoSignTimeStr.split(":").toTypedArray()
             val hour = time[0].toInt()
             val minute = time[1].toInt()
             val calendar = Calendar.getInstance()
             calendar[Calendar.HOUR_OF_DAY] = hour
             calendar[Calendar.MINUTE] = minute
             if (calendar.timeInMillis >= System.currentTimeMillis()) {
-                alarmManager.setInexactRepeating(
+                alarmManager.setRepeating(
                     AlarmManager.RTC,
                     calendar.timeInMillis,
                     AlarmManager.INTERVAL_DAY,

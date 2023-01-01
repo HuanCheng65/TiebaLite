@@ -5,11 +5,11 @@ import android.app.PendingIntent
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import com.huanchengfly.tieba.post.pendingIntentFlagImmutable
+import com.huanchengfly.tieba.post.pendingIntentFlagMutable
 import com.huanchengfly.tieba.post.utils.TiebaUtil
 import com.huanchengfly.tieba.post.utils.Util
 import com.huanchengfly.tieba.post.utils.appPreferences
-import java.util.*
+import java.util.Calendar
 
 class BootCompleteSignReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
@@ -33,9 +33,9 @@ class BootCompleteSignReceiver : BroadcastReceiver() {
                         context,
                         0,
                         Intent(context, AutoSignAlarm::class.java),
-                        pendingIntentFlagImmutable()
+                        pendingIntentFlagMutable()
                     )
-                    alarmManager.setInexactRepeating(
+                    alarmManager.setRepeating(
                         AlarmManager.RTC,
                         time,
                         AlarmManager.INTERVAL_DAY,
