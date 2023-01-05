@@ -4,6 +4,7 @@ import com.huanchengfly.tieba.post.api.ForumSortType
 import com.huanchengfly.tieba.post.api.SearchThreadFilter
 import com.huanchengfly.tieba.post.api.SearchThreadOrder
 import com.huanchengfly.tieba.post.api.models.*
+import com.huanchengfly.tieba.post.api.models.protos.frsPage.FrsPageResponse
 import com.huanchengfly.tieba.post.api.models.protos.hotThreadList.HotThreadListResponse
 import com.huanchengfly.tieba.post.api.models.protos.personalized.PersonalizedResponse
 import com.huanchengfly.tieba.post.api.models.protos.userLike.UserLikeResponse
@@ -1082,4 +1083,15 @@ interface ITiebaApi {
     fun hotThreadListFlow(
         tabCode: String
     ): Flow<HotThreadListResponse>
+
+    /**
+     * 吧页面
+     *
+     * @param forumName 吧名
+     * @param goodClassifyId 精品贴分类
+     */
+    fun frsPage(
+        forumName: String,
+        goodClassifyId: Int? = 0
+    ): Flow<FrsPageResponse>
 }

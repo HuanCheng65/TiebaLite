@@ -370,7 +370,6 @@ class App : Application(), IApp, IGetter, SketchFactory {
                         )
                     } else context.getColorCompat(R.color.theme_color_background_light)
                 }
-
                 R.attr.colorWindowBackground -> {
                     if (ThemeUtil.isTranslucentTheme(theme)) {
                         return context.getColorCompat(R.color.transparent)
@@ -385,7 +384,6 @@ class App : Application(), IApp, IGetter, SketchFactory {
                         )
                     } else context.getColorCompat(R.color.theme_color_window_background_light)
                 }
-
                 R.attr.colorChip -> {
                     if (ThemeUtil.isTranslucentTheme(theme)) {
                         return context.getColorCompat(R.color.transparent)
@@ -400,7 +398,6 @@ class App : Application(), IApp, IGetter, SketchFactory {
                         )
                     } else context.getColorCompat(R.color.theme_color_chip_light)
                 }
-
                 R.attr.colorOnChip -> {
                     if (ThemeUtil.isTranslucentTheme(theme)) {
                         return getColorByAttr(context, R.attr.colorTextSecondary, theme)
@@ -691,6 +688,9 @@ class App : Application(), IApp, IGetter, SketchFactory {
     }
 
     override fun createSketch(): Sketch = Sketch.Builder(this).apply {
+        httpStack(OkHttpStack.Builder().apply {
+            userAgent(System.getProperty("http.agent"))
+        }.build())
         components {
             addDrawableDecoder(
                 when {

@@ -7,7 +7,6 @@ option java_package = "com.huanchengfly.tieba.post.api.models.protos.hotThreadLi
 import "Common.proto";
 import "CommonRequest.proto";
 import "ThreadInfo.proto";
-import "Frs.proto";
 
 message HotThreadListRequestData {
   CommonRequest common = 1;

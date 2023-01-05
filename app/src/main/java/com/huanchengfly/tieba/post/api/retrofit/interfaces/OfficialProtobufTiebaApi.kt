@@ -1,5 +1,6 @@
 package com.huanchengfly.tieba.post.api.retrofit.interfaces
 
+import com.huanchengfly.tieba.post.api.models.protos.frsPage.FrsPageResponse
 import com.huanchengfly.tieba.post.api.models.protos.hotThreadList.HotThreadListResponse
 import com.huanchengfly.tieba.post.api.models.protos.personalized.PersonalizedResponse
 import com.huanchengfly.tieba.post.api.models.protos.userLike.UserLikeResponse
@@ -23,4 +24,9 @@ interface OfficialProtobufTiebaApi {
     fun hotThreadListFlow(
         @Body body: MyMultipartBody,
     ): Flow<HotThreadListResponse>
+
+    @POST("/c/f/frs/page?cmd=301001")
+    fun frsPageFlow(
+        @Body body: MyMultipartBody,
+    ): Flow<FrsPageResponse>
 }

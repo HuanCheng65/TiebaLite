@@ -8,6 +8,7 @@ import com.huanchengfly.tieba.post.api.Param
 import com.huanchengfly.tieba.post.api.SearchThreadFilter
 import com.huanchengfly.tieba.post.api.SearchThreadOrder
 import com.huanchengfly.tieba.post.api.booleanToString
+import com.huanchengfly.tieba.post.api.buildAdParam
 import com.huanchengfly.tieba.post.api.buildAppPosInfo
 import com.huanchengfly.tieba.post.api.buildCommonRequest
 import com.huanchengfly.tieba.post.api.buildProtobufRequestBody
@@ -44,6 +45,9 @@ import com.huanchengfly.tieba.post.api.models.UserLikeForumBean
 import com.huanchengfly.tieba.post.api.models.UserPostBean
 import com.huanchengfly.tieba.post.api.models.WebReplyResultBean
 import com.huanchengfly.tieba.post.api.models.WebUploadPicBean
+import com.huanchengfly.tieba.post.api.models.protos.frsPage.FrsPageRequest
+import com.huanchengfly.tieba.post.api.models.protos.frsPage.FrsPageRequestData
+import com.huanchengfly.tieba.post.api.models.protos.frsPage.FrsPageResponse
 import com.huanchengfly.tieba.post.api.models.protos.hotThreadList.HotThreadListRequest
 import com.huanchengfly.tieba.post.api.models.protos.hotThreadList.HotThreadListRequestData
 import com.huanchengfly.tieba.post.api.models.protos.hotThreadList.HotThreadListResponse
@@ -788,6 +792,35 @@ object MixedTiebaApiImpl : ITiebaApi {
                         common = buildCommonRequest(),
                         tabCode = tabCode,
                         tabId = "1"
+                    )
+                )
+            )
+        )
+    }
+
+    override fun frsPage(
+        forumName: String,
+        goodClassifyId: Int?
+    ): Flow<FrsPageResponse> {
+        return RetrofitTiebaApi.OFFICIAL_PROTOBUF_TIEBA_API.frsPageFlow(
+            buildProtobufRequestBody(
+                FrsPageRequest(
+                    FrsPageRequestData(
+                        ad_param = buildAdParam(),
+                        app_pos = buildAppPosInfo(),
+                        call_from = 0,
+                        category_id = 0,
+                        cid = goodClassifyId ?: 0,
+                        common = buildCommonRequest(),
+                        ctime = 0,
+                        data_size = 0,
+                        scr_dip = App.ScreenInfo.DENSITY.toDouble(),
+                        scr_h = getScreenHeight(),
+                        scr_w = getScreenWidth(),
+                        is_good = if (goodClassifyId != null) 1 else 0,
+                        kw = forumName,
+                        rn = 90,
+                        rn_need = 30
                     )
                 )
             )

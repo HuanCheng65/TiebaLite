@@ -6,6 +6,7 @@ import com.huanchengfly.tieba.post.App
 import com.huanchengfly.tieba.post.api.models.OAID
 import com.huanchengfly.tieba.post.api.models.protos.AppPosInfo
 import com.huanchengfly.tieba.post.api.models.protos.CommonRequest
+import com.huanchengfly.tieba.post.api.models.protos.frsPage.AdParam
 import com.huanchengfly.tieba.post.api.retrofit.RetrofitTiebaApi
 import com.huanchengfly.tieba.post.api.retrofit.body.MyMultipartBody
 import com.huanchengfly.tieba.post.toJson
@@ -34,6 +35,10 @@ fun buildProtobufRequestBody(
             addFormDataPart("data", "file", data.encode().toRequestBody())
         }
         .build()
+}
+
+fun buildAdParam(): AdParam {
+    return AdParam(load_count = 0, refresh_count = 4, yoga_lib_version = "1.0")
 }
 
 fun buildAppPosInfo(): AppPosInfo {
