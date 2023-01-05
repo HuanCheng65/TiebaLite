@@ -25,6 +25,7 @@ import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.DropdownMenuItem
+import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Icon
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Surface
@@ -33,6 +34,9 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.ViewAgenda
 import androidx.compose.material.icons.rounded.Check
 import androidx.compose.material.icons.rounded.Search
+import androidx.compose.material.pullrefresh.PullRefreshIndicator
+import androidx.compose.material.pullrefresh.pullRefresh
+import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
@@ -40,6 +44,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.Center
 import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
@@ -55,8 +60,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.google.accompanist.drawablepainter.rememberDrawablePainter
 import com.google.accompanist.placeholder.placeholder
-import com.google.accompanist.swiperefresh.SwipeRefresh
-import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import com.huanchengfly.tieba.post.R
 import com.huanchengfly.tieba.post.activities.ForumActivity
 import com.huanchengfly.tieba.post.activities.NewSearchActivity
@@ -69,6 +72,7 @@ import com.huanchengfly.tieba.post.ui.common.theme.compose.ExtendedTheme
 import com.huanchengfly.tieba.post.ui.widgets.Chip
 import com.huanchengfly.tieba.post.ui.widgets.compose.AccountNavIconIfCompact
 import com.huanchengfly.tieba.post.ui.widgets.compose.ActionItem
+import com.huanchengfly.tieba.post.ui.widgets.compose.Avatar
 import com.huanchengfly.tieba.post.ui.widgets.compose.ConfirmDialog
 import com.huanchengfly.tieba.post.ui.widgets.compose.LongClickMenu
 import com.huanchengfly.tieba.post.ui.widgets.compose.Toolbar
@@ -307,30 +311,7 @@ private fun ForumItem(
         ) {
             AnimatedVisibility(visible = showAvatar) {
                 Row {
-                    coil.compose.AsyncImage(
-                        model = item.avatar,
-                        contentDescription = null,
-                        modifier = Modifier
-                            .clip(CircleShape)
-                            .size(40.dp)
-                            .align(CenterVertically),
-                    )
-//                    AsyncImage(
-//                        imageUri = item.avatar,
-//                        contentDescription = null,
-//                        modifier = Modifier
-//                            .clip(CircleShape)
-//                            .size(40.dp)
-//                            .align(CenterVertically),
-//                    ) {
-//                        resultCachePolicy(CachePolicy.DISABLED)
-//                        memoryCachePolicy(CachePolicy.DISABLED)
-//                        disallowReuseBitmap()
-//                    }
-//                    {
-//                        placeholder(ImageUtil.getPlaceHolder(context, 0))
-//                        crossfade()
-//                    }
+                    Avatar(data = item.avatar, size = 40.dp, contentDescription = null)
                     Spacer(modifier = Modifier.width(14.dp))
                 }
             }
@@ -382,6 +363,7 @@ private fun ForumItem(
     }
 }
 
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun HomePage(
     viewModel: HomeViewModel = pageViewModel<HomeUiIntent, HomeViewModel>(
@@ -431,11 +413,12 @@ fun HomePage(
         },
         modifier = Modifier.fillMaxSize(),
     ) { contentPaddings ->
-        SwipeRefresh(
-            state = rememberSwipeRefreshState(isRefreshing = isLoading),
-            onRefresh = { viewModel.send(HomeUiIntent.Refresh) },
-            modifier = Modifier.padding(contentPaddings)
-        ) {
+        val pullRefreshState = rememberPullRefreshState(
+            refreshing = isLoading,
+            onRefresh = { viewModel.send(HomeUiIntent.Refresh) })
+        Box(modifier = Modifier
+            .padding(contentPaddings)
+            .pullRefresh(pullRefreshState)) {
             val gridState = rememberLazyGridState()
             LazyVerticalGrid(
                 state = gridState,
@@ -512,7 +495,10 @@ fun HomePage(
                             Header(
                                 text = stringResource(id = R.string.forum_list_title),
                                 invert = true,
-                                modifier = Modifier.placeholder(visible = true, color = ExtendedTheme.colors.chip)
+                                modifier = Modifier.placeholder(
+                                    visible = true,
+                                    color = ExtendedTheme.colors.chip
+                                )
                             )
                             Spacer(modifier = Modifier.height(8.dp))
                         }
@@ -522,6 +508,12 @@ fun HomePage(
                     }
                 }
             }
+
+            PullRefreshIndicator(
+                refreshing = isLoading,
+                state = pullRefreshState,
+                modifier = Modifier.align(Alignment.TopCenter)
+            )
         }
     }
 }

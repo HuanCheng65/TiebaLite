@@ -1,0 +1,83 @@
+syntax = "proto3";
+
+package protos;
+
+option java_package = "com.huanchengfly.tieba.post.api.models.protos.topicList";
+
+import "Common.proto";
+import "CommonRequest.proto";
+import "ThreadInfo.proto";
+
+message TopicListRequestData {
+  CommonRequest common = 1;
+  string call_from = 2;
+  string list_type = 3;
+  string need_tab_list = 4;
+  int64 fid = 5;
+}
+
+message TopicListRequest {
+  TopicListRequestData data = 1;
+}
+
+message TopicListModule {
+  string module_title = 1;
+  repeated TopicList topic_list = 2;
+  string tips = 3;
+  string rule_jump_url = 4;
+}
+
+message MediaTopic {
+  uint64 topic_id = 1;
+  string topic_name = 2;
+  VideoInfo video_info = 3;
+  string pic_url = 4;
+}
+
+message TabList {
+  string tab_name = 1;
+  string tab_type = 2;
+  string share_pic = 3;
+  string share_title = 4;
+  string share_desc = 5;
+  string share_url = 6;
+}
+
+message TopicList {
+  uint64 topic_id = 1;
+  string topic_name = 2;
+  uint64 discuss_num = 3;
+  int32 tag = 4;
+  string topic_desc = 5;
+  string topic_pic = 6;
+  int64 update_time = 7;
+  string topic_user_name = 8;
+  repeated Media media = 9;
+  int64 topic_tid = 10;
+  string topic_h5_url = 11;
+  VideoInfo video_info = 12;
+  int32 topic_thread_types = 13;
+}
+
+message NewTopicList {
+  int64 topic_id = 1;
+  string topic_name = 2;
+  string topic_desc = 3;
+  int64 discuss_num = 4;
+  string topic_image = 5;
+  int32 topic_tag = 6;
+}
+
+message TopicListResponseData {
+  TopicListModule topic_bang = 1;
+  TopicListModule topic_manual = 2;
+  MediaTopic media_topic = 3;
+  repeated TabList tab_list = 6;
+  repeated TopicList frs_tab_topic = 7;
+  repeated NewTopicList topic_list = 8;
+}
+
+message TopicListResponse {
+  Error error = 1;
+  TopicListResponseData data = 2;
+}

@@ -19,7 +19,8 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import com.github.panpf.sketch.compose.AsyncImage
+import coil.compose.AsyncImage
+import coil.request.ImageRequest
 import com.google.accompanist.drawablepainter.rememberDrawablePainter
 import com.huanchengfly.tieba.post.utils.ImageUtil
 
@@ -83,16 +84,22 @@ fun Avatar(
 
         is String? -> {
             AsyncImage(
-                imageUri = data,
+                model = ImageRequest.Builder(LocalContext.current)
+                    .data(data)
+                    .crossfade(true)
+                    .build(),
                 contentDescription = contentDescription,
+                placeholder = rememberDrawablePainter(
+                    drawable = ImageUtil.getPlaceHolder(
+                        context,
+                        0
+                    )
+                ),
                 modifier = modifier
                     .size(size)
                     .clip(CircleShape),
                 contentScale = ContentScale.Crop
-            ) {
-                placeholder(ImageUtil.getPlaceHolder(context, 0))
-                crossfade()
-            }
+            )
         }
 
         else -> throw IllegalArgumentException("不支持该类型")

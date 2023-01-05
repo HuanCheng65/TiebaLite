@@ -8,7 +8,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
-import com.github.panpf.sketch.compose.AsyncImage
+import coil.compose.AsyncImage
+import coil.request.ImageRequest
+import com.google.accompanist.drawablepainter.rememberDrawablePainter
 import com.huanchengfly.tieba.post.goToActivity
 import com.huanchengfly.tieba.post.models.protos.PhotoViewData
 import com.huanchengfly.tieba.post.ui.page.photoview.PhotoViewActivity
@@ -37,11 +39,13 @@ fun NetworkImage(
         }
     } else Modifier
     AsyncImage(
-        imageUri = imageUri,
+        model = ImageRequest.Builder(LocalContext.current)
+            .data(imageUri)
+            .crossfade(true)
+            .build(),
         contentDescription = contentDescription,
+        placeholder = rememberDrawablePainter(drawable = ImageUtil.getPlaceHolder(context, 0)),
         modifier = modifier.then(clickableModifier),
         contentScale = contentScale,
-    ) {
-        placeholder(ImageUtil.getPlaceHolder(context, 0))
-    }
+    )
 }

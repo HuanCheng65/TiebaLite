@@ -1,4 +1,4 @@
-package com.huanchengfly.tieba.post.ui.page.main.explore
+package com.huanchengfly.tieba.post.ui.widgets.compose
 
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.background
@@ -16,23 +16,17 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
 import androidx.compose.material.LocalContentColor
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Favorite
 import androidx.compose.material.icons.rounded.FavoriteBorder
-import androidx.compose.material.icons.rounded.KeyboardArrowDown
 import androidx.compose.material.icons.rounded.PhotoSizeSelectActual
 import androidx.compose.material.icons.rounded.SwapCalls
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -42,13 +36,10 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
-import androidx.constraintlayout.compose.ConstraintLayout
 import cn.jzvd.Jzvd
 import com.github.panpf.sketch.displayImage
 import com.huanchengfly.tieba.post.R
@@ -56,19 +47,9 @@ import com.huanchengfly.tieba.post.activities.ForumActivity
 import com.huanchengfly.tieba.post.activities.UserActivity
 import com.huanchengfly.tieba.post.api.models.protos.Media
 import com.huanchengfly.tieba.post.api.models.protos.ThreadInfo
-import com.huanchengfly.tieba.post.api.models.protos.personalized.DislikeReason
-import com.huanchengfly.tieba.post.api.models.protos.personalized.ThreadPersonalized
 import com.huanchengfly.tieba.post.ui.common.theme.compose.ExtendedTheme
 import com.huanchengfly.tieba.post.ui.utils.getPhotoViewData
 import com.huanchengfly.tieba.post.ui.widgets.VideoPlayerStandard
-import com.huanchengfly.tieba.post.ui.widgets.compose.Avatar
-import com.huanchengfly.tieba.post.ui.widgets.compose.ClickMenu
-import com.huanchengfly.tieba.post.ui.widgets.compose.NetworkImage
-import com.huanchengfly.tieba.post.ui.widgets.compose.Sizes
-import com.huanchengfly.tieba.post.ui.widgets.compose.UserHeader
-import com.huanchengfly.tieba.post.ui.widgets.compose.VerticalGrid
-import com.huanchengfly.tieba.post.ui.widgets.compose.items
-import com.huanchengfly.tieba.post.ui.widgets.compose.rememberMenuState
 import com.huanchengfly.tieba.post.utils.DateTimeUtils
 import com.huanchengfly.tieba.post.utils.ImageUtil
 import com.huanchengfly.tieba.post.utils.StringUtil
@@ -78,142 +59,6 @@ import kotlin.math.min
 private val Media.url: String
     @Composable get() =
         ImageUtil.getUrl(LocalContext.current, true, originPic, dynamicPic, bigPic, srcPic)
-
-@Composable
-fun VideoPlayer(
-    videoUrl: String,
-    thumbnailUrl: String,
-    title: String = "",
-    modifier: Modifier = Modifier
-) {
-    AndroidView(
-        factory = { context ->
-            VideoPlayerStandard(context)
-        },
-        modifier = modifier
-    ) {
-        it.setUp(videoUrl, title)
-        it.posterImageView.displayImage(thumbnailUrl)
-    }
-    DisposableEffect(videoUrl) {
-        onDispose {
-            Jzvd.releaseAllVideos()
-        }
-    }
-}
-
-@Composable
-fun Dislike(
-    personalized: ThreadPersonalized,
-    onDislike: (clickTime: Long, reasons: List<DislikeReason>) -> Unit,
-) {
-    var clickTime by remember { mutableStateOf(0L) }
-    val selectedReasons = remember { mutableStateListOf<DislikeReason>() }
-    val menuState = rememberMenuState()
-    ClickMenu(
-        menuState = menuState,
-        menuContent = {
-            DisposableEffect(personalized) {
-                clickTime = System.currentTimeMillis()
-                onDispose {
-                    selectedReasons.clear()
-                }
-            }
-            ConstraintLayout(
-                modifier = Modifier.padding(vertical = 8.dp)
-            ) {
-                val (title, grid) = createRefs()
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier
-                        .constrainAs(title) {
-                            start.linkTo(parent.start)
-                            end.linkTo(parent.end)
-                            top.linkTo(parent.top)
-                        }
-                        .padding(horizontal = 16.dp),
-                ) {
-                    Text(
-                        text = stringResource(id = R.string.title_dislike),
-                        style = MaterialTheme.typography.subtitle1,
-                        modifier = Modifier.weight(1f),
-                    )
-                    Spacer(modifier = Modifier.width(32.dp))
-                    Text(
-                        text = stringResource(id = R.string.button_submit_dislike),
-                        modifier = Modifier
-                            .clip(RoundedCornerShape(6.dp))
-                            .background(color = ExtendedTheme.colors.accent)
-                            .clickable {
-                                dismiss()
-                                onDislike(clickTime, selectedReasons)
-                            }
-                            .padding(vertical = 4.dp, horizontal = 8.dp),
-                        color = ExtendedTheme.colors.onAccent,
-                        textAlign = TextAlign.Center,
-                        fontWeight = FontWeight.Bold,
-                        style = MaterialTheme.typography.subtitle2,
-                    )
-                }
-                VerticalGrid(
-                    column = 2,
-                    modifier = Modifier
-                        .constrainAs(grid) {
-                            start.linkTo(title.start)
-                            end.linkTo(title.end)
-                            top.linkTo(title.bottom, 16.dp)
-                            bottom.linkTo(parent.bottom)
-                        }
-                        .padding(horizontal = 16.dp),
-                    horizontalArrangement = Arrangement.spacedBy(4.dp),
-                    verticalArrangement = Arrangement.spacedBy(4.dp),
-                ) {
-                    items(
-                        items = personalized.dislikeResource,
-                        span = { if (it.dislikeId == 7) 2 else 1 }
-                    ) {
-                        val backgroundColor by animateColorAsState(
-                            targetValue = if (selectedReasons.contains(it)) ExtendedTheme.colors.accent else ExtendedTheme.colors.chip
-                        )
-                        val contentColor by animateColorAsState(
-                            targetValue = if (selectedReasons.contains(it)) ExtendedTheme.colors.onAccent else ExtendedTheme.colors.onChip
-                        )
-                        Text(
-                            text = it.dislikeReason,
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .clip(RoundedCornerShape(6.dp))
-                                .background(color = backgroundColor)
-                                .clickable {
-                                    if (selectedReasons.contains(it)) {
-                                        selectedReasons.remove(it)
-                                    } else {
-                                        selectedReasons.add(it)
-                                    }
-                                }
-                                .padding(vertical = 8.dp, horizontal = 16.dp),
-                            color = contentColor,
-                            textAlign = TextAlign.Center,
-                            fontWeight = FontWeight.Bold,
-                            style = MaterialTheme.typography.subtitle2,
-                        )
-                    }
-                }
-            }
-        },
-    ) {
-        IconButton(
-            onClick = { menuState.expanded = true },
-            modifier = Modifier.size(24.dp)
-        ) {
-            Icon(
-                imageVector = Icons.Rounded.KeyboardArrowDown,
-                contentDescription = null,
-                tint = ExtendedTheme.colors.textSecondary
-            )
-        }
-    }
-}
 
 @Composable
 fun FeedCard(
@@ -431,5 +276,28 @@ private fun ActionBtn(
         )
         Spacer(modifier = Modifier.width(8.dp))
         Text(text = text, style = MaterialTheme.typography.caption, color = animatedColor)
+    }
+}
+
+@Composable
+fun VideoPlayer(
+    videoUrl: String,
+    thumbnailUrl: String,
+    title: String = "",
+    modifier: Modifier = Modifier
+) {
+    AndroidView(
+        factory = { context ->
+            VideoPlayerStandard(context)
+        },
+        modifier = modifier
+    ) {
+        it.setUp(videoUrl, title)
+        it.posterImageView.displayImage(thumbnailUrl)
+    }
+    DisposableEffect(videoUrl) {
+        onDispose {
+            Jzvd.releaseAllVideos()
+        }
     }
 }

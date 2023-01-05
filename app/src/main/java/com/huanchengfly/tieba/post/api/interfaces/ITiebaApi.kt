@@ -7,6 +7,7 @@ import com.huanchengfly.tieba.post.api.models.*
 import com.huanchengfly.tieba.post.api.models.protos.frsPage.FrsPageResponse
 import com.huanchengfly.tieba.post.api.models.protos.hotThreadList.HotThreadListResponse
 import com.huanchengfly.tieba.post.api.models.protos.personalized.PersonalizedResponse
+import com.huanchengfly.tieba.post.api.models.protos.topicList.TopicListResponse
 import com.huanchengfly.tieba.post.api.models.protos.userLike.UserLikeResponse
 import com.huanchengfly.tieba.post.api.models.web.ForumBean
 import com.huanchengfly.tieba.post.api.models.web.ForumHome
@@ -1083,6 +1084,11 @@ interface ITiebaApi {
     fun hotThreadListFlow(
         tabCode: String
     ): Flow<HotThreadListResponse>
+
+    /**
+     * 话题榜
+     */
+    fun topicListFlow(): Flow<TopicListResponse>
 
     /**
      * 吧页面

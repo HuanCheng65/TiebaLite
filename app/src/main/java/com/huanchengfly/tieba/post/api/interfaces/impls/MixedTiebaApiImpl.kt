@@ -54,6 +54,9 @@ import com.huanchengfly.tieba.post.api.models.protos.hotThreadList.HotThreadList
 import com.huanchengfly.tieba.post.api.models.protos.personalized.PersonalizedRequest
 import com.huanchengfly.tieba.post.api.models.protos.personalized.PersonalizedRequestData
 import com.huanchengfly.tieba.post.api.models.protos.personalized.PersonalizedResponse
+import com.huanchengfly.tieba.post.api.models.protos.topicList.TopicListRequest
+import com.huanchengfly.tieba.post.api.models.protos.topicList.TopicListRequestData
+import com.huanchengfly.tieba.post.api.models.protos.topicList.TopicListResponse
 import com.huanchengfly.tieba.post.api.models.protos.userLike.UserLikeRequest
 import com.huanchengfly.tieba.post.api.models.protos.userLike.UserLikeRequestData
 import com.huanchengfly.tieba.post.api.models.protos.userLike.UserLikeResponse
@@ -792,6 +795,22 @@ object MixedTiebaApiImpl : ITiebaApi {
                         common = buildCommonRequest(),
                         tabCode = tabCode,
                         tabId = "1"
+                    )
+                )
+            )
+        )
+    }
+
+    override fun topicListFlow(): Flow<TopicListResponse> {
+        return RetrofitTiebaApi.OFFICIAL_PROTOBUF_TIEBA_API.topicListFlow(
+            buildProtobufRequestBody(
+                TopicListRequest(
+                    TopicListRequestData(
+                        common = buildCommonRequest(),
+                        call_from = "newbang",
+                        list_type = "all",
+                        need_tab_list = "0",
+                        fid = 0L
                     )
                 )
             )

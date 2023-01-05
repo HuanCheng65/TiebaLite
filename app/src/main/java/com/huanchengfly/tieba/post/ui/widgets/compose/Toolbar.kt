@@ -42,7 +42,6 @@ import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import com.github.panpf.sketch.compose.AsyncImage
 import com.google.accompanist.drawablepainter.rememberDrawablePainter
 import com.huanchengfly.tieba.post.R
 import com.huanchengfly.tieba.post.activities.LoginActivity
@@ -52,7 +51,6 @@ import com.huanchengfly.tieba.post.ui.common.theme.compose.ExtendedTheme
 import com.huanchengfly.tieba.post.ui.common.windowsizeclass.WindowWidthSizeClass.Companion.Compact
 import com.huanchengfly.tieba.post.utils.AccountUtil
 import com.huanchengfly.tieba.post.utils.AccountUtil.LocalAccount
-import com.huanchengfly.tieba.post.utils.ImageUtil
 import com.huanchengfly.tieba.post.utils.StringUtil
 import com.huanchengfly.tieba.post.utils.compose.calcStatusBarColor
 
@@ -136,16 +134,11 @@ fun AccountNavIcon(
             onClick = onClick,
             shape = CircleShape
         ) {
-            AsyncImage(
-                imageUri = StringUtil.getAvatarUrl(currentAccount.portrait),
-                contentDescription = stringResource(id = R.string.title_switch_account_long_press),
-                modifier = Modifier
-                    .clip(CircleShape)
-                    .size(size),
-            ) {
-                placeholder(ImageUtil.getPlaceHolder(context, 0))
-                crossfade()
-            }
+            Avatar(
+                data = StringUtil.getAvatarUrl(currentAccount.portrait),
+                size = size,
+                contentDescription = stringResource(id = R.string.title_switch_account_long_press)
+            )
         }
     }
 }

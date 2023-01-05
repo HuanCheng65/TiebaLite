@@ -21,16 +21,21 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.ContentAlpha
 import androidx.compose.material.Divider
+import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.KeyboardArrowRight
+import androidx.compose.material.pullrefresh.PullRefreshIndicator
+import androidx.compose.material.pullrefresh.pullRefresh
+import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontFamily
@@ -40,8 +45,6 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.google.accompanist.placeholder.material.placeholder
-import com.google.accompanist.swiperefresh.SwipeRefresh
-import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import com.huanchengfly.tieba.post.R
 import com.huanchengfly.tieba.post.api.models.protos.ThreadInfo
 import com.huanchengfly.tieba.post.arch.collectPartialAsState
@@ -51,11 +54,18 @@ import com.huanchengfly.tieba.post.ui.common.theme.compose.OrangeA700
 import com.huanchengfly.tieba.post.ui.common.theme.compose.RedA700
 import com.huanchengfly.tieba.post.ui.common.theme.compose.White
 import com.huanchengfly.tieba.post.ui.common.theme.compose.Yellow
-import com.huanchengfly.tieba.post.ui.widgets.compose.*
+import com.huanchengfly.tieba.post.ui.page.LocalNavigator
+import com.huanchengfly.tieba.post.ui.page.destinations.HotTopicListPageDestination
+import com.huanchengfly.tieba.post.ui.widgets.compose.LazyLoad
+import com.huanchengfly.tieba.post.ui.widgets.compose.NetworkImage
+import com.huanchengfly.tieba.post.ui.widgets.compose.ProvideContentColor
+import com.huanchengfly.tieba.post.ui.widgets.compose.VerticalGrid
+import com.huanchengfly.tieba.post.ui.widgets.compose.items
+import com.huanchengfly.tieba.post.ui.widgets.compose.itemsIndexed
 import com.huanchengfly.tieba.post.utils.StringUtil.getShortNumString
 import com.ramcosta.composedestinations.annotation.Destination
 
-@OptIn(ExperimentalFoundationApi::class)
+@OptIn(ExperimentalFoundationApi::class, ExperimentalMaterialApi::class)
 @Destination
 @Composable
 fun HotPage(
@@ -65,6 +75,7 @@ fun HotPage(
         viewModel.send(HotUiIntent.Load)
         viewModel.initialized = true
     }
+    val navigator = LocalNavigator.current
     val isLoading by viewModel.uiState.collectPartialAsState(
         prop1 = HotUiState::isRefreshing,
         initial = true
@@ -89,8 +100,10 @@ fun HotPage(
         prop1 = HotUiState::isLoadingThreadList,
         initial = false
     )
-    val swipeRefreshState = rememberSwipeRefreshState(isRefreshing = isLoading)
-    SwipeRefresh(state = swipeRefreshState, onRefresh = { viewModel.send(HotUiIntent.Load) }) {
+    val pullRefreshState = rememberPullRefreshState(
+        refreshing = isLoading,
+        onRefresh = { viewModel.send(HotUiIntent.Load) })
+    Box(modifier = Modifier.pullRefresh(pullRefreshState)) {
         LazyColumn(
             modifier = Modifier
                 .fillMaxWidth(),
@@ -170,6 +183,9 @@ fun HotPage(
                                     horizontalArrangement = Arrangement.spacedBy(8.dp),
                                     modifier = Modifier
                                         .fillMaxWidth()
+                                        .clickable {
+                                            navigator.navigate(HotTopicListPageDestination)
+                                        }
                                         .padding(vertical = 8.dp)
                                 ) {
                                     Text(
@@ -250,6 +266,12 @@ fun HotPage(
                 }
             }
         }
+
+        PullRefreshIndicator(
+            refreshing = isLoading,
+            state = pullRefreshState,
+            modifier = Modifier.align(Alignment.TopCenter)
+        )
     }
 }
 
@@ -344,7 +366,8 @@ private fun ThreadListItem(
             NetworkImage(
                 imageUri = item.media.first().dynamicPic,
                 contentDescription = null,
-                modifier = heightModifier.aspectRatio(16f / 9)
+                modifier = heightModifier.aspectRatio(16f / 9),
+                contentScale = ContentScale.Crop
             )
         }
     }

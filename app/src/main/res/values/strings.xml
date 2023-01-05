@@ -276,7 +276,7 @@
     <string name="title_dialog_unfollow_forum">确定要取消关注%s吧吗？</string>
     <string name="menu_save_audio">保存语音</string>
     <string name="title_hot_message">贴吧话题</string>
-    <string name="title_hot_message_list">热议话题</string>
+    <string name="title_hot_message_list">话题榜</string>
     <string name="desc_hot_message_list">(每小时更新一次,以实时讨论量排序)</string>
     <string name="toast_photo_saved">图片保存在 %1$s</string>
     <string name="title_settings_default_sort_type">吧默认排序方式</string>
