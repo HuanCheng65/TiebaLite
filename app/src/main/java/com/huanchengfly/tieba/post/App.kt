@@ -1,5 +1,6 @@
 package com.huanchengfly.tieba.post
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.ActivityManager
 import android.app.Application
@@ -25,6 +26,7 @@ import com.github.panpf.sketch.decode.GifAnimatedDrawableDecoder
 import com.github.panpf.sketch.decode.GifMovieDrawableDecoder
 import com.github.panpf.sketch.decode.HeifAnimatedDrawableDecoder
 import com.github.panpf.sketch.decode.WebpAnimatedDrawableDecoder
+import com.github.panpf.sketch.http.OkHttpStack
 import com.huanchengfly.tieba.post.activities.BaseActivity
 import com.huanchengfly.tieba.post.components.ClipBoardLinkDetector
 import com.huanchengfly.tieba.post.components.dialogs.LoadingDialog
@@ -241,6 +243,7 @@ class App : Application(), IApp, IGetter, SketchFactory {
     }
 
     object ThemeDelegate : ThemeSwitcher {
+        @SuppressLint("DiscouragedApi")
         fun getColorByAttr(context: Context, attrId: Int, theme: String): Int {
             val resources = context.resources
             when (attrId) {
@@ -388,9 +391,16 @@ class App : Application(), IApp, IGetter, SketchFactory {
                         return context.getColorCompat(R.color.transparent)
                     }
                     return if (ThemeUtil.isNightMode(theme)) {
-                        context.getColorCompat(R.color.theme_color_chip_night)
+                        context.getColorCompat(
+                            resources.getIdentifier(
+                                "theme_color_chip_$theme",
+                                "color",
+                                packageName
+                            )
+                        )
                     } else context.getColorCompat(R.color.theme_color_chip_light)
                 }
+
                 R.attr.colorOnChip -> {
                     if (ThemeUtil.isTranslucentTheme(theme)) {
                         return getColorByAttr(context, R.attr.colorTextSecondary, theme)
@@ -516,7 +526,7 @@ class App : Application(), IApp, IGetter, SketchFactory {
                     } else context.getColorCompat(R.color.theme_color_swipe_refresh_view_background_light)
                 }
                 R.attr.colorToolbarBar -> {
-                    return if (ThemeUtil.isTranslucentTheme(theme)) {
+                    return if (ThemeUtil.isTranslucentTheme(theme) || ThemeUtil.isNightMode(theme)) {
                         context.getColorCompat(
                             resources.getIdentifier(
                                 "theme_color_toolbar_bar_$theme",
@@ -524,8 +534,6 @@ class App : Application(), IApp, IGetter, SketchFactory {
                                 packageName
                             )
                         )
-                    } else if (ThemeUtil.isNightMode(theme)) {
-                        context.getColorCompat(R.color.theme_color_toolbar_bar_dark)
                     } else {
                         context.getColorCompat(R.color.theme_color_toolbar_bar_light)
                     }
@@ -539,7 +547,13 @@ class App : Application(), IApp, IGetter, SketchFactory {
                 }
                 R.attr.colorNavBarSurface -> {
                     return if (ThemeUtil.isNightMode(theme)) {
-                        context.getColorCompat(R.color.theme_color_nav_bar_surface_dark)
+                        context.getColorCompat(
+                            resources.getIdentifier(
+                                "theme_color_nav_bar_surface_$theme",
+                                "color",
+                                packageName
+                            )
+                        )
                     } else {
                         context.getColorCompat(R.color.theme_color_nav_bar_surface_light)
                     }
@@ -577,11 +591,13 @@ class App : Application(), IApp, IGetter, SketchFactory {
                     context,
                     R.attr.colorWindowBackground
                 )
+
                 R.color.default_color_toolbar -> return getColorByAttr(context, R.attr.colorToolbar)
                 R.color.default_color_toolbar_item -> return getColorByAttr(
                     context,
                     R.attr.colorToolbarItem
                 )
+
                 R.color.default_color_toolbar_item_active -> return getColorByAttr(
                     context,
                     R.attr.colorToolbarItemActive
