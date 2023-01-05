@@ -51,7 +51,8 @@ fun ListPref(
     textColor: Color = MaterialTheme.colors.onBackground,
     enabled: Boolean = true,
     leadingIcon: @Composable (() -> Unit)? = null,
-    entries: Map<String, String> = mapOf(), //TODO: Change to List?
+    entries: Map<String, String> = emptyMap(), //TODO: Change to List?
+    icons: Map<String, @Composable () -> Unit> = emptyMap(),
 ) {
     val dialogState = rememberDialogState()
     val selectionKey = stringPreferencesKey(key)
@@ -105,6 +106,7 @@ fun ListPref(
                 edit(current = value to title)
                 dismiss()
             },
+            itemIcons = icons,
             modifier = Modifier.padding(bottom = 16.dp)
         )
     }

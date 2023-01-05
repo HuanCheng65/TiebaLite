@@ -615,4 +615,5 @@
     <string name="hot_thread_rank_rule">(按内容热度排序，每小时更新一次)</string>
     <string name="tab_all_hot_thread">总榜</string>
     <string name="hot_num">热度 %s</string>
+    <string name="settings_app_icon">应用图标</string>
 </resources>

@@ -2,6 +2,7 @@ package com.huanchengfly.tieba.post.ui.widgets.compose.picker
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -28,6 +29,7 @@ fun <ItemValue> ListSinglePicker(
     itemValues: List<ItemValue>,
     selectedPosition: Int,
     onItemSelected: (position: Int, title: String, value: ItemValue, changed: Boolean) -> Unit,
+    itemIcons: Map<ItemValue, @Composable () -> Unit> = emptyMap(),
     selectedIndicator: @Composable () -> Unit = {
         Icon(
             imageVector = Icons.Rounded.Check,
@@ -57,8 +59,11 @@ fun <ItemValue> ListSinglePicker(
                             it != selectedPosition
                         )
                     }
-                    .padding(vertical = 16.dp, horizontal = 24.dp)
+                    .padding(vertical = 16.dp, horizontal = 24.dp),
+                horizontalArrangement = Arrangement.spacedBy(16.dp),
+                verticalAlignment = Alignment.CenterVertically
             ) {
+                (itemIcons.getOrDefault(itemValues[it]) {}).invoke()
                 ProvideContentColor(
                     color = if (selected) colors.selectedItemColor(enabled).value else colors.itemColor(
                         enabled
