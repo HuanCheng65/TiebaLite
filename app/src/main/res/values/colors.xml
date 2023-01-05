@@ -26,11 +26,11 @@
 
     <color name="color_text">#FF000000</color>
     <color name="color_text_secondary">#FF808080</color>
-    <color name="color_text_disabled">#99808080</color>
+    <color name="color_text_disabled">#FF696969</color>
 
     <color name="color_text_night">#EEEEEE</color>
     <color name="color_text_secondary_night">#808080</color>
-    <color name="color_text_disabled_night">#99808080</color>
+    <color name="color_text_disabled_night">#CC808080</color>
 
     <color name="color_text_translucent_light">#EFFFFFFF</color>
     <color name="color_text_secondary_translucent_light">#8AFFFFFF</color>

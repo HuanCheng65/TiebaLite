@@ -17,7 +17,7 @@ fun Color.calcStatusBarColor(): Color {
     var darkerStatusBar = true
     val isToolbarPrimaryColor =
         context.dataStore.getBoolean(ThemeUtil.KEY_CUSTOM_TOOLBAR_PRIMARY_COLOR, false)
-    if (!ThemeUtil.isTranslucentTheme() && !ThemeUtil.isNightMode() && !isToolbarPrimaryColor) {
+    if (!ThemeUtil.isTranslucentTheme() && !isToolbarPrimaryColor) {
         darkerStatusBar = false
     } else if (!context.dataStore.getBoolean("status_bar_darker", true)) {
         darkerStatusBar = false
