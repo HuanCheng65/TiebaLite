@@ -4,7 +4,18 @@ import android.graphics.Typeface
 import androidx.compose.animation.core.animateIntAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.RowScope
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -34,7 +45,11 @@ import com.google.accompanist.placeholder.placeholder
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import com.huanchengfly.tieba.post.R
-import com.huanchengfly.tieba.post.activities.*
+import com.huanchengfly.tieba.post.activities.AppThemeActivity
+import com.huanchengfly.tieba.post.activities.HistoryActivity
+import com.huanchengfly.tieba.post.activities.UserActivity
+import com.huanchengfly.tieba.post.activities.UserCollectActivity
+import com.huanchengfly.tieba.post.activities.WebViewActivity
 import com.huanchengfly.tieba.post.arch.collectPartialAsState
 import com.huanchengfly.tieba.post.arch.pageViewModel
 import com.huanchengfly.tieba.post.goToActivity
@@ -151,14 +166,16 @@ private fun InfoCard(
             )
         }
         Spacer(modifier = Modifier.width(16.dp))
-        Avatar(
-            data = avatar,
-            size = Sizes.Large,
-            contentDescription = stringResource(id = R.string.desc_user_avatar),
-            modifier = Modifier
-                .align(Alignment.Bottom)
-                .placeholder(visible = isPlaceholder, color = ExtendedTheme.colors.chip),
-        )
+        if (avatar != null) {
+            Avatar(
+                data = avatar,
+                size = Sizes.Large,
+                contentDescription = stringResource(id = R.string.desc_user_avatar),
+                modifier = Modifier
+                    .align(Alignment.Bottom)
+                    .placeholder(visible = isPlaceholder, color = ExtendedTheme.colors.chip),
+            )
+        }
     }
 }
 
@@ -240,11 +257,13 @@ fun UserPage(
         modifier = Modifier
             .statusBarsPadding()
             .fillMaxSize()
-    ) {
+    ) { contentPaddings ->
         SwipeRefresh(
             state = rememberSwipeRefreshState(isRefreshing = isLoading),
             onRefresh = { viewModel.send(UserUiIntent.Refresh) },
-            modifier = Modifier.fillMaxSize(),
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(contentPaddings),
         ) {
             Column(
                 modifier = Modifier

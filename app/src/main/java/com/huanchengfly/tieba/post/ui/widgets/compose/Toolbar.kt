@@ -42,9 +42,8 @@ import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import coil.compose.AsyncImage
-import coil.compose.rememberAsyncImagePainter
-import coil.request.ImageRequest
+import com.github.panpf.sketch.compose.AsyncImage
+import com.google.accompanist.drawablepainter.rememberDrawablePainter
 import com.huanchengfly.tieba.post.R
 import com.huanchengfly.tieba.post.activities.LoginActivity
 import com.huanchengfly.tieba.post.arch.BaseComposeActivity.Companion.LocalWindowSizeClass
@@ -71,8 +70,8 @@ fun AccountNavIcon(
     val currentAccount = LocalAccount.current
     if (spacer) Spacer(modifier = Modifier.width(12.dp))
     if (currentAccount == null) {
-        AsyncImage(
-            model = R.drawable.ic_launcher_new_round,
+        Image(
+            painter = rememberDrawablePainter(drawable = LocalContext.current.getDrawable(R.drawable.ic_launcher_new_round)),
             contentDescription = null,
             modifier = Modifier
                 .clip(CircleShape)
@@ -137,21 +136,16 @@ fun AccountNavIcon(
             onClick = onClick,
             shape = CircleShape
         ) {
-            Image(
-                painter = rememberAsyncImagePainter(
-                    ImageRequest.Builder(LocalContext.current)
-                        .data(StringUtil.getAvatarUrl(currentAccount.portrait))
-                        .apply {
-                            placeholder(ImageUtil.getPlaceHolder(LocalContext.current, 0))
-                            crossfade(true)
-                        }
-                        .build()
-                ),
+            AsyncImage(
+                imageUri = StringUtil.getAvatarUrl(currentAccount.portrait),
                 contentDescription = stringResource(id = R.string.title_switch_account_long_press),
                 modifier = Modifier
                     .clip(CircleShape)
                     .size(size),
-            )
+            ) {
+                placeholder(ImageUtil.getPlaceHolder(context, 0))
+                crossfade()
+            }
         }
     }
 }

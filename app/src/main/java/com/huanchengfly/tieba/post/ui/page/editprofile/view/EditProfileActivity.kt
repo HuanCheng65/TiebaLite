@@ -34,10 +34,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.view.WindowCompat
 import androidx.lifecycle.lifecycleScope
-import coil.compose.AsyncImage
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
+import com.github.panpf.sketch.compose.AsyncImage
 import com.google.accompanist.placeholder.material.placeholder
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.huanchengfly.tieba.post.R
@@ -266,7 +266,7 @@ fun EditProfileCard(
                     .placeholder(visible = loading)
             ) {
                 AsyncImage(
-                    model = StringUtil.getAvatarUrl(portrait),
+                    imageUri = StringUtil.getAvatarUrl(portrait),
                     contentDescription = null,
                     modifier = Modifier.fillMaxSize()
                 )

@@ -4,7 +4,12 @@ import android.content.Context
 import android.content.Intent
 import android.webkit.CookieManager
 import android.widget.Toast
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.staticCompositionLocalOf
 import com.huanchengfly.tieba.post.App
 import com.huanchengfly.tieba.post.R
 import com.huanchengfly.tieba.post.api.TiebaApi
@@ -161,11 +166,11 @@ object AccountUtil {
 
     @JvmStatic
     fun updateLoginInfo(cookie: String): Boolean {
-        val bdussSplit = cookie.split("BDUSS=").toTypedArray()
-        val sTokenSplit = cookie.split("STOKEN=").toTypedArray()
+        val bdussSplit = cookie.split("BDUSS=")
+        val sTokenSplit = cookie.split("STOKEN=")
         if (bdussSplit.size > 1 && sTokenSplit.size > 1) {
-            val bduss = bdussSplit[1].split(";").toTypedArray()[0]
-            val sToken = sTokenSplit[1].split(";").toTypedArray()[0]
+            val bduss = bdussSplit[1].split(";")[0]
+            val sToken = sTokenSplit[1].split(";")[0]
             val account = getAccountInfoByBduss(bduss)
             if (account != null) {
                 account.apply {

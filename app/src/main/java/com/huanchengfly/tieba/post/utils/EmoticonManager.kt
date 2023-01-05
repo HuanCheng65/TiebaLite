@@ -5,6 +5,7 @@ import android.graphics.Bitmap
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
 import androidx.appcompat.content.res.AppCompatResources
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.text.InlineTextContent
 import androidx.compose.material.LocalTextStyle
@@ -14,8 +15,8 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.*
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import coil.compose.AsyncImage
 import com.bumptech.glide.Glide
+import com.google.accompanist.drawablepainter.rememberDrawablePainter
 import com.huanchengfly.tieba.post.App
 import com.huanchengfly.tieba.post.models.EmoticonCache
 import com.huanchengfly.tieba.post.pxToDp
@@ -107,8 +108,13 @@ object EmoticonManager {
             "Emoticon#$id" to InlineTextContent(
                 placeholder = Placeholder(heightPx.pxToSp().sp, heightPx.pxToSp().sp, PlaceholderVerticalAlign.TextCenter),
                 children = {
-                    AsyncImage(
-                        model = getEmoticonDrawable(LocalContext.current, id),
+                    Image(
+                        painter = rememberDrawablePainter(
+                            drawable = getEmoticonDrawable(
+                                LocalContext.current,
+                                id
+                            )
+                        ),
                         contentDescription = null,
                         modifier = Modifier.size(heightPx.pxToDp().dp)
                     )

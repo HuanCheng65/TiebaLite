@@ -26,7 +26,6 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.DropdownMenuItem
 import androidx.compose.material.Icon
-import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
@@ -43,7 +42,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment.Companion.Center
 import androidx.compose.ui.Alignment.Companion.CenterVertically
-import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -55,9 +53,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import coil.compose.AsyncImage
-import coil.compose.rememberAsyncImagePainter
-import coil.request.ImageRequest
+import com.google.accompanist.drawablepainter.rememberDrawablePainter
 import com.google.accompanist.placeholder.placeholder
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
@@ -70,6 +66,7 @@ import com.huanchengfly.tieba.post.arch.pageViewModel
 import com.huanchengfly.tieba.post.getInt
 import com.huanchengfly.tieba.post.goToActivity
 import com.huanchengfly.tieba.post.ui.common.theme.compose.ExtendedTheme
+import com.huanchengfly.tieba.post.ui.widgets.Chip
 import com.huanchengfly.tieba.post.ui.widgets.compose.AccountNavIconIfCompact
 import com.huanchengfly.tieba.post.ui.widgets.compose.ActionItem
 import com.huanchengfly.tieba.post.ui.widgets.compose.ConfirmDialog
@@ -155,18 +152,7 @@ private fun Header(
     invert: Boolean = false,
     modifier: Modifier = Modifier
 ) {
-    Text(
-        color = if (invert) MaterialTheme.colors.onSecondary else ExtendedTheme.colors.onChip,
-        fontSize = 12.sp,
-        fontWeight = FontWeight.Bold,
-        text = text,
-        modifier = Modifier
-            .padding(start = 16.dp)
-            .clip(RoundedCornerShape(100))
-            .then(modifier)
-            .background(color = if (invert) MaterialTheme.colors.secondary else ExtendedTheme.colors.chip)
-            .padding(horizontal = 16.dp, vertical = 4.dp)
-    )
+    Chip(text = text, invertColor = invert, modifier = modifier)
 }
 
 @Composable
@@ -179,8 +165,13 @@ private fun ForumItemPlaceholder(
             .padding(horizontal = 16.dp, vertical = 12.dp)
     ) {
         if (showAvatar) {
-            AsyncImage(
-                model = ImageUtil.getPlaceHolder(LocalContext.current, 0),
+            Image(
+                painter = rememberDrawablePainter(
+                    drawable = ImageUtil.getPlaceHolder(
+                        LocalContext.current,
+                        0
+                    )
+                ),
                 contentDescription = null,
                 modifier = Modifier
                     .clip(CircleShape)
@@ -224,7 +215,6 @@ private fun ForumItemPlaceholder(
     }
 }
 
-@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 private fun ForumItem(
     viewModel: HomeViewModel,
@@ -317,19 +307,30 @@ private fun ForumItem(
         ) {
             AnimatedVisibility(visible = showAvatar) {
                 Row {
-                    Image(
-                        painter = rememberAsyncImagePainter(
-                            ImageRequest.Builder(LocalContext.current).data(item.avatar).apply {
-                                placeholder(ImageUtil.getPlaceHolder(LocalContext.current, 0))
-                                crossfade(true)
-                            }.build()
-                        ),
+                    coil.compose.AsyncImage(
+                        model = item.avatar,
                         contentDescription = null,
                         modifier = Modifier
                             .clip(CircleShape)
                             .size(40.dp)
                             .align(CenterVertically),
                     )
+//                    AsyncImage(
+//                        imageUri = item.avatar,
+//                        contentDescription = null,
+//                        modifier = Modifier
+//                            .clip(CircleShape)
+//                            .size(40.dp)
+//                            .align(CenterVertically),
+//                    ) {
+//                        resultCachePolicy(CachePolicy.DISABLED)
+//                        memoryCachePolicy(CachePolicy.DISABLED)
+//                        disallowReuseBitmap()
+//                    }
+//                    {
+//                        placeholder(ImageUtil.getPlaceHolder(context, 0))
+//                        crossfade()
+//                    }
                     Spacer(modifier = Modifier.width(14.dp))
                 }
             }
@@ -404,7 +405,7 @@ fun HomePage(
         initial = emptyList()
     )
     var listSingle by remember { mutableStateOf(context.appPreferences.listSingle) }
-    val gridCells by derivedStateOf { getGridCells(context, listSingle) }
+    val gridCells by remember { derivedStateOf { getGridCells(context, listSingle) } }
     Scaffold(
         backgroundColor = Color.Transparent,
         topBar = {
@@ -429,10 +430,11 @@ fun HomePage(
             )
         },
         modifier = Modifier.fillMaxSize(),
-    ) {
+    ) { contentPaddings ->
         SwipeRefresh(
             state = rememberSwipeRefreshState(isRefreshing = isLoading),
             onRefresh = { viewModel.send(HomeUiIntent.Refresh) },
+            modifier = Modifier.padding(contentPaddings)
         ) {
             val gridState = rememberLazyGridState()
             LazyVerticalGrid(

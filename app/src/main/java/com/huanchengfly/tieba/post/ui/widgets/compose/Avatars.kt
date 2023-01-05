@@ -1,5 +1,6 @@
 package com.huanchengfly.tieba.post.ui.widgets.compose
 
+import android.graphics.drawable.Drawable
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.padding
@@ -14,16 +15,17 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import coil.compose.rememberAsyncImagePainter
-import coil.request.ImageRequest
+import com.github.panpf.sketch.compose.AsyncImage
+import com.google.accompanist.drawablepainter.rememberDrawablePainter
 import com.huanchengfly.tieba.post.utils.ImageUtil
 
 object Sizes {
     val Small = 36.dp
-    val Middle = 48.dp
+    val Medium = 48.dp
     val Large = 56.dp
 }
 
@@ -57,17 +59,42 @@ fun Avatar(
     contentDescription: String?,
     modifier: Modifier = Modifier,
 ) {
-    Image(
-        painter = rememberAsyncImagePainter(
-            ImageRequest.Builder(LocalContext.current)
-                .data(data)
-                .apply {
-                    placeholder(ImageUtil.getPlaceHolder(LocalContext.current, 0))
-                    crossfade(true)
-                }
-                .build()
-        ),
-        contentDescription = contentDescription,
-        modifier = modifier.size(size).clip(CircleShape),
-    )
+    val context = LocalContext.current
+    when (data) {
+        is Int -> {
+            Image(
+                painter = rememberDrawablePainter(drawable = context.getDrawable(data)),
+                contentDescription = contentDescription,
+                modifier = modifier
+                    .size(size)
+                    .clip(CircleShape),
+            )
+        }
+
+        is Drawable -> {
+            Image(
+                painter = rememberDrawablePainter(drawable = data),
+                contentDescription = contentDescription,
+                modifier = modifier
+                    .size(size)
+                    .clip(CircleShape),
+            )
+        }
+
+        is String? -> {
+            AsyncImage(
+                imageUri = data,
+                contentDescription = contentDescription,
+                modifier = modifier
+                    .size(size)
+                    .clip(CircleShape),
+                contentScale = ContentScale.Crop
+            ) {
+                placeholder(ImageUtil.getPlaceHolder(context, 0))
+                crossfade()
+            }
+        }
+
+        else -> throw IllegalArgumentException("不支持该类型")
+    }
 }
