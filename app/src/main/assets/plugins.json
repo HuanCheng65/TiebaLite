@@ -7,14 +7,6 @@
       "author": "huanchengfly",
       "version": "1.0",
       "main_class": "com.huanchengfly.tieba.post.plugins.PluginCommentLookup"
-    },
-    {
-      "id": "AsoulCnki",
-      "name": "枝网查重",
-      "desc": "调用枝网查重 API 查询重复小作文",
-      "author": "huanchengfly",
-      "version": "1.0",
-      "main_class": "com.huanchengfly.tieba.post.plugins.asoulcnki.PluginAsoulCnki"
     }
   ]
 }
