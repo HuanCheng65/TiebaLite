@@ -120,7 +120,7 @@ dependencies {
     implementation "androidx.media3:media3-exoplayer:$media3_version"
     implementation "androidx.media3:media3-ui:$media3_version"
 
-    def compose_destinations_version = '1.7.23-beta'
+    def compose_destinations_version = '1.7.30-beta'
     implementation "io.github.raamcosta.compose-destinations:animations-core:$compose_destinations_version"
     ksp "io.github.raamcosta.compose-destinations:ksp:$compose_destinations_version"
 
@@ -134,7 +134,7 @@ dependencies {
     implementation "androidx.hilt:hilt-navigation-compose:$hilt_androidx_version"
     kapt "androidx.hilt:hilt-compiler:$hilt_androidx_version"
 
-    def accompanist_version = '0.27.0'
+    def accompanist_version = '0.28.0'
     implementation "com.google.accompanist:accompanist-drawablepainter:$accompanist_version"
     implementation "com.google.accompanist:accompanist-insets-ui:$accompanist_version"
     implementation "com.google.accompanist:accompanist-systemuicontroller:$accompanist_version"
