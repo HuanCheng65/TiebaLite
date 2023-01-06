@@ -184,15 +184,19 @@ fun BlockSettingsPage(
         }
     ) { paddingValues ->
         val snackbarHostState = LocalSnackbarHostState.current
-        coroutineScope.launch {
-            viewModel.uiEventFlow
-                .filterIsInstance<BlockSettingsUiEvent.Success>()
-                .collect {
-                    snackbarHostState.showSnackbar(when (it) {
-                        is BlockSettingsUiEvent.Success.Add -> context.getString(R.string.toast_add_success)
-                        is BlockSettingsUiEvent.Success.Delete -> context.getString(R.string.toast_delete_success)
-                    })
-                }
+        LaunchedEffect(null) {
+            coroutineScope.launch {
+                viewModel.uiEventFlow
+                    .filterIsInstance<BlockSettingsUiEvent.Success>()
+                    .collect {
+                        snackbarHostState.showSnackbar(
+                            when (it) {
+                                is BlockSettingsUiEvent.Success.Add -> context.getString(R.string.toast_add_success)
+                                is BlockSettingsUiEvent.Success.Delete -> context.getString(R.string.toast_delete_success)
+                            }
+                        )
+                    }
+            }
         }
         HorizontalPager(
             count = 2,
