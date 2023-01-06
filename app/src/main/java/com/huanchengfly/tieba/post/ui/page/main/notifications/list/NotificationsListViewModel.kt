@@ -9,42 +9,33 @@ import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.*
 import javax.inject.Inject
 
-typealias NotificationsListViewModel = BaseViewModel<NotificationsListUiIntent, NotificationsListPartialChange, NotificationsListUiState, NotificationsListUiEvent>
+abstract class NotificationsListViewModel :
+    BaseViewModel<NotificationsListUiIntent, NotificationsListPartialChange, NotificationsListUiState, NotificationsListUiEvent>() {
+
+    override fun createInitialState(): NotificationsListUiState = NotificationsListUiState()
+
+    override fun dispatchEvent(partialChange: NotificationsListPartialChange): UiEvent? =
+        when (partialChange) {
+            is NotificationsListPartialChange.Refresh.Failure -> CommonUiEvent.Toast(partialChange.error.getErrorMessage())
+            is NotificationsListPartialChange.LoadMore.Failure -> CommonUiEvent.Toast(partialChange.error.getErrorMessage())
+            else -> null
+        }
+}
 
 @HiltViewModel
 class ReplyMeListViewModel @Inject constructor() : NotificationsListViewModel() {
-    override fun createInitialState(): NotificationsListUiState = NotificationsListUiState()
-
     override fun createPartialChangeProducer():
             PartialChangeProducer<NotificationsListUiIntent, NotificationsListPartialChange, NotificationsListUiState> {
         return NotificationsListPartialChangeProducer(NotificationsType.ReplyMe)
     }
-
-    override fun dispatchEvent(partialChange: NotificationsListPartialChange): UiEvent? =
-        when (partialChange) {
-            is NotificationsListPartialChange.Refresh.Failure -> CommonUiEvent.Toast(partialChange.error.getErrorMessage())
-            is NotificationsListPartialChange.LoadMore.Failure -> CommonUiEvent.Toast(partialChange.error.getErrorMessage())
-            else -> null
-        }
-
 }
 
 @HiltViewModel
 class AtMeListViewModel @Inject constructor() : NotificationsListViewModel() {
-    override fun createInitialState(): NotificationsListUiState = NotificationsListUiState()
-
     override fun createPartialChangeProducer():
             PartialChangeProducer<NotificationsListUiIntent, NotificationsListPartialChange, NotificationsListUiState> {
         return NotificationsListPartialChangeProducer(NotificationsType.AtMe)
     }
-
-    override fun dispatchEvent(partialChange: NotificationsListPartialChange): UiEvent? =
-        when (partialChange) {
-            is NotificationsListPartialChange.Refresh.Failure -> CommonUiEvent.Toast(partialChange.error.getErrorMessage())
-            is NotificationsListPartialChange.LoadMore.Failure -> CommonUiEvent.Toast(partialChange.error.getErrorMessage())
-            else -> null
-        }
-
 }
 
 private class NotificationsListPartialChangeProducer(private val type: NotificationsType) : PartialChangeProducer<NotificationsListUiIntent, NotificationsListPartialChange, NotificationsListUiState> {
