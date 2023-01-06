@@ -21,11 +21,15 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Divider
+import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Icon
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.AccountCircle
+import androidx.compose.material.pullrefresh.PullRefreshIndicator
+import androidx.compose.material.pullrefresh.pullRefresh
+import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -38,12 +42,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.google.accompanist.placeholder.placeholder
-import com.google.accompanist.swiperefresh.SwipeRefresh
-import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import com.huanchengfly.tieba.post.R
 import com.huanchengfly.tieba.post.activities.AppThemeActivity
 import com.huanchengfly.tieba.post.activities.HistoryActivity
@@ -59,24 +60,12 @@ import com.huanchengfly.tieba.post.ui.page.LocalNavigator
 import com.huanchengfly.tieba.post.ui.page.destinations.AboutPageDestination
 import com.huanchengfly.tieba.post.ui.page.destinations.SettingsPageDestination
 import com.huanchengfly.tieba.post.ui.widgets.compose.Avatar
+import com.huanchengfly.tieba.post.ui.widgets.compose.HorizontalDivider
 import com.huanchengfly.tieba.post.ui.widgets.compose.Sizes
 import com.huanchengfly.tieba.post.ui.widgets.compose.Switch
 import com.huanchengfly.tieba.post.utils.CuidUtils
 import com.huanchengfly.tieba.post.utils.StringUtil
 import com.huanchengfly.tieba.post.utils.ThemeUtil
-
-@Composable
-fun HorizontalDivider(
-    modifier: Modifier = Modifier,
-    color: Color = ExtendedTheme.colors.divider,
-    height: Dp = 16.dp,
-    width: Dp = 1.dp,
-) {
-    Box(modifier = modifier
-        .height(height)
-        .width(width)
-        .background(color = color))
-}
 
 @Composable
 private fun StatCardPlaceholder(modifier: Modifier = Modifier) {
@@ -235,6 +224,7 @@ private fun LoginTipCard(modifier: Modifier = Modifier) {
     }
 }
 
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun UserPage(
     viewModel: UserViewModel = pageViewModel<UserUiIntent, UserViewModel>(
@@ -246,7 +236,7 @@ fun UserPage(
     val context = LocalContext.current
     val isLoading by viewModel.uiState.collectPartialAsState(
         prop1 = UserUiState::isLoading,
-        initial = true
+        initial = false
     )
     val account by viewModel.uiState.collectPartialAsState(
         prop1 = UserUiState::account,
@@ -258,12 +248,14 @@ fun UserPage(
             .statusBarsPadding()
             .fillMaxSize()
     ) { contentPaddings ->
-        SwipeRefresh(
-            state = rememberSwipeRefreshState(isRefreshing = isLoading),
-            onRefresh = { viewModel.send(UserUiIntent.Refresh) },
+        val pullRefreshState = rememberPullRefreshState(
+            refreshing = isLoading,
+            onRefresh = { viewModel.send(UserUiIntent.Refresh) })
+        Box(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(contentPaddings),
+                .padding(contentPaddings)
+                .pullRefresh(pullRefreshState),
         ) {
             Column(
                 modifier = Modifier
@@ -373,6 +365,12 @@ fun UserPage(
                     onClick = { navigator.navigate(AboutPageDestination) },
                 )
             }
+
+            PullRefreshIndicator(
+                refreshing = isLoading,
+                state = pullRefreshState,
+                modifier = Modifier.align(Alignment.TopCenter)
+            )
         }
     }
 }
