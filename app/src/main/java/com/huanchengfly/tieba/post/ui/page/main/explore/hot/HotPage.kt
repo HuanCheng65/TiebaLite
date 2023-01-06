@@ -78,7 +78,7 @@ fun HotPage(
     val navigator = LocalNavigator.current
     val isLoading by viewModel.uiState.collectPartialAsState(
         prop1 = HotUiState::isRefreshing,
-        initial = true
+        initial = false
     )
     val topicList by viewModel.uiState.collectPartialAsState(
         prop1 = HotUiState::topicList,

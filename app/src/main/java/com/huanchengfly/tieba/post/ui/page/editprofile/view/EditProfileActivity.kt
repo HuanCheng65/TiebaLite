@@ -399,7 +399,10 @@ fun PageEditProfile(
     viewModel: EditProfileViewModel,
     onBackPressed: () -> Unit
 ) {
-    val isLoading by viewModel.uiState.collectPartialAsState(EditProfileState::isLoading, initial = true)
+    val isLoading by viewModel.uiState.collectPartialAsState(
+        EditProfileState::isLoading,
+        initial = false
+    )
     if (!isLoading) {
         val uiState by viewModel.uiState.collectAsState()
         var sex by remember { mutableStateOf(uiState.sex) }

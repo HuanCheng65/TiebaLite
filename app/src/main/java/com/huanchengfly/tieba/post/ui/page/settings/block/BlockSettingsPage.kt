@@ -24,6 +24,7 @@ import androidx.compose.material.icons.outlined.AccountCircle
 import androidx.compose.material.icons.outlined.Block
 import androidx.compose.material.icons.outlined.CheckCircle
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -104,7 +105,7 @@ fun BlockSettingsPage(
     )
     val isLoading by viewModel.uiState.collectPartialAsState(
         prop1 = BlockSettingsUiState::isLoading,
-        initial = true
+        initial = false
     )
     MyScaffold(
         backgroundColor = Color.Transparent,

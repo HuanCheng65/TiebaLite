@@ -38,7 +38,7 @@ fun ConcernPage(
     val context = LocalContext.current
     val isRefreshing by viewModel.uiState.collectPartialAsState(
         prop1 = ConcernUiState::isRefreshing,
-        initial = true
+        initial = false
     )
     val isLoadingMore by viewModel.uiState.collectPartialAsState(
         prop1 = ConcernUiState::isLoadingMore,

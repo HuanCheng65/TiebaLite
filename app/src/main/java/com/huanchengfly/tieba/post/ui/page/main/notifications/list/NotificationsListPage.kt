@@ -2,21 +2,31 @@ package com.huanchengfly.tieba.post.ui.page.main.notifications.list
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Text
+import androidx.compose.material.pullrefresh.PullRefreshIndicator
+import androidx.compose.material.pullrefresh.pullRefresh
+import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.google.accompanist.swiperefresh.SwipeRefresh
-import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import com.huanchengfly.tieba.post.R
 import com.huanchengfly.tieba.post.activities.FloorActivity
 import com.huanchengfly.tieba.post.activities.ThreadActivity
@@ -24,10 +34,16 @@ import com.huanchengfly.tieba.post.activities.UserActivity
 import com.huanchengfly.tieba.post.arch.collectPartialAsState
 import com.huanchengfly.tieba.post.arch.pageViewModel
 import com.huanchengfly.tieba.post.ui.common.theme.compose.ExtendedTheme
-import com.huanchengfly.tieba.post.ui.widgets.compose.*
+import com.huanchengfly.tieba.post.ui.widgets.compose.Avatar
+import com.huanchengfly.tieba.post.ui.widgets.compose.EmoticonText
+import com.huanchengfly.tieba.post.ui.widgets.compose.LazyLoad
+import com.huanchengfly.tieba.post.ui.widgets.compose.LoadMoreLayout
+import com.huanchengfly.tieba.post.ui.widgets.compose.Sizes
+import com.huanchengfly.tieba.post.ui.widgets.compose.UserHeader
 import com.huanchengfly.tieba.post.utils.DateTimeUtils
 import com.huanchengfly.tieba.post.utils.StringUtil
 
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun NotificationsListPage(
     type: NotificationsType,
@@ -43,7 +59,7 @@ fun NotificationsListPage(
     val context = LocalContext.current
     val isRefreshing by viewModel.uiState.collectPartialAsState(
         prop1 = NotificationsListUiState::isRefreshing,
-        initial = true
+        initial = false
     )
     val isLoadingMore by viewModel.uiState.collectPartialAsState(
         prop1 = NotificationsListUiState::isLoadingMore,
@@ -61,10 +77,11 @@ fun NotificationsListPage(
         prop1 = NotificationsListUiState::currentPage,
         initial = 1
     )
-    val swipeRefreshState = rememberSwipeRefreshState(isRefreshing = isRefreshing)
-    SwipeRefresh(
-        state = swipeRefreshState,
-        onRefresh = { viewModel.send(NotificationsListUiIntent.Refresh) },
+    val pullRefreshState = rememberPullRefreshState(
+        refreshing = isRefreshing,
+        onRefresh = { viewModel.send(NotificationsListUiIntent.Refresh) })
+    Box(
+        modifier = Modifier.pullRefresh(pullRefreshState)
     ) {
         LoadMoreLayout(
             isLoading = isLoadingMore,
@@ -125,11 +142,16 @@ fun NotificationsListPage(
                             Spacer(modifier = Modifier.height(16.dp))
                             EmoticonText(
                                 text = quoteText,
-                                modifier = Modifier.fillMaxWidth()
+                                modifier = Modifier
+                                    .fillMaxWidth()
                                     .clip(RoundedCornerShape(6.dp))
                                     .clickable {
                                         if ("1" == it.isFloor && it.quotePid != null) {
-                                            FloorActivity.launch(context, it.threadId!!, postId = it.quotePid)
+                                            FloorActivity.launch(
+                                                context,
+                                                it.threadId!!,
+                                                postId = it.quotePid
+                                            )
                                         } else {
                                             ThreadActivity.launch(context, it.threadId!!)
                                         }
@@ -144,5 +166,11 @@ fun NotificationsListPage(
                 }
             }
         }
+
+        PullRefreshIndicator(
+            refreshing = isRefreshing,
+            state = pullRefreshState,
+            modifier = Modifier.align(Alignment.TopCenter)
+        )
     }
 }

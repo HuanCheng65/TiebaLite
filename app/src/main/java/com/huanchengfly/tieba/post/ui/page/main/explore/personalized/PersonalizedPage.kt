@@ -70,7 +70,7 @@ fun PersonalizedPage(
     val context = LocalContext.current
     val isRefreshing by viewModel.uiState.collectPartialAsState(
         prop1 = PersonalizedUiState::isRefreshing,
-        initial = true
+        initial = false
     )
     val isLoadingMore by viewModel.uiState.collectPartialAsState(
         prop1 = PersonalizedUiState::isLoadingMore,

@@ -214,6 +214,7 @@ private fun ForumItem(
     showAvatar: Boolean,
     isTopForum: Boolean = false
 ) {
+    val navigator = LocalNavigator.current
     val context = LocalContext.current
     val menuState = rememberMenuState()
     var willUnfollow by remember {
@@ -276,18 +277,7 @@ private fun ForumItem(
             }
         },
         onClick = {
-            PreloadUtil.startActivityWithPreload(
-                context,
-                Intent(
-                    context,
-                    ForumActivity::class.java
-                ).putExtra(ForumActivity.EXTRA_FORUM_NAME, item.forumName),
-                ForumLoader(
-                    item.forumName,
-                    1,
-                    getSortType(context, item.forumName)
-                )
-            )
+            navigator.navigate(ForumPageDestination(item.forumName))
         }
     ) {
         Row(
@@ -364,7 +354,7 @@ fun HomePage(
     val context = LocalContext.current
     val isLoading by viewModel.uiState.collectPartialAsState(
         prop1 = HomeUiState::isLoading,
-        initial = true
+        initial = false
     )
     val forums by viewModel.uiState.collectPartialAsState(
         prop1 = HomeUiState::forums,

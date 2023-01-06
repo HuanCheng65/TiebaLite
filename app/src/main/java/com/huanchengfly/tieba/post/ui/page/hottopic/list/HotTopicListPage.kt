@@ -164,7 +164,7 @@ fun HotTopicListPage(
 ) {
     val isRefreshing by viewModel.uiState.collectPartialAsState(
         prop1 = HotTopicListUiState::isRefreshing,
-        initial = true
+        initial = false
     )
     val topicList by viewModel.uiState.collectPartialAsState(
         prop1 = HotTopicListUiState::topicList,
