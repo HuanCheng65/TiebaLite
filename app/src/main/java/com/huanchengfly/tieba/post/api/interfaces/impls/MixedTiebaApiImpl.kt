@@ -200,7 +200,7 @@ object MixedTiebaApiImpl : ITiebaApi {
     override fun userLikeForum(
         uid: String, page: Int
     ): Call<UserLikeForumBean> {
-        val myUid = AccountUtil.getUid(App.INSTANCE)
+        val myUid = AccountUtil.getUid()
         return RetrofitTiebaApi.MINI_TIEBA_API.userLikeForum(
             page = page,
             uid = myUid,
@@ -355,7 +355,7 @@ object MixedTiebaApiImpl : ITiebaApi {
         RetrofitTiebaApi.NEW_TIEBA_API.threadStore(
             pageSize,
             pageSize * page,
-            AccountUtil.getUid(App.INSTANCE)
+            AccountUtil.getUid()
         )
 
     override fun removeStore(threadId: String, tbs: String): Call<CommonResponse> =

@@ -66,7 +66,7 @@ class DislikeDialog(
                     clickTime,
                     extras.joinToString(",")
                 ),
-                AccountUtil.getSToken(context)!!
+                AccountUtil.getSToken()!!
             ).enqueue(object : Callback<CommonResponse> {
                 override fun onFailure(call: Call<CommonResponse>, t: Throwable) {}
                 override fun onResponse(

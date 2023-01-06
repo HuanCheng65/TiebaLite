@@ -1,7 +1,6 @@
 package com.huanchengfly.tieba.post.ui.page.main.home
 
 import android.content.Context
-import android.content.Intent
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.Image
@@ -61,14 +60,13 @@ import androidx.compose.ui.unit.sp
 import com.google.accompanist.drawablepainter.rememberDrawablePainter
 import com.google.accompanist.placeholder.placeholder
 import com.huanchengfly.tieba.post.R
-import com.huanchengfly.tieba.post.activities.ForumActivity
 import com.huanchengfly.tieba.post.activities.NewSearchActivity
-import com.huanchengfly.tieba.post.api.ForumSortType
 import com.huanchengfly.tieba.post.arch.collectPartialAsState
 import com.huanchengfly.tieba.post.arch.pageViewModel
-import com.huanchengfly.tieba.post.getInt
 import com.huanchengfly.tieba.post.goToActivity
 import com.huanchengfly.tieba.post.ui.common.theme.compose.ExtendedTheme
+import com.huanchengfly.tieba.post.ui.page.LocalNavigator
+import com.huanchengfly.tieba.post.ui.page.destinations.ForumPageDestination
 import com.huanchengfly.tieba.post.ui.widgets.Chip
 import com.huanchengfly.tieba.post.ui.widgets.compose.AccountNavIconIfCompact
 import com.huanchengfly.tieba.post.ui.widgets.compose.ActionItem
@@ -80,18 +78,8 @@ import com.huanchengfly.tieba.post.ui.widgets.compose.rememberDialogState
 import com.huanchengfly.tieba.post.ui.widgets.compose.rememberMenuState
 import com.huanchengfly.tieba.post.utils.AccountUtil.LocalAccount
 import com.huanchengfly.tieba.post.utils.ImageUtil
-import com.huanchengfly.tieba.post.utils.ThemeUtil
 import com.huanchengfly.tieba.post.utils.TiebaUtil
 import com.huanchengfly.tieba.post.utils.appPreferences
-import com.huanchengfly.tieba.post.utils.preload.PreloadUtil
-import com.huanchengfly.tieba.post.utils.preload.loaders.ForumLoader
-
-private fun getSortType(context: Context, forumName: String): ForumSortType {
-    val defaultSortType = context.appPreferences.defaultSortType!!.toInt()
-    return ForumSortType.valueOf(
-        ThemeUtil.dataStore.getInt(forumName + "_sort_type", defaultSortType)
-    )
-}
 
 private fun getGridCells(context: Context, listSingle: Boolean = context.appPreferences.listSingle): GridCells {
     return if (listSingle) {

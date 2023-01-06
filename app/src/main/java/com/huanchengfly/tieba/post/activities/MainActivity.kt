@@ -238,17 +238,18 @@ open class MainActivity : BaseActivity(), NavigationBarView.OnItemSelectedListen
             } catch (e: Exception) {
                 e.printStackTrace()
             }
-            if (AccountUtil.isLoggedIn() && AccountUtil.getCookie(this) == null) {
-                showDialog(DialogUtil.build(this)
-                    .setTitle(R.string.title_dialog_update_stoken)
-                    .setMessage(R.string.message_dialog_update_stoken)
-                    .setPositiveButton(R.string.button_sure_default) { _: DialogInterface?, _: Int ->
-                        startActivity(
-                            UpdateInfoActivity.newIntent(
-                                this,
-                                UpdateInfoActivity.ACTION_UPDATE_LOGIN_INFO
+            if (AccountUtil.isLoggedIn() && AccountUtil.getCookie() == null) {
+                showDialog(
+                    DialogUtil.build(this)
+                        .setTitle(R.string.title_dialog_update_stoken)
+                        .setMessage(R.string.message_dialog_update_stoken)
+                        .setPositiveButton(R.string.button_sure_default) { _: DialogInterface?, _: Int ->
+                            startActivity(
+                                UpdateInfoActivity.newIntent(
+                                    this,
+                                    UpdateInfoActivity.ACTION_UPDATE_LOGIN_INFO
+                                )
                             )
-                        )
                     }
                     .setCancelable(false)
                     .create())

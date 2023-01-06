@@ -173,7 +173,7 @@ class MyInfoFragment : BaseFragment(), View.OnClickListener, CompoundButton.OnCh
         if (AccountUtil.isLoggedIn()) {
             launch {
                 TiebaApi.getInstance()
-                    .profileFlow(AccountUtil.getUid(attachContext)!!)
+                    .profileFlow(AccountUtil.getUid()!!)
                     .catch { e ->
                         e.printStackTrace()
                         mRefreshView.isRefreshing = false

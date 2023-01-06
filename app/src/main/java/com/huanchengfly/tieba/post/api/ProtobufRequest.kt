@@ -61,7 +61,7 @@ fun buildCommonRequest(
     clientVersion: String,
 ): CommonRequest {
     return CommonRequest(
-        BDUSS = AccountUtil.getBduss(context),
+        BDUSS = AccountUtil.getBduss(),
         _client_id = RetrofitTiebaApi.clientId,
         _client_type = 2,
         _client_version = clientVersion,
@@ -80,6 +80,6 @@ fun buildCommonRequest(
         net_type = "1",
         oaid = OAID(App.oaid).toJson(),
         pversion = "1.0.3",
-        stoken = AccountUtil.getSToken(context),
+        stoken = AccountUtil.getSToken(),
     )
 }

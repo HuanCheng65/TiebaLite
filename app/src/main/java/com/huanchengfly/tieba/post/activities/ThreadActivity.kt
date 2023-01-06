@@ -928,7 +928,7 @@ class ThreadActivity : BaseActivity(), View.OnClickListener, IThreadMenuFragment
     }
 
     private fun canDelete(): Boolean {
-        return dataBean?.thread?.author?.id == AccountUtil.getUid(this)
+        return dataBean?.thread?.author?.id == AccountUtil.getUid()
     }
 
     override fun onDelete() {

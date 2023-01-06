@@ -148,7 +148,7 @@ class EditProfileActivity : BaseActivity() {
 
     private val intents by lazy {
         merge(
-            flowOf(EditProfileIntent.Init(AccountUtil.getUid(this) ?: "0"))
+            flowOf(EditProfileIntent.Init(AccountUtil.getUid() ?: "0"))
         )
     }
     private val handler = Handler(Looper.getMainLooper())

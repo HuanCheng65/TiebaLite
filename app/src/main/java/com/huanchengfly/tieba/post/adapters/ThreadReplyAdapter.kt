@@ -356,7 +356,7 @@ class ThreadReplyAdapter(context: Context) :
                     }
                     R.id.menu_delete -> {
                         if (TextUtils.equals(
-                                AccountUtil.getUid(context),
+                                AccountUtil.getUid(),
                                 subPostListItemBean.authorId
                             )
                         ) {
@@ -417,7 +417,7 @@ class ThreadReplyAdapter(context: Context) :
             .setInitMenuCallback { menu: Menu ->
                 PluginManager.initPluginMenu(menu, PluginManager.MENU_SUB_POST_ITEM)
                 menu.findItem(R.id.menu_report).isVisible = false
-                if (TextUtils.equals(AccountUtil.getUid(context), subPostListItemBean.authorId)) {
+                if (TextUtils.equals(AccountUtil.getUid(), subPostListItemBean.authorId)) {
                     menu.findItem(R.id.menu_delete).isVisible = true
                 }
             }

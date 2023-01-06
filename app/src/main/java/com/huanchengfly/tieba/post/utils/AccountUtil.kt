@@ -10,7 +10,6 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.staticCompositionLocalOf
-import com.huanchengfly.tieba.post.App
 import com.huanchengfly.tieba.post.R
 import com.huanchengfly.tieba.post.api.TiebaApi
 import com.huanchengfly.tieba.post.models.database.Account
@@ -200,34 +199,29 @@ object AccountUtil {
         Toast.makeText(context, R.string.toast_exit_account_success, Toast.LENGTH_SHORT).show()
     }
 
-    fun getSToken(context: Context? = App.INSTANCE): String? {
-        if (context == null) return null
+    fun getSToken(): String? {
         val account = getLoginInfo()
         return account?.sToken
     }
 
-    fun getCookie(context: Context?): String? {
-        if (context == null) return null
+    fun getCookie(): String? {
         val account = getLoginInfo()
         return account?.cookie
     }
 
-    fun getUid(context: Context?): String? {
-        if (context == null) return null
+    fun getUid(): String? {
         val account = getLoginInfo()
         return account?.uid
     }
 
-    fun getBduss(context: Context?): String? {
-        if (context == null) return null
+    fun getBduss(): String? {
         val account = getLoginInfo()
         return account?.bduss
     }
 
     @JvmStatic
-    fun getBdussCookie(context: Context?): String? {
-        if (context == null) return null
-        val bduss = getBduss(context)
+    fun getBdussCookie(): String? {
+        val bduss = getBduss()
         return if (bduss != null) {
             getBdussCookie(bduss)
         } else null

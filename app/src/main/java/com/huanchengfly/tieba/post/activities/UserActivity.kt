@@ -201,7 +201,7 @@ class UserActivity : BaseActivity() {
                     PhotoViewBean(StringUtil.getAvatarUrl(it.user.portrait), null)
                 )
             }
-            if (TextUtils.equals(AccountUtil.getUid(this), it.user.id)) {
+            if (TextUtils.equals(AccountUtil.getUid(), it.user.id)) {
                 actionBtn.setText(R.string.menu_edit_info)
             } else {
                 if ("1" == it.user.hasConcerned) {
@@ -272,7 +272,7 @@ class UserActivity : BaseActivity() {
 
     @OnClick(R.id.user_center_action_btn)
     fun onActionBtnClick(view: View?) {
-        if (TextUtils.equals(profileBean!!.user!!.id, AccountUtil.getUid(this))) {
+        if (TextUtils.equals(profileBean!!.user!!.id, AccountUtil.getUid())) {
             goToActivity<EditProfileActivity>()
             return
         }

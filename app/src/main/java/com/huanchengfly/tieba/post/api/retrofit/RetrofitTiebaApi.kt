@@ -8,8 +8,20 @@ import com.huanchengfly.tieba.post.api.models.OAID
 import com.huanchengfly.tieba.post.api.retrofit.adapter.DeferredCallAdapterFactory
 import com.huanchengfly.tieba.post.api.retrofit.adapter.FlowCallAdapterFactory
 import com.huanchengfly.tieba.post.api.retrofit.converter.gson.GsonConverterFactory
-import com.huanchengfly.tieba.post.api.retrofit.interceptors.*
-import com.huanchengfly.tieba.post.api.retrofit.interfaces.*
+import com.huanchengfly.tieba.post.api.retrofit.interceptors.AddCookieInterceptor
+import com.huanchengfly.tieba.post.api.retrofit.interceptors.CommonHeaderInterceptor
+import com.huanchengfly.tieba.post.api.retrofit.interceptors.CommonParamInterceptor
+import com.huanchengfly.tieba.post.api.retrofit.interceptors.DropInterceptor
+import com.huanchengfly.tieba.post.api.retrofit.interceptors.FailureResponseInterceptor
+import com.huanchengfly.tieba.post.api.retrofit.interceptors.ForceLoginInterceptor
+import com.huanchengfly.tieba.post.api.retrofit.interceptors.ProtoFailureResponseInterceptor
+import com.huanchengfly.tieba.post.api.retrofit.interceptors.SortAndSignInterceptor
+import com.huanchengfly.tieba.post.api.retrofit.interceptors.StParamInterceptor
+import com.huanchengfly.tieba.post.api.retrofit.interfaces.MiniTiebaApi
+import com.huanchengfly.tieba.post.api.retrofit.interfaces.NewTiebaApi
+import com.huanchengfly.tieba.post.api.retrofit.interfaces.OfficialProtobufTiebaApi
+import com.huanchengfly.tieba.post.api.retrofit.interfaces.OfficialTiebaApi
+import com.huanchengfly.tieba.post.api.retrofit.interfaces.WebTiebaApi
 import com.huanchengfly.tieba.post.toJson
 import com.huanchengfly.tieba.post.utils.AccountUtil
 import com.huanchengfly.tieba.post.utils.CuidUtils
@@ -35,7 +47,7 @@ object RetrofitTiebaApi {
     private val connectionPool = ConnectionPool(32, 5, TimeUnit.MINUTES)
 
     private val defaultCommonParamInterceptor = CommonParamInterceptor(
-        Param.BDUSS to { AccountUtil.getBduss(App.INSTANCE) },
+        Param.BDUSS to { AccountUtil.getBduss() },
         Param.CLIENT_ID to { clientId },
         Param.CLIENT_TYPE to { "2" },
         Param.OS_VERSION to { Build.VERSION.SDK_INT.toString() },
@@ -127,7 +139,7 @@ object RetrofitTiebaApi {
             CommonHeaderInterceptor(
                 Header.CHARSET to { "UTF-8" },
                 Header.CLIENT_TYPE to { "2" },
-                Header.CLIENT_USER_TOKEN to { AccountUtil.getUid(App.INSTANCE) },
+                Header.CLIENT_USER_TOKEN to { AccountUtil.getUid() },
                 Header.COOKIE to { "CUID=${CuidUtils.getNewCuid()};ka=open;TBBRAND=${Build.MODEL};" },
                 Header.CUID to { CuidUtils.getNewCuid() },
                 Header.CUID_GALAXY2 to { CuidUtils.getNewCuid() },
