@@ -159,10 +159,11 @@ dependencies {
     implementation "androidx.compose.ui:ui:$compose_version"
     implementation "androidx.compose.ui:ui-tooling:$compose_version"
     implementation "androidx.compose.ui:ui-tooling-preview:$compose_version"
-    androidTestImplementation "androidx.compose.ui:ui-test-junit4:$compose_version"
     implementation "androidx.compose.foundation:foundation:$compose_version"
     implementation "androidx.compose.material:material:$compose_version"
     implementation "androidx.compose.material:material-icons-extended:$compose_version"
+    androidTestImplementation "androidx.compose.ui:ui-test-junit4:$compose_version"
+    debugImplementation "androidx.compose.ui:ui-test-manifest:$compose_version"
 
     implementation 'androidx.activity:activity-compose:1.6.1'
     implementation "com.google.android.material:compose-theme-adapter:1.2.1"
@@ -190,11 +191,6 @@ dependencies {
     //Local Files
     implementation fileTree(include: ["*.jar"], dir: "libs")
 
-    //兼容 Glide
-    implementation "com.android.support:support-annotations:28.0.0"
-    debugImplementation "androidx.compose.ui:ui-test-manifest:$compose_version"
-    kapt "com.android.support:support-annotations:28.0.0"
-
     //AndroidX
     implementation "androidx.appcompat:appcompat:1.5.1"
     implementation "androidx.annotation:annotation:1.5.0"
@@ -213,10 +209,10 @@ dependencies {
     //Test
     testImplementation "junit:junit:4.13.2"
     androidTestImplementation "androidx.test:core:1.5.0"
-    androidTestImplementation "androidx.test.ext:junit:1.1.4"
+    androidTestImplementation "androidx.test.ext:junit:1.1.5"
     androidTestImplementation "androidx.test:rules:1.5.0"
-    androidTestImplementation "androidx.test:runner:1.5.1"
-    androidTestImplementation "androidx.test.espresso:espresso-core:3.5.0"
+    androidTestImplementation "androidx.test:runner:1.5.2"
+    androidTestImplementation "androidx.test.espresso:espresso-core:3.5.1"
 
     //Glide
     implementation "com.github.bumptech.glide:glide:$glide_version"
@@ -235,9 +231,6 @@ dependencies {
     implementation "org.litepal.android:kotlin:3.0.0"
     implementation 'cn.jzvd:jiaozivideoplayer:7.7.2.3300'
     implementation "com.jrummyapps:colorpicker:2.1.7"
-
-    implementation "com.davemorrissey.labs:subsampling-scale-image-view-androidx:3.10.0"
-    implementation "com.bm.photoview:library:2.0.7"
 
     implementation "com.scwang.smart:refresh-layout-kernel:2.0.1"
     implementation "com.scwang.smart:refresh-header-material:2.0.1"
