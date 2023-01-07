@@ -184,7 +184,7 @@ class ThreadStoreFragment : BaseFragment() {
                     val storeInfoList = data!!.storeThread ?: return
                     threadStoreAdapter.reset()
                     threadStoreAdapter.setData(storeInfoList)
-                    hasMore = storeInfoList.size > 0
+                    hasMore = storeInfoList.isNotEmpty()
                 }
 
                 override fun onFailure(call: Call<ThreadStoreBean?>, t: Throwable) {

@@ -49,7 +49,6 @@ import com.huanchengfly.tieba.post.R
 import com.huanchengfly.tieba.post.activities.AppThemeActivity
 import com.huanchengfly.tieba.post.activities.HistoryActivity
 import com.huanchengfly.tieba.post.activities.UserActivity
-import com.huanchengfly.tieba.post.activities.UserCollectActivity
 import com.huanchengfly.tieba.post.activities.WebViewActivity
 import com.huanchengfly.tieba.post.arch.collectPartialAsState
 import com.huanchengfly.tieba.post.arch.pageViewModel
@@ -59,6 +58,7 @@ import com.huanchengfly.tieba.post.ui.common.theme.compose.ExtendedTheme
 import com.huanchengfly.tieba.post.ui.page.LocalNavigator
 import com.huanchengfly.tieba.post.ui.page.destinations.AboutPageDestination
 import com.huanchengfly.tieba.post.ui.page.destinations.SettingsPageDestination
+import com.huanchengfly.tieba.post.ui.page.destinations.ThreadStorePageDestination
 import com.huanchengfly.tieba.post.ui.widgets.compose.Avatar
 import com.huanchengfly.tieba.post.ui.widgets.compose.HorizontalDivider
 import com.huanchengfly.tieba.post.ui.widgets.compose.Sizes
@@ -312,7 +312,7 @@ fun UserPage(
                     icon = ImageVector.vectorResource(id = R.drawable.ic_favorite),
                     text = stringResource(id = R.string.title_my_collect),
                     onClick = {
-                        context.goToActivity<UserCollectActivity>()
+                        navigator.navigate(ThreadStorePageDestination)
                     }
                 )
                 ListMenuItem(

@@ -120,10 +120,25 @@ fun NotificationsListPage(
                                         contentDescription = null
                                     )
                                 },
-                                name = { Text(text = it.replyer.nameShow ?: it.replyer.name ?: "") },
-                                desc = { Text(text = DateTimeUtils.getRelativeTimeString(LocalContext.current, it.time!!)) },
+                                name = {
+                                    Text(
+                                        text = it.replyer.nameShow ?: it.replyer.name ?: ""
+                                    )
+                                },
                                 onClick = {
-                                    UserActivity.launch(context, it.replyer.id!!, StringUtil.getAvatarUrl(it.replyer.portrait))
+                                    UserActivity.launch(
+                                        context,
+                                        it.replyer.id!!,
+                                        StringUtil.getAvatarUrl(it.replyer.portrait)
+                                    )
+                                },
+                                desc = {
+                                    Text(
+                                        text = DateTimeUtils.getRelativeTimeString(
+                                            LocalContext.current,
+                                            it.time!!
+                                        )
+                                    )
                                 },
                             ) {}
                         }

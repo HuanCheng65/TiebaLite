@@ -624,4 +624,6 @@
     <string name="launcher_not_support_pin_shortcut">启动器不支持创建快捷方式</string>
     <string name="load_shortcut_icon_fail">加载图标失败</string>
     <string name="sort_menu">排序菜单</string>
+    <string name="delete_store_success">取消收藏成功</string>
+    <string name="delete_store_failure">取消收藏失败 %s</string>
 </resources>

@@ -96,19 +96,19 @@ private fun DefaultUserHeader(
                 color = ExtendedTheme.colors.text
             )
         },
+        onClick = {
+            UserActivity.launch(
+                context,
+                user.id.toString(),
+                StringUtil.getAvatarUrl(user.portrait)
+            )
+        },
         desc = {
             Text(
                 text = DateTimeUtils.getRelativeTimeString(
                     context,
                     time.toString()
                 )
-            )
-        },
-        onClick = {
-            UserActivity.launch(
-                context,
-                user.id.toString(),
-                StringUtil.getAvatarUrl(user.portrait)
             )
         },
         content = content

@@ -311,4 +311,41 @@ interface OfficialTiebaApi {
         @retrofit2.http.Header(Header.USER_AGENT) user_agent: String = "bdtb for Android $client_version",
         @Field("stoken") stoken: String? = AccountUtil.getSToken(),
     ): Flow<CommonResponse>
+
+    @POST("/c/f/post/threadstore")
+    @FormUrlEncoded
+    @Headers(
+        "${Header.FORCE_LOGIN}: ${Header.FORCE_LOGIN_TRUE}",
+        "${Header.COOKIE}: ka=open",
+        "${Header.DROP_HEADERS}: ${Header.CHARSET},${Header.CLIENT_TYPE}",
+        "${Header.NO_COMMON_PARAMS}: ${Param.OAID}",
+    )
+    fun threadStoreFlow(
+        @Field("rn") pageSize: Int,
+        @Field("offset") offset: Int,
+        @retrofit2.http.Header("client_user_token") client_user_token: String? = AccountUtil.getUid(),
+        @Field("_client_version") client_version: String = "11.10.8.6",
+        @retrofit2.http.Header(Header.USER_AGENT) user_agent: String = "bdtb for Android $client_version",
+        @Field("stoken") stoken: String? = AccountUtil.getSToken(),
+        @Field("user_id") user_id: String? = AccountUtil.getUid(),
+    ): Flow<ThreadStoreBean>
+
+    @POST("/c/c/post/rmstore")
+    @FormUrlEncoded
+    @Headers(
+        "${Header.FORCE_LOGIN}: ${Header.FORCE_LOGIN_TRUE}",
+        "${Header.COOKIE}: ka=open",
+        "${Header.DROP_HEADERS}: ${Header.CHARSET},${Header.CLIENT_TYPE}",
+        "${Header.NO_COMMON_PARAMS}: ${Param.OAID}",
+    )
+    fun removeStoreFlow(
+        @Field("tid") threadId: String,
+        @Field("tbs") tbs: String = AccountUtil.getLoginInfo()!!.tbs,
+        @Field("stoken") stoken: String = AccountUtil.getSToken()!!,
+        @Field("user_id") user_id: String? = AccountUtil.getUid(),
+        @Field("fid") fid: String = "null",
+        @Field("_client_version") client_version: String = "11.10.8.6",
+        @retrofit2.http.Header(Header.USER_AGENT) user_agent: String = "bdtb for Android $client_version",
+        @retrofit2.http.Header("client_user_token") client_user_token: String? = user_id,
+    ): Flow<CommonResponse>
 }

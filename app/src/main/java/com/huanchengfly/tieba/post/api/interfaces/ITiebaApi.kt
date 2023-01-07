@@ -500,6 +500,19 @@ interface ITiebaApi {
     ): Call<ThreadStoreBean>
 
     /**
+     * 查看收藏贴列表
+     *
+     * **需登录**
+     *
+     * @param page 分页页码（从 0 开始）
+     * @param pageSize 每页贴数（默认 20）
+     */
+    fun threadStoreFlow(
+        page: Int = 0,
+        pageSize: Int = 20
+    ): Flow<ThreadStoreBean>
+
+    /**
      * 移除收藏
      *
      * **需登录**
@@ -511,6 +524,17 @@ interface ITiebaApi {
         threadId: String,
         tbs: String
     ): Call<CommonResponse>
+
+    /**
+     * 移除收藏
+     *
+     * **需登录**
+     *
+     * @param threadId 贴子 ID
+     */
+    fun removeStoreFlow(
+        threadId: String
+    ): Flow<CommonResponse>
 
     /**
      * 添加/更新收藏

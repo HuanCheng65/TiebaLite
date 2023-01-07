@@ -375,8 +375,17 @@ object MixedTiebaApiImpl : ITiebaApi {
             AccountUtil.getUid()
         )
 
+    override fun threadStoreFlow(page: Int, pageSize: Int): Flow<ThreadStoreBean> =
+        RetrofitTiebaApi.OFFICIAL_TIEBA_API.threadStoreFlow(
+            pageSize,
+            pageSize * page
+        )
+
     override fun removeStore(threadId: String, tbs: String): Call<CommonResponse> =
         RetrofitTiebaApi.NEW_TIEBA_API.removeStore(threadId, tbs)
+
+    override fun removeStoreFlow(threadId: String): Flow<CommonResponse> =
+        RetrofitTiebaApi.OFFICIAL_TIEBA_API.removeStoreFlow(threadId)
 
     override fun addStore(threadId: String, postId: String, tbs: String): Call<CommonResponse> =
         RetrofitTiebaApi.NEW_TIEBA_API.addStore(

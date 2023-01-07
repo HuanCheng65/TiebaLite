@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.ProvideTextStyle
@@ -26,9 +25,9 @@ import com.huanchengfly.tieba.post.ui.common.theme.compose.ExtendedTheme
 fun UserHeader(
     avatar: @Composable () -> Unit,
     name: @Composable () -> Unit,
-    desc: @Composable () -> Unit,
     modifier: Modifier = Modifier,
     onClick: (() -> Unit)? = null,
+    desc: @Composable (() -> Unit)? = null,
     content: @Composable (RowScope.() -> Unit)? = null,
 ) {
     val clickableModifier = if (onClick != null) {
@@ -49,7 +48,10 @@ fun UserHeader(
             avatar()
         }
         Spacer(modifier = Modifier.width(8.dp))
-        Column(modifier = Modifier.weight(1f)) {
+        Column(
+            modifier = Modifier.weight(1f),
+            verticalArrangement = Arrangement.spacedBy(2.dp)
+        ) {
             Box(modifier = clickableModifier) {
                 ProvideTextStyle(
                     value = MaterialTheme.typography.subtitle1.merge(
@@ -62,17 +64,18 @@ fun UserHeader(
                     name()
                 }
             }
-            Spacer(modifier = Modifier.height(2.dp))
-            Box(modifier = clickableModifier) {
-                ProvideTextStyle(
-                    value = MaterialTheme.typography.caption.merge(
-                        TextStyle(
-                            color = ExtendedTheme.colors.textSecondary,
-                            fontSize = 11.sp
+            if (desc != null) {
+                Box(modifier = clickableModifier) {
+                    ProvideTextStyle(
+                        value = MaterialTheme.typography.caption.merge(
+                            TextStyle(
+                                color = ExtendedTheme.colors.textSecondary,
+                                fontSize = 11.sp
+                            )
                         )
-                    )
-                ) {
-                    desc()
+                    ) {
+                        desc()
+                    }
                 }
             }
         }
