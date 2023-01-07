@@ -577,6 +577,11 @@ class App : Application(), IApp, IGetter, SketchFactory {
                     R.attr.colorOnAccent
                 )
 
+                R.color.default_color_chip -> return return getColorByAttr(
+                    context,
+                    R.attr.colorChip
+                )
+
                 R.color.default_color_background -> return getColorByAttr(
                     context,
                     R.attr.colorBg

@@ -64,11 +64,12 @@
     <color name="default_color_window_background">#FFF3F7F9</color>
     <color name="default_color_nav">#FFFFFFFF</color>
     <color name="default_color_unselected">#FF6E7486</color>
-    <color name="default_color_floor_card">#FFF3F7F9</color>
+    <color name="default_color_floor_card">#FFF8F8F8</color>
     <color name="default_color_card">#FFFFFFFF</color>
     <color name="default_color_divider">#FFF7FBFE</color>
     <color name="default_color_shadow">#FEE9E9E9</color>
     <color name="default_color_swipe_refresh_view_background">#FFFFFFFF</color>
+    <color name="default_color_chip">#FFF8F8F8</color>
 
     <color name="theme_color_primary_white">@color/tieba</color>
     <color name="theme_color_primary_tieba">@color/tieba</color>
@@ -173,12 +174,12 @@
     <color name="theme_color_unselected_grey_dark">#FF808080</color>
     <color name="theme_color_unselected_amoled_dark">#FF808080</color>
 
-    <color name="theme_color_floor_card_light">#FFF3F7F9</color>
+    <color name="theme_color_floor_card_light">#FFF8F8F8</color>
     <color name="theme_color_floor_card_translucent_light">#15FFFFFF</color>
     <color name="theme_color_floor_card_translucent_dark">#2A000000</color>
     <color name="theme_color_floor_card_dark">#FF1A2A39</color>
-    <color name="theme_color_floor_card_grey_dark">#FF2A2A2A</color>
-    <color name="theme_color_floor_card_amoled_dark">#FF151515</color>
+    <color name="theme_color_floor_card_grey_dark">#FF1E1E1E</color>
+    <color name="theme_color_floor_card_amoled_dark">#FF1E1E1E</color>
 
     <color name="theme_color_card_light">#FFFFFFFF</color>
     <color name="theme_color_card_translucent_light">#10FFFFFF</color>

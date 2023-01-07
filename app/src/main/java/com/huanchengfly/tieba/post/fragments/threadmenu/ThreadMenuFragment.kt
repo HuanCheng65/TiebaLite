@@ -31,9 +31,6 @@ class ThreadMenuFragment(
     @BindView(R.id.thread_menu_see_lz_text)
     lateinit var seeLzText: TintTextView
 
-    @BindView(R.id.thread_menu_see_lz_status)
-    lateinit var seeLzStatus: TintTextView
-
     @BindView(R.id.thread_menu_collect)
     lateinit var collectItem: TintLinearLayout
 
@@ -42,9 +39,6 @@ class ThreadMenuFragment(
 
     @BindView(R.id.thread_menu_collect_text)
     lateinit var collectText: TintTextView
-
-    @BindView(R.id.thread_menu_collect_status)
-    lateinit var collectStatus: TintTextView
 
     @BindView(R.id.thread_menu_pure_read)
     lateinit var pureReadItem: TintLinearLayout
@@ -55,9 +49,6 @@ class ThreadMenuFragment(
     @BindView(R.id.thread_menu_pure_read_text)
     lateinit var pureReadText: TintTextView
 
-    @BindView(R.id.thread_menu_pure_read_status)
-    lateinit var pureReadStatus: TintTextView
-
     @BindView(R.id.thread_menu_sort)
     lateinit var sortItem: TintLinearLayout
 
@@ -66,9 +57,6 @@ class ThreadMenuFragment(
 
     @BindView(R.id.thread_menu_sort_text)
     lateinit var sortText: TintTextView
-
-    @BindView(R.id.thread_menu_sort_status)
-    lateinit var sortStatus: TintTextView
 
     @BindView(R.id.thread_menu_delete)
     lateinit var deleteMenuItem: View
@@ -85,63 +73,39 @@ class ThreadMenuFragment(
     override fun initView() {
         if (seeLz) {
             seeLzItem.setBackgroundTintResId(R.color.default_color_accent)
-            seeLzIcon.setTintListResId(R.color.default_color_card)
-            seeLzText.tintResId = R.color.default_color_card
-            seeLzStatus.tintResId = R.color.default_color_card
-            seeLzStatus.setText(R.string.title_on)
-            seeLzStatus.alpha = .75f
+            seeLzIcon.setTintListResId(R.color.default_color_background)
+            seeLzText.tintResId = R.color.default_color_background
         } else {
-            seeLzItem.setBackgroundTintResId(R.color.default_color_card)
-            seeLzIcon.setTintListResId(R.color.default_color_accent)
+            seeLzItem.setBackgroundTintResId(R.color.default_color_chip)
+            seeLzIcon.setTintListResId(R.color.default_color_text)
             seeLzText.tintResId = R.color.default_color_text
-            seeLzStatus.tintResId = R.color.default_color_text_secondary
-            seeLzStatus.setText(R.string.title_off)
-            seeLzStatus.alpha = 1f
         }
         if (collect) {
             collectItem.setBackgroundTintResId(R.color.default_color_accent)
-            collectIcon.setTintListResId(R.color.default_color_card)
-            collectText.tintResId = R.color.default_color_card
-            collectStatus.tintResId = R.color.default_color_card
-            collectStatus.setText(R.string.title_collected)
-            collectStatus.alpha = .75f
+            collectIcon.setTintListResId(R.color.default_color_background)
+            collectText.tintResId = R.color.default_color_background
         } else {
-            collectItem.setBackgroundTintResId(R.color.default_color_card)
-            collectIcon.setTintListResId(R.color.default_color_accent)
+            collectItem.setBackgroundTintResId(R.color.default_color_chip)
+            collectIcon.setTintListResId(R.color.default_color_text)
             collectText.tintResId = R.color.default_color_text
-            collectStatus.tintResId = R.color.default_color_text_secondary
-            collectStatus.setText(R.string.title_uncollected)
-            collectStatus.alpha = 1f
         }
         if (pureRead) {
             pureReadItem.setBackgroundTintResId(R.color.default_color_accent)
-            pureReadIcon.setTintListResId(R.color.default_color_card)
-            pureReadText.tintResId = R.color.default_color_card
-            pureReadStatus.tintResId = R.color.default_color_card
-            pureReadStatus.setText(R.string.title_on)
-            pureReadStatus.alpha = .75f
+            pureReadIcon.setTintListResId(R.color.default_color_background)
+            pureReadText.tintResId = R.color.default_color_background
         } else {
-            pureReadItem.setBackgroundTintResId(R.color.default_color_card)
-            pureReadIcon.setTintListResId(R.color.default_color_accent)
+            pureReadItem.setBackgroundTintResId(R.color.default_color_chip)
+            pureReadIcon.setTintListResId(R.color.default_color_text)
             pureReadText.tintResId = R.color.default_color_text
-            pureReadStatus.tintResId = R.color.default_color_text_secondary
-            pureReadStatus.setText(R.string.title_off)
-            pureReadStatus.alpha = 1f
         }
         if (sort) {
             sortItem.setBackgroundTintResId(R.color.default_color_accent)
-            sortIcon.setTintListResId(R.color.default_color_card)
-            sortText.tintResId = R.color.default_color_card
-            sortStatus.tintResId = R.color.default_color_card
-            sortStatus.setText(R.string.title_on)
-            sortStatus.alpha = .75f
+            sortIcon.setTintListResId(R.color.default_color_background)
+            sortText.tintResId = R.color.default_color_background
         } else {
-            sortItem.setBackgroundTintResId(R.color.default_color_card)
-            sortIcon.setTintListResId(R.color.default_color_accent)
+            sortItem.setBackgroundTintResId(R.color.default_color_chip)
+            sortIcon.setTintListResId(R.color.default_color_text)
             sortText.tintResId = R.color.default_color_text
-            sortStatus.tintResId = R.color.default_color_text_secondary
-            sortStatus.setText(R.string.title_off)
-            sortStatus.alpha = 1f
         }
         listOf(
             seeLzItem,

@@ -5,8 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@drawable/bg_top_radius_8dp"
-    app:backgroundTint="@color/default_color_window_background"
-    tools:backgroundTint="@color/default_color_window_background">
+    app:backgroundTint="@color/default_color_background"
+    tools:backgroundTint="@color/default_color_background">
 
     <LinearLayout
         android:id="@+id/thread_menu"
@@ -16,12 +16,12 @@
         android:orientation="vertical">
 
         <com.huanchengfly.tieba.post.ui.widgets.theme.TintView
-            android:layout_width="64dp"
+            android:layout_width="90dp"
             android:layout_height="4dp"
             android:layout_gravity="center_horizontal"
             android:layout_margin="8dp"
             android:background="@drawable/bg_radius_50dp"
-            app:backgroundTint="@color/default_color_on_toolbar_bar" />
+            app:backgroundTint="@color/default_color_divider" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -30,61 +30,52 @@
             android:padding="16dp">
 
             <com.huanchengfly.tieba.post.ui.widgets.theme.TintLinearLayout
+                android:gravity="center"
                 android:id="@+id/thread_menu_see_lz"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="8dp"
                 android:layout_weight="1"
                 android:background="@drawable/bg_radius_10dp"
-                android:orientation="vertical"
+                android:orientation="horizontal"
                 android:padding="16dp"
-                app:backgroundTint="@color/default_color_card">
+                app:backgroundTint="@color/default_color_chip">
 
                 <com.huanchengfly.tieba.post.ui.widgets.theme.TintImageView
                     android:id="@+id/thread_menu_see_lz_icon"
-                    android:layout_width="36dp"
-                    android:layout_height="36dp"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
                     android:layout_gravity="start|center_vertical"
-                    android:paddingLeft="-4dp"
-                    app:srcCompat="@drawable/ic_outline_account_circle"
+                    app:srcCompat="@drawable/ic_outline_face"
                     app:tint="@color/default_color_accent" />
 
                 <com.huanchengfly.tieba.post.ui.widgets.theme.TintTextView
                     android:id="@+id/thread_menu_see_lz_text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
+                    android:layout_marginStart="8dp"
                     android:text="@string/title_see_lz"
-                    android:textSize="17sp"
+                    android:textSize="15sp"
                     android:textStyle="bold"
                     app:tint="@color/default_color_text" />
-
-                <com.huanchengfly.tieba.post.ui.widgets.theme.TintTextView
-                    android:id="@+id/thread_menu_see_lz_status"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="4dp"
-                    android:text="@string/title_off"
-                    android:textSize="14sp"
-                    app:tint="@color/default_color_text_secondary" />
             </com.huanchengfly.tieba.post.ui.widgets.theme.TintLinearLayout>
 
             <com.huanchengfly.tieba.post.ui.widgets.theme.TintLinearLayout
+                android:gravity="center"
                 android:id="@+id/thread_menu_collect"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:layout_weight="1"
                 android:background="@drawable/bg_radius_10dp"
-                android:orientation="vertical"
+                android:orientation="horizontal"
                 android:padding="16dp"
-                app:backgroundTint="@color/default_color_card">
+                app:backgroundTint="@color/default_color_chip">
 
                 <com.huanchengfly.tieba.post.ui.widgets.theme.TintImageView
                     android:id="@+id/thread_menu_collect_icon"
-                    android:layout_width="36dp"
-                    android:layout_height="36dp"
-                    android:paddingStart="-8dp"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
                     app:srcCompat="@drawable/ic_round_star_outline"
                     app:tint="@color/default_color_accent" />
 
@@ -92,20 +83,11 @@
                     android:id="@+id/thread_menu_collect_text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
+                    android:layout_marginStart="8dp"
                     android:text="@string/title_collect"
-                    android:textSize="17sp"
+                    android:textSize="15sp"
                     android:textStyle="bold"
                     app:tint="@color/default_color_text" />
-
-                <com.huanchengfly.tieba.post.ui.widgets.theme.TintTextView
-                    android:id="@+id/thread_menu_collect_status"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="4dp"
-                    android:text="@string/title_uncollected"
-                    android:textSize="14sp"
-                    app:tint="@color/default_color_text_secondary" />
             </com.huanchengfly.tieba.post.ui.widgets.theme.TintLinearLayout>
         </LinearLayout>
 
@@ -118,20 +100,21 @@
             android:paddingBottom="16dp">
 
             <com.huanchengfly.tieba.post.ui.widgets.theme.TintLinearLayout
+                android:gravity="center"
                 android:id="@+id/thread_menu_pure_read"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="8dp"
                 android:layout_weight="1"
                 android:background="@drawable/bg_radius_10dp"
-                android:orientation="vertical"
+                android:orientation="horizontal"
                 android:padding="16dp"
-                app:backgroundTint="@color/default_color_card">
+                app:backgroundTint="@color/default_color_chip">
 
                 <com.huanchengfly.tieba.post.ui.widgets.theme.TintImageView
                     android:id="@+id/thread_menu_pure_read_icon"
-                    android:layout_width="36dp"
-                    android:layout_height="36dp"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
                     app:srcCompat="@drawable/ic_outline_chrome_reader_mode"
                     app:tint="@color/default_color_accent" />
 
@@ -139,72 +122,49 @@
                     android:id="@+id/thread_menu_pure_read_text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
+                    android:layout_marginStart="8dp"
                     android:text="@string/title_pure_read"
-                    android:textSize="17sp"
+                    android:textSize="15sp"
                     android:textStyle="bold"
                     app:tint="@color/default_color_text" />
-
-                <com.huanchengfly.tieba.post.ui.widgets.theme.TintTextView
-                    android:id="@+id/thread_menu_pure_read_status"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="4dp"
-                    android:text="@string/title_off"
-                    android:textSize="14sp"
-                    app:tint="@color/default_color_text_secondary" />
             </com.huanchengfly.tieba.post.ui.widgets.theme.TintLinearLayout>
 
             <com.huanchengfly.tieba.post.ui.widgets.theme.TintLinearLayout
+                android:gravity="center"
                 android:id="@+id/thread_menu_sort"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:layout_weight="1"
                 android:background="@drawable/bg_radius_10dp"
-                android:orientation="vertical"
+                android:orientation="horizontal"
                 android:padding="16dp"
-                app:backgroundTint="@color/default_color_card">
+                app:backgroundTint="@color/default_color_chip">
 
                 <com.huanchengfly.tieba.post.ui.widgets.theme.TintImageView
                     android:id="@+id/thread_menu_sort_icon"
-                    android:layout_width="36dp"
-                    android:layout_height="36dp"
-                    app:srcCompat="@drawable/ic_round_airplay"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    app:srcCompat="@drawable/ic_round_arrow_circle_up"
                     app:tint="@color/default_color_accent" />
 
                 <com.huanchengfly.tieba.post.ui.widgets.theme.TintTextView
                     android:id="@+id/thread_menu_sort_text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
+                    android:layout_marginStart="8dp"
                     android:text="@string/title_sort"
-                    android:textSize="17sp"
+                    android:textSize="15sp"
                     android:textStyle="bold"
                     app:tint="@color/default_color_text" />
-
-                <com.huanchengfly.tieba.post.ui.widgets.theme.TintTextView
-                    android:id="@+id/thread_menu_sort_status"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="4dp"
-                    android:text="@string/title_off"
-                    android:textSize="14sp"
-                    app:tint="@color/default_color_text_secondary" />
             </com.huanchengfly.tieba.post.ui.widgets.theme.TintLinearLayout>
         </LinearLayout>
 
-        <com.huanchengfly.tieba.post.ui.widgets.theme.TintLinearLayout
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp"
             android:layout_marginBottom="16dp"
-            android:background="@drawable/bg_radius_8dp"
-            android:orientation="vertical"
-            android:paddingTop="8dp"
-            android:paddingBottom="8dp"
-            app:backgroundTint="@color/default_color_card">
+            android:orientation="vertical">
 
             <LinearLayout
                 android:id="@+id/thread_menu_jump_page"
@@ -222,8 +182,8 @@
                     android:layout_height="24dp"
                     android:layout_gravity="center_vertical"
                     android:layout_marginEnd="16dp"
-                    app:srcCompat="@drawable/ic_round_live_tv"
-                    app:tint="@color/default_color_text_secondary" />
+                    app:srcCompat="@drawable/ic_outline_rocket_launch"
+                    app:tint="@color/default_color_text" />
 
                 <com.huanchengfly.tieba.post.ui.widgets.theme.TintTextView
                     android:layout_width="wrap_content"
@@ -232,7 +192,7 @@
                     android:text="@string/title_jump_page"
                     android:textSize="16sp"
                     android:textStyle="bold"
-                    app:tint="@color/default_color_text_secondary" />
+                    app:tint="@color/default_color_text" />
             </LinearLayout>
 
             <LinearLayout
@@ -251,8 +211,8 @@
                     android:layout_height="24dp"
                     android:layout_gravity="center_vertical"
                     android:layout_marginEnd="16dp"
-                    app:srcCompat="@drawable/ic_round_share_white"
-                    app:tint="@color/default_color_text_secondary" />
+                    app:srcCompat="@drawable/ic_outline_share"
+                    app:tint="@color/default_color_text" />
 
                 <com.huanchengfly.tieba.post.ui.widgets.theme.TintTextView
                     android:layout_width="wrap_content"
@@ -261,7 +221,7 @@
                     android:text="@string/title_share"
                     android:textSize="16sp"
                     android:textStyle="bold"
-                    app:tint="@color/default_color_text_secondary" />
+                    app:tint="@color/default_color_text" />
             </LinearLayout>
 
 
@@ -272,8 +232,8 @@
                 android:background="?selectableItemBackground"
                 android:orientation="horizontal"
                 android:paddingStart="16dp"
-                android:paddingTop="12dp"
                 android:paddingEnd="16dp"
+                android:paddingTop="12dp"
                 android:paddingBottom="12dp">
 
                 <com.huanchengfly.tieba.post.ui.widgets.theme.TintImageView
@@ -282,7 +242,7 @@
                     android:layout_gravity="center_vertical"
                     android:layout_marginEnd="16dp"
                     app:srcCompat="@drawable/ic_link"
-                    app:tint="@color/default_color_text_secondary" />
+                    app:tint="@color/default_color_text" />
 
                 <com.huanchengfly.tieba.post.ui.widgets.theme.TintTextView
                     android:layout_width="wrap_content"
@@ -291,7 +251,7 @@
                     android:text="@string/title_copy_link"
                     android:textSize="16sp"
                     android:textStyle="bold"
-                    app:tint="@color/default_color_text_secondary" />
+                    app:tint="@color/default_color_text" />
             </LinearLayout>
 
             <LinearLayout
@@ -310,8 +270,8 @@
                     android:layout_height="24dp"
                     android:layout_gravity="center_vertical"
                     android:layout_marginEnd="16dp"
-                    app:srcCompat="@drawable/ic_round_verified_user"
-                    app:tint="@color/default_color_text_secondary" />
+                    app:srcCompat="@drawable/ic_outline_report"
+                    app:tint="@color/default_color_text" />
 
                 <com.huanchengfly.tieba.post.ui.widgets.theme.TintTextView
                     android:layout_width="wrap_content"
@@ -320,7 +280,7 @@
                     android:text="@string/title_report"
                     android:textSize="16sp"
                     android:textStyle="bold"
-                    app:tint="@color/default_color_text_secondary" />
+                    app:tint="@color/default_color_text" />
             </LinearLayout>
 
             <LinearLayout
@@ -339,8 +299,8 @@
                     android:layout_height="24dp"
                     android:layout_gravity="center_vertical"
                     android:layout_marginEnd="16dp"
-                    app:srcCompat="@drawable/ic_round_delete"
-                    app:tint="@color/default_color_text_secondary" />
+                    app:srcCompat="@drawable/ic_outline_delete"
+                    app:tint="@color/default_color_text" />
 
                 <com.huanchengfly.tieba.post.ui.widgets.theme.TintTextView
                     android:layout_width="wrap_content"
@@ -349,9 +309,9 @@
                     android:text="@string/title_delete"
                     android:textSize="16sp"
                     android:textStyle="bold"
-                    app:tint="@color/default_color_text_secondary" />
+                    app:tint="@color/default_color_text" />
             </LinearLayout>
-        </com.huanchengfly.tieba.post.ui.widgets.theme.TintLinearLayout>
+        </LinearLayout>
     </LinearLayout>
 
     <com.huanchengfly.tieba.post.ui.widgets.theme.TintMaterialButton
