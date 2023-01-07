@@ -19,7 +19,6 @@ import android.view.ViewGroup
 import android.webkit.WebView
 import android.widget.FrameLayout
 import android.widget.GridView
-import android.widget.RelativeLayout
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.appcompat.widget.Toolbar
@@ -28,10 +27,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager.widget.ViewPager
 import butterknife.BindView
-import cn.dreamtobe.kpswitch.util.KPSwitchConflictUtil
-import cn.dreamtobe.kpswitch.util.KPSwitchConflictUtil.SubPanelAndTrigger
-import cn.dreamtobe.kpswitch.util.KeyboardUtil
-import cn.dreamtobe.kpswitch.widget.KPSwitchFSPanelFrameLayout
+import com.effective.android.panel.PanelSwitchHelper
+import com.effective.android.panel.utils.hideSoftInput
+import com.effective.android.panel.view.panel.PanelView
 import com.google.android.material.tabs.TabLayout
 import com.huanchengfly.tieba.post.R
 import com.huanchengfly.tieba.post.adapters.InsertPhotoAdapter
@@ -49,24 +47,27 @@ import com.huanchengfly.tieba.post.models.ReplyInfoBean
 import com.huanchengfly.tieba.post.models.database.Draft
 import com.huanchengfly.tieba.post.toastShort
 import com.huanchengfly.tieba.post.ui.widgets.edittext.widget.UndoableEditText
-import com.huanchengfly.tieba.post.ui.widgets.theme.TintConstraintLayout
 import com.huanchengfly.tieba.post.ui.widgets.theme.TintImageView
+import com.huanchengfly.tieba.post.ui.widgets.theme.TintLinearLayout
 import com.huanchengfly.tieba.post.utils.*
 import org.litepal.LitePal.where
 
+
 class ReplyActivity : BaseActivity(), View.OnClickListener,
     InsertPhotoAdapter.PickMediasLauncherProvider {
-    @BindView(R.id.activity_reply_edit_text)
+    private var mHelper: PanelSwitchHelper? = null
+
+    @BindView(R.id.edit_text)
     lateinit var editText: UndoableEditText
 
-    @BindView(R.id.activity_reply_panel_root)
-    lateinit var panelFrameLayout: KPSwitchFSPanelFrameLayout
+    @BindView(R.id.activity_reply_layout)
+    lateinit var rootLayout: TintLinearLayout
 
     @BindView(R.id.activity_reply_emoticon)
-    lateinit var emoticonView: RelativeLayout
+    lateinit var emoticonView: PanelView
 
     @BindView(R.id.activity_reply_insert_photo)
-    lateinit var insertImageView: FrameLayout
+    lateinit var insertImageView: PanelView
 
     @BindView(R.id.activity_reply_edit_emoticon)
     lateinit var emoticonBtn: TintImageView
@@ -106,6 +107,52 @@ class ReplyActivity : BaseActivity(), View.OnClickListener,
         insertPhotoAdapter.setFileList(photoInfoBeans)
     }
 
+    override fun onStart() {
+        super.onStart()
+        if (mHelper == null) {
+            mHelper = PanelSwitchHelper.Builder(this)
+                .logTrack(true)
+                .build(false)
+
+            if (appPreferences.postOrReplyWarning) {
+                showDialog {
+                    setTitle(R.string.title_dialog_reply_warning)
+                    setMessage(R.string.message_dialog_reply_warning)
+                    setNegativeButton(R.string.btn_cancel_reply) { _, _ ->
+                        finish()
+                    }
+                    setNeutralButton(R.string.btn_continue_reply, null)
+                    setPositiveButton(R.string.button_official_client_reply) { _, _ ->
+                        val intent = Intent(ACTION_VIEW).setData(getDispatchUri())
+                        val resolveInfos =
+                            packageManager.queryIntentActivities(
+                                intent,
+                                PackageManager.MATCH_DEFAULT_ONLY
+                            )
+                                .filter { it.resolvePackageName != packageName }
+                        try {
+                            if (resolveInfos.isNotEmpty()) {
+                                startActivity(intent)
+                            } else {
+                                toastShort(R.string.toast_official_client_not_install)
+                            }
+                        } catch (e: ActivityNotFoundException) {
+                            toastShort(R.string.toast_official_client_not_install)
+                        }
+                        finish()
+                    }
+                }
+            }
+        }
+    }
+
+    override fun onBackPressed() {
+        if (mHelper?.hookSystemBackByPanelSwitcher() == true) {
+            return
+        }
+        super.onBackPressed()
+    }
+
     override fun getPickMediasLauncher(): ActivityResultLauncher<PickMediasRequest> =
         pickMediasLauncher
 
@@ -115,10 +162,9 @@ class ReplyActivity : BaseActivity(), View.OnClickListener,
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        if (ThemeUtil.THEME_TRANSLUCENT == ThemeUtil.getTheme()) {
-            val constraintLayout = findViewById<TintConstraintLayout>(R.id.activity_reply_layout)
-            constraintLayout.setBackgroundTintResId(0)
-            ThemeUtil.setTranslucentBackground(constraintLayout)
+        if (ThemeUtil.isTranslucentTheme()) {
+            rootLayout.setBackgroundTintResId(0)
+            ThemeUtil.setTranslucentBackground(rootLayout)
         }
         Util.setStatusBarTransparent(this)
         val decor = window.decorView as ViewGroup
@@ -129,30 +175,6 @@ class ReplyActivity : BaseActivity(), View.OnClickListener,
         window.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
         initData()
         initView()
-        if (appPreferences.postOrReplyWarning) showDialog {
-            setTitle(R.string.title_dialog_reply_warning)
-            setMessage(R.string.message_dialog_reply_warning)
-            setNegativeButton(R.string.btn_cancel_reply) { _, _ ->
-                finish()
-            }
-            setNeutralButton(R.string.btn_continue_reply, null)
-            setPositiveButton(R.string.button_official_client_reply) { _, _ ->
-                val intent = Intent(ACTION_VIEW).setData(getDispatchUri())
-                val resolveInfos =
-                    packageManager.queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY)
-                        .filter { it.resolvePackageName != packageName }
-                try {
-                    if (resolveInfos.isNotEmpty()) {
-                        startActivity(intent)
-                    } else {
-                        toastShort(R.string.toast_official_client_not_install)
-                    }
-                } catch (e: ActivityNotFoundException) {
-                    toastShort(R.string.toast_official_client_not_install)
-                }
-                finish()
-            }
-        }
     }
 
     private fun getDispatchUri(): Uri? {
@@ -184,7 +206,6 @@ class ReplyActivity : BaseActivity(), View.OnClickListener,
 
     override fun onPause() {
         super.onPause()
-        panelFrameLayout.recordKeyboardStatus(window)
         if (replyInfoBean != null && !replySuccess) {
             Draft(
                 replyInfoBean!!.hash(),
@@ -282,8 +303,9 @@ class ReplyActivity : BaseActivity(), View.OnClickListener,
             }
         })
         mItemTouchHelper.attachToRecyclerView(insertView)
-        findViewById<View>(R.id.activity_reply_root).setOnClickListener(this)
-        findViewById<View>(R.id.activity_reply_layout).setOnClickListener(this)
+        findViewById<View>(R.id.content_view).setOnClickListener(this)
+        findViewById<View>(R.id.panel_container).setOnClickListener(this)
+        rootLayout.setOnClickListener(this)
         toolbar.setNavigationIcon(R.drawable.ic_reply_toolbar_round_close)
         if (replyInfoBean!!.pid == null && replyInfoBean!!.floorNum == null) {
             insertImageBtn.visibility = View.VISIBLE
@@ -452,13 +474,6 @@ class ReplyActivity : BaseActivity(), View.OnClickListener,
                 if (sendItem != null) sendItem!!.isEnabled = canSend()
             }
         })
-        KeyboardUtil.attach(this, panelFrameLayout)
-        KPSwitchConflictUtil.attach(
-            panelFrameLayout,
-            editText,
-            SubPanelAndTrigger(emoticonView, emoticonBtn),
-            SubPanelAndTrigger(insertImageView, insertImageBtn)
-        )
         EmoticonUtil.GlobalOnItemClickManagerUtil.attachToEditText(editText)
     }
 
@@ -576,8 +591,8 @@ class ReplyActivity : BaseActivity(), View.OnClickListener,
                             finish()
                         }.doIfFailure {
                             if (loadingDialog != null) loadingDialog!!.cancel()
-                            KeyboardUtil.hideKeyboard(panelFrameLayout)
-                            showErrorSnackBar(panelFrameLayout, it)
+                            hideSoftInput()
+                            showErrorSnackBar(rootLayout, it)
                         }
                     }
                 }
@@ -600,7 +615,7 @@ class ReplyActivity : BaseActivity(), View.OnClickListener,
 
     override fun onClick(v: View) {
         when (v.id) {
-            R.id.activity_reply_root -> finish()
+            R.id.content_view -> finish()
             R.id.activity_reply_edit_undo -> editText.undo()
             R.id.activity_reply_edit_redo -> editText.redo()
             R.id.activity_reply_edit_clear -> editText.setText(null)

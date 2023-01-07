@@ -14,7 +14,8 @@ import androidx.appcompat.widget.ListPopupWindow
 import androidx.core.widget.TextViewCompat
 import androidx.recyclerview.widget.RecyclerView
 import butterknife.BindView
-import cn.dreamtobe.kpswitch.util.KeyboardUtil
+import com.effective.android.panel.utils.hideSoftInput
+import com.effective.android.panel.utils.showSoftInput
 import com.google.android.material.textfield.TextInputLayout
 import com.huanchengfly.tieba.post.R
 import com.huanchengfly.tieba.post.adapters.SearchPostAdapter
@@ -124,7 +125,7 @@ class SearchPostActivity : BaseActivity() {
             editText.setText(keyword)
         }
         editText.post {
-            KeyboardUtil.showKeyboard(editText)
+            editText.showSoftInput()
         }
     }
 
@@ -167,7 +168,7 @@ class SearchPostActivity : BaseActivity() {
     override fun onBackPressed() {
         if (state == State.SEARCH) {
             state = State.INPUT
-            KeyboardUtil.showKeyboard(editText)
+            editText.showSoftInput()
         } else {
             finish()
         }
@@ -336,7 +337,7 @@ class SearchPostActivity : BaseActivity() {
                 editText.apply {
                     setText(item.content)
                     clearFocus()
-                    KeyboardUtil.hideKeyboard(this)
+                    hideSoftInput()
                 }
                 keyword = item.content
             }

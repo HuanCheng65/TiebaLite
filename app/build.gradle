@@ -227,7 +227,7 @@ dependencies {
     implementation "com.squareup.retrofit2:converter-wire:$retrofit_version"
 
     implementation 'com.google.code.gson:gson:2.10'
-    implementation "cn.dreamtobe.kpswitch:library:1.6.2"
+    implementation 'com.github.DSAppTeam:PanelSwitchHelper:v1.5.2'
     implementation "org.litepal.android:kotlin:3.0.0"
     implementation 'cn.jzvd:jiaozivideoplayer:7.7.2.3300'
     implementation "com.jrummyapps:colorpicker:2.1.7"

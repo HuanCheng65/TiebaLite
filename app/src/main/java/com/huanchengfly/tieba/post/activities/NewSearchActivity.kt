@@ -13,9 +13,10 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import androidx.recyclerview.widget.RecyclerView
 import butterknife.BindView
-import cn.dreamtobe.kpswitch.util.KeyboardUtil
 import com.alibaba.android.vlayout.DelegateAdapter
 import com.alibaba.android.vlayout.VirtualLayoutManager
+import com.effective.android.panel.utils.hideSoftInput
+import com.effective.android.panel.utils.showSoftInput
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.textfield.TextInputLayout
 import com.huanchengfly.tieba.post.R
@@ -118,7 +119,7 @@ class NewSearchActivity : BaseActivity(), TabLayout.OnTabSelectedListener {
         editText.setOnEditorActionListener { v, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_SEARCH) {
                 keyword = v.text.toString()
-                if (!keyword.isNullOrBlank()) KeyboardUtil.hideKeyboard(v)
+                if (!keyword.isNullOrBlank()) hideSoftInput()
                 return@setOnEditorActionListener true
             }
             return@setOnEditorActionListener false
@@ -129,7 +130,7 @@ class NewSearchActivity : BaseActivity(), TabLayout.OnTabSelectedListener {
         keyword = intent.getStringExtra(EXTRA_KEYWORD)
         editText.post {
             if (keyword.isNullOrBlank()) {
-                KeyboardUtil.showKeyboard(editText)
+                editText.showSoftInput()
             }
         }
     }
@@ -189,7 +190,7 @@ class NewSearchActivity : BaseActivity(), TabLayout.OnTabSelectedListener {
         if (state == State.SEARCH) {
             state = State.INPUT
             invalidateState()
-            KeyboardUtil.showKeyboard(editText)
+            editText.showSoftInput()
         } else {
             finish()
         }
@@ -238,7 +239,7 @@ class NewSearchActivity : BaseActivity(), TabLayout.OnTabSelectedListener {
                 editText.apply {
                     setText(item.content)
                     clearFocus()
-                    KeyboardUtil.hideKeyboard(this)
+                    hideSoftInput()
                 }
                 keyword = item.content
             }

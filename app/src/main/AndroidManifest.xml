@@ -301,6 +301,7 @@
         <activity
             android:name=".activities.ReplyActivity"
             android:configChanges="screenSize|screenLayout|orientation|smallestScreenSize|keyboardHidden"
+            android:windowSoftInputMode="stateAlwaysHidden|adjustResize"
             android:theme="@style/AppTheme.Floating" />
         <activity
             android:name=".activities.BlockListActivity"

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.huanchengfly.tieba.post.ui.widgets.theme.TintRelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:backgroundTint="@color/default_color_background">
+
+    <androidx.viewpager.widget.ViewPager
+        android:id="@+id/activity_reply_emoticon_view_pager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/activity_reply_emoticon_tab"
+        android:layout_alignParentTop="true" />
+
+    <com.huanchengfly.tieba.post.ui.widgets.theme.TintTabLayout
+        android:id="@+id/activity_reply_emoticon_tab"
+        style="@style/Widget.TabLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true" />
+</com.huanchengfly.tieba.post.ui.widgets.theme.TintRelativeLayout>
