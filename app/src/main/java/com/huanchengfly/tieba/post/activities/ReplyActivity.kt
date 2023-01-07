@@ -111,8 +111,7 @@ class ReplyActivity : BaseActivity(), View.OnClickListener,
         super.onStart()
         if (mHelper == null) {
             mHelper = PanelSwitchHelper.Builder(this)
-                .logTrack(true)
-                .build(false)
+                .build(true)
 
             if (appPreferences.postOrReplyWarning) {
                 showDialog {
