@@ -410,7 +410,7 @@ fun HomePage(
                         context.goToActivity<NewSearchActivity>()
                     }
                 }
-                if (!isLoading) {
+                if (!isLoading || forums.isNotEmpty()) {
                     if (topForums.isNotEmpty()) {
                         item(key = "TopForumHeader", span = { GridItemSpan(maxLineSpan) }) {
                             Column {
