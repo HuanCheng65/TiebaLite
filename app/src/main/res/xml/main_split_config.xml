@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:window="http://schemas.android.com/apk/res-auto">
+    <ActivityRule window:alwaysExpand="true">
+        <ActivityFilter window:activityName=".activities.PhotoViewActivity" />
+        <ActivityFilter window:activityName=".ui.page.photoview.PhotoViewActivity" />
+    </ActivityRule>
     <SplitPairRule
         window:splitRatio="0.5"
         window:splitMinWidth="600dp"
