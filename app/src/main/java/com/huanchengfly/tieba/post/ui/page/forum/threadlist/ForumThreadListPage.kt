@@ -2,6 +2,7 @@ package com.huanchengfly.tieba.post.ui.page.forum.threadlist
 
 import android.content.Context
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -12,6 +13,8 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Divider
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.MaterialTheme
@@ -25,6 +28,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
@@ -174,6 +178,14 @@ fun ForumThreadListPage(
         prop1 = ForumThreadListUiState::threadListIds,
         initial = emptyList()
     )
+    val goodClassifyId by viewModel.uiState.collectPartialAsState(
+        prop1 = ForumThreadListUiState::goodClassifyId,
+        initial = null
+    )
+    val goodClassifies by viewModel.uiState.collectPartialAsState(
+        prop1 = ForumThreadListUiState::goodClassifies,
+        initial = emptyList()
+    )
     val pullRefreshState = rememberPullRefreshState(
         refreshing = isRefreshing,
         onRefresh = { viewModel.send(getRefreshIntent(context, forumName, isGood)) }
@@ -200,6 +212,35 @@ fun ForumThreadListPage(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier.fillMaxWidth()
             ) {
+                if (isGood) {
+                    item(key = "GoodClassifyHeader") {
+                        Row(
+                            modifier = Modifier
+                                .horizontalScroll(rememberScrollState())
+                                .padding(vertical = 8.dp, horizontal = 16.dp),
+                            horizontalArrangement = Arrangement.spacedBy(8.dp)
+                        ) {
+                            goodClassifies.forEach {
+                                Chip(
+                                    text = it.class_name,
+                                    modifier = Modifier
+                                        .clip(RoundedCornerShape(100))
+                                        .clickable {
+                                            viewModel.send(
+                                                getRefreshIntent(
+                                                    context,
+                                                    forumName,
+                                                    true,
+                                                    goodClassifyId = it.class_id
+                                                )
+                                            )
+                                        },
+                                    invertColor = goodClassifyId == it.class_id
+                                )
+                            }
+                        }
+                    }
+                }
                 itemsIndexed(
                     items = threadList,
                     key = { index, item -> "${index}_${item.id}" },

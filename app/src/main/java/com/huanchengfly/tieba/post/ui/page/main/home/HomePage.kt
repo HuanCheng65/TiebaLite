@@ -144,7 +144,7 @@ private fun Header(
     invert: Boolean = false,
     modifier: Modifier = Modifier
 ) {
-    Chip(text = text, invertColor = invert, modifier = modifier)
+    Chip(text = text, modifier = modifier.padding(start = 16.dp), invertColor = invert)
 }
 
 @Composable

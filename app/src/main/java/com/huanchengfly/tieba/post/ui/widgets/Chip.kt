@@ -17,8 +17,8 @@ import com.huanchengfly.tieba.post.utils.ThemeUtil
 @Composable
 fun Chip(
     text: String,
-    invertColor: Boolean = false,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    invertColor: Boolean = false
 ) {
     Text(
         color = if (invertColor)
@@ -27,10 +27,8 @@ fun Chip(
         fontSize = 12.sp,
         fontWeight = FontWeight.Bold,
         text = text,
-        modifier = Modifier
-            .padding(start = 16.dp)
+        modifier = modifier
             .clip(RoundedCornerShape(100))
-            .then(modifier)
             .background(
                 color = if (invertColor)
                     if (ThemeUtil.isNightMode()) MaterialTheme.colors.secondary.copy(alpha = 0.3f) else MaterialTheme.colors.secondary

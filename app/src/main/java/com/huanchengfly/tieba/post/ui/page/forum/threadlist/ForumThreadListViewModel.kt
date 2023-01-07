@@ -3,6 +3,7 @@ package com.huanchengfly.tieba.post.ui.page.forum.threadlist
 import com.huanchengfly.tieba.post.api.TiebaApi
 import com.huanchengfly.tieba.post.api.models.AgreeBean
 import com.huanchengfly.tieba.post.api.models.protos.ThreadInfo
+import com.huanchengfly.tieba.post.api.models.protos.frsPage.Classify
 import com.huanchengfly.tieba.post.api.retrofit.exception.getErrorCode
 import com.huanchengfly.tieba.post.api.retrofit.exception.getErrorMessage
 import com.huanchengfly.tieba.post.api.updateAgreeStatus
@@ -99,6 +100,8 @@ private class ForumThreadListPartialChangeProducer(val type: ForumThreadListType
                     ForumThreadListPartialChange.FirstLoad.Success(
                         threadList,
                         response.data_.thread_id_list,
+                        response.data_.forum?.good_classify ?: emptyList(),
+                        goodClassifyId.takeIf { type == ForumThreadListType.Good },
                         response.data_.page.has_more == 1
                     )
                 }
@@ -126,6 +129,8 @@ private class ForumThreadListPartialChangeProducer(val type: ForumThreadListType
                     ForumThreadListPartialChange.Refresh.Success(
                         threadList,
                         response.data_.thread_id_list,
+                        response.data_.forum?.good_classify ?: emptyList(),
+                        goodClassifyId.takeIf { type == ForumThreadListType.Good },
                         response.data_.page.has_more == 1
                     )
                 }
@@ -250,6 +255,8 @@ sealed interface ForumThreadListPartialChange : PartialChange<ForumThreadListUiS
                     isRefreshing = false,
                     threadList = threadList,
                     threadListIds = threadListIds,
+                    goodClassifies = goodClassifies,
+                    goodClassifyId = goodClassifyId,
                     currentPage = 1,
                     hasMore = hasMore
                 )
@@ -262,6 +269,8 @@ sealed interface ForumThreadListPartialChange : PartialChange<ForumThreadListUiS
         data class Success(
             val threadList: List<ThreadInfo>,
             val threadListIds: List<Long>,
+            val goodClassifies: List<Classify>,
+            val goodClassifyId: Int?,
             val hasMore: Boolean,
         ) : FirstLoad()
 
@@ -278,6 +287,8 @@ sealed interface ForumThreadListPartialChange : PartialChange<ForumThreadListUiS
                     isRefreshing = false,
                     threadList = threadList,
                     threadListIds = threadListIds,
+                    goodClassifies = goodClassifies,
+                    goodClassifyId = goodClassifyId,
                     currentPage = 1,
                     hasMore = hasMore
                 )
@@ -290,6 +301,8 @@ sealed interface ForumThreadListPartialChange : PartialChange<ForumThreadListUiS
         data class Success(
             val threadList: List<ThreadInfo>,
             val threadListIds: List<Long>,
+            val goodClassifies: List<Classify>,
+            val goodClassifyId: Int? = null,
             val hasMore: Boolean,
         ) : Refresh()
 
@@ -394,6 +407,7 @@ data class ForumThreadListUiState(
     val goodClassifyId: Int? = null,
     val threadList: List<ThreadInfo> = emptyList(),
     val threadListIds: List<Long> = emptyList(),
+    val goodClassifies: List<Classify> = emptyList(),
     val currentPage: Int = 1,
     val hasMore: Boolean = true,
 ) : UiState
