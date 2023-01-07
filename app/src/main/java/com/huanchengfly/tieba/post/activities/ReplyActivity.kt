@@ -483,11 +483,6 @@ class ReplyActivity : BaseActivity(), View.OnClickListener,
         return super.onCreateOptionsMenu(menu)
     }
 
-    override fun finish() {
-        overridePendingTransition(R.anim.in_bottom, R.anim.out_bottom)
-        super.finish()
-    }
-
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (item.itemId == R.id.menu_send) {
             realReply()
