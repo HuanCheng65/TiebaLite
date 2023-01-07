@@ -14,6 +14,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.DropdownMenu
 import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -50,42 +51,47 @@ class MenuScope(
 fun ClickMenu(
     menuState: MenuState = rememberMenuState(),
     menuContent: @Composable MenuScope.() -> Unit,
-    shape: Shape = RoundedCornerShape(14.dp),
-    onDismiss: (() -> Unit)? = null,
     modifier: Modifier = Modifier,
+    menuShape: Shape = RoundedCornerShape(14.dp),
+    triggerShape: Shape? = null,
+    onDismiss: (() -> Unit)? = null,
     content: @Composable MenuScope.() -> Unit
 ) {
     val menuScope = MenuScope(menuState, onDismiss)
-    val coroutineScope = rememberCoroutineScope()
     val interactionSource = remember { MutableInteractionSource() }
     val indication = LocalIndication.current
-    coroutineScope.launch {
-        interactionSource.interactions
-            .filterIsInstance<PressInteraction.Press>()
-            .collect {
-                menuState.offset = it.pressPosition
-            }
-    }
-    Box(
-        modifier = Modifier
-            .combinedClickable(
-                interactionSource = interactionSource,
-                indication = indication,
-                onClick = {
-                    menuState.expanded = true
+    LaunchedEffect(key1 = null) {
+        launch {
+            interactionSource.interactions
+                .filterIsInstance<PressInteraction.Press>()
+                .collect {
+                    menuState.offset = it.pressPosition
                 }
-            )
-    ) {
-        menuScope.content()
+        }
+    }
+    Box {
+        val triggerModifier = if (triggerShape != null) Modifier.clip(triggerShape) else Modifier
+        Box(
+            modifier = triggerModifier
+                .combinedClickable(
+                    interactionSource = interactionSource,
+                    indication = indication,
+                    onClick = {
+                        menuState.expanded = true
+                    }
+                )
+        ) {
+            menuScope.content()
+        }
         Box(
             modifier = Modifier
+                .clip(menuShape)
                 .offset {
                     IntOffset(
                         menuState.offset.x.roundToInt(),
                         menuState.offset.y.roundToInt()
                     )
                 }
-                .clip(shape)
         ) {
             DropdownMenu(
                 expanded = menuState.expanded,
@@ -113,18 +119,20 @@ fun LongClickMenu(
     val coroutineScope = rememberCoroutineScope()
     val interactionSource = remember { MutableInteractionSource() }
     val indication = LocalIndication.current
-    coroutineScope.launch {
-        interactionSource.interactions
-            .filterIsInstance<PressInteraction.Press>()
-            .collect {
-                menuState.offset = it.pressPosition
-            }
-    }
-    coroutineScope.launch {
-        interactionSource.interactions
-            .collect {
-                Log.i("Indication", "$it")
-            }
+    LaunchedEffect(key1 = null) {
+        coroutineScope.launch {
+            interactionSource.interactions
+                .filterIsInstance<PressInteraction.Press>()
+                .collect {
+                    menuState.offset = it.pressPosition
+                }
+        }
+        coroutineScope.launch {
+            interactionSource.interactions
+                .collect {
+                    Log.i("Indication", "$it")
+                }
+        }
     }
     Box(
         modifier = Modifier

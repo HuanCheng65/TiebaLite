@@ -45,6 +45,9 @@ import com.huanchengfly.tieba.post.api.models.UserLikeForumBean
 import com.huanchengfly.tieba.post.api.models.UserPostBean
 import com.huanchengfly.tieba.post.api.models.WebReplyResultBean
 import com.huanchengfly.tieba.post.api.models.WebUploadPicBean
+import com.huanchengfly.tieba.post.api.models.protos.forumRecommend.ForumRecommendRequest
+import com.huanchengfly.tieba.post.api.models.protos.forumRecommend.ForumRecommendRequestData
+import com.huanchengfly.tieba.post.api.models.protos.forumRecommend.ForumRecommendResponse
 import com.huanchengfly.tieba.post.api.models.protos.frsPage.FrsPageRequest
 import com.huanchengfly.tieba.post.api.models.protos.frsPage.FrsPageRequestData
 import com.huanchengfly.tieba.post.api.models.protos.frsPage.FrsPageResponse
@@ -54,6 +57,9 @@ import com.huanchengfly.tieba.post.api.models.protos.hotThreadList.HotThreadList
 import com.huanchengfly.tieba.post.api.models.protos.personalized.PersonalizedRequest
 import com.huanchengfly.tieba.post.api.models.protos.personalized.PersonalizedRequestData
 import com.huanchengfly.tieba.post.api.models.protos.personalized.PersonalizedResponse
+import com.huanchengfly.tieba.post.api.models.protos.threadList.ThreadListRequest
+import com.huanchengfly.tieba.post.api.models.protos.threadList.ThreadListRequestData
+import com.huanchengfly.tieba.post.api.models.protos.threadList.ThreadListResponse
 import com.huanchengfly.tieba.post.api.models.protos.topicList.TopicListRequest
 import com.huanchengfly.tieba.post.api.models.protos.topicList.TopicListRequestData
 import com.huanchengfly.tieba.post.api.models.protos.topicList.TopicListResponse
@@ -273,15 +279,26 @@ object MixedTiebaApiImpl : ITiebaApi {
         forumId: String,
         forumName: String,
         tbs: String
-    ): Flow<CommonResponse> = RetrofitTiebaApi.MINI_TIEBA_API.unlikeForumFlow(forumId, forumName, tbs)
+    ): Flow<CommonResponse> =
+        RetrofitTiebaApi.OFFICIAL_TIEBA_API.unfavolike(forumId, forumName, tbs)
 
     override fun likeForum(
         forumId: String, forumName: String, tbs: String
     ): Call<LikeForumResultBean> =
         RetrofitTiebaApi.MINI_TIEBA_API.likeForum(forumId, forumName, tbs)
 
+    override fun likeForumFlow(
+        forumId: String,
+        forumName: String,
+        tbs: String
+    ): Flow<LikeForumResultBean> =
+        RetrofitTiebaApi.MINI_TIEBA_API.likeForumFlow(forumId, forumName, tbs)
+
     override fun signAsync(forumName: String, tbs: String): Deferred<ApiResult<SignResultBean>> =
         RetrofitTiebaApi.MINI_TIEBA_API.signAsync(forumName, tbs)
+
+    override fun signFlow(forumId: String, forumName: String, tbs: String): Flow<SignResultBean> =
+        RetrofitTiebaApi.OFFICIAL_TIEBA_API.signFlow(forumId, forumName, tbs)
 
     override fun delThread(
         forumId: String,
@@ -817,8 +834,29 @@ object MixedTiebaApiImpl : ITiebaApi {
         )
     }
 
+    override fun forumRecommendNewFlow(
+        sortType: Int
+    ): Flow<ForumRecommendResponse> {
+        return RetrofitTiebaApi.OFFICIAL_PROTOBUF_TIEBA_API.forumRecommendFlow(
+            buildProtobufRequestBody(
+                ForumRecommendRequest(
+                    ForumRecommendRequestData(
+                        common = buildCommonRequest(),
+                        like_forum = 1,
+                        recommend = 1,
+                        sort_type = sortType,
+                        topic = 0
+                    )
+                )
+            )
+        )
+    }
+
     override fun frsPage(
         forumName: String,
+        page: Int,
+        loadType: Int,
+        sortType: Int,
         goodClassifyId: Int?
     ): Flow<FrsPageResponse> {
         return RetrofitTiebaApi.OFFICIAL_PROTOBUF_TIEBA_API.frsPageFlow(
@@ -833,13 +871,60 @@ object MixedTiebaApiImpl : ITiebaApi {
                         common = buildCommonRequest(),
                         ctime = 0,
                         data_size = 0,
+                        hot_thread_id = 0,
+                        is_default_navtab = 0,
+                        is_good = if (goodClassifyId != null) 1 else 0,
+                        is_selection = 0,
+                        kw = forumName,
+                        last_click_tid = 0,
+                        load_type = loadType,
+                        net_error = 0,
+                        pn = page,
+                        q_type = 2,
+                        rn = 90,
+                        rn_need = 30,
                         scr_dip = App.ScreenInfo.DENSITY.toDouble(),
                         scr_h = getScreenHeight(),
                         scr_w = getScreenWidth(),
-                        is_good = if (goodClassifyId != null) 1 else 0,
-                        kw = forumName,
-                        rn = 90,
-                        rn_need = 30
+                        sort_type = sortType,
+                        st_param = 0,
+                        st_type = "recom_flist",
+                        up_schema = "",
+                        with_group = 1,
+                        yuelaou_locate = ""
+                    )
+                )
+            )
+        )
+    }
+
+    override fun threadList(
+        forumId: Long,
+        forumName: String,
+        page: Int,
+        sortType: Int,
+        threadIds: String
+    ): Flow<ThreadListResponse> {
+        return RetrofitTiebaApi.OFFICIAL_PROTOBUF_TIEBA_API.threadListFlow(
+            buildProtobufRequestBody(
+                ThreadListRequest(
+                    ThreadListRequestData(
+                        ad_param = buildAdParam(3, 0, null),
+                        app_pos = buildAppPosInfo(),
+                        common = buildCommonRequest(),
+                        scr_dip = App.ScreenInfo.DENSITY.toDouble(),
+                        scr_h = getScreenHeight(),
+                        scr_w = getScreenWidth(),
+                        forum_id = forumId,
+                        forum_name = forumName,
+                        pn = page,
+                        q_type = 2,
+                        user_id = AccountUtil.getUid()?.toLongOrNull(),
+                        thread_ids = threadIds,
+                        sort_type = sortType,
+                        need_abstract = 0,
+                        st_type = 0,
+                        last_click_tid = 0
                     )
                 )
             )

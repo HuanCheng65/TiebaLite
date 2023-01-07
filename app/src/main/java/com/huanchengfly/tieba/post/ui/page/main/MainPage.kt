@@ -25,14 +25,9 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
-import androidx.lifecycle.flowWithLifecycle
-import androidx.lifecycle.lifecycleScope
-import androidx.window.layout.FoldingFeature
-import androidx.window.layout.WindowInfoTracker
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.rememberPagerState
-import com.huanchengfly.tieba.post.MainActivityV2
 import com.huanchengfly.tieba.post.R
 import com.huanchengfly.tieba.post.arch.BaseComposeActivity.Companion.LocalWindowSizeClass
 import com.huanchengfly.tieba.post.arch.collectPartialAsState
@@ -48,15 +43,11 @@ import com.huanchengfly.tieba.post.ui.page.main.user.UserPage
 import com.huanchengfly.tieba.post.ui.utils.DevicePosture
 import com.huanchengfly.tieba.post.ui.utils.MainNavigationContentPosition
 import com.huanchengfly.tieba.post.ui.utils.MainNavigationType
-import com.huanchengfly.tieba.post.ui.utils.isBookPosture
-import com.huanchengfly.tieba.post.ui.utils.isSeparating
 import com.huanchengfly.tieba.post.utils.appPreferences
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.annotation.RootNavGraph
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
-import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
 @Composable
@@ -99,32 +90,10 @@ private fun NavigationWrapper(
 @Composable
 fun MainPage(
     navigator: DestinationsNavigator,
-    activity: MainActivityV2,
+    devicePostureFlow: StateFlow<DevicePosture>,
     viewModel: MainViewModel = pageViewModel<MainUiIntent, MainViewModel>(emptyList()),
 ) {
     val windowSizeClass = LocalWindowSizeClass.current
-    val devicePostureFlow = WindowInfoTracker.getOrCreate(activity).windowLayoutInfo(activity)
-        .flowWithLifecycle(activity.lifecycle)
-        .map { layoutInfo ->
-            val foldingFeature =
-                layoutInfo.displayFeatures
-                    .filterIsInstance<FoldingFeature>()
-                    .firstOrNull()
-            when {
-                isBookPosture(foldingFeature) ->
-                    DevicePosture.BookPosture(foldingFeature.bounds)
-
-                isSeparating(foldingFeature) ->
-                    DevicePosture.Separating(foldingFeature.bounds, foldingFeature.orientation)
-
-                else -> DevicePosture.NormalPosture
-            }
-        }
-        .stateIn(
-            scope = activity.lifecycleScope,
-            started = SharingStarted.Eagerly,
-            initialValue = DevicePosture.NormalPosture
-        )
     val foldingDevicePosture by devicePostureFlow.collectAsState()
     val messageCount by viewModel.uiState.collectPartialAsState(
         prop1 = MainUiState::messageCount,

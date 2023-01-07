@@ -37,8 +37,16 @@ fun buildProtobufRequestBody(
         .build()
 }
 
-fun buildAdParam(): AdParam {
-    return AdParam(load_count = 0, refresh_count = 4, yoga_lib_version = "1.0")
+fun buildAdParam(
+    load_count: Int = 0,
+    refresh_count: Int = 4,
+    yoga_lib_version: String? = "1.0"
+): AdParam {
+    return AdParam(
+        load_count = load_count,
+        refresh_count = refresh_count,
+        yoga_lib_version = yoga_lib_version
+    )
 }
 
 fun buildAppPosInfo(): AppPosInfo {

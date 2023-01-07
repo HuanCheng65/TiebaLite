@@ -4,6 +4,25 @@ package protos;
 
 option java_package = "com.huanchengfly.tieba.post.api.models.protos";
 
+message PrivateForumInfo {
+  int32 private_forum_status = 1;
+  int32 private_forum_audit_status = 2;
+}
+
+message ThemeElement {
+  string common_color = 1;
+  string dark_color = 2;
+  string light_color = 3;
+  string pattern_image = 4;
+  string font_color = 5;
+}
+
+message ThemeColorInfo {
+  ThemeElement day = 1;
+  ThemeElement night = 2;
+  ThemeElement dark = 3;
+}
+
 message Page {
   int32 page_size = 1;
   int32 offset = 2;
@@ -49,11 +68,11 @@ message Anti {
 }
 
 message AppPosInfo {
-  int64 addr_timestamp = 6;
-  bool ap_connected = 2;
-  string ap_mac = 1;
-  string asp_shown_info = 7;
-  string coordinate_type = 3;
+  optional int64 addr_timestamp = 6;
+  optional bool ap_connected = 2;
+  optional string ap_mac = 1;
+  optional string asp_shown_info = 7;
+  optional string coordinate_type = 3;
 }
 
 message Error {

@@ -17,8 +17,8 @@ import com.huanchengfly.tieba.post.utils.ThemeUtil
 @Composable
 fun Chip(
     text: String,
-    invertColor: Boolean,
-    modifier: Modifier
+    invertColor: Boolean = false,
+    modifier: Modifier = Modifier
 ) {
     Text(
         color = if (invertColor)

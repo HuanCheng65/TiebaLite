@@ -18,7 +18,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.core.content.ContextCompat
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.window.layout.FoldingFeature
+import androidx.window.layout.WindowInfoTracker
 import com.google.accompanist.navigation.material.ExperimentalMaterialNavigationApi
 import com.google.accompanist.systemuicontroller.SystemUiController
 import com.huanchengfly.tieba.post.api.retrofit.exception.getErrorMessage
@@ -27,6 +30,9 @@ import com.huanchengfly.tieba.post.services.NotifyJobService
 import com.huanchengfly.tieba.post.ui.common.theme.compose.ExtendedTheme
 import com.huanchengfly.tieba.post.ui.page.NavGraphs
 import com.huanchengfly.tieba.post.ui.page.destinations.MainPageDestination
+import com.huanchengfly.tieba.post.ui.utils.DevicePosture
+import com.huanchengfly.tieba.post.ui.utils.isBookPosture
+import com.huanchengfly.tieba.post.ui.utils.isSeparating
 import com.huanchengfly.tieba.post.utils.AccountUtil
 import com.huanchengfly.tieba.post.utils.JobServiceUtil
 import com.huanchengfly.tieba.post.utils.PermissionUtils
@@ -39,15 +45,45 @@ import com.ramcosta.composedestinations.animations.rememberAnimatedNavHostEngine
 import com.ramcosta.composedestinations.navigation.dependency
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class MainActivityV2 : BaseComposeActivity() {
     private val handler = Handler(Looper.getMainLooper())
     private val newMessageReceiver: BroadcastReceiver = NewMessageReceiver()
+
+    private val devicePostureFlow: StateFlow<DevicePosture> by lazy {
+        WindowInfoTracker.getOrCreate(this)
+            .windowLayoutInfo(this)
+            .flowWithLifecycle(lifecycle)
+            .map { layoutInfo ->
+                val foldingFeature =
+                    layoutInfo.displayFeatures
+                        .filterIsInstance<FoldingFeature>()
+                        .firstOrNull()
+                when {
+                    isBookPosture(foldingFeature) ->
+                        DevicePosture.BookPosture(foldingFeature.bounds)
+
+                    isSeparating(foldingFeature) ->
+                        DevicePosture.Separating(foldingFeature.bounds, foldingFeature.orientation)
+
+                    else -> DevicePosture.NormalPosture
+                }
+            }
+            .stateIn(
+                scope = lifecycleScope,
+                started = SharingStarted.Eagerly,
+                initialValue = DevicePosture.NormalPosture
+            )
+    }
 
     private fun fetchAccount() {
         lifecycleScope.launch(Dispatchers.Main) {
@@ -142,6 +178,7 @@ class MainActivityV2 : BaseComposeActivity() {
                 engine = engine,
                 dependenciesContainerBuilder = {
                     dependency(MainPageDestination) { this@MainActivityV2 }
+                    dependency(devicePostureFlow)
                 }
             )
         }

@@ -16,6 +16,7 @@ message ThreadInfo {
   string lastTime = 6;
   int32 lastTimeInt = 7;
   int32 threadTypes = 8;
+  int32 isTop = 9;
   int32 isGood = 10;
   User author = 18;
   User lastReplyer = 19;
@@ -30,6 +31,7 @@ message ThreadInfo {
   int32 collectStatus = 50;
   string collectMarkPid = 51;
   int32 isMemberTop = 54;
+  int64 authorId = 56;
   optional VideoInfo videoInfo = 79;
   repeated PbContent richTitle = 111;
   repeated PbContent richAbstract = 112;
@@ -44,6 +46,8 @@ message ThreadInfo {
   SimpleForum forumInfo = 155;
   string tShareImg = 159;
   string nid = 164;
+  int32 tabId = 175;
+  string tabName = 176;
   int32 isDeleted = 181;
   int32 hotNum = 182;
 }

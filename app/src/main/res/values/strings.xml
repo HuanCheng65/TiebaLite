@@ -616,4 +616,12 @@
     <string name="tab_all_hot_thread">总榜</string>
     <string name="hot_num">热度 %s</string>
     <string name="settings_app_icon">应用图标</string>
+    <string name="text_stat_threads">贴子</string>
+    <string name="snackbar_agree_fail">点赞失败(%1$d)：%2$s</string>
+    <string name="button_signed_in">已签%d天</string>
+    <string name="btn_search_in_forum">吧内搜索</string>
+    <string name="btn_more">更多选项</string>
+    <string name="launcher_not_support_pin_shortcut">启动器不支持创建快捷方式</string>
+    <string name="load_shortcut_icon_fail">加载图标失败</string>
+    <string name="sort_menu">排序菜单</string>
 </resources>

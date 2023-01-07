@@ -2,7 +2,7 @@ package com.huanchengfly.tieba.post.ui.page.main.home
 
 import com.huanchengfly.tieba.post.api.TiebaApi
 import com.huanchengfly.tieba.post.api.models.CommonResponse
-import com.huanchengfly.tieba.post.api.models.ForumRecommend
+import com.huanchengfly.tieba.post.api.models.protos.forumRecommend.ForumRecommendResponse
 import com.huanchengfly.tieba.post.api.retrofit.exception.getErrorMessage
 import com.huanchengfly.tieba.post.arch.*
 import com.huanchengfly.tieba.post.models.database.TopForum
@@ -37,9 +37,17 @@ class HomeViewModel : BaseViewModel<HomeUiIntent, HomePartialChange, HomeUiState
         }
 
         private fun produceRefreshPartialChangeFlow() =
-            TiebaApi.getInstance().forumRecommendFlow()
-                .map<ForumRecommend, HomePartialChange.Refresh> { forumRecommend ->
-                    val forums = forumRecommend.likeForum.map { HomeUiState.Forum(it.avatar, it.forumId, it.forumName, it.isSign == "1", it.levelId) }
+            TiebaApi.getInstance().forumRecommendNewFlow()
+                .map<ForumRecommendResponse, HomePartialChange.Refresh> { forumRecommend ->
+                    val forums = forumRecommend.data_?.like_forum?.map {
+                        HomeUiState.Forum(
+                            it.avatar,
+                            it.forum_id.toString(),
+                            it.forum_name,
+                            it.is_sign == 1,
+                            it.level_id.toString()
+                        )
+                    } ?: emptyList()
                     val topForums = mutableListOf<HomeUiState.Forum>()
                     val topForumsDB = LitePal.findAll(TopForum::class.java).map { it.forumId }
                     topForums.addAll(forums.filter { topForumsDB.contains(it.forumId) })

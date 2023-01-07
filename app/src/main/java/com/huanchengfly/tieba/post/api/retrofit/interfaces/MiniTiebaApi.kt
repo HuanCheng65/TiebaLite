@@ -330,12 +330,29 @@ interface MiniTiebaApi {
     ): Call<LikeForumResultBean>
 
     @Headers("${Header.FORCE_LOGIN}: ${Header.FORCE_LOGIN_TRUE}")
+    @POST("/c/c/forum/like")
+    @FormUrlEncoded
+    fun likeForumFlow(
+        @Field("fid") forumId: String,
+        @Field("kw") forumName: String,
+        @Field("tbs") tbs: String? = AccountUtil.getLoginInfo()?.tbs
+    ): Flow<LikeForumResultBean>
+
+    @Headers("${Header.FORCE_LOGIN}: ${Header.FORCE_LOGIN_TRUE}")
     @POST("/c/c/forum/sign")
     @FormUrlEncoded
     fun signAsync(
         @Field("kw") forumName: String,
         @Field("tbs") tbs: String
     ): Deferred<ApiResult<SignResultBean>>
+
+    @Headers("${Header.FORCE_LOGIN}: ${Header.FORCE_LOGIN_TRUE}")
+    @POST("/c/c/forum/sign")
+    @FormUrlEncoded
+    fun signFlow(
+        @Field("kw") forumName: String,
+        @Field("tbs") tbs: String
+    ): Flow<SignResultBean>
 
     @Headers("${Header.FORCE_LOGIN}: ${Header.FORCE_LOGIN_TRUE}")
     @POST("/c/c/bawu/delthread")

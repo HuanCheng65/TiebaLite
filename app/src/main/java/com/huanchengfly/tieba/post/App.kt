@@ -36,7 +36,6 @@ import com.huanchengfly.tieba.post.ui.common.theme.interfaces.ThemeSwitcher
 import com.huanchengfly.tieba.post.ui.common.theme.utils.ThemeUtils
 import com.huanchengfly.tieba.post.utils.AccountUtil
 import com.huanchengfly.tieba.post.utils.AppIconUtil
-import com.huanchengfly.tieba.post.utils.CrashUtil
 import com.huanchengfly.tieba.post.utils.EmoticonManager
 import com.huanchengfly.tieba.post.utils.SharedPreferencesUtil
 import com.huanchengfly.tieba.post.utils.ThemeUtil
@@ -113,11 +112,10 @@ class App : Application(), IApp, IGetter, SketchFactory {
         }
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
         ThemeUtils.init(ThemeDelegate)
-        if (BuildConfig.DEBUG) AppIconUtil.setIcon()
+        AppIconUtil.setIcon()
         registerActivityLifecycleCallbacks(ClipBoardLinkDetector)
         EmoticonManager.init(this)
         PluginManager.init(this)
-        if (BuildConfig.DEBUG) CrashUtil.CrashHandler.getInstance().init(this)
     }
 
     //解决魅族 Flyme 系统夜间模式强制反色

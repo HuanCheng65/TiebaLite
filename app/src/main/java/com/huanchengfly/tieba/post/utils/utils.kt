@@ -16,11 +16,23 @@ import android.view.View
 import androidx.annotation.ColorInt
 import androidx.browser.customtabs.CustomTabColorSchemeParams
 import androidx.browser.customtabs.CustomTabsIntent
+import androidx.core.content.pm.ShortcutInfoCompat
+import androidx.core.content.pm.ShortcutManagerCompat
+import androidx.core.graphics.drawable.IconCompat
+import coil.Coil
+import coil.request.ImageRequest
+import coil.request.SuccessResult
 import com.google.android.material.snackbar.Snackbar
-import com.huanchengfly.tieba.post.*
+import com.huanchengfly.tieba.post.App
+import com.huanchengfly.tieba.post.R
 import com.huanchengfly.tieba.post.activities.ThreadActivity
 import com.huanchengfly.tieba.post.activities.WebViewActivity
 import com.huanchengfly.tieba.post.api.retrofit.exception.TiebaException
+import com.huanchengfly.tieba.post.dataStore
+import com.huanchengfly.tieba.post.dpToPxFloat
+import com.huanchengfly.tieba.post.getBoolean
+import com.huanchengfly.tieba.post.goToActivity
+import com.huanchengfly.tieba.post.toastShort
 import com.huanchengfly.tieba.post.ui.common.theme.utils.ColorStateListUtils
 import com.huanchengfly.tieba.post.ui.common.theme.utils.ThemeUtils
 import com.huanchengfly.tieba.post.utils.Util.createSnackbar
@@ -233,6 +245,7 @@ fun calcStatusBarColorInt(context: Context, @ColorInt originColor: Int): Int {
 
 val Context.powerManager: PowerManager
     get() = getSystemService(Context.POWER_SERVICE) as PowerManager
+
 fun Context.ignoreBatteryOptimization() {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
         if (!powerManager.isIgnoringBatteryOptimizations(packageName)) {
@@ -243,4 +256,41 @@ fun Context.ignoreBatteryOptimization() {
     }
 }
 
-fun Context.isIgnoringBatteryOptimizations(): Boolean = powerManager.isIgnoringBatteryOptimizations(packageName)
+fun Context.isIgnoringBatteryOptimizations(): Boolean =
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+        powerManager.isIgnoringBatteryOptimizations(packageName)
+    } else {
+        true
+    }
+
+suspend fun requestPinShortcut(
+    context: Context,
+    shortcutId: String,
+    iconImageUri: String,
+    label: String,
+    shortcutIntent: Intent,
+    onSuccess: () -> Unit = {},
+    onFailure: (String) -> Unit = {}
+) {
+    if (ShortcutManagerCompat.isRequestPinShortcutSupported(context)) {
+        val request = ImageRequest.Builder(context)
+            .data(iconImageUri)
+            .allowHardware(false)
+            .build()
+        val imageResult = Coil.imageLoader(context)
+            .execute(request)
+        if (imageResult is SuccessResult) {
+            val shortcutInfo = ShortcutInfoCompat.Builder(context, shortcutId)
+                .setIcon(IconCompat.createWithBitmap(ImageUtil.drawableToBitmap(imageResult.drawable)))
+                .setIntent(shortcutIntent)
+                .setShortLabel(label)
+                .build()
+            val result = ShortcutManagerCompat.requestPinShortcut(context, shortcutInfo, null)
+            if (result) onSuccess() else onFailure(context.getString(R.string.launcher_not_support_pin_shortcut))
+        } else {
+            onFailure(context.getString(R.string.load_shortcut_icon_fail))
+        }
+    } else {
+        onFailure(context.getString(R.string.launcher_not_support_pin_shortcut))
+    }
+}

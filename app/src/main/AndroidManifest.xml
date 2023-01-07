@@ -154,6 +154,14 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
 
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data
+                    android:host="forum"
+                    android:scheme="tblite" />
+            </intent-filter>
+
             <meta-data
                 android:name="android.app.shortcuts"
                 android:resource="@xml/shortcut" />
@@ -161,7 +169,6 @@
 
         <activity-alias
             android:name=".MainActivityIconInvert"
-            android:enabled="false"
             android:exported="true"
             android:icon="@mipmap/ic_launcher_new_invert"
             android:roundIcon="@mipmap/ic_launcher_new_invert_round"

@@ -17,9 +17,9 @@ message CommonRequest {
   string c3_aid = 35;
   string cuid = 7;
   string cuid_galaxy2 = 32;
-  string cuid_gid = 33;
+  optional string cuid_gid = 33;
   string from = 6;
-  int32 is_teenager = 41;
+  optional int32 is_teenager = 41;
   string lego_lib_version = 28;
   string model = 9;
   string net_type = 12;

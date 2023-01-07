@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.text.InlineTextContent
 import androidx.compose.material.LocalTextStyle
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.*
@@ -104,23 +105,32 @@ object EmoticonManager {
         val textMeasurer = rememberTextMeasurer()
         val textLayoutResult = textMeasurer.measure(AnnotatedString("表情"), style)
         val heightPx = textLayoutResult.size.height
-        return emoticonIds.associate { id ->
-            "Emoticon#$id" to InlineTextContent(
-                placeholder = Placeholder(heightPx.pxToSp().sp, heightPx.pxToSp().sp, PlaceholderVerticalAlign.TextCenter),
-                children = {
-                    Image(
-                        painter = rememberDrawablePainter(
-                            drawable = getEmoticonDrawable(
-                                LocalContext.current,
-                                id
-                            )
-                        ),
-                        contentDescription = null,
-                        modifier = Modifier.size(heightPx.pxToDp().dp)
-                    )
-                }
-            )
+
+        val inlineContent = remember(key1 = style) {
+            emoticonIds.associate { id ->
+                "Emoticon#$id" to InlineTextContent(
+                    placeholder = Placeholder(
+                        heightPx.pxToSp().sp,
+                        heightPx.pxToSp().sp,
+                        PlaceholderVerticalAlign.TextCenter
+                    ),
+                    children = {
+                        Image(
+                            painter = rememberDrawablePainter(
+                                drawable = getEmoticonDrawable(
+                                    LocalContext.current,
+                                    id
+                                )
+                            ),
+                            contentDescription = null,
+                            modifier = Modifier.size(heightPx.pxToDp().dp)
+                        )
+                    }
+                )
+            }
         }
+
+        return inlineContent
     }
 
     fun init(context: Context) {

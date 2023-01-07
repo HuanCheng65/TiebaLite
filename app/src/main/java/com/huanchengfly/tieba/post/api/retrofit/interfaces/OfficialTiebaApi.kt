@@ -6,7 +6,6 @@ import com.huanchengfly.tieba.post.api.Param
 import com.huanchengfly.tieba.post.api.getScreenHeight
 import com.huanchengfly.tieba.post.api.getScreenWidth
 import com.huanchengfly.tieba.post.api.models.*
-import com.huanchengfly.tieba.post.api.models.protos.personalized.PersonalizedResponse
 import com.huanchengfly.tieba.post.api.retrofit.ApiResult
 import com.huanchengfly.tieba.post.api.retrofit.body.MyMultipartBody
 import com.huanchengfly.tieba.post.utils.AccountUtil
@@ -279,12 +278,37 @@ interface OfficialTiebaApi {
     ): Flow<PersonalizedBean>
 
     @Headers(
-        "x_bd_data_type: protobuf"
+        "${Header.FORCE_LOGIN}: ${Header.FORCE_LOGIN_TRUE}",
+        "${Header.COOKIE}: ka=open",
+        "${Header.DROP_HEADERS}: ${Header.CHARSET},${Header.CLIENT_TYPE}",
+        "${Header.NO_COMMON_PARAMS}: ${Param.OAID}",
     )
-    @POST("/c/f/excellent/personalized?cmd=309264")
-    fun personalizedProtoFlow(
-        @Body body: MyMultipartBody,
+    @POST("/c/c/forum/sign")
+    @FormUrlEncoded
+    fun signFlow(
+        @Field("fid") forumId: String,
+        @Field("kw") forumName: String,
+        @Field("tbs") tbs: String,
         @retrofit2.http.Header("client_user_token") client_user_token: String? = AccountUtil.getUid(),
-        @retrofit2.http.Header(Header.USER_AGENT) user_agent: String = "bdtb for Android 11.10.8.6",
-    ): Flow<PersonalizedResponse>
+        @Field("_client_version") client_version: String = "11.10.8.6",
+        @retrofit2.http.Header(Header.USER_AGENT) user_agent: String = "bdtb for Android $client_version",
+    ): Flow<SignResultBean>
+
+    @POST("/c/c/forum/unfavolike")
+    @FormUrlEncoded
+    @Headers(
+        "${Header.FORCE_LOGIN}: ${Header.FORCE_LOGIN_TRUE}",
+        "${Header.COOKIE}: ka=open",
+        "${Header.DROP_HEADERS}: ${Header.CHARSET},${Header.CLIENT_TYPE}",
+        "${Header.NO_COMMON_PARAMS}: ${Param.OAID}",
+    )
+    fun unfavolike(
+        @Field("fid") forumId: String,
+        @Field("kw") forumName: String,
+        @Field("tbs") tbs: String,
+        @retrofit2.http.Header("client_user_token") client_user_token: String? = AccountUtil.getUid(),
+        @Field("_client_version") client_version: String = "11.10.8.6",
+        @retrofit2.http.Header(Header.USER_AGENT) user_agent: String = "bdtb for Android $client_version",
+        @Field("stoken") stoken: String? = AccountUtil.getSToken(),
+    ): Flow<CommonResponse>
 }

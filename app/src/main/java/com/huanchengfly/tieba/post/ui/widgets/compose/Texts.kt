@@ -6,6 +6,7 @@ import androidx.compose.material.LocalContentColor
 import androidx.compose.material.LocalTextStyle
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.takeOrElse
@@ -42,8 +43,10 @@ fun EmoticonText(
     onTextLayout: (TextLayoutResult) -> Unit = {},
     style: TextStyle = LocalTextStyle.current,
 ) {
+    val emoticonString = remember(key1 = text) { text.emoticonString }
+
     EmoticonText(
-        text.emoticonString,
+        emoticonString,
         modifier,
         color,
         fontSize,

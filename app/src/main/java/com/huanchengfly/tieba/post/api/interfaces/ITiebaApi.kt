@@ -4,9 +4,11 @@ import com.huanchengfly.tieba.post.api.ForumSortType
 import com.huanchengfly.tieba.post.api.SearchThreadFilter
 import com.huanchengfly.tieba.post.api.SearchThreadOrder
 import com.huanchengfly.tieba.post.api.models.*
+import com.huanchengfly.tieba.post.api.models.protos.forumRecommend.ForumRecommendResponse
 import com.huanchengfly.tieba.post.api.models.protos.frsPage.FrsPageResponse
 import com.huanchengfly.tieba.post.api.models.protos.hotThreadList.HotThreadListResponse
 import com.huanchengfly.tieba.post.api.models.protos.personalized.PersonalizedResponse
+import com.huanchengfly.tieba.post.api.models.protos.threadList.ThreadListResponse
 import com.huanchengfly.tieba.post.api.models.protos.topicList.TopicListResponse
 import com.huanchengfly.tieba.post.api.models.protos.userLike.UserLikeResponse
 import com.huanchengfly.tieba.post.api.models.web.ForumBean
@@ -342,6 +344,21 @@ interface ITiebaApi {
     ): Call<LikeForumResultBean>
 
     /**
+     * 关注一个吧
+     *
+     * **需登录**
+     *
+     * @param forumId 吧 ID
+     * @param forumName 吧名
+     * @param tbs tbs（长）
+     */
+    fun likeForumFlow(
+        forumId: String,
+        forumName: String,
+        tbs: String
+    ): Flow<LikeForumResultBean>
+
+    /**
      * 吧签到
      *
      * **需登录**
@@ -353,6 +370,21 @@ interface ITiebaApi {
         forumName: String,
         tbs: String
     ): Deferred<ApiResult<SignResultBean>>
+
+    /**
+     * 吧签到
+     *
+     * **需登录**
+     *
+     * @param forumId 吧 ID
+     * @param forumName 吧名
+     * @param tbs tbs
+     */
+    fun signFlow(
+        forumId: String,
+        forumName: String,
+        tbs: String
+    ): Flow<SignResultBean>
 
     /**
      * 删除自己的贴子
@@ -1091,13 +1123,46 @@ interface ITiebaApi {
     fun topicListFlow(): Flow<TopicListResponse>
 
     /**
+     * 关注吧列表
+     *
+     * **需登录**
+     *
+     * @param sortType 排序（0=更新排序 1=等级排序）
+     */
+    fun forumRecommendNewFlow(
+        sortType: Int = 1
+    ): Flow<ForumRecommendResponse>
+
+    /**
      * 吧页面
      *
      * @param forumName 吧名
+     * @param page 页码（从 1 开始）
+     * @param loadType 加载类型（1 - 下拉刷新 2 - 加载更多）
+     * @param sortType 排序
      * @param goodClassifyId 精品贴分类
      */
     fun frsPage(
         forumName: String,
-        goodClassifyId: Int? = 0
+        page: Int,
+        loadType: Int,
+        sortType: Int,
+        goodClassifyId: Int? = null
     ): Flow<FrsPageResponse>
+
+    /**
+     * 吧页面 - 贴子列表
+     *
+     * @param forumId 吧 ID
+     * @param forumName 吧名
+     * @param page 页码（从 1 开始）
+     * @param sortType 排序
+     */
+    fun threadList(
+        forumId: Long,
+        forumName: String,
+        page: Int,
+        sortType: Int,
+        threadIds: String = "",
+    ): Flow<ThreadListResponse>
 }

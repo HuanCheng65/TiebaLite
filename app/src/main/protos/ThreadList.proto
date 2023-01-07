@@ -1,0 +1,46 @@
+syntax = "proto3";
+
+package protos;
+
+option java_package = "com.huanchengfly.tieba.post.api.models.protos.threadList";
+
+import "Common.proto";
+import "CommonRequest.proto";
+import "ThreadInfo.proto";
+import "FrsPage.proto";
+
+message ThreadListRequestData {
+  optional string ad_context_list = 19;
+  AdParam ad_param = 18;
+  AppPosInfo app_pos = 17;
+  CommonRequest common = 8;
+  uint64 forum_id = 2;
+  string forum_name = 14;
+  optional uint64 last_click_tid = 15;
+  optional uint32 need_abstract = 3;
+  int32 pn = 13;
+  uint32 q_type = 7;
+  double scr_dip = 12;
+  uint32 scr_h = 6;
+  uint32 scr_w = 5;
+  optional int32 sort_type = 16;
+  optional uint32 st_type = 4;
+  string thread_ids = 1;
+  optional int64 user_id = 9;
+  optional string da_idfa = 10;
+  string platform = 11;
+}
+
+message ThreadListRequest {
+  ThreadListRequestData data = 1;
+}
+
+message ThreadListResponseData {
+  repeated ThreadInfo thread_list = 1;
+  repeated User user_list = 2;
+}
+
+message ThreadListResponse {
+  Error error = 1;
+  ThreadListResponseData data = 2;
+}

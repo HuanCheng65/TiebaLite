@@ -1,5 +1,6 @@
 package com.huanchengfly.tieba.post.arch
 
+import android.annotation.SuppressLint
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.State
@@ -7,6 +8,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.*
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.*
@@ -21,20 +23,49 @@ fun <T> Flow<T>.collectIn(
     flowWithLifecycle(lifecycleOwner.lifecycle, minActiveState).collect(action)
 }
 
+@SuppressLint("FlowOperatorInvokedInComposition")
 @Composable
 fun <T : UiState, A> Flow<T>.collectPartialAsState(
     prop1: KProperty1<T, A>,
     initial: A,
-) : State<A> {
+): State<A> {
     return map { prop1.get(it) }
         .distinctUntilChanged()
         .collectAsState(initial = initial)
 }
 
+inline fun <reified Event : UiEvent> CoroutineScope.onEvent(
+    viewModel: BaseViewModel<*, *, *, *>,
+    noinline listener: suspend (Event) -> Unit
+) {
+    launch {
+        viewModel.uiEventFlow
+            .filterIsInstance<Event>()
+            .collect {
+                launch {
+                    listener(it)
+                }
+            }
+    }
+}
+
 @Composable
-inline fun <INTENT: UiIntent, reified VM : BaseViewModel<INTENT, *, *, *>> pageViewModel(
+inline fun <reified VM : BaseViewModel<*, *, *, *>> pageViewModel(): VM {
+    return hiltViewModel<VM>().apply {
+        val context = LocalContext.current
+        if (context is BaseComposeActivity) {
+            uiEventFlow.filterIsInstance<CommonUiEvent>()
+                .collectIn(context) {
+                    context.handleCommonEvent(it)
+                }
+        }
+    }
+}
+
+@Composable
+inline fun <INTENT : UiIntent, reified VM : BaseViewModel<INTENT, *, *, *>> pageViewModel(
     initialIntent: List<INTENT> = emptyList(),
-) : VM {
+): VM {
     return hiltViewModel<VM>().apply {
         val context = LocalContext.current
         if (context is BaseComposeActivity) {

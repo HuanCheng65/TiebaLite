@@ -6,6 +6,7 @@ import com.huanchengfly.tieba.post.api.models.AgreeBean
 import com.huanchengfly.tieba.post.api.models.protos.userLike.ConcernData
 import com.huanchengfly.tieba.post.api.models.protos.userLike.UserLikeResponse
 import com.huanchengfly.tieba.post.api.retrofit.exception.getErrorMessage
+import com.huanchengfly.tieba.post.api.updateAgreeStatus
 import com.huanchengfly.tieba.post.arch.BaseViewModel
 import com.huanchengfly.tieba.post.arch.CommonUiEvent
 import com.huanchengfly.tieba.post.arch.PartialChange
@@ -110,35 +111,7 @@ sealed interface ConcernPartialChange : PartialChange<ConcernUiState> {
                 if (threadInfo == null) it
                 else it.copy(
                     threadList = if (threadInfo.threadId == threadId) {
-                        if (threadInfo.agree != null) {
-                            if (hasAgree != threadInfo.agree.hasAgree) {
-                                if (hasAgree == 1) {
-                                    threadInfo.copy(
-                                        agreeNum = threadInfo.agreeNum + 1,
-                                        agree = threadInfo.agree.copy(
-                                            agreeNum = threadInfo.agree.agreeNum + 1,
-                                            diffAgreeNum = threadInfo.agree.diffAgreeNum + 1,
-                                            hasAgree = 1
-                                        )
-                                    )
-                                } else {
-                                    threadInfo.copy(
-                                        agreeNum = threadInfo.agreeNum - 1,
-                                        agree = threadInfo.agree.copy(
-                                            agreeNum = threadInfo.agree.agreeNum - 1,
-                                            diffAgreeNum = threadInfo.agree.diffAgreeNum - 1,
-                                            hasAgree = 0
-                                        )
-                                    )
-                                }
-                            } else {
-                                threadInfo
-                            }
-                        } else {
-                            threadInfo.copy(
-                                agreeNum = if (hasAgree == 1) threadInfo.agreeNum + 1 else threadInfo.agreeNum - 1
-                            )
-                        }
+                        threadInfo.updateAgreeStatus(hasAgree)
                     } else {
                         threadInfo
                     }

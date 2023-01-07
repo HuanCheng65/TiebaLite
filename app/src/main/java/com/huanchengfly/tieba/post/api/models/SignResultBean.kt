@@ -17,6 +17,8 @@ data class SignResultBean(
         val userId: String? = null,
         @SerializedName("is_sign_in")
         val isSignIn: String? = null,
+        @SerializedName("cont_sign_num")
+        val contSignNum: String? = null,
         @SerializedName("user_sign_rank")
         val userSignRank: String? = null,
         @SerializedName("sign_time")
@@ -26,6 +28,14 @@ data class SignResultBean(
         @SerializedName("level_name")
         val levelName: String? = null,
         @SerializedName("levelup_score")
-        val levelUpScore: String? = null
-    ) : BaseBean()
+        val levelUpScore: String? = null,
+        @SerializedName("all_level_info")
+        val allLevelInfo: List<AllLevelInfo> = emptyList()
+    ) : BaseBean() {
+        data class AllLevelInfo(
+            val id: String,
+            val name: String,
+            val score: String
+        )
+    }
 }

@@ -38,7 +38,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -107,13 +106,15 @@ fun PersonalizedPage(
     var showRefreshTip by remember {
         mutableStateOf(false)
     }
-    rememberCoroutineScope().launch {
-        viewModel.uiEventFlow
-            .filterIsInstance<PersonalizedUiEvent.RefreshSuccess>()
-            .collect {
-                refreshCount = it.count
-                showRefreshTip = true
-            }
+    LaunchedEffect(Unit) {
+        launch {
+            viewModel.uiEventFlow
+                .filterIsInstance<PersonalizedUiEvent.RefreshSuccess>()
+                .collect {
+                    refreshCount = it.count
+                    showRefreshTip = true
+                }
+        }
     }
     if (showRefreshTip) {
         LaunchedEffect(Unit) {

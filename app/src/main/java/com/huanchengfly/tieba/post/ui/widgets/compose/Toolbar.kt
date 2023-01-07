@@ -238,7 +238,32 @@ fun Toolbar(
     title: String,
     navigationIcon: @Composable (() -> Unit)? = null,
     actions: @Composable RowScope.() -> Unit = {},
-    content: @Composable ColumnScope.() -> Unit = {}
+    content: @Composable (ColumnScope.() -> Unit)? = null
+) {
+    TopAppBarContainer(
+        topBar = {
+            TopAppBar(
+                title = {
+                    ProvideContentColor(color = ExtendedTheme.colors.onTopBar) {
+                        Text(text = title, fontWeight = FontWeight.Bold)
+                    }
+                },
+                actions = actions,
+                navigationIcon = navigationIcon,
+                backgroundColor = ExtendedTheme.colors.topBar,
+                contentColor = ExtendedTheme.colors.onTopBar,
+                elevation = 0.dp
+            )
+        },
+        content = content
+    )
+}
+
+
+@Composable
+fun TopAppBarContainer(
+    topBar: @Composable ColumnScope.() -> Unit,
+    content: @Composable (ColumnScope.() -> Unit)? = null
 ) {
     Column {
         Spacer(
@@ -247,24 +272,15 @@ fun Toolbar(
                 .fillMaxWidth()
                 .background(color = ExtendedTheme.colors.topBar.calcStatusBarColor())
         )
-        TopAppBar(
-            title = {
-                ProvideContentColor(color = ExtendedTheme.colors.onTopBar) {
-                    Text(text = title, fontWeight = FontWeight.Bold)
-                }
-            },
-            actions = actions,
-            navigationIcon = navigationIcon,
-            backgroundColor = ExtendedTheme.colors.topBar,
-            contentColor = ExtendedTheme.colors.onTopBar,
-            elevation = 0.dp
-        )
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .background(color = ExtendedTheme.colors.topBar),
-        ) {
-            content()
+        topBar()
+        if (content != null) {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(color = ExtendedTheme.colors.topBar),
+            ) {
+                content()
+            }
         }
     }
 }

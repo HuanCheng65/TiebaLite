@@ -1,8 +1,10 @@
 package com.huanchengfly.tieba.post.api.retrofit.interfaces
 
+import com.huanchengfly.tieba.post.api.models.protos.forumRecommend.ForumRecommendResponse
 import com.huanchengfly.tieba.post.api.models.protos.frsPage.FrsPageResponse
 import com.huanchengfly.tieba.post.api.models.protos.hotThreadList.HotThreadListResponse
 import com.huanchengfly.tieba.post.api.models.protos.personalized.PersonalizedResponse
+import com.huanchengfly.tieba.post.api.models.protos.threadList.ThreadListResponse
 import com.huanchengfly.tieba.post.api.models.protos.topicList.TopicListResponse
 import com.huanchengfly.tieba.post.api.models.protos.userLike.UserLikeResponse
 import com.huanchengfly.tieba.post.api.retrofit.body.MyMultipartBody
@@ -31,8 +33,18 @@ interface OfficialProtobufTiebaApi {
         @Body body: MyMultipartBody,
     ): Flow<TopicListResponse>
 
+    @POST("/c/f/forum/forumrecommend?cmd=303011")
+    fun forumRecommendFlow(
+        @Body body: MyMultipartBody,
+    ): Flow<ForumRecommendResponse>
+
     @POST("/c/f/frs/page?cmd=301001")
     fun frsPageFlow(
         @Body body: MyMultipartBody,
     ): Flow<FrsPageResponse>
+
+    @POST("/c/f/frs/threadlist?cmd=301002")
+    fun threadListFlow(
+        @Body body: MyMultipartBody,
+    ): Flow<ThreadListResponse>
 }
