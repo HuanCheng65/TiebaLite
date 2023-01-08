@@ -31,6 +31,7 @@ import androidx.core.content.pm.ShortcutInfoCompat
 import androidx.core.content.pm.ShortcutManagerCompat
 import androidx.core.graphics.drawable.IconCompat
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.flowWithLifecycle
 import butterknife.BindView
 import cn.jzvd.Jzvd
 import com.bumptech.glide.Glide
@@ -51,8 +52,7 @@ import com.huanchengfly.tieba.post.api.TiebaApi
 import com.huanchengfly.tieba.post.api.models.CommonResponse
 import com.huanchengfly.tieba.post.api.models.ForumPageBean
 import com.huanchengfly.tieba.post.api.models.LikeForumResultBean
-import com.huanchengfly.tieba.post.api.retrofit.doIfFailure
-import com.huanchengfly.tieba.post.api.retrofit.doIfSuccess
+import com.huanchengfly.tieba.post.api.retrofit.exception.getErrorMessage
 import com.huanchengfly.tieba.post.fragments.ForumFragment
 import com.huanchengfly.tieba.post.fragments.ForumFragment.OnRefreshedListener
 import com.huanchengfly.tieba.post.interfaces.Refreshable
@@ -72,6 +72,9 @@ import com.huanchengfly.tieba.post.utils.StringUtil.getShortNumString
 import com.huanchengfly.tieba.post.utils.anim.animSet
 import com.huanchengfly.tieba.post.utils.preload.PreloadUtil
 import kotlinx.coroutines.Dispatchers.IO
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
@@ -539,35 +542,39 @@ class ForumActivity : BaseActivity(), View.OnClickListener, OnRefreshedListener,
                     }
                 }
             }
+
             R.id.toolbar -> scrollToTop()
-            R.id.forum_header_button, R.id.toolbar_btn_right -> if (mDataBean != null) {
-                if ("1" == mDataBean!!.forum?.isLike) {
-                    if ("0" == mDataBean!!.forum?.signInInfo?.userInfo?.isSignIn) {
-                        launch(IO + job) {
+            R.id.forum_header_button, R.id.toolbar_btn_right -> {
+                val forum = mDataBean?.forum
+                val tbs = mDataBean?.anti?.tbs ?: AccountUtil.getLoginInfo()?.tbs
+                if ("1" == forum?.isLike) {
+                    if (tbs != null && forum.id != null && forum.name != null && "0" == forum.signInInfo?.userInfo?.isSignIn) {
+                        launch {
                             TiebaApi.getInstance()
-                                .signAsync(mDataBean!!.forum?.name!!, mDataBean!!.anti?.tbs!!)
-                                .doIfSuccess {
-                                    if (it.userInfo != null) {
-                                        mDataBean!!.forum?.signInInfo?.userInfo?.isSignIn = "1"
-                                        Util.createSnackbar(
-                                            myViewPager,
-                                            getString(
-                                                R.string.toast_sign_success,
-                                                it.userInfo.signBonusPoint,
-                                                it.userInfo.userSignRank
-                                            ),
-                                            Snackbar.LENGTH_SHORT
-                                        ).show()
-                                        refreshHeaderView()
-                                        refreshForumInfo()
-                                    }
-                                }
-                                .doIfFailure {
+                                .signFlow(forum.id, forum.name, tbs)
+                                .catch {
                                     Util.createSnackbar(
                                         myViewPager,
-                                        getString(R.string.toast_sign_failed, it.message),
+                                        getString(R.string.toast_sign_failed, it.getErrorMessage()),
                                         Snackbar.LENGTH_SHORT
                                     ).show()
+                                }
+                                .flowOn(IO)
+                                .flowWithLifecycle(lifecycle)
+                                .mapNotNull { it.userInfo }
+                                .collect {
+                                    mDataBean!!.forum?.signInInfo?.userInfo?.isSignIn = "1"
+                                    Util.createSnackbar(
+                                        myViewPager,
+                                        getString(
+                                            R.string.toast_sign_success,
+                                            it.signBonusPoint,
+                                            it.userSignRank
+                                        ),
+                                        Snackbar.LENGTH_SHORT
+                                    ).show()
+                                    refreshHeaderView()
+                                    refreshForumInfo()
                                 }
                         }
                     }
@@ -597,7 +604,7 @@ class ForumActivity : BaseActivity(), View.OnClickListener, OnRefreshedListener,
                                     this@ForumActivity,
                                     getString(
                                         R.string.toast_like_success,
-                                        data.info?.memberSum
+                                        data.info.memberSum
                                     ),
                                     Toast.LENGTH_SHORT
                                 ).show()

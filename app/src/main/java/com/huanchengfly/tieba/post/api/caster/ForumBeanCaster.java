@@ -89,29 +89,30 @@ public class ForumBeanCaster extends ICaster<ForumBean, ForumPageBean> {
     private static class FrsForumBeanImpl extends ICaster<ForumBean.FrsForumBean, ForumPageBean.ForumBean> {
         @Override
         public ForumPageBean.ForumBean cast(ForumBean.FrsForumBean frsForumBean) {
-            ForumPageBean.ForumBean forumBean = new ForumPageBean.ForumBean();
-            forumBean.setAvatar(frsForumBean.getAvatar());
-            forumBean.setCurScore(frsForumBean.getCurScore());
-            forumBean.setGoodClassify(frsForumBean.getGoodClassify());
-            forumBean.setId(frsForumBean.getId());
-            forumBean.setIsExists(frsForumBean.isExists() ? "1" : "0");
-            forumBean.setIsLike(frsForumBean.getIsLike());
-            forumBean.setLevelId(frsForumBean.getLevelId());
-            forumBean.setLevelName(frsForumBean.getLevelName());
-            forumBean.setLevelUpScore(frsForumBean.getLevelUpScore());
-            forumBean.setName(frsForumBean.getName());
-            forumBean.setSignInInfo(frsForumBean.getSignInInfo());
-            forumBean.setTids(frsForumBean.getTids());
-            forumBean.setSlogan(frsForumBean.getSlogan());
-            forumBean.setUserLevel(frsForumBean.getUserLevel());
-            forumBean.setMemberNum(frsForumBean.getMemberNum());
-            forumBean.setPostNum(frsForumBean.getPostNum());
-            forumBean.setThreadNum(frsForumBean.getThreadNum());
-            forumBean.setManagers(frsForumBean.getManagers());
-            forumBean.setZyqTitle(frsForumBean.getAttrs().getZyqTitle());
-            forumBean.setZyqDefine(frsForumBean.getAttrs().getZyqDefine());
-            forumBean.setZyqFriend(frsForumBean.getAttrs().getZyqFriend());
-            return forumBean;
+            return new ForumPageBean.ForumBean(
+                    frsForumBean.getId(),
+                    frsForumBean.getName(),
+                    frsForumBean.getIsLike(),
+                    frsForumBean.getUserLevel(),
+                    frsForumBean.getLevelId(),
+                    frsForumBean.getLevelName(),
+                    frsForumBean.isExists() ? "1" : "0",
+                    frsForumBean.getCurScore(),
+                    frsForumBean.getLevelUpScore(),
+                    frsForumBean.getMemberNum(),
+                    frsForumBean.getThreadNum(),
+                    null,
+                    frsForumBean.getPostNum(),
+                    frsForumBean.getManagers(),
+                    frsForumBean.getAttrs().getZyqTitle(),
+                    frsForumBean.getAttrs().getZyqDefine(),
+                    frsForumBean.getAttrs().getZyqFriend(),
+                    frsForumBean.getGoodClassify(),
+                    frsForumBean.getSlogan(),
+                    frsForumBean.getAvatar(),
+                    frsForumBean.getTids(),
+                    frsForumBean.getSignInInfo()
+            );
         }
     }
 

@@ -5,9 +5,6 @@ import android.util.Log
 import com.huanchengfly.tieba.post.api.TiebaApi
 import com.huanchengfly.tieba.post.api.models.MSignBean
 import com.huanchengfly.tieba.post.api.models.SignResultBean
-import com.huanchengfly.tieba.post.api.retrofit.ApiResult
-import com.huanchengfly.tieba.post.api.retrofit.doIfFailure
-import com.huanchengfly.tieba.post.api.retrofit.doIfSuccess
 import com.huanchengfly.tieba.post.api.retrofit.exception.getErrorCode
 import com.huanchengfly.tieba.post.api.retrofit.exception.getErrorMessage
 import com.huanchengfly.tieba.post.models.SignDataBean
@@ -31,10 +28,9 @@ abstract class IOKSigner(
 
     abstract suspend fun start(): Boolean
 
-    suspend fun sign(signDataBean: SignDataBean): ApiResult<SignResultBean> {
+    fun signFlow(signDataBean: SignDataBean): Flow<SignResultBean> {
         return TiebaApi.getInstance()
-            .signAsync(signDataBean.forumName, signDataBean.tbs)
-            .await()
+            .signFlow(signDataBean.forumId, signDataBean.forumName, signDataBean.tbs)
     }
 
     fun getSignDelay(): Long {
@@ -153,11 +149,12 @@ class SingleAccountSigner(
                         .map { it.info }
                 } else {
                     flow { emit(emptyList()) }
-                }).onStart {
-                    withContext(Dispatchers.Main) {
-                        mProgressListener?.onStart(totalCount)
+                })
+                    .onStart {
+                        withContext(Dispatchers.Main) {
+                            mProgressListener?.onStart(totalCount)
+                        }
                     }
-                }
                     .catch { emit(emptyList()) }
             }
             .flattenConcat()
@@ -197,29 +194,19 @@ class SingleAccountSigner(
                         }
                         result = true
                     }
-                    .map { data -> sign(data) }
+                    .flatMapConcat { signFlow(it) }
             }
-            /*
-            .flatMapConcat { forumRecommend ->
-                signData.addAll(forumRecommend.likeForum.filter { it.isSign != "1" }
-                    .map { SignDataBean(it.forumName, userName, tbs) })
-                totalCount = signData.size
-                signData
-                    .asFlow()
-                    .onEach {
-                        position = signData.indexOf(it)
-                        mProgressListener?.onProgressStart(it, position, signData.size)
-                    }
-                    .onEmpty {
-                        mProgressListener?.onFinish(true, 0, 0)
-                    }
-                    .onStart {
-                        mProgressListener?.onStart(totalCount)
-                    }
-                    .map { data -> sign(data) }
+            .catch { e ->
+                result = false
+                lastFailure = e
+                mProgressListener?.onFailure(
+                    position,
+                    totalCount,
+                    e.getErrorCode(),
+                    e.getErrorMessage()
+                )
+                delay(getSignDelay())
             }
-            */
-            .catch { e -> emit(ApiResult.Failure(e)) }
             .onCompletion {
                 withContext(Dispatchers.Main) {
                     mProgressListener?.onFinish(
@@ -230,25 +217,14 @@ class SingleAccountSigner(
                 }
             }
             .collect {
-                it.doIfSuccess { res ->
-                    result = true
-                    successCount += 1
-                    mProgressListener?.onProgressFinish(
-                        signData[position],
-                        res,
-                        position,
-                        totalCount
-                    )
-                }.doIfFailure { e ->
-                    result = false
-                    lastFailure = e
-                    mProgressListener?.onFailure(
-                        position,
-                        totalCount,
-                        e.getErrorCode(),
-                        e.getErrorMessage()
-                    )
-                }
+                result = true
+                successCount += 1
+                mProgressListener?.onProgressFinish(
+                    signData[position],
+                    it,
+                    position,
+                    totalCount
+                )
                 delay(getSignDelay())
             }
         return result
