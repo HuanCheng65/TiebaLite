@@ -21,6 +21,7 @@ import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.rememberPagerState
 import com.huanchengfly.tieba.post.R
 import com.huanchengfly.tieba.post.ui.common.theme.compose.ExtendedTheme
+import com.huanchengfly.tieba.post.ui.page.ProvideNavigator
 import com.huanchengfly.tieba.post.ui.page.history.list.HistoryListPage
 import com.huanchengfly.tieba.post.ui.widgets.compose.BackNavigationIcon
 import com.huanchengfly.tieba.post.ui.widgets.compose.MyScaffold
@@ -113,6 +114,7 @@ fun HistoryPage(
             }
         }
     ) {
+        ProvideNavigator(navigator = navigator) {
         HorizontalPager(
             count = 2,
             state = pagerState,
@@ -124,6 +126,7 @@ fun HistoryPage(
                 HistoryListPage(type = HistoryUtil.TYPE_THREAD)
             } else {
                 HistoryListPage(type = HistoryUtil.TYPE_FORUM)
+            }
             }
         }
     }

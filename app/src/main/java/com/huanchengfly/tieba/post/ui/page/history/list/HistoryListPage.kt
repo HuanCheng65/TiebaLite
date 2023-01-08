@@ -30,6 +30,8 @@ import com.huanchengfly.tieba.post.fromJson
 import com.huanchengfly.tieba.post.models.ThreadHistoryInfoBean
 import com.huanchengfly.tieba.post.models.database.History
 import com.huanchengfly.tieba.post.ui.common.theme.compose.ExtendedTheme
+import com.huanchengfly.tieba.post.ui.page.LocalNavigator
+import com.huanchengfly.tieba.post.ui.page.destinations.ForumPageDestination
 import com.huanchengfly.tieba.post.ui.widgets.Chip
 import com.huanchengfly.tieba.post.ui.widgets.compose.Avatar
 import com.huanchengfly.tieba.post.ui.widgets.compose.LazyLoad
@@ -74,6 +76,7 @@ fun HistoryListPage(
     )
 
     val context = LocalContext.current
+    val navigator = LocalNavigator.current
     val snackbarHostState = LocalSnackbarHostState.current
     LaunchedEffect(null) {
         onEvent<HistoryListUiEvent.Delete.Failure>(viewModel) {
@@ -123,10 +126,9 @@ fun HistoryListPage(
                             },
                             onClick = {
                                 when (it.type) {
-                                    HistoryUtil.TYPE_FORUM -> ForumActivity.launch(
-                                        context,
-                                        it.data
-                                    )
+                                    HistoryUtil.TYPE_FORUM -> {
+                                        navigator.navigate(ForumPageDestination(it.data))
+                                    }
 
                                     HistoryUtil.TYPE_THREAD -> {
                                         val extra =
