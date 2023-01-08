@@ -47,7 +47,6 @@ import androidx.compose.ui.unit.sp
 import com.google.accompanist.placeholder.placeholder
 import com.huanchengfly.tieba.post.R
 import com.huanchengfly.tieba.post.activities.AppThemeActivity
-import com.huanchengfly.tieba.post.activities.HistoryActivity
 import com.huanchengfly.tieba.post.activities.UserActivity
 import com.huanchengfly.tieba.post.activities.WebViewActivity
 import com.huanchengfly.tieba.post.arch.collectPartialAsState
@@ -57,6 +56,7 @@ import com.huanchengfly.tieba.post.models.database.Account
 import com.huanchengfly.tieba.post.ui.common.theme.compose.ExtendedTheme
 import com.huanchengfly.tieba.post.ui.page.LocalNavigator
 import com.huanchengfly.tieba.post.ui.page.destinations.AboutPageDestination
+import com.huanchengfly.tieba.post.ui.page.destinations.HistoryPageDestination
 import com.huanchengfly.tieba.post.ui.page.destinations.SettingsPageDestination
 import com.huanchengfly.tieba.post.ui.page.destinations.ThreadStorePageDestination
 import com.huanchengfly.tieba.post.ui.widgets.compose.Avatar
@@ -319,7 +319,7 @@ fun UserPage(
                     icon = ImageVector.vectorResource(id = R.drawable.ic_outline_watch_later_24),
                     text = stringResource(id = R.string.title_history),
                     onClick = {
-                        context.goToActivity<HistoryActivity>()
+                        navigator.navigate(HistoryPageDestination)
                     }
                 )
                 ListMenuItem(

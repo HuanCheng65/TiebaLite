@@ -83,6 +83,7 @@ import com.huanchengfly.tieba.post.arch.pageViewModel
 import com.huanchengfly.tieba.post.dataStore
 import com.huanchengfly.tieba.post.getInt
 import com.huanchengfly.tieba.post.goToActivity
+import com.huanchengfly.tieba.post.models.database.History
 import com.huanchengfly.tieba.post.ui.common.theme.compose.ExtendedTheme
 import com.huanchengfly.tieba.post.ui.page.ProvideNavigator
 import com.huanchengfly.tieba.post.ui.page.forum.threadlist.ForumThreadListPage
@@ -102,6 +103,7 @@ import com.huanchengfly.tieba.post.ui.widgets.compose.picker.ListSinglePicker
 import com.huanchengfly.tieba.post.ui.widgets.compose.rememberDialogState
 import com.huanchengfly.tieba.post.ui.widgets.compose.rememberMenuState
 import com.huanchengfly.tieba.post.utils.AccountUtil.LocalAccount
+import com.huanchengfly.tieba.post.utils.HistoryUtil
 import com.huanchengfly.tieba.post.utils.StringUtil.getShortNumString
 import com.huanchengfly.tieba.post.utils.TiebaUtil
 import com.huanchengfly.tieba.post.utils.appPreferences
@@ -364,6 +366,20 @@ fun ForumPage(
     }
 
     val unlikeDialogState = rememberDialogState()
+
+    if (forum != null) {
+        LaunchedEffect(forum) {
+            HistoryUtil.writeHistory(
+                History()
+                    .setTitle(context.getString(R.string.title_forum, forumName))
+                    .setTimestamp(System.currentTimeMillis())
+                    .setAvatar(forum.avatar)
+                    .setType(HistoryUtil.TYPE_FORUM)
+                    .setData(forumName),
+                true
+            )
+        }
+    }
 
     if (account != null && forum != null) {
         ConfirmDialog(
