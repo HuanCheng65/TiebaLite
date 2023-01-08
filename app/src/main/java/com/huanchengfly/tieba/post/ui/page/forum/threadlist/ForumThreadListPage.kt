@@ -254,7 +254,7 @@ fun ForumThreadListPage(
                     Column(
                         modifier = Modifier.fillMaxWidth(fraction)
                     ) {
-                        if (index > 0 && threadList[index - 1].isTop != item.isTop) {
+                        if (index > 0) {
                             Divider(
                                 color = ExtendedTheme.colors.divider,
                                 modifier = Modifier.padding(horizontal = 16.dp),

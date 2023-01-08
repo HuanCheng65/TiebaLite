@@ -2,7 +2,6 @@ package com.huanchengfly.tieba.post.ui.page.main.notifications.list
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -89,8 +88,7 @@ fun NotificationsListPage(
             onLoadMore = { viewModel.send(NotificationsListUiIntent.LoadMore(currentPage + 1)) },
         ) {
             LazyColumn(
-                contentPadding = PaddingValues(vertical = 16.dp),
-                verticalArrangement = Arrangement.spacedBy(24.dp),
+                contentPadding = PaddingValues(vertical = 4.dp)
             ) {
                 items(
                     items = data,
@@ -109,7 +107,7 @@ fun NotificationsListPage(
                                     ThreadActivity.launch(context, it.threadId!!, it.postId)
                                 }
                             }
-                            .padding(horizontal = 16.dp)
+                            .padding(horizontal = 16.dp, vertical = 12.dp)
                     ) {
                         if (it.replyer != null) {
                             UserHeader(
