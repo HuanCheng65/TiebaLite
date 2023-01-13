@@ -297,8 +297,10 @@ public class ReplyActivity extends BaseActivity implements View.OnClickListener 
         }
         builder.append(editText.getText());
         if (getAppPreferences().getLittleTail() != null) {
-            builder.append("\n")
-                    .append(getAppPreferences().getLittleTail());
+            if( replyInfoBean.isSubFloor() == false || replyInfoBean.getReplyUser() == null ){
+                builder.append("\n");
+            }
+            builder.append(getAppPreferences().getLittleTail());
         }
         return builder.toString();
     }
