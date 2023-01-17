@@ -384,9 +384,12 @@ class ReplyActivity : BaseActivity(), View.OnClickListener,
                     .append(" :")
             }
             builder.append(editText.text)
+
             if (appPreferences.littleTail != null) {
-                builder.append("\n")
-                    .append(appPreferences.littleTail)
+                if (replyInfoBean!!.isSubFloor == false || replyInfoBean!!.replyUser == null) {
+                    builder.append("\n")
+                }
+                builder.append(appPreferences.littleTail)
             }
             return builder.toString()
         }
