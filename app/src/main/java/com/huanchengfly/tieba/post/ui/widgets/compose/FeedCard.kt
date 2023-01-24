@@ -202,6 +202,17 @@ private val ThreadTitle: @Composable ColumnScope.(ThreadInfo) -> Unit = {
                 append(" ")
             }
 
+            if (it.tabName.isNotBlank()) {
+                withStyle(
+                    style = SpanStyle(
+                        fontWeight = FontWeight.Bold,
+                    )
+                ) {
+                    append(it.tabName)
+                }
+                append(" | ")
+            }
+
             append(it.title)
         }
 
@@ -223,7 +234,6 @@ fun FeedCard(
     onAgree: () -> Unit,
     dislikeAction: @Composable () -> Unit = {},
 ) {
-    val context = LocalContext.current
     Card(
         header = {
             if (item.author != null) {
