@@ -50,6 +50,9 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
 import cn.jzvd.Jzvd
 import com.github.panpf.sketch.displayImage
+import com.google.accompanist.placeholder.PlaceholderHighlight
+import com.google.accompanist.placeholder.material.fade
+import com.google.accompanist.placeholder.material.placeholder
 import com.huanchengfly.tieba.post.R
 import com.huanchengfly.tieba.post.activities.UserActivity
 import com.huanchengfly.tieba.post.api.abstractText
@@ -228,6 +231,51 @@ private val ThreadTitle: @Composable ColumnScope.(ThreadInfo) -> Unit = {
 }
 
 @Composable
+fun FeedCardPlaceholder() {
+    Card(
+        header = { UserHeaderPlaceholder(avatarSize = Sizes.Small) },
+        content = {
+            Text(
+                text = "TitlePlaceholder",
+                style = MaterialTheme.typography.subtitle1,
+                fontSize = 15.sp,
+                fontWeight = FontWeight.Bold,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
+                modifier = Modifier
+                    .placeholder(
+                        visible = true,
+                        highlight = PlaceholderHighlight.fade(),
+                    )
+            )
+
+            Text(
+                text = "Text",
+                style = MaterialTheme.typography.body1,
+                fontSize = 15.sp,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .placeholder(
+                        visible = true,
+                        highlight = PlaceholderHighlight.fade(),
+                    )
+            )
+        },
+        action = {
+            Row(modifier = Modifier.fillMaxWidth()) {
+                repeat(3) {
+                    ActionBtnPlaceholder(
+                        modifier = Modifier.weight(1f)
+                    )
+                }
+            }
+        }
+    )
+}
+
+@Composable
 fun FeedCard(
     item: ThreadInfo,
     onClick: () -> Unit,
@@ -357,6 +405,29 @@ fun FeedCard(
         },
         onClick = onClick
     )
+}
+
+@Composable
+private fun ActionBtnPlaceholder(
+    modifier: Modifier = Modifier
+) {
+    Row(
+        modifier = Modifier
+            .padding(vertical = 16.dp)
+            .then(modifier),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.Center,
+    ) {
+        Text(
+            text = "Button",
+            style = MaterialTheme.typography.caption,
+            modifier = Modifier
+                .placeholder(
+                    visible = true,
+                    highlight = PlaceholderHighlight.fade(),
+                ),
+        )
+    }
 }
 
 @Composable

@@ -39,6 +39,7 @@ import com.huanchengfly.tieba.post.activities.ThreadActivity
 import com.huanchengfly.tieba.post.api.abstractText
 import com.huanchengfly.tieba.post.arch.BaseComposeActivity.Companion.LocalWindowSizeClass
 import com.huanchengfly.tieba.post.arch.collectPartialAsState
+import com.huanchengfly.tieba.post.arch.onEvent
 import com.huanchengfly.tieba.post.arch.pageViewModel
 import com.huanchengfly.tieba.post.ui.common.theme.compose.ExtendedTheme
 import com.huanchengfly.tieba.post.ui.common.windowsizeclass.WindowWidthSizeClass
@@ -130,29 +131,25 @@ fun ForumThreadListPage(
         }
     }
     LaunchedEffect(null) {
-        launch {
-            viewModel.uiEventFlow
-                .filterIsInstance<ForumThreadListUiEvent.AgreeFail>()
-                .collect {
-                    val snackbarResult = snackbarHostState.showSnackbar(
-                        message = context.getString(
-                            R.string.snackbar_agree_fail,
-                            it.errorCode,
-                            it.errorMsg
-                        ),
-                        actionLabel = context.getString(R.string.button_retry)
-                    )
+        onEvent<ForumThreadListUiEvent.AgreeFail>(viewModel) {
+            val snackbarResult = snackbarHostState.showSnackbar(
+                message = context.getString(
+                    R.string.snackbar_agree_fail,
+                    it.errorCode,
+                    it.errorMsg
+                ),
+                actionLabel = context.getString(R.string.button_retry)
+            )
 
-                    if (snackbarResult == SnackbarResult.ActionPerformed) {
-                        viewModel.send(
-                            ForumThreadListUiIntent.Agree(
-                                it.threadId,
-                                it.postId,
-                                it.hasAgree
-                            )
-                        )
-                    }
-                }
+            if (snackbarResult == SnackbarResult.ActionPerformed) {
+                viewModel.send(
+                    ForumThreadListUiIntent.Agree(
+                        it.threadId,
+                        it.postId,
+                        it.hasAgree
+                    )
+                )
+            }
         }
     }
     val isRefreshing by viewModel.uiState.collectPartialAsState(

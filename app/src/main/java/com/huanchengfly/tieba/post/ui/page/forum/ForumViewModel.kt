@@ -157,8 +157,8 @@ sealed interface ForumPartialChange : PartialChange<ForumUiState> {
     sealed class Load : ForumPartialChange {
         override fun reduce(oldState: ForumUiState): ForumUiState = when (this) {
             Start -> oldState.copy(isLoading = true)
-            is Success -> oldState.copy(isLoading = true, forum = forum, tbs = tbs)
-            is Failure -> oldState.copy(isLoading = false)
+            is Success -> oldState.copy(isLoading = true, isError = false, forum = forum, tbs = tbs)
+            is Failure -> oldState.copy(isLoading = false, isError = true)
         }
 
         object Start : Load()
@@ -246,6 +246,7 @@ sealed interface ForumPartialChange : PartialChange<ForumUiState> {
 
 data class ForumUiState(
     val isLoading: Boolean = false,
+    val isError: Boolean = false,
     val forum: ForumInfo? = null,
     val tbs: String? = null
 ) : UiState

@@ -22,6 +22,9 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.google.accompanist.drawablepainter.rememberDrawablePainter
+import com.google.accompanist.placeholder.PlaceholderHighlight
+import com.google.accompanist.placeholder.material.fade
+import com.google.accompanist.placeholder.material.placeholder
 import com.huanchengfly.tieba.post.utils.ImageUtil
 
 object Sizes {
@@ -50,6 +53,23 @@ fun AvatarIcon(
             .clip(shape)
             .background(color = backgroundColor)
             .padding((size - iconSize) / 2),
+    )
+}
+
+@Composable
+fun AvatarPlaceholder(
+    size: Dp,
+    modifier: Modifier = Modifier,
+) {
+    Avatar(
+        data = ImageUtil.getPlaceHolder(LocalContext.current, 0),
+        size = size,
+        contentDescription = null,
+        modifier = modifier.placeholder(
+            visible = true,
+            highlight = PlaceholderHighlight.fade(),
+            shape = CircleShape
+        )
     )
 }
 

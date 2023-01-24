@@ -12,14 +12,48 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.ProvideTextStyle
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.google.accompanist.placeholder.PlaceholderHighlight
+import com.google.accompanist.placeholder.material.fade
+import com.google.accompanist.placeholder.material.placeholder
 import com.huanchengfly.tieba.post.ui.common.theme.compose.ExtendedTheme
+
+@Composable
+fun UserHeaderPlaceholder(
+    avatarSize: Dp
+) {
+    UserHeader(
+        avatar = {
+            AvatarPlaceholder(avatarSize)
+        },
+        name = {
+            Text(
+                text = "Username",
+                modifier = Modifier.placeholder(
+                    visible = true,
+                    highlight = PlaceholderHighlight.fade(),
+                )
+            )
+        },
+        desc = {
+            Text(
+                text = "Desc",
+                modifier = Modifier.placeholder(
+                    visible = true,
+                    highlight = PlaceholderHighlight.fade(),
+                )
+            )
+        }
+    )
+}
 
 @Composable
 fun UserHeader(
