@@ -628,4 +628,5 @@
     <string name="delete_store_failure">取消收藏失败 %s</string>
     <string name="delete_history_failure">删除历史记录失败 %s</string>
     <string name="delete_history_success">删除历史记录成功</string>
+    <string name="error_tip">出错了</string>
 </resources>

@@ -47,12 +47,12 @@ import com.google.accompanist.placeholder.material.placeholder
 import com.google.gson.reflect.TypeToken
 import com.huanchengfly.tieba.post.R
 import com.huanchengfly.tieba.post.arch.collectPartialAsState
+import com.huanchengfly.tieba.post.arch.onEvent
 import com.huanchengfly.tieba.post.arch.pageViewModel
 import com.huanchengfly.tieba.post.models.database.Block
 import com.huanchengfly.tieba.post.ui.common.theme.compose.ExtendedTheme
 import com.huanchengfly.tieba.post.ui.page.main.BottomNavigationDivider
 import com.huanchengfly.tieba.post.ui.widgets.compose.BackNavigationIcon
-import com.huanchengfly.tieba.post.ui.widgets.compose.EmptyPlaceholder
 import com.huanchengfly.tieba.post.ui.widgets.compose.LocalSnackbarHostState
 import com.huanchengfly.tieba.post.ui.widgets.compose.LongClickMenu
 import com.huanchengfly.tieba.post.ui.widgets.compose.MyScaffold
@@ -60,10 +60,10 @@ import com.huanchengfly.tieba.post.ui.widgets.compose.PagerTabIndicator
 import com.huanchengfly.tieba.post.ui.widgets.compose.PromptDialog
 import com.huanchengfly.tieba.post.ui.widgets.compose.TitleCentredToolbar
 import com.huanchengfly.tieba.post.ui.widgets.compose.rememberDialogState
+import com.huanchengfly.tieba.post.ui.widgets.compose.states.StateScreen
 import com.huanchengfly.tieba.post.utils.GsonUtil
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
-import kotlinx.coroutines.flow.filterIsInstance
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalPagerApi::class)
@@ -186,17 +186,13 @@ fun BlockSettingsPage(
     ) { paddingValues ->
         val snackbarHostState = LocalSnackbarHostState.current
         LaunchedEffect(null) {
-            coroutineScope.launch {
-                viewModel.uiEventFlow
-                    .filterIsInstance<BlockSettingsUiEvent.Success>()
-                    .collect {
-                        snackbarHostState.showSnackbar(
-                            when (it) {
-                                is BlockSettingsUiEvent.Success.Add -> context.getString(R.string.toast_add_success)
-                                is BlockSettingsUiEvent.Success.Delete -> context.getString(R.string.toast_delete_success)
-                            }
-                        )
+            onEvent<BlockSettingsUiEvent.Success>(viewModel) {
+                snackbarHostState.showSnackbar(
+                    when (it) {
+                        is BlockSettingsUiEvent.Success.Add -> context.getString(R.string.toast_add_success)
+                        is BlockSettingsUiEvent.Success.Delete -> context.getString(R.string.toast_delete_success)
                     }
+                )
             }
         }
         HorizontalPager(
@@ -206,28 +202,36 @@ fun BlockSettingsPage(
             contentPadding = paddingValues,
             verticalAlignment = Alignment.Top
         ) { position ->
-            if (isLoading) {
-                LazyColumn {
-                    items(4) {
-                        BlockItemPlaceholder()
-                    }
-                }
-            } else {
-                val items = if (position == 0) blackList else whiteList
-                if (items.isNotEmpty()) {
-                    LazyColumn {
-                        items(items, key = { it.id }) {
-                            LongClickMenu(menuContent = {
-                                DropdownMenuItem(onClick = { viewModel.send(BlockSettingsUiIntent.Delete(it.id)) }) {
-                                    Text(text = stringResource(id = R.string.title_delete))
-                                }
-                            }) {
-                                BlockItem(item = it)
-                            }
+            val items = if (position == 0) blackList else whiteList
+            StateScreen(
+                isEmpty = items.isEmpty(),
+                isError = false,
+                isLoading = isLoading,
+                onReload = { viewModel.send(BlockSettingsUiIntent.Load) },
+                loadingScreen = {
+                    LazyColumn(modifier = Modifier.fillMaxSize()) {
+                        items(4) {
+                            BlockItemPlaceholder()
                         }
                     }
-                } else {
-                    EmptyPlaceholder(modifier = Modifier.fillMaxSize())
+                }
+            ) {
+                LazyColumn {
+                    items(items, key = { it.id }) {
+                        LongClickMenu(menuContent = {
+                            DropdownMenuItem(onClick = {
+                                viewModel.send(
+                                    BlockSettingsUiIntent.Delete(
+                                        it.id
+                                    )
+                                )
+                            }) {
+                                Text(text = stringResource(id = R.string.title_delete))
+                            }
+                        }) {
+                            BlockItem(item = it)
+                        }
+                    }
                 }
             }
         }
