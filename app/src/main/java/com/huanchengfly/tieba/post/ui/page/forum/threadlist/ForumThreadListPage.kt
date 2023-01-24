@@ -36,6 +36,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.huanchengfly.tieba.post.R
 import com.huanchengfly.tieba.post.activities.ThreadActivity
+import com.huanchengfly.tieba.post.api.abstractText
 import com.huanchengfly.tieba.post.arch.BaseComposeActivity.Companion.LocalWindowSizeClass
 import com.huanchengfly.tieba.post.arch.collectPartialAsState
 import com.huanchengfly.tieba.post.arch.pageViewModel
@@ -280,8 +281,12 @@ fun ForumThreadListPage(
                                     size = Sizes.Small,
                                     contentDescription = item.author?.name
                                 )
+                                var title = item.title
+                                if (title.isBlank()) {
+                                    title = item.abstractText
+                                }
                                 Text(
-                                    text = item.title,
+                                    text = title,
                                     style = MaterialTheme.typography.subtitle1,
                                     maxLines = 1,
                                     overflow = TextOverflow.Ellipsis,
