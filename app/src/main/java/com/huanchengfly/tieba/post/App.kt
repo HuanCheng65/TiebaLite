@@ -18,7 +18,6 @@ import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatDelegate
 import com.github.gzuliyujiang.oaid.DeviceID
-import com.github.gzuliyujiang.oaid.DeviceIdentifier
 import com.github.gzuliyujiang.oaid.IGetter
 import com.github.panpf.sketch.Sketch
 import com.github.panpf.sketch.SketchFactory
@@ -36,6 +35,7 @@ import com.huanchengfly.tieba.post.ui.common.theme.interfaces.ThemeSwitcher
 import com.huanchengfly.tieba.post.ui.common.theme.utils.ThemeUtils
 import com.huanchengfly.tieba.post.utils.AccountUtil
 import com.huanchengfly.tieba.post.utils.AppIconUtil
+import com.huanchengfly.tieba.post.utils.ClientUtils
 import com.huanchengfly.tieba.post.utils.EmoticonManager
 import com.huanchengfly.tieba.post.utils.SharedPreferencesUtil
 import com.huanchengfly.tieba.post.utils.ThemeUtil
@@ -54,6 +54,9 @@ import com.microsoft.appcenter.distribute.ReleaseDetails
 import com.microsoft.appcenter.distribute.UpdateAction
 import com.microsoft.appcenter.distribute.UpdateTrack
 import dagger.hilt.android.HiltAndroidApp
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import org.litepal.LitePal
 
 
@@ -96,7 +99,6 @@ class App : Application(), IApp, IGetter, SketchFactory {
         super.onCreate()
         LitePal.initialize(this)
         AccountUtil.init(this)
-        DeviceIdentifier.register(this)
         DeviceID.getOAID(this, this)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
             setWebViewPath(this)
@@ -114,8 +116,15 @@ class App : Application(), IApp, IGetter, SketchFactory {
         ThemeUtils.init(ThemeDelegate)
         AppIconUtil.setIcon()
         registerActivityLifecycleCallbacks(ClipBoardLinkDetector)
-        EmoticonManager.init(this)
         PluginManager.init(this)
+        CoroutineScope(Dispatchers.IO).apply {
+            launch {
+                EmoticonManager.init(this@App)
+            }
+            launch {
+                ClientUtils.init(this@App)
+            }
+        }
     }
 
     //解决魅族 Flyme 系统夜间模式强制反色

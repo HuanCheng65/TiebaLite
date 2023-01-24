@@ -39,6 +39,7 @@ import com.huanchengfly.tieba.post.api.models.SearchThreadBean
 import com.huanchengfly.tieba.post.api.models.SearchUserBean
 import com.huanchengfly.tieba.post.api.models.SignResultBean
 import com.huanchengfly.tieba.post.api.models.SubFloorListBean
+import com.huanchengfly.tieba.post.api.models.Sync
 import com.huanchengfly.tieba.post.api.models.ThreadContentBean
 import com.huanchengfly.tieba.post.api.models.ThreadStoreBean
 import com.huanchengfly.tieba.post.api.models.UserLikeForumBean
@@ -939,4 +940,7 @@ object MixedTiebaApiImpl : ITiebaApi {
             )
         )
     }
+
+    override fun syncFlow(clientId: String?): Flow<Sync> =
+        RetrofitTiebaApi.OFFICIAL_TIEBA_API.sync(clientId)
 }

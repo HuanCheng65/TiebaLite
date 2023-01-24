@@ -1,12 +1,26 @@
 package com.huanchengfly.tieba.post.api.retrofit.interceptors
 
-import com.huanchengfly.tieba.post.api.*
+import com.huanchengfly.tieba.post.api.Header
+import com.huanchengfly.tieba.post.api.Method
+import com.huanchengfly.tieba.post.api.ParamExpression
+import com.huanchengfly.tieba.post.api.addAllEncoded
+import com.huanchengfly.tieba.post.api.addAllParts
+import com.huanchengfly.tieba.post.api.contains
+import com.huanchengfly.tieba.post.api.containsEncodedName
+import com.huanchengfly.tieba.post.api.forEachNonNull
+import com.huanchengfly.tieba.post.api.newBuilder
 import com.huanchengfly.tieba.post.api.retrofit.body.MyMultipartBody
 import okhttp3.FormBody
 import okhttp3.Interceptor
 import okhttp3.Response
 
-class CommonParamInterceptor(private vararg val additionParams: ParamExpression) : Interceptor {
+class CommonParamInterceptor(private val additionParams: List<ParamExpression>) : Interceptor {
+    constructor(vararg additionParams: ParamExpression) : this(additionParams.toList())
+
+    operator fun plus(interceptor: CommonParamInterceptor): CommonParamInterceptor {
+        return CommonParamInterceptor(additionParams + interceptor.additionParams)
+    }
+
     override fun intercept(chain: Interceptor.Chain): Response {
         val request = chain.request()
         var headers = request.headers

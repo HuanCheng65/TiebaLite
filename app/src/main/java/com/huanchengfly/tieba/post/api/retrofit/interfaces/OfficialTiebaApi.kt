@@ -1,5 +1,6 @@
 package com.huanchengfly.tieba.post.api.retrofit.interfaces
 
+import android.os.Build
 import com.huanchengfly.tieba.post.App.ScreenInfo
 import com.huanchengfly.tieba.post.api.Header
 import com.huanchengfly.tieba.post.api.Param
@@ -348,4 +349,31 @@ interface OfficialTiebaApi {
         @retrofit2.http.Header(Header.USER_AGENT) user_agent: String = "bdtb for Android $client_version",
         @retrofit2.http.Header("client_user_token") client_user_token: String? = user_id,
     ): Flow<CommonResponse>
+
+    @Headers(
+        "${Header.COOKIE}: ka=open",
+        "${Header.DROP_HEADERS}: ${Header.CHARSET},${Header.CLIENT_TYPE}",
+        "${Header.NO_COMMON_PARAMS}: ${Param.OAID},${Param.CLIENT_TYPE}",
+    )
+    @POST("/c/s/sync")
+    @FormUrlEncoded
+    fun sync(
+        @Field(Param.CLIENT_ID) clientId: String? = null,
+        @Field("_msg_status") msgStatus: String = "1",
+        @Field("_phone_screen") phoneScreen: String = "${getScreenWidth()},${getScreenHeight()}",
+        @Field("_pic_quality") picQuality: String = "0",
+        @Field("board") board: String = Build.BOARD,
+        @Field("brand") brand: String = Build.BRAND,
+        @Field("incremental") incremental: String = Build.VERSION.INCREMENTAL,
+        @Field("md5") md5: String = "E0F995CA7286059FC61F649796A0D757",
+        @Field("signmd5") signmd5: String = "225172691",
+        @Field("package") packageName: String = "com.baidu.tieba",
+        @Field("versioncode") versionCode: String = "185204737",
+        @Field("scr_dip") scr_dip: String = ScreenInfo.DENSITY.toString(),
+        @Field("scr_h") scr_h: String = getScreenHeight().toString(),
+        @Field("scr_w") scr_w: String = getScreenWidth().toString(),
+        @Field("_client_version") client_version: String = "11.10.8.6",
+        @retrofit2.http.Header(Header.USER_AGENT) user_agent: String = "bdtb for Android $client_version",
+        @Field("stoken") sToken: String? = AccountUtil.getSToken(),
+    ): Flow<Sync>
 }

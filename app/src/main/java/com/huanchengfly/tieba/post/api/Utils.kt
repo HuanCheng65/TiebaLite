@@ -1,12 +1,9 @@
 package com.huanchengfly.tieba.post.api
 
-import com.huanchengfly.tieba.post.App
 import com.huanchengfly.tieba.post.App.ScreenInfo
 import com.huanchengfly.tieba.post.api.models.protos.ThreadInfo
-import com.huanchengfly.tieba.post.utils.StatusBarUtil
 
-fun getScreenHeight(): Int =
-    ScreenInfo.EXACT_SCREEN_HEIGHT - StatusBarUtil.getStatusBarHeight(App.INSTANCE)
+fun getScreenHeight(): Int = ScreenInfo.EXACT_SCREEN_HEIGHT
 
 fun getScreenWidth(): Int = ScreenInfo.EXACT_SCREEN_WIDTH
 

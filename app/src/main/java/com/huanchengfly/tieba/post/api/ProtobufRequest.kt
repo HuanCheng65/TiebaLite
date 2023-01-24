@@ -11,6 +11,7 @@ import com.huanchengfly.tieba.post.api.retrofit.RetrofitTiebaApi
 import com.huanchengfly.tieba.post.api.retrofit.body.MyMultipartBody
 import com.huanchengfly.tieba.post.toJson
 import com.huanchengfly.tieba.post.utils.AccountUtil
+import com.huanchengfly.tieba.post.utils.ClientUtils
 import com.huanchengfly.tieba.post.utils.CuidUtils
 import com.huanchengfly.tieba.post.utils.MobileInfoUtil
 import com.huanchengfly.tieba.post.utils.UIDUtil
@@ -70,7 +71,7 @@ fun buildCommonRequest(
 ): CommonRequest {
     return CommonRequest(
         BDUSS = AccountUtil.getBduss(),
-        _client_id = RetrofitTiebaApi.clientId,
+        _client_id = ClientUtils.clientId ?: RetrofitTiebaApi.randomClientId,
         _client_type = 2,
         _client_version = clientVersion,
         _os_version = "${Build.VERSION.SDK_INT}",

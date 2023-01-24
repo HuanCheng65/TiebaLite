@@ -143,3 +143,12 @@ internal inline fun Array<out ParamExpression>.forEachNonNull(action: (String, S
         }
     }
 }
+
+internal inline fun List<ParamExpression>.forEachNonNull(action: (String, String) -> Unit) {
+    forEach { (name, valueExpression) ->
+        val value = valueExpression()
+        if (value != null) {
+            action(name, value)
+        }
+    }
+}

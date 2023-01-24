@@ -1189,4 +1189,6 @@ interface ITiebaApi {
         sortType: Int,
         threadIds: String = "",
     ): Flow<ThreadListResponse>
+
+    fun syncFlow(clientId: String? = null): Flow<Sync>
 }
