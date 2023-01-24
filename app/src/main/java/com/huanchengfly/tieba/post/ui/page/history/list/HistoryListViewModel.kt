@@ -18,6 +18,7 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.filterIsInstance
 import kotlinx.coroutines.flow.flatMapConcat
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.merge
@@ -65,7 +66,11 @@ private class HistoryListPartialChangeProducer(val type: Int) :
                 .flatMapConcat { it.producePartialChange() },
             intentFlow.filterIsInstance<HistoryListUiIntent.Delete>()
                 .flatMapConcat { it.producePartialChange() },
+            intentFlow.filterIsInstance<HistoryListUiIntent.DeleteAll>()
+                .flatMapConcat { produceDeleteAllPartialChange() },
         )
+
+    private fun produceDeleteAllPartialChange() = flowOf(HistoryListPartialChange.DeleteAll)
 
     private fun produceRefreshPartialChange() =
         HistoryUtil.getFlow(type, 0)
@@ -107,9 +112,22 @@ sealed interface HistoryListUiIntent : UiIntent {
     data class LoadMore(val page: Int) : HistoryListUiIntent
 
     data class Delete(val id: Int) : HistoryListUiIntent
+
+    object DeleteAll : HistoryListUiIntent
 }
 
 sealed interface HistoryListPartialChange : PartialChange<HistoryListUiState> {
+    object DeleteAll : HistoryListPartialChange {
+        override fun reduce(oldState: HistoryListUiState): HistoryListUiState = oldState.copy(
+            todayHistoryData = emptyList(),
+            beforeHistoryData = emptyList(),
+            currentPage = 0,
+            hasMore = false,
+            isLoadingMore = false,
+            isRefreshing = false
+        )
+    }
+
     sealed class Refresh : HistoryListPartialChange {
         override fun reduce(oldState: HistoryListUiState): HistoryListUiState = when (this) {
             is Failure -> oldState
@@ -194,4 +212,6 @@ sealed interface HistoryListUiEvent : UiEvent {
             val errorMsg: String
         ) : Delete
     }
+
+    object DeleteAll : HistoryListUiEvent
 }

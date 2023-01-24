@@ -9,10 +9,13 @@ import androidx.compose.material.TabRow
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Delete
+import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -23,6 +26,7 @@ import com.huanchengfly.tieba.post.R
 import com.huanchengfly.tieba.post.ui.common.theme.compose.ExtendedTheme
 import com.huanchengfly.tieba.post.ui.page.ProvideNavigator
 import com.huanchengfly.tieba.post.ui.page.history.list.HistoryListPage
+import com.huanchengfly.tieba.post.ui.page.history.list.HistoryListUiEvent
 import com.huanchengfly.tieba.post.ui.widgets.compose.BackNavigationIcon
 import com.huanchengfly.tieba.post.ui.widgets.compose.MyScaffold
 import com.huanchengfly.tieba.post.ui.widgets.compose.PagerTabIndicator
@@ -31,6 +35,7 @@ import com.huanchengfly.tieba.post.utils.HistoryUtil
 import com.ramcosta.composedestinations.annotation.DeepLink
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalPagerApi::class)
@@ -45,8 +50,14 @@ fun HistoryPage(
 ) {
     val pagerState = rememberPagerState()
     val coroutineScope = rememberCoroutineScope()
+    val scaffoldState = rememberScaffoldState()
+
+    val context = LocalContext.current
+
+    val eventFlow = remember { MutableSharedFlow<HistoryListUiEvent>() }
 
     MyScaffold(
+        scaffoldState = scaffoldState,
         topBar = {
             TitleCentredToolbar(
                 title = stringResource(id = R.string.title_history),
@@ -54,7 +65,19 @@ fun HistoryPage(
                     BackNavigationIcon(onBackPressed = { navigator.navigateUp() })
                 },
                 actions = {
-                    IconButton(onClick = { /*TODO*/ }) {
+                    IconButton(onClick = {
+                        coroutineScope.launch {
+                            HistoryUtil.deleteAll()
+                            eventFlow.emit(HistoryListUiEvent.DeleteAll)
+                            launch {
+                                scaffoldState.snackbarHostState.showSnackbar(
+                                    context.getString(
+                                        R.string.toast_clear_success
+                                    )
+                                )
+                            }
+                        }
+                    }) {
                         Icon(
                             imageVector = Icons.Outlined.Delete,
                             contentDescription = stringResource(id = R.string.title_history_delete),
@@ -115,18 +138,18 @@ fun HistoryPage(
         }
     ) {
         ProvideNavigator(navigator = navigator) {
-        HorizontalPager(
-            count = 2,
-            state = pagerState,
-            modifier = Modifier.fillMaxSize(),
-            verticalAlignment = Alignment.Top,
-            userScrollEnabled = true,
-        ) {
-            if (it == 0) {
-                HistoryListPage(type = HistoryUtil.TYPE_THREAD)
-            } else {
-                HistoryListPage(type = HistoryUtil.TYPE_FORUM)
-            }
+            HorizontalPager(
+                count = 2,
+                state = pagerState,
+                modifier = Modifier.fillMaxSize(),
+                verticalAlignment = Alignment.Top,
+                userScrollEnabled = true,
+            ) {
+                if (it == 0) {
+                    HistoryListPage(type = HistoryUtil.TYPE_THREAD, eventFlow = eventFlow)
+                } else {
+                    HistoryListPage(type = HistoryUtil.TYPE_FORUM, eventFlow = eventFlow)
+                }
             }
         }
     }
