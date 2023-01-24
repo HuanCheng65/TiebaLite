@@ -321,8 +321,8 @@ fun FeedCard(
                                 NetworkImage(
                                     imageUri = media.url,
                                     contentDescription = null,
-                                    photoViewData = getPhotoViewData(item, index),
                                     modifier = Modifier.weight(1f),
+                                    photoViewData = getPhotoViewData(item, index),
                                     contentScale = ContentScale.Crop
                                 )
                             }

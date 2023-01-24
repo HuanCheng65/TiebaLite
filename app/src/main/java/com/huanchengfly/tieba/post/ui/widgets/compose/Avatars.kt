@@ -19,8 +19,9 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import coil.compose.AsyncImage
-import coil.request.ImageRequest
+import com.github.panpf.sketch.compose.AsyncImage
+import com.github.panpf.sketch.fetch.newResourceUri
+import com.github.panpf.sketch.request.DisplayRequest
 import com.google.accompanist.drawablepainter.rememberDrawablePainter
 import com.google.accompanist.placeholder.PlaceholderHighlight
 import com.google.accompanist.placeholder.material.fade
@@ -83,9 +84,13 @@ fun Avatar(
     val context = LocalContext.current
     when (data) {
         is Int -> {
-            Image(
-                painter = rememberDrawablePainter(drawable = context.getDrawable(data)),
+            AsyncImage(
+                request = DisplayRequest(LocalContext.current, newResourceUri(data)) {
+                    placeholder(ImageUtil.getPlaceHolder(context, 0))
+                    crossfade()
+                },
                 contentDescription = contentDescription,
+                contentScale = ContentScale.Crop,
                 modifier = modifier
                     .size(size)
                     .clip(CircleShape),
@@ -104,21 +109,15 @@ fun Avatar(
 
         is String? -> {
             AsyncImage(
-                model = ImageRequest.Builder(LocalContext.current)
-                    .data(data)
-                    .crossfade(true)
-                    .build(),
+                request = DisplayRequest(LocalContext.current, data) {
+                    placeholder(ImageUtil.getPlaceHolder(context, 0))
+                    crossfade()
+                },
                 contentDescription = contentDescription,
-                placeholder = rememberDrawablePainter(
-                    drawable = ImageUtil.getPlaceHolder(
-                        context,
-                        0
-                    )
-                ),
+                contentScale = ContentScale.Crop,
                 modifier = modifier
                     .size(size)
                     .clip(CircleShape),
-                contentScale = ContentScale.Crop
             )
         }
 

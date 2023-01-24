@@ -111,8 +111,6 @@ wire {
 
 dependencies {
     implementation "com.github.germainkevinbusiness:CollapsingTopBarCompose:1.1.7"
-    implementation "io.coil-kt:coil:2.2.2"
-    implementation "io.coil-kt:coil-compose:2.2.2"
 
     implementation 'org.jetbrains.kotlinx:kotlinx-serialization-json:1.4.1'
 //    implementation 'androidx.compose.material3:material3:1.0.0'
@@ -145,7 +143,7 @@ dependencies {
     implementation "com.google.accompanist:accompanist-swiperefresh:$accompanist_version"
     implementation "com.google.accompanist:accompanist-webview:$accompanist_version"
 
-    def sketch_version = "3.1.0"
+    def sketch_version = "3.2.0-beta01"
     implementation "io.github.panpf.sketch3:sketch:$sketch_version"
     implementation "io.github.panpf.sketch3:sketch-compose:$sketch_version"
     implementation "io.github.panpf.sketch3:sketch-extensions:$sketch_version"

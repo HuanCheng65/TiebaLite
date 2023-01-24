@@ -19,9 +19,8 @@ import androidx.browser.customtabs.CustomTabsIntent
 import androidx.core.content.pm.ShortcutInfoCompat
 import androidx.core.content.pm.ShortcutManagerCompat
 import androidx.core.graphics.drawable.IconCompat
-import coil.Coil
-import coil.request.ImageRequest
-import coil.request.SuccessResult
+import com.github.panpf.sketch.request.LoadRequest
+import com.github.panpf.sketch.request.LoadResult
 import com.google.android.material.snackbar.Snackbar
 import com.huanchengfly.tieba.post.App
 import com.huanchengfly.tieba.post.R
@@ -273,15 +272,10 @@ suspend fun requestPinShortcut(
     onFailure: (String) -> Unit = {}
 ) {
     if (ShortcutManagerCompat.isRequestPinShortcutSupported(context)) {
-        val request = ImageRequest.Builder(context)
-            .data(iconImageUri)
-            .allowHardware(false)
-            .build()
-        val imageResult = Coil.imageLoader(context)
-            .execute(request)
-        if (imageResult is SuccessResult) {
+        val imageResult = LoadRequest(context, iconImageUri).execute()
+        if (imageResult is LoadResult.Success) {
             val shortcutInfo = ShortcutInfoCompat.Builder(context, shortcutId)
-                .setIcon(IconCompat.createWithBitmap(ImageUtil.drawableToBitmap(imageResult.drawable)))
+                .setIcon(IconCompat.createWithBitmap(imageResult.bitmap))
                 .setIntent(shortcutIntent)
                 .setShortLabel(label)
                 .build()
