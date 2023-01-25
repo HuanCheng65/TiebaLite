@@ -7,7 +7,12 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
@@ -15,7 +20,6 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Divider
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.SnackbarResult
@@ -41,17 +45,14 @@ import com.huanchengfly.tieba.post.arch.BaseComposeActivity.Companion.LocalWindo
 import com.huanchengfly.tieba.post.arch.collectPartialAsState
 import com.huanchengfly.tieba.post.arch.onEvent
 import com.huanchengfly.tieba.post.arch.pageViewModel
-import com.huanchengfly.tieba.post.ui.common.theme.compose.ExtendedTheme
 import com.huanchengfly.tieba.post.ui.common.windowsizeclass.WindowWidthSizeClass
 import com.huanchengfly.tieba.post.ui.page.forum.getSortType
 import com.huanchengfly.tieba.post.ui.widgets.Chip
-import com.huanchengfly.tieba.post.ui.widgets.compose.Avatar
 import com.huanchengfly.tieba.post.ui.widgets.compose.FeedCard
 import com.huanchengfly.tieba.post.ui.widgets.compose.LazyLoad
 import com.huanchengfly.tieba.post.ui.widgets.compose.LoadMoreLayout
 import com.huanchengfly.tieba.post.ui.widgets.compose.LocalSnackbarHostState
-import com.huanchengfly.tieba.post.ui.widgets.compose.Sizes
-import com.huanchengfly.tieba.post.utils.StringUtil
+import com.huanchengfly.tieba.post.ui.widgets.compose.VerticalDivider
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.filterIsInstance
 import kotlinx.coroutines.launch
@@ -208,7 +209,8 @@ fun ForumThreadListPage(
             LazyColumn(
                 state = lazyListState,
                 horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth(),
+                contentPadding = WindowInsets.navigationBars.asPaddingValues()
             ) {
                 if (isGood) {
                     item(key = "GoodClassifyHeader") {
@@ -252,13 +254,6 @@ fun ForumThreadListPage(
                     Column(
                         modifier = Modifier.fillMaxWidth(fraction)
                     ) {
-                        if (index > 0) {
-                            Divider(
-                                color = ExtendedTheme.colors.divider,
-                                modifier = Modifier.padding(horizontal = 16.dp),
-                                thickness = 2.dp
-                            )
-                        }
                         if (item.isTop == 1) {
                             Row(
                                 modifier = Modifier
@@ -269,14 +264,13 @@ fun ForumThreadListPage(
                                             item.threadId.toString()
                                         )
                                     }
-                                    .padding(16.dp),
+                                    .padding(horizontal = 16.dp, vertical = 8.dp),
                                 verticalAlignment = Alignment.CenterVertically,
                                 horizontalArrangement = Arrangement.spacedBy(16.dp)
                             ) {
-                                Avatar(
-                                    data = StringUtil.getAvatarUrl(item.author?.portrait),
-                                    size = Sizes.Small,
-                                    contentDescription = item.author?.name
+                                Chip(
+                                    text = stringResource(id = R.string.content_top),
+                                    shape = RoundedCornerShape(3.dp)
                                 )
                                 var title = item.title
                                 if (title.isBlank()) {
@@ -284,15 +278,20 @@ fun ForumThreadListPage(
                                 }
                                 Text(
                                     text = title,
-                                    style = MaterialTheme.typography.subtitle1,
+                                    style = MaterialTheme.typography.subtitle2,
                                     maxLines = 1,
                                     overflow = TextOverflow.Ellipsis,
                                     modifier = Modifier.weight(1f),
                                     fontSize = 15.sp
                                 )
-                                Chip(text = stringResource(id = R.string.content_top))
                             }
                         } else {
+                            if (index > 0) {
+                                if (threadList[index - 1].isTop == 1) {
+                                    Spacer(modifier = Modifier.height(8.dp))
+                                }
+                                VerticalDivider(modifier = Modifier.padding(horizontal = 16.dp))
+                            }
                             FeedCard(
                                 item = item,
                                 onClick = {

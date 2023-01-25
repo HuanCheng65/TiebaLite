@@ -28,7 +28,6 @@ import androidx.compose.material.icons.rounded.SwapCalls
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -66,6 +65,7 @@ import com.huanchengfly.tieba.post.ui.page.destinations.ForumPageDestination
 import com.huanchengfly.tieba.post.ui.utils.getPhotoViewData
 import com.huanchengfly.tieba.post.ui.widgets.VideoPlayerStandard
 import com.huanchengfly.tieba.post.utils.DateTimeUtils
+import com.huanchengfly.tieba.post.utils.EmoticonUtil.emoticonString
 import com.huanchengfly.tieba.post.utils.ImageUtil
 import com.huanchengfly.tieba.post.utils.StringUtil
 import kotlin.math.max
@@ -174,60 +174,42 @@ private fun Badge(
     }
 }
 
-private val ThreadAbstract: @Composable ColumnScope.(ThreadInfo) -> Unit = {
-    if (it.hasAbstract) {
-        val text = remember(key1 = it.id) { it.abstractText }
-
-        EmoticonText(
-            text = text,
-            style = MaterialTheme.typography.body1,
-            fontSize = 15.sp,
-            maxLines = 3,
-            overflow = TextOverflow.Ellipsis
-        )
-    }
-}
-
-private val ThreadTitle: @Composable ColumnScope.(ThreadInfo) -> Unit = {
+private val ThreadContent: @Composable ColumnScope.(ThreadInfo) -> Unit = {
     val showTitle = it.isNoTitle != 1 && it.title.isNotBlank()
-
-    if (showTitle) {
-        val title = buildAnnotatedString {
-            if (it.isGood == 1) {
-                withStyle(
-                    style = SpanStyle(
-                        color = ExtendedTheme.colors.primary,
-                        fontWeight = FontWeight.Bold,
-                    )
-                ) {
-                    append(stringResource(id = R.string.tip_good))
+    val showAbstract = it.hasAbstract
+    val content = buildAnnotatedString {
+        if (showTitle) {
+            withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
+                if (it.isGood == 1) {
+                    withStyle(style = SpanStyle(color = ExtendedTheme.colors.primary)) {
+                        append(stringResource(id = R.string.tip_good))
+                    }
+                    append(" ")
                 }
-                append(" ")
-            }
 
-            if (it.tabName.isNotBlank()) {
-                withStyle(
-                    style = SpanStyle(
-                        fontWeight = FontWeight.Bold,
-                    )
-                ) {
+                if (it.tabName.isNotBlank()) {
                     append(it.tabName)
+                    append(" | ")
                 }
-                append(" | ")
+
+                append(it.title)
             }
-
-            append(it.title)
         }
-
-        Text(
-            text = title,
-            style = MaterialTheme.typography.subtitle1,
-            fontSize = 15.sp,
-            fontWeight = if (it.hasAbstract) FontWeight.Bold else FontWeight.Normal,
-            maxLines = 2,
-            overflow = TextOverflow.Ellipsis
-        )
+        if (showTitle && showAbstract) append('\n')
+        if (showAbstract) {
+            append(it.abstractText.emoticonString)
+        }
     }
+
+    EmoticonText(
+        text = content,
+        style = MaterialTheme.typography.body1,
+        fontSize = 15.sp,
+        maxLines = 5,
+        overflow = TextOverflow.Ellipsis,
+        lineHeight = 22.sp,
+        modifier = Modifier.fillMaxWidth()
+    )
 }
 
 @Composable
@@ -289,9 +271,7 @@ fun FeedCard(
             }
         },
         content = {
-            ThreadTitle(item)
-
-            ThreadAbstract(item)
+            ThreadContent(item)
 
             if (item.videoInfo != null) {
                 VideoPlayer(
@@ -343,7 +323,6 @@ fun FeedCard(
                 val navigator = LocalNavigator.current
                 Row(
                     modifier = Modifier
-                        .padding(top = 8.dp)
                         .clip(RoundedCornerShape(4.dp))
                         .background(color = ExtendedTheme.colors.chip)
                         .clickable {

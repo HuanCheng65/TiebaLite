@@ -4,6 +4,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.width
+import androidx.compose.material.Divider
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -24,4 +25,14 @@ fun HorizontalDivider(
             .width(width)
             .background(color = color)
     )
+}
+
+@Composable
+fun VerticalDivider(
+    modifier: Modifier = Modifier,
+    color: Color = ExtendedTheme.colors.divider,
+    thickness: Dp = 1.dp,
+    startIndent: Dp = 0.dp
+) {
+    Divider(modifier = modifier, color = color, thickness = thickness, startIndent = startIndent)
 }

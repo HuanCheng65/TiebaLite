@@ -20,7 +20,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.ContentAlpha
-import androidx.compose.material.Divider
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
@@ -59,6 +58,7 @@ import com.huanchengfly.tieba.post.ui.page.destinations.HotTopicListPageDestinat
 import com.huanchengfly.tieba.post.ui.widgets.compose.LazyLoad
 import com.huanchengfly.tieba.post.ui.widgets.compose.NetworkImage
 import com.huanchengfly.tieba.post.ui.widgets.compose.ProvideContentColor
+import com.huanchengfly.tieba.post.ui.widgets.compose.VerticalDivider
 import com.huanchengfly.tieba.post.ui.widgets.compose.VerticalGrid
 import com.huanchengfly.tieba.post.ui.widgets.compose.items
 import com.huanchengfly.tieba.post.ui.widgets.compose.itemsIndexed
@@ -203,8 +203,7 @@ fun HotPage(
                     }
                 }
                 item(key = "TopicDivider") {
-                    Divider(
-                        color = ExtendedTheme.colors.divider,
+                    VerticalDivider(
                         modifier = Modifier
                             .padding(top = 16.dp, bottom = 8.dp)
                             .padding(horizontal = 16.dp),

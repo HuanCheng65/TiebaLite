@@ -2,12 +2,11 @@ package com.huanchengfly.tieba.post.ui.page.main.notifications.list
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -107,7 +106,8 @@ fun NotificationsListPage(
                                     ThreadActivity.launch(context, it.threadId!!, it.postId)
                                 }
                             }
-                            .padding(horizontal = 16.dp, vertical = 12.dp)
+                            .padding(horizontal = 16.dp, vertical = 12.dp),
+                        verticalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
                         if (it.replyer != null) {
                             UserHeader(
@@ -140,7 +140,6 @@ fun NotificationsListPage(
                                 },
                             ) {}
                         }
-                        Spacer(modifier = Modifier.height(16.dp))
                         EmoticonText(text = it.content ?: "")
                         val quoteText = if (type == NotificationsType.ReplyMe) {
                             if ("1" == it.isFloor) {
@@ -152,7 +151,6 @@ fun NotificationsListPage(
                             it.title
                         }
                         if (quoteText != null) {
-                            Spacer(modifier = Modifier.height(16.dp))
                             EmoticonText(
                                 text = quoteText,
                                 modifier = Modifier

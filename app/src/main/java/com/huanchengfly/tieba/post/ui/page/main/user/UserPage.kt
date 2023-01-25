@@ -20,7 +20,6 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.Divider
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Icon
 import androidx.compose.material.Scaffold
@@ -63,6 +62,7 @@ import com.huanchengfly.tieba.post.ui.widgets.compose.Avatar
 import com.huanchengfly.tieba.post.ui.widgets.compose.HorizontalDivider
 import com.huanchengfly.tieba.post.ui.widgets.compose.Sizes
 import com.huanchengfly.tieba.post.ui.widgets.compose.Switch
+import com.huanchengfly.tieba.post.ui.widgets.compose.VerticalDivider
 import com.huanchengfly.tieba.post.utils.CuidUtils
 import com.huanchengfly.tieba.post.utils.StringUtil
 import com.huanchengfly.tieba.post.utils.ThemeUtil
@@ -350,8 +350,7 @@ fun UserPage(
                         )
                     },
                 )
-                Divider(
-                    color = ExtendedTheme.colors.divider,
+                VerticalDivider(
                     modifier = Modifier.padding(vertical = 8.dp, horizontal = 16.dp)
                 )
                 ListMenuItem(
@@ -379,9 +378,9 @@ fun UserPage(
 private fun ListMenuItem(
     icon: ImageVector,
     text: String,
-    onClick: (() -> Unit)? = null,
     modifier: Modifier = Modifier,
-    customContent: (@Composable RowScope.() -> Unit)? = null,
+    onClick: (() -> Unit)? = null,
+    customContent: @Composable (RowScope.() -> Unit)? = null,
 ) {
     val menuModifier = if (onClick != null) {
         Modifier.clickable(onClick = onClick)
@@ -394,7 +393,7 @@ private fun ListMenuItem(
             .then(menuModifier)
             .padding(horizontal = 16.dp, vertical = 12.dp),
     ) {
-        Icon(imageVector = icon, contentDescription = text)
+        Icon(imageVector = icon, contentDescription = text, tint = ExtendedTheme.colors.accent)
         Spacer(modifier = Modifier.width(16.dp))
         Text(
             text = text,

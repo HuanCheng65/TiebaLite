@@ -20,22 +20,23 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.huanchengfly.tieba.post.utils.GsonUtil
 import com.huanchengfly.tieba.post.utils.MD5Util
+import kotlin.math.roundToInt
 
 
 fun Float.dpToPx(): Int =
-    dpToPxFloat().toInt()
+    dpToPxFloat().roundToInt()
 
 fun Float.dpToPxFloat(): Float =
     this * App.ScreenInfo.DENSITY + 0.5f
 
 fun Float.spToPx(): Int =
-    (this * App.INSTANCE.resources.displayMetrics.scaledDensity + 0.5f).toInt()
+    (this * App.INSTANCE.resources.displayMetrics.scaledDensity + 0.5f).roundToInt()
 
 fun Float.pxToDp(): Int =
-    (this / App.ScreenInfo.DENSITY + 0.5f).toInt()
+    (this / App.ScreenInfo.DENSITY + 0.5f).roundToInt()
 
 fun Float.pxToSp(): Int =
-    (this / App.INSTANCE.resources.displayMetrics.scaledDensity + 0.5f).toInt()
+    (this / App.INSTANCE.resources.displayMetrics.scaledDensity + 0.5f).roundToInt()
 
 fun Int.dpToPx(): Int = this.toFloat().dpToPx()
 

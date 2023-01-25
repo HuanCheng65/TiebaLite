@@ -15,6 +15,7 @@ import androidx.compose.material.icons.rounded.AccountCircle
 import androidx.compose.material.icons.rounded.Inventory2
 import androidx.compose.material.icons.rounded.Notifications
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
@@ -28,6 +29,7 @@ import androidx.compose.ui.res.vectorResource
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.rememberPagerState
+import com.huanchengfly.tieba.post.LocalNotificationCountFlow
 import com.huanchengfly.tieba.post.R
 import com.huanchengfly.tieba.post.arch.BaseComposeActivity.Companion.LocalWindowSizeClass
 import com.huanchengfly.tieba.post.arch.collectPartialAsState
@@ -93,12 +95,20 @@ fun MainPage(
     devicePostureFlow: StateFlow<DevicePosture>,
     viewModel: MainViewModel = pageViewModel<MainUiIntent, MainViewModel>(emptyList()),
 ) {
-    val windowSizeClass = LocalWindowSizeClass.current
-    val foldingDevicePosture by devicePostureFlow.collectAsState()
     val messageCount by viewModel.uiState.collectPartialAsState(
         prop1 = MainUiState::messageCount,
         initial = 0
     )
+
+    val notificationCountFlow = LocalNotificationCountFlow.current
+    LaunchedEffect(null) {
+        notificationCountFlow.collect {
+            viewModel.send(MainUiIntent.NewMessage.Receive(it))
+        }
+    }
+
+    val windowSizeClass = LocalWindowSizeClass.current
+    val foldingDevicePosture by devicePostureFlow.collectAsState()
     val navigationItems = listOfNotNull(
         NavigationItem(
             icon = { if (it) Icons.Rounded.Inventory2 else Icons.Outlined.Inventory2 },
@@ -124,6 +134,9 @@ fun MainPage(
             title = stringResource(id = R.string.title_notifications),
             badge = messageCount > 0,
             badgeText = "$messageCount",
+            onClick = {
+                viewModel.send(MainUiIntent.NewMessage.Clear)
+            },
             content = {
                 NotificationsPage()
             }

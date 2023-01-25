@@ -12,7 +12,7 @@ fun Boolean.booleanToString(): String = if (this) "1" else "0"
 val ThreadInfo.abstractText: String
     get() = richAbstract.joinToString(separator = "") {
         when (it.type) {
-            0 -> it.text
+            0 -> it.text.replace(Regex(" {2,}"), " ")
             2 -> "#(${it.c})"
             else -> ""
         }

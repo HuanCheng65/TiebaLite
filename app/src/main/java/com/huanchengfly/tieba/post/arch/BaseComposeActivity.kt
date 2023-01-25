@@ -68,7 +68,8 @@ abstract class BaseComposeActivity : BaseActivity() {
                         )
                         setNavigationBarColor(
                             Color.Transparent,
-                            darkIcons = ThemeUtil.isNavigationBarFontDark()
+                            darkIcons = ThemeUtil.isNavigationBarFontDark(),
+                            navigationBarContrastEnforced = false
                         )
                     }
                 }

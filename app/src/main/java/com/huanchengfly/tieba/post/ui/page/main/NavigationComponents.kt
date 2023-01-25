@@ -359,6 +359,7 @@ fun BottomNavigation(
                     selected = index == currentPosition,
                     onClick = {
                         onChangePosition(index)
+                        navigationItem.onClick?.invoke()
                     },
                     icon = {
                         Box {
@@ -398,5 +399,6 @@ data class NavigationItem(
     val title: String,
     val badge: Boolean = false,
     val badgeText: String? = null,
+    val onClick: (() -> Unit)? = null,
     val content: @Composable () -> Unit = {}
 )

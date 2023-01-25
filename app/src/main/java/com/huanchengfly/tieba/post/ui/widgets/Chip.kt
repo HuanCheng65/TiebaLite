@@ -8,6 +8,7 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -18,7 +19,8 @@ import com.huanchengfly.tieba.post.utils.ThemeUtil
 fun Chip(
     text: String,
     modifier: Modifier = Modifier,
-    invertColor: Boolean = false
+    invertColor: Boolean = false,
+    shape: Shape = RoundedCornerShape(100)
 ) {
     Text(
         color = if (invertColor)
@@ -28,7 +30,7 @@ fun Chip(
         fontWeight = FontWeight.Bold,
         text = text,
         modifier = modifier
-            .clip(RoundedCornerShape(100))
+            .clip(shape)
             .background(
                 color = if (invertColor)
                     if (ThemeUtil.isNightMode()) MaterialTheme.colors.secondary.copy(alpha = 0.3f) else MaterialTheme.colors.secondary

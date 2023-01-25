@@ -199,7 +199,7 @@
     <color name="theme_color_divider_translucent_light">#10FFFFFF</color>
     <color name="theme_color_divider_translucent_dark">#15000000</color>
     <color name="theme_color_divider_dark">#FF10171D</color>
-    <color name="theme_color_divider_grey_dark">#FF151515</color>
+    <color name="theme_color_divider_grey_dark">#FF1E1E1E</color>
     <color name="theme_color_divider_amoled_dark">#FF1E1E1E</color>
 
     <color name="theme_color_shadow_day">@color/color_shadow</color>

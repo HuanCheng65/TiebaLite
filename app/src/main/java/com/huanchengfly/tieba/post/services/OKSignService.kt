@@ -10,6 +10,7 @@ import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationChannelCompat
 import androidx.core.app.NotificationCompat
+import androidx.core.app.NotificationCompat.FOREGROUND_SERVICE_IMMEDIATE
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.app.ServiceCompat
 import com.huanchengfly.tieba.post.R
@@ -43,7 +44,7 @@ class OKSignService : IntentService(TAG), CoroutineScope, ProgressListener {
         Log.i(TAG, "onStartCommand")
         if (intent?.action == ACTION_START_SIGN) {
             startForeground(
-                1,
+                NOTIFICATION_ID,
                 buildNotification(
                     getString(R.string.title_loading_data),
                     getString(R.string.text_please_wait)
@@ -97,6 +98,7 @@ class OKSignService : IntentService(TAG), CoroutineScope, ProgressListener {
     private fun buildNotification(title: String, text: String?): NotificationCompat.Builder {
         createNotificationChannel()
         return NotificationCompat.Builder(this, NOTIFICATION_CHANNEL_ID)
+            .setForegroundServiceBehavior(FOREGROUND_SERVICE_IMMEDIATE)
             .setContentText(text)
             .setContentTitle(title)
             .setSubText(getString(R.string.title_oksign))
@@ -115,7 +117,7 @@ class OKSignService : IntentService(TAG), CoroutineScope, ProgressListener {
             return
         }
         notificationManager.notify(
-            1,
+            NOTIFICATION_ID,
             buildNotification(title, text)
                 .setContentIntent(
                     PendingIntent.getActivity(
@@ -140,11 +142,11 @@ class OKSignService : IntentService(TAG), CoroutineScope, ProgressListener {
         val notification = buildNotification(title, text)
             .build()
         notification.flags = notification.flags.addFlag(NotificationCompat.FLAG_ONGOING_EVENT)
-        notificationManager.notify(1, notification)
+        notificationManager.notify(NOTIFICATION_ID, notification)
     }
 
     private fun clearNotification() {
-        notificationManager.cancel(1)
+        notificationManager.cancel(NOTIFICATION_ID)
     }
 
 
@@ -228,6 +230,7 @@ class OKSignService : IntentService(TAG), CoroutineScope, ProgressListener {
 
         const val TAG = "OKSignService"
         const val NOTIFICATION_CHANNEL_ID = "1"
+        const val NOTIFICATION_ID = 1
         const val ACTION_SIGN_SUCCESS_ALL =
             "com.huanchengfly.tieba.post.service.action.SIGN_SUCCESS_ALL"
         const val ACTION_START_SIGN = "com.huanchengfly.tieba.post.service.action.ACTION_SIGN_START"

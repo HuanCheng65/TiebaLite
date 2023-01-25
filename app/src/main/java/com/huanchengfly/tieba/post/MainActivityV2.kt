@@ -13,16 +13,24 @@ import android.os.Handler
 import android.os.Looper
 import androidx.compose.animation.AnimatedContentScope
 import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.plusAssign
 import androidx.window.layout.FoldingFeature
 import androidx.window.layout.WindowInfoTracker
+import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import com.google.accompanist.navigation.material.ExperimentalMaterialNavigationApi
+import com.google.accompanist.navigation.material.ModalBottomSheetLayout
+import com.google.accompanist.navigation.material.rememberBottomSheetNavigator
 import com.google.accompanist.systemuicontroller.SystemUiController
 import com.huanchengfly.tieba.post.api.retrofit.exception.getErrorMessage
 import com.huanchengfly.tieba.post.arch.BaseComposeActivity
@@ -45,6 +53,9 @@ import com.ramcosta.composedestinations.animations.rememberAnimatedNavHostEngine
 import com.ramcosta.composedestinations.navigation.dependency
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.channels.BufferOverflow
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.catch
@@ -54,10 +65,16 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
+val LocalNotificationCountFlow =
+    staticCompositionLocalOf<Flow<Int>> { throw IllegalStateException("not allowed here!") }
+
 @AndroidEntryPoint
 class MainActivityV2 : BaseComposeActivity() {
     private val handler = Handler(Looper.getMainLooper())
     private val newMessageReceiver: BroadcastReceiver = NewMessageReceiver()
+
+    private val notificationCountFlow: MutableSharedFlow<Int> =
+        MutableSharedFlow(replay = 1, onBufferOverflow = BufferOverflow.DROP_OLDEST)
 
     private val devicePostureFlow: StateFlow<DevicePosture> by lazy {
         WindowInfoTracker.getOrCreate(this)
@@ -153,34 +170,53 @@ class MainActivityV2 : BaseComposeActivity() {
     @OptIn(ExperimentalAnimationApi::class, ExperimentalMaterialNavigationApi::class)
     @Composable
     override fun createContent() {
-        Surface(
-            color = ExtendedTheme.colors.background
-        ) {
-            val engine = rememberAnimatedNavHostEngine(
-                navHostContentAlignment = Alignment.TopStart,
-                rootDefaultAnimations = RootNavGraphDefaultAnimations(
-                    enterTransition = {
-                        slideIntoContainer(AnimatedContentScope.SlideDirection.Start, initialOffset = { it })
-                    },
-                    exitTransition = {
-                        slideOutOfContainer(AnimatedContentScope.SlideDirection.End, targetOffset = { -it })
-                    },
-                    popEnterTransition = {
-                        slideIntoContainer(AnimatedContentScope.SlideDirection.Start, initialOffset = { -it })
-                    },
-                    popExitTransition = {
-                        slideOutOfContainer(AnimatedContentScope.SlideDirection.End, targetOffset = { it })
-                    },
-                ),
-            )
-            DestinationsNavHost(
-                navGraph = NavGraphs.root,
-                engine = engine,
-                dependenciesContainerBuilder = {
-                    dependency(MainPageDestination) { this@MainActivityV2 }
-                    dependency(devicePostureFlow)
+        CompositionLocalProvider(LocalNotificationCountFlow provides notificationCountFlow) {
+            Surface(
+                color = ExtendedTheme.colors.background
+            ) {
+                val engine = rememberAnimatedNavHostEngine(
+                    navHostContentAlignment = Alignment.TopStart,
+                    rootDefaultAnimations = RootNavGraphDefaultAnimations(
+                        enterTransition = {
+                            slideIntoContainer(
+                                AnimatedContentScope.SlideDirection.Start,
+                                initialOffset = { it })
+                        },
+                        exitTransition = {
+                            slideOutOfContainer(
+                                AnimatedContentScope.SlideDirection.End,
+                                targetOffset = { -it })
+                        },
+                        popEnterTransition = {
+                            slideIntoContainer(
+                                AnimatedContentScope.SlideDirection.Start,
+                                initialOffset = { -it })
+                        },
+                        popExitTransition = {
+                            slideOutOfContainer(
+                                AnimatedContentScope.SlideDirection.End,
+                                targetOffset = { it })
+                        },
+                    ),
+                )
+                val navController = rememberAnimatedNavController()
+                val bottomSheetNavigator = rememberBottomSheetNavigator()
+                navController.navigatorProvider += bottomSheetNavigator
+                ModalBottomSheetLayout(
+                    bottomSheetNavigator = bottomSheetNavigator,
+                    sheetShape = RoundedCornerShape(16.dp)
+                ) {
+                    DestinationsNavHost(
+                        navController = navController,
+                        navGraph = NavGraphs.root,
+                        engine = engine,
+                        dependenciesContainerBuilder = {
+                            dependency(MainPageDestination) { this@MainActivityV2 }
+                            dependency(devicePostureFlow)
+                        }
+                    )
                 }
-            )
+            }
         }
     }
 
@@ -191,7 +227,9 @@ class MainActivityV2 : BaseComposeActivity() {
                 val channel = intent.getStringExtra("channel")
                 val count = intent.getIntExtra("count", 0)
                 if (channel != null && channel == NotifyJobService.CHANNEL_TOTAL) {
-
+                    lifecycleScope.launch {
+                        notificationCountFlow.emit(count)
+                    }
                 }
             }
         }

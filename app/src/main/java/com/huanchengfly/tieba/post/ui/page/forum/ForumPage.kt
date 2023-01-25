@@ -20,7 +20,7 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -62,8 +62,11 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.ExperimentalTextApi
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -88,6 +91,7 @@ import com.huanchengfly.tieba.post.dataStore
 import com.huanchengfly.tieba.post.getInt
 import com.huanchengfly.tieba.post.goToActivity
 import com.huanchengfly.tieba.post.models.database.History
+import com.huanchengfly.tieba.post.pxToDp
 import com.huanchengfly.tieba.post.ui.common.theme.compose.ExtendedTheme
 import com.huanchengfly.tieba.post.ui.page.LocalNavigator
 import com.huanchengfly.tieba.post.ui.page.ProvideNavigator
@@ -125,6 +129,8 @@ import kotlinx.coroutines.flow.filterIsInstance
 import kotlinx.coroutines.launch
 import kotlin.math.max
 import kotlin.math.min
+
+private val TabWidth = 100.dp
 
 fun getSortType(
     context: Context,
@@ -171,19 +177,14 @@ private fun ForumHeaderPlaceholder(
                 )
             }
             if (LocalAccount.current != null) {
-                Button(
-                    onClick = {},
-                    elevation = null,
-                    shape = RoundedCornerShape(100),
-                    colors = ButtonDefaults.buttonColors(
-                        backgroundColor = ExtendedTheme.colors.accent,
-                        contentColor = ExtendedTheme.colors.onAccent
-                    ),
-                    contentPadding = PaddingValues(horizontal = 18.dp, vertical = 6.dp),
-                    modifier = Modifier.placeholder(
-                        visible = true,
-                        highlight = PlaceholderHighlight.fade(),
-                    )
+                Box(
+                    modifier = Modifier
+                        .clip(RoundedCornerShape(100))
+                        .placeholder(
+                            visible = true,
+                            highlight = PlaceholderHighlight.fade(),
+                        )
+                        .padding(horizontal = 18.dp, vertical = 6.dp)
                 ) {
                     Text(text = stringResource(id = R.string.button_sign_in), fontSize = 13.sp)
                 }
@@ -343,7 +344,7 @@ private suspend fun sendToDesktop(
     )
 }
 
-@OptIn(ExperimentalPagerApi::class)
+@OptIn(ExperimentalPagerApi::class, ExperimentalTextApi::class)
 @Destination(
     deepLinks = [
         DeepLink(uriPattern = "tblite://forum/{forumName}")
@@ -625,6 +626,19 @@ fun ForumPage(
                             }
                         }
                     ) {
+                        var tabWidth by remember { mutableStateOf(0) }
+                        val textMeasurer = rememberTextMeasurer()
+                        val tabText = stringResource(id = R.string.tab_forum_1)
+                        val tabTextStyle = MaterialTheme.typography.button.copy(
+                            fontWeight = FontWeight.Bold,
+                            fontSize = 13.sp,
+                            letterSpacing = 0.sp
+                        )
+                        LaunchedEffect(null) {
+                            val result =
+                                textMeasurer.measure(AnnotatedString(tabText), style = tabTextStyle)
+                            tabWidth = (result.size.width.pxToDp() + 16 * 2) * 2
+                        }
                         TabRow(
                             selectedTabIndex = pagerState.currentPage,
                             indicator = { tabPositions ->
@@ -637,7 +651,7 @@ fun ForumPage(
                             backgroundColor = ExtendedTheme.colors.topBar,
                             contentColor = ExtendedTheme.colors.accent,
                             modifier = Modifier
-                                .width(120.dp * 2)
+                                .width(tabWidth.dp)
                                 .align(Alignment.Start)
                         ) {
                             val menuState = rememberMenuState()
@@ -687,23 +701,9 @@ fun ForumPage(
                                 }
                             ) {
                                 val rotate by animateFloatAsState(targetValue = if (menuState.expanded) 180f else 0f)
+                                val alpha by animateFloatAsState(targetValue = if (pagerState.currentPage == 0) 1f else 0f)
+
                                 Tab(
-                                    text = {
-                                        Row(
-                                            verticalAlignment = Alignment.CenterVertically,
-                                            modifier = Modifier.offset(x = 12.dp)
-                                        ) {
-                                            Text(
-                                                text = stringResource(id = R.string.tab_forum_1),
-                                                fontSize = 13.sp
-                                            )
-                                            Icon(
-                                                imageVector = Icons.Rounded.ArrowDropDown,
-                                                contentDescription = stringResource(id = R.string.sort_menu),
-                                                modifier = Modifier.rotate(rotate)
-                                            )
-                                        }
-                                    },
                                     selected = pagerState.currentPage == 0,
                                     onClick = {
                                         if (pagerState.currentPage != 0) {
@@ -716,16 +716,30 @@ fun ForumPage(
                                     },
                                     selectedContentColor = ExtendedTheme.colors.accent,
                                     unselectedContentColor = ExtendedTheme.colors.onTopBarSecondary,
-                                    interactionSource = interactionSource
-                                )
+                                    interactionSource = interactionSource,
+                                ) {
+                                    Row(
+                                        verticalAlignment = Alignment.CenterVertically,
+                                        modifier = Modifier
+                                            .height(48.dp)
+                                            .padding(start = 16.dp)
+                                    ) {
+                                        Text(
+                                            text = stringResource(id = R.string.tab_forum_1),
+                                            style = tabTextStyle
+                                        )
+                                        Icon(
+                                            imageVector = Icons.Rounded.ArrowDropDown,
+                                            contentDescription = stringResource(id = R.string.sort_menu),
+                                            modifier = Modifier
+                                                .size(16.dp)
+                                                .rotate(rotate)
+                                                .alpha(alpha)
+                                        )
+                                    }
+                                }
                             }
                             Tab(
-                                text = {
-                                    Text(
-                                        text = stringResource(id = R.string.tab_forum_good),
-                                        fontSize = 13.sp
-                                    )
-                                },
                                 selected = pagerState.currentPage == 1,
                                 onClick = {
                                     coroutineScope.launch {
@@ -734,7 +748,19 @@ fun ForumPage(
                                 },
                                 selectedContentColor = ExtendedTheme.colors.accent,
                                 unselectedContentColor = ExtendedTheme.colors.onTopBarSecondary
-                            )
+                            ) {
+                                Row(
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    modifier = Modifier
+                                        .height(48.dp)
+                                        .padding(horizontal = 16.dp)
+                                ) {
+                                    Text(
+                                        text = stringResource(id = R.string.tab_forum_good),
+                                        style = tabTextStyle
+                                    )
+                                }
+                            }
                         }
                     }
                 },
@@ -772,7 +798,8 @@ fun ForumPage(
                             }
                         },
                         backgroundColor = ExtendedTheme.colors.background,
-                        contentColor = ExtendedTheme.colors.accent
+                        contentColor = ExtendedTheme.colors.accent,
+                        modifier = Modifier.navigationBarsPadding()
                     ) {
                         Icon(
                             imageVector = when (context.appPreferences.forumFabFunction) {
@@ -869,17 +896,20 @@ fun LoadingPlaceholder(
                     repeat(2) {
                         Box(
                             modifier = Modifier
-                                .width(120.dp)
+                                .padding(horizontal = 16.dp)
                                 .fillMaxHeight(),
                             contentAlignment = Alignment.Center
                         ) {
                             Text(
                                 text = stringResource(id = R.string.tab_forum_1),
-                                fontSize = 13.sp,
                                 modifier = Modifier.placeholder(
                                     visible = true,
                                     highlight = PlaceholderHighlight.fade(),
-                                )
+                                ),
+                                fontSize = 13.sp,
+                                fontWeight = FontWeight.Bold,
+                                letterSpacing = 0.sp,
+                                style = MaterialTheme.typography.button,
                             )
                         }
                     }

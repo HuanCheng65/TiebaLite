@@ -19,7 +19,6 @@ import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.windowInsetsTopHeight
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.Divider
 import androidx.compose.material.DropdownMenuItem
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
@@ -110,8 +109,7 @@ fun AccountNavIcon(
                         Text(text = it.nameShow ?: it.name)
                     }
                 }
-                Divider(
-                    color = ExtendedTheme.colors.divider,
+                VerticalDivider(
                     modifier = Modifier.padding(vertical = 8.dp)
                 )
                 DropdownMenuItem(onClick = {
