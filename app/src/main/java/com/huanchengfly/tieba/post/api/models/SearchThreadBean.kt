@@ -2,47 +2,43 @@ package com.huanchengfly.tieba.post.api.models
 
 import com.google.gson.annotations.SerializedName
 
-class SearchThreadBean {
+data class SearchThreadBean(
     @SerializedName("no")
-    val errorCode: Int? = null
-
+    val errorCode: Int,
     @SerializedName("error")
-    val errorMsg: String? = null
+    val errorMsg: String,
     val data: DataBean? = null
-
-    class DataBean {
+) {
+    data class DataBean(
         @SerializedName("has_more")
-        val hasMore: Int? = null
-
+        val hasMore: Int? = null,
         @SerializedName("current_page")
-        val currentPage: Int? = null
-
+        val currentPage: Int? = null,
         @SerializedName("post_list")
         val postList: List<ThreadInfoBean>? = null
-    }
+    )
 
-    class ThreadInfoBean {
-        val tid: String? = null
-        val pid: String? = null
-        val title: String? = null
-        val content: String? = null
-        val time: String? = null
+    data class ThreadInfoBean(
+        val tid: String? = null,
+        val pid: String? = null,
+        val title: String? = null,
+        val content: String? = null,
+        val time: String? = null,
 
         @SerializedName("post_num")
-        val postNum: String? = null
+        val postNum: String? = null,
 
         @SerializedName("forum_name")
-        val forumName: String? = null
-        val user: UserInfoBean? = null
+        val forumName: String? = null,
+        val user: UserInfoBean? = null,
         val type: Int? = null
-    }
+    )
 
-    class UserInfoBean {
+    data class UserInfoBean(
         @SerializedName("user_name")
-        val userName: String? = null
-
+        val userName: String? = null,
         @SerializedName("user_id")
-        val userId: String? = null
+        val userId: String? = null,
         val portrait: String? = null
-    }
+    )
 }

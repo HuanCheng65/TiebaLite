@@ -23,7 +23,6 @@ import androidx.compose.material.icons.rounded.Download
 import androidx.compose.material.icons.rounded.Share
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -164,9 +163,7 @@ class PhotoViewActivity : BaseComposeActivityWithParcelable<PhotoViewData>() {
             prop1 = PhotoViewUiState::hasNext,
             initial = false
         )
-        val pageCount by derivedStateOf {
-            items.size
-        }
+        val pageCount = items.size
         Surface(color = Color.Black) {
             if (items.isNotEmpty()) {
                 val coroutineScope = rememberCoroutineScope()
