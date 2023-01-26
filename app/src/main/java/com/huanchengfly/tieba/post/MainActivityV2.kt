@@ -44,8 +44,8 @@ import com.huanchengfly.tieba.post.ui.utils.isSeparating
 import com.huanchengfly.tieba.post.utils.AccountUtil
 import com.huanchengfly.tieba.post.utils.JobServiceUtil
 import com.huanchengfly.tieba.post.utils.PermissionUtils
-import com.huanchengfly.tieba.post.utils.ReceiverUtil
 import com.huanchengfly.tieba.post.utils.TiebaUtil
+import com.huanchengfly.tieba.post.utils.newIntentFilter
 import com.huanchengfly.tieba.post.utils.requestPermission
 import com.ramcosta.composedestinations.DestinationsNavHost
 import com.ramcosta.composedestinations.animations.defaults.RootNavGraphDefaultAnimations
@@ -137,7 +137,7 @@ class MainActivityV2 : BaseComposeActivity() {
             ContextCompat.registerReceiver(
                 this,
                 newMessageReceiver,
-                ReceiverUtil.createIntentFilter(NotifyJobService.ACTION_NEW_MESSAGE),
+                newIntentFilter(NotifyJobService.ACTION_NEW_MESSAGE),
                 ContextCompat.RECEIVER_NOT_EXPORTED
             )
             startService(Intent(this, NotifyJobService::class.java))

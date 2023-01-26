@@ -268,13 +268,13 @@ open class MainActivity : BaseActivity(), NavigationBarView.OnItemSelectedListen
         ContextCompat.registerReceiver(
             this,
             newMessageReceiver,
-            ReceiverUtil.createIntentFilter(NotifyJobService.ACTION_NEW_MESSAGE),
+            newIntentFilter(NotifyJobService.ACTION_NEW_MESSAGE),
             ContextCompat.RECEIVER_NOT_EXPORTED
         )
         ContextCompat.registerReceiver(
             this,
             accountSwitchReceiver,
-            ReceiverUtil.createIntentFilter(AccountUtil.ACTION_SWITCH_ACCOUNT),
+            newIntentFilter(AccountUtil.ACTION_SWITCH_ACCOUNT),
             ContextCompat.RECEIVER_NOT_EXPORTED
         )
         try {

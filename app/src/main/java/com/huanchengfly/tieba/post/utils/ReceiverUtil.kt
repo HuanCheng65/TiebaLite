@@ -1,11 +1,8 @@
-package com.huanchengfly.tieba.post.utils;
+package com.huanchengfly.tieba.post.utils
 
-import android.content.IntentFilter;
+import android.content.IntentFilter
 
-public class ReceiverUtil {
-    public static IntentFilter createIntentFilter(String action) {
-        IntentFilter filter = new IntentFilter();
-        filter.addAction(action);
-        return filter;
+fun newIntentFilter(action: String) =
+    IntentFilter().apply {
+        addAction(action)
     }
-}
