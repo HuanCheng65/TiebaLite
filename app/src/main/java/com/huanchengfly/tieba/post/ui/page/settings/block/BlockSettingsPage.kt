@@ -125,7 +125,7 @@ fun BlockSettingsPage(
                         )
                     },
                     divider = {},
-                    backgroundColor = ExtendedTheme.colors.topBar,
+                    backgroundColor = Color.Transparent,
                     contentColor = ExtendedTheme.colors.onTopBar,
                     modifier = Modifier
                         .align(Alignment.CenterHorizontally)

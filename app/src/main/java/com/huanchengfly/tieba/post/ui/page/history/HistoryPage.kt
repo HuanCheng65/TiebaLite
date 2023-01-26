@@ -15,6 +15,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -57,6 +58,7 @@ fun HistoryPage(
     val eventFlow = remember { MutableSharedFlow<HistoryListUiEvent>() }
 
     MyScaffold(
+        backgroundColor = Color.Transparent,
         scaffoldState = scaffoldState,
         topBar = {
             TitleCentredToolbar(
@@ -95,7 +97,7 @@ fun HistoryPage(
                         )
                     },
                     divider = {},
-                    backgroundColor = ExtendedTheme.colors.topBar,
+                    backgroundColor = Color.Transparent,
                     contentColor = ExtendedTheme.colors.accent,
                     modifier = Modifier
                         .width(100.dp * 2)

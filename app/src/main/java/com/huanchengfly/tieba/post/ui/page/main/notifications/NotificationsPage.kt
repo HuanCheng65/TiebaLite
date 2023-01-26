@@ -67,7 +67,7 @@ fun NotificationsPage() {
                         )
                     },
                     divider = {},
-                    backgroundColor = ExtendedTheme.colors.topBar,
+                    backgroundColor = Color.Transparent,
                     contentColor = ExtendedTheme.colors.onTopBar,
                 ) {
                     pages.forEachIndexed { index, pair -> 

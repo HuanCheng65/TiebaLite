@@ -648,7 +648,7 @@ fun ForumPage(
                                 )
                             },
                             divider = {},
-                            backgroundColor = ExtendedTheme.colors.topBar,
+                            backgroundColor = Color.Transparent,
                             contentColor = ExtendedTheme.colors.accent,
                             modifier = Modifier
                                 .width(tabWidth.dp)
