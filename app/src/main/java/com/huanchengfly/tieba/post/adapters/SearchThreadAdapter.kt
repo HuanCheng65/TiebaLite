@@ -23,31 +23,21 @@ class SearchThreadAdapter(
     ) {
         viewHolder.setText(R.id.item_search_thread_title, item.title)
         viewHolder.setText(R.id.item_search_thread_content, item.content)
-        viewHolder.setVisibility(R.id.item_search_thread_content, !item.content.isNullOrBlank())
-        viewHolder.setText(R.id.user_name, item.user?.userName)
+        viewHolder.setVisibility(R.id.item_search_thread_content, item.content.isNotBlank())
+        viewHolder.setText(R.id.user_name, item.user.userName)
         ImageUtil.load(
             viewHolder.getView(R.id.user_avatar),
             ImageUtil.LOAD_TYPE_AVATAR,
-            item.user?.portrait
+            item.user.portrait
         )
-        if (item.forumName == null) {
-            viewHolder.setText(
-                R.id.user_content,
-                if (item.time != null) DateTimeUtils.getRelativeTimeString(
-                    context,
-                    item.time
-                ) else null
+        viewHolder.setText(
+            R.id.user_content,
+            context.getString(
+                R.string.template_two_string,
+                DateTimeUtils.getRelativeTimeString(context, item.time),
+                context.getString(R.string.title_forum_name, item.forumName)
             )
-        } else {
-            viewHolder.setText(
-                R.id.user_content,
-                if (item.time != null) context.getString(
-                    R.string.template_two_string,
-                    DateTimeUtils.getRelativeTimeString(context, item.time),
-                    context.getString(R.string.title_forum_name, item.forumName)
-                ) else context.getString(R.string.title_forum_name, item.forumName)
-            )
-        }
+        )
         viewHolder.itemView.background = getItemBackgroundDrawable(
             context,
             position,

@@ -7,38 +7,52 @@ data class SearchThreadBean(
     val errorCode: Int,
     @SerializedName("error")
     val errorMsg: String,
-    val data: DataBean? = null
+    val data: DataBean
 ) {
     data class DataBean(
         @SerializedName("has_more")
-        val hasMore: Int? = null,
+        val hasMore: Int,
         @SerializedName("current_page")
-        val currentPage: Int? = null,
+        val currentPage: Int,
         @SerializedName("post_list")
-        val postList: List<ThreadInfoBean>? = null
+        val postList: List<ThreadInfoBean> = emptyList()
     )
 
     data class ThreadInfoBean(
-        val tid: String? = null,
-        val pid: String? = null,
-        val title: String? = null,
-        val content: String? = null,
-        val time: String? = null,
-
+        val tid: String,
+        val pid: String,
+        val title: String,
+        val content: String,
+        val time: String,
         @SerializedName("post_num")
-        val postNum: String? = null,
-
+        val postNum: String,
+        @SerializedName("like_num")
+        val likeNum: String,
+        @SerializedName("share_num")
+        val shareNum: String,
+        @SerializedName("forum_id")
+        val forumId: String,
         @SerializedName("forum_name")
-        val forumName: String? = null,
-        val user: UserInfoBean? = null,
-        val type: Int? = null
+        val forumName: String,
+        val user: UserInfoBean,
+        val type: Int,
+        @SerializedName("forum_info")
+        val forumInfo: ForumInfo
+    )
+
+    data class ForumInfo(
+        @SerializedName("forum_name")
+        val forumName: String,
+        val avatar: String,
     )
 
     data class UserInfoBean(
         @SerializedName("user_name")
-        val userName: String? = null,
+        val userName: String,
+        @SerializedName("show_nickname")
+        val showNickname: String,
         @SerializedName("user_id")
-        val userId: String? = null,
-        val portrait: String? = null
+        val userId: String,
+        val portrait: String,
     )
 }

@@ -90,7 +90,7 @@ class SearchThreadFragment : BaseFragment(), ISearchFragment, NewSearchActivity.
         super.onViewCreated(view, savedInstanceState)
         searchThreadAdapter = SearchThreadAdapter(this).apply {
             setOnItemClickListener { _, item, _ ->
-                ThreadActivity.launch(attachContext, item.tid!!, item.pid)
+                ThreadActivity.launch(attachContext, item.tid, item.pid)
             }
         }
         recyclerView.apply {
@@ -191,7 +191,7 @@ class SearchThreadFragment : BaseFragment(), ISearchFragment, NewSearchActivity.
                             return
                         }
                         mData = searchThreadBean.data
-                        mData!!.postList?.let {
+                        mData!!.postList.let {
                             searchThreadAdapter!!.insert(it)
                         }
                         page += 1
