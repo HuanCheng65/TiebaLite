@@ -221,7 +221,7 @@ class MainActivityV2 : BaseComposeActivity() {
                 navController.navigatorProvider += bottomSheetNavigator
                 ModalBottomSheetLayout(
                     bottomSheetNavigator = bottomSheetNavigator,
-                    sheetShape = RoundedCornerShape(16.dp)
+                    sheetShape = RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp)
                 ) {
                     DestinationsNavHost(
                         navController = navController,
