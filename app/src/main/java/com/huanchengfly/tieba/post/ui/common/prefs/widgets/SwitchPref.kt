@@ -3,7 +3,11 @@ package com.huanchengfly.tieba.post.ui.common.prefs.widgets
 import android.util.Log
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.MaterialTheme
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.datastore.preferences.core.booleanPreferencesKey
@@ -36,12 +40,14 @@ fun SwitchPref(
 
     fun edit(newState: Boolean) = run {
         scope.launch {
+            checked = newState
+            onCheckedChange?.invoke(newState)
+        }
+        scope.launch {
             try {
                 datastore.edit { preferences ->
                     preferences[selectionKey] = newState
                 }
-                checked = newState
-                onCheckedChange?.invoke(newState)
             } catch (e: Exception) {
                 Log.e("SwitchPref", "Could not write pref $key to database. ${e.printStackTrace()}")
             }

@@ -66,11 +66,14 @@ fun ListPref(
 
     fun edit(current: Pair<String, String>) = run {
         scope.launch {
+            selected = current.first
+            onValueChange?.invoke(current.first)
+        }
+        scope.launch {
             try {
                 datastore.edit { preferences ->
                     preferences[selectionKey] = current.first
                 }
-                onValueChange?.invoke(current.first)
             } catch (e: Exception) {
                 Log.e("ListPref", "Could not write pref $key to database. ${e.printStackTrace()}")
             }
