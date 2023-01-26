@@ -13,12 +13,16 @@ import android.os.Handler
 import android.os.Looper
 import androidx.compose.animation.AnimatedContentScope
 import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.VisibilityThreshold
+import androidx.compose.animation.core.spring
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
@@ -174,33 +178,46 @@ class MainActivityV2 : BaseComposeActivity() {
             Surface(
                 color = ExtendedTheme.colors.background
             ) {
+                val animationSpec = spring(
+                    stiffness = Spring.StiffnessMediumLow,
+                    visibilityThreshold = IntOffset.VisibilityThreshold
+                )
                 val engine = rememberAnimatedNavHostEngine(
                     navHostContentAlignment = Alignment.TopStart,
                     rootDefaultAnimations = RootNavGraphDefaultAnimations(
                         enterTransition = {
                             slideIntoContainer(
                                 AnimatedContentScope.SlideDirection.Start,
-                                initialOffset = { it })
+                                animationSpec = animationSpec,
+                                initialOffset = { it }
+                            )
                         },
                         exitTransition = {
                             slideOutOfContainer(
                                 AnimatedContentScope.SlideDirection.End,
-                                targetOffset = { -it })
+                                animationSpec = animationSpec,
+                                targetOffset = { -it }
+                            )
                         },
                         popEnterTransition = {
                             slideIntoContainer(
                                 AnimatedContentScope.SlideDirection.Start,
-                                initialOffset = { -it })
+                                animationSpec = animationSpec,
+                                initialOffset = { -it }
+                            )
                         },
                         popExitTransition = {
                             slideOutOfContainer(
                                 AnimatedContentScope.SlideDirection.End,
-                                targetOffset = { it })
+                                animationSpec = animationSpec,
+                                targetOffset = { it }
+                            )
                         },
                     ),
                 )
                 val navController = rememberAnimatedNavController()
-                val bottomSheetNavigator = rememberBottomSheetNavigator()
+                val bottomSheetNavigator =
+                    rememberBottomSheetNavigator(animationSpec = spring(stiffness = Spring.StiffnessMediumLow))
                 navController.navigatorProvider += bottomSheetNavigator
                 ModalBottomSheetLayout(
                     bottomSheetNavigator = bottomSheetNavigator,
