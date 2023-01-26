@@ -35,7 +35,6 @@ interface OfficialTiebaApi {
         @Field("scr_h") scr_h: String = getScreenHeight().toString(),
         @Field("scr_w") scr_w: String = getScreenWidth().toString(),
         @retrofit2.http.Header("thread_id") threadIdHeader: String = threadId,
-        @retrofit2.http.Header("client_logid") clientLogidHeader: String = "${System.currentTimeMillis()}",
     ): Call<ThreadContentBean>
 
     @POST("/c/f/pb/page")
@@ -56,7 +55,6 @@ interface OfficialTiebaApi {
         @Field("scr_h") scr_h: String = getScreenHeight().toString(),
         @Field("scr_w") scr_w: String = getScreenWidth().toString(),
         @retrofit2.http.Header("thread_id") threadIdHeader: String = threadId,
-        @retrofit2.http.Header("client_logid") clientLogidHeader: String = "${System.currentTimeMillis()}",
     ): Call<ThreadContentBean>
 
     @POST("/c/f/pb/page")
@@ -77,7 +75,6 @@ interface OfficialTiebaApi {
         @Field("scr_h") scr_h: String = getScreenHeight().toString(),
         @Field("scr_w") scr_w: String = getScreenWidth().toString(),
         @retrofit2.http.Header("thread_id") threadIdHeader: String = threadId,
-        @retrofit2.http.Header("client_logid") clientLogidHeader: String = "${System.currentTimeMillis()}",
     ): Deferred<ApiResult<ThreadContentBean>>
 
     @POST("/c/f/pb/page")
@@ -98,7 +95,6 @@ interface OfficialTiebaApi {
         @Field("scr_h") scr_h: String = getScreenHeight().toString(),
         @Field("scr_w") scr_w: String = getScreenWidth().toString(),
         @retrofit2.http.Header("thread_id") threadIdHeader: String = threadId,
-        @retrofit2.http.Header("client_logid") clientLogidHeader: String = "${System.currentTimeMillis()}",
     ): Deferred<ApiResult<ThreadContentBean>>
 
     @Headers("${Header.FORCE_LOGIN}: ${Header.FORCE_LOGIN_TRUE}")
@@ -353,7 +349,7 @@ interface OfficialTiebaApi {
     @Headers(
         "${Header.COOKIE}: ka=open",
         "${Header.DROP_HEADERS}: ${Header.CHARSET},${Header.CLIENT_TYPE}",
-        "${Header.NO_COMMON_PARAMS}: ${Param.OAID},${Param.CLIENT_TYPE}",
+        "${Header.NO_COMMON_PARAMS}: ${Param.OAID}",
     )
     @POST("/c/s/sync")
     @FormUrlEncoded
@@ -376,4 +372,46 @@ interface OfficialTiebaApi {
         @retrofit2.http.Header(Header.USER_AGENT) user_agent: String = "bdtb for Android $client_version",
         @Field("stoken") sToken: String? = AccountUtil.getSToken(),
     ): Flow<Sync>
+
+    @Headers(
+        "${Header.FORCE_LOGIN}: ${Header.FORCE_LOGIN_TRUE}",
+        "${Header.COOKIE}: ka=open",
+        "${Header.DROP_HEADERS}: ${Header.CHARSET},${Header.CLIENT_TYPE}",
+        "${Header.NO_COMMON_PARAMS}: ${Param.OAID}",
+    )
+    @POST("/c/c/post/add")
+    @FormUrlEncoded
+    fun addPostFlow(
+        @Field("content") content: String,
+        @Field("fid") forumId: String,
+        @Field("kw") forumName: String,
+        @Field("tbs") tbs: String,
+        @Field("tid") threadId: String,
+        @Field("quote_id") quoteId: String? = null,
+        @Field("repostid") repostId: String? = null,
+        @Field("reply_uid") replyUserId: String = "null",
+        @Field("name_show") nameShow: String? = AccountUtil.getLoginInfo()?.nameShow,
+        @Field("anonymous") anonymous: String = "1",
+        @Field("authsid") authsid: String = "null",
+        @Field("barrage_time") barrage_time: String = "0",
+        @Field("can_no_forum") can_no_forum: String = "0",
+        @Field("entrance_type") entrance_type: String = "0",
+        @Field("from_fourm_id") from_fourm_id: String = "null",
+        @Field("is_ad") is_ad: String = "0",
+        @Field("is_addition") is_addition: String? = null,
+        @Field("is_barrage") is_barrage: String? = "0",
+        @Field("is_feedback") is_feedback: String = "0",
+        @Field("is_giftpost") is_giftpost: String? = null,
+        @Field("is_twzhibo_thread") is_twzhibo_thread: String? = null,
+        @Field("new_vcode") new_vcode: String = "1",
+        @Field("post_from") post_from: String = "3",
+        @Field("takephoto_num") takephoto_num: String = "0",
+        @Field("v_fid") v_fid: String = "",
+        @Field("v_fname") v_fname: String = "",
+        @Field("vcode_tag") vcode_tag: String = "12",
+        @Field("_client_version") client_version: String = "11.10.8.6",
+        @retrofit2.http.Header(Header.USER_AGENT) user_agent: String = "bdtb for Android $client_version",
+        @Field("stoken") sToken: String? = AccountUtil.getSToken(),
+        @retrofit2.http.Header("client_user_token") client_user_token: String? = AccountUtil.getUid(),
+    ): Flow<AddPostBean>
 }

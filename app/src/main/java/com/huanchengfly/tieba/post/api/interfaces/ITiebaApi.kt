@@ -1191,4 +1191,28 @@ interface ITiebaApi {
     ): Flow<ThreadListResponse>
 
     fun syncFlow(clientId: String? = null): Flow<Sync>
+
+
+    /**
+     * 回贴（App 接口）
+     *
+     * **需登录**
+     *
+     * @param forumId 吧 ID
+     * @param forumName 吧名
+     * @param threadId 贴子 ID
+     * @param tbs tbs
+     * @param content 回复内容
+     * @param postId 回复楼 ID，为空则回复贴子
+     * @param replyUserId 楼中楼回复用户 ID
+     */
+    fun addPostFlow(
+        content: String,
+        forumId: String,
+        forumName: String,
+        threadId: String,
+        tbs: String,
+        postId: String? = null,
+        replyUserId: String? = null
+    ): Flow<AddPostBean>
 }

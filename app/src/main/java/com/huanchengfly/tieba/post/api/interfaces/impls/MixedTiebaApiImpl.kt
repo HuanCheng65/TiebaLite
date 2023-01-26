@@ -15,6 +15,7 @@ import com.huanchengfly.tieba.post.api.buildProtobufRequestBody
 import com.huanchengfly.tieba.post.api.getScreenHeight
 import com.huanchengfly.tieba.post.api.getScreenWidth
 import com.huanchengfly.tieba.post.api.interfaces.ITiebaApi
+import com.huanchengfly.tieba.post.api.models.AddPostBean
 import com.huanchengfly.tieba.post.api.models.AgreeBean
 import com.huanchengfly.tieba.post.api.models.CheckReportBean
 import com.huanchengfly.tieba.post.api.models.CollectDataBean
@@ -943,4 +944,30 @@ object MixedTiebaApiImpl : ITiebaApi {
 
     override fun syncFlow(clientId: String?): Flow<Sync> =
         RetrofitTiebaApi.OFFICIAL_TIEBA_API.sync(clientId)
+
+    override fun addPostFlow(
+        content: String,
+        forumId: String,
+        forumName: String,
+        threadId: String,
+        tbs: String,
+        postId: String?,
+        replyUserId: String?
+    ): Flow<AddPostBean> {
+        return RetrofitTiebaApi.OFFICIAL_TIEBA_API.addPostFlow(
+            content,
+            forumId,
+            forumName,
+            tbs,
+            threadId,
+            quoteId = postId,
+            replyUserId = replyUserId ?: if (postId == null) "null" else "",
+            repostId = postId,
+            is_addition = if (postId == null) null else "0",
+            is_barrage = if (postId == null) "0" else null,
+            is_giftpost = if (postId == null) null else "0",
+            is_twzhibo_thread = if (postId == null) null else "0",
+            post_from = if (postId == null) "3" else "11"
+        )
+    }
 }

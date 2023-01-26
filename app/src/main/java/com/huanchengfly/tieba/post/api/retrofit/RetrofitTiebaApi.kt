@@ -1,6 +1,7 @@
 package com.huanchengfly.tieba.post.api.retrofit
 
 import android.os.Build
+import android.webkit.WebView
 import com.huanchengfly.tieba.post.App
 import com.huanchengfly.tieba.post.api.Header
 import com.huanchengfly.tieba.post.api.Param
@@ -46,6 +47,7 @@ object RetrofitTiebaApi {
     internal val randomClientId = "wappc_${initTime}_${(Math.random() * 1000).roundToInt()}"
     private val stParamInterceptor = StParamInterceptor()
     private val connectionPool = ConnectionPool(32, 5, TimeUnit.MINUTES)
+    private val defaultUserAgent = WebView(App.INSTANCE).settings.userAgentString
 
     private val defaultCommonParamInterceptor = CommonParamInterceptor(
         Param.BDUSS to { AccountUtil.getBduss() },
@@ -86,9 +88,14 @@ object RetrofitTiebaApi {
     val WEB_TIEBA_API: WebTiebaApi by lazy {
         createJsonApi<WebTiebaApi>("https://tieba.baidu.com/",
             CommonHeaderInterceptor(
-                Header.ACCEPT_LANGUAGE to { Header.ACCEPT_LANGUAGE_VALUE },
+                Header.USER_AGENT to { "$defaultUserAgent tieba/11.10.8.6 skin/default" },
+                Header.CUID to { CuidUtils.getNewCuid() },
+                Header.CUID_GALAXY2 to { CuidUtils.getNewCuid() },
+                Header.CUID_GID to { "" },
+                Header.CUID_GALAXY3 to { UIDUtil.getAid() },
+                Header.CLIENT_USER_TOKEN to { AccountUtil.getUid() },
+                Header.CHARSET to { "UTF-8" },
                 Header.HOST to { "tieba.baidu.com" },
-                Header.USER_AGENT to { "Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.5060.0 Mobile Safari/537.36 Edg/103.0.1264.2" }
             ),
             AddCookieInterceptor)
     }
@@ -124,6 +131,7 @@ object RetrofitTiebaApi {
                 Header.CUID_GALAXY3 to { UIDUtil.getAid() },
                 Header.CLIENT_TYPE to { "2" },
                 Header.CHARSET to { "UTF-8" },
+                "client_logid" to { "$initTime" }
             ),
             defaultCommonParamInterceptor + CommonParamInterceptor(
                 Param.CUID to { CuidUtils.getNewCuid() },
