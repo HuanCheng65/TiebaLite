@@ -27,7 +27,7 @@ buildscript {
         classpath "com.didiglobal.booster:booster-transform-webview:$booster_version"
         classpath "com.didiglobal.booster:booster-transform-shared-preferences:$booster_version"
         if (!debug) {
-//            classpath "com.didiglobal.booster:booster-transform-activity-thread:$booster_version"
+            classpath "com.didiglobal.booster:booster-transform-activity-thread:$booster_version"
 //            classpath "com.didiglobal.booster:booster-transform-finalizer-watchdog-daemon:$booster_version"
 //            classpath "com.didiglobal.booster:booster-transform-res-check:$booster_version"
 //            classpath "com.didiglobal.booster:booster-transform-toast:$booster_version"
