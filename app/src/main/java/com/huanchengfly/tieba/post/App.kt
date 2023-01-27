@@ -40,10 +40,10 @@ import com.huanchengfly.tieba.post.utils.EmoticonManager
 import com.huanchengfly.tieba.post.utils.SharedPreferencesUtil
 import com.huanchengfly.tieba.post.utils.ThemeUtil
 import com.huanchengfly.tieba.post.utils.TiebaUtil
-import com.huanchengfly.tieba.post.utils.UIDUtil
 import com.huanchengfly.tieba.post.utils.Util
 import com.huanchengfly.tieba.post.utils.appPreferences
 import com.huanchengfly.tieba.post.utils.applicationMetaData
+import com.huanchengfly.tieba.post.utils.helios.Base32
 import com.huanchengfly.tieba.post.utils.launchUrl
 import com.microsoft.appcenter.AppCenter
 import com.microsoft.appcenter.analytics.Analytics
@@ -65,9 +65,7 @@ class App : Application(), IApp, IGetter, SketchFactory {
     private val mActivityList: MutableList<Activity> = mutableListOf()
 
     override fun onOAIDGetComplete(result: String) {
-        oaid = UIDUtil.Encoder(
-            "ABCDEFGHIJKLMNOPQRSTUVWXYZ234567="
-        ).encode(result.encodeToByteArray())
+        oaid = Base32.encode(result.encodeToByteArray())
     }
 
     override fun onOAIDGetError(error: Exception) {

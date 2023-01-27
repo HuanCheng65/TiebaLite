@@ -1,7 +1,6 @@
 package com.huanchengfly.tieba.post.api.retrofit
 
 import android.os.Build
-import android.webkit.WebView
 import com.huanchengfly.tieba.post.App
 import com.huanchengfly.tieba.post.api.Header
 import com.huanchengfly.tieba.post.api.Param
@@ -47,7 +46,8 @@ object RetrofitTiebaApi {
     internal val randomClientId = "wappc_${initTime}_${(Math.random() * 1000).roundToInt()}"
     private val stParamInterceptor = StParamInterceptor()
     private val connectionPool = ConnectionPool(32, 5, TimeUnit.MINUTES)
-    private val defaultUserAgent = WebView(App.INSTANCE).settings.userAgentString
+    private val defaultUserAgent: String =
+        "Mozilla/5.0 (Linux; Android ${Build.VERSION.RELEASE}; ${Build.MODEL} Build/TKQ1.220829.002; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/109.0.5414.86 Mobile Safari/537.36"
 
     private val defaultCommonParamInterceptor = CommonParamInterceptor(
         Param.BDUSS to { AccountUtil.getBduss() },
@@ -74,10 +74,10 @@ object RetrofitTiebaApi {
             defaultCommonHeaderInterceptor,
             CommonHeaderInterceptor(
                 Header.USER_AGENT to { "bdtb for Android 8.2.2" },
-                Header.CUID to { UIDUtil.getFinalCUID() }
+                Header.CUID to { UIDUtil.finalCUID }
             ),
             defaultCommonParamInterceptor + CommonParamInterceptor(
-                Param.CUID to { UIDUtil.getFinalCUID() },
+                Param.CUID to { UIDUtil.finalCUID },
                 Param.FROM to { "baidu_appstore" },
                 Param.CLIENT_VERSION to { "8.2.2" }
             ),
@@ -106,12 +106,12 @@ object RetrofitTiebaApi {
             defaultCommonHeaderInterceptor,
             CommonHeaderInterceptor(
                 Header.USER_AGENT to { "bdtb for Android 7.2.0.0" },
-                Header.CUID to { UIDUtil.getFinalCUID() },
-                Header.CUID_GALAXY2 to { UIDUtil.getFinalCUID() }
+                Header.CUID to { UIDUtil.finalCUID },
+                Header.CUID_GALAXY2 to { UIDUtil.finalCUID }
             ),
             defaultCommonParamInterceptor + CommonParamInterceptor(
-                Param.CUID to { UIDUtil.getFinalCUID() },
-                Param.CUID_GALAXY2 to { UIDUtil.getFinalCUID() },
+                Param.CUID to { UIDUtil.finalCUID },
+                Param.CUID_GALAXY2 to { UIDUtil.finalCUID },
                 Param.FROM to { "1021636m" },
                 Param.CLIENT_VERSION to { "7.2.0.0" },
                 Param.SUBAPP_TYPE to { "mini" }

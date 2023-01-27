@@ -1,12 +1,12 @@
 package com.huanchengfly.tieba.post.utils
 
+import com.huanchengfly.tieba.post.utils.helios.Base32
+import com.huanchengfly.tieba.post.utils.helios.Hasher
+
 object CuidUtils {
     fun getNewCuid(): String {
-        val cuid = UIDUtil.getCUID()
-        val b = aid.common.cc.b().y(cuid.encodeToByteArray())
-        val encode = UIDUtil.Encoder(
-            "ABCDEFGHIJKLMNOPQRSTUVWXYZ234567="
-        ).encode(b)
+        val cuid = UIDUtil.cUID
+        val encode = Base32.encode(Hasher.hash(cuid.toByteArray()))
         return "$cuid|V$encode"
     }
 }
