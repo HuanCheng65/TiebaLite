@@ -171,13 +171,11 @@ object AccountUtil {
             val bduss = bdussSplit[1].split(";")[0]
             val sToken = sTokenSplit[1].split(";")[0]
             val account = getAccountInfoByBduss(bduss)
-            if (account != null) {
-                account.apply {
-                    this.sToken = sToken
-                    this.cookie = cookie
-                }.update(account.id.toLong())
-                return true
-            }
+            account.apply {
+                this.sToken = sToken
+                this.cookie = cookie
+            }.update(account.id.toLong())
+            return true
         }
         return false
     }
