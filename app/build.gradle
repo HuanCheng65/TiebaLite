@@ -1,7 +1,8 @@
 plugins {
-    id "com.android.application"
-    id "kotlin-android"
-    id "kotlin-kapt"
+    id 'com.android.application'
+    id 'com.didiglobal.booster'
+    id 'kotlin-android'
+    id 'kotlin-kapt'
     id 'kotlinx-serialization'
     id 'dagger.hilt.android.plugin'
     id 'com.squareup.wire'
