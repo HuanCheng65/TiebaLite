@@ -1,4 +1,4 @@
-name: Android CI
+name: Build, Deploy
 
 on:
   push:
@@ -23,17 +23,49 @@ jobs:
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
+      - name: Decrypt keystore
+        env:
+          RELEASE_ENCRYPT_SECRET_KEY: ${{ secrets.RELEASE_ENCRYPT_SECRET_KEY }}
+        run: openssl aes-256-cbc -d -in "${{ github.workspace }}/${{ vars.RELEASE_KEYSTORE }}.encrypted" -k $RELEASE_ENCRYPT_SECRET_KEY -md md5 >> ${{ github.workspace }}/${{ vars.RELEASE_KEYSTORE }}
+
+      - name: Generate keystore.properties
+        env:
+          RELEASE_KEY_PASSWORD: ${{ secrets.RELEASEKEYPASSWORD }}
+          RELEASE_STORE_PASSWORD: ${{ secrets.RELEASESTOREPASSWORD }}
+        run: printf 'releaseKeyAlias=%s\nreleaseKeyPassword=%s\nreleaseKeyStore=%s\nreleaseStorePassword=%s' ${{ vars.RELEASE_KEY_ALIAS }} $RELEASE_KEY_PASSWORD ${{ vars.RELEASE_KEYSTORE }} $RELEASE_STORE_PASSWORD > ${{ github.workspace }}/keystore.properties
+
       - name: Build with Gradle
-        run: ./gradlew packageRelease
+        run: ./gradlew clean packageRelease
 
       - name: Upload Package
         uses: actions/upload-artifact@v3.1.2
         with:
           name: package
-          path: ${{ github.workspace }}/build/outputs/apk/release/*.apk
+          path: ${{ github.workspace }}/app/build/outputs/apk/release/*.apk
 
       - name: Upload Mapping
         uses: actions/upload-artifact@v3.1.2
         with:
           name: mapping
-          path: ${{ github.workspace }}/build/outputs/apk/mapping
+          path: ${{ github.workspace }}/app/build/outputs/mapping/release
+
+      - name: Upload Mapping to App Center
+        uses: vhsantos26/app-center-cli-action@v1
+        with:
+          user_token: ${{ secrets.APP_CENTER_TOKEN }}
+          command: appcenter crashes upload-mappings
+
+      - name: Get Output Metadata
+        run: |
+          echo 'OUTPUT_METADATA<<OUTPUT_METADATA_DELIMITER' >> $GITHUB_ENV
+          cat ${{ github.workspace }}/app/build/outputs/apk/release/output-metadata.json >> $GITHUB_ENV
+          echo 'OUTPUT_METADATA_DELIMITER' >> $GITHUB_ENV
+
+      - name: Upload Mapping to App Center
+        env:
+          version_code: ${{ fromJSON(env.OUTPUT_METADATA).elements[0].versionCode }}
+          version_name: ${{ fromJSON(env.OUTPUT_METADATA).elements[0].versionName }}
+        uses: vhsantos26/app-center-cli-action@v1
+        with:
+          user_token: ${{ secrets.APP_CENTER_TOKEN }}
+          command: appcenter crashes upload-mappings -c $version_code -n $version_name -m ${{ github.workspace }}/app/build/outputs/apk/mapping/mapping.txt -a huanchengfly/TiebaLite

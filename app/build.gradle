@@ -13,13 +13,14 @@ def keystoreProperties = new Properties()
 keystoreProperties.load(new FileInputStream(rootProject.file("keystore.properties")))
 def applicationProperties = new Properties()
 applicationProperties.load(new FileInputStream(rootProject.file("application.properties")))
-def buildId = System.getenv("APPCENTER_BUILD_ID")
-def isSelfBuild = buildId == null
+def sha = System.getenv("GITHUB_SHA")
+def isCI = System.getenv("CI")
+def isSelfBuild = isCI != "true"
 def applicationVersionCode = applicationProperties["versionCode"].toInteger()
 def applicationVersionName = applicationProperties["versionName"]
 def isPerVersion = applicationProperties["isPerRelease"] == "true"
 if (!isSelfBuild) {
-    applicationVersionName = applicationVersionName + ".${buildId}"
+    applicationVersionName = applicationVersionName + ".${sha.substring(0, 7)}"
 }
 if (isPerVersion) {
     applicationVersionName = applicationVersionName + ".${applicationProperties["preReleaseName"]}-${applicationProperties["preReleaseVer"]}"
@@ -146,7 +147,7 @@ dependencies {
     implementation "com.google.accompanist:accompanist-swiperefresh:$accompanist_version"
     implementation "com.google.accompanist:accompanist-webview:$accompanist_version"
 
-    def sketch_version = "3.2.0-beta01"
+    def sketch_version = "3.2.0-beta02"
     implementation "io.github.panpf.sketch3:sketch:$sketch_version"
     implementation "io.github.panpf.sketch3:sketch-compose:$sketch_version"
     implementation "io.github.panpf.sketch3:sketch-extensions:$sketch_version"
@@ -193,7 +194,7 @@ dependencies {
     implementation fileTree(include: ["*.jar"], dir: "libs")
 
     //AndroidX
-    implementation "androidx.appcompat:appcompat:1.5.1"
+    implementation "androidx.appcompat:appcompat:1.6.0"
     implementation "androidx.annotation:annotation:1.5.0"
     implementation "androidx.constraintlayout:constraintlayout:2.1.4"
     implementation "androidx.core:core-ktx:1.9.0"
