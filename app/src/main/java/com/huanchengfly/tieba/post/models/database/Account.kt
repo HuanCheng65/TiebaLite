@@ -4,14 +4,14 @@ import androidx.compose.runtime.Stable
 import org.litepal.crud.LitePalSupport
 
 @Stable
-data class Account(
-    var uid: String,
-    var name: String,
-    var bduss: String,
-    var tbs: String,
-    var portrait: String,
-    var sToken: String,
-    var cookie: String,
+data class Account @JvmOverloads constructor(
+    var uid: String = "",
+    var name: String = "",
+    var bduss: String = "",
+    var tbs: String = "",
+    var portrait: String = "",
+    var sToken: String = "",
+    var cookie: String = "",
     var nameShow: String? = null,
     var intro: String? = null,
     var sex: String? = null,

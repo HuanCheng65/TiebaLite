@@ -1,17 +1,27 @@
 package com.huanchengfly.tieba.post.arch
 
-import android.annotation.SuppressLint
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.State
-import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.produceState
 import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.*
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.flowWithLifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.asFlow
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.filterIsInstance
+import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import kotlin.reflect.KProperty1
 
@@ -23,15 +33,24 @@ fun <T> Flow<T>.collectIn(
     flowWithLifecycle(lifecycleOwner.lifecycle, minActiveState).collect(action)
 }
 
-@SuppressLint("FlowOperatorInvokedInComposition")
 @Composable
 fun <T : UiState, A> Flow<T>.collectPartialAsState(
     prop1: KProperty1<T, A>,
     initial: A,
 ): State<A> {
-    return map { prop1.get(it) }
-        .distinctUntilChanged()
-        .collectAsState(initial = initial)
+    return produceState(
+        initialValue = initial,
+        key1 = this,
+        key2 = prop1,
+        key3 = initial
+    ) {
+        this@collectPartialAsState
+            .map { prop1.get(it) }
+            .distinctUntilChanged()
+            .collect {
+                value = it
+            }
+    }
 }
 
 inline fun <reified Event : UiEvent> CoroutineScope.onEvent(
