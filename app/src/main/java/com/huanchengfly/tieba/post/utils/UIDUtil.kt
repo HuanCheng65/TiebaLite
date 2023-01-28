@@ -5,11 +5,11 @@ import android.os.Build
 import android.provider.Settings
 import android.text.TextUtils
 import com.huanchengfly.tieba.post.App.Companion.INSTANCE
+import com.huanchengfly.tieba.post.toMD5
 import com.huanchengfly.tieba.post.utils.helios.Base32
 import com.huanchengfly.tieba.post.utils.helios.Hasher
 import java.nio.charset.StandardCharsets
 import java.security.MessageDigest
-import java.util.Locale
 import java.util.UUID
 
 object UIDUtil {
@@ -54,10 +54,9 @@ object UIDUtil {
             if (TextUtils.isEmpty(imei)) {
                 imei = "0"
             }
-            return MD5Util.toMd5((if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) imei + androidId + uUID else "com.baidu$androidId").toByteArray())
-                .uppercase(
-                    Locale.getDefault()
-                )
+            val raw =
+                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) imei + androidId + uUID else "com.baidu$androidId"
+            return raw.toMD5().uppercase()
         }
 
     val finalCUID: String
