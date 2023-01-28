@@ -13,6 +13,7 @@ import androidx.compose.foundation.text.InlineTextContent
 import androidx.compose.foundation.text.appendInlineContent
 import androidx.compose.material.DropdownMenuItem
 import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.LocalContentColor
 import androidx.compose.material.Text
 import androidx.compose.material.pullrefresh.PullRefreshIndicator
 import androidx.compose.material.pullrefresh.pullRefresh
@@ -219,8 +220,10 @@ private fun StoreItem(
             name = {
                 Text(
                     text = getUsernameAnnotatedString(
+                        LocalContext.current,
                         info.author.name ?: "",
-                        info.author.nameShow
+                        info.author.nameShow,
+                        LocalContentColor.current
                     )
                 )
             },

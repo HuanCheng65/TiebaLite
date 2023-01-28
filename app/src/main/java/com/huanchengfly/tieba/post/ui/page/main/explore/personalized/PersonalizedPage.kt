@@ -48,6 +48,7 @@ import com.huanchengfly.tieba.post.R
 import com.huanchengfly.tieba.post.activities.ThreadActivity
 import com.huanchengfly.tieba.post.arch.collectPartialAsState
 import com.huanchengfly.tieba.post.arch.pageViewModel
+import com.huanchengfly.tieba.post.arch.wrapImmutable
 import com.huanchengfly.tieba.post.ui.common.theme.compose.ExtendedTheme
 import com.huanchengfly.tieba.post.ui.widgets.compose.FeedCard
 import com.huanchengfly.tieba.post.ui.widgets.compose.LazyLoad
@@ -139,7 +140,8 @@ fun PersonalizedPage(
                     contentType = { _, item ->
                         when {
                             item.videoInfo != null -> "Video"
-                            item.media.isNotEmpty() -> "Media"
+                            item.media.size == 1 -> "SingleMedia"
+                            item.media.size > 1 -> "MultiMedia"
                             else -> "PlainText"
                         }
                     }
@@ -151,7 +153,7 @@ fun PersonalizedPage(
                             exit = shrinkVertically() + fadeOut()
                         ) {
                             FeedCard(
-                                item = item,
+                                info = wrapImmutable(item),
                                 onClick = {
                                     ThreadActivity.launch(context, item.threadId.toString())
                                 },

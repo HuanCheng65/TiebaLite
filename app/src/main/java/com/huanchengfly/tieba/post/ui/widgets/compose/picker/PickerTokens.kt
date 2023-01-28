@@ -2,6 +2,7 @@ package com.huanchengfly.tieba.post.ui.widgets.compose.picker
 
 import androidx.compose.material.ContentAlpha
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.Stable
 import androidx.compose.runtime.State
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.graphics.Color
@@ -23,6 +24,7 @@ private class DefaultPickerColors(
         rememberUpdatedState(if (enabled) selectedItemColor else disabledSelectedItemColor)
 }
 
+@Stable
 interface PickerColors {
     @Composable
     fun itemColor(enabled: Boolean): State<Color>

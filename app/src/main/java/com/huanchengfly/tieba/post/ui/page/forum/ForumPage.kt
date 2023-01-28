@@ -84,9 +84,11 @@ import com.google.accompanist.placeholder.material.placeholder
 import com.huanchengfly.tieba.post.R
 import com.huanchengfly.tieba.post.activities.SearchPostActivity
 import com.huanchengfly.tieba.post.api.models.protos.frsPage.ForumInfo
+import com.huanchengfly.tieba.post.arch.ImmutableHolder
 import com.huanchengfly.tieba.post.arch.collectPartialAsState
 import com.huanchengfly.tieba.post.arch.onEvent
 import com.huanchengfly.tieba.post.arch.pageViewModel
+import com.huanchengfly.tieba.post.arch.wrapImmutable
 import com.huanchengfly.tieba.post.dataStore
 import com.huanchengfly.tieba.post.getInt
 import com.huanchengfly.tieba.post.goToActivity
@@ -210,10 +212,11 @@ private fun ForumHeaderPlaceholder(
 
 @Composable
 private fun ForumHeader(
-    forum: ForumInfo,
+    forumInfoImmutableHolder: ImmutableHolder<ForumInfo>,
     onBtnClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val (forum) = forumInfoImmutableHolder
     Column(
         modifier = modifier
             .fillMaxWidth(),
@@ -535,7 +538,7 @@ fun ForumPage(
                                     expandedTitle = {
                                         if (forum != null) {
                                             ForumHeader(
-                                                forum = forum,
+                                                forumInfoImmutableHolder = wrapImmutable(forum),
                                                 onBtnClick = {
                                                     when {
                                                         forum.is_like != 1 -> viewModel.send(

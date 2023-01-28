@@ -26,10 +26,10 @@ import com.huanchengfly.tieba.post.ui.common.theme.compose.ExtendedTheme
 import com.huanchengfly.tieba.post.ui.page.main.explore.concern.ConcernPage
 import com.huanchengfly.tieba.post.ui.page.main.explore.hot.HotPage
 import com.huanchengfly.tieba.post.ui.page.main.explore.personalized.PersonalizedPage
-import com.huanchengfly.tieba.post.ui.widgets.compose.AccountNavIconIfCompact
 import com.huanchengfly.tieba.post.ui.widgets.compose.ActionItem
 import com.huanchengfly.tieba.post.ui.widgets.compose.PagerTabIndicator
 import com.huanchengfly.tieba.post.ui.widgets.compose.Toolbar
+import com.huanchengfly.tieba.post.ui.widgets.compose.accountNavIconIfCompact
 import kotlinx.coroutines.launch
 
 
@@ -55,7 +55,7 @@ fun ExplorePage() {
         topBar = {
             Toolbar(
                 title = stringResource(id = R.string.title_explore),
-                navigationIcon = AccountNavIconIfCompact(),
+                navigationIcon = accountNavIconIfCompact(),
                 actions = {
                     ActionItem(
                         icon = Icons.Rounded.Search,

@@ -20,6 +20,7 @@ import androidx.compose.ui.unit.dp
 import com.huanchengfly.tieba.post.activities.ThreadActivity
 import com.huanchengfly.tieba.post.arch.collectPartialAsState
 import com.huanchengfly.tieba.post.arch.pageViewModel
+import com.huanchengfly.tieba.post.arch.wrapImmutable
 import com.huanchengfly.tieba.post.ui.widgets.compose.FeedCard
 import com.huanchengfly.tieba.post.ui.widgets.compose.LazyLoad
 import com.huanchengfly.tieba.post.ui.widgets.compose.LoadMoreLayout
@@ -72,7 +73,7 @@ fun ConcernPage(
                     if (item.recommendType == 1) {
                         Column {
                             FeedCard(
-                                item = item.threadList!!,
+                                info = wrapImmutable(item.threadList!!),
                                 onClick = {
                                     ThreadActivity.launch(
                                         context,

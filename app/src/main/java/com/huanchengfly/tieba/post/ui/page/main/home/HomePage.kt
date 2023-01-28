@@ -68,12 +68,12 @@ import com.huanchengfly.tieba.post.ui.common.theme.compose.ExtendedTheme
 import com.huanchengfly.tieba.post.ui.page.LocalNavigator
 import com.huanchengfly.tieba.post.ui.page.destinations.ForumPageDestination
 import com.huanchengfly.tieba.post.ui.widgets.Chip
-import com.huanchengfly.tieba.post.ui.widgets.compose.AccountNavIconIfCompact
 import com.huanchengfly.tieba.post.ui.widgets.compose.ActionItem
 import com.huanchengfly.tieba.post.ui.widgets.compose.Avatar
 import com.huanchengfly.tieba.post.ui.widgets.compose.ConfirmDialog
 import com.huanchengfly.tieba.post.ui.widgets.compose.LongClickMenu
 import com.huanchengfly.tieba.post.ui.widgets.compose.Toolbar
+import com.huanchengfly.tieba.post.ui.widgets.compose.accountNavIconIfCompact
 import com.huanchengfly.tieba.post.ui.widgets.compose.rememberDialogState
 import com.huanchengfly.tieba.post.ui.widgets.compose.rememberMenuState
 import com.huanchengfly.tieba.post.utils.AccountUtil.LocalAccount
@@ -377,7 +377,7 @@ fun HomePage(
         topBar = {
             Toolbar(
                 title = stringResource(id = R.string.title_main),
-                navigationIcon = AccountNavIconIfCompact(),
+                navigationIcon = accountNavIconIfCompact(),
                 actions = {
                     ActionItem(
                         icon = ImageVector.vectorResource(id = R.drawable.ic_oksign),

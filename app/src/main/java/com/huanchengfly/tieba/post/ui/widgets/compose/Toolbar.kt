@@ -54,7 +54,7 @@ import com.huanchengfly.tieba.post.utils.StringUtil
 import com.huanchengfly.tieba.post.utils.compose.calcStatusBarColor
 
 @Composable
-fun AccountNavIconIfCompact(): (@Composable () -> Unit)? =
+fun accountNavIconIfCompact(): (@Composable () -> Unit)? =
     if (LocalWindowSizeClass.current.widthSizeClass == Compact) (@Composable { AccountNavIcon() })
     else null
 

@@ -76,51 +76,60 @@ fun AvatarPlaceholder(
 
 @Composable
 fun Avatar(
-    data: Any?,
+    data: String?,
     size: Dp,
     contentDescription: String?,
     modifier: Modifier = Modifier,
 ) {
     val context = LocalContext.current
-    when (data) {
-        is Int -> {
-            AsyncImage(
-                request = DisplayRequest(LocalContext.current, newResourceUri(data)) {
-                    placeholder(ImageUtil.getPlaceHolder(context, 0))
-                    crossfade()
-                },
-                contentDescription = contentDescription,
-                contentScale = ContentScale.Crop,
-                modifier = modifier
-                    .size(size)
-                    .clip(CircleShape),
-            )
-        }
 
-        is Drawable -> {
-            Image(
-                painter = rememberDrawablePainter(drawable = data),
-                contentDescription = contentDescription,
-                modifier = modifier
-                    .size(size)
-                    .clip(CircleShape),
-            )
-        }
+    AsyncImage(
+        request = DisplayRequest(LocalContext.current, data) {
+            placeholder(ImageUtil.getPlaceHolder(context, 0))
+            crossfade()
+        },
+        contentDescription = contentDescription,
+        contentScale = ContentScale.Crop,
+        modifier = modifier
+            .size(size)
+            .clip(CircleShape),
+    )
+}
 
-        is String? -> {
-            AsyncImage(
-                request = DisplayRequest(LocalContext.current, data) {
-                    placeholder(ImageUtil.getPlaceHolder(context, 0))
-                    crossfade()
-                },
-                contentDescription = contentDescription,
-                contentScale = ContentScale.Crop,
-                modifier = modifier
-                    .size(size)
-                    .clip(CircleShape),
-            )
-        }
+@Composable
+fun Avatar(
+    data: Int,
+    size: Dp,
+    contentDescription: String?,
+    modifier: Modifier = Modifier,
+) {
+    val context = LocalContext.current
 
-        else -> throw IllegalArgumentException("不支持该类型")
-    }
+    AsyncImage(
+        request = DisplayRequest(LocalContext.current, newResourceUri(data)) {
+            placeholder(ImageUtil.getPlaceHolder(context, 0))
+            crossfade()
+        },
+        contentDescription = contentDescription,
+        contentScale = ContentScale.Crop,
+        modifier = modifier
+            .size(size)
+            .clip(CircleShape),
+    )
+}
+
+@Composable
+fun Avatar(
+    data: Drawable,
+    size: Dp,
+    contentDescription: String?,
+    modifier: Modifier = Modifier,
+) {
+    Image(
+        painter = rememberDrawablePainter(drawable = data),
+        contentDescription = contentDescription,
+        modifier = modifier
+            .size(size)
+            .clip(CircleShape),
+    )
 }

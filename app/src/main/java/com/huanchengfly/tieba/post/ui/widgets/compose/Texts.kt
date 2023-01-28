@@ -21,6 +21,7 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.TextUnit
 import com.huanchengfly.tieba.post.utils.EmoticonManager
+import com.huanchengfly.tieba.post.utils.EmoticonManager.getEmoticonHeightPx
 import com.huanchengfly.tieba.post.utils.EmoticonUtil.emoticonString
 
 
@@ -104,6 +105,9 @@ fun EmoticonText(
             letterSpacing = letterSpacing
         )
     )
+    val sizePx = getEmoticonHeightPx(mergedStyle)
+    val emoticonInlineContent =
+        remember(sizePx) { EmoticonManager.getEmoticonInlineContent(sizePx) }
     Text(
         text,
         modifier,
@@ -119,7 +123,7 @@ fun EmoticonText(
         overflow,
         softWrap,
         maxLines,
-        EmoticonManager.getEmoticonInlineContent(mergedStyle) + inlineContent,
+        emoticonInlineContent + inlineContent,
         onTextLayout,
         style
     )

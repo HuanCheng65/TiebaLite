@@ -59,6 +59,8 @@ import com.huanchengfly.tieba.post.api.hasAbstract
 import com.huanchengfly.tieba.post.api.models.protos.Media
 import com.huanchengfly.tieba.post.api.models.protos.ThreadInfo
 import com.huanchengfly.tieba.post.api.models.protos.User
+import com.huanchengfly.tieba.post.arch.ImmutableHolder
+import com.huanchengfly.tieba.post.arch.wrapImmutable
 import com.huanchengfly.tieba.post.ui.common.theme.compose.ExtendedTheme
 import com.huanchengfly.tieba.post.ui.page.LocalNavigator
 import com.huanchengfly.tieba.post.ui.page.destinations.ForumPageDestination
@@ -93,8 +95,10 @@ private fun DefaultUserHeader(
         name = {
             Text(
                 text = StringUtil.getUsernameAnnotatedString(
+                    context = LocalContext.current,
                     username = user.name,
-                    nickname = user.nameShow
+                    nickname = user.nameShow,
+                    color = LocalContentColor.current
                 ),
                 color = ExtendedTheme.colors.text
             )
@@ -259,11 +263,12 @@ fun FeedCardPlaceholder() {
 
 @Composable
 fun FeedCard(
-    item: ThreadInfo,
+    info: ImmutableHolder<ThreadInfo>,
     onClick: () -> Unit,
     onAgree: () -> Unit,
     dislikeAction: @Composable () -> Unit = {},
 ) {
+    val (item) = info
     Card(
         header = {
             if (item.author != null) {
@@ -465,10 +470,12 @@ fun VideoPlayer(
 @Composable
 fun FeedCardPreview() {
     FeedCard(
-        item = ThreadInfo(
-            title = "预览",
-            author = User(),
-            lastTimeInt = (System.currentTimeMillis() / 1000).toInt()
+        info = wrapImmutable(
+            ThreadInfo(
+                title = "预览",
+                author = User(),
+                lastTimeInt = (System.currentTimeMillis() / 1000).toInt()
+            )
         ),
         onClick = {},
         onAgree = {}

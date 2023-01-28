@@ -1,13 +1,24 @@
 package com.huanchengfly.tieba.post.ui.widgets.compose.picker
 
 import androidx.compose.foundation.gestures.animateScrollBy
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.material.Divider
 import androidx.compose.material.Text
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.Immutable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -120,6 +131,7 @@ fun <T> WheelPicker(
     }
 }
 
+@Immutable
 class NumberPickerDivider(
     val showed: Boolean = false,
     val color: Color = Color.Transparent,
@@ -127,6 +139,7 @@ class NumberPickerDivider(
     val indent: Dp = 0.dp
 )
 
+@Immutable
 class ItemStyles(
     val defaultTextStyle: TextStyle = TextStyle.Default,
     val selectedTextStyle: TextStyle = TextStyle.Default

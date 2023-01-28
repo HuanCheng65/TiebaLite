@@ -8,15 +8,13 @@ import android.text.Spanned
 import android.text.TextUtils
 import android.text.style.ForegroundColorSpan
 import android.widget.TextView
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.withStyle
 import com.huanchengfly.tieba.post.R
 import com.huanchengfly.tieba.post.components.spans.EmoticonSpanV2
-import com.huanchengfly.tieba.post.ui.common.theme.compose.ExtendedTheme
 import com.huanchengfly.tieba.post.ui.common.theme.utils.ThemeUtils
 import com.huanchengfly.tieba.post.utils.EmoticonManager.getEmoticonDrawable
 import com.huanchengfly.tieba.post.utils.EmoticonManager.getEmoticonIdByName
@@ -92,19 +90,21 @@ object StringUtil {
         return nickname ?: ""
     }
 
-    @Composable
-    fun getUsernameAnnotatedString(username: String, nickname: String?): AnnotatedString {
-        val showBoth = LocalContext.current.appPreferences.showBothUsernameAndNickname
+    fun getUsernameAnnotatedString(
+        context: Context,
+        username: String,
+        nickname: String?,
+        color: Color
+    ): AnnotatedString {
+        val showBoth = context.appPreferences.showBothUsernameAndNickname
         return buildAnnotatedString {
-            if (nickname.isNullOrEmpty()) {
-                append(username)
-            } else if (showBoth && username.isNotEmpty() && username != nickname) {
+            if (showBoth && !nickname.isNullOrEmpty() && username != nickname) {
                 append(nickname)
-                withStyle(SpanStyle(color = ExtendedTheme.colors.textDisabled)) {
+                withStyle(SpanStyle(color = color)) {
                     append("(${username})")
                 }
             } else {
-                append(nickname)
+                append(nickname ?: username)
             }
         }
     }

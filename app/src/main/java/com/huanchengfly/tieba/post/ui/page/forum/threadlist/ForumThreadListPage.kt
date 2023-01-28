@@ -45,6 +45,7 @@ import com.huanchengfly.tieba.post.arch.BaseComposeActivity.Companion.LocalWindo
 import com.huanchengfly.tieba.post.arch.collectPartialAsState
 import com.huanchengfly.tieba.post.arch.onEvent
 import com.huanchengfly.tieba.post.arch.pageViewModel
+import com.huanchengfly.tieba.post.arch.wrapImmutable
 import com.huanchengfly.tieba.post.ui.common.windowsizeclass.WindowWidthSizeClass
 import com.huanchengfly.tieba.post.ui.page.forum.getSortType
 import com.huanchengfly.tieba.post.ui.widgets.Chip
@@ -96,7 +97,7 @@ private fun getLoadMoreIntent(
 }
 
 private enum class ItemType {
-    Top, Normal
+    Top, PlainText, SingleMedia, MultiMedia, Video
 }
 
 @OptIn(ExperimentalMaterialApi::class)
@@ -244,7 +245,16 @@ fun ForumThreadListPage(
                 itemsIndexed(
                     items = threadList,
                     key = { index, item -> "${index}_${item.id}" },
-                    contentType = { _, item -> if (item.isTop == 1) ItemType.Top else ItemType.Normal }
+                    contentType = { _, item ->
+                        if (item.isTop == 1) ItemType.Top
+                        else {
+                            if (item.media.isNotEmpty())
+                                if (item.media.size == 1) ItemType.SingleMedia else ItemType.MultiMedia
+                            else if (item.videoInfo != null)
+                                ItemType.Video
+                            else ItemType.PlainText
+                        }
+                    }
                 ) { index, item ->
                     val windowSizeClass = LocalWindowSizeClass.current
                     val fraction = when (windowSizeClass.widthSizeClass) {
@@ -293,7 +303,7 @@ fun ForumThreadListPage(
                                 VerticalDivider(modifier = Modifier.padding(horizontal = 16.dp))
                             }
                             FeedCard(
-                                item = item,
+                                info = wrapImmutable(item),
                                 onClick = {
                                     ThreadActivity.launch(
                                         context,

@@ -4,7 +4,14 @@ import android.util.Log
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Size
@@ -19,7 +26,6 @@ import com.huanchengfly.tieba.post.ui.widgets.compose.TimePickerDialog
 import com.huanchengfly.tieba.post.ui.widgets.compose.rememberDialogState
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-import java.time.LocalTime
 
 /**
  * Preference which shows a TextField in a Dialog
@@ -109,24 +115,24 @@ fun TimePickerPerf(
         }
 
         TimePickerDialog(
-            dialogState = dialogState,
-            modifier = Modifier.onGloballyPositioned {
-                dialogSize = it.size.toSize()
-            },
-            currentTime = LocalTime.parse(timeVal),
-            onConfirm = {
-                timeVal = it.toString()
-                onValueChange(it.toString())
-                edit()
-            },
-            onValueChange = {
-                timeVal = it.toString()
-                onValueChange(it.toString())
-            },
             title = {
                 if (dialogTitle != null) {
                     Text(text = dialogTitle)
                 }
+            },
+            currentTime = timeVal,
+            onConfirm = {
+                timeVal = it
+                onValueChange(it)
+                edit()
+            },
+            modifier = Modifier.onGloballyPositioned {
+                dialogSize = it.size.toSize()
+            },
+            dialogState = dialogState,
+            onValueChange = {
+                timeVal = it.toString()
+                onValueChange(it.toString())
             },
         ) {
             if (dialogMessage != null) {

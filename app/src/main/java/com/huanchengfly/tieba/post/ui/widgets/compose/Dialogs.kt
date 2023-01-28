@@ -29,7 +29,6 @@ import com.huanchengfly.tieba.post.ui.common.theme.compose.ExtendedTheme
 import com.huanchengfly.tieba.post.ui.widgets.compose.picker.TimePicker
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import java.time.LocalTime
 
 @Composable
 fun DialogScope.DialogPositiveButton(
@@ -87,17 +86,17 @@ fun DialogScope.DialogNegativeButton(
 
 @Composable
 fun TimePickerDialog(
-    dialogState: DialogState = rememberDialogState(),
+    title: @Composable (DialogScope.() -> Unit),
+    currentTime: String,
+    onConfirm: (String) -> Unit,
     modifier: Modifier = Modifier,
-    currentTime: LocalTime,
-    onConfirm: (LocalTime) -> Unit,
-    onValueChange: ((LocalTime) -> Unit)? = null,
+    dialogState: DialogState = rememberDialogState(),
+    onValueChange: ((String) -> Unit)? = null,
     onCancel: (() -> Unit)? = null,
     is24TimeFormat: Boolean = true,
     confirmText: String = stringResource(id = R.string.button_sure_default),
     cancelText: String = stringResource(id = R.string.button_cancel),
-    title: @Composable DialogScope.() -> Unit,
-    content: @Composable DialogScope.() -> Unit = {},
+    content: @Composable (DialogScope.() -> Unit) = {},
 ) {
     var timeVal by remember { mutableStateOf(currentTime) }
     Dialog(
@@ -117,12 +116,12 @@ fun TimePickerDialog(
                 }
             }
             TimePicker(
-                is24TimeFormat = is24TimeFormat,
                 currentTime = timeVal,
                 onTimeChanged = {
                     timeVal = it
                     onValueChange?.invoke(it)
                 },
+                is24TimeFormat = is24TimeFormat,
                 modifier = Modifier.height(150.dp)
             )
             Spacer(modifier = Modifier.height(16.dp))

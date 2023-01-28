@@ -23,10 +23,10 @@ import com.huanchengfly.tieba.post.goToActivity
 import com.huanchengfly.tieba.post.ui.common.theme.compose.ExtendedTheme
 import com.huanchengfly.tieba.post.ui.page.main.notifications.list.NotificationsListPage
 import com.huanchengfly.tieba.post.ui.page.main.notifications.list.NotificationsType
-import com.huanchengfly.tieba.post.ui.widgets.compose.AccountNavIconIfCompact
 import com.huanchengfly.tieba.post.ui.widgets.compose.ActionItem
 import com.huanchengfly.tieba.post.ui.widgets.compose.PagerTabIndicator
 import com.huanchengfly.tieba.post.ui.widgets.compose.Toolbar
+import com.huanchengfly.tieba.post.ui.widgets.compose.accountNavIconIfCompact
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalPagerApi::class)
@@ -48,7 +48,7 @@ fun NotificationsPage() {
         topBar = {
             Toolbar(
                 title = stringResource(id = R.string.title_notifications),
-                navigationIcon = AccountNavIconIfCompact(),
+                navigationIcon = accountNavIconIfCompact(),
                 actions = {
                     ActionItem(
                         icon = Icons.Rounded.Search,

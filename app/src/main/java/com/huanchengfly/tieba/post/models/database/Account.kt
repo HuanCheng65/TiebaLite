@@ -1,7 +1,9 @@
 package com.huanchengfly.tieba.post.models.database
 
+import androidx.compose.runtime.Stable
 import org.litepal.crud.LitePalSupport
 
+@Stable
 data class Account(
     var uid: String,
     var name: String,
@@ -24,7 +26,5 @@ data class Account(
     var constellation: String? = null,
     var loadSuccess: Boolean = false,
 ) : LitePalSupport() {
-    internal constructor() : this("", "", "", "", "", "", "")
-
     val id: Int = 0
 }

@@ -8,17 +8,22 @@ import androidx.appcompat.content.res.AppCompatResources
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.text.InlineTextContent
-import androidx.compose.material.LocalTextStyle
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.text.*
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.ExperimentalTextApi
+import androidx.compose.ui.text.Placeholder
+import androidx.compose.ui.text.PlaceholderVerticalAlign
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.bumptech.glide.Glide
 import com.google.accompanist.drawablepainter.rememberDrawablePainter
 import com.huanchengfly.tieba.post.App
+import com.huanchengfly.tieba.post.R
 import com.huanchengfly.tieba.post.models.EmoticonCache
 import com.huanchengfly.tieba.post.pxToDp
 import com.huanchengfly.tieba.post.pxToSp
@@ -99,38 +104,42 @@ object EmoticonManager {
 
     @OptIn(ExperimentalTextApi::class)
     @Composable
-    fun getEmoticonInlineContent(
-        style: TextStyle = LocalTextStyle.current
-    ): Map<String, InlineTextContent> {
+    fun getEmoticonHeightPx(style: TextStyle): Int {
         val textMeasurer = rememberTextMeasurer()
-        val textLayoutResult = textMeasurer.measure(AnnotatedString("表情"), style)
-        val heightPx = textLayoutResult.size.height
+        val textLayoutResult = textMeasurer.measure(
+            AnnotatedString(stringResource(id = R.string.emoticon_default)),
+            style
+        )
+        return textLayoutResult.size.height
+    }
 
-        val inlineContent = remember(key1 = style) {
-            emoticonIds.associate { id ->
-                "Emoticon#$id" to InlineTextContent(
-                    placeholder = Placeholder(
-                        heightPx.pxToSp().sp,
-                        heightPx.pxToSp().sp,
-                        PlaceholderVerticalAlign.TextCenter
-                    ),
-                    children = {
-                        Image(
-                            painter = rememberDrawablePainter(
-                                drawable = getEmoticonDrawable(
-                                    LocalContext.current,
-                                    id
-                                )
-                            ),
-                            contentDescription = null,
-                            modifier = Modifier.size(heightPx.pxToDp().dp)
-                        )
-                    }
-                )
-            }
+    fun getEmoticonInlineContent(
+        sizePx: Int
+    ): Map<String, InlineTextContent> {
+        return emoticonIds.associate { id ->
+            "Emoticon#$id" to InlineTextContent(
+                placeholder = Placeholder(
+                    sizePx.pxToSp().sp,
+                    sizePx.pxToSp().sp,
+                    PlaceholderVerticalAlign.TextCenter
+                ),
+                children = {
+                    Image(
+                        painter = rememberDrawablePainter(
+                            drawable = getEmoticonDrawable(
+                                LocalContext.current,
+                                id
+                            )
+                        ),
+                        contentDescription = stringResource(
+                            id = R.string.emoticon,
+                            getEmoticonNameById(id) ?: ""
+                        ),
+                        modifier = Modifier.size(sizePx.pxToDp().dp)
+                    )
+                }
+            )
         }
-
-        return inlineContent
     }
 
     fun init(context: Context) {
@@ -203,6 +212,16 @@ object EmoticonManager {
 
     fun getEmoticonIdByName(name: String): String? {
         return emoticonMapping[name]
+    }
+
+    fun getEmoticonNameById(id: String): String? {
+        return emoticonMapping.firstNotNullOfOrNull { (name, emoticonId) ->
+            if (emoticonId == id) {
+                name
+            } else {
+                null
+            }
+        }
     }
 
     fun getEmoticonResId(context: Context, id: String): Int {
