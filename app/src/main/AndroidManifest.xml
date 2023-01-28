@@ -140,7 +140,7 @@
         <activity
             android:name=".MainActivityV2"
             android:configChanges="screenSize|screenLayout|orientation|smallestScreenSize|keyboard|navigation|keyboardHidden"
-            android:enabled="false"
+            android:enabled="true"
             android:exported="true"
             android:icon="@mipmap/ic_launcher_new"
             android:roundIcon="@mipmap/ic_launcher_new_round"
@@ -168,6 +168,7 @@
 
         <activity-alias
             android:name=".MainActivityIconInvert"
+            android:enabled="false"
             android:exported="true"
             android:icon="@mipmap/ic_launcher_new_invert"
             android:roundIcon="@mipmap/ic_launcher_new_invert_round"
