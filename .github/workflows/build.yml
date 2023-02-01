@@ -49,23 +49,17 @@ jobs:
           name: mapping
           path: ${{ github.workspace }}/app/build/outputs/mapping/release
 
-      - name: Upload Mapping to App Center
-        uses: vhsantos26/app-center-cli-action@v1
+      - name: Get Android version
+        id: get_version
+        uses: ltDino/android-get-version-action@v1.0
         with:
-          user_token: ${{ secrets.APP_CENTER_TOKEN }}
-          command: appcenter crashes upload-mappings
-
-      - name: Get Output Metadata
-        run: |
-          echo 'OUTPUT_METADATA<<OUTPUT_METADATA_DELIMITER' >> $GITHUB_ENV
-          cat ${{ github.workspace }}/app/build/outputs/apk/release/output-metadata.json >> $GITHUB_ENV
-          echo 'OUTPUT_METADATA_DELIMITER' >> $GITHUB_ENV
+          gradlePath: ${{ github.workspace }}/app/build.gradle
 
       - name: Upload Mapping to App Center
         env:
-          version_code: ${{ fromJSON(env.OUTPUT_METADATA).elements[0].versionCode }}
-          version_name: ${{ fromJSON(env.OUTPUT_METADATA).elements[0].versionName }}
+          version_code: ${{ steps.get_version.outputs.versionCode }}
+          version_name: ${{ steps.get_version.outputs.versionName }}
         uses: vhsantos26/app-center-cli-action@v1
         with:
           user_token: ${{ secrets.APP_CENTER_TOKEN }}
-          command: appcenter crashes upload-mappings -c $version_code -n $version_name -m ${{ github.workspace }}/app/build/outputs/apk/mapping/mapping.txt -a huanchengfly/TiebaLite
+          command: appcenter crashes upload-mappings -c $version_code -n $version_name -m ${{ github.workspace }}/app/build/outputs/mapping/release/mapping.txt -a huanchengfly/TiebaLite
