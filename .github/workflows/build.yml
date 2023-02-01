@@ -38,28 +38,32 @@ jobs:
         run: ./gradlew clean packageRelease
 
       - name: Upload Package
+        if: ${{ success() }}
         uses: actions/upload-artifact@v3.1.2
         with:
           name: package
           path: ${{ github.workspace }}/app/build/outputs/apk/release/*.apk
 
       - name: Upload Mapping
+        if: ${{ success() }}
         uses: actions/upload-artifact@v3.1.2
         with:
           name: mapping
           path: ${{ github.workspace }}/app/build/outputs/mapping/release
 
-      - name: Get Android version
-        id: get_version
-        uses: ltDino/android-get-version-action@v1.0
+      - name: Read Output Metadata
+        if: ${{ success() }}
+        id: read_output_metadata
+        uses: juliangruber/read-file-action@v1
         with:
-          gradlePath: ${{ github.workspace }}/app/build.gradle
+          path: ${{ github.workspace }}/app/build/outputs/apk/release/output-metadata.json
 
       - name: Upload Mapping to App Center
+        if: ${{ success() }}
         env:
-          version_code: ${{ steps.get_version.outputs.versionCode }}
-          version_name: ${{ steps.get_version.outputs.versionName }}
+          version_code: ${{ fromJSON(steps.read_output_metadata.outputs.content).elements[0].versionCode }}
+          version_name: ${{ fromJSON(steps.read_output_metadata.outputs.content).elements[0].versionName }}
         uses: vhsantos26/app-center-cli-action@v1
         with:
           user_token: ${{ secrets.APP_CENTER_TOKEN }}
-          command: appcenter crashes upload-mappings -c $version_code -n $version_name -m ${{ github.workspace }}/app/build/outputs/mapping/release/mapping.txt -a huanchengfly/TiebaLite
+          command: appcenter crashes upload-mappings -c ${{ env.version_code }} -n ${{ env.version_name }} -m /github/workspace/app/build/outputs/mapping/release/mapping.txt -a huanchengfly/TiebaLite
