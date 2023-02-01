@@ -1,6 +1,8 @@
 # <p align="center">Tieba Lite</p>
 <p align="center">
-    <img alt="Build Status" src="https://build.appcenter.ms/v0.1/apps/11fb9a7c-fef2-4fd3-b150-167d30fc089d/branches/4.0-dev/badge">
+    <a href="https://github.com/HuanCheng65/TiebaLite/actions/workflows/build.yml">
+        <img alt="Build Status" src="https://github.com/HuanCheng65/TiebaLite/actions/workflows/build.yml/badge.svg?branch=4.0-dev">
+    </a>
     <a href="https://t.me/tblite_discuss">
         <img alt="Status" src="https://img.shields.io/badge/-Telegram-blue?logo=telegram&style=flat">
     </a>
