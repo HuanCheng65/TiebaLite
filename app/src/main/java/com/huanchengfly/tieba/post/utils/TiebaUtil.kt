@@ -68,7 +68,7 @@ object TiebaUtil {
             calendar[Calendar.MINUTE] = minute
             if (calendar.timeInMillis >= System.currentTimeMillis()) {
                 alarmManager.setRepeating(
-                    AlarmManager.RTC,
+                    AlarmManager.RTC_WAKEUP,
                     calendar.timeInMillis,
                     AlarmManager.INTERVAL_DAY,
                     pendingIntent
