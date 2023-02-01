@@ -17,10 +17,20 @@ message User {
   int32 is_manager = 11;
   int32 is_bawu = 25;
   string bawu_type = 26;
+  int32 fans_num = 30;
+  int32 concern_num = 31;
+  int32 sex = 32;
+  int32 my_like_num = 33;
+  string intro = 34;
   int32 has_concerned = 35;
+  int32 post_num = 37;
+  string tb_age = 38;
   int32 gender = 42;
   PrivSets privSets = 45;
   string fansNickname = 57;
+  int32 thread_num = 87;
+  int32 agree_num = 88;
   int32 priv_thread = 92;
   int32 isDefaultAvatar = 106;
+  uint32 total_agree_num = 118;
 }

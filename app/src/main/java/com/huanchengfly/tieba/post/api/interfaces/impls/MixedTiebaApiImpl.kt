@@ -59,6 +59,9 @@ import com.huanchengfly.tieba.post.api.models.protos.hotThreadList.HotThreadList
 import com.huanchengfly.tieba.post.api.models.protos.personalized.PersonalizedRequest
 import com.huanchengfly.tieba.post.api.models.protos.personalized.PersonalizedRequestData
 import com.huanchengfly.tieba.post.api.models.protos.personalized.PersonalizedResponse
+import com.huanchengfly.tieba.post.api.models.protos.profile.ProfileRequest
+import com.huanchengfly.tieba.post.api.models.protos.profile.ProfileRequestData
+import com.huanchengfly.tieba.post.api.models.protos.profile.ProfileResponse
 import com.huanchengfly.tieba.post.api.models.protos.threadList.AdParam
 import com.huanchengfly.tieba.post.api.models.protos.threadList.ThreadListRequest
 import com.huanchengfly.tieba.post.api.models.protos.threadList.ThreadListRequestData
@@ -969,6 +972,33 @@ object MixedTiebaApiImpl : ITiebaApi {
             is_giftpost = if (postId == null) null else "0",
             is_twzhibo_thread = if (postId == null) null else "0",
             post_from = if (postId == null) "3" else "11"
+        )
+    }
+
+    override fun profileFlow(uid: Long): Flow<ProfileResponse> {
+        val selfUid = AccountUtil.getUid()?.toLongOrNull()
+        val isSelf = selfUid == uid
+        return RetrofitTiebaApi.OFFICIAL_PROTOBUF_TIEBA_API.profileFlow(
+            buildProtobufRequestBody(
+                ProfileRequest(
+                    ProfileRequestData(
+                        common = buildCommonRequest(),
+                        friend_uid = uid.takeIf { !isSelf },
+                        friend_uid_portrait = "",
+                        has_plist = 1,
+                        is_from_usercenter = 1,
+                        need_post_count = 1,
+                        page = 2,
+                        pn = 1,
+                        q_type = 0,
+                        rn = 20,
+                        scr_dip = App.ScreenInfo.DENSITY.toDouble(),
+                        scr_h = getScreenHeight(),
+                        scr_w = getScreenWidth(),
+                        uid = selfUid,
+                    )
+                )
+            )
         )
     }
 }

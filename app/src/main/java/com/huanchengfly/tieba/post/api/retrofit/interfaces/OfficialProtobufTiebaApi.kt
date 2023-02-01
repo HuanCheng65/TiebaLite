@@ -4,6 +4,7 @@ import com.huanchengfly.tieba.post.api.models.protos.forumRecommend.ForumRecomme
 import com.huanchengfly.tieba.post.api.models.protos.frsPage.FrsPageResponse
 import com.huanchengfly.tieba.post.api.models.protos.hotThreadList.HotThreadListResponse
 import com.huanchengfly.tieba.post.api.models.protos.personalized.PersonalizedResponse
+import com.huanchengfly.tieba.post.api.models.protos.profile.ProfileResponse
 import com.huanchengfly.tieba.post.api.models.protos.threadList.ThreadListResponse
 import com.huanchengfly.tieba.post.api.models.protos.topicList.TopicListResponse
 import com.huanchengfly.tieba.post.api.models.protos.userLike.UserLikeResponse
@@ -47,4 +48,9 @@ interface OfficialProtobufTiebaApi {
     fun threadListFlow(
         @Body body: MyMultipartBody,
     ): Flow<ThreadListResponse>
+
+    @POST("/c/u/user/profile?cmd=303012")
+    fun profileFlow(
+        @Body body: MyMultipartBody,
+    ): Flow<ProfileResponse>
 }
