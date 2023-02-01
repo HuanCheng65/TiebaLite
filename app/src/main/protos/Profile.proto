@@ -1,0 +1,43 @@
+syntax = "proto3";
+
+package tieba.profile;
+
+option java_package = "com.huanchengfly.tieba.post.api.models.protos.profile";
+
+import "ForumDynamic.proto";
+import "CommonRequest.proto";
+import "User.proto";
+import "Anti.proto";
+import "Error.proto";
+
+message ProfileRequestData {
+  CommonRequest common = 9;
+  int64 friend_uid = 3;
+  string friend_uid_portrait = 16;
+  uint32 has_plist = 8;
+  int32 is_from_usercenter = 14;
+  uint32 need_post_count = 2;
+  int32 page = 15;
+  uint32 pn = 6;
+  uint32 q_type = 12;
+  uint32 rn = 7;
+  double scr_dip = 13;
+  int32 scr_h = 11;
+  int32 scr_w = 10;
+  int64 uid = 1;
+}
+
+message ProfileRequest {
+  ProfileRequestData data = 1;
+}
+
+message ProfileResponseData {
+  User user = 1;
+  Anti anti_stat = 2;
+  repeated ForumDynamic concerned_forum_list = 13;
+}
+
+message ProfileResponse {
+  Error error = 1;
+  ProfileResponseData data = 2;
+}

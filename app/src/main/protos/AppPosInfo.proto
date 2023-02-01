@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+package tieba;
+
+option java_package = "com.huanchengfly.tieba.post.api.models.protos";
+
+message AppPosInfo {
+  optional int64 addr_timestamp = 6;
+  optional bool ap_connected = 2;
+  optional string ap_mac = 1;
+  optional string asp_shown_info = 7;
+  optional string coordinate_type = 3;
+}

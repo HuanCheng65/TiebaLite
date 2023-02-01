@@ -1,0 +1,10 @@
+syntax = "proto3";
+
+package tieba.frsPage;
+
+option java_package = "com.huanchengfly.tieba.post.api.models.protos.frsPage";
+
+message Group {
+  int32 hide_recommend_group = 1;
+  int32 group_count = 2;
+}

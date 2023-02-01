@@ -1,12 +1,14 @@
 syntax = "proto3";
 
-package protos;
+package tieba.hotThreadList;
 
 option java_package = "com.huanchengfly.tieba.post.api.models.protos.hotThreadList";
 
-import "Common.proto";
 import "CommonRequest.proto";
 import "ThreadInfo.proto";
+import "RecommendTopicList.proto";
+import "FrsTabInfo.proto";
+import "Error.proto";
 
 message HotThreadListRequestData {
   CommonRequest common = 1;

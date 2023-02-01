@@ -1,12 +1,14 @@
 syntax = "proto3";
 
-package protos;
+package tieba.topicList;
 
 option java_package = "com.huanchengfly.tieba.post.api.models.protos.topicList";
 
-import "Common.proto";
 import "CommonRequest.proto";
 import "ThreadInfo.proto";
+import "Error.proto";
+import "Media.proto";
+import "VideoInfo.proto";
 
 message TopicListRequestData {
   CommonRequest common = 1;

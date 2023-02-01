@@ -1,0 +1,10 @@
+syntax = "proto3";
+
+package tieba.frsPage;
+
+option java_package = "com.huanchengfly.tieba.post.api.models.protos.frsPage";
+
+message Forum {
+  int64 forum_id = 1;
+  string level1_dir_name = 2;
+}

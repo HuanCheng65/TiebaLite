@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+package tieba.frsPage;
+
+option java_package = "com.huanchengfly.tieba.post.api.models.protos.frsPage";
+
+message Classify {
+  string name = 1;
+  int64 id = 2;
+  int32 class_id = 3;
+  string class_name = 4;
+}

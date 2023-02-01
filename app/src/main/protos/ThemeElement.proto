@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+package tieba;
+
+option java_package = "com.huanchengfly.tieba.post.api.models.protos";
+
+message ThemeElement {
+  string common_color = 1;
+  string dark_color = 2;
+  string light_color = 3;
+  string pattern_image = 4;
+  string font_color = 5;
+}

@@ -1,7 +1,5 @@
 syntax = "proto3";
 
-package protos;
-
 option java_package = "com.huanchengfly.tieba.post.models.protos";
 
 message PhotoViewData {

@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+package tieba;
+
+option java_package = "com.huanchengfly.tieba.post.api.models.protos";
+
+import "Abstract.proto";
+
+message PostInfoContent {
+  repeated Abstract post_content = 1;
+  uint64 create_time = 2;
+  uint64 post_type = 3;
+  uint64 post_id = 4;
+  int32 is_author_view = 5;
+  string target_scheme = 7;
+}

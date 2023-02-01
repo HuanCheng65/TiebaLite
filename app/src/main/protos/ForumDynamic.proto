@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+package tieba;
+
+option java_package = "com.huanchengfly.tieba.post.api.models.protos.profile";
+
+message ForumDynamic {
+  int64 forum_id = 1;
+  string forum_name = 2;
+  string avatar = 3;
+  string slogan = 4;
+  uint32 is_like = 5;
+  uint32 member_count = 6;
+  uint32 thread_count = 7;
+  uint32 user_thread_count = 9;
+}

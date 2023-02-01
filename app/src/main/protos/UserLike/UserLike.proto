@@ -1,13 +1,14 @@
 syntax = "proto3";
 
-package protos;
+package tieba.userLike;
 
 option java_package = "com.huanchengfly.tieba.post.api.models.protos.userLike";
 
-import "Common.proto";
 import "CommonRequest.proto";
 import "ThreadInfo.proto";
-import "Pb.proto";
+import "PbContent.proto";
+import "Error.proto";
+import "User.proto";
 
 message UserLikeRequestData {
   CommonRequest common = 1;

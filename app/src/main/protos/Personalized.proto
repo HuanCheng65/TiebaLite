@@ -1,12 +1,13 @@
 syntax = "proto3";
 
-package protos;
+package tieba;
 
 option java_package = "com.huanchengfly.tieba.post.api.models.protos.personalized";
 
-import "Common.proto";
 import "CommonRequest.proto";
 import "ThreadInfo.proto";
+import "AppPosInfo.proto";
+import "Error.proto";
 
 message PersonalizedRequestData {
   string ad_context_list = 30;

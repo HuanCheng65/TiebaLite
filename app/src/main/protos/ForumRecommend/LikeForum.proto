@@ -1,0 +1,28 @@
+syntax = "proto3";
+import "ThemeColorInfo.proto";
+import "PrivateForumInfo.proto";
+import "FrsTabInfo.proto";
+
+package tieba.forumRecommend;
+
+option java_package = "com.huanchengfly.tieba.post.api.models.protos.forumRecommend";
+
+message LikeForum {
+  int64 forum_id = 1;
+  string forum_name = 2;
+  string avatar = 3;
+  int32 is_sign = 4;
+  int32 level_id = 5;
+  int32 is_liveforum = 6;
+  uint32 is_brand_forum = 7;
+  string content = 9;
+  int32 is_top = 10;
+  int32 sort_type = 11;
+  ThemeColorInfo theme_color = 12;
+  bool need_trans = 14;
+  int32 is_private_forum = 15;
+  int32 is_manager = 18;
+  optional PrivateForumInfo private_forum_info = 19;
+  int64 hot_thread_id = 20;
+  repeated FrsTabInfo tab_info = 21;
+}

@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+package tieba;
+
+option java_package = "com.huanchengfly.tieba.post.api.models.protos";
+
+message VideoInfo {
+  string videoMD5 = 1;
+  string videoUrl = 2;
+  uint32 videoDuration = 3;
+  uint32 videoWidth = 4;
+  uint32 videoHeight = 5;
+  string thumbnailUrl = 6;
+  uint32 thumbnailWidth = 7;
+  uint32 thumbnailHeight = 8;
+  string mediaSubtitle = 11;
+}

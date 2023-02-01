@@ -59,6 +59,7 @@ import com.huanchengfly.tieba.post.api.models.protos.hotThreadList.HotThreadList
 import com.huanchengfly.tieba.post.api.models.protos.personalized.PersonalizedRequest
 import com.huanchengfly.tieba.post.api.models.protos.personalized.PersonalizedRequestData
 import com.huanchengfly.tieba.post.api.models.protos.personalized.PersonalizedResponse
+import com.huanchengfly.tieba.post.api.models.protos.threadList.AdParam
 import com.huanchengfly.tieba.post.api.models.protos.threadList.ThreadListRequest
 import com.huanchengfly.tieba.post.api.models.protos.threadList.ThreadListRequestData
 import com.huanchengfly.tieba.post.api.models.protos.threadList.ThreadListResponse
@@ -920,7 +921,7 @@ object MixedTiebaApiImpl : ITiebaApi {
             buildProtobufRequestBody(
                 ThreadListRequest(
                     ThreadListRequestData(
-                        ad_param = buildAdParam(3, 0, null),
+                        ad_param = AdParam(3, 0, null),
                         app_pos = buildAppPosInfo(),
                         common = buildCommonRequest(),
                         scr_dip = App.ScreenInfo.DENSITY.toDouble(),

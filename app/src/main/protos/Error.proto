@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+package tieba;
+
+option java_package = "com.huanchengfly.tieba.post.api.models.protos";
+
+message Error {
+  string error_msg = 2;
+  int32 error_code = 1;
+  string user_msg = 3;
+}

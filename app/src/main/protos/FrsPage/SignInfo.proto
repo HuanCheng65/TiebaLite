@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+package tieba.frsPage;
+
+option java_package = "com.huanchengfly.tieba.post.api.models.protos.frsPage";
+
+import "FrsPage/SignForum.proto";
+import "FrsPage/SignUser.proto";
+
+message SignInfo {
+  SignUser user_info = 1;
+  SignForum forum_info = 2;
+}

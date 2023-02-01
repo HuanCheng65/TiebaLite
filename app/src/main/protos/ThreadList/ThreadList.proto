@@ -1,13 +1,15 @@
 syntax = "proto3";
 
-package protos;
+package tieba.threadList;
 
 option java_package = "com.huanchengfly.tieba.post.api.models.protos.threadList";
 
-import "Common.proto";
 import "CommonRequest.proto";
 import "ThreadInfo.proto";
-import "FrsPage.proto";
+import "AppPosInfo.proto";
+import "User.proto";
+import "Error.proto";
+import "ThreadList/AdParam.proto";
 
 message ThreadListRequestData {
   optional string ad_context_list = 19;

@@ -1,0 +1,12 @@
+syntax = "proto3";
+import "ThemeElement.proto";
+
+package tieba;
+
+option java_package = "com.huanchengfly.tieba.post.api.models.protos";
+
+message ThemeColorInfo {
+  ThemeElement day = 1;
+  ThemeElement night = 2;
+  ThemeElement dark = 3;
+}

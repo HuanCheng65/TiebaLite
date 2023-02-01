@@ -1,0 +1,26 @@
+syntax = "proto3";
+import "PrivSets.proto";
+
+package tieba;
+
+option java_package = "com.huanchengfly.tieba.post.api.models.protos";
+
+message User {
+  int32 is_login = 1;
+  int64 id = 2;
+  string name = 3;
+  string nameShow = 4;
+  string portrait = 5;
+  int32 no_un = 6;
+  int32 type = 7;
+  int32 userhide = 9;
+  int32 is_manager = 11;
+  int32 is_bawu = 25;
+  string bawu_type = 26;
+  int32 has_concerned = 35;
+  int32 gender = 42;
+  PrivSets privSets = 45;
+  string fansNickname = 57;
+  int32 priv_thread = 92;
+  int32 isDefaultAvatar = 106;
+}
