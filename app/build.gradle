@@ -178,7 +178,7 @@ dependencies {
 
     implementation 'com.github.gzu-liyujiang:Android_CN_OAID:4.2.4'
 
-    implementation 'org.jetbrains:annotations:23.0.0'
+    implementation 'org.jetbrains:annotations:24.0.0'
 
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
     api 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4'
@@ -221,14 +221,14 @@ dependencies {
     kapt "com.github.bumptech.glide:compiler:$glide_version"
     implementation "com.github.bumptech.glide:okhttp3-integration:$glide_version"
 
-    implementation "com.google.android.material:material:1.7.0"
+    implementation "com.google.android.material:material:1.8.0"
 
     implementation "com.squareup.okhttp3:okhttp:4.10.0"
     implementation "com.squareup.retrofit2:retrofit:$retrofit_version"
     implementation "com.squareup.retrofit2:converter-gson:$retrofit_version"
     implementation "com.squareup.retrofit2:converter-wire:$retrofit_version"
 
-    implementation 'com.google.code.gson:gson:2.10'
+    implementation 'com.google.code.gson:gson:2.10.1'
     implementation 'com.github.DSAppTeam:PanelSwitchHelper:v1.5.2'
     implementation "org.litepal.android:kotlin:3.0.0"
     implementation 'cn.jzvd:jiaozivideoplayer:7.7.2.3300'
