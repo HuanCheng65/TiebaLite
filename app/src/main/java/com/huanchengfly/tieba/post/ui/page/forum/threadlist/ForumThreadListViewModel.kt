@@ -25,6 +25,7 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.merge
 import kotlinx.coroutines.flow.onStart
 import javax.inject.Inject
+import kotlin.math.min
 
 abstract class ForumThreadListViewModel :
     BaseViewModel<ForumThreadListUiIntent, ForumThreadListPartialChange, ForumThreadListUiState, ForumThreadListUiEvent>() {
@@ -140,12 +141,13 @@ private class ForumThreadListPartialChangeProducer(val type: ForumThreadListType
 
     private fun ForumThreadListUiIntent.LoadMore.producePartialChange(): Flow<ForumThreadListPartialChange.LoadMore> {
         val flow = if (threadListIds.isNotEmpty()) {
+            val size = min(threadListIds.size, 30)
             TiebaApi.getInstance().threadList(
                 forumId,
                 forumName,
                 currentPage,
                 sortType,
-                threadListIds.subList(0, 30).joinToString(separator = ",") { "$it" }
+                threadListIds.subList(0, size).joinToString(separator = ",") { "$it" }
             ).map { response ->
                 if (response.data_ == null) ForumThreadListPartialChange.LoadMore.Failure(
                     NullPointerException("未知错误")
@@ -157,7 +159,7 @@ private class ForumThreadListPartialChangeProducer(val type: ForumThreadListType
                     }
                     ForumThreadListPartialChange.LoadMore.Success(
                         threadList = threadList,
-                        threadListIds = threadListIds.drop(30),
+                        threadListIds = threadListIds.drop(size),
                         currentPage = currentPage,
                         hasMore = threadList.isNotEmpty()
                     )
