@@ -1,16 +1,25 @@
 package com.huanchengfly.tieba.post.arch
 
 import android.util.Log
+import androidx.compose.runtime.Stable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.scan
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
 interface PartialChangeProducer<Intent : UiIntent, PC : PartialChange<State>, State : UiState> {
     fun toPartialChangeFlow(intentFlow: Flow<Intent>): Flow<PC>
 }
 
+@Stable
 abstract class BaseViewModel<
         Intent : UiIntent,
         PC : PartialChange<State>,
@@ -57,5 +66,16 @@ abstract class BaseViewModel<
         viewModelScope.launch {
             _intentFlow.emit(intent)
         }
+    }
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
+
+        other as BaseViewModel<*, *, *, *>
+
+        if (initialized != other.initialized) return false
+
+        return true
     }
 }

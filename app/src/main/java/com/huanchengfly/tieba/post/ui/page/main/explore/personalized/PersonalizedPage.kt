@@ -18,6 +18,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.staggeredgrid.LazyStaggeredGridState
 import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
 import androidx.compose.foundation.lazy.staggeredgrid.itemsIndexed
@@ -33,6 +34,7 @@ import androidx.compose.material.pullrefresh.PullRefreshIndicator
 import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -44,8 +46,12 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.github.panpf.sketch.request.PauseLoadWhenScrollingDrawableDecodeInterceptor
 import com.huanchengfly.tieba.post.R
 import com.huanchengfly.tieba.post.activities.ThreadActivity
+import com.huanchengfly.tieba.post.api.models.protos.ThreadInfo
+import com.huanchengfly.tieba.post.api.models.protos.personalized.DislikeReason
+import com.huanchengfly.tieba.post.api.models.protos.personalized.ThreadPersonalized
 import com.huanchengfly.tieba.post.arch.collectPartialAsState
 import com.huanchengfly.tieba.post.arch.pageViewModel
 import com.huanchengfly.tieba.post.arch.wrapImmutable
@@ -123,96 +129,50 @@ fun PersonalizedPage(
             showRefreshTip = false
         }
     }
-
+    if (lazyStaggeredGridState.isScrollInProgress) {
+        DisposableEffect(Unit) {
+            PauseLoadWhenScrollingDrawableDecodeInterceptor.scrolling = true
+            onDispose {
+                PauseLoadWhenScrollingDrawableDecodeInterceptor.scrolling = false
+            }
+        }
+    }
     Box(modifier = Modifier.pullRefresh(pullRefreshState)) {
         LoadMoreLayout(
             isLoading = isLoadingMore,
             loadEnd = false,
             onLoadMore = { viewModel.send(PersonalizedUiIntent.LoadMore(currentPage + 1)) },
         ) {
-            LazyVerticalStaggeredGrid(
-                columns = StaggeredGridCells.Adaptive(240.dp),
+            FeedList(
+                dataProvider = { data },
+                personalizedDataProvider = { threadPersonalizedData },
+                refreshPositionProvider = { refreshPosition },
+                hiddenThreadIdsProvider = { hiddenThreadIds },
+                onItemClick = { threadInfo ->
+                    ThreadActivity.launch(context, threadInfo.id.toString())
+                },
+                onAgree = { item ->
+                    viewModel.send(
+                        PersonalizedUiIntent.Agree(
+                            item.threadId,
+                            item.firstPostId,
+                            item.agree?.hasAgree ?: 0
+                        )
+                    )
+                },
+                onDislike = { item, clickTime, reasons ->
+                    viewModel.send(
+                        PersonalizedUiIntent.Dislike(
+                            item.forumInfo?.id ?: 0,
+                            item.threadId,
+                            reasons,
+                            clickTime
+                        )
+                    )
+                },
+                onRefresh = { viewModel.send(PersonalizedUiIntent.Refresh) },
                 state = lazyStaggeredGridState
-            ) {
-                itemsIndexed(
-                    items = data,
-                    key = { _, item -> "${item.id}" },
-                    contentType = { _, item ->
-                        when {
-                            item.videoInfo != null -> "Video"
-                            item.media.size == 1 -> "SingleMedia"
-                            item.media.size > 1 -> "MultiMedia"
-                            else -> "PlainText"
-                        }
-                    }
-                ) { index, item ->
-                    Column {
-                        AnimatedVisibility(
-                            visible = !hiddenThreadIds.contains(item.threadId),
-                            enter = EnterTransition.None,
-                            exit = shrinkVertically() + fadeOut()
-                        ) {
-                            FeedCard(
-                                info = wrapImmutable(item),
-                                onClick = {
-                                    ThreadActivity.launch(context, item.threadId.toString())
-                                },
-                                onAgree = {
-                                    viewModel.send(
-                                        PersonalizedUiIntent.Agree(
-                                            item.threadId,
-                                            item.firstPostId,
-                                            item.agree?.hasAgree ?: 0
-                                        )
-                                    )
-                                },
-                            ) {
-                                Dislike(
-                                    personalized = threadPersonalizedData[index],
-                                    onDislike = { clickTime, reasons ->
-                                        viewModel.send(
-                                            PersonalizedUiIntent.Dislike(
-                                                item.forumInfo?.id ?: 0,
-                                                item.threadId,
-                                                reasons,
-                                                clickTime
-                                            )
-                                        )
-                                    }
-                                )
-                            }
-                        }
-                        if (!hiddenThreadIds.contains(item.threadId)) {
-                            if ((refreshPosition == 0 || index + 1 != refreshPosition) && index < data.size - 1) {
-                                VerticalDivider(
-                                    modifier = Modifier.padding(horizontal = 16.dp),
-                                    thickness = 2.dp
-                                )
-                            }
-                        }
-                        if (refreshPosition != 0 && index + 1 == refreshPosition) {
-                            Row(
-                                horizontalArrangement = Arrangement.Center,
-                                verticalAlignment = Alignment.CenterVertically,
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .clickable { viewModel.send(PersonalizedUiIntent.Refresh) }
-                                    .padding(8.dp),
-                            ) {
-                                Icon(
-                                    imageVector = Icons.Rounded.Refresh,
-                                    contentDescription = null
-                                )
-                                Spacer(modifier = Modifier.width(16.dp))
-                                Text(
-                                    text = stringResource(id = R.string.tip_refresh),
-                                    style = MaterialTheme.typography.subtitle1
-                                )
-                            }
-                        }
-                    }
-                }
-            }
+            )
             LaunchedEffect(data.firstOrNull()?.id) {
                 //delay(50)
                 lazyStaggeredGridState.scrollToItem(0, 0)
@@ -242,7 +202,99 @@ fun PersonalizedPage(
                     .padding(horizontal = 16.dp, vertical = 8.dp)
                     .align(Alignment.TopCenter)
             ) {
-                Text(text = stringResource(id = R.string.toast_feed_refresh, refreshCount), color = ExtendedTheme.colors.onAccent)
+                Text(
+                    text = stringResource(id = R.string.toast_feed_refresh, refreshCount),
+                    color = ExtendedTheme.colors.onAccent
+                )
+            }
+        }
+    }
+}
+
+@OptIn(ExperimentalFoundationApi::class)
+@Composable
+private fun FeedList(
+    dataProvider: () -> List<ThreadInfo>,
+    personalizedDataProvider: () -> List<ThreadPersonalized>,
+    refreshPositionProvider: () -> Int,
+    hiddenThreadIdsProvider: () -> List<Long>,
+    onItemClick: (ThreadInfo) -> Unit,
+    onAgree: (ThreadInfo) -> Unit,
+    onDislike: (ThreadInfo, Long, List<DislikeReason>) -> Unit,
+    onRefresh: () -> Unit,
+    state: LazyStaggeredGridState,
+) {
+    val data = dataProvider()
+    val threadPersonalizedData = personalizedDataProvider()
+    val refreshPosition = refreshPositionProvider()
+    val hiddenThreadIds = hiddenThreadIdsProvider()
+    LazyVerticalStaggeredGrid(
+        columns = StaggeredGridCells.Adaptive(240.dp),
+        state = state
+    ) {
+        itemsIndexed(
+            items = data,
+            key = { _, item -> "${item.id}" },
+            contentType = { _, item ->
+                when {
+                    item.videoInfo != null -> "Video"
+                    item.media.size == 1 -> "SingleMedia"
+                    item.media.size > 1 -> "MultiMedia"
+                    else -> "PlainText"
+                }
+            }
+        ) { index, item ->
+            Column {
+                AnimatedVisibility(
+                    visible = !hiddenThreadIds.contains(item.threadId),
+                    enter = EnterTransition.None,
+                    exit = shrinkVertically() + fadeOut()
+                ) {
+                    FeedCard(
+                        info = wrapImmutable(item),
+                        onClick = {
+                            onItemClick(item)
+                        },
+                        onAgree = {
+                            onAgree(item)
+                        },
+                    ) {
+                        Dislike(
+                            personalized = threadPersonalizedData[index],
+                            onDislike = { clickTime, reasons ->
+                                onDislike(item, clickTime, reasons)
+                            }
+                        )
+                    }
+                }
+                if (!hiddenThreadIds.contains(item.threadId)) {
+                    if ((refreshPosition == 0 || index + 1 != refreshPosition) && index < data.size - 1) {
+                        VerticalDivider(
+                            modifier = Modifier.padding(horizontal = 16.dp),
+                            thickness = 2.dp
+                        )
+                    }
+                }
+                if (refreshPosition != 0 && index + 1 == refreshPosition) {
+                    Row(
+                        horizontalArrangement = Arrangement.Center,
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clickable(onClick = onRefresh)
+                            .padding(8.dp),
+                    ) {
+                        Icon(
+                            imageVector = Icons.Rounded.Refresh,
+                            contentDescription = null
+                        )
+                        Spacer(modifier = Modifier.width(16.dp))
+                        Text(
+                            text = stringResource(id = R.string.tip_refresh),
+                            style = MaterialTheme.typography.subtitle1
+                        )
+                    }
+                }
             }
         }
     }

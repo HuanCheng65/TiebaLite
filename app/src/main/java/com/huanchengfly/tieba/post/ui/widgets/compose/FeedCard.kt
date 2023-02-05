@@ -57,6 +57,7 @@ import com.huanchengfly.tieba.post.activities.UserActivity
 import com.huanchengfly.tieba.post.api.abstractText
 import com.huanchengfly.tieba.post.api.hasAbstract
 import com.huanchengfly.tieba.post.api.models.protos.Media
+import com.huanchengfly.tieba.post.api.models.protos.SimpleForum
 import com.huanchengfly.tieba.post.api.models.protos.ThreadInfo
 import com.huanchengfly.tieba.post.api.models.protos.User
 import com.huanchengfly.tieba.post.arch.ImmutableHolder
@@ -178,30 +179,35 @@ private fun Badge(
     }
 }
 
-private val ThreadContent: @Composable ColumnScope.(ThreadInfo) -> Unit = {
-    val showTitle = it.isNoTitle != 1 && it.title.isNotBlank()
-    val showAbstract = it.hasAbstract
+@Composable
+fun ThreadContent(
+    info: ImmutableHolder<ThreadInfo>,
+) {
+    val (item) = info
+
+    val showTitle = item.isNoTitle != 1 && item.title.isNotBlank()
+    val showAbstract = item.hasAbstract
     val content = buildAnnotatedString {
         if (showTitle) {
             withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
-                if (it.isGood == 1) {
+                if (item.isGood == 1) {
                     withStyle(style = SpanStyle(color = ExtendedTheme.colors.primary)) {
                         append(stringResource(id = R.string.tip_good))
                     }
                     append(" ")
                 }
 
-                if (it.tabName.isNotBlank()) {
-                    append(it.tabName)
+                if (item.tabName.isNotBlank()) {
+                    append(item.tabName)
                     append(" | ")
                 }
 
-                append(it.title)
+                append(item.title)
             }
         }
         if (showTitle && showAbstract) append('\n')
         if (showAbstract) {
-            append(it.abstractText.emoticonString)
+            append(item.abstractText.emoticonString)
         }
     }
 
@@ -262,6 +268,37 @@ fun FeedCardPlaceholder() {
 }
 
 @Composable
+private fun ForumInfoChip(
+    info: ImmutableHolder<SimpleForum>,
+    onClick: () -> Unit
+) {
+    val (forumInfo) = info
+    Row(
+        modifier = Modifier
+            .clip(RoundedCornerShape(4.dp))
+            .background(color = ExtendedTheme.colors.chip)
+            .clickable(onClick = onClick)
+            .padding(4.dp),
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        NetworkImage(
+            imageUri = StringUtil.getAvatarUrl(forumInfo.avatar),
+            contentDescription = null,
+            modifier = Modifier
+                .size(12.dp)
+                .clip(RoundedCornerShape(4.dp))
+        )
+        Spacer(modifier = Modifier.width(8.dp))
+        Text(
+            text = stringResource(id = R.string.title_forum_name, forumInfo.name),
+            style = MaterialTheme.typography.body2,
+            color = ExtendedTheme.colors.onChip,
+            fontSize = 12.sp,
+        )
+    }
+}
+
+@Composable
 fun FeedCard(
     info: ImmutableHolder<ThreadInfo>,
     onClick: () -> Unit,
@@ -276,7 +313,7 @@ fun FeedCard(
             }
         },
         content = {
-            ThreadContent(item)
+            ThreadContent(info)
 
             if (item.videoInfo != null) {
                 VideoPlayer(
@@ -326,31 +363,12 @@ fun FeedCard(
 
             if (item.forumInfo != null) {
                 val navigator = LocalNavigator.current
-                Row(
-                    modifier = Modifier
-                        .clip(RoundedCornerShape(4.dp))
-                        .background(color = ExtendedTheme.colors.chip)
-                        .clickable {
-                            navigator.navigate(ForumPageDestination(item.forumInfo.name))
-                        }
-                        .padding(4.dp),
-                    verticalAlignment = Alignment.CenterVertically,
-                ) {
-                    NetworkImage(
-                        imageUri = StringUtil.getAvatarUrl(item.forumInfo.avatar),
-                        contentDescription = null,
-                        modifier = Modifier
-                            .size(12.dp)
-                            .clip(RoundedCornerShape(4.dp))
-                    )
-                    Spacer(modifier = Modifier.width(8.dp))
-                    Text(
-                        text = stringResource(id = R.string.title_forum_name, item.forumInfo.name),
-                        style = MaterialTheme.typography.body2,
-                        color = ExtendedTheme.colors.onChip,
-                        fontSize = 12.sp,
-                    )
-                }
+                ForumInfoChip(
+                    info = wrapImmutable(item.forumInfo),
+                    onClick = {
+                        navigator.navigate(ForumPageDestination(item.forumInfo.name))
+                    }
+                )
             }
         },
         action = {
