@@ -205,7 +205,9 @@ class MyInfoFragment : BaseFragment(), View.OnClickListener, CompoundButton.OnCh
 
     private fun updateAccount(profile: Profile) {
         AccountUtil.getLoginInfo()?.apply {
-            tbs = profile.anti.tbs
+            profile.anti?.tbs?.let {
+                tbs = it
+            }
             portrait = profile.user.portrait
             intro = profile.user.intro
             sex = profile.user.sex

@@ -6,7 +6,7 @@ import com.google.gson.annotations.SerializedName
 
 @Keep
 data class Profile(
-    val anti: Anti,
+    val anti: Anti?,
     @SerializedName("anti_stat")
     val antiStat: AntiStat,
     @SerializedName("block_info")
@@ -21,7 +21,7 @@ data class Profile(
 ) {
     @Keep
     data class Anti(
-        val tbs: String
+        val tbs: String?
     )
 
     @Keep
@@ -91,6 +91,8 @@ data class Profile(
         val friendNum: String,
         @SerializedName("gift_num")
         val giftNum: String,
+        @SerializedName("has_concerned")
+        val hasConcerned: String,
         val id: String,
         var intro: String?,
         @SerializedName("ip_address")

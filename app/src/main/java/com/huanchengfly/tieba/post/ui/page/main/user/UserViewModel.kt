@@ -41,7 +41,9 @@ class UserViewModel @Inject constructor() : BaseViewModel<UserUiIntent, UserPart
                     .profileFlow(account.uid)
                     .map<Profile, UserPartialChange> { profile ->
                         account.apply {
-                            tbs = profile.anti.tbs
+                            profile.anti?.tbs?.let {
+                                tbs = it
+                            }
                             portrait = profile.user.portrait
                             intro = profile.user.intro
                             sex = profile.user.sex
@@ -62,10 +64,18 @@ class UserViewModel @Inject constructor() : BaseViewModel<UserUiIntent, UserPart
                     .onStart {
                         emit(UserPartialChange.Refresh.Start)
                         if (account.loadSuccess) {
-                            emit(UserPartialChange.Refresh.Success(account = account, isLocal = true))
+                            emit(
+                                UserPartialChange.Refresh.Success(
+                                    account = account,
+                                    isLocal = true
+                                )
+                            )
                         }
                     }
-                    .catch { emit(UserPartialChange.Refresh.Failure(errorMessage = it.getErrorMessage())) }
+                    .catch {
+                        it.printStackTrace()
+                        emit(UserPartialChange.Refresh.Failure(errorMessage = it.getErrorMessage()))
+                    }
             }
         }
     }
