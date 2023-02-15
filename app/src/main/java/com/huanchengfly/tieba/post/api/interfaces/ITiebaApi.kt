@@ -155,7 +155,7 @@ interface ITiebaApi {
      *
      * @param forumName 吧名
      * @param page 分页页码（从 1 开始）
-     * @param sortType 排序类型 [com.huanchengfly.tieba.api.ForumSortType]
+     * @param sortType 排序类型 [com.huanchengfly.tieba.post.api.ForumSortType]
      * @param goodClassifyId 精品贴分类 ID
      */
     fun forumPage(
@@ -1222,7 +1222,7 @@ interface ITiebaApi {
      *
      * @param uid 用户 ID
      */
-    fun profileFlow(
+    fun userProfileFlow(
         uid: Long
     ): Flow<ProfileResponse>
 }

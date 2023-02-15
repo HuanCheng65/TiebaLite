@@ -119,6 +119,16 @@ object StringUtil {
         } else "http://tb.himg.baidu.com/sys/portrait/item/$portrait"
     }
 
+    @JvmStatic
+    fun getBigAvatarUrl(portrait: String?): String {
+        if (portrait.isNullOrEmpty()) {
+            return ""
+        }
+        return if (portrait.startsWith("http://") || portrait.startsWith("https://")) {
+            portrait
+        } else "http://tb.himg.baidu.com/sys/portraith/item/$portrait"
+    }
+
     fun String.getShortNumString(): String {
         val long = toLongOrNull() ?: return ""
         return long.getShortNumString()

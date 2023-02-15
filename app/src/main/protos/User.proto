@@ -17,6 +17,7 @@ message User {
   int32 is_manager = 11;
   int32 is_bawu = 25;
   string bawu_type = 26;
+  string portraith = 27;
   int32 fans_num = 30;
   int32 concern_num = 31;
   int32 sex = 32;

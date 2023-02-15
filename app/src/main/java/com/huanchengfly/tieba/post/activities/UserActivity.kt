@@ -22,7 +22,7 @@ import com.google.android.material.tabs.TabLayout
 import com.huanchengfly.tieba.post.R
 import com.huanchengfly.tieba.post.adapters.FragmentTabViewPagerAdapter
 import com.huanchengfly.tieba.post.api.TiebaApi
-import com.huanchengfly.tieba.post.api.models.ProfileBean
+import com.huanchengfly.tieba.post.api.models.protos.profile.ProfileResponseData
 import com.huanchengfly.tieba.post.api.retrofit.exception.getErrorMessage
 import com.huanchengfly.tieba.post.fragments.UserLikeForumFragment
 import com.huanchengfly.tieba.post.fragments.UserPostFragment
@@ -35,14 +35,8 @@ import com.huanchengfly.tieba.post.ui.page.editprofile.view.EditProfileActivity
 import com.huanchengfly.tieba.post.ui.widgets.theme.TintMaterialButton
 import com.huanchengfly.tieba.post.ui.widgets.theme.TintToolbar
 import com.huanchengfly.tieba.post.utils.*
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.launch
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 import kotlin.math.abs
 
 
@@ -92,7 +86,7 @@ class UserActivity : BaseActivity() {
     @BindView(R.id.user_info_chips)
     lateinit var infoChips: View
 
-    private var profileBean: ProfileBean? = null
+    private var profileBean: ProfileResponseData? = null
     private var uid: String? = null
     private var tab = 0
 
@@ -113,7 +107,8 @@ class UserActivity : BaseActivity() {
         uid = intent.getStringExtra(EXTRA_UID)
         tab = intent.getIntExtra(EXTRA_TAB, TAB_THREAD)
         val avatar = intent.getStringExtra(EXTRA_AVATAR)
-        if (uid == null) {
+        val uidLong = uid?.toLongOrNull()
+        if (uidLong == null) {
             finish()
             return
         }
@@ -124,14 +119,17 @@ class UserActivity : BaseActivity() {
         if (!TextUtils.isEmpty(avatar)) {
             loadingView.visibility = View.GONE
             ImageUtil.load(avatarView, ImageUtil.LOAD_TYPE_AVATAR, StringUtil.getAvatarUrl(avatar))
-            ImageUtil.initImageView(avatarView, PhotoViewBean(StringUtil.getAvatarUrl(avatar), null))
+            ImageUtil.initImageView(
+                avatarView,
+                PhotoViewBean(StringUtil.getAvatarUrl(avatar), null)
+            )
         }
         appbar.addOnOffsetChangedListener { appBarLayout: AppBarLayout, verticalOffset: Int ->
             val percent = abs(verticalOffset * 1.0f) / appBarLayout.totalScrollRange
             headerView.alpha = 1f - percent
             headerMaskView.alpha = percent
-            if (profileBean != null && profileBean!!.user != null && abs(verticalOffset) >= appBarLayout.totalScrollRange) {
-                toolbar.title = profileBean!!.user!!.nameShow
+            if (profileBean != null && abs(verticalOffset) >= appBarLayout.totalScrollRange) {
+                toolbar.title = profileBean?.user?.nameShow
             } else {
                 toolbar.title = null
             }
@@ -142,36 +140,34 @@ class UserActivity : BaseActivity() {
         setSupportActionBar(toolbar)
         val actionBar = supportActionBar
         actionBar?.setDisplayHomeAsUpEnabled(true)
-        TiebaApi.getInstance()
-            .profile(uid!!)
-            .enqueue(object : Callback<ProfileBean?> {
-                override fun onResponse(
-                    call: Call<ProfileBean?>,
-                    response: Response<ProfileBean?>
-                ) {
-                    val data = response.body()
+        launch {
+            TiebaApi.getInstance()
+                .userProfileFlow(uidLong)
+                .collect {
                     actionBtn.visibility = View.VISIBLE
                     loadingView.visibility = View.GONE
+                    val data = it.data_
+                    if (data?.user == null) {
+                        return@collect
+                    }
                     profileBean = data
                     refreshHeader()
                     adapter.clear()
                     adapter.addFragment(
                         UserPostFragment.newInstance(uid, true),
-                        "贴子 " + data!!.user!!.threadNum
+                        "贴子 " + data.user.thread_num
                     )
                     adapter.addFragment(
                         UserPostFragment.newInstance(uid, false),
-                        "回复 " + data.user!!.repostNum
+                        "回复 " + data.user.post_num
                     )
                     adapter.addFragment(
                         UserLikeForumFragment.newInstance(uid),
-                        "关注吧 " + data.user.myLikeNum
+                        "关注吧 " + data.user.my_like_num
                     )
                     viewPager.setCurrentItem(tab, false)
                 }
-
-                override fun onFailure(call: Call<ProfileBean?>, t: Throwable) {}
-            })
+        }
         listOf(
             followStatTv,
             fansStatTv
@@ -180,39 +176,36 @@ class UserActivity : BaseActivity() {
         }
     }
 
-    fun refreshHeader() {
-        profileBean?.let {
-            if (it.user == null) {
-                return
-            }
-            titleView.text = it.user.nameShow
-            sloganView.text = it.user.intro
-            followStatTv.text = "${it.user.concernNum}"
-            fansStatTv.text = "${it.user.fansNum}"
+    private fun refreshHeader() {
+        profileBean?.user?.let {
+            titleView.text = it.nameShow
+            sloganView.text = it.intro
+            followStatTv.text = "${it.concern_num}"
+            fansStatTv.text = "${it.fans_num}"
             //getString(R.string.tip_stat, profileBean!!.user!!.concernNum, profileBean!!.user!!.fansNum)
             if (avatarView.tag == null) {
                 ImageUtil.load(
                     avatarView,
                     ImageUtil.LOAD_TYPE_AVATAR,
-                    StringUtil.getAvatarUrl(it.user.portrait)
+                    StringUtil.getAvatarUrl(it.portrait)
                 )
                 ImageUtil.initImageView(
                     avatarView,
-                    PhotoViewBean(StringUtil.getAvatarUrl(it.user.portrait), null)
+                    PhotoViewBean(StringUtil.getBigAvatarUrl(it.portraith), null)
                 )
             }
-            if (TextUtils.equals(AccountUtil.getUid(), it.user.id)) {
+            if (TextUtils.equals(AccountUtil.getUid(), "${it.id}")) {
                 actionBtn.setText(R.string.menu_edit_info)
             } else {
-                if ("1" == it.user.hasConcerned) {
+                if (1 == it.has_concerned) {
                     actionBtn.setText(R.string.button_unfollow)
                 } else {
                     actionBtn.setText(R.string.button_follow)
                 }
             }
             sexTv.text =
-                if (it.user.sex == "1") "♂" else if (it.user.sex == "2") "♀" else "?"
-            tbAgeTv.text = getString(R.string.tb_age, it.user.tbAge)
+                if (it.sex == 1) "♂" else if (it.sex == 2) "♀" else "?"
+            tbAgeTv.text = getString(R.string.tb_age, it.tb_age)
             infoChips.visibility = View.VISIBLE
         }
     }
@@ -234,25 +227,25 @@ class UserActivity : BaseActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.menu_block_black, R.id.menu_block_white -> {
-                if (profileBean == null || profileBean!!.user == null) {
-                    return true
-                }
-                val category =
-                    if (item.itemId == R.id.menu_block_black) Block.CATEGORY_BLACK_LIST else Block.CATEGORY_WHITE_LIST
-                Block(
-                    category = category,
-                    type = Block.TYPE_USER,
-                    username = profileBean!!.user!!.name,
-                    uid = profileBean!!.user!!.id
-                ).saveAsync()
-                    .listen { success: Boolean ->
-                        if (success) {
-                            Toast.makeText(this, R.string.toast_add_success, Toast.LENGTH_SHORT)
-                                .show()
+                profileBean?.user?.let {
+                    val category =
+                        if (item.itemId == R.id.menu_block_black) Block.CATEGORY_BLACK_LIST else Block.CATEGORY_WHITE_LIST
+                    Block(
+                        category = category,
+                        type = Block.TYPE_USER,
+                        username = it.name,
+                        uid = it.id.toString()
+                    ).saveAsync()
+                        .listen { success: Boolean ->
+                            if (success) {
+                                Toast.makeText(this, R.string.toast_add_success, Toast.LENGTH_SHORT)
+                                    .show()
+                            }
                         }
-                    }
+                }
                 return true
             }
+
             R.id.menu_edit_info -> {
                 startActivity(WebViewActivity.newIntent(this, getString(R.string.url_edit_info)))
                 return true
@@ -272,45 +265,52 @@ class UserActivity : BaseActivity() {
 
     @OnClick(R.id.user_center_action_btn)
     fun onActionBtnClick(view: View?) {
-        if (TextUtils.equals(profileBean!!.user!!.id, AccountUtil.getUid())) {
-            goToActivity<EditProfileActivity>()
-            return
-        }
-        if ("1" == profileBean!!.user!!.hasConcerned) {
-            MainScope().launch {
-                TiebaApi.getInstance()
-                    .unfollowFlow(
-                        profileBean!!.user!!.portrait!!,
-                        AccountUtil.getLoginInfo()!!.tbs
-                    )
-                    .flowOn(Dispatchers.IO)
-                    .catch { e ->
-                        toastShort(e.getErrorMessage())
-                    }
-                    .collect {
-                        //toastShort(R.string.toast_success)
-                        profileBean!!.user!!.setHasConcerned("0")
-                        refreshHeader()
-                    }
+        profileBean?.user?.let { user ->
+            if (TextUtils.equals(user.id.toString(), AccountUtil.getUid())) {
+                goToActivity<EditProfileActivity>()
+                return
             }
-        } else {
-            MainScope().launch {
-                TiebaApi.getInstance()
-                    .followFlow(
-                        profileBean!!.user!!.portrait!!,
-                        AccountUtil.getLoginInfo()!!.tbs
-                    )
-                    .flowOn(Dispatchers.IO)
-                    .catch { e ->
-                        toastShort(e.getErrorMessage())
-                    }
-                    .collect {
-                        if ("1" == it.info.isToast) {
-                            toastShort(it.info.toastText)
+            if (1 == user.has_concerned) {
+                launch {
+                    TiebaApi.getInstance()
+                        .unfollowFlow(
+                            user.portrait,
+                            AccountUtil.getLoginInfo()!!.tbs
+                        )
+                        .catch { e ->
+                            toastShort(e.getErrorMessage())
                         }
-                        profileBean!!.user!!.setHasConcerned("1")
-                        refreshHeader()
-                    }
+                        .collect {
+                            profileBean = profileBean!!.copy(
+                                user = profileBean?.user!!.copy(
+                                    has_concerned = 0
+                                )
+                            )
+                            refreshHeader()
+                        }
+                }
+            } else {
+                launch {
+                    TiebaApi.getInstance()
+                        .followFlow(
+                            user.portrait,
+                            AccountUtil.getLoginInfo()!!.tbs
+                        )
+                        .catch { e ->
+                            toastShort(e.getErrorMessage())
+                        }
+                        .collect {
+                            if ("1" == it.info.isToast) {
+                                toastShort(it.info.toastText)
+                            }
+                            profileBean = profileBean!!.copy(
+                                user = profileBean?.user!!.copy(
+                                    has_concerned = 1
+                                )
+                            )
+                            refreshHeader()
+                        }
+                }
             }
         }
     }

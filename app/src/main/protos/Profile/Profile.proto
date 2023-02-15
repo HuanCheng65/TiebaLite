@@ -16,6 +16,7 @@ message ProfileRequestData {
   optional string friend_uid_portrait = 16;
   uint32 has_plist = 8;
   int32 is_from_usercenter = 14;
+  uint32 is_guest = 4;
   uint32 need_post_count = 2;
   int32 page = 15;
   uint32 pn = 6;

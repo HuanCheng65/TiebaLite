@@ -975,7 +975,7 @@ object MixedTiebaApiImpl : ITiebaApi {
         )
     }
 
-    override fun profileFlow(uid: Long): Flow<ProfileResponse> {
+    override fun userProfileFlow(uid: Long): Flow<ProfileResponse> {
         val selfUid = AccountUtil.getUid()?.toLongOrNull()
         val isSelf = selfUid == uid
         return RetrofitTiebaApi.OFFICIAL_PROTOBUF_TIEBA_API.profileFlow(
@@ -987,6 +987,7 @@ object MixedTiebaApiImpl : ITiebaApi {
                         friend_uid_portrait = "",
                         has_plist = 1,
                         is_from_usercenter = 1,
+                        is_guest = if (isSelf) 0 else 1,
                         need_post_count = 1,
                         page = 2,
                         pn = 1,
