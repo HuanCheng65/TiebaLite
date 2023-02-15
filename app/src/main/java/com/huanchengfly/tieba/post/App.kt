@@ -38,6 +38,7 @@ import com.huanchengfly.tieba.post.utils.AccountUtil
 import com.huanchengfly.tieba.post.utils.AppIconUtil
 import com.huanchengfly.tieba.post.utils.ClientUtils
 import com.huanchengfly.tieba.post.utils.EmoticonManager
+import com.huanchengfly.tieba.post.utils.Icons
 import com.huanchengfly.tieba.post.utils.SharedPreferencesUtil
 import com.huanchengfly.tieba.post.utils.ThemeUtil
 import com.huanchengfly.tieba.post.utils.TiebaUtil
@@ -93,6 +94,11 @@ class App : Application(), IApp, IGetter, SketchFactory {
         return null
     }
 
+    fun refreshIcon(enableNewUi: Boolean = applicationMetaData.getBoolean("enable_new_ui") || appPreferences.enableNewUi) {
+        if (enableNewUi) AppIconUtil.setIcon()
+        else AppIconUtil.setIcon(Icons.DISABLE)
+    }
+
     override fun onCreate() {
         INSTANCE = this
         super.onCreate()
@@ -103,7 +109,6 @@ class App : Application(), IApp, IGetter, SketchFactory {
             setWebViewPath(this)
         }
         val isSelfBuild = applicationMetaData.getBoolean("is_self_build")
-        val enableNewUi = applicationMetaData.getBoolean("enable_new_ui")
         if (!isSelfBuild) {
             Distribute.setUpdateTrack(if (appPreferences.checkCIUpdate) UpdateTrack.PRIVATE else UpdateTrack.PUBLIC)
             Distribute.setListener(MyDistributeListener())
@@ -112,9 +117,9 @@ class App : Application(), IApp, IGetter, SketchFactory {
                 Analytics::class.java, Crashes::class.java, Distribute::class.java
             )
         }
+        refreshIcon()
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
         ThemeUtils.init(ThemeDelegate)
-        if (enableNewUi) AppIconUtil.setIcon()
         registerActivityLifecycleCallbacks(ClipBoardLinkDetector)
         PluginManager.init(this)
         CoroutineScope(Dispatchers.IO).apply {

@@ -10,6 +10,7 @@ object Icons {
     const val NEW_ICON = "com.huanchengfly.tieba.post.MainActivityV2"
     const val NEW_ICON_INVERT = "com.huanchengfly.tieba.post.MainActivityIconInvert"
     const val OLD_ICON = "com.huanchengfly.tieba.post.MainActivityIconOld"
+    const val DISABLE = "com.huanchengfly.tieba.post.MainActivityV2Disabled"
 
     const val DEFAULT_ICON = NEW_ICON
 

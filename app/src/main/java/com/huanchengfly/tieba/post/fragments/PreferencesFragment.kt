@@ -17,6 +17,7 @@ import androidx.preference.ListPreference
 import androidx.preference.Preference
 import androidx.preference.SwitchPreference
 import com.google.android.material.snackbar.Snackbar
+import com.huanchengfly.tieba.post.App
 import com.huanchengfly.tieba.post.BuildConfig
 import com.huanchengfly.tieba.post.DataStorePreference
 import com.huanchengfly.tieba.post.R
@@ -257,6 +258,10 @@ class PreferencesFragment : PreferencesFragment() {
         aboutPreference!!.summary =
             getString(R.string.tip_about, BuildConfig.VERSION_NAME)
         refresh()
+        findPreference<SwitchPreference>("enableNewUi")?.setOnPreferenceChangeListener { _, newValue ->
+            App.INSTANCE.refreshIcon(newValue == true)
+            true
+        }
         /*
         try {
             val preferenceGroupClazz = PreferenceGroup::class.java

@@ -72,6 +72,8 @@ open class AppPreferencesUtils(context: Context) {
 
     var darkTheme by DataStoreDelegates.string(key = "dark_theme", defaultValue = "grey_dark")
 
+    var enableNewUi by DataStoreDelegates.boolean(defaultValue = false)
+
     var followSystemNight by DataStoreDelegates.boolean(
         defaultValue = true,
         key = "follow_system_night"

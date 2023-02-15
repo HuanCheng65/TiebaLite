@@ -20,6 +20,7 @@
     <string-array name="experimental_features">
         <item>oksign_use_official_oksign</item>
         <item>checkCIUpdate</item>
+        <item>enableNewUi</item>
     </string-array>
 
     <string-array name="image_load_type_entries">

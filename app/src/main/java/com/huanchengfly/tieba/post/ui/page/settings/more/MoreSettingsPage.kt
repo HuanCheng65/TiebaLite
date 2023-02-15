@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.BugReport
+import androidx.compose.material.icons.outlined.FiberNew
 import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material.icons.outlined.OfflineBolt
 import androidx.compose.runtime.*
@@ -76,6 +77,23 @@ fun MoreSettingsPage(
                     title = stringResource(id = R.string.title_check_ci_update),
                     defaultChecked = false,
                     summary = stringResource(id = R.string.tip_check_ci_update)
+                )
+            }
+            prefsItem {
+                SwitchPref(
+                    leadingIcon = {
+                        LeadingIcon {
+                            AvatarIcon(
+                                icon = Icons.Outlined.FiberNew,
+                                size = Sizes.Small,
+                                contentDescription = null,
+                            )
+                        }
+                    },
+                    key = "enableNewUi",
+                    title = stringResource(id = R.string.title_enable_new_ui),
+                    defaultChecked = false,
+                    summary = stringResource(id = R.string.summary_enable_new_ui)
                 )
             }
             prefsItem {
