@@ -26,6 +26,7 @@ import com.github.panpf.sketch.decode.GifMovieDrawableDecoder
 import com.github.panpf.sketch.decode.HeifAnimatedDrawableDecoder
 import com.github.panpf.sketch.decode.WebpAnimatedDrawableDecoder
 import com.github.panpf.sketch.http.OkHttpStack
+import com.github.panpf.sketch.request.PauseLoadWhenScrollingDrawableDecodeInterceptor
 import com.huanchengfly.tieba.post.activities.BaseActivity
 import com.huanchengfly.tieba.post.components.ClipBoardLinkDetector
 import com.huanchengfly.tieba.post.components.dialogs.LoadingDialog
@@ -102,6 +103,7 @@ class App : Application(), IApp, IGetter, SketchFactory {
             setWebViewPath(this)
         }
         val isSelfBuild = applicationMetaData.getBoolean("is_self_build")
+        val enableNewUi = applicationMetaData.getBoolean("enable_new_ui")
         if (!isSelfBuild) {
             Distribute.setUpdateTrack(if (appPreferences.checkCIUpdate) UpdateTrack.PRIVATE else UpdateTrack.PUBLIC)
             Distribute.setListener(MyDistributeListener())
@@ -112,7 +114,7 @@ class App : Application(), IApp, IGetter, SketchFactory {
         }
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
         ThemeUtils.init(ThemeDelegate)
-        AppIconUtil.setIcon()
+        if (enableNewUi) AppIconUtil.setIcon()
         registerActivityLifecycleCallbacks(ClipBoardLinkDetector)
         PluginManager.init(this)
         CoroutineScope(Dispatchers.IO).apply {
@@ -702,6 +704,7 @@ class App : Application(), IApp, IGetter, SketchFactory {
             userAgent(System.getProperty("http.agent"))
         }.build())
         components {
+            addDrawableDecodeInterceptor(PauseLoadWhenScrollingDrawableDecodeInterceptor())
             addDrawableDecoder(
                 when {
                     Build.VERSION.SDK_INT >= Build.VERSION_CODES.P -> GifAnimatedDrawableDecoder.Factory()
