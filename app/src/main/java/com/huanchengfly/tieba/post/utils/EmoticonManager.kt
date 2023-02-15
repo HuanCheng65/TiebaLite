@@ -20,7 +20,8 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.bumptech.glide.Glide
+import com.github.panpf.sketch.request.LoadRequest
+import com.github.panpf.sketch.request.LoadResult
 import com.google.accompanist.drawablepainter.rememberDrawablePainter
 import com.huanchengfly.tieba.post.App
 import com.huanchengfly.tieba.post.R
@@ -28,9 +29,11 @@ import com.huanchengfly.tieba.post.models.EmoticonCache
 import com.huanchengfly.tieba.post.pxToDp
 import com.huanchengfly.tieba.post.pxToSp
 import com.huanchengfly.tieba.post.toJson
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import java.io.File
 import java.lang.ref.WeakReference
-import java.util.concurrent.Executors
 
 object EmoticonManager {
     private val DEFAULT_EMOTICON_MAPPING: Map<String, String> = mapOf(
@@ -99,8 +102,7 @@ object EmoticonManager {
     private val emoticonIds: MutableList<String> = mutableListOf()
     private val emoticonMapping: MutableMap<String, String> = mutableMapOf()
     private val drawableCache: MutableMap<String, Drawable> = mutableMapOf()
-
-    private val executor by lazy { Executors.newCachedThreadPool() }
+    private val coroutineScope: CoroutineScope = CoroutineScope(Dispatchers.IO)
 
     @OptIn(ExperimentalTextApi::class)
     @Composable
@@ -164,7 +166,7 @@ object EmoticonManager {
             emoticonMapping.putAll(emoticonCache.mapping)
         }
         updateCache()
-        executor.submit {
+        coroutineScope.launch {
             fetchEmoticons(context)
         }
     }
@@ -249,25 +251,21 @@ object EmoticonManager {
         ).also { drawableCache[id] = it }
     }
 
-    private fun fetchEmoticons(context: Context) {
+    private suspend fun fetchEmoticons(context: Context) {
         emoticonIds.forEach {
             val resId = getEmoticonResId(context, it)
             val emoticonFile = getEmoticonFile(it)
             if (resId == 0 && !emoticonFile.exists()) {
-                try {
-                    val emoticonBitmap =
-                        Glide.with(getContext())
-                            .asBitmap()
-                            .load("http://static.tieba.baidu.com/tb/editor/images/client/$it.png")
-                            .submit()
-                            .get()
+                val loadEmoticonResult = LoadRequest(
+                    context,
+                    "http://static.tieba.baidu.com/tb/editor/images/client/$it.png"
+                ).execute()
+                if (loadEmoticonResult is LoadResult.Success) {
                     ImageUtil.bitmapToFile(
-                        emoticonBitmap,
+                        loadEmoticonResult.bitmap,
                         emoticonFile,
                         Bitmap.CompressFormat.PNG
                     )
-                } catch (e: Exception) {
-                    e.printStackTrace()
                 }
             }
         }
@@ -284,6 +282,10 @@ object EmoticonManager {
             emoticonMapping[name] = realId
             changed = true
         }
-        if (changed) updateCache()
+        if (changed) {
+            coroutineScope.launch {
+                updateCache()
+            }
+        }
     }
 }

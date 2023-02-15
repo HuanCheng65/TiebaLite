@@ -2,6 +2,7 @@ package com.huanchengfly.tieba.post.api
 
 import com.huanchengfly.tieba.post.App.ScreenInfo
 import com.huanchengfly.tieba.post.api.models.protos.ThreadInfo
+import com.huanchengfly.tieba.post.utils.EmoticonManager
 
 fun getScreenHeight(): Int = ScreenInfo.EXACT_SCREEN_HEIGHT
 
@@ -13,7 +14,11 @@ val ThreadInfo.abstractText: String
     get() = richAbstract.joinToString(separator = "") {
         when (it.type) {
             0 -> it.text.replace(Regex(" {2,}"), " ")
-            2 -> "#(${it.c})"
+            2 -> {
+                EmoticonManager.registerEmoticon(it.text, it.c)
+                "#(${it.c})"
+            }
+
             else -> ""
         }
     }
