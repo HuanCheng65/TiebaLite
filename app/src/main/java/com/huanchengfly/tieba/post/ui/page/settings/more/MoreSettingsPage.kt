@@ -16,6 +16,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
+import com.huanchengfly.tieba.post.App
 import com.huanchengfly.tieba.post.BuildConfig
 import com.huanchengfly.tieba.post.R
 import com.huanchengfly.tieba.post.dataStore
@@ -93,7 +94,10 @@ fun MoreSettingsPage(
                     key = "enableNewUi",
                     title = stringResource(id = R.string.title_enable_new_ui),
                     defaultChecked = false,
-                    summary = stringResource(id = R.string.summary_enable_new_ui)
+                    summary = stringResource(id = R.string.summary_enable_new_ui),
+                    onCheckedChange = {
+                        App.INSTANCE.setIcon(it)
+                    }
                 )
             }
             prefsItem {

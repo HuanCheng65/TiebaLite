@@ -27,7 +27,7 @@ object AppIconUtil {
         get() = context.appPreferences
 
     fun setIcon(icon: String = appPreferences.appIcon ?: Icons.NEW_ICON) {
-        val newIcon = if (Icons.ICONS.contains(icon)) {
+        val newIcon = if (Icons.ICONS.contains(icon) || icon == Icons.DISABLE) {
             icon
         } else Icons.DEFAULT_ICON
         Icons.ICONS.forEach {
@@ -44,7 +44,7 @@ object AppIconUtil {
      *
      * @param componentName 组件名
      */
-    private fun PackageManager.enableComponent(componentName: ComponentName) {
+    fun PackageManager.enableComponent(componentName: ComponentName) {
         setComponentEnabledSetting(
             componentName,
             PackageManager.COMPONENT_ENABLED_STATE_ENABLED,
@@ -57,7 +57,7 @@ object AppIconUtil {
      *
      * @param componentName 组件名
      */
-    private fun PackageManager.disableComponent(componentName: ComponentName) {
+    fun PackageManager.disableComponent(componentName: ComponentName) {
         setComponentEnabledSetting(
             componentName,
             PackageManager.COMPONENT_ENABLED_STATE_DISABLED,

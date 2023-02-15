@@ -259,7 +259,7 @@ class PreferencesFragment : PreferencesFragment() {
             getString(R.string.tip_about, BuildConfig.VERSION_NAME)
         refresh()
         findPreference<SwitchPreference>("enableNewUi")?.setOnPreferenceChangeListener { _, newValue ->
-            App.INSTANCE.refreshIcon(newValue == true)
+            App.INSTANCE.setIcon(newValue == true)
             true
         }
         /*

@@ -5,6 +5,7 @@ import android.app.Activity
 import android.app.ActivityManager
 import android.app.Application
 import android.app.Dialog
+import android.content.ComponentName
 import android.content.Context
 import android.content.res.Configuration
 import android.content.res.Resources
@@ -36,6 +37,8 @@ import com.huanchengfly.tieba.post.ui.common.theme.interfaces.ThemeSwitcher
 import com.huanchengfly.tieba.post.ui.common.theme.utils.ThemeUtils
 import com.huanchengfly.tieba.post.utils.AccountUtil
 import com.huanchengfly.tieba.post.utils.AppIconUtil
+import com.huanchengfly.tieba.post.utils.AppIconUtil.disableComponent
+import com.huanchengfly.tieba.post.utils.AppIconUtil.enableComponent
 import com.huanchengfly.tieba.post.utils.ClientUtils
 import com.huanchengfly.tieba.post.utils.EmoticonManager
 import com.huanchengfly.tieba.post.utils.Icons
@@ -94,7 +97,29 @@ class App : Application(), IApp, IGetter, SketchFactory {
         return null
     }
 
-    fun refreshIcon(enableNewUi: Boolean = applicationMetaData.getBoolean("enable_new_ui") || appPreferences.enableNewUi) {
+    private fun setOldMainActivityEnabled(enabled: Boolean) {
+        if (enabled) {
+            packageManager.enableComponent(
+                ComponentName(
+                    this,
+                    "com.huanchengfly.tieba.post.activities.MainActivity"
+                )
+            )
+        } else {
+            packageManager.disableComponent(
+                ComponentName(
+                    this,
+                    "com.huanchengfly.tieba.post.activities.MainActivity"
+                )
+            )
+        }
+    }
+
+    fun setIcon(
+        enableNewUi: Boolean = applicationMetaData.getBoolean("enable_new_ui") || appPreferences.enableNewUi,
+        keepOld: Boolean = BuildConfig.DEBUG
+    ) {
+        setOldMainActivityEnabled(!enableNewUi && !keepOld)
         if (enableNewUi) AppIconUtil.setIcon()
         else AppIconUtil.setIcon(Icons.DISABLE)
     }
@@ -117,7 +142,7 @@ class App : Application(), IApp, IGetter, SketchFactory {
                 Analytics::class.java, Crashes::class.java, Distribute::class.java
             )
         }
-        refreshIcon()
+        setIcon(keepOld = !BuildConfig.DEBUG && !isSelfBuild)
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
         ThemeUtils.init(ThemeDelegate)
         registerActivityLifecycleCallbacks(ClipBoardLinkDetector)
