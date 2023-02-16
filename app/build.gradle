@@ -15,7 +15,7 @@ def applicationProperties = new Properties()
 applicationProperties.load(new FileInputStream(rootProject.file("application.properties")))
 def sha = System.getenv("GITHUB_SHA")
 def isCI = System.getenv("CI")
-def isSelfBuild = isCI != "true"
+def isSelfBuild = isCI == null || !isCI.equalsIgnoreCase("true")
 def applicationVersionCode = applicationProperties["versionCode"].toInteger()
 def applicationVersionName = applicationProperties["versionName"]
 def isPerVersion = applicationProperties["isPerRelease"] == "true"

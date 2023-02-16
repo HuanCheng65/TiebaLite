@@ -142,7 +142,7 @@ class App : Application(), IApp, IGetter, SketchFactory {
                 Analytics::class.java, Crashes::class.java, Distribute::class.java
             )
         }
-        setIcon(keepOld = !BuildConfig.DEBUG && !isSelfBuild)
+        setIcon(keepOld = BuildConfig.DEBUG || isSelfBuild)
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
         ThemeUtils.init(ThemeDelegate)
         registerActivityLifecycleCallbacks(ClipBoardLinkDetector)
