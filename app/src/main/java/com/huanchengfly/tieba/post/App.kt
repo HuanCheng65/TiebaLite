@@ -119,7 +119,7 @@ class App : Application(), IApp, IGetter, SketchFactory {
         enableNewUi: Boolean = applicationMetaData.getBoolean("enable_new_ui") || appPreferences.enableNewUi,
         keepOld: Boolean = BuildConfig.DEBUG
     ) {
-        setOldMainActivityEnabled(!enableNewUi && !keepOld)
+        setOldMainActivityEnabled(!enableNewUi || keepOld)
         if (enableNewUi) AppIconUtil.setIcon()
         else AppIconUtil.setIcon(Icons.DISABLE)
     }
