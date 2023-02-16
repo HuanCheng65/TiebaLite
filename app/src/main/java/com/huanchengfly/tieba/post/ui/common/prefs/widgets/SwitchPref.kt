@@ -39,10 +39,8 @@ fun SwitchPref(
     prefs?.get(selectionKey)?.also { checked = it } // starting value if it exists in datastore
 
     fun edit(newState: Boolean) = run {
-        scope.launch {
-            checked = newState
-            onCheckedChange?.invoke(newState)
-        }
+        checked = newState
+        onCheckedChange?.invoke(newState)
         scope.launch {
             try {
                 datastore.edit { preferences ->

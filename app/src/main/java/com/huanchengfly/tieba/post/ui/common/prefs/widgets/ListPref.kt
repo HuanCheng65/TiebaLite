@@ -65,10 +65,8 @@ fun ListPref(
     prefs?.get(selectionKey)?.also { selected = it } // starting value if it exists in datastore
 
     fun edit(current: Pair<String, String>) = run {
-        scope.launch {
-            selected = current.first
-            onValueChange?.invoke(current.first)
-        }
+        selected = current.first
+        onValueChange?.invoke(current.first)
         scope.launch {
             try {
                 datastore.edit { preferences ->
