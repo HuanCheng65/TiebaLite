@@ -9,9 +9,10 @@ import com.huanchengfly.tieba.post.api.models.OAID
 import com.huanchengfly.tieba.post.api.retrofit.adapter.DeferredCallAdapterFactory
 import com.huanchengfly.tieba.post.api.retrofit.adapter.FlowCallAdapterFactory
 import com.huanchengfly.tieba.post.api.retrofit.converter.gson.GsonConverterFactory
-import com.huanchengfly.tieba.post.api.retrofit.interceptors.AddCookieInterceptor
+import com.huanchengfly.tieba.post.api.retrofit.interceptors.AddWebCookieInterceptor
 import com.huanchengfly.tieba.post.api.retrofit.interceptors.CommonHeaderInterceptor
 import com.huanchengfly.tieba.post.api.retrofit.interceptors.CommonParamInterceptor
+import com.huanchengfly.tieba.post.api.retrofit.interceptors.CookieInterceptor
 import com.huanchengfly.tieba.post.api.retrofit.interceptors.DropInterceptor
 import com.huanchengfly.tieba.post.api.retrofit.interceptors.FailureResponseInterceptor
 import com.huanchengfly.tieba.post.api.retrofit.interceptors.ForceLoginInterceptor
@@ -98,7 +99,8 @@ object RetrofitTiebaApi {
                 Header.CHARSET to { "UTF-8" },
                 Header.HOST to { "tieba.baidu.com" },
             ),
-            AddCookieInterceptor)
+            AddWebCookieInterceptor
+        )
     }
 
     val MINI_TIEBA_API: MiniTiebaApi by lazy {
@@ -247,6 +249,7 @@ object RetrofitTiebaApi {
             addInterceptor(DropInterceptor)
             addInterceptor(ProtoFailureResponseInterceptor)
             addInterceptor(ForceLoginInterceptor)
+            addInterceptor(CookieInterceptor)
             addInterceptor(sortAndSignInterceptor)
             connectionPool(connectionPool)
         }.build())

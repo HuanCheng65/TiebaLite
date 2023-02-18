@@ -117,7 +117,7 @@ interface WebTiebaApi {
     ): Deferred<ApiResult<ForumBean>>
 
     @Headers(
-        "${Header.ADD_COOKIE}: ${Header.ADD_COOKIE_FALSE}"
+        "${Header.ADD_WEB_COOKIE}: ${Header.ADD_WEB_COOKIE_FALSE}"
     )
     @GET("/mo/q/newmoindex?need_user=1")
     fun myInfo(
@@ -125,7 +125,7 @@ interface WebTiebaApi {
     ): Call<MyInfoBean>
 
     @Headers(
-        "${Header.ADD_COOKIE}: ${Header.ADD_COOKIE_FALSE}"
+        "${Header.ADD_WEB_COOKIE}: ${Header.ADD_WEB_COOKIE_FALSE}"
     )
     @GET("/mo/q/newmoindex?need_user=1")
     fun myInfoAsync(
@@ -133,7 +133,7 @@ interface WebTiebaApi {
     ): Deferred<ApiResult<MyInfoBean>>
 
     @Headers(
-        "${Header.ADD_COOKIE}: ${Header.ADD_COOKIE_FALSE}"
+        "${Header.ADD_WEB_COOKIE}: ${Header.ADD_WEB_COOKIE_FALSE}"
     )
     @GET("/mo/q/newmoindex?need_user=1")
     fun myInfoFlow(

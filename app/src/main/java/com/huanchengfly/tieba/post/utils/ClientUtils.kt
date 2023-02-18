@@ -14,14 +14,17 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 object ClientUtils {
-    const val CLIENT_ID = "client_id"
-    const val SAMPLE_ID = "sample_id"
+    private const val CLIENT_ID = "client_id"
+    private const val SAMPLE_ID = "sample_id"
+    private const val BAIDU_ID = "baidu_id"
 
     private val clientIdKey = stringPreferencesKey(CLIENT_ID)
     private val sampleIdKey = stringPreferencesKey(SAMPLE_ID)
+    private val baiduIdKey = stringPreferencesKey(BAIDU_ID)
 
     var clientId: String? = null
     var sampleId: String? = null
+    var baiduId: String? = null
 
     fun init(context: Context) {
         CoroutineScope(Dispatchers.IO).launch {
@@ -31,7 +34,17 @@ object ClientUtils {
             sampleId = withContext(Dispatchers.IO) {
                 context.dataStore.data.map { it[sampleIdKey] }.firstOrNull()
             }
+            baiduId = withContext(Dispatchers.IO) {
+                context.dataStore.data.map { it[baiduIdKey] }.firstOrNull()
+            }
             sync(context)
+        }
+    }
+
+    suspend fun saveBaiduId(context: Context, id: String) {
+        baiduId = id
+        context.dataStore.edit {
+            it[baiduIdKey] = id
         }
     }
 

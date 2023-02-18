@@ -1,6 +1,5 @@
 package com.huanchengfly.tieba.post.activities
 
-import android.content.Intent
 import android.graphics.Bitmap
 import android.os.Bundle
 import android.os.Handler
@@ -13,6 +12,7 @@ import com.huanchengfly.tieba.post.api.retrofit.exception.getErrorMessage
 import com.huanchengfly.tieba.post.fragments.WebViewFragment
 import com.huanchengfly.tieba.post.interfaces.WebViewListener
 import com.huanchengfly.tieba.post.utils.AccountUtil
+import com.huanchengfly.tieba.post.utils.ClientUtils
 import com.huanchengfly.tieba.post.utils.ThemeUtil
 import com.huanchengfly.tieba.post.utils.Util
 import kotlinx.coroutines.Dispatchers
@@ -21,6 +21,8 @@ import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.launch
 
 class LoginActivity : BaseActivity(), WebViewListener {
+    private var isLoadingAccount = false
+
     private var toolbar: Toolbar? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -48,49 +50,66 @@ class LoginActivity : BaseActivity(), WebViewListener {
         toolbar!!.title = newTitle
     }
 
+    // 从 Cookies 字符串解析出每个 Cookie
+    fun parseCookies(cookies: String): Map<String, String> {
+        val cookieMap = mutableMapOf<String, String>()
+        cookies.split(";").forEach {
+            val cookie = it.trim()
+            val cookieSplit = cookie.split("=").toMutableList()
+            if (cookieSplit.size > 1) {
+                val name = cookieSplit.removeFirst()
+                cookieMap[name] = cookieSplit.joinToString("=")
+            }
+        }
+        return cookieMap
+    }
+
     override fun onPageFinished(view: WebView, url: String) {
+        if (isLoadingAccount) {
+            return
+        }
         val cookieManager = CookieManager.getInstance()
-        val cookies = cookieManager.getCookie(url)
-        if (cookies != null) {
-            val bdussSplit = cookies.split("BDUSS=")
-            val sTokenSplit = cookies.split("STOKEN=")
-            if (bdussSplit.size > 1 && sTokenSplit.size > 1) {
-                val bduss = bdussSplit[1].split(";")[0]
-                val sToken = sTokenSplit[1].split(";")[0]
-                if (url.startsWith("https://tieba.baidu.com/index/tbwise/") || url.startsWith("https://tiebac.baidu.com/index/tbwise/")) {
-                    val snackBar = Util.createSnackbar(view, "请稍后…", Snackbar.LENGTH_INDEFINITE)
-                    snackBar.show()
-                    launch {
-                        AccountUtil.fetchAccountFlow(bduss, sToken, cookies)
-                            .flowOn(Dispatchers.IO)
-                            .catch { e ->
-                                snackBar.setText("登录失败 ${e.getErrorMessage()}")
+        val cookiesStr = cookieManager.getCookie(url) ?: ""
+        val cookies = parseCookies(cookiesStr)
+        val bduss = cookies["BDUSS"]
+        val sToken = cookies["STOKEN"]
+        val baiduId = cookies["BAIDUID"]
+        if (url.startsWith("https://tieba.baidu.com/index/tbwise/") || url.startsWith("https://tiebac.baidu.com/index/tbwise/")) {
+            if (bduss == null || sToken == null) {
+                return
+            }
+            if (!baiduId.isNullOrEmpty() && ClientUtils.baiduId.isNullOrEmpty()) launch {
+                ClientUtils.saveBaiduId(
+                    this@LoginActivity,
+                    baiduId
+                )
+            }
+            val snackBar = Util.createSnackbar(view, "请稍后…", Snackbar.LENGTH_INDEFINITE)
+            isLoadingAccount = true
+            snackBar.show()
+            launch {
+                AccountUtil.fetchAccountFlow(bduss, sToken, cookiesStr)
+                    .flowOn(Dispatchers.IO)
+                    .catch { e ->
+                        snackBar.setText("登录失败 ${e.getErrorMessage()}")
+                        isLoadingAccount = false
+                        view.loadUrl("https://wappass.baidu.com/passport?login&u=https%3A%2F%2Ftieba.baidu.com%2Findex%2Ftbwise%2Fmine")
+                        handler.postDelayed({ snackBar.dismiss() }, 1500)
+                    }
+                    .flowOn(Dispatchers.Main)
+                    .collect { account ->
+                        AccountUtil.newAccount(account.uid, account) {
+                            isLoadingAccount = false
+                            if (it) {
+                                AccountUtil.switchUser(this@LoginActivity, account.id)
+                                snackBar.setText("登录成功，即将跳转")
+                            } else {
+                                snackBar.setText("登录失败 未知错误")
                                 view.loadUrl("https://wappass.baidu.com/passport?login&u=https%3A%2F%2Ftieba.baidu.com%2Findex%2Ftbwise%2Fmine")
                                 handler.postDelayed({ snackBar.dismiss() }, 1500)
                             }
-                            .flowOn(Dispatchers.Main)
-                            .collect { account ->
-                                AccountUtil.newAccount(account.uid, account) {
-                                    if (it) {
-                                        AccountUtil.switchUser(this@LoginActivity, account.id)
-                                        snackBar.setText("登录成功，即将跳转")
-                                        handler.postDelayed({
-                                            snackBar.dismiss()
-                                            finish()
-                                            startActivity(
-                                                Intent(
-                                                    this@LoginActivity,
-                                                    UpdateInfoActivity::class.java
-                                                )
-                                            )
-                                        }, 1500)
-                                    } else {
-                                        snackBar.setText("登录失败 未知错误")
-                                    }
-                                }
-                            }
+                        }
                     }
-                }
             }
         }
     }

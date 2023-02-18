@@ -5,7 +5,7 @@ import com.huanchengfly.tieba.post.utils.AccountUtil
 import okhttp3.Interceptor
 import okhttp3.Response
 
-object AddCookieInterceptor : Interceptor {
+object AddWebCookieInterceptor : Interceptor {
     override fun intercept(chain: Interceptor.Chain): Response {
         val request = chain.request()
         var headers = request.headers
@@ -13,11 +13,11 @@ object AddCookieInterceptor : Interceptor {
         val body = request.body
 
         var addCookie = true
-        val addCookieHeader = headers[Header.ADD_COOKIE]
+        val addCookieHeader = headers[Header.ADD_WEB_COOKIE]
         if (addCookieHeader != null) {
-            if (addCookieHeader == Header.ADD_COOKIE_FALSE) addCookie = false
+            if (addCookieHeader == Header.ADD_WEB_COOKIE_FALSE) addCookie = false
             headers = headers.newBuilder()
-                .removeAll(Header.ADD_COOKIE)
+                .removeAll(Header.ADD_WEB_COOKIE)
                 .build()
         }
 

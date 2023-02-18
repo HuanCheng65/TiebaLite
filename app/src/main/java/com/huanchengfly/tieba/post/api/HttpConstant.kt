@@ -30,8 +30,8 @@ object Header {
     const val DROP_HEADERS = "drop_headers"
     const val NO_COMMON_PARAMS = "no_common_params"
 
-    const val ADD_COOKIE = "add_cookie"
-    const val ADD_COOKIE_FALSE = "false"
+    const val ADD_WEB_COOKIE = "add_cookie"
+    const val ADD_WEB_COOKIE_FALSE = "false"
 
     const val ACCEPT_LANGUAGE = "Accept-Language"
     const val ACCEPT_LANGUAGE_VALUE = "zh-CN,zh;q=0.9"
