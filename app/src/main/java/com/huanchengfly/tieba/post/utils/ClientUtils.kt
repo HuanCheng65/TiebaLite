@@ -7,6 +7,7 @@ import com.huanchengfly.tieba.post.api.TiebaApi
 import com.huanchengfly.tieba.post.dataStore
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
@@ -42,10 +43,13 @@ object ClientUtils {
     }
 
     private suspend fun sync(context: Context) {
-        TiebaApi.getInstance().syncFlow(clientId).collect {
-            clientId = it.client.clientId
-            sampleId = it.wlConfig.sampleId
-            save(context, it.client.clientId, it.wlConfig.sampleId)
-        }
+        TiebaApi.getInstance()
+            .syncFlow(clientId)
+            .catch { it.printStackTrace() }
+            .collect {
+                clientId = it.client.clientId
+                sampleId = it.wlConfig.sampleId
+                save(context, it.client.clientId, it.wlConfig.sampleId)
+            }
     }
 }
