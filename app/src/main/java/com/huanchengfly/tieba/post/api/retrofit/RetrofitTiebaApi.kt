@@ -2,6 +2,7 @@ package com.huanchengfly.tieba.post.api.retrofit
 
 import android.os.Build
 import com.huanchengfly.tieba.post.App
+import com.huanchengfly.tieba.post.api.ClientVersion
 import com.huanchengfly.tieba.post.api.Header
 import com.huanchengfly.tieba.post.api.Param
 import com.huanchengfly.tieba.post.api.models.OAID
@@ -140,7 +141,7 @@ object RetrofitTiebaApi {
                 Param.FROM to { "tieba" },
                 Param.CLIENT_VERSION to { "12.25.1.0" },
                 Param.CUID_GALAXY3 to { UIDUtil.getAid() },
-                Param.OAID to { OAID(App.oaid).toJson() },
+                Param.OAID to { OAID().toJson() },
             ),
             stParamInterceptor,
         )
@@ -158,17 +159,45 @@ object RetrofitTiebaApi {
                 Header.CUID_GALAXY2 to { CuidUtils.getNewCuid() },
                 Header.CUID_GID to { "" },
                 Header.CUID_GALAXY3 to { UIDUtil.getAid() },
-                Header.USER_AGENT to { "bdtb for Android 11.10.8.6" },
+                Header.USER_AGENT to { "bdtb for Android ${ClientVersion.TIEBA_V11.version}" },
                 Header.X_BD_DATA_TYPE to { "protobuf" },
             ),
-            defaultCommonParamInterceptor + CommonParamInterceptor(
+            defaultCommonParamInterceptor - Param.OS_VERSION + CommonParamInterceptor(
                 Param.CUID to { CuidUtils.getNewCuid() },
                 Param.CUID_GALAXY2 to { CuidUtils.getNewCuid() },
                 Param.CUID_GID to { "" },
-                Param.FROM to { "1024324o" },
-                Param.CLIENT_VERSION to { "11.10.8.6" },
+                Param.FROM to { "tieba" },
+                Param.CLIENT_VERSION to { ClientVersion.TIEBA_V11.version },
                 Param.CUID_GALAXY3 to { UIDUtil.getAid() },
-                Param.OAID to { OAID(App.oaid).toJson() },
+                Param.OAID to { OAID().toJson() },
+            ),
+            stParamInterceptor,
+        )
+    }
+
+    val OFFICIAL_PROTOBUF_TIEBA_V12_API: OfficialProtobufTiebaApi by lazy {
+        createProtobufApi<OfficialProtobufTiebaApi>(
+            "http://c.tieba.baidu.com/",
+            CommonHeaderInterceptor(
+                Header.CHARSET to { "UTF-8" },
+                Header.CLIENT_TYPE to { "2" },
+                Header.CLIENT_USER_TOKEN to { AccountUtil.getUid() },
+                Header.COOKIE to { "CUID=${CuidUtils.getNewCuid()};ka=open;TBBRAND=${Build.MODEL};" },
+                Header.CUID to { CuidUtils.getNewCuid() },
+                Header.CUID_GALAXY2 to { CuidUtils.getNewCuid() },
+                Header.CUID_GID to { "" },
+                Header.CUID_GALAXY3 to { UIDUtil.getAid() },
+                Header.USER_AGENT to { "bdtb for Android ${ClientVersion.TIEBA_V12.version}" },
+                Header.X_BD_DATA_TYPE to { "protobuf" },
+            ),
+            defaultCommonParamInterceptor - Param.OS_VERSION + CommonParamInterceptor(
+                Param.CUID to { CuidUtils.getNewCuid() },
+                Param.CUID_GALAXY2 to { CuidUtils.getNewCuid() },
+                Param.CUID_GID to { "" },
+                Param.FROM to { "tieba" },
+                Param.CLIENT_VERSION to { ClientVersion.TIEBA_V12.version },
+                Param.CUID_GALAXY3 to { UIDUtil.getAid() },
+                Param.OAID to { UIDUtil.getOAID() },
             ),
             stParamInterceptor,
         )

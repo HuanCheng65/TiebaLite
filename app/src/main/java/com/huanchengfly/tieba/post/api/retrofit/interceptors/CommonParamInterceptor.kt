@@ -21,6 +21,10 @@ class CommonParamInterceptor(private val additionParams: List<ParamExpression>) 
         return CommonParamInterceptor(additionParams + interceptor.additionParams)
     }
 
+    operator fun minus(name: String): CommonParamInterceptor {
+        return CommonParamInterceptor(additionParams.filter { it.first != name })
+    }
+
     override fun intercept(chain: Interceptor.Chain): Response {
         val request = chain.request()
         var headers = request.headers

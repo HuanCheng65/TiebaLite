@@ -19,7 +19,6 @@ import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatDelegate
 import com.github.gzuliyujiang.oaid.DeviceID
-import com.github.gzuliyujiang.oaid.IGetter
 import com.github.panpf.sketch.Sketch
 import com.github.panpf.sketch.SketchFactory
 import com.github.panpf.sketch.decode.GifAnimatedDrawableDecoder
@@ -30,6 +29,7 @@ import com.github.panpf.sketch.http.OkHttpStack
 import com.github.panpf.sketch.request.PauseLoadWhenScrollingDrawableDecodeInterceptor
 import com.huanchengfly.tieba.post.activities.BaseActivity
 import com.huanchengfly.tieba.post.components.ClipBoardLinkDetector
+import com.huanchengfly.tieba.post.components.OAIDGetter
 import com.huanchengfly.tieba.post.components.dialogs.LoadingDialog
 import com.huanchengfly.tieba.post.plugins.PluginManager
 import com.huanchengfly.tieba.post.plugins.interfaces.IApp
@@ -48,7 +48,6 @@ import com.huanchengfly.tieba.post.utils.TiebaUtil
 import com.huanchengfly.tieba.post.utils.Util
 import com.huanchengfly.tieba.post.utils.appPreferences
 import com.huanchengfly.tieba.post.utils.applicationMetaData
-import com.huanchengfly.tieba.post.utils.helios.Base32
 import com.huanchengfly.tieba.post.utils.launchUrl
 import com.microsoft.appcenter.AppCenter
 import com.microsoft.appcenter.analytics.Analytics
@@ -66,16 +65,8 @@ import org.litepal.LitePal
 
 
 @HiltAndroidApp
-class App : Application(), IApp, IGetter, SketchFactory {
+class App : Application(), IApp, SketchFactory {
     private val mActivityList: MutableList<Activity> = mutableListOf()
-
-    override fun onOAIDGetComplete(result: String) {
-        oaid = Base32.encode(result.encodeToByteArray())
-    }
-
-    override fun onOAIDGetError(error: Exception) {
-        oaid = ""
-    }
 
     @RequiresApi(api = 28)
     private fun setWebViewPath(context: Context) {
@@ -129,7 +120,7 @@ class App : Application(), IApp, IGetter, SketchFactory {
         super.onCreate()
         LitePal.initialize(this)
         AccountUtil.init(this)
-        DeviceID.getOAID(this, this)
+        Config.init(this)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
             setWebViewPath(this)
         }
@@ -146,6 +137,7 @@ class App : Application(), IApp, IGetter, SketchFactory {
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
         ThemeUtils.init(ThemeDelegate)
         registerActivityLifecycleCallbacks(ClipBoardLinkDetector)
+        registerActivityLifecycleCallbacks(OAIDGetter)
         PluginManager.init(this)
         CoroutineScope(Dispatchers.IO).apply {
             launch {
@@ -206,6 +198,29 @@ class App : Application(), IApp, IGetter, SketchFactory {
         }
     }
 
+    object Config {
+        var inited: Boolean = false
+
+        var isOAIDSupported: Boolean = false
+        var statusCode: Int = -200
+        var oaid: String = ""
+        var encodedOAID: String = ""
+        var isTrackLimited: Boolean = false
+
+        fun init(context: Context) {
+            if (!inited) {
+                isOAIDSupported = DeviceID.supportedOAID(context)
+                if (isOAIDSupported) {
+                    DeviceID.getOAID(context, OAIDGetter)
+                } else {
+                    statusCode = -200
+                    isTrackLimited = false
+                }
+                inited = true
+            }
+        }
+    }
+
     object ScreenInfo {
         @JvmField
         var EXACT_SCREEN_HEIGHT = 0
@@ -253,7 +268,7 @@ class App : Application(), IApp, IGetter, SketchFactory {
     }
 
     companion object {
-        val TAG = App::class.java.simpleName
+        const val TAG = "App"
 
         @JvmStatic
         var translucentBackground: Drawable? = null
@@ -264,9 +279,6 @@ class App : Application(), IApp, IGetter, SketchFactory {
         @JvmStatic
         lateinit var INSTANCE: App
             private set
-
-        @JvmStatic
-        var oaid: String = ""
 
         val isSystemNight: Boolean
             get() = nightMode == Configuration.UI_MODE_NIGHT_YES
@@ -616,7 +628,7 @@ class App : Application(), IApp, IGetter, SketchFactory {
                     R.attr.colorOnAccent
                 )
 
-                R.color.default_color_chip -> return return getColorByAttr(
+                R.color.default_color_chip -> return getColorByAttr(
                     context,
                     R.attr.colorChip
                 )

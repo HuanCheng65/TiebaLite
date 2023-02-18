@@ -87,7 +87,7 @@ fun buildCommonRequest(
         lego_lib_version = "3.0.0",
         model = Build.MODEL,
         net_type = "1",
-        oaid = OAID(App.oaid).toJson(),
+        oaid = OAID().toJson(),
         pversion = "1.0.3",
         sample_id = ClientUtils.sampleId,
         stoken = AccountUtil.getSToken(),

@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.os.Build
 import android.provider.Settings
 import android.text.TextUtils
+import com.huanchengfly.tieba.post.App
 import com.huanchengfly.tieba.post.App.Companion.INSTANCE
 import com.huanchengfly.tieba.post.toMD5
 import com.huanchengfly.tieba.post.utils.helios.Base32
@@ -22,6 +23,13 @@ object UIDUtil {
         val androidId =
             Settings.Secure.getString(INSTANCE.contentResolver, Settings.Secure.ANDROID_ID)
         return androidId ?: defaultValue
+    }
+
+    fun getOAID(): String {
+        if (App.Config.encodedOAID.isBlank()) return ""
+        val raw = "A10-${App.Config.encodedOAID}-"
+        val sign = Base32.encode(Hasher.hash(raw.toByteArray()))
+        return "$raw$sign"
     }
 
     fun getAid(): String {
