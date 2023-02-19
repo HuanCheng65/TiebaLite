@@ -30,6 +30,7 @@ import com.huanchengfly.tieba.post.models.PhotoViewBean
 import com.huanchengfly.tieba.post.ui.common.theme.utils.ThemeUtils
 import com.huanchengfly.tieba.post.utils.AnimUtil
 import com.huanchengfly.tieba.post.utils.ImageUtil
+import com.huanchengfly.tieba.post.utils.download
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -95,7 +96,7 @@ class PhotoViewActivity : BaseActivity(), OnChangeBottomBarVisibilityListener,
                     }
                     picBeans.addAll(data.picList)
                     picBeans.forEach {
-                        it.img.original?.let { it1 -> imgInfoBeans.add(it1) }
+                        it.img.original.let { it1 -> imgInfoBeans.add(it1) }
                     }
                     lastIndex = picBeans.first().overAllIndex.toInt()
                     for (photoViewBean in photoViewBeans) {
@@ -277,7 +278,7 @@ class PhotoViewActivity : BaseActivity(), OnChangeBottomBarVisibilityListener,
                     this,
                     mAdapter.getBean(mViewPager.currentItem).originUrl,
                     true
-                ) { uri: Uri? ->
+                ) { uri: Uri ->
                     val intent = Intent(Intent.ACTION_SEND)
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                         intent.putExtra(Intent.EXTRA_STREAM, uri)
