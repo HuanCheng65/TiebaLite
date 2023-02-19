@@ -121,7 +121,7 @@ class UserActivity : BaseActivity() {
             ImageUtil.load(avatarView, ImageUtil.LOAD_TYPE_AVATAR, StringUtil.getAvatarUrl(avatar))
             ImageUtil.initImageView(
                 avatarView,
-                PhotoViewBean(StringUtil.getAvatarUrl(avatar), null)
+                PhotoViewBean(StringUtil.getAvatarUrl(avatar), StringUtil.getBigAvatarUrl(avatar))
             )
         }
         appbar.addOnOffsetChangedListener { appBarLayout: AppBarLayout, verticalOffset: Int ->
@@ -191,7 +191,10 @@ class UserActivity : BaseActivity() {
                 )
                 ImageUtil.initImageView(
                     avatarView,
-                    PhotoViewBean(StringUtil.getBigAvatarUrl(it.portraith), null)
+                    PhotoViewBean(
+                        StringUtil.getBigAvatarUrl(it.portraith),
+                        StringUtil.getBigAvatarUrl(it.portraith)
+                    )
                 )
             }
             if (TextUtils.equals(AccountUtil.getUid(), "${it.id}")) {
