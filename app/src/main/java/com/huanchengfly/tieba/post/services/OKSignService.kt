@@ -36,6 +36,8 @@ class OKSignService : IntentService(TAG), CoroutineScope, ProgressListener {
     override val coroutineContext: CoroutineContext
         get() = Dispatchers.Main + job
 
+    private var lastSignData: SignDataBean? = null
+
     private val notificationManager: NotificationManagerCompat by lazy {
         NotificationManagerCompat.from(this)
     }
@@ -165,6 +167,7 @@ class OKSignService : IntentService(TAG), CoroutineScope, ProgressListener {
     }
 
     override fun onProgressStart(signDataBean: SignDataBean, current: Int, total: Int) {
+        lastSignData = signDataBean
         updateNotification(
             getString(
                 R.string.title_signing_progress,
@@ -217,8 +220,22 @@ class OKSignService : IntentService(TAG), CoroutineScope, ProgressListener {
     }
 
     override fun onFailure(current: Int, total: Int, errorCode: Int, errorMsg: String) {
-        ServiceCompat.stopForeground(this, ServiceCompat.STOP_FOREGROUND_DETACH)
-        updateNotification(getString(R.string.title_oksign_fail), errorMsg)
+        lastSignData.let {
+            if (it == null) {
+                ServiceCompat.stopForeground(this, ServiceCompat.STOP_FOREGROUND_DETACH)
+                updateNotification(getString(R.string.title_oksign_fail), errorMsg)
+            } else {
+                updateNotification(
+                    getString(
+                        R.string.title_signing_progress,
+                        it.userName,
+                        current + 1,
+                        total
+                    ),
+                    getString(R.string.text_singing_progress_fail, it.forumName, errorMsg)
+                )
+            }
+        }
     }
 
     companion object {

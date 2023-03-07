@@ -436,6 +436,7 @@
     <string name="text_stat_fans">粉丝</string>
     <string name="title_custom_font_size">字体大小</string>
     <string name="text_singing_progress">%1$s吧 ✓</string>
+    <string name="text_singing_progress_fail">%1$s吧 × %2$s</string>
     <string name="text_singing_progress_exp">%1$s吧 ✓ 经验 +%2$s</string>
     <string name="title_start_sign">即将开始签到</string>
     <string name="toast_oksign_start">签到已开始，可在通知栏查看进度</string>
