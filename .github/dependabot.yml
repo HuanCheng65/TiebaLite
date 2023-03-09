@@ -30,7 +30,7 @@ registries:
 updates:
   # Maintain dependencies for gradle
   - package-ecosystem: gradle
-    directory: "/"
+    directory: "app"
     schedule:
       interval: "daily"
     registries: "*"

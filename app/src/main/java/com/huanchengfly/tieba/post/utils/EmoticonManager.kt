@@ -191,8 +191,13 @@ object EmoticonManager {
     fun getEmoticonDataCache(): EmoticonCache {
         val emoticonDataCacheFile = File(getEmoticonCacheDir(), "emoticon_data_cache")
         if (emoticonDataCacheFile.exists()) {
-            return GsonUtil.getGson()
-                .fromJson(emoticonDataCacheFile.reader(), EmoticonCache::class.java)
+            return try {
+                GsonUtil.getGson()
+                    .fromJson(emoticonDataCacheFile.reader(), EmoticonCache::class.java)
+            }catch (e:Exception){
+                EmoticonCache()
+            }
+
         }
         return EmoticonCache()
     }
