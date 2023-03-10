@@ -12,6 +12,7 @@ buildscript {
         wire_version = '4.4.3'
         hilt_version = '2.44.2'
         booster_version = '4.15.0'
+        lottie_version = '6.0.0'
         debug = gradle.startParameter.taskNames.any {
             it.contains('debug') || it.contains('Debug')
         }
