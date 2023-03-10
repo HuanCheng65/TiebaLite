@@ -257,6 +257,30 @@ fun Toolbar(
     )
 }
 
+@Composable
+fun Toolbar(
+    title: @Composable (() -> Unit),
+    navigationIcon: @Composable (() -> Unit)? = null,
+    actions: @Composable RowScope.() -> Unit = {},
+    content: @Composable (ColumnScope.() -> Unit)? = null
+) {
+    TopAppBarContainer(
+        topBar = {
+            TopAppBar(
+                title = {
+                    ProvideContentColor(color = ExtendedTheme.colors.onTopBar, content = title)
+                },
+                actions = actions,
+                navigationIcon = navigationIcon,
+                backgroundColor = ExtendedTheme.colors.topBar,
+                contentColor = ExtendedTheme.colors.onTopBar,
+                elevation = 0.dp
+            )
+        },
+        content = content
+    )
+}
+
 
 @Composable
 fun TopAppBarContainer(
