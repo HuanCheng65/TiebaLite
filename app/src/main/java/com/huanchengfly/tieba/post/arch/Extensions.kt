@@ -94,7 +94,7 @@ inline fun <INTENT : UiIntent, reified VM : BaseViewModel<INTENT, *, *, *>> page
                 }
         }
         if (initialIntent.isNotEmpty()) {
-            LaunchedEffect(key1 = "initialize") {
+            LaunchedEffect(key1 = initialized) {
                 if (!initialized) {
                     initialized = true
                     initialIntent.asFlow()

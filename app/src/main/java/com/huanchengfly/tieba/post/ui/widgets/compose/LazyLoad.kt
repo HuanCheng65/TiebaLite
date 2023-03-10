@@ -8,7 +8,7 @@ fun LazyLoad(
     loaded: Boolean,
     onLoad: () -> Unit,
 ) {
-    LaunchedEffect(onLoad) {
+    LaunchedEffect(key1 = loaded, key2 = onLoad) {
         if (!loaded) onLoad()
     }
 }
