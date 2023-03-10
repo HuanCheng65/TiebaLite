@@ -7,10 +7,12 @@ import com.huanchengfly.tieba.post.utils.TiebaUtil
 
 class AutoSignAlarm : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
-        TiebaUtil.startSign(context)
+        runCatching {
+            TiebaUtil.startSign(context)
+        }
     }
 
     companion object {
-        val TAG: String = AutoSignAlarm::class.java.simpleName
+        val TAG: String = "AutoSignAlarm"
     }
 }
