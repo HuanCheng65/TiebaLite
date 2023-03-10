@@ -168,7 +168,7 @@ class PersonalizedFeedFragment : BaseFragment(), PersonalizedFeedAdapter.OnRefre
                                 it.author?.nameShow,
                                 it.author?.id
                             )
-                        }!!
+                        } ?: emptyList()
                     val threadBeans: MutableList<PersonalizedBean.ThreadBean> =
                         ArrayList(adapter.getItemList())
                     adapter.apply {
