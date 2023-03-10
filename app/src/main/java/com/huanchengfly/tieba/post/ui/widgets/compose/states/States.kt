@@ -37,18 +37,22 @@ fun StateScreen(
     isEmpty: Boolean,
     isError: Boolean,
     isLoading: Boolean,
-    onReload: () -> Unit,
     modifier: Modifier = Modifier,
+    onReload: (() -> Unit)? = null,
     emptyScreen: @Composable () -> Unit = DefaultEmptyScreen,
     errorScreen: @Composable () -> Unit = DefaultErrorScreen,
     loadingScreen: @Composable () -> Unit = DefaultLoadingScreen,
     content: @Composable () -> Unit,
 ) {
+    val clickableModifier = if (onReload != null) Modifier.clickable(
+        enabled = isEmpty && !isLoading,
+        onClick = onReload
+    ) else Modifier
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .then(modifier)
-            .clickable(enabled = isEmpty && !isLoading, onClick = onReload),
+                then modifier
+                then clickableModifier,
         contentAlignment = Alignment.Center
     ) {
         if (!isEmpty) {
