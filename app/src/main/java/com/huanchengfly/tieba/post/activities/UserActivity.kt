@@ -143,6 +143,7 @@ class UserActivity : BaseActivity() {
         launch {
             TiebaApi.getInstance()
                 .userProfileFlow(uidLong)
+                .catch { toastShort(it.getErrorMessage()) }
                 .collect {
                     actionBtn.visibility = View.VISIBLE
                     loadingView.visibility = View.GONE
