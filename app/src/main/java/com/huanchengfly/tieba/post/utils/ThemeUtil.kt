@@ -235,9 +235,10 @@ object ThemeUtil {
         context.setTheme(getThemeByName(nowTheme))
     }
 
-    fun getThemeTranslucent(): String {
-        var nowTheme = getTheme()
-        if (isTranslucentTheme()) {
+    @JvmOverloads
+    fun getThemeTranslucent(theme: String = getTheme()): String {
+        var nowTheme = theme
+        if (isTranslucentTheme(nowTheme)) {
             val colorTheme =
                 dataStore.getInt("translucent_background_theme", TRANSLUCENT_THEME_LIGHT)
             nowTheme = if (colorTheme == TRANSLUCENT_THEME_DARK) {

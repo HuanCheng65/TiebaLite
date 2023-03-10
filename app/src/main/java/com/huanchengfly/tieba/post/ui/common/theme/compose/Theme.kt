@@ -1,7 +1,16 @@
 package com.huanchengfly.tieba.post.ui.common.theme.compose
 
-import androidx.compose.material.*
-import androidx.compose.runtime.*
+import androidx.compose.material.Colors
+import androidx.compose.material.ContentAlpha
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.darkColors
+import androidx.compose.material.lightColors
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.Stable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.graphics.Color
 import com.huanchengfly.tieba.post.App
 import com.huanchengfly.tieba.post.R
@@ -102,37 +111,63 @@ fun getColorPalette(
 
 @Composable
 private fun getThemeColorForTheme(theme: String): ExtendedColors {
-    val textColor = Color(App.ThemeDelegate.getColorByAttr(App.INSTANCE, R.attr.colorText, theme))
+    val nowTheme = ThemeUtil.getThemeTranslucent(theme)
+    val textColor =
+        Color(App.ThemeDelegate.getColorByAttr(App.INSTANCE, R.attr.colorText, nowTheme))
     val bottomBarColor =
-        Color(App.ThemeDelegate.getColorByAttr(App.INSTANCE, R.attr.colorNavBar, theme))
+        Color(App.ThemeDelegate.getColorByAttr(App.INSTANCE, R.attr.colorNavBar, nowTheme))
     return ExtendedColors(
-        theme,
-        ThemeUtil.isNightMode(theme),
-        Color(App.ThemeDelegate.getColorByAttr(App.INSTANCE, R.attr.colorPrimary, theme)),
-        Color(App.ThemeDelegate.getColorByAttr(App.INSTANCE, R.attr.colorNewAccent, theme)),
-        Color(App.ThemeDelegate.getColorByAttr(App.INSTANCE, R.attr.colorOnAccent, theme)),
-        Color(App.ThemeDelegate.getColorByAttr(App.INSTANCE, R.attr.colorToolbar, theme)),
-        Color(App.ThemeDelegate.getColorByAttr(App.INSTANCE, R.attr.colorToolbarItem, theme)),
-        Color(App.ThemeDelegate.getColorByAttr(App.INSTANCE, R.attr.color_toolbar_item_secondary, theme)),
-        Color(App.ThemeDelegate.getColorByAttr(App.INSTANCE, R.attr.colorToolbarItemActive, theme)),
-        Color(App.ThemeDelegate.getColorByAttr(App.INSTANCE, R.attr.colorToolbarBar, theme)),
-        Color(App.ThemeDelegate.getColorByAttr(App.INSTANCE, R.attr.colorOnToolbarBar, theme)),
+        nowTheme,
+        ThemeUtil.isNightMode(nowTheme),
+        Color(App.ThemeDelegate.getColorByAttr(App.INSTANCE, R.attr.colorPrimary, nowTheme)),
+        Color(App.ThemeDelegate.getColorByAttr(App.INSTANCE, R.attr.colorNewAccent, nowTheme)),
+        Color(App.ThemeDelegate.getColorByAttr(App.INSTANCE, R.attr.colorOnAccent, nowTheme)),
+        Color(App.ThemeDelegate.getColorByAttr(App.INSTANCE, R.attr.colorToolbar, nowTheme)),
+        Color(App.ThemeDelegate.getColorByAttr(App.INSTANCE, R.attr.colorToolbarItem, nowTheme)),
+        Color(
+            App.ThemeDelegate.getColorByAttr(
+                App.INSTANCE,
+                R.attr.color_toolbar_item_secondary,
+                nowTheme
+            )
+        ),
+        Color(
+            App.ThemeDelegate.getColorByAttr(
+                App.INSTANCE,
+                R.attr.colorToolbarItemActive,
+                nowTheme
+            )
+        ),
+        Color(App.ThemeDelegate.getColorByAttr(App.INSTANCE, R.attr.colorToolbarBar, nowTheme)),
+        Color(App.ThemeDelegate.getColorByAttr(App.INSTANCE, R.attr.colorOnToolbarBar, nowTheme)),
         bottomBarColor,
-        Color(App.ThemeDelegate.getColorByAttr(App.INSTANCE, R.attr.colorNavBarSurface, theme)),
-        Color(App.ThemeDelegate.getColorByAttr(App.INSTANCE, R.attr.colorOnNavBarSurface, theme)),
+        Color(App.ThemeDelegate.getColorByAttr(App.INSTANCE, R.attr.colorNavBarSurface, nowTheme)),
+        Color(
+            App.ThemeDelegate.getColorByAttr(
+                App.INSTANCE,
+                R.attr.colorOnNavBarSurface,
+                nowTheme
+            )
+        ),
         textColor.copy(alpha = ContentAlpha.high),
         textColor.copy(alpha = ContentAlpha.medium),
         textColor.copy(alpha = ContentAlpha.disabled),
-        Color(App.ThemeDelegate.getColorByAttr(App.INSTANCE, R.attr.color_text_disabled, theme)),
-        Color(App.ThemeDelegate.getColorByAttr(App.INSTANCE, R.attr.colorBg, theme)),
-        Color(App.ThemeDelegate.getColorByAttr(App.INSTANCE, R.attr.colorChip, theme)),
-        Color(App.ThemeDelegate.getColorByAttr(App.INSTANCE, R.attr.colorOnChip, theme)),
-        Color(App.ThemeDelegate.getColorByAttr(App.INSTANCE, R.attr.colorUnselected, theme)),
-        Color(App.ThemeDelegate.getColorByAttr(App.INSTANCE, R.attr.colorCard, theme)),
-        Color(App.ThemeDelegate.getColorByAttr(App.INSTANCE, R.attr.colorFloorCard, theme)),
-        Color(App.ThemeDelegate.getColorByAttr(App.INSTANCE, R.attr.colorDivider, theme)),
-        Color(App.ThemeDelegate.getColorByAttr(App.INSTANCE, R.attr.shadow_color, theme)),
-        Color(App.ThemeDelegate.getColorByAttr(App.INSTANCE, R.attr.color_swipe_refresh_layout_background, theme)),
+        Color(App.ThemeDelegate.getColorByAttr(App.INSTANCE, R.attr.color_text_disabled, nowTheme)),
+        Color(App.ThemeDelegate.getColorByAttr(App.INSTANCE, R.attr.colorBg, nowTheme)),
+        Color(App.ThemeDelegate.getColorByAttr(App.INSTANCE, R.attr.colorChip, nowTheme)),
+        Color(App.ThemeDelegate.getColorByAttr(App.INSTANCE, R.attr.colorOnChip, nowTheme)),
+        Color(App.ThemeDelegate.getColorByAttr(App.INSTANCE, R.attr.colorUnselected, nowTheme)),
+        Color(App.ThemeDelegate.getColorByAttr(App.INSTANCE, R.attr.colorCard, nowTheme)),
+        Color(App.ThemeDelegate.getColorByAttr(App.INSTANCE, R.attr.colorFloorCard, nowTheme)),
+        Color(App.ThemeDelegate.getColorByAttr(App.INSTANCE, R.attr.colorDivider, nowTheme)),
+        Color(App.ThemeDelegate.getColorByAttr(App.INSTANCE, R.attr.shadow_color, nowTheme)),
+        Color(
+            App.ThemeDelegate.getColorByAttr(
+                App.INSTANCE,
+                R.attr.color_swipe_refresh_layout_background,
+                nowTheme
+            )
+        ),
     )
 }
 
