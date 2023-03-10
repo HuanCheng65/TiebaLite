@@ -107,6 +107,9 @@ fun MainPage(
         }
     }
 
+    val pagerState = rememberPagerState()
+    val coroutineScope = rememberCoroutineScope()
+    val themeColors = ExtendedTheme.colors
     val windowSizeClass = LocalWindowSizeClass.current
     val foldingDevicePosture by devicePostureFlow.collectAsState()
     val navigationItems = listOfNotNull(
@@ -114,7 +117,14 @@ fun MainPage(
             icon = { if (it) Icons.Rounded.Inventory2 else Icons.Outlined.Inventory2 },
             title = stringResource(id = R.string.title_main),
             content = {
-                HomePage()
+                HomePage(
+                    canOpenExplore = !LocalContext.current.appPreferences.hideExplore,
+                    onOpenExplore = {
+                        coroutineScope.launch {
+                            pagerState.scrollToPage(1)
+                        }
+                    }
+                )
             }
         ),
         if (LocalContext.current.appPreferences.hideExplore) null
@@ -149,9 +159,6 @@ fun MainPage(
             }
         ),
     )
-    val pagerState = rememberPagerState()
-    val coroutineScope = rememberCoroutineScope()
-    val themeColors = ExtendedTheme.colors
 
     val navigationType = when (windowSizeClass.widthSizeClass) {
         WindowWidthSizeClass.Compact -> {

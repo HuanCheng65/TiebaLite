@@ -6,11 +6,13 @@ import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -26,6 +28,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.DropdownMenuItem
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Icon
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
@@ -54,12 +57,18 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.airbnb.lottie.compose.LottieAnimation
+import com.airbnb.lottie.compose.LottieCompositionSpec
+import com.airbnb.lottie.compose.LottieConstants
+import com.airbnb.lottie.compose.rememberLottieComposition
 import com.google.accompanist.drawablepainter.rememberDrawablePainter
 import com.google.accompanist.placeholder.placeholder
 import com.huanchengfly.tieba.post.R
+import com.huanchengfly.tieba.post.activities.LoginActivity
 import com.huanchengfly.tieba.post.activities.NewSearchActivity
 import com.huanchengfly.tieba.post.arch.collectPartialAsState
 import com.huanchengfly.tieba.post.arch.pageViewModel
@@ -70,12 +79,14 @@ import com.huanchengfly.tieba.post.ui.page.destinations.ForumPageDestination
 import com.huanchengfly.tieba.post.ui.widgets.Chip
 import com.huanchengfly.tieba.post.ui.widgets.compose.ActionItem
 import com.huanchengfly.tieba.post.ui.widgets.compose.Avatar
+import com.huanchengfly.tieba.post.ui.widgets.compose.Button
 import com.huanchengfly.tieba.post.ui.widgets.compose.ConfirmDialog
 import com.huanchengfly.tieba.post.ui.widgets.compose.LongClickMenu
 import com.huanchengfly.tieba.post.ui.widgets.compose.Toolbar
 import com.huanchengfly.tieba.post.ui.widgets.compose.accountNavIconIfCompact
 import com.huanchengfly.tieba.post.ui.widgets.compose.rememberDialogState
 import com.huanchengfly.tieba.post.ui.widgets.compose.rememberMenuState
+import com.huanchengfly.tieba.post.ui.widgets.compose.states.StateScreen
 import com.huanchengfly.tieba.post.utils.AccountUtil.LocalAccount
 import com.huanchengfly.tieba.post.utils.ImageUtil
 import com.huanchengfly.tieba.post.utils.TiebaUtil
@@ -362,8 +373,10 @@ fun HomePage(
             HomeUiIntent.Refresh
         )
     ),
+    canOpenExplore: Boolean = false,
+    onOpenExplore: () -> Unit = {},
 ) {
-    LocalAccount.current
+    val account = LocalAccount.current
     val context = LocalContext.current
     val isLoading by viewModel.uiState.collectPartialAsState(
         prop1 = HomeUiState::isLoading,
@@ -379,6 +392,7 @@ fun HomePage(
     )
     var listSingle by remember { mutableStateOf(context.appPreferences.listSingle) }
     val gridCells by remember { derivedStateOf { getGridCells(context, listSingle) } }
+
     Scaffold(
         backgroundColor = Color.Transparent,
         topBar = {
@@ -404,26 +418,42 @@ fun HomePage(
         },
         modifier = Modifier.fillMaxSize(),
     ) { contentPaddings ->
-        val pullRefreshState = rememberPullRefreshState(
-            refreshing = isLoading,
-            onRefresh = { viewModel.send(HomeUiIntent.Refresh) })
-        Box(modifier = Modifier
-            .padding(contentPaddings)
-            .pullRefresh(pullRefreshState)) {
-            val gridState = rememberLazyGridState()
-            LazyVerticalGrid(
-                state = gridState,
-                columns = gridCells,
-                contentPadding = PaddingValues(bottom = 12.dp),
+        StateScreen(
+            isEmpty = forums.isEmpty(),
+            isError = false,
+            isLoading = isLoading,
+            modifier = Modifier.padding(contentPaddings),
+            emptyScreen = {
+                EmptyScreen(
+                    loggedIn = account != null,
+                    canOpenExplore = canOpenExplore,
+                    onOpenExplore = onOpenExplore
+                )
+            },
+            loadingScreen = {
+                HomePageSkeletonScreen(listSingle = listSingle, gridCells = gridCells)
+            }
+        ) {
+            val pullRefreshState = rememberPullRefreshState(
+                refreshing = isLoading,
+                onRefresh = { viewModel.send(HomeUiIntent.Refresh) })
+            Box(
                 modifier = Modifier
-                    .fillMaxSize(),
+                    .pullRefresh(pullRefreshState)
             ) {
-                item(key = "SearchBox", span = { GridItemSpan(maxLineSpan) }) {
-                    SearchBox(modifier = Modifier.padding(bottom = 12.dp)) {
-                        context.goToActivity<NewSearchActivity>()
+                val gridState = rememberLazyGridState()
+                LazyVerticalGrid(
+                    state = gridState,
+                    columns = gridCells,
+                    contentPadding = PaddingValues(bottom = 12.dp),
+                    modifier = Modifier
+                        .fillMaxSize(),
+                ) {
+                    item(key = "SearchBox", span = { GridItemSpan(maxLineSpan) }) {
+                        SearchBox(modifier = Modifier.padding(bottom = 12.dp)) {
+                            context.goToActivity<NewSearchActivity>()
+                        }
                     }
-                }
-                if (!isLoading || forums.isNotEmpty()) {
                     if (topForums.isNotEmpty()) {
                         item(key = "TopForumHeader", span = { GridItemSpan(maxLineSpan) }) {
                             Column {
@@ -458,53 +488,126 @@ fun HomePage(
                         val item = forums[it]
                         ForumItem(viewModel, item, listSingle)
                     }
-                } else {
-                    item(key = "TopForumHeaderPlaceholder", span = { GridItemSpan(maxLineSpan) }) {
-                        Column {
-                            Header(
-                                text = stringResource(id = R.string.title_top_forum),
-                                invert = true,
-                                modifier = Modifier.placeholder(visible = true, color = ExtendedTheme.colors.chip)
-                            )
-                            Spacer(modifier = Modifier.height(8.dp))
-                        }
-                    }
-                    items(6, key = { "TopPlaceholder$it" }) {
-                        ForumItemPlaceholder(listSingle)
-                    }
-                    item(
-                        key = "Spacer",
-                        span = { GridItemSpan(maxLineSpan) }) {
-                        Spacer(
-                            modifier = Modifier.height(
-                                16.dp
-                            )
-                        )
-                    }
-                    item(key = "ForumHeaderPlaceholder", span = { GridItemSpan(maxLineSpan) }) {
-                        Column {
-                            Header(
-                                text = stringResource(id = R.string.forum_list_title),
-                                invert = true,
-                                modifier = Modifier.placeholder(
-                                    visible = true,
-                                    color = ExtendedTheme.colors.chip
-                                )
-                            )
-                            Spacer(modifier = Modifier.height(8.dp))
-                        }
-                    }
-                    items(12, key = { "Placeholder$it" }) {
-                        ForumItemPlaceholder(listSingle)
-                    }
                 }
-            }
 
-            PullRefreshIndicator(
-                refreshing = isLoading,
-                state = pullRefreshState,
-                modifier = Modifier.align(Alignment.TopCenter)
+                PullRefreshIndicator(
+                    refreshing = isLoading,
+                    state = pullRefreshState,
+                    modifier = Modifier.align(Alignment.TopCenter)
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun HomePageSkeletonScreen(
+    listSingle: Boolean,
+    gridCells: GridCells
+) {
+    LazyVerticalGrid(
+        columns = gridCells,
+        contentPadding = PaddingValues(bottom = 12.dp),
+        modifier = Modifier
+            .fillMaxSize(),
+    ) {
+        item(key = "TopForumHeaderPlaceholder", span = { GridItemSpan(maxLineSpan) }) {
+            Column {
+                Header(
+                    text = stringResource(id = R.string.title_top_forum),
+                    invert = true,
+                    modifier = Modifier.placeholder(
+                        visible = true,
+                        color = ExtendedTheme.colors.chip
+                    )
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+            }
+        }
+        items(6, key = { "TopPlaceholder$it" }) {
+            ForumItemPlaceholder(listSingle)
+        }
+        item(
+            key = "Spacer",
+            span = { GridItemSpan(maxLineSpan) }) {
+            Spacer(
+                modifier = Modifier.height(
+                    16.dp
+                )
             )
+        }
+        item(key = "ForumHeaderPlaceholder", span = { GridItemSpan(maxLineSpan) }) {
+            Column {
+                Header(
+                    text = stringResource(id = R.string.forum_list_title),
+                    invert = true,
+                    modifier = Modifier.placeholder(
+                        visible = true,
+                        color = ExtendedTheme.colors.chip
+                    )
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+            }
+        }
+        items(12, key = { "Placeholder$it" }) {
+            ForumItemPlaceholder(listSingle)
+        }
+    }
+}
+
+@Composable
+fun EmptyScreen(
+    loggedIn: Boolean,
+    canOpenExplore: Boolean,
+    onOpenExplore: () -> Unit
+) {
+    val context = LocalContext.current
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.spacedBy(8.dp, alignment = CenterVertically)
+    ) {
+        val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.lottie_astronaut))
+        LottieAnimation(
+            composition = composition,
+            iterations = LottieConstants.IterateForever,
+            modifier = Modifier
+                .fillMaxWidth()
+                .aspectRatio(2f)
+        )
+        Text(
+            text = stringResource(id = R.string.title_empty),
+            style = MaterialTheme.typography.h6,
+            color = ExtendedTheme.colors.text,
+            textAlign = TextAlign.Center,
+        )
+        if (!loggedIn) {
+            Text(
+                text = stringResource(id = R.string.title_empty_login),
+                style = MaterialTheme.typography.body1,
+                color = ExtendedTheme.colors.textSecondary,
+                textAlign = TextAlign.Center
+            )
+            Button(
+                onClick = {
+                    context.goToActivity<LoginActivity>()
+                },
+                modifier = Modifier
+                    .fillMaxWidth()
+            ) {
+                Text(text = stringResource(id = R.string.button_login))
+            }
+        }
+        if (canOpenExplore) {
+            Button(
+                onClick = onOpenExplore,
+                modifier = Modifier
+                    .fillMaxWidth()
+            ) {
+                Text(text = stringResource(id = R.string.button_go_to_explore))
+            }
         }
     }
 }
