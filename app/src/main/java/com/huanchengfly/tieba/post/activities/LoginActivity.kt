@@ -101,7 +101,7 @@ class LoginActivity : BaseActivity(), WebViewListener {
                         AccountUtil.newAccount(account.uid, account) {
                             isLoadingAccount = false
                             if (it) {
-                                AccountUtil.switchUser(this@LoginActivity, account.id)
+                                AccountUtil.switchAccount(this@LoginActivity, account.id)
                                 snackBar.setText("登录成功，即将跳转")
                                 handler.postDelayed({
                                     snackBar.dismiss()

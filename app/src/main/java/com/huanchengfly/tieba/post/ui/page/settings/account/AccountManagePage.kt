@@ -94,10 +94,12 @@ fun AccountManagePage(
                                 )
                             }
                         },
-                        onValueChange = { AccountUtil.switchUser(context, it.toInt()) },
+                        onValueChange = { AccountUtil.switchAccount(context, it.toInt()) },
                         enabled = true,
                         defaultValue = account.id.toString(),
-                        entries = AllAccounts.current.associate { it.id.toString() to (it.nameShow ?: it.name) }
+                        entries = AllAccounts.current.associate {
+                            it.id.toString() to (it.nameShow ?: it.name)
+                        }
                     )
                 } else {
                     TextPref(

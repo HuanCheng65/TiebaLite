@@ -92,7 +92,7 @@ object AccountUtil {
     }
 
     @JvmStatic
-    fun switchUser(context: Context, id: Int): Boolean {
+    fun switchAccount(context: Context, id: Int): Boolean {
         context.sendBroadcast(Intent().setAction(ACTION_SWITCH_ACCOUNT))
         val account = runCatching { getAccountInfo(id) }.getOrNull() ?: return false
         mutableCurrentAccountState.value = account
@@ -188,7 +188,7 @@ object AccountUtil {
         if (accounts.size > 1) {
             accounts = allAccounts
             account = accounts[0]
-            switchUser(context, account.id)
+            switchAccount(context, account.id)
             Toast.makeText(context, "退出登录成功，已切换至账号 " + account.nameShow, Toast.LENGTH_SHORT).show()
             return
         }

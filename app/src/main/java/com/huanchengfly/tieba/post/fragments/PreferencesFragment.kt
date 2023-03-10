@@ -84,7 +84,7 @@ class PreferencesFragment : PreferencesFragment() {
         val accountsPreference = findPreference<ListPreference>("switch_account")
         accountsPreference!!.onPreferenceChangeListener =
             Preference.OnPreferenceChangeListener { _: Preference?, newValue: Any? ->
-                if (AccountUtil.switchUser(
+                if (AccountUtil.switchAccount(
                         attachContext,
                         Integer.valueOf((newValue as String?)!!)
                     )

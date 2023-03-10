@@ -82,7 +82,7 @@ fun AccountNavIcon(
             menuContent = {
                 val allAccounts = AccountUtil.allAccounts
                 allAccounts.forEach {
-                    DropdownMenuItem(onClick = { AccountUtil.switchUser(context, it.id) }) {
+                    DropdownMenuItem(onClick = { AccountUtil.switchAccount(context, it.id) }) {
                         Box(
                             modifier = Modifier
                                 .clip(CircleShape)
