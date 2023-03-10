@@ -20,10 +20,13 @@ import androidx.compose.animation.core.VisibilityThreshold
 import androidx.compose.animation.core.spring
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Surface
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
@@ -47,11 +50,17 @@ import com.huanchengfly.tieba.post.ui.page.destinations.MainPageDestination
 import com.huanchengfly.tieba.post.ui.utils.DevicePosture
 import com.huanchengfly.tieba.post.ui.utils.isBookPosture
 import com.huanchengfly.tieba.post.ui.utils.isSeparating
+import com.huanchengfly.tieba.post.ui.widgets.compose.AlertDialog
+import com.huanchengfly.tieba.post.ui.widgets.compose.DialogNegativeButton
+import com.huanchengfly.tieba.post.ui.widgets.compose.DialogPositiveButton
+import com.huanchengfly.tieba.post.ui.widgets.compose.rememberDialogState
 import com.huanchengfly.tieba.post.utils.AccountUtil
 import com.huanchengfly.tieba.post.utils.JobServiceUtil
 import com.huanchengfly.tieba.post.utils.PermissionUtils
 import com.huanchengfly.tieba.post.utils.TiebaUtil
+import com.huanchengfly.tieba.post.utils.isIgnoringBatteryOptimizations
 import com.huanchengfly.tieba.post.utils.newIntentFilter
+import com.huanchengfly.tieba.post.utils.requestIgnoreBatteryOptimizations
 import com.huanchengfly.tieba.post.utils.requestPermission
 import com.ramcosta.composedestinations.DestinationsNavHost
 import com.ramcosta.composedestinations.animations.defaults.RootNavGraphDefaultAnimations
@@ -178,6 +187,34 @@ class MainActivityV2 : BaseComposeActivity() {
     @OptIn(ExperimentalAnimationApi::class, ExperimentalMaterialNavigationApi::class)
     @Composable
     override fun createContent() {
+        val okSignAlertDialogState = rememberDialogState()
+        AlertDialog(
+            dialogState = okSignAlertDialogState,
+            title = { Text(text = stringResource(id = R.string.title_dialog_oksign_battery_optimization)) },
+            content = { Text(text = stringResource(id = R.string.message_dialog_oksign_battery_optimization)) },
+            buttons = {
+                DialogPositiveButton(
+                    text = stringResource(id = R.string.button_go_to_ignore_battery_optimization),
+                    onClick = {
+                        requestIgnoreBatteryOptimizations()
+                    }
+                )
+                DialogNegativeButton(
+                    text = stringResource(id = R.string.button_cancel)
+                )
+                DialogNegativeButton(
+                    text = stringResource(id = R.string.button_dont_remind_again),
+                    onClick = {
+                        appPreferences.ignoreBatteryOptimizationsDialog = true
+                    }
+                )
+            },
+        )
+        LaunchedEffect(Unit) {
+            if (appPreferences.autoSign && !isIgnoringBatteryOptimizations() && !appPreferences.ignoreBatteryOptimizationsDialog) {
+                okSignAlertDialogState.show()
+            }
+        }
         CompositionLocalProvider(LocalNotificationCountFlow provides notificationCountFlow) {
             Surface(
                 color = ExtendedTheme.colors.background

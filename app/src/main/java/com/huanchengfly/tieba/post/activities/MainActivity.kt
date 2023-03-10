@@ -174,16 +174,17 @@ open class MainActivity : BaseActivity(), NavigationBarView.OnItemSelectedListen
             }
         }
         mViewPager.post {
-            Crashes.hasCrashedInLastSession().thenAccept { hasCrashed ->
-                if (hasCrashed) {
-                    Crashes.getLastSessionCrashReport().thenAccept {
-                        val device = it.device
-                        showDialog {
-                            setTitle(R.string.title_dialog_copy_crash_report)
-                            setMessage(R.string.message_dialog_crash)
-                            setPositiveButton(R.string.button_copy_crash) { _, _ ->
-                                TiebaUtil.copyText(
-                                    this@MainActivity, """
+            Crashes.hasCrashedInLastSession()
+                .thenAccept { hasCrashed ->
+                    if (hasCrashed) {
+                        Crashes.getLastSessionCrashReport().thenAccept {
+                            val device = it.device
+                            showDialog {
+                                setTitle(R.string.title_dialog_copy_crash_report)
+                                setMessage(R.string.message_dialog_crash)
+                                setPositiveButton(R.string.button_copy_crash) { _, _ ->
+                                    TiebaUtil.copyText(
+                                        this@MainActivity, """
                                         App 版本：${device.appVersion}
                                         系统版本：${device.osVersion}
                                         机型：${device.oemName} ${device.model}
@@ -191,30 +192,42 @@ open class MainActivity : BaseActivity(), NavigationBarView.OnItemSelectedListen
                                         崩溃：
                                         ${it.stackTrace}
                                     """.trimIndent()
-                                )
+                                    )
+                                }
+                                setNegativeButton(R.string.button_cancel, null)
                             }
-                            setNegativeButton(R.string.button_cancel, null)
                         }
                     }
                 }
-            }
             if (!SharedPreferencesUtil.get(SharedPreferencesUtil.SP_APP_DATA)
                     .getBoolean("notice_dialog", false)
             ) {
-                showDialog(
-                    DialogUtil.build(this)
-                        .setTitle(R.string.title_dialog_notice)
-                        .setMessage(R.string.message_dialog_notice)
-                        .setPositiveButton(R.string.button_sure_default) { _, _ ->
-                            SharedPreferencesUtil.put(
-                                this,
-                                SharedPreferencesUtil.SP_APP_DATA,
-                                "notice_dialog",
-                                true
-                            )
-                        }
-                        .setCancelable(false)
-                        .create())
+                showDialog {
+                    setTitle(R.string.title_dialog_notice)
+                    setMessage(R.string.message_dialog_notice)
+                    setPositiveButton(R.string.button_sure_default) { _, _ ->
+                        SharedPreferencesUtil.put(
+                            this@MainActivity,
+                            SharedPreferencesUtil.SP_APP_DATA,
+                            "notice_dialog",
+                            true
+                        )
+                    }
+                    setCancelable(false)
+                }
+            }
+            if (appPreferences.autoSign && !isIgnoringBatteryOptimizations() && !appPreferences.ignoreBatteryOptimizationsDialog) {
+                showDialog {
+                    title = getString(R.string.title_dialog_oksign_battery_optimization)
+                    setMessage(R.string.message_dialog_oksign_battery_optimization)
+                    setPositiveButton(R.string.button_go_to_ignore_battery_optimization) { _, _ ->
+                        requestIgnoreBatteryOptimizations()
+                    }
+                    setNeutralButton(R.string.button_cancel, null)
+                    setNegativeButton(R.string.button_dont_remind_again) { _, _ ->
+                        appPreferences.ignoreBatteryOptimizationsDialog = true
+                    }
+                }
             }
             if (shouldShowSwitchSnackBar()) {
                 Util.createSnackbar(

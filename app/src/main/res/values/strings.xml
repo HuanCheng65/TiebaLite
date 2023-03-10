@@ -204,7 +204,7 @@
     <string name="summary_auto_sign">开启后，将每天定时运行一键签到</string>
     <string name="summary_auto_sign_on">自动签到已开启</string>
     <string name="summary_auto_sign_time">当前设置为 %1$s</string>
-    <string name="tip_auto_sign">请允许贴吧 Lite 的自启动，否则可能无法正常唤醒签到。\n若使用的是 MIUI 等国产定制 UI，你还需要在系统设置中进行相应修改。</string>
+    <string name="tip_auto_sign">请允许贴吧 Lite 的自启动并忽略“电池优化”，否则可能无法正常唤醒签到。\n若使用的是 MIUI 等国产定制 UI，你还需要在系统设置中进行相应修改。</string>
     <string name="update_tip_no_content">点击查看完整更新日志</string>
     <string name="title_forum">%1$s吧</string>
     <string name="menu_edit_info">编辑资料</string>
@@ -638,4 +638,8 @@
     <string name="emoticon">表情 %s</string>
     <string name="summary_enable_new_ui">（实验性特性）启用新版 UI。仅少部分页面完成，BUG 可能较多，仅供尝鲜使用！</string>
     <string name="title_enable_new_ui">启用新版 UI</string>
+    <string name="title_dialog_oksign_battery_optimization">请忽略“电池优化”</string>
+    <string name="message_dialog_oksign_battery_optimization">在 Android 12 及以上版本中，后台启动前台服务被严格限制。为了避免一键签到无法正常启动，请忽略本应用的“电池优化”。</string>
+    <string name="button_go_to_ignore_battery_optimization">好的，去忽略</string>
+    <string name="button_dont_remind_again">不再提示</string>
 </resources>

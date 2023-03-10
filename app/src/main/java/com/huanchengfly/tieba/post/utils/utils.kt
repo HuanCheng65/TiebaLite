@@ -1,5 +1,6 @@
 package com.huanchengfly.tieba.post.utils
 
+import android.annotation.SuppressLint
 import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
@@ -245,7 +246,8 @@ fun calcStatusBarColorInt(context: Context, @ColorInt originColor: Int): Int {
 val Context.powerManager: PowerManager
     get() = getSystemService(Context.POWER_SERVICE) as PowerManager
 
-fun Context.ignoreBatteryOptimization() {
+@SuppressLint("BatteryLife")
+fun Context.requestIgnoreBatteryOptimizations() {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
         if (!powerManager.isIgnoringBatteryOptimizations(packageName)) {
             val intent = Intent(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS)

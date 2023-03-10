@@ -32,6 +32,8 @@ open class AppPreferencesUtils(context: Context) {
 
     var userLikeLastRequestUnix by DataStoreDelegates.long(defaultValue = 0L)
 
+    var ignoreBatteryOptimizationsDialog by DataStoreDelegates.boolean(defaultValue = false)
+
     var appIcon by DataStoreDelegates.string(
         defaultValue = Icons.DEFAULT_ICON,
         key = AppIconUtil.PREF_KEY_APP_ICON

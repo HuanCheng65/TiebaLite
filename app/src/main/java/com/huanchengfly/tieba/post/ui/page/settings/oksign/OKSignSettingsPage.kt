@@ -8,7 +8,11 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.*
+import androidx.compose.material.icons.outlined.BatteryAlert
+import androidx.compose.material.icons.outlined.BrowseGallery
+import androidx.compose.material.icons.outlined.OfflinePin
+import androidx.compose.material.icons.outlined.Speed
+import androidx.compose.material.icons.outlined.WatchLater
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.ExperimentalComposeUiApi
@@ -32,10 +36,15 @@ import com.huanchengfly.tieba.post.ui.common.prefs.widgets.TextPref
 import com.huanchengfly.tieba.post.ui.common.prefs.widgets.TimePickerPerf
 import com.huanchengfly.tieba.post.ui.common.theme.compose.ExtendedTheme
 import com.huanchengfly.tieba.post.ui.page.settings.LeadingIcon
-import com.huanchengfly.tieba.post.ui.widgets.compose.*
-import com.huanchengfly.tieba.post.utils.ignoreBatteryOptimization
+import com.huanchengfly.tieba.post.ui.widgets.compose.AvatarIcon
+import com.huanchengfly.tieba.post.ui.widgets.compose.BackNavigationIcon
+import com.huanchengfly.tieba.post.ui.widgets.compose.LocalSnackbarHostState
+import com.huanchengfly.tieba.post.ui.widgets.compose.MyScaffold
+import com.huanchengfly.tieba.post.ui.widgets.compose.Sizes
+import com.huanchengfly.tieba.post.ui.widgets.compose.TitleCentredToolbar
 import com.huanchengfly.tieba.post.utils.isIgnoringBatteryOptimizations
 import com.huanchengfly.tieba.post.utils.powerManager
+import com.huanchengfly.tieba.post.utils.requestIgnoreBatteryOptimizations
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import kotlinx.coroutines.launch
@@ -160,7 +169,7 @@ fun OKSignSettingsPage(
                     onClick = {
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                             if (!context.powerManager.isIgnoringBatteryOptimizations(context.packageName)) {
-                                context.ignoreBatteryOptimization()
+                                context.requestIgnoreBatteryOptimizations()
                             } else {
                                 coroutineScope.launch {
                                     snackbarHostState.showSnackbar(context.getString(R.string.toast_ignore_battery_optimization_already))
