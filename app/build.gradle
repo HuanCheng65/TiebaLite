@@ -6,7 +6,7 @@ plugins {
     id 'kotlinx-serialization'
     id 'dagger.hilt.android.plugin'
     id 'com.squareup.wire'
-    id 'com.google.devtools.ksp' version "$kotlin_version-1.0.8"
+    id 'com.google.devtools.ksp' version "$kotlin_version-1.0.9"
 }
 
 def keystoreProperties = new Properties()
@@ -49,7 +49,7 @@ android {
         compose true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion '1.3.2'
+        kotlinCompilerExtensionVersion compose_compiler_version
     }
     signingConfigs {
         release {
@@ -120,7 +120,7 @@ dependencies {
     implementation 'org.jetbrains.kotlinx:kotlinx-serialization-json:1.4.1'
 //    implementation 'androidx.compose.material3:material3:1.0.0'
 
-    def media3_version = "1.0.0-beta03"
+    def media3_version = "1.0.0-rc02"
     implementation "androidx.media3:media3-exoplayer:$media3_version"
     implementation "androidx.media3:media3-ui:$media3_version"
 
@@ -148,7 +148,7 @@ dependencies {
     implementation "com.google.accompanist:accompanist-swiperefresh:$accompanist_version"
     implementation "com.google.accompanist:accompanist-webview:$accompanist_version"
 
-    def sketch_version = "3.2.0-beta02"
+    def sketch_version = "3.2.0"
     implementation "io.github.panpf.sketch3:sketch:$sketch_version"
     implementation "io.github.panpf.sketch3:sketch-compose:$sketch_version"
     implementation "io.github.panpf.sketch3:sketch-extensions:$sketch_version"
@@ -156,17 +156,23 @@ dependencies {
     implementation "io.github.panpf.sketch3:sketch-zoom:$sketch_version"
     implementation "io.github.panpf.sketch3:sketch-okhttp:$sketch_version"
 
+    def composeBom = platform("androidx.compose:compose-bom:$compose_bom_version")
+    implementation composeBom
+    androidTestImplementation composeBom
 
-    def compose_version = '1.3.1'
-    implementation "androidx.compose.animation:animation:$compose_version"
-    implementation "androidx.compose.ui:ui:$compose_version"
-    implementation "androidx.compose.ui:ui-tooling:$compose_version"
-    implementation "androidx.compose.ui:ui-tooling-preview:$compose_version"
-    implementation "androidx.compose.foundation:foundation:$compose_version"
-    implementation "androidx.compose.material:material:$compose_version"
-    implementation "androidx.compose.material:material-icons-extended:$compose_version"
-    androidTestImplementation "androidx.compose.ui:ui-test-junit4:$compose_version"
-    debugImplementation "androidx.compose.ui:ui-test-manifest:$compose_version"
+    implementation 'androidx.compose.material:material'
+    implementation 'androidx.compose.material:material-icons-core'
+    // Optional - Add full set of material icons
+    implementation 'androidx.compose.material:material-icons-extended'
+
+
+    // Android Studio Preview support
+    implementation 'androidx.compose.ui:ui-tooling-preview'
+    debugImplementation 'androidx.compose.ui:ui-tooling'
+
+    // UI Tests
+    androidTestImplementation 'androidx.compose.ui:ui-test-junit4'
+    debugImplementation 'androidx.compose.ui:ui-test-manifest'
 
     implementation 'androidx.activity:activity-compose:1.6.1'
     implementation "com.google.android.material:compose-theme-adapter:1.2.1"
@@ -185,7 +191,7 @@ dependencies {
     api 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4'
     api 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4'
 
-    def lifecycle_version = "2.5.1"
+    def lifecycle_version = "2.6.0"
 
     implementation "androidx.lifecycle:lifecycle-runtime-ktx:$lifecycle_version"
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version"
@@ -196,7 +202,7 @@ dependencies {
 
     //AndroidX
     implementation "androidx.appcompat:appcompat:1.6.1"
-    implementation "androidx.annotation:annotation:1.5.0"
+    implementation "androidx.annotation:annotation:1.6.0"
     implementation "androidx.constraintlayout:constraintlayout:2.1.4"
     implementation "androidx.core:core-ktx:1.9.0"
     implementation 'androidx.core:core-splashscreen:1.0.0'
