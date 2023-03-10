@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+package tieba;
+
+option java_package = "com.huanchengfly.tieba.post.api.models.protos";
+
+message PbLinkInfo {
+  string title = 1;
+  string to_url = 2;
+  string pic_url = 3;
+  string link_from = 4;
+  string ext_txt = 5;
+  uint32 sort = 6;
+  int32 url_type = 7;
+}

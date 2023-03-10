@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+package tieba;
+
+option java_package = "com.huanchengfly.tieba.post.api.models.protos";
+
+import "ActionControl.proto";
+
+message AdCloseInfo {
+  int32 support_close = 1;
+  string title = 2;
+  repeated string reasons = 3;
+  string confirm_title = 4;
+  ActionControl action_control = 5;
+}

@@ -1,0 +1,14 @@
+syntax = "proto3";
+
+package tieba;
+
+option java_package = "com.huanchengfly.tieba.post.api.models.protos";
+
+message ActHot {
+  string bsize = 1;
+  string img_src = 2;
+  string link = 3;
+  string author_name = 4;
+  string img_des = 5;
+  int32 img_type = 6;
+}

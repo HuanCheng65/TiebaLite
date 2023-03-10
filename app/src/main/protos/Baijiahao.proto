@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+package tieba;
+
+option java_package = "com.huanchengfly.tieba.post.api.models.protos";
+
+message Baijiahao {
+  string ori_ugc_nid = 1;
+  string ori_ugc_tid = 2;
+  int32 ori_ugc_type = 3;
+  string ori_ugc_vid = 4;
+  string forward_url = 5;
+}

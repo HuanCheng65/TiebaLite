@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+package tieba;
+
+option java_package = "com.huanchengfly.tieba.post.api.models.protos";
+
+message BusinessAccountInfo {
+  int32 is_business_account = 1;
+  int32 is_forum_business_account = 2;
+  string business_name = 3;
+  string identifi_explain = 4;
+}

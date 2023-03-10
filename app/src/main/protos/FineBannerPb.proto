@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+package tieba;
+
+option java_package = "com.huanchengfly.tieba.post.api.models.protos";
+
+message FineBannerPb {
+  int64 ftid = 1;
+  string title = 2;
+  string pic_url = 3;
+  string link_url = 4;
+}

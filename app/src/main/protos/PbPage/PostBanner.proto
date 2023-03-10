@@ -1,0 +1,14 @@
+syntax = "proto3";
+
+package tieba.pbPage;
+
+option java_package = "com.huanchengfly.tieba.post.api.models.protos.pbPage";
+
+message PostBanner {
+    string banner_pic = 1;
+    string banner_name = 2;
+    uint32 banner_position = 3;
+    uint32 link_type = 4;
+    string banner_url = 5;
+    uint32 client_type = 6;
+}

@@ -1,0 +1,20 @@
+syntax = "proto3";
+
+package tieba;
+
+option java_package = "com.huanchengfly.tieba.post.api.models.protos";
+
+message Advertisement {
+  int64 time = 1;
+  string pic = 2;
+  string pic_click = 3;
+  string jump_link = 4;
+  string advertisement_id = 5;
+  string view_statistics_url = 6;
+  string click_statistics_url = 7;
+  string floating_text = 8;
+  string deeplink = 9;
+  string scheme = 10;
+  string package_name = 11;
+  string display_ad_icon = 12;
+}

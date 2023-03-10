@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+package tieba.pbPage;
+
+option java_package = "com.huanchengfly.tieba.post.api.models.protos.pbPage";
+
+import "PbPage/PbPageRequestData.proto";
+
+message PbPageRequest {
+  PbPageRequestData data = 1;
+}

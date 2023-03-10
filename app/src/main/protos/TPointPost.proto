@@ -1,0 +1,26 @@
+syntax = "proto3";
+
+package tieba;
+
+option java_package = "com.huanchengfly.tieba.post.api.models.protos";
+
+import "ActBtn.proto";
+import "DetailInfo.proto";
+import "Timgs.proto";
+import "VideoInfo.proto";
+
+message TPointPost {
+  uint32 is_tuiguang = 1;
+  string position = 2;
+  int64 template_id = 3;
+  int32 template_type = 4;
+  repeated ActBtn act_btn = 5;
+  repeated Timgs t_imgs = 6;
+  DetailInfo detail_info = 7;
+  string monitor_id = 8;
+  int32 hidden_day = 9;
+  VideoInfo t_video = 10;
+  string tag_name = 11;
+  string tag_name_url = 12;
+  string tag_name_wh = 13;
+}

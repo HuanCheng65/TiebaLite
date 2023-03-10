@@ -1,0 +1,42 @@
+syntax = "proto3";
+
+package tieba;
+
+option java_package = "com.huanchengfly.tieba.post.api.models.protos";
+
+import "GoodsInfo.proto";
+
+message App {
+  int32 type = 1;
+  int32 pos = 2;
+  string icon_url = 3;
+  string icon_link = 4;
+  string app_name = 5;
+  string app_desc = 6;
+  string p_name = 7;
+  string p_url = 8;
+  string img_url = 9;
+  int32 app_time = 10;
+  string web_url = 11;
+  string ad_id = 12;
+  string id = 13;
+  string name = 14;
+  int32 url_type = 15;
+  string url = 16;
+  string ios_url = 17;
+  string apk_url = 18;
+  string apk_name = 19;
+  string pos_name = 20;
+  string first_name = 21;
+  string second_name = 22;
+  int32 cpid = 23;
+  string abtest = 24;
+  int32 plan_id = 25;
+  string user_id = 26;
+  string price = 27;
+  string verify = 28;
+  string ext_info = 29;
+  repeated GoodsInfo goods_info = 30;
+  string loc_code = 31;
+  string deep_url = 32;
+}

@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+package tieba;
+
+option java_package = "com.huanchengfly.tieba.post.api.models.protos";
+
+import "SubPostList.proto";
+
+message SubPost {
+  uint64 pid = 1;
+  repeated SubPostList sub_post_list = 2;
+}

@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+package tieba;
+
+option java_package = "com.huanchengfly.tieba.post.api.models.protos";
+
+import "App.proto";
+import "FeedForumInfo.proto";
+import "RecomTopicInfo.proto";
+
+message BannerList {
+  repeated App app = 1;
+  repeated FeedForumInfo feed_forum = 2;
+  RecomTopicInfo hot_topic = 3;
+  string applist = 4;
+  App pb_banner_ad = 5;
+  repeated App video_recommend_ad = 6;
+}

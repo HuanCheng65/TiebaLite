@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+package tieba;
+
+option java_package = "com.huanchengfly.tieba.post.api.models.protos";
+
+message AlaCoverLabel {
+  uint32 label_id = 1;
+  string label_name = 2;
+  string label_rgb = 3;
+}

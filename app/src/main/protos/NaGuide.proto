@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+package tieba;
+
+option java_package = "com.huanchengfly.tieba.post.api.models.protos";
+
+import "RecGuide.proto";
+
+message NaGuide {
+  string dwnl_url = 1;
+  repeated RecGuide rec_info = 2;
+}

@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+package tieba;
+
+option java_package = "com.huanchengfly.tieba.post.api.models.protos";
+
+message DealMedia {
+  int32 type = 1;
+  string small_pic = 2;
+  string big_pic = 3;
+  string water_pic = 4;
+}

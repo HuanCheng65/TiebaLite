@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+package tieba;
+
+option java_package = "com.huanchengfly.tieba.post.api.models.protos";
+
+message ActionControl {
+  string url = 1;
+  string name = 2;
+  string text_color = 3;
+  string text_color_pressed = 4;
+}

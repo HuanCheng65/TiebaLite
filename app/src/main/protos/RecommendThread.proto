@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+package tieba;
+
+option java_package = "com.huanchengfly.tieba.post.api.models.protos";
+
+message RecommendThread {
+    uint64 tid = 1;
+    string title = 2;
+    uint64 post_num = 3;
+    repeated string term_list = 4;
+}

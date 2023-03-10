@@ -1,0 +1,63 @@
+syntax = "proto3";
+
+package tieba;
+
+option java_package = "com.huanchengfly.tieba.post.api.models.protos";
+
+import "AlaChallengeInfo.proto";
+import "AlaCoverLabel.proto";
+import "AlaShareInfo.proto";
+import "AlaStageDislikeInfo.proto";
+import "AlaUserInfo.proto";
+import "DislikeInfo.proto";
+import "YyExt.proto";
+
+message AlaLiveInfo {
+  uint64 live_id = 1;
+  string cover = 2;
+  string session_id = 3;
+  string rtmp_url = 4;
+  string hls_url = 5;
+  uint64 group_id = 6;
+  string media_url = 7;
+  string media_pic = 8;
+  string media_id = 9;
+  string media_subtitle = 10;
+  string description = 11;
+  AlaUserInfo user_info = 12;
+  uint32 duration = 13;
+  uint32 audience_count = 14;
+  uint32 live_type = 15;
+  uint32 screen_direction = 16;
+  string label_name = 17;
+  int32 live_status = 18;
+  AlaShareInfo share_info = 19;
+  uint64 distance = 20;
+  string third_app_id = 21;
+  uint64 thread_id = 22;
+  repeated AlaStageDislikeInfo stage_dislike_info = 23;
+  AlaCoverLabel label = 24;
+  AlaChallengeInfo challenge_info = 25;
+  int32 frs_toplive_type = 26;
+  string frs_toplive_pic = 27;
+  int32 frs_toplive_force = 28;
+  int32 live_from = 29;
+  string third_room_id = 31;
+  string router_type = 32;
+  string third_live_type = 33;
+  string first_headline = 34;
+  string second_headline = 35;
+  uint32 pb_display_type = 36;
+  string recom_reason = 37;
+  uint32 open_recom_reason = 38;
+  uint32 open_recom_location = 39;
+  uint32 open_recom_fans = 40;
+  uint32 open_recom_duration = 41;
+  repeated DislikeInfo dislike_info = 43;
+  uint64 room_id = 44;
+  int32 room_status = 45;
+  string room_name = 46;
+  string forum_user_live_msg = 47;
+  string cover_wide = 48;
+  YyExt yy_ext = 49;
+}

@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+package tieba.pbPage;
+
+option java_package = "com.huanchengfly.tieba.post.api.models.protos.pbPage";
+
+import "GuessLikeThreadInfo.proto";
+
+message GuessLikeStruct {
+  string title = 1;
+  repeated GuessLikeThreadInfo thread_list = 2;
+}

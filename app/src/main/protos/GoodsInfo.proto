@@ -1,0 +1,41 @@
+syntax = "proto3";
+
+package tieba;
+
+option java_package = "com.huanchengfly.tieba.post.api.models.protos";
+
+import "AdCloseInfo.proto";
+import "ThreadPicList.proto";
+import "VideoInfo.proto";
+
+message GoodsInfo {
+  int32 id = 1;
+  string user_name = 2;
+  string user_portrait = 3;
+  string thread_title = 4;
+  string thread_pic = 5;
+  string pop_window_text = 6;
+  int32 goods_style = 7;
+  repeated ThreadPicList thread_pic_list = 8;
+  int32 label_visible = 9;
+  string label_text = 10;
+  int32 rank_level = 11;
+  string thread_type = 12;
+  string button_text = 13;
+  string card_desc = 14;
+  string card_tag = 15;
+  int32 width = 16;
+  int32 height = 17;
+  int32 label_measure = 18;
+  string thread_content = 19;
+  string lego_card = 20;
+  VideoInfo video_info = 21;
+  string tag_name = 22;
+  string button_url = 23;
+  string ad_source = 24;
+  string tag_name_url = 25;
+  string tag_name_wh = 26;
+  string brand_icon = 27;
+  string brand_icon_wh = 28;
+  AdCloseInfo close_info = 29;
+}

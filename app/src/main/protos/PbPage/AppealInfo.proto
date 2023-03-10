@@ -1,0 +1,10 @@
+syntax = "proto3";
+
+package tieba.pbPage;
+
+option java_package = "com.huanchengfly.tieba.post.api.models.protos.pbPage";
+
+message AppealInfo {
+  string source = 1;
+  string appeal_url = 2;
+}

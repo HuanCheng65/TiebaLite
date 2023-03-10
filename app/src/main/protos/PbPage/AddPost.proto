@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+package tieba.pbPage;
+
+option java_package = "com.huanchengfly.tieba.post.api.models.protos.pbPage";
+
+message AddPost {
+  int32 create_time = 1;
+  string post_id = 2;
+  int32 already_count = 3;
+  int32 total_count = 4;
+  string last_addition_content = 5;
+  int32 last_addition_time = 6;
+  string warn_msg = 7;
+}

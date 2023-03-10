@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+package tieba;
+
+option java_package = "com.huanchengfly.tieba.post.api.models.protos";
+
+message TwZhiBoAnti {
+  int32 can_add_live_post = 1;
+  int32 can_del_live_post = 2;
+  int32 can_show_pb_headline = 3;
+}

@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+package tieba;
+
+option java_package = "com.huanchengfly.tieba.post.api.models.protos";
+
+message TogetherHi {
+  string album_name = 1;
+  uint64 album_id = 2;
+  uint32 start_time = 3;
+  uint32 end_time = 4;
+  string location = 5;
+  uint32 num_signup = 6;
+  repeated string potraits = 7;
+  uint32 num_join = 8;
+  repeated string pic_urls = 9;
+}

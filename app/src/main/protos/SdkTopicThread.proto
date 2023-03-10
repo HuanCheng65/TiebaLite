@@ -1,0 +1,14 @@
+syntax = "proto3";
+
+package tieba;
+
+option java_package = "com.huanchengfly.tieba.post.api.models.protos";
+
+message SdkTopicThread {
+    string pic_url = 1;
+    string title = 2;
+    uint64 post_num = 3;
+    uint64 zan_num = 4;
+    uint64 tid = 5;
+    int32 need_topic = 6;
+}

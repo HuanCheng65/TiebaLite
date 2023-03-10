@@ -1,0 +1,14 @@
+syntax = "proto3";
+
+package tieba;
+
+option java_package = "com.huanchengfly.tieba.post.api.models.protos";
+
+message Promotion {
+    string title = 1;
+    string sub_title = 2;
+    string image = 3;
+    string link = 4;
+    string link_text = 5;
+    int64 appear_time = 6;
+}

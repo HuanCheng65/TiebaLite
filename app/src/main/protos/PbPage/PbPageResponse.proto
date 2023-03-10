@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+package tieba.pbPage;
+
+option java_package = "com.huanchengfly.tieba.post.api.models.protos.pbPage";
+
+import "Error.proto";
+import "PbPage/PbPageResponseData.proto";
+
+message PbPageResponse {
+  Error error = 1;
+  PbPageResponseData data = 2;
+}

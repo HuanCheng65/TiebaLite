@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+package tieba;
+
+option java_package = "com.huanchengfly.tieba.post.api.models.protos";
+
+message ApkDetail {
+  string developer = 1;
+  string publisher = 2;
+  string version = 3;
+  int32 version_code = 6;
+  string update_time = 7;
+  string size = 8;
+  int32 need_network = 9;
+  int32 need_inner_buy = 10;
+  string authority_url = 11;
+  string privacy_url = 12;
+  int32 pkg_source = 13;
+}

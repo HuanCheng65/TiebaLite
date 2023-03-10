@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+package tieba;
+
+option java_package = "com.huanchengfly.tieba.post.api.models.protos";
+
+message SendCardInfo {
+    string card_logo = 1;
+    string card_name = 2;
+    string card_pro = 3;
+    int32 card_get_status = 4;
+    int64 packet_id = 5;
+}

@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+package tieba.pbPage;
+
+option java_package = "com.huanchengfly.tieba.post.api.models.protos.pbPage";
+
+message NewsInfo {
+  string news_link = 1;
+  string summary = 2;
+  uint32 position = 3;
+  uint32 news_type = 4;
+  string news_icon = 5;
+  string subtitle = 6;
+  string button_text = 7;
+}

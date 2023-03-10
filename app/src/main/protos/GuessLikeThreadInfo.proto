@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+package tieba;
+
+option java_package = "com.huanchengfly.tieba.post.api.models.protos";
+
+message GuessLikeThreadInfo {
+  int64 thread_id = 1;
+  int64 forum_id = 2;
+  string forum_name = 3;
+  int64 reply_num = 4;
+  string recom_cover = 5;
+  string recom_reason = 6;
+  string title = 7;
+}

@@ -1,0 +1,25 @@
+syntax = "proto3";
+
+package tieba;
+
+option java_package = "com.huanchengfly.tieba.post.api.models.protos";
+
+import "ApkDetail.proto";
+
+message Item {
+  int64 item_id = 1;
+  string item_name = 2;
+  double icon_size = 3;
+  string icon_url = 4;
+  repeated string tags = 5;
+  double score = 6;
+  int32 star = 7;
+  string button_name = 8;
+  string button_link = 9;
+  string item_appid = 10;
+  int32 category_id = 11;
+  int32 button_link_type = 12;
+  string apk_name = 13;
+  string forum_name = 14;
+  ApkDetail apk_detail = 15;
+}

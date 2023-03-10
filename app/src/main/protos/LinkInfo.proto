@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+package tieba;
+
+option java_package = "com.huanchengfly.tieba.post.api.models.protos";
+
+message LinkInfo {
+  string desc = 1;
+  string link = 2;
+  string type = 3;
+}

@@ -1,0 +1,9 @@
+syntax = "proto3";
+
+option java_package = "com.huanchengfly.tieba.post.api.models.protos";
+
+message AppTransmitData {
+  string wise_sample_id = 1;
+  string yy_hdid = 2;
+  string yy_version = 3;
+}

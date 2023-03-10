@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+package tieba.pbPage;
+
+option java_package = "com.huanchengfly.tieba.post.api.models.protos.pbPage";
+
+message GodCard {
+  string user_name = 1;
+  string portrait = 2;
+  string time_ex = 3;
+  string text = 4;
+  string pic_url = 5;
+  string button_text = 6;
+  string button_url = 7;
+  uint32 show_floor = 8;
+}

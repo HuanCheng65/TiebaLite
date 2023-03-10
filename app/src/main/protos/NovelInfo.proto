@@ -1,0 +1,21 @@
+syntax = "proto3";
+
+package tieba;
+
+option java_package = "com.huanchengfly.tieba.post.api.models.protos";
+
+message NovelInfo {
+  int64 novel_id = 1;
+  string img = 2;
+  string name = 3;
+  string author = 4;
+  string desc = 5;
+  string discount_price = 6;
+  int64 percent = 7;
+  string h5_url = 8;
+  string is_pay = 9;
+  int64 chapters = 10;
+  string member_text = 11;
+  string member_img = 12;
+  string buy_url = 13;
+}

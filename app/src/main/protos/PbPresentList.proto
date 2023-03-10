@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+package tieba;
+
+option java_package = "com.huanchengfly.tieba.post.api.models.protos";
+
+message PbPresentList {
+  uint32 gift_id = 1;
+  string gift_name = 2;
+  string thumbnail_url = 3;
+  uint32 num = 4;
+}

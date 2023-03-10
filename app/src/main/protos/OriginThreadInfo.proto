@@ -1,0 +1,49 @@
+syntax = "proto3";
+
+package tieba;
+
+option java_package = "com.huanchengfly.tieba.post.api.models.protos";
+
+import "Abstract.proto";
+import "Agree.proto";
+import "AlaLiveInfo.proto";
+import "Baijiahao.proto";
+import "HeadItem.proto";
+import "Item.proto";
+import "Media.proto";
+import "PbContent.proto";
+import "PbLinkInfo.proto";
+import "PollInfo.proto";
+import "User.proto";
+import "VideoInfo.proto";
+import "Voice.proto";
+
+message OriginThreadInfo {
+  string title = 1;
+  repeated Media media = 2;
+  repeated Abstract _abstract = 3;
+  string fname = 4;
+  string tid = 5;
+  AlaLiveInfo ala_info = 6;
+  int64 fid = 7;
+  int32 thread_type = 8;
+  int32 is_deleted = 9;
+  int32 is_ugc = 10;
+  Baijiahao ori_ugc_info = 11;
+  repeated Voice voice_info = 12;
+  VideoInfo video_info = 13;
+  repeated PbContent content = 14;
+  int32 is_new_style = 15;
+  int32 reply_num = 16;
+  User author = 18;
+  Agree agree = 19;
+  int32 shared_num = 20;
+  PollInfo poll_info = 21;
+  Item item = 22;
+  repeated HeadItem item_star = 23;
+  repeated PbLinkInfo pb_link_info = 24;
+  int64 pid = 25;
+  int32 good_types = 26;
+  int32 top_types = 27;
+  int32 is_frs_mask = 28;
+}

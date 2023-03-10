@@ -1,0 +1,14 @@
+syntax = "proto3";
+
+package tieba;
+
+option java_package = "com.huanchengfly.tieba.post.api.models.protos";
+
+import "User.proto";
+
+message PsRankListItem {
+    int64 game_id = 1;
+    int64 user_id = 2;
+    int64 score = 3;
+    User user = 4;
+}

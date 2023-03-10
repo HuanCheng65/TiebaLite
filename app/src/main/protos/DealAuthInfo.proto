@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+package tieba;
+
+option java_package = "com.huanchengfly.tieba.post.api.models.protos";
+
+message DealAuthInfo {
+  string item_name = 1;
+  string item_content = 2;
+  string item_url = 3;
+}
