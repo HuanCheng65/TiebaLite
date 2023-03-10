@@ -3,6 +3,7 @@ package com.huanchengfly.tieba.post.ui.widgets;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Color;
+import android.media.AudioManager;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.ImageButton;
@@ -131,16 +132,20 @@ public class VideoPlayerStandard extends JzvdStd {
     }
 
     @Override
+    protected void touchActionMove(float x, float y) {
+        if (mAudioManager == null)
+            mAudioManager = (AudioManager) getApplicationContext().getSystemService(Context.AUDIO_SERVICE);
+        super.touchActionMove(x, y);
+    }
+
+    @Override
     public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.download_btn:
-                String url = (String) jzDataSource.getCurrentUrl();
-                FileUtil.downloadBySystem(getContext(), FileUtil.FILE_TYPE_VIDEO, url);
-                Toast.makeText(getContext(), R.string.toast_start_download, Toast.LENGTH_SHORT).show();
-                break;
-            default:
-                super.onClick(v);
-                break;
+        if (v.getId() == R.id.download_btn) {
+            String url = (String) jzDataSource.getCurrentUrl();
+            FileUtil.downloadBySystem(getContext(), FileUtil.FILE_TYPE_VIDEO, url);
+            Toast.makeText(getContext(), R.string.toast_start_download, Toast.LENGTH_SHORT).show();
+        } else {
+            super.onClick(v);
         }
     }
 }
