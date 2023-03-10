@@ -103,6 +103,10 @@ class LoginActivity : BaseActivity(), WebViewListener {
                             if (it) {
                                 AccountUtil.switchUser(this@LoginActivity, account.id)
                                 snackBar.setText("登录成功，即将跳转")
+                                handler.postDelayed({
+                                    snackBar.dismiss()
+                                    finish()
+                                }, 1500)
                             } else {
                                 snackBar.setText("登录失败 未知错误")
                                 view.loadUrl("https://wappass.baidu.com/passport?login&u=https%3A%2F%2Ftieba.baidu.com%2Findex%2Ftbwise%2Fmine")
