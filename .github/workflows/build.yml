@@ -37,12 +37,21 @@ jobs:
       - name: Build with Gradle
         run: ./gradlew clean packageRelease
 
+      - name: Read Output Metadata
+        if: ${{ success() }}
+        id: read_output_metadata
+        uses: juliangruber/read-file-action@v1
+        with:
+          path: ${{ github.workspace }}/app/build/outputs/apk/release/output-metadata.json
+
       - name: Upload Package
         if: ${{ success() }}
+        env:
+          output_file: ${{ fromJSON(steps.read_output_metadata.outputs.content).elements[0].outputFile }}
         uses: actions/upload-artifact@v3.1.2
         with:
-          name: package
-          path: ${{ github.workspace }}/app/build/outputs/apk/release/*.apk
+          name: ${{ env.output_file }}
+          path: ${{ github.workspace }}/app/build/outputs/apk/release/${{ env.output_file }}
 
       - name: Upload Mapping
         if: ${{ success() }}
@@ -50,13 +59,6 @@ jobs:
         with:
           name: mapping
           path: ${{ github.workspace }}/app/build/outputs/mapping/release
-
-      - name: Read Output Metadata
-        if: ${{ success() }}
-        id: read_output_metadata
-        uses: juliangruber/read-file-action@v1
-        with:
-          path: ${{ github.workspace }}/app/build/outputs/apk/release/output-metadata.json
 
       - name: Upload Mapping to App Center
         if: ${{ success() }}
