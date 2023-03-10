@@ -3,6 +3,7 @@ package com.huanchengfly.tieba.post.api.interfaces.impls
 import android.os.Build
 import android.text.TextUtils
 import com.huanchengfly.tieba.post.App
+import com.huanchengfly.tieba.post.api.ClientVersion
 import com.huanchengfly.tieba.post.api.ForumSortType
 import com.huanchengfly.tieba.post.api.Param
 import com.huanchengfly.tieba.post.api.SearchThreadFilter
@@ -56,6 +57,9 @@ import com.huanchengfly.tieba.post.api.models.protos.frsPage.FrsPageResponse
 import com.huanchengfly.tieba.post.api.models.protos.hotThreadList.HotThreadListRequest
 import com.huanchengfly.tieba.post.api.models.protos.hotThreadList.HotThreadListRequestData
 import com.huanchengfly.tieba.post.api.models.protos.hotThreadList.HotThreadListResponse
+import com.huanchengfly.tieba.post.api.models.protos.pbPage.PbPageRequest
+import com.huanchengfly.tieba.post.api.models.protos.pbPage.PbPageRequestData
+import com.huanchengfly.tieba.post.api.models.protos.pbPage.PbPageResponse
 import com.huanchengfly.tieba.post.api.models.protos.personalized.PersonalizedRequest
 import com.huanchengfly.tieba.post.api.models.protos.personalized.PersonalizedRequestData
 import com.huanchengfly.tieba.post.api.models.protos.personalized.PersonalizedResponse
@@ -108,12 +112,12 @@ object MixedTiebaApiImpl : ITiebaApi {
     }
 
     override fun personalizedProtoFlow(loadType: Int, page: Int): Flow<PersonalizedResponse> {
-        return RetrofitTiebaApi.OFFICIAL_PROTOBUF_TIEBA_API.personalizedFlow(
+        return RetrofitTiebaApi.OFFICIAL_PROTOBUF_TIEBA_V12_API.personalizedFlow(
             buildProtobufRequestBody(
                 data = PersonalizedRequest(
                     PersonalizedRequestData(
                         app_pos = buildAppPosInfo(),
-                        common = buildCommonRequest(),
+                        common = buildCommonRequest(clientVersion = ClientVersion.TIEBA_V12),
                         load_type = loadType,
                         pn = page,
                         need_tags = 0,
@@ -131,7 +135,8 @@ object MixedTiebaApiImpl : ITiebaApi {
                         scr_h = getScreenHeight(),
                         scr_w = getScreenWidth()
                     )
-                )
+                ),
+                clientVersion = ClientVersion.TIEBA_V12
             )
         )
     }
