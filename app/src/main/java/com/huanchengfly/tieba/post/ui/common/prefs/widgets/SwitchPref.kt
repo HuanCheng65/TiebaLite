@@ -112,13 +112,13 @@ fun SwitchPref(
     prefs?.get(selectionKey)?.also { checked = it } // starting value if it exists in datastore
 
     fun edit(newState: Boolean) = run {
+        checked = newState
+        onCheckedChange?.invoke(newState)
         scope.launch {
             try {
                 datastore.edit { preferences ->
                     preferences[selectionKey] = newState
                 }
-                checked = newState
-                onCheckedChange?.invoke(newState)
             } catch (e: Exception) {
                 Log.e("SwitchPref", "Could not write pref $key to database. ${e.printStackTrace()}")
             }
