@@ -177,7 +177,7 @@ class PhotoViewActivity : BaseComposeActivityWithParcelable<PhotoViewData>() {
                         count = pageCount,
                         state = pagerState,
                         key = {
-                            items[it].originUrl
+                            "${items[it].originUrl}_${items[it].overallIndex}"
                         }
                     ) {
                         val item = items[it]
