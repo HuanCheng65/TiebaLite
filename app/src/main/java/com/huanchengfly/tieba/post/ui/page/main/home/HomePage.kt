@@ -231,12 +231,19 @@ private fun ForumItem(
 
         ConfirmDialog(
             dialogState = dialogState,
-            modifier = Modifier,
             onConfirm = { viewModel.send(HomeUiIntent.Unfollow(item.forumId, item.forumName)) },
+            modifier = Modifier,
             onCancel = {
                 willUnfollow = false
             },
-            title = { Text(text = stringResource(id = R.string.title_dialog_unfollow_forum, item.forumName)) }
+            title = {
+                Text(
+                    text = stringResource(
+                        id = R.string.title_dialog_unfollow_forum,
+                        item.forumName
+                    )
+                )
+            }
         )
 
         LaunchedEffect(key1 = "launchUnfollowDialog") {

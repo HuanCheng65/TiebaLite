@@ -1,5 +1,6 @@
 package com.huanchengfly.tieba.post.utils
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.drawable.BitmapDrawable
@@ -25,6 +26,7 @@ import com.github.panpf.sketch.request.LoadResult
 import com.google.accompanist.drawablepainter.rememberDrawablePainter
 import com.huanchengfly.tieba.post.App
 import com.huanchengfly.tieba.post.R
+import com.huanchengfly.tieba.post.fromJson
 import com.huanchengfly.tieba.post.models.EmoticonCache
 import com.huanchengfly.tieba.post.pxToDp
 import com.huanchengfly.tieba.post.pxToSp
@@ -188,16 +190,14 @@ object EmoticonManager {
         return contextRef.get() ?: App.INSTANCE
     }
 
-    fun getEmoticonDataCache(): EmoticonCache {
-        val emoticonDataCacheFile = File(getEmoticonCacheDir(), "emoticon_data_cache")
-        if (emoticonDataCacheFile.exists()) {
-            return GsonUtil.getGson()
-                .fromJson(emoticonDataCacheFile.reader(), EmoticonCache::class.java)
-        }
-        return EmoticonCache()
+    private fun getEmoticonDataCache(): EmoticonCache {
+        return runCatching {
+            File(getEmoticonCacheDir(), "emoticon_data_cache").takeIf { it.exists() }
+                ?.fromJson<EmoticonCache>()
+        }.getOrNull() ?: EmoticonCache()
     }
 
-    fun getEmoticonCacheDir(): File {
+    private fun getEmoticonCacheDir(): File {
         return File(getContext().externalCacheDir ?: getContext().cacheDir, "emoticon").apply {
             if (exists() && isFile) {
                 delete()
@@ -208,7 +208,7 @@ object EmoticonManager {
         }
     }
 
-    fun getEmoticonFile(id: String): File {
+    private fun getEmoticonFile(id: String): File {
         return File(getEmoticonCacheDir(), "$id.png")
     }
 
@@ -216,7 +216,7 @@ object EmoticonManager {
         return emoticonMapping[name]
     }
 
-    fun getEmoticonNameById(id: String): String? {
+    private fun getEmoticonNameById(id: String): String? {
         return emoticonMapping.firstNotNullOfOrNull { (name, emoticonId) ->
             if (emoticonId == id) {
                 name
@@ -226,7 +226,8 @@ object EmoticonManager {
         }
     }
 
-    fun getEmoticonResId(context: Context, id: String): Int {
+    @SuppressLint("DiscouragedApi")
+    private fun getEmoticonResId(context: Context, id: String): Int {
         return context.resources.getIdentifier(id, "drawable", context.packageName)
     }
 

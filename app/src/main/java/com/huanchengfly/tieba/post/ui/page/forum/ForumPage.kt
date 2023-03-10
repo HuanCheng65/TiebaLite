@@ -468,7 +468,6 @@ fun ForumPage(
     if (account != null && forum != null) {
         ConfirmDialog(
             dialogState = unlikeDialogState,
-            modifier = Modifier,
             onConfirm = {
                 viewModel.send(
                     ForumUiIntent.Unlike(forum.id, forumName, tbs ?: account.tbs)

@@ -20,6 +20,7 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -41,8 +42,7 @@ fun DialogScope.DialogPositiveButton(
             dismiss()
         },
         modifier = Modifier
-            .fillMaxWidth()
-            .padding(vertical = 4.dp),
+            .fillMaxWidth(),
         shape = RoundedCornerShape(100),
         colors = ButtonDefaults.textButtonColors(
             backgroundColor = MaterialTheme.colors.secondary,
@@ -100,6 +100,7 @@ fun TimePickerDialog(
 ) {
     var timeVal by remember { mutableStateOf(currentTime) }
     Dialog(
+        modifier = modifier,
         dialogState = dialogState,
         onDismiss = onCancel,
         title = title,
@@ -107,7 +108,6 @@ fun TimePickerDialog(
             DialogPositiveButton(text = confirmText, onClick = { onConfirm.invoke(timeVal) })
             DialogNegativeButton(text = cancelText, onClick = onCancel)
         },
-        modifier = modifier,
     ) {
         Column(modifier = Modifier.padding(horizontal = 24.dp)) {
             ProvideTextStyle(value = MaterialTheme.typography.body1) {
@@ -130,17 +130,72 @@ fun TimePickerDialog(
 }
 
 @Composable
-fun ConfirmDialog(
-    dialogState: DialogState = rememberDialogState(),
+fun AlertDialog(
+    dialogState: DialogState,
     modifier: Modifier = Modifier,
-    onConfirm: () -> Unit,
-    onCancel: (() -> Unit)? = null,
-    confirmText: String = stringResource(id = R.string.button_sure_default),
-    cancelText: String = stringResource(id = R.string.button_cancel),
-    title: @Composable (DialogScope.() -> Unit),
+    onDismiss: (() -> Unit)? = null,
+    confirmText: String = stringResource(id = R.string.button_ok),
+    title: @Composable (DialogScope.() -> Unit) = {},
     content: @Composable (DialogScope.() -> Unit) = {},
 ) {
     Dialog(
+        modifier = modifier,
+        dialogState = dialogState,
+        onDismiss = onDismiss,
+        title = title,
+        buttons = {
+            DialogPositiveButton(text = confirmText)
+        },
+    ) {
+        Column(modifier = Modifier.padding(horizontal = 24.dp)) {
+            ProvideTextStyle(value = MaterialTheme.typography.body1) {
+                ProvideContentColor(color = ExtendedTheme.colors.text) {
+                    content()
+                }
+            }
+        }
+    }
+}
+
+@Composable
+fun AlertDialog(
+    dialogState: DialogState,
+    modifier: Modifier = Modifier,
+    onDismiss: (() -> Unit)? = null,
+    title: @Composable (DialogScope.() -> Unit) = {},
+    content: @Composable (DialogScope.() -> Unit) = {},
+    buttons: @Composable (DialogScope.() -> Unit) = {},
+) {
+    Dialog(
+        modifier = modifier,
+        dialogState = dialogState,
+        onDismiss = onDismiss,
+        title = title,
+        buttons = buttons,
+    ) {
+        Column(modifier = Modifier.padding(horizontal = 24.dp)) {
+            ProvideTextStyle(value = MaterialTheme.typography.body1) {
+                ProvideContentColor(color = ExtendedTheme.colors.text) {
+                    content()
+                }
+            }
+        }
+    }
+}
+
+@Composable
+fun ConfirmDialog(
+    dialogState: DialogState,
+    onConfirm: () -> Unit,
+    modifier: Modifier = Modifier,
+    onCancel: (() -> Unit)? = null,
+    confirmText: String = stringResource(id = R.string.button_sure_default),
+    cancelText: String = stringResource(id = R.string.button_cancel),
+    title: @Composable (DialogScope.() -> Unit) = {},
+    content: @Composable (DialogScope.() -> Unit) = {},
+) {
+    Dialog(
+        modifier = modifier,
         dialogState = dialogState,
         onDismiss = onCancel,
         title = title,
@@ -148,7 +203,6 @@ fun ConfirmDialog(
             DialogPositiveButton(text = confirmText, onClick = onConfirm)
             DialogNegativeButton(text = cancelText, onClick = onCancel)
         },
-        modifier = modifier,
     ) {
         Column(modifier = Modifier.padding(horizontal = 12.dp)) {
             ProvideTextStyle(value = MaterialTheme.typography.body1) {
@@ -180,6 +234,7 @@ fun PromptDialog(
         textVal = value
     }
     Dialog(
+        modifier = modifier,
         dialogState = dialogState,
         onDismiss = onCancel,
         title = title,
@@ -187,7 +242,6 @@ fun PromptDialog(
             DialogPositiveButton(text = confirmText, onClick = { onConfirm.invoke(textVal) })
             DialogNegativeButton(text = cancelText, onClick = onCancel)
         },
-        modifier = modifier,
     ) {
         val focusRequester = FocusRequester.Default
         val softwareKeyboardController = LocalSoftwareKeyboardController.current
@@ -236,14 +290,14 @@ fun PromptDialog(
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun Dialog(
+    modifier: Modifier = Modifier,
     dialogState: DialogState = rememberDialogState(),
     onDismiss: (() -> Unit)? = null,
+    title: @Composable (DialogScope.() -> Unit) = {},
     cancelable: Boolean = true,
     cancelableOnTouchOutside: Boolean = true,
-    title: @Composable DialogScope.() -> Unit,
-    buttons: @Composable DialogScope.() -> Unit = {},
-    modifier: Modifier = Modifier,
-    content: @Composable DialogScope.() -> Unit,
+    buttons: @Composable (DialogScope.() -> Unit) = {},
+    content: @Composable (DialogScope.() -> Unit),
 ) {
     if (dialogState.show) {
         val dialogScope = DialogScope(
@@ -268,19 +322,22 @@ fun Dialog(
                     dialogScope.dismiss()
                 }
             ) {
-                Column(modifier = modifier
-                    .align(Alignment.BottomCenter)
-                    .fillMaxWidth()
-                    .padding(16.dp)
-                    .background(
-                        color = ExtendedTheme.colors.background,
-                        shape = RoundedCornerShape(24.dp)
-                    )
-                    .padding(vertical = 24.dp)
-                    .clickable(
-                        interactionSource = remember { MutableInteractionSource() },
-                        indication = null
-                    ) {}
+                Column(
+                    modifier = modifier
+                        .align(Alignment.BottomCenter)
+                        .fillMaxWidth()
+                        .padding(16.dp)
+                        .background(
+                            color = ExtendedTheme.colors.background,
+                            shape = RoundedCornerShape(24.dp)
+                        )
+                        .padding(vertical = 24.dp)
+                        .clickable(
+                            interactionSource = remember { MutableInteractionSource() },
+                            indication = null,
+                            onClick = {}
+                        ),
+                    verticalArrangement = Arrangement.spacedBy(16.dp)
                 ) {
                     ProvideContentColor(color = ExtendedTheme.colors.text) {
                         Box(
@@ -288,11 +345,10 @@ fun Dialog(
                                 .padding(horizontal = 24.dp)
                                 .align(Alignment.CenterHorizontally)
                         ) {
-                            ProvideTextStyle(value = MaterialTheme.typography.h6) {
+                            ProvideTextStyle(value = MaterialTheme.typography.h6.copy(fontWeight = FontWeight.Bold)) {
                                 dialogScope.title()
                             }
                         }
-                        Spacer(modifier = Modifier.height(16.dp))
                         Box(modifier = Modifier.align(Alignment.CenterHorizontally)) {
                             dialogScope.content()
                         }
