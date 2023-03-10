@@ -1005,4 +1005,62 @@ object MixedTiebaApiImpl : ITiebaApi {
             )
         )
     }
+
+    override fun pbPageFlow(
+        threadId: Long,
+        page: Int,
+        sortType: Int,
+        forumId: Long?
+    ): Flow<PbPageResponse> {
+        return RetrofitTiebaApi.OFFICIAL_PROTOBUF_TIEBA_V12_API.pbPageFlow(
+            buildProtobufRequestBody(
+                PbPageRequest(
+                    PbPageRequestData(
+                        common = buildCommonRequest(clientVersion = ClientVersion.TIEBA_V12),
+                        kz = threadId,
+                        ad_param = com.huanchengfly.tieba.post.api.models.protos.pbPage.AdParam(
+                            load_count = 0,
+                            refresh_count = 1,
+                            is_req_ad = 1
+                        ),
+                        app_pos = buildAppPosInfo(),
+                        back = 0,
+                        banner = 1,
+                        broadcast_id = 0,
+                        floor_rn = 4,
+                        floor_sort_type = 1,
+                        forum_id = forumId ?: 0,
+                        from_push = 0,
+                        from_smart_frs = 0,
+                        immersion_video_comment_source = 0,
+                        is_comm_reverse = 0,
+                        is_fold_comment_req = 0,
+                        is_jumpfloor = 0,
+                        jumpfloor_num = 0,
+                        need_repost_recommend_forum = 0,
+                        obj_locate = "",
+                        obj_param1 = "2",
+                        obj_source = "",
+                        ori_ugc_type = 0,
+                        pb_rn = 0,
+                        pid = 0,
+                        pn = page,
+                        q_type = 1,
+                        r = sortType,
+                        rn = 15,
+                        s_model = 0,
+                        scr_dip = App.ScreenInfo.DENSITY.toDouble(),
+                        scr_h = getScreenHeight(),
+                        scr_w = getScreenWidth(),
+                        source_type = 2,
+                        st_type = "personalize_page",
+                        thread_type = 0,
+                        weipost = 0,
+                        with_floor = 1
+                    )
+                ),
+                clientVersion = ClientVersion.TIEBA_V12
+            )
+        )
+    }
 }

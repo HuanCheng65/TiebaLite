@@ -3,6 +3,7 @@ package com.huanchengfly.tieba.post.api.retrofit.interfaces
 import com.huanchengfly.tieba.post.api.models.protos.forumRecommend.ForumRecommendResponse
 import com.huanchengfly.tieba.post.api.models.protos.frsPage.FrsPageResponse
 import com.huanchengfly.tieba.post.api.models.protos.hotThreadList.HotThreadListResponse
+import com.huanchengfly.tieba.post.api.models.protos.pbPage.PbPageResponse
 import com.huanchengfly.tieba.post.api.models.protos.personalized.PersonalizedResponse
 import com.huanchengfly.tieba.post.api.models.protos.profile.ProfileResponse
 import com.huanchengfly.tieba.post.api.models.protos.threadList.ThreadListResponse
@@ -53,4 +54,9 @@ interface OfficialProtobufTiebaApi {
     fun profileFlow(
         @Body body: MyMultipartBody,
     ): Flow<ProfileResponse>
+
+    @POST("/c/f/pb/page?cmd=302001&format=protobuf")
+    fun pbPageFlow(
+        @Body body: MyMultipartBody,
+    ): Flow<PbPageResponse>
 }

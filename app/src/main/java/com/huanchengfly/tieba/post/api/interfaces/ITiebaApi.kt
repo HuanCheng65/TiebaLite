@@ -7,6 +7,7 @@ import com.huanchengfly.tieba.post.api.models.*
 import com.huanchengfly.tieba.post.api.models.protos.forumRecommend.ForumRecommendResponse
 import com.huanchengfly.tieba.post.api.models.protos.frsPage.FrsPageResponse
 import com.huanchengfly.tieba.post.api.models.protos.hotThreadList.HotThreadListResponse
+import com.huanchengfly.tieba.post.api.models.protos.pbPage.PbPageResponse
 import com.huanchengfly.tieba.post.api.models.protos.personalized.PersonalizedResponse
 import com.huanchengfly.tieba.post.api.models.protos.profile.ProfileResponse
 import com.huanchengfly.tieba.post.api.models.protos.threadList.ThreadListResponse
@@ -1225,4 +1226,16 @@ interface ITiebaApi {
     fun userProfileFlow(
         uid: Long
     ): Flow<ProfileResponse>
+
+    /**
+     * 贴子页（Flow）
+     *
+     * @param threadId 贴子 ID
+     */
+    fun pbPageFlow(
+        threadId: Long,
+        page: Int,
+        sortType: Int = 0,
+        forumId: Long? = null,
+    ): Flow<PbPageResponse>
 }

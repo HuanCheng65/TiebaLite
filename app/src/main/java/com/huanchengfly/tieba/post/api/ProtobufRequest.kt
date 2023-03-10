@@ -63,33 +63,54 @@ fun buildAppPosInfo(): AppPosInfo {
 fun buildCommonRequest(
     context: Context = App.INSTANCE,
     clientVersion: ClientVersion = ClientVersion.TIEBA_V11
-): CommonRequest = buildCommonRequest(context, clientVersion.version)
+): CommonRequest = when (clientVersion) {
+    ClientVersion.TIEBA_V11 ->
+        CommonRequest(
+            BDUSS = AccountUtil.getBduss(),
+            _client_id = ClientUtils.clientId ?: RetrofitTiebaApi.randomClientId,
+            _client_type = 2,
+            _client_version = clientVersion.version,
+            _os_version = "${Build.VERSION.SDK_INT}",
+            _phone_imei = MobileInfoUtil.getIMEI(context),
+            _timestamp = System.currentTimeMillis(),
+            brand = Build.BRAND,
+            c3_aid = UIDUtil.getAid(),
+            cuid = CuidUtils.getNewCuid(),
+            cuid_galaxy2 = CuidUtils.getNewCuid(),
+            cuid_gid = "",
+            from = "1024324o",
+            is_teenager = 0,
+            lego_lib_version = "3.0.0",
+            model = Build.MODEL,
+            net_type = "1",
+            oaid = OAID().toJson(),
+            pversion = "1.0.3",
+            sample_id = ClientUtils.sampleId,
+            stoken = AccountUtil.getSToken(),
+        )
 
-fun buildCommonRequest(
-    context: Context = App.INSTANCE,
-    clientVersion: String,
-): CommonRequest {
-    return CommonRequest(
-        BDUSS = AccountUtil.getBduss(),
-        _client_id = ClientUtils.clientId ?: RetrofitTiebaApi.randomClientId,
-        _client_type = 2,
-        _client_version = clientVersion,
-        _os_version = "${Build.VERSION.SDK_INT}",
-        _phone_imei = MobileInfoUtil.getIMEI(context),
-        _timestamp = System.currentTimeMillis(),
-        brand = Build.BRAND,
-        c3_aid = UIDUtil.getAid(),
-        cuid = CuidUtils.getNewCuid(),
-        cuid_galaxy2 = CuidUtils.getNewCuid(),
-        cuid_gid = "",
-        from = "1024324o",
-        is_teenager = 0,
-        lego_lib_version = "3.0.0",
-        model = Build.MODEL,
-        net_type = "1",
-        oaid = OAID().toJson(),
-        pversion = "1.0.3",
-        sample_id = ClientUtils.sampleId,
-        stoken = AccountUtil.getSToken(),
-    )
+    ClientVersion.TIEBA_V12 ->
+        CommonRequest(
+            BDUSS = AccountUtil.getBduss(),
+            _client_id = ClientUtils.clientId ?: RetrofitTiebaApi.randomClientId,
+            _client_type = 2,
+            _client_version = clientVersion.version,
+            _os_version = "${Build.VERSION.SDK_INT}",
+            _phone_imei = MobileInfoUtil.getIMEI(context),
+            _timestamp = System.currentTimeMillis(),
+            brand = Build.BRAND,
+            c3_aid = UIDUtil.getAid(),
+            cuid = CuidUtils.getNewCuid(),
+            cuid_galaxy2 = CuidUtils.getNewCuid(),
+            cuid_gid = "",
+            from = "1024324o",
+            is_teenager = 0,
+            lego_lib_version = "3.0.0",
+            model = Build.MODEL,
+            net_type = "1",
+            oaid = UIDUtil.getOAID(),
+            pversion = "1.0.3",
+            sample_id = ClientUtils.sampleId,
+            stoken = AccountUtil.getSToken(),
+        )
 }
