@@ -13,6 +13,7 @@ import android.graphics.Color
 import android.graphics.drawable.Drawable
 import android.os.Build
 import android.os.Process
+import android.webkit.WebSettings
 import android.webkit.WebView
 import androidx.annotation.Keep
 import androidx.annotation.RequiresApi
@@ -206,9 +207,11 @@ class App : Application(), IApp, SketchFactory {
         var oaid: String = ""
         var encodedOAID: String = ""
         var isTrackLimited: Boolean = false
+        var userAgent: String? = null
 
         fun init(context: Context) {
             if (!inited) {
+                userAgent = WebSettings.getDefaultUserAgent(context)
                 isOAIDSupported = DeviceID.supportedOAID(context)
                 if (isOAIDSupported) {
                     DeviceID.getOAID(context, OAIDGetter)

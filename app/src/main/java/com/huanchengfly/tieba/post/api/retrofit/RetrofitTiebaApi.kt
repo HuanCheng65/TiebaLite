@@ -5,6 +5,7 @@ import com.huanchengfly.tieba.post.App
 import com.huanchengfly.tieba.post.api.ClientVersion
 import com.huanchengfly.tieba.post.api.Header
 import com.huanchengfly.tieba.post.api.Param
+import com.huanchengfly.tieba.post.api.getUserAgent
 import com.huanchengfly.tieba.post.api.models.OAID
 import com.huanchengfly.tieba.post.api.retrofit.adapter.DeferredCallAdapterFactory
 import com.huanchengfly.tieba.post.api.retrofit.adapter.FlowCallAdapterFactory
@@ -48,8 +49,6 @@ object RetrofitTiebaApi {
     internal val randomClientId = "wappc_${initTime}_${(Math.random() * 1000).roundToInt()}"
     private val stParamInterceptor = StParamInterceptor()
     private val connectionPool = ConnectionPool(32, 5, TimeUnit.MINUTES)
-    private val defaultUserAgent: String =
-        "Mozilla/5.0 (Linux; Android ${Build.VERSION.RELEASE}; ${Build.MODEL} Build/TKQ1.220829.002; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/109.0.5414.86 Mobile Safari/537.36"
 
     private val defaultCommonParamInterceptor = CommonParamInterceptor(
         Param.BDUSS to { AccountUtil.getBduss() },
@@ -90,7 +89,7 @@ object RetrofitTiebaApi {
     val WEB_TIEBA_API: WebTiebaApi by lazy {
         createJsonApi<WebTiebaApi>("https://tieba.baidu.com/",
             CommonHeaderInterceptor(
-                Header.USER_AGENT to { "$defaultUserAgent tieba/11.10.8.6 skin/default" },
+                Header.USER_AGENT to { getUserAgent("tieba/11.10.8.6 skin/default") },
                 Header.CUID to { CuidUtils.getNewCuid() },
                 Header.CUID_GALAXY2 to { CuidUtils.getNewCuid() },
                 Header.CUID_GID to { "" },
