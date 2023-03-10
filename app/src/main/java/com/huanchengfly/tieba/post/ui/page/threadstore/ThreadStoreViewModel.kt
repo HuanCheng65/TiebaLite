@@ -170,7 +170,7 @@ data class ThreadStoreUiState(
     val isRefreshing: Boolean = false,
     val isLoadingMore: Boolean = false,
     val hasMore: Boolean = true,
-    val currentPage: Int = 0,
+    val currentPage: Int = 1,
     val data: List<ThreadStoreBean.ThreadStoreInfo> = emptyList()
 ) : UiState
 
