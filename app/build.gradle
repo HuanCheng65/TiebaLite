@@ -19,11 +19,11 @@ def isSelfBuild = isCI == null || !isCI.equalsIgnoreCase("true")
 def applicationVersionCode = applicationProperties["versionCode"].toInteger()
 def applicationVersionName = applicationProperties["versionName"]
 def isPerVersion = applicationProperties["isPerRelease"] == "true"
-if (!isSelfBuild) {
-    applicationVersionName = applicationVersionName + ".${sha.substring(0, 7)}"
-}
 if (isPerVersion) {
-    applicationVersionName = applicationVersionName + ".${applicationProperties["preReleaseName"]}-${applicationProperties["preReleaseVer"]}"
+    applicationVersionName = applicationVersionName + "-${applicationProperties["preReleaseName"]}.${applicationProperties["preReleaseVer"]}"
+}
+if (!isSelfBuild) {
+    applicationVersionName = applicationVersionName + "+${sha.substring(0, 7)}"
 }
 
 android {
