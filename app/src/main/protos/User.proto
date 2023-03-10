@@ -34,4 +34,5 @@ message User {
   int32 priv_thread = 92;
   int32 isDefaultAvatar = 106;
   uint32 total_agree_num = 118;
+  string ip_address = 127;
 }
