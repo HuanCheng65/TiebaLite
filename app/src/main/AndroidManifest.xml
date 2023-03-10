@@ -166,7 +166,7 @@
 
             <meta-data
                 android:name="android.app.shortcuts"
-                android:resource="@xml/shortcut" />
+                android:resource="@xml/shortcut_new" />
         </activity>
 
         <activity-alias
@@ -184,7 +184,7 @@
 
             <meta-data
                 android:name="android.app.shortcuts"
-                android:resource="@xml/shortcut" />
+                android:resource="@xml/shortcut_new" />
         </activity-alias>
         <activity-alias
             android:name=".MainActivityIconOld"
@@ -201,7 +201,7 @@
 
             <meta-data
                 android:name="android.app.shortcuts"
-                android:resource="@xml/shortcut" />
+                android:resource="@xml/shortcut_new" />
         </activity-alias>
 
         <activity
