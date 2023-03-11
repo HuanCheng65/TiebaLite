@@ -82,6 +82,7 @@ import com.huanchengfly.tieba.post.ui.widgets.compose.Avatar
 import com.huanchengfly.tieba.post.ui.widgets.compose.Button
 import com.huanchengfly.tieba.post.ui.widgets.compose.ConfirmDialog
 import com.huanchengfly.tieba.post.ui.widgets.compose.LongClickMenu
+import com.huanchengfly.tieba.post.ui.widgets.compose.TextButton
 import com.huanchengfly.tieba.post.ui.widgets.compose.Toolbar
 import com.huanchengfly.tieba.post.ui.widgets.compose.accountNavIconIfCompact
 import com.huanchengfly.tieba.post.ui.widgets.compose.rememberDialogState
@@ -380,7 +381,7 @@ fun HomePage(
     val context = LocalContext.current
     val isLoading by viewModel.uiState.collectPartialAsState(
         prop1 = HomeUiState::isLoading,
-        initial = false
+        initial = true
     )
     val forums by viewModel.uiState.collectPartialAsState(
         prop1 = HomeUiState::forums,
@@ -577,15 +578,15 @@ fun EmptyScreen(
                 .fillMaxWidth()
                 .aspectRatio(2f)
         )
-        Text(
-            text = stringResource(id = R.string.title_empty),
-            style = MaterialTheme.typography.h6,
-            color = ExtendedTheme.colors.text,
-            textAlign = TextAlign.Center,
-        )
         if (!loggedIn) {
             Text(
                 text = stringResource(id = R.string.title_empty_login),
+                style = MaterialTheme.typography.h6,
+                color = ExtendedTheme.colors.text,
+                textAlign = TextAlign.Center,
+            )
+            Text(
+                text = stringResource(id = R.string.home_empty_login),
                 style = MaterialTheme.typography.body1,
                 color = ExtendedTheme.colors.textSecondary,
                 textAlign = TextAlign.Center
@@ -599,9 +600,16 @@ fun EmptyScreen(
             ) {
                 Text(text = stringResource(id = R.string.button_login))
             }
+        } else {
+            Text(
+                text = stringResource(id = R.string.title_empty),
+                style = MaterialTheme.typography.h6,
+                color = ExtendedTheme.colors.text,
+                textAlign = TextAlign.Center,
+            )
         }
         if (canOpenExplore) {
-            Button(
+            TextButton(
                 onClick = onOpenExplore,
                 modifier = Modifier
                     .fillMaxWidth()

@@ -645,7 +645,8 @@
     <string name="link">链接</string>
     <string name="user">用户</string>
     <string name="title_empty">这里什么都没有</string>
-    <string name="title_empty_login">请登录之后查看你的关注。\n或者你也可以先去逛逛发现？</string>
+    <string name="home_empty_login">请登录之后查看你的关注。\n或者你也可以先去逛逛发现？</string>
     <string name="button_login">去登录</string>
     <string name="button_go_to_explore">随便看看</string>
+    <string name="title_empty_login">你还未登录</string>
 </resources>
