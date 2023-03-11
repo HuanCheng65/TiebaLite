@@ -112,7 +112,7 @@ sealed interface UserPartialChange : PartialChange<UserUiState> {
 }
 
 data class UserUiState(
-    val isLoading: Boolean = true,
+    val isLoading: Boolean = false,
     val account: Account? = null
 ) : UiState
 
