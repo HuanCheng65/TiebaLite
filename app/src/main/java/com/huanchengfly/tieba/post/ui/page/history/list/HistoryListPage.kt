@@ -91,18 +91,16 @@ fun HistoryListPage(
     val context = LocalContext.current
     val navigator = LocalNavigator.current
     val snackbarHostState = LocalSnackbarHostState.current
-    LaunchedEffect(null) {
-        onEvent<HistoryListUiEvent.Delete.Failure>(viewModel) {
-            snackbarHostState.showSnackbar(
-                context.getString(
-                    R.string.delete_history_failure,
-                    it.errorMsg
-                )
+    viewModel.onEvent<HistoryListUiEvent.Delete.Failure> {
+        snackbarHostState.showSnackbar(
+            context.getString(
+                R.string.delete_history_failure,
+                it.errorMsg
             )
-        }
-        onEvent<HistoryListUiEvent.Delete.Success>(viewModel) {
-            snackbarHostState.showSnackbar(context.getString(R.string.delete_history_success))
-        }
+        )
+    }
+    viewModel.onEvent<HistoryListUiEvent.Delete.Success> {
+        snackbarHostState.showSnackbar(context.getString(R.string.delete_history_success))
     }
     Box(
         modifier = Modifier

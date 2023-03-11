@@ -24,7 +24,6 @@ import androidx.compose.material.icons.outlined.AccountCircle
 import androidx.compose.material.icons.outlined.Block
 import androidx.compose.material.icons.outlined.CheckCircle
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -185,15 +184,13 @@ fun BlockSettingsPage(
         }
     ) { paddingValues ->
         val snackbarHostState = LocalSnackbarHostState.current
-        LaunchedEffect(null) {
-            onEvent<BlockSettingsUiEvent.Success>(viewModel) {
-                snackbarHostState.showSnackbar(
-                    when (it) {
-                        is BlockSettingsUiEvent.Success.Add -> context.getString(R.string.toast_add_success)
-                        is BlockSettingsUiEvent.Success.Delete -> context.getString(R.string.toast_delete_success)
-                    }
-                )
-            }
+        viewModel.onEvent<BlockSettingsUiEvent.Success> {
+            snackbarHostState.showSnackbar(
+                when (it) {
+                    is BlockSettingsUiEvent.Success.Add -> context.getString(R.string.toast_add_success)
+                    is BlockSettingsUiEvent.Success.Delete -> context.getString(R.string.toast_delete_success)
+                }
+            )
         }
         HorizontalPager(
             count = 2,

@@ -367,55 +367,53 @@ fun ForumPage(
 
     val scaffoldState = rememberScaffoldState()
     val snackbarHostState = scaffoldState.snackbarHostState
-    LaunchedEffect(null) {
-        onEvent<ForumUiEvent.SignIn.Success>(viewModel) {
-            snackbarHostState.showSnackbar(
-                message = context.getString(
-                    R.string.toast_sign_success,
-                    "${it.signBonusPoint}",
-                    "${it.userSignRank}"
-                )
+    viewModel.onEvent<ForumUiEvent.SignIn.Success> {
+        snackbarHostState.showSnackbar(
+            message = context.getString(
+                R.string.toast_sign_success,
+                "${it.signBonusPoint}",
+                "${it.userSignRank}"
             )
-        }
-        onEvent<ForumUiEvent.SignIn.Failure>(viewModel) {
-            snackbarHostState.showSnackbar(
-                message = context.getString(
-                    R.string.toast_sign_failed,
-                    it.errorMsg
-                )
+        )
+    }
+    viewModel.onEvent<ForumUiEvent.SignIn.Failure> {
+        snackbarHostState.showSnackbar(
+            message = context.getString(
+                R.string.toast_sign_failed,
+                it.errorMsg
             )
-        }
-        onEvent<ForumUiEvent.Like.Success>(viewModel) {
-            snackbarHostState.showSnackbar(
-                message = context.getString(
-                    R.string.toast_like_success,
-                    it.memberSum,
-                )
+        )
+    }
+    viewModel.onEvent<ForumUiEvent.Like.Success> {
+        snackbarHostState.showSnackbar(
+            message = context.getString(
+                R.string.toast_like_success,
+                it.memberSum,
             )
-        }
-        onEvent<ForumUiEvent.Like.Failure>(viewModel) {
-            snackbarHostState.showSnackbar(
-                message = context.getString(
-                    R.string.toast_like_failed,
-                    it.errorMsg
-                )
+        )
+    }
+    viewModel.onEvent<ForumUiEvent.Like.Failure> {
+        snackbarHostState.showSnackbar(
+            message = context.getString(
+                R.string.toast_like_failed,
+                it.errorMsg
             )
-        }
-        onEvent<ForumUiEvent.Unlike.Success>(viewModel) {
-            snackbarHostState.showSnackbar(
-                message = context.getString(
-                    R.string.toast_unlike_success
-                )
+        )
+    }
+    viewModel.onEvent<ForumUiEvent.Unlike.Success> {
+        snackbarHostState.showSnackbar(
+            message = context.getString(
+                R.string.toast_unlike_success
             )
-        }
-        onEvent<ForumUiEvent.Unlike.Failure>(viewModel) {
-            snackbarHostState.showSnackbar(
-                message = context.getString(
-                    R.string.toast_unlike_failed,
-                    it.errorMsg
-                )
+        )
+    }
+    viewModel.onEvent<ForumUiEvent.Unlike.Failure> {
+        snackbarHostState.showSnackbar(
+            message = context.getString(
+                R.string.toast_unlike_failed,
+                it.errorMsg
             )
-        }
+        )
     }
 
     val isLoading by viewModel.uiState.collectPartialAsState(

@@ -132,26 +132,24 @@ fun ForumThreadListPage(
                 }
         }
     }
-    LaunchedEffect(null) {
-        onEvent<ForumThreadListUiEvent.AgreeFail>(viewModel) {
-            val snackbarResult = snackbarHostState.showSnackbar(
-                message = context.getString(
-                    R.string.snackbar_agree_fail,
-                    it.errorCode,
-                    it.errorMsg
-                ),
-                actionLabel = context.getString(R.string.button_retry)
-            )
+    viewModel.onEvent<ForumThreadListUiEvent.AgreeFail> {
+        val snackbarResult = snackbarHostState.showSnackbar(
+            message = context.getString(
+                R.string.snackbar_agree_fail,
+                it.errorCode,
+                it.errorMsg
+            ),
+            actionLabel = context.getString(R.string.button_retry)
+        )
 
-            if (snackbarResult == SnackbarResult.ActionPerformed) {
-                viewModel.send(
-                    ForumThreadListUiIntent.Agree(
-                        it.threadId,
-                        it.postId,
-                        it.hasAgree
-                    )
+        if (snackbarResult == SnackbarResult.ActionPerformed) {
+            viewModel.send(
+                ForumThreadListUiIntent.Agree(
+                    it.threadId,
+                    it.postId,
+                    it.hasAgree
                 )
-            }
+            )
         }
     }
     val isRefreshing by viewModel.uiState.collectPartialAsState(

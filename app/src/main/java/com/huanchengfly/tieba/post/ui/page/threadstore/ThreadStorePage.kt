@@ -20,7 +20,6 @@ import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -107,18 +106,16 @@ fun ThreadStorePage(
     val pullRefreshState = rememberPullRefreshState(
         refreshing = isRefreshing,
         onRefresh = { viewModel.send(ThreadStoreUiIntent.Refresh) })
-    LaunchedEffect(null) {
-        onEvent<ThreadStoreUiEvent.Delete.Failure>(viewModel) {
-            scaffoldState.snackbarHostState.showSnackbar(
-                context.getString(
-                    R.string.delete_store_failure,
-                    it.errorMsg
-                )
+    viewModel.onEvent<ThreadStoreUiEvent.Delete.Failure> {
+        scaffoldState.snackbarHostState.showSnackbar(
+            context.getString(
+                R.string.delete_store_failure,
+                it.errorMsg
             )
-        }
-        onEvent<ThreadStoreUiEvent.Delete.Success>(viewModel) {
-            scaffoldState.snackbarHostState.showSnackbar(context.getString(R.string.delete_store_success))
-        }
+        )
+    }
+    viewModel.onEvent<ThreadStoreUiEvent.Delete.Success> {
+        scaffoldState.snackbarHostState.showSnackbar(context.getString(R.string.delete_store_success))
     }
     MyScaffold(
         backgroundColor = Color.Transparent,

@@ -1,9 +1,12 @@
 package com.huanchengfly.tieba.post.arch
 
+import android.util.Log
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.State
 import androidx.compose.runtime.produceState
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
@@ -11,11 +14,11 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewModelScope
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.asFlow
+import kotlinx.coroutines.flow.cancellable
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.filterIsInstance
 import kotlinx.coroutines.flow.flowOn
@@ -53,18 +56,26 @@ fun <T : UiState, A> Flow<T>.collectPartialAsState(
     }
 }
 
-inline fun <reified Event : UiEvent> CoroutineScope.onEvent(
-    viewModel: BaseViewModel<*, *, *, *>,
+@Composable
+inline fun <reified Event : UiEvent> BaseViewModel<*, *, *, *>.onEvent(
     noinline listener: suspend (Event) -> Unit
 ) {
-    launch {
-        viewModel.uiEventFlow
-            .filterIsInstance<Event>()
-            .collect {
-                launch {
-                    listener(it)
-                }
+    val coroutineScope = rememberCoroutineScope()
+    DisposableEffect(key1 = listener, key2 = this) {
+        with(coroutineScope) {
+            val job = launch {
+                uiEventFlow
+                    .filterIsInstance<Event>()
+                    .cancellable()
+                    .collect {
+                        launch {
+                            listener(it)
+                        }
+                    }
             }
+
+            onDispose { job.cancel() }
+        }
     }
 }
 
@@ -73,10 +84,24 @@ inline fun <reified VM : BaseViewModel<*, *, *, *>> pageViewModel(): VM {
     return hiltViewModel<VM>().apply {
         val context = LocalContext.current
         if (context is BaseComposeActivity) {
-            uiEventFlow.filterIsInstance<CommonUiEvent>()
-                .collectIn(context) {
-                    context.handleCommonEvent(it)
+            val coroutineScope = rememberCoroutineScope()
+
+            DisposableEffect(key1 = this) {
+                with(coroutineScope) {
+                    val job =
+                        uiEventFlow
+                            .filterIsInstance<CommonUiEvent>()
+                            .cancellable()
+                            .collectIn(context) {
+                                context.handleCommonEvent(it)
+                            }
+
+                    onDispose {
+                        Log.i("pageViewModel", "onDispose")
+                        job.cancel()
+                    }
                 }
+            }
         }
     }
 }
@@ -85,14 +110,7 @@ inline fun <reified VM : BaseViewModel<*, *, *, *>> pageViewModel(): VM {
 inline fun <INTENT : UiIntent, reified VM : BaseViewModel<INTENT, *, *, *>> pageViewModel(
     initialIntent: List<INTENT> = emptyList(),
 ): VM {
-    return hiltViewModel<VM>().apply {
-        val context = LocalContext.current
-        if (context is BaseComposeActivity) {
-            uiEventFlow.filterIsInstance<CommonUiEvent>()
-                .collectIn(context) {
-                    context.handleCommonEvent(it)
-                }
-        }
+    return pageViewModel<VM>().apply {
         if (initialIntent.isNotEmpty()) {
             LaunchedEffect(key1 = initialized) {
                 if (!initialized) {
