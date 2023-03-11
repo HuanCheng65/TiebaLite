@@ -13,6 +13,7 @@ import com.huanchengfly.tieba.post.api.retrofit.converter.gson.GsonConverterFact
 import com.huanchengfly.tieba.post.api.retrofit.interceptors.AddWebCookieInterceptor
 import com.huanchengfly.tieba.post.api.retrofit.interceptors.CommonHeaderInterceptor
 import com.huanchengfly.tieba.post.api.retrofit.interceptors.CommonParamInterceptor
+import com.huanchengfly.tieba.post.api.retrofit.interceptors.ConnectivityInterceptor
 import com.huanchengfly.tieba.post.api.retrofit.interceptors.CookieInterceptor
 import com.huanchengfly.tieba.post.api.retrofit.interceptors.DropInterceptor
 import com.huanchengfly.tieba.post.api.retrofit.interceptors.FailureResponseInterceptor
@@ -224,6 +225,7 @@ object RetrofitTiebaApi {
             addInterceptor(FailureResponseInterceptor)
             addInterceptor(ForceLoginInterceptor)
             addInterceptor(sortAndSignInterceptor)
+            addInterceptor(ConnectivityInterceptor)
             connectionPool(connectionPool)
         }.build())
         .build()
@@ -250,6 +252,7 @@ object RetrofitTiebaApi {
             addInterceptor(ForceLoginInterceptor)
             addInterceptor(CookieInterceptor)
             addInterceptor(sortAndSignInterceptor)
+            addInterceptor(ConnectivityInterceptor)
             connectionPool(connectionPool)
         }.build())
         .build()

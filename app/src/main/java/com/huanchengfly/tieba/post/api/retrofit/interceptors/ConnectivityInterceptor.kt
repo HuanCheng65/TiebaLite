@@ -1,0 +1,32 @@
+package com.huanchengfly.tieba.post.api.retrofit.interceptors
+
+import com.huanchengfly.tieba.post.App
+import com.huanchengfly.tieba.post.R
+import com.huanchengfly.tieba.post.api.retrofit.exception.NoConnectivityException
+import com.huanchengfly.tieba.post.utils.isNetworkConnected
+import okhttp3.Interceptor
+import okhttp3.Response
+import java.io.IOException
+import java.net.SocketTimeoutException
+
+object ConnectivityInterceptor : Interceptor {
+    override fun intercept(chain: Interceptor.Chain): Response {
+        val response = runCatching { chain.proceed(chain.request()) }
+
+        val exception = response.exceptionOrNull()
+
+        return when {
+            exception is IOException && !isNetworkConnected() -> throw NoConnectivityException(
+                App.INSTANCE.getString(
+                    R.string.no_internet_connectivity
+                )
+            )
+
+            exception is SocketTimeoutException && isNetworkConnected() -> throw NoConnectivityException(
+                App.INSTANCE.getString(R.string.connectivity_timeout)
+            )
+
+            else -> response.getOrThrow()
+        }
+    }
+}

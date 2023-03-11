@@ -649,4 +649,12 @@
     <string name="button_login">去登录</string>
     <string name="button_go_to_explore">随便看看</string>
     <string name="title_empty_login">你还未登录</string>
+    <string name="no_internet_connectivity">无互联网连接</string>
+    <string name="connectivity_timeout">连接超时</string>
+    <string name="title_no_internet_connectivity">网络找不到了</string>
+    <string name="title_api_error">服务器有一些自己的想法</string>
+    <string name="title_unknown_error">发生了一个奇怪的错误…</string>
+    <string name="message_no_internet_connectivity">%s。请检查你的网络连接是否正常</string>
+    <string name="message_unknown_error">哦我的老伙计，我向你保证这真的是一个奇怪的错误……</string>
+    <string name="btn_reload">重新加载</string>
 </resources>

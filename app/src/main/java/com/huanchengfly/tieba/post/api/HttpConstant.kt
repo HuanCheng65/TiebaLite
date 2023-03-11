@@ -11,7 +11,7 @@ object Method {
 }
 
 object Error {
-    const val ERROR_NET = 10
+    const val ERROR_NETWORK = 10
     const val ERROR_UNKNOWN = -1
     const val ERROR_PARSE = -2
     const val ERROR_NOT_LOGGED_IN = 11
