@@ -6,7 +6,6 @@ import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -81,8 +80,10 @@ import com.huanchengfly.tieba.post.ui.widgets.compose.ActionItem
 import com.huanchengfly.tieba.post.ui.widgets.compose.Avatar
 import com.huanchengfly.tieba.post.ui.widgets.compose.Button
 import com.huanchengfly.tieba.post.ui.widgets.compose.ConfirmDialog
+import com.huanchengfly.tieba.post.ui.widgets.compose.ErrorScreen
 import com.huanchengfly.tieba.post.ui.widgets.compose.LongClickMenu
 import com.huanchengfly.tieba.post.ui.widgets.compose.TextButton
+import com.huanchengfly.tieba.post.ui.widgets.compose.TipScreen
 import com.huanchengfly.tieba.post.ui.widgets.compose.Toolbar
 import com.huanchengfly.tieba.post.ui.widgets.compose.accountNavIconIfCompact
 import com.huanchengfly.tieba.post.ui.widgets.compose.rememberDialogState
@@ -153,8 +154,8 @@ fun SearchBox(
 @Composable
 private fun Header(
     text: String,
-    invert: Boolean = false,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    invert: Boolean = false
 ) {
     Chip(
         text = text,
@@ -391,6 +392,11 @@ fun HomePage(
         prop1 = HomeUiState::topForums,
         initial = emptyList()
     )
+    val error by viewModel.uiState.collectPartialAsState(
+        prop1 = HomeUiState::error,
+        initial = null
+    )
+    val isError by remember { derivedStateOf { error != null } }
     var listSingle by remember { mutableStateOf(context.appPreferences.listSingle) }
     val gridCells by remember { derivedStateOf { getGridCells(context, listSingle) } }
 
@@ -421,9 +427,12 @@ fun HomePage(
     ) { contentPaddings ->
         StateScreen(
             isEmpty = forums.isEmpty(),
-            isError = false,
+            isError = isError,
             isLoading = isLoading,
             modifier = Modifier.padding(contentPaddings),
+            onReload = {
+                viewModel.send(HomeUiIntent.Refresh)
+            },
             emptyScreen = {
                 EmptyScreen(
                     loggedIn = account != null,
@@ -433,6 +442,9 @@ fun HomePage(
             },
             loadingScreen = {
                 HomePageSkeletonScreen(listSingle = listSingle, gridCells = gridCells)
+            },
+            errorScreen = {
+                error?.let { ErrorScreen(error = it) }
             }
         ) {
             val pullRefreshState = rememberPullRefreshState(
@@ -516,11 +528,11 @@ private fun HomePageSkeletonScreen(
             Column {
                 Header(
                     text = stringResource(id = R.string.title_top_forum),
-                    invert = true,
                     modifier = Modifier.placeholder(
                         visible = true,
                         color = ExtendedTheme.colors.chip
-                    )
+                    ),
+                    invert = true
                 )
                 Spacer(modifier = Modifier.height(8.dp))
             }
@@ -541,11 +553,11 @@ private fun HomePageSkeletonScreen(
             Column {
                 Header(
                     text = stringResource(id = R.string.forum_list_title),
-                    invert = true,
                     modifier = Modifier.placeholder(
                         visible = true,
                         color = ExtendedTheme.colors.chip
-                    )
+                    ),
+                    invert = true
                 )
                 Spacer(modifier = Modifier.height(8.dp))
             }
@@ -563,59 +575,55 @@ fun EmptyScreen(
     onOpenExplore: () -> Unit
 ) {
     val context = LocalContext.current
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(8.dp, alignment = CenterVertically)
-    ) {
-        val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.lottie_astronaut))
-        LottieAnimation(
-            composition = composition,
-            iterations = LottieConstants.IterateForever,
-            modifier = Modifier
-                .fillMaxWidth()
-                .aspectRatio(2f)
-        )
-        if (!loggedIn) {
-            Text(
-                text = stringResource(id = R.string.title_empty_login),
-                style = MaterialTheme.typography.h6,
-                color = ExtendedTheme.colors.text,
-                textAlign = TextAlign.Center,
-            )
-            Text(
-                text = stringResource(id = R.string.home_empty_login),
-                style = MaterialTheme.typography.body1,
-                color = ExtendedTheme.colors.textSecondary,
-                textAlign = TextAlign.Center
-            )
-            Button(
-                onClick = {
-                    context.goToActivity<LoginActivity>()
-                },
+    TipScreen(
+        title = {
+            if (!loggedIn) {
+                Text(text = stringResource(id = R.string.title_empty_login))
+            } else {
+                Text(text = stringResource(id = R.string.title_empty))
+            }
+        },
+        image = {
+            val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.lottie_astronaut))
+            LottieAnimation(
+                composition = composition,
+                iterations = LottieConstants.IterateForever,
                 modifier = Modifier
                     .fillMaxWidth()
-            ) {
-                Text(text = stringResource(id = R.string.button_login))
-            }
-        } else {
-            Text(
-                text = stringResource(id = R.string.title_empty),
-                style = MaterialTheme.typography.h6,
-                color = ExtendedTheme.colors.text,
-                textAlign = TextAlign.Center,
+                    .aspectRatio(2f)
             )
-        }
-        if (canOpenExplore) {
-            TextButton(
-                onClick = onOpenExplore,
-                modifier = Modifier
-                    .fillMaxWidth()
-            ) {
-                Text(text = stringResource(id = R.string.button_go_to_explore))
+        },
+        message = {
+            if (!loggedIn) {
+                Text(
+                    text = stringResource(id = R.string.home_empty_login),
+                    style = MaterialTheme.typography.body1,
+                    color = ExtendedTheme.colors.textSecondary,
+                    textAlign = TextAlign.Center
+                )
             }
-        }
-    }
+        },
+        actions = {
+            if (!loggedIn) {
+                Button(
+                    onClick = {
+                        context.goToActivity<LoginActivity>()
+                    },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                ) {
+                    Text(text = stringResource(id = R.string.button_login))
+                }
+            }
+            if (canOpenExplore) {
+                TextButton(
+                    onClick = onOpenExplore,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                ) {
+                    Text(text = stringResource(id = R.string.button_go_to_explore))
+                }
+            }
+        },
+    )
 }

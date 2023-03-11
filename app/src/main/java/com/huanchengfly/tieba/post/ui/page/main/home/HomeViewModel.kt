@@ -15,24 +15,29 @@ import org.litepal.LitePal
 class HomeViewModel : BaseViewModel<HomeUiIntent, HomePartialChange, HomeUiState, HomeUiEvent>() {
     override fun createInitialState(): HomeUiState = HomeUiState()
 
-    override fun createPartialChangeProducer(): PartialChangeProducer<HomeUiIntent, HomePartialChange, HomeUiState> = HomePartialChangeProducer
+    override fun createPartialChangeProducer(): PartialChangeProducer<HomeUiIntent, HomePartialChange, HomeUiState> =
+        HomePartialChangeProducer
 
     override fun dispatchEvent(partialChange: HomePartialChange): UiEvent? =
         when (partialChange) {
-            is HomePartialChange.Refresh.Failure -> CommonUiEvent.Toast(partialChange.errorMessage)
             is HomePartialChange.TopForums.Delete.Failure -> CommonUiEvent.Toast(partialChange.errorMessage)
             is HomePartialChange.TopForums.Add.Failure -> CommonUiEvent.Toast(partialChange.errorMessage)
             else -> null
         }
 
-    object HomePartialChangeProducer : PartialChangeProducer<HomeUiIntent, HomePartialChange, HomeUiState> {
+    object HomePartialChangeProducer :
+        PartialChangeProducer<HomeUiIntent, HomePartialChange, HomeUiState> {
         @OptIn(FlowPreview::class)
         override fun toPartialChangeFlow(intentFlow: Flow<HomeUiIntent>): Flow<HomePartialChange> {
             return merge(
-                intentFlow.filterIsInstance<HomeUiIntent.Refresh>().flatMapConcat { produceRefreshPartialChangeFlow() },
-                intentFlow.filterIsInstance<HomeUiIntent.TopForums.Delete>().flatMapConcat { it.toPartialChangeFlow() },
-                intentFlow.filterIsInstance<HomeUiIntent.TopForums.Add>().flatMapConcat { it.toPartialChangeFlow() },
-                intentFlow.filterIsInstance<HomeUiIntent.Unfollow>().flatMapConcat { it.toPartialChangeFlow() },
+                intentFlow.filterIsInstance<HomeUiIntent.Refresh>()
+                    .flatMapConcat { produceRefreshPartialChangeFlow() },
+                intentFlow.filterIsInstance<HomeUiIntent.TopForums.Delete>()
+                    .flatMapConcat { it.toPartialChangeFlow() },
+                intentFlow.filterIsInstance<HomeUiIntent.TopForums.Add>()
+                    .flatMapConcat { it.toPartialChangeFlow() },
+                intentFlow.filterIsInstance<HomeUiIntent.Unfollow>()
+                    .flatMapConcat { it.toPartialChangeFlow() },
             )
         }
 
@@ -54,7 +59,7 @@ class HomeViewModel : BaseViewModel<HomeUiIntent, HomePartialChange, HomeUiState
                     HomePartialChange.Refresh.Success(forums, topForums)
                 }
                 .onStart { emit(HomePartialChange.Refresh.Start) }
-                .catch { emit(HomePartialChange.Refresh.Failure(it.getErrorMessage())) }
+                .catch { emit(HomePartialChange.Refresh.Failure(it)) }
 
         private fun HomeUiIntent.TopForums.Delete.toPartialChangeFlow() =
             flow {
@@ -79,7 +84,8 @@ class HomeViewModel : BaseViewModel<HomeUiIntent, HomePartialChange, HomeUiState
                 .catch { emit(HomePartialChange.TopForums.Add.Failure(it.getErrorMessage())) }
 
         private fun HomeUiIntent.Unfollow.toPartialChangeFlow() =
-            TiebaApi.getInstance().unlikeForumFlow(forumId, forumName, AccountUtil.getLoginInfo()!!.tbs)
+            TiebaApi.getInstance()
+                .unlikeForumFlow(forumId, forumName, AccountUtil.getLoginInfo()!!.tbs)
                 .map<CommonResponse, HomePartialChange.Unfollow> {
                     HomePartialChange.Unfollow.Success(forumId)
                 }
@@ -93,9 +99,9 @@ sealed interface HomeUiIntent : UiIntent {
     data class Unfollow(val forumId: String, val forumName: String) : HomeUiIntent
 
     sealed interface TopForums : HomeUiIntent {
-        data class Delete(val forumId: String): TopForums
+        data class Delete(val forumId: String) : TopForums
 
-        data class Add(val forum: HomeUiState.Forum): TopForums
+        data class Add(val forum: HomeUiState.Forum) : TopForums
     }
 }
 
@@ -109,6 +115,7 @@ sealed interface HomePartialChange : PartialChange<HomeUiState> {
                         topForums = oldState.topForums.filterNot { it.forumId == forumId },
                     )
                 }
+
                 is Failure -> oldState
             }
 
@@ -120,8 +127,14 @@ sealed interface HomePartialChange : PartialChange<HomeUiState> {
     sealed class Refresh : HomePartialChange {
         override fun reduce(oldState: HomeUiState): HomeUiState =
             when (this) {
-                is Success -> oldState.copy(isLoading = false, forums = forums, topForums = topForums)
-                is Failure -> oldState.copy(isLoading = false)
+                is Success -> oldState.copy(
+                    isLoading = false,
+                    forums = forums,
+                    topForums = topForums,
+                    error = null
+                )
+
+                is Failure -> oldState.copy(isLoading = false, error = error)
                 Start -> oldState.copy(isLoading = true)
             }
 
@@ -133,7 +146,7 @@ sealed interface HomePartialChange : PartialChange<HomeUiState> {
         ) : Refresh()
 
         data class Failure(
-            val errorMessage: String
+            val error: Throwable
         ) : Refresh()
     }
 
@@ -160,6 +173,7 @@ sealed interface HomePartialChange : PartialChange<HomeUiState> {
                             topForums = oldState.forums.filter { topForumsId.contains(it.forumId) }
                         )
                     }
+
                     is Failure -> oldState
                 }
 
@@ -174,6 +188,7 @@ data class HomeUiState(
     val isLoading: Boolean = true,
     val forums: List<Forum> = emptyList(),
     val topForums: List<Forum> = emptyList(),
+    val error: Throwable? = null,
 ) : UiState {
     data class Forum(
         val avatar: String,

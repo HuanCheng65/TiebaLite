@@ -2,29 +2,42 @@ package com.huanchengfly.tieba.post.ui.widgets.compose.states
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.size
-import androidx.compose.material.CircularProgressIndicator
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
+import com.airbnb.lottie.compose.LottieAnimation
+import com.airbnb.lottie.compose.LottieCompositionSpec
+import com.airbnb.lottie.compose.LottieConstants
+import com.airbnb.lottie.compose.rememberLottieComposition
 import com.huanchengfly.tieba.post.R
 import com.huanchengfly.tieba.post.ui.common.theme.compose.ExtendedTheme
 import com.huanchengfly.tieba.post.ui.widgets.compose.EmptyPlaceholder
 
-val DefaultLoadingScreen: @Composable () -> Unit = {
-    CircularProgressIndicator(modifier = Modifier.size(48.dp), color = MaterialTheme.colors.primary)
+val DefaultLoadingScreen: @Composable StateScreenScope.() -> Unit = {
+    val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.lottie_loading_paperplane))
+    LottieAnimation(
+        composition = composition,
+        iterations = LottieConstants.IterateForever,
+        modifier = Modifier
+            .fillMaxWidth()
+            .aspectRatio(2f)
+    )
+//    CircularProgressIndicator(modifier = Modifier.size(48.dp), color = MaterialTheme.colors.primary)
 }
 
-val DefaultEmptyScreen: @Composable () -> Unit = {
+val DefaultEmptyScreen: @Composable StateScreenScope.() -> Unit = {
     EmptyPlaceholder()
 }
 
-val DefaultErrorScreen: @Composable () -> Unit = {
+val DefaultErrorScreen: @Composable StateScreenScope.() -> Unit = {
     Text(
         text = stringResource(id = R.string.error_tip),
         style = MaterialTheme.typography.body1,
@@ -39,12 +52,14 @@ fun StateScreen(
     isLoading: Boolean,
     modifier: Modifier = Modifier,
     onReload: (() -> Unit)? = null,
-    emptyScreen: @Composable () -> Unit = DefaultEmptyScreen,
-    errorScreen: @Composable () -> Unit = DefaultErrorScreen,
-    loadingScreen: @Composable () -> Unit = DefaultLoadingScreen,
-    content: @Composable () -> Unit,
+    clickToReload: Boolean = false,
+    emptyScreen: @Composable StateScreenScope.() -> Unit = DefaultEmptyScreen,
+    errorScreen: @Composable StateScreenScope.() -> Unit = DefaultErrorScreen,
+    loadingScreen: @Composable StateScreenScope.() -> Unit = DefaultLoadingScreen,
+    content: @Composable StateScreenScope.() -> Unit,
 ) {
-    val clickableModifier = if (onReload != null) Modifier.clickable(
+    val stateScreenScope = remember(key1 = onReload) { StateScreenScope(onReload) }
+    val clickableModifier = if (onReload != null && clickToReload) Modifier.clickable(
         enabled = isEmpty && !isLoading,
         onClick = onReload
     ) else Modifier
@@ -56,15 +71,26 @@ fun StateScreen(
         contentAlignment = Alignment.Center
     ) {
         if (!isEmpty) {
-            content()
+            stateScreenScope.content()
         } else {
             if (isLoading) {
-                loadingScreen()
+                stateScreenScope.loadingScreen()
             } else if (isError) {
-                errorScreen()
+                stateScreenScope.errorScreen()
             } else {
-                emptyScreen()
+                stateScreenScope.emptyScreen()
             }
         }
+    }
+}
+
+class StateScreenScope(
+    private val onReload: (() -> Unit)? = null
+) {
+    val canReload: Boolean
+        get() = onReload != null
+
+    fun reload() {
+        onReload?.invoke()
     }
 }
