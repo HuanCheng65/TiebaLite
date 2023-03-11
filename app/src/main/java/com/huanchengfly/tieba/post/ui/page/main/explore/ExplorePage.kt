@@ -30,17 +30,19 @@ import com.huanchengfly.tieba.post.ui.widgets.compose.ActionItem
 import com.huanchengfly.tieba.post.ui.widgets.compose.PagerTabIndicator
 import com.huanchengfly.tieba.post.ui.widgets.compose.Toolbar
 import com.huanchengfly.tieba.post.ui.widgets.compose.accountNavIconIfCompact
+import com.huanchengfly.tieba.post.utils.AccountUtil.LocalAccount
 import kotlinx.coroutines.launch
 
 
 @OptIn(ExperimentalPagerApi::class)
 @Composable
 fun ExplorePage() {
+    val account = LocalAccount.current
     val context = LocalContext.current
-    val pages = listOf<Pair<String, (@Composable () -> Unit)>>(
-        stringResource(id = R.string.title_concern) to @Composable {
+    val pages = listOfNotNull<Pair<String, (@Composable () -> Unit)>>(
+        if (account != null) stringResource(id = R.string.title_concern) to @Composable {
             ConcernPage()
-        },
+        } else null,
         stringResource(id = R.string.title_personalized) to @Composable {
             PersonalizedPage()
         },
