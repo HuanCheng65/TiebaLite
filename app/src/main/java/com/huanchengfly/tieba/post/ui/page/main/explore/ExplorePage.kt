@@ -50,7 +50,7 @@ fun ExplorePage() {
             HotPage()
         },
     )
-    val pagerState = rememberPagerState(initialPage = 1)
+    val pagerState = rememberPagerState(initialPage = if (account != null) 1 else 0)
     val coroutineScope = rememberCoroutineScope()
     Scaffold(
         backgroundColor = Color.Transparent,
