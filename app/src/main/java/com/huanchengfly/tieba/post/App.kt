@@ -119,12 +119,12 @@ class App : Application(), IApp, SketchFactory {
     override fun onCreate() {
         INSTANCE = this
         super.onCreate()
-        LitePal.initialize(this)
-        AccountUtil.init(this)
-        Config.init(this)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
             setWebViewPath(this)
         }
+        LitePal.initialize(this)
+        AccountUtil.init(this)
+        Config.init(this)
         val isSelfBuild = applicationMetaData.getBoolean("is_self_build")
         if (!isSelfBuild) {
             Distribute.setUpdateTrack(if (appPreferences.checkCIUpdate) UpdateTrack.PRIVATE else UpdateTrack.PUBLIC)
