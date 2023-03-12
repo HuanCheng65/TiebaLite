@@ -19,7 +19,8 @@ import com.airbnb.lottie.compose.LottieConstants
 import com.airbnb.lottie.compose.rememberLottieComposition
 import com.huanchengfly.tieba.post.R
 import com.huanchengfly.tieba.post.ui.common.theme.compose.ExtendedTheme
-import com.huanchengfly.tieba.post.ui.widgets.compose.EmptyPlaceholder
+import com.huanchengfly.tieba.post.ui.widgets.compose.Button
+import com.huanchengfly.tieba.post.ui.widgets.compose.TipScreen
 
 val DefaultLoadingScreen: @Composable StateScreenScope.() -> Unit = {
     val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.lottie_loading_paperplane))
@@ -34,7 +35,26 @@ val DefaultLoadingScreen: @Composable StateScreenScope.() -> Unit = {
 }
 
 val DefaultEmptyScreen: @Composable StateScreenScope.() -> Unit = {
-    EmptyPlaceholder()
+    TipScreen(
+        title = { Text(text = stringResource(id = R.string.title_empty)) },
+        image = {
+            val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.lottie_empty_box))
+            LottieAnimation(
+                composition = composition,
+                iterations = LottieConstants.IterateForever,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .aspectRatio(2f)
+            )
+        },
+        actions = {
+            if (canReload) {
+                Button(onClick = { reload() }) {
+                    Text(text = stringResource(id = R.string.btn_refresh))
+                }
+            }
+        }
+    )
 }
 
 val DefaultErrorScreen: @Composable StateScreenScope.() -> Unit = {

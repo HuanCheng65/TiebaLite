@@ -657,4 +657,6 @@
     <string name="message_no_internet_connectivity">%s。请检查你的网络连接是否正常</string>
     <string name="message_unknown_error">哦我的老伙计，我向你保证这真的是一个奇怪的错误……</string>
     <string name="btn_reload">重新加载</string>
+    <string name="title_not_logged_in">你尚未登录</string>
+    <string name="message_not_logged_in">请登录后继续访问</string>
 </resources>

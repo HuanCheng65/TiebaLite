@@ -26,6 +26,7 @@ import com.airbnb.lottie.compose.rememberLottieComposition
 import com.huanchengfly.tieba.post.R
 import com.huanchengfly.tieba.post.api.retrofit.exception.NoConnectivityException
 import com.huanchengfly.tieba.post.api.retrofit.exception.TiebaApiException
+import com.huanchengfly.tieba.post.api.retrofit.exception.TiebaNotLoggedInException
 import com.huanchengfly.tieba.post.api.retrofit.exception.getErrorCode
 import com.huanchengfly.tieba.post.api.retrofit.exception.getErrorMessage
 import com.huanchengfly.tieba.post.arch.BaseComposeActivity.Companion.LocalWindowSizeClass
@@ -80,6 +81,7 @@ fun TipScreen(
 enum class ErrorType {
     NETWORK,
     SERVER,
+    NOT_LOGGED_IN,
     UNKNOWN
 }
 
@@ -114,6 +116,7 @@ fun ErrorTipScreen(
     val errorType = when (error) {
         is NoConnectivityException -> ErrorType.NETWORK
         is TiebaApiException -> ErrorType.SERVER
+        is TiebaNotLoggedInException -> ErrorType.NOT_LOGGED_IN
         else -> ErrorType.UNKNOWN
     }
     val errorMessage = error.getErrorMessage()
@@ -149,6 +152,10 @@ fun ErrorTipScreen(
 
                 ErrorType.UNKNOWN -> {
                     Text(text = stringResource(id = R.string.title_unknown_error))
+                }
+
+                ErrorType.NOT_LOGGED_IN -> {
+                    Text(text = stringResource(id = R.string.title_not_logged_in))
                 }
             }
         },
@@ -186,6 +193,16 @@ fun ErrorTipScreen(
                             .aspectRatio(2f)
                     )
                 }
+
+                ErrorType.NOT_LOGGED_IN -> {
+                    val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.lottie_astronaut))
+                    LottieAnimation(
+                        composition = composition,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .aspectRatio(2f)
+                    )
+                }
             }
         },
         message = {
@@ -209,6 +226,10 @@ fun ErrorTipScreen(
 
                     ErrorType.UNKNOWN -> {
                         Text(text = stringResource(id = R.string.message_unknown_error))
+                    }
+
+                    ErrorType.NOT_LOGGED_IN -> {
+                        Text(text = stringResource(id = R.string.message_not_logged_in))
                     }
                 }
                 appendMessage()
