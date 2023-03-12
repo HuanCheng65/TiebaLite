@@ -57,6 +57,29 @@ fun <T : UiState, A> Flow<T>.collectPartialAsState(
 }
 
 @Composable
+inline fun <reified Event : UiEvent> Flow<UiEvent>.onEvent(
+    noinline listener: suspend (Event) -> Unit
+) {
+    val coroutineScope = rememberCoroutineScope()
+    DisposableEffect(key1 = listener, key2 = this) {
+        with(coroutineScope) {
+            val job = launch {
+                this@onEvent
+                    .filterIsInstance<Event>()
+                    .cancellable()
+                    .collect {
+                        launch {
+                            listener(it)
+                        }
+                    }
+            }
+
+            onDispose { job.cancel() }
+        }
+    }
+}
+
+@Composable
 inline fun <reified Event : UiEvent> BaseViewModel<*, *, *, *>.onEvent(
     noinline listener: suspend (Event) -> Unit
 ) {
