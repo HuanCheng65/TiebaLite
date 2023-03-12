@@ -204,16 +204,16 @@ fun BlockSettingsPage(
                 isEmpty = items.isEmpty(),
                 isError = false,
                 isLoading = isLoading,
-                onReload = { viewModel.send(BlockSettingsUiIntent.Load) },
                 loadingScreen = {
                     LazyColumn(modifier = Modifier.fillMaxSize()) {
                         items(4) {
                             BlockItemPlaceholder()
                         }
                     }
-                }
+                },
+                modifier = Modifier.fillMaxSize()
             ) {
-                LazyColumn {
+                LazyColumn(Modifier.fillMaxSize()) {
                     items(items, key = { it.id }) {
                         LongClickMenu(menuContent = {
                             DropdownMenuItem(onClick = {
