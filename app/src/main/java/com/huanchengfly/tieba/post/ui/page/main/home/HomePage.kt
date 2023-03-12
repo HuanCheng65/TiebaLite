@@ -518,12 +518,18 @@ private fun HomePageSkeletonScreen(
     listSingle: Boolean,
     gridCells: GridCells
 ) {
+    val context = LocalContext.current
     LazyVerticalGrid(
         columns = gridCells,
         contentPadding = PaddingValues(bottom = 12.dp),
         modifier = Modifier
             .fillMaxSize(),
     ) {
+        item(key = "SearchBox", span = { GridItemSpan(maxLineSpan) }) {
+            SearchBox(modifier = Modifier.padding(bottom = 12.dp)) {
+                context.goToActivity<NewSearchActivity>()
+            }
+        }
         item(key = "TopForumHeaderPlaceholder", span = { GridItemSpan(maxLineSpan) }) {
             Column {
                 Header(
