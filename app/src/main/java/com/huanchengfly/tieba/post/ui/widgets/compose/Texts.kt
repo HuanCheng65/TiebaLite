@@ -33,6 +33,7 @@ import androidx.compose.ui.unit.sp
 import com.huanchengfly.tieba.post.R
 import com.huanchengfly.tieba.post.pxToDp
 import com.huanchengfly.tieba.post.pxToSp
+import com.huanchengfly.tieba.post.ui.common.theme.compose.ExtendedTheme
 import com.huanchengfly.tieba.post.utils.EmoticonManager
 import com.huanchengfly.tieba.post.utils.EmoticonManager.getEmoticonHeightPx
 import com.huanchengfly.tieba.post.utils.EmoticonUtil.emoticonString
@@ -180,7 +181,7 @@ fun IconText(
             letterSpacing = letterSpacing
         )
     )
-    val sizePx = getEmoticonHeightPx(mergedStyle)
+    val sizePx = getEmoticonHeightPx(mergedStyle) * 9 / 10
     val sizeSp = sizePx.pxToSp().sp
     val sizeDp = sizePx.pxToDp().dp
     val iconInlineContent =
@@ -196,7 +197,8 @@ fun IconText(
                         Icon(
                             Icons.Rounded.Link,
                             contentDescription = stringResource(id = R.string.link),
-                            modifier = Modifier.size(sizeDp)
+                            modifier = Modifier.size(sizeDp),
+                            tint = ExtendedTheme.colors.accent,
                         )
                     }
                 ),
@@ -210,7 +212,8 @@ fun IconText(
                         Icon(
                             Icons.Rounded.AccountCircle,
                             contentDescription = stringResource(id = R.string.user),
-                            modifier = Modifier.size(sizeDp)
+                            modifier = Modifier.size(sizeDp),
+                            tint = ExtendedTheme.colors.accent,
                         )
                     }
                 ),
