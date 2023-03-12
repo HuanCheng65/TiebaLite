@@ -6,11 +6,13 @@ import com.huanchengfly.tieba.post.api.models.ThreadStoreBean
 import com.huanchengfly.tieba.post.api.retrofit.exception.getErrorCode
 import com.huanchengfly.tieba.post.api.retrofit.exception.getErrorMessage
 import com.huanchengfly.tieba.post.arch.BaseViewModel
+import com.huanchengfly.tieba.post.arch.ImmutableHolder
 import com.huanchengfly.tieba.post.arch.PartialChange
 import com.huanchengfly.tieba.post.arch.PartialChangeProducer
 import com.huanchengfly.tieba.post.arch.UiEvent
 import com.huanchengfly.tieba.post.arch.UiIntent
 import com.huanchengfly.tieba.post.arch.UiState
+import com.huanchengfly.tieba.post.arch.wrapImmutable
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.Flow
@@ -103,13 +105,14 @@ sealed interface ThreadStoreUiIntent : UiIntent {
 sealed interface ThreadStorePartialChange : PartialChange<ThreadStoreUiState> {
     sealed class Refresh : ThreadStorePartialChange {
         override fun reduce(oldState: ThreadStoreUiState): ThreadStoreUiState = when (this) {
-            is Failure -> oldState.copy(isRefreshing = false)
+            is Failure -> oldState.copy(isRefreshing = false, error = wrapImmutable(error))
             Start -> oldState.copy(isRefreshing = true)
             is Success -> oldState.copy(
                 isRefreshing = false,
                 data = data,
                 currentPage = 0,
-                hasMore = hasMore
+                hasMore = hasMore,
+                error = null
             )
         }
 
@@ -171,7 +174,8 @@ data class ThreadStoreUiState(
     val isLoadingMore: Boolean = false,
     val hasMore: Boolean = true,
     val currentPage: Int = 1,
-    val data: List<ThreadStoreBean.ThreadStoreInfo> = emptyList()
+    val data: List<ThreadStoreBean.ThreadStoreInfo> = emptyList(),
+    val error: ImmutableHolder<Throwable>? = null
 ) : UiState
 
 sealed interface ThreadStoreUiEvent : UiEvent {

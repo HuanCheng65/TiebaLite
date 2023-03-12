@@ -20,7 +20,9 @@ import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -49,6 +51,7 @@ import com.huanchengfly.tieba.post.pxToSp
 import com.huanchengfly.tieba.post.ui.common.theme.compose.ExtendedTheme
 import com.huanchengfly.tieba.post.ui.widgets.compose.Avatar
 import com.huanchengfly.tieba.post.ui.widgets.compose.BackNavigationIcon
+import com.huanchengfly.tieba.post.ui.widgets.compose.ErrorScreen
 import com.huanchengfly.tieba.post.ui.widgets.compose.LazyLoad
 import com.huanchengfly.tieba.post.ui.widgets.compose.LoadMoreLayout
 import com.huanchengfly.tieba.post.ui.widgets.compose.LongClickMenu
@@ -56,6 +59,7 @@ import com.huanchengfly.tieba.post.ui.widgets.compose.MyScaffold
 import com.huanchengfly.tieba.post.ui.widgets.compose.Sizes
 import com.huanchengfly.tieba.post.ui.widgets.compose.TitleCentredToolbar
 import com.huanchengfly.tieba.post.ui.widgets.compose.UserHeader
+import com.huanchengfly.tieba.post.ui.widgets.compose.states.StateScreen
 import com.huanchengfly.tieba.post.utils.StringUtil
 import com.huanchengfly.tieba.post.utils.StringUtil.getUsernameAnnotatedString
 import com.huanchengfly.tieba.post.utils.appPreferences
@@ -100,12 +104,14 @@ fun ThreadStorePage(
         prop1 = ThreadStoreUiState::data,
         initial = emptyList()
     )
+    val error by viewModel.uiState.collectPartialAsState(
+        prop1 = ThreadStoreUiState::error,
+        initial = null
+    )
+    val isError by remember { derivedStateOf { error != null } }
 
     val context = LocalContext.current
     val scaffoldState = rememberScaffoldState()
-    val pullRefreshState = rememberPullRefreshState(
-        refreshing = isRefreshing,
-        onRefresh = { viewModel.send(ThreadStoreUiIntent.Refresh) })
     viewModel.onEvent<ThreadStoreUiEvent.Delete.Failure> {
         scaffoldState.snackbarHostState.showSnackbar(
             context.getString(
@@ -128,64 +134,87 @@ fun ThreadStorePage(
                 }
             )
         }
-    ) { paddingValues ->
+    ) { contentPaddings ->
         val textMeasurer = rememberTextMeasurer()
 
-        Box(modifier = Modifier.pullRefresh(pullRefreshState)) {
-            LoadMoreLayout(
-                isLoading = isLoadingMore,
-                onLoadMore = { viewModel.send(ThreadStoreUiIntent.LoadMore(currentPage + 1)) },
-                loadEnd = !hasMore
-            ) {
-                LazyColumn(contentPadding = paddingValues) {
-                    items(
-                        items = data,
-                        key = { it.threadId }
-                    ) { info ->
-                        LongClickMenu(
-                            menuContent = {
-                                DropdownMenuItem(onClick = {
-                                    viewModel.send(
-                                        ThreadStoreUiIntent.Delete(
-                                            info.threadId
+        StateScreen(
+            isEmpty = data.isEmpty(),
+            isError = isError,
+            isLoading = isRefreshing,
+            modifier = Modifier.padding(contentPaddings),
+            onReload = {
+                viewModel.send(ThreadStoreUiIntent.Refresh)
+            },
+            errorScreen = {
+                error?.let {
+                    val (e) = it
+                    ErrorScreen(error = e)
+                }
+            }
+        ) {
+            val pullRefreshState = rememberPullRefreshState(
+                refreshing = isRefreshing,
+                onRefresh = { viewModel.send(ThreadStoreUiIntent.Refresh) }
+            )
+
+            Box(modifier = Modifier.pullRefresh(pullRefreshState)) {
+                LoadMoreLayout(
+                    isLoading = isLoadingMore,
+                    onLoadMore = { viewModel.send(ThreadStoreUiIntent.LoadMore(currentPage + 1)) },
+                    loadEnd = !hasMore
+                ) {
+                    LazyColumn {
+                        items(
+                            items = data,
+                            key = { it.threadId }
+                        ) { info ->
+                            LongClickMenu(
+                                menuContent = {
+                                    DropdownMenuItem(onClick = {
+                                        viewModel.send(
+                                            ThreadStoreUiIntent.Delete(
+                                                info.threadId
+                                            )
                                         )
-                                    )
-                                }) {
-                                    Text(text = stringResource(id = R.string.title_collect_on))
-                                }
-                            },
-                            onClick = {
-                                ThreadActivity.launch(
-                                    context,
-                                    info.threadId,
-                                    info.markPid,
-                                    context.appPreferences.collectThreadSeeLz,
-                                    "collect",
-                                    info.maxPid
-                                )
-                            }
-                        ) {
-                            StoreItem(
-                                info = info,
-                                onUserClick = {
-                                    info.author.lzUid?.let {
-                                        UserActivity.launch(
-                                            context,
-                                            it, StringUtil.getAvatarUrl(info.author.userPortrait)
-                                        )
+                                    }) {
+                                        Text(text = stringResource(id = R.string.title_collect_on))
                                     }
                                 },
-                                textMeasurer = textMeasurer
-                            )
+                                onClick = {
+                                    ThreadActivity.launch(
+                                        context,
+                                        info.threadId,
+                                        info.markPid,
+                                        context.appPreferences.collectThreadSeeLz,
+                                        "collect",
+                                        info.maxPid
+                                    )
+                                }
+                            ) {
+                                StoreItem(
+                                    info = info,
+                                    onUserClick = {
+                                        info.author.lzUid?.let {
+                                            UserActivity.launch(
+                                                context,
+                                                it,
+                                                StringUtil.getAvatarUrl(info.author.userPortrait)
+                                            )
+                                        }
+                                    },
+                                    textMeasurer = textMeasurer
+                                )
+                            }
                         }
                     }
                 }
+
+                PullRefreshIndicator(
+                    refreshing = isRefreshing,
+                    state = pullRefreshState,
+                    modifier = Modifier.align(Alignment.TopCenter)
+                )
             }
-            PullRefreshIndicator(
-                refreshing = isRefreshing,
-                state = pullRefreshState,
-                modifier = Modifier.align(Alignment.TopCenter)
-            )
         }
     }
 }
