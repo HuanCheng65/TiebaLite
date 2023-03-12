@@ -108,7 +108,7 @@ fun OKSignSettingsPage(
                     },
                     key = "oksign_use_official_oksign",
                     title = stringResource(id = R.string.title_oksign_use_official_oksign),
-                    defaultChecked = true,
+                    defaultChecked = false,
                     summary = stringResource(id = R.string.summary_oksign_use_official_oksign),
                 )
             }
@@ -125,7 +125,7 @@ fun OKSignSettingsPage(
                     },
                     key = "auto_sign",
                     title = stringResource(id = R.string.title_auto_sign),
-                    defaultChecked = true,
+                    defaultChecked = false,
                     summaryOn = stringResource(id = R.string.summary_auto_sign_on),
                     summaryOff = stringResource(id = R.string.summary_auto_sign),
                 )
