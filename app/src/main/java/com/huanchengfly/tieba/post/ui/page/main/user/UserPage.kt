@@ -121,11 +121,11 @@ private fun StatCard(
 
 @Composable
 private fun InfoCard(
+    modifier: Modifier = Modifier,
     userName: String = "",
     userIntro: String = "",
     avatar: String? = null,
-    isPlaceholder: Boolean = false,
-    modifier: Modifier = Modifier
+    isPlaceholder: Boolean = false
 ) {
     Row(
         modifier = modifier,
@@ -264,9 +264,6 @@ fun UserPage(
             ) {
                 if (account != null) {
                     InfoCard(
-                        userName = account!!.nameShow ?: account!!.name,
-                        userIntro = account!!.intro ?: stringResource(id = R.string.tip_no_intro),
-                        avatar = StringUtil.getAvatarUrl(account!!.portrait),
                         modifier = Modifier
                             .padding(top = 8.dp)
                             .clickable {
@@ -277,6 +274,9 @@ fun UserPage(
                                 )
                             }
                             .padding(horizontal = 16.dp, vertical = 16.dp),
+                        userName = account!!.nameShow ?: account!!.name,
+                        userIntro = account!!.intro ?: stringResource(id = R.string.tip_no_intro),
+                        avatar = StringUtil.getAvatarUrl(account!!.portrait),
                     )
                     StatCard(
                         account = account!!,
@@ -288,10 +288,10 @@ fun UserPage(
                     )
                 } else if (isLoading) {
                     InfoCard(
-                        isPlaceholder = true,
                         modifier = Modifier
                             .padding(horizontal = 16.dp, vertical = 16.dp)
                             .padding(top = 8.dp),
+                        isPlaceholder = true,
                     )
                     StatCardPlaceholder(
                         modifier = Modifier
@@ -308,13 +308,15 @@ fun UserPage(
                     )
                 }
                 val navigator = LocalNavigator.current
-                ListMenuItem(
-                    icon = ImageVector.vectorResource(id = R.drawable.ic_favorite),
-                    text = stringResource(id = R.string.title_my_collect),
-                    onClick = {
-                        navigator.navigate(ThreadStorePageDestination)
-                    }
-                )
+                if (account != null) {
+                    ListMenuItem(
+                        icon = ImageVector.vectorResource(id = R.drawable.ic_favorite),
+                        text = stringResource(id = R.string.title_my_collect),
+                        onClick = {
+                            navigator.navigate(ThreadStorePageDestination)
+                        }
+                    )
+                }
                 ListMenuItem(
                     icon = ImageVector.vectorResource(id = R.drawable.ic_outline_watch_later_24),
                     text = stringResource(id = R.string.title_history),
@@ -340,16 +342,18 @@ fun UserPage(
                         onCheckedChange = { ThemeUtil.switchNightMode() }
                     )
                 }
-                ListMenuItem(
-                    icon = ImageVector.vectorResource(id = R.drawable.ic_help_outline_black_24),
-                    text = stringResource(id = R.string.my_info_service_center),
-                    onClick = {
-                        WebViewActivity.launch(
-                            context,
-                            "https://tieba.baidu.com/mo/q/hybrid-main-service/uegServiceCenter?cuid=${CuidUtils.getNewCuid()}&cuid_galaxy2=${CuidUtils.getNewCuid()}&cuid_gid=&timestamp=${System.currentTimeMillis()}&_client_version=11.10.8.6&nohead=1"
-                        )
-                    },
-                )
+                if (account != null) {
+                    ListMenuItem(
+                        icon = ImageVector.vectorResource(id = R.drawable.ic_help_outline_black_24),
+                        text = stringResource(id = R.string.my_info_service_center),
+                        onClick = {
+                            WebViewActivity.launch(
+                                context,
+                                "https://tieba.baidu.com/mo/q/hybrid-main-service/uegServiceCenter?cuid=${CuidUtils.getNewCuid()}&cuid_galaxy2=${CuidUtils.getNewCuid()}&cuid_gid=&timestamp=${System.currentTimeMillis()}&_client_version=11.10.8.6&nohead=1"
+                            )
+                        },
+                    )
+                }
                 VerticalDivider(
                     modifier = Modifier.padding(vertical = 8.dp, horizontal = 16.dp)
                 )
