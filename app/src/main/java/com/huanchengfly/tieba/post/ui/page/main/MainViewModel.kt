@@ -1,6 +1,11 @@
 package com.huanchengfly.tieba.post.ui.page.main
 
-import com.huanchengfly.tieba.post.arch.*
+import com.huanchengfly.tieba.post.arch.BaseViewModel
+import com.huanchengfly.tieba.post.arch.PartialChange
+import com.huanchengfly.tieba.post.arch.PartialChangeProducer
+import com.huanchengfly.tieba.post.arch.UiEvent
+import com.huanchengfly.tieba.post.arch.UiIntent
+import com.huanchengfly.tieba.post.arch.UiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.filterIsInstance
@@ -50,4 +55,6 @@ sealed interface MainPartialChange : PartialChange<MainUiState> {
 
 data class MainUiState(val messageCount: Int = 0) : UiState
 
-sealed interface MainUiEvent : UiEvent
+sealed interface MainUiEvent : UiEvent {
+    object Refresh : MainUiEvent
+}

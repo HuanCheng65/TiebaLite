@@ -53,20 +53,22 @@ import com.huanchengfly.tieba.post.api.models.protos.ThreadInfo
 import com.huanchengfly.tieba.post.api.models.protos.personalized.DislikeReason
 import com.huanchengfly.tieba.post.api.models.protos.personalized.ThreadPersonalized
 import com.huanchengfly.tieba.post.arch.collectPartialAsState
+import com.huanchengfly.tieba.post.arch.onEvent
 import com.huanchengfly.tieba.post.arch.pageViewModel
 import com.huanchengfly.tieba.post.arch.wrapImmutable
 import com.huanchengfly.tieba.post.ui.common.theme.compose.ExtendedTheme
+import com.huanchengfly.tieba.post.ui.page.main.MainUiEvent
 import com.huanchengfly.tieba.post.ui.widgets.compose.FeedCard
 import com.huanchengfly.tieba.post.ui.widgets.compose.LazyLoad
 import com.huanchengfly.tieba.post.ui.widgets.compose.LoadMoreLayout
 import com.huanchengfly.tieba.post.ui.widgets.compose.VerticalDivider
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.filterIsInstance
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.flow.Flow
 
 @OptIn(ExperimentalFoundationApi::class, ExperimentalMaterialApi::class)
 @Composable
 fun PersonalizedPage(
+    eventFlow: Flow<MainUiEvent>,
     viewModel: PersonalizedViewModel = pageViewModel()
 ) {
     LazyLoad(loaded = viewModel.initialized) {
@@ -113,16 +115,15 @@ fun PersonalizedPage(
     var showRefreshTip by remember {
         mutableStateOf(false)
     }
-    LaunchedEffect(Unit) {
-        launch {
-            viewModel.uiEventFlow
-                .filterIsInstance<PersonalizedUiEvent.RefreshSuccess>()
-                .collect {
-                    refreshCount = it.count
-                    showRefreshTip = true
-                }
-        }
+
+    eventFlow.onEvent<MainUiEvent.Refresh> {
+        viewModel.send(PersonalizedUiIntent.Refresh)
     }
+    viewModel.onEvent<PersonalizedUiEvent.RefreshSuccess> {
+        refreshCount = it.count
+        showRefreshTip = true
+    }
+
     if (showRefreshTip) {
         LaunchedEffect(Unit) {
             delay(2000)

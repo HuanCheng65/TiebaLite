@@ -19,16 +19,20 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import com.huanchengfly.tieba.post.activities.ThreadActivity
 import com.huanchengfly.tieba.post.arch.collectPartialAsState
+import com.huanchengfly.tieba.post.arch.onEvent
 import com.huanchengfly.tieba.post.arch.pageViewModel
 import com.huanchengfly.tieba.post.arch.wrapImmutable
+import com.huanchengfly.tieba.post.ui.page.main.MainUiEvent
 import com.huanchengfly.tieba.post.ui.widgets.compose.FeedCard
 import com.huanchengfly.tieba.post.ui.widgets.compose.LazyLoad
 import com.huanchengfly.tieba.post.ui.widgets.compose.LoadMoreLayout
 import com.huanchengfly.tieba.post.ui.widgets.compose.VerticalDivider
+import kotlinx.coroutines.flow.Flow
 
 @OptIn(ExperimentalFoundationApi::class, ExperimentalMaterialApi::class)
 @Composable
 fun ConcernPage(
+    eventFlow: Flow<MainUiEvent>,
     viewModel: ConcernViewModel = pageViewModel()
 ) {
     LazyLoad(loaded = viewModel.initialized) {
@@ -55,6 +59,11 @@ fun ConcernPage(
     val pullRefreshState = rememberPullRefreshState(
         refreshing = isRefreshing,
         onRefresh = { viewModel.send(ConcernUiIntent.Refresh) })
+
+    eventFlow.onEvent<MainUiEvent.Refresh> {
+        viewModel.send(ConcernUiIntent.Refresh)
+    }
+
     Box(
         modifier = Modifier.pullRefresh(pullRefreshState)
     ) {

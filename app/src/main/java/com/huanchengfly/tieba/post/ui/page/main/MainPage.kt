@@ -18,6 +18,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -49,6 +50,7 @@ import com.huanchengfly.tieba.post.utils.appPreferences
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.annotation.RootNavGraph
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
@@ -56,6 +58,7 @@ import kotlinx.coroutines.launch
 private fun NavigationWrapper(
     currentPosition: Int,
     onChangePosition: (position: Int) -> Unit,
+    onReselected: (position: Int) -> Unit,
     navigationItems: List<NavigationItem>,
     navigationType: MainNavigationType,
     navigationContentPosition: MainNavigationContentPosition,
@@ -66,6 +69,7 @@ private fun NavigationWrapper(
             NavigationDrawerContent(
                 currentPosition = currentPosition,
                 onChangePosition = onChangePosition,
+                onReselected = onReselected,
                 navigationItems = navigationItems,
                 navigationContentPosition = navigationContentPosition
             )
@@ -74,6 +78,7 @@ private fun NavigationWrapper(
             NavigationRail(
                 currentPosition = currentPosition,
                 onChangePosition = onChangePosition,
+                onReselected = onReselected,
                 navigationItems = navigationItems,
                 navigationContentPosition = navigationContentPosition
             )
@@ -100,6 +105,15 @@ fun MainPage(
         initial = 0
     )
 
+    val eventFlows = remember {
+        listOf(
+            MutableSharedFlow<MainUiEvent>(),
+            MutableSharedFlow<MainUiEvent>(),
+            MutableSharedFlow<MainUiEvent>(),
+            MutableSharedFlow<MainUiEvent>(),
+        )
+    }
+
     val notificationCountFlow = LocalNotificationCountFlow.current
     LaunchedEffect(null) {
         notificationCountFlow.collect {
@@ -118,13 +132,13 @@ fun MainPage(
             title = stringResource(id = R.string.title_main),
             content = {
                 HomePage(
-                    canOpenExplore = !LocalContext.current.appPreferences.hideExplore,
-                    onOpenExplore = {
-                        coroutineScope.launch {
-                            pagerState.scrollToPage(1)
-                        }
+                    eventFlow = eventFlows[0],
+                    canOpenExplore = !LocalContext.current.appPreferences.hideExplore
+                ) {
+                    coroutineScope.launch {
+                        pagerState.scrollToPage(1)
                     }
-                )
+                }
             }
         ),
         if (LocalContext.current.appPreferences.hideExplore) null
@@ -136,7 +150,7 @@ fun MainPage(
             },
             title = stringResource(id = R.string.title_explore),
             content = {
-                ExplorePage()
+                ExplorePage(eventFlows[1])
             }
         ),
         NavigationItem(
@@ -187,17 +201,25 @@ fun MainPage(
         WindowHeightSizeClass.Compact -> {
             MainNavigationContentPosition.TOP
         }
+
         WindowHeightSizeClass.Medium,
         WindowHeightSizeClass.Expanded -> {
             MainNavigationContentPosition.CENTER
         }
+
         else -> {
             MainNavigationContentPosition.TOP
+        }
+    }
+    val onReselected: (Int) -> Unit = {
+        coroutineScope.launch {
+            eventFlows[it].emit(MainUiEvent.Refresh)
         }
     }
     NavigationWrapper(
         currentPosition = pagerState.currentPage,
         onChangePosition = { coroutineScope.launch { pagerState.scrollToPage(it) } },
+        onReselected = onReselected,
         navigationItems = navigationItems,
         navigationType = navigationType,
         navigationContentPosition = navigationContentPosition
@@ -209,7 +231,10 @@ fun MainPage(
                 AnimatedVisibility(visible = navigationType == MainNavigationType.BOTTOM_NAVIGATION) {
                     BottomNavigation(
                         currentPosition = pagerState.currentPage,
-                        onChangePosition = { coroutineScope.launch { pagerState.scrollToPage(it) } },
+                        onChangePosition = {
+                            coroutineScope.launch { pagerState.scrollToPage(it) }
+                        },
+                        onReselected = onReselected,
                         navigationItems = navigationItems,
                         themeColors = themeColors,
                     )

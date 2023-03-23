@@ -129,6 +129,7 @@ fun NavigationDrawerItem(
 fun NavigationDrawerContent(
     currentPosition: Int,
     onChangePosition: (position: Int) -> Unit,
+    onReselected: (position: Int) -> Unit,
     navigationItems: List<NavigationItem>,
     navigationContentPosition: MainNavigationContentPosition
 ) {
@@ -191,7 +192,13 @@ fun NavigationDrawerContent(
                 navigationItems.forEachIndexed { index, navigationItem ->
                     NavigationDrawerItem(
                         selected = index == currentPosition,
-                        onClick = { onChangePosition(index) },
+                        onClick = {
+                            if (index == currentPosition) {
+                                onReselected(index)
+                            } else {
+                                onChangePosition(index)
+                            }
+                        },
                         label = { Text(text = navigationItem.title) },
                         icon = {
                             Box {
@@ -275,6 +282,7 @@ private fun PositionLayout(
 fun NavigationRail(
     currentPosition: Int,
     onChangePosition: (position: Int) -> Unit,
+    onReselected: (position: Int) -> Unit,
     navigationItems: List<NavigationItem>,
     navigationContentPosition: MainNavigationContentPosition
 ) {
@@ -296,7 +304,13 @@ fun NavigationRail(
             navigationItems.forEachIndexed { index, navigationItem ->
                 NavigationRailItem(
                     selected = index == currentPosition,
-                    onClick = { onChangePosition(index) },
+                    onClick = {
+                        if (index == currentPosition) {
+                            onReselected(index)
+                        } else {
+                            onChangePosition(index)
+                        }
+                    },
                     icon = {
                         Box {
                             Icon(
@@ -345,6 +359,7 @@ fun BottomNavigationDivider(
 fun BottomNavigation(
     currentPosition: Int,
     onChangePosition: (position: Int) -> Unit,
+    onReselected: (position: Int) -> Unit,
     navigationItems: List<NavigationItem>,
     themeColors: ExtendedColors = ExtendedTheme.colors
 ) {
@@ -358,7 +373,11 @@ fun BottomNavigation(
                 BottomNavigationItem(
                     selected = index == currentPosition,
                     onClick = {
-                        onChangePosition(index)
+                        if (index == currentPosition) {
+                            onReselected(index)
+                        } else {
+                            onChangePosition(index)
+                        }
                         navigationItem.onClick?.invoke()
                     },
                     icon = {

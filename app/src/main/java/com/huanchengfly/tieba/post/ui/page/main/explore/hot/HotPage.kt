@@ -47,6 +47,7 @@ import com.google.accompanist.placeholder.material.placeholder
 import com.huanchengfly.tieba.post.R
 import com.huanchengfly.tieba.post.api.models.protos.ThreadInfo
 import com.huanchengfly.tieba.post.arch.collectPartialAsState
+import com.huanchengfly.tieba.post.arch.onEvent
 import com.huanchengfly.tieba.post.arch.pageViewModel
 import com.huanchengfly.tieba.post.ui.common.theme.compose.ExtendedTheme
 import com.huanchengfly.tieba.post.ui.common.theme.compose.OrangeA700
@@ -55,6 +56,7 @@ import com.huanchengfly.tieba.post.ui.common.theme.compose.White
 import com.huanchengfly.tieba.post.ui.common.theme.compose.Yellow
 import com.huanchengfly.tieba.post.ui.page.LocalNavigator
 import com.huanchengfly.tieba.post.ui.page.destinations.HotTopicListPageDestination
+import com.huanchengfly.tieba.post.ui.page.main.MainUiEvent
 import com.huanchengfly.tieba.post.ui.widgets.compose.LazyLoad
 import com.huanchengfly.tieba.post.ui.widgets.compose.NetworkImage
 import com.huanchengfly.tieba.post.ui.widgets.compose.ProvideContentColor
@@ -64,16 +66,21 @@ import com.huanchengfly.tieba.post.ui.widgets.compose.items
 import com.huanchengfly.tieba.post.ui.widgets.compose.itemsIndexed
 import com.huanchengfly.tieba.post.utils.StringUtil.getShortNumString
 import com.ramcosta.composedestinations.annotation.Destination
+import kotlinx.coroutines.flow.Flow
 
 @OptIn(ExperimentalFoundationApi::class, ExperimentalMaterialApi::class)
 @Destination
 @Composable
 fun HotPage(
+    eventFlow: Flow<MainUiEvent>,
     viewModel: HotViewModel = pageViewModel()
 ) {
     LazyLoad(loaded = viewModel.initialized) {
         viewModel.send(HotUiIntent.Load)
         viewModel.initialized = true
+    }
+    eventFlow.onEvent<MainUiEvent.Refresh> {
+        viewModel.send(HotUiIntent.Load)
     }
     val navigator = LocalNavigator.current
     val isLoading by viewModel.uiState.collectPartialAsState(

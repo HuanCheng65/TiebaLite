@@ -70,11 +70,13 @@ import com.huanchengfly.tieba.post.R
 import com.huanchengfly.tieba.post.activities.LoginActivity
 import com.huanchengfly.tieba.post.activities.NewSearchActivity
 import com.huanchengfly.tieba.post.arch.collectPartialAsState
+import com.huanchengfly.tieba.post.arch.onEvent
 import com.huanchengfly.tieba.post.arch.pageViewModel
 import com.huanchengfly.tieba.post.goToActivity
 import com.huanchengfly.tieba.post.ui.common.theme.compose.ExtendedTheme
 import com.huanchengfly.tieba.post.ui.page.LocalNavigator
 import com.huanchengfly.tieba.post.ui.page.destinations.ForumPageDestination
+import com.huanchengfly.tieba.post.ui.page.main.MainUiEvent
 import com.huanchengfly.tieba.post.ui.widgets.Chip
 import com.huanchengfly.tieba.post.ui.widgets.compose.ActionItem
 import com.huanchengfly.tieba.post.ui.widgets.compose.Avatar
@@ -93,6 +95,7 @@ import com.huanchengfly.tieba.post.utils.AccountUtil.LocalAccount
 import com.huanchengfly.tieba.post.utils.ImageUtil
 import com.huanchengfly.tieba.post.utils.TiebaUtil
 import com.huanchengfly.tieba.post.utils.appPreferences
+import kotlinx.coroutines.flow.Flow
 
 private fun getGridCells(context: Context, listSingle: Boolean = context.appPreferences.listSingle): GridCells {
     return if (listSingle) {
@@ -370,6 +373,7 @@ private fun ForumItem(
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun HomePage(
+    eventFlow: Flow<MainUiEvent>,
     viewModel: HomeViewModel = pageViewModel<HomeUiIntent, HomeViewModel>(
         listOf(
             HomeUiIntent.Refresh
@@ -399,6 +403,10 @@ fun HomePage(
     val isError by remember { derivedStateOf { error != null } }
     var listSingle by remember { mutableStateOf(context.appPreferences.listSingle) }
     val gridCells by remember { derivedStateOf { getGridCells(context, listSingle) } }
+
+    eventFlow.onEvent<MainUiEvent.Refresh> {
+        viewModel.send(HomeUiIntent.Refresh)
+    }
 
     Scaffold(
         backgroundColor = Color.Transparent,
