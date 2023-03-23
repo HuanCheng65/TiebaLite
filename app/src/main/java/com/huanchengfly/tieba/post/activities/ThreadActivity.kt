@@ -32,7 +32,6 @@ import com.huanchengfly.tieba.post.adapters.ThreadHeaderAdapter
 import com.huanchengfly.tieba.post.adapters.ThreadMainPostAdapter
 import com.huanchengfly.tieba.post.adapters.ThreadReplyAdapter
 import com.huanchengfly.tieba.post.api.TiebaApi
-import com.huanchengfly.tieba.post.api.interfaces.CommonCallback
 import com.huanchengfly.tieba.post.api.models.AgreeBean
 import com.huanchengfly.tieba.post.api.models.CommonResponse
 import com.huanchengfly.tieba.post.api.models.ThreadContentBean
@@ -46,6 +45,7 @@ import com.huanchengfly.tieba.post.components.dialogs.EditTextDialog
 import com.huanchengfly.tieba.post.fragments.threadmenu.IThreadMenuFragment
 import com.huanchengfly.tieba.post.fragments.threadmenu.ThreadMenuFragment
 import com.huanchengfly.tieba.post.goToActivity
+import com.huanchengfly.tieba.post.interfaces.CommonCallback
 import com.huanchengfly.tieba.post.models.ReplyInfoBean
 import com.huanchengfly.tieba.post.models.ThreadHistoryInfoBean
 import com.huanchengfly.tieba.post.models.database.History
@@ -687,7 +687,8 @@ class ThreadActivity : BaseActivity(), View.OnClickListener, IThreadMenuFragment
             DialogUtil.build(this)
                 .setMessage(R.string.message_update_store_floor)
                 .setPositiveButton(R.string.button_yes) { dialog: DialogInterface, _ ->
-                    collect(object : CommonCallback<CommonResponse> {
+                    collect(object :
+                        CommonCallback<CommonResponse> {
                         override fun onSuccess(data: CommonResponse) {
                             Toast.makeText(
                                 this@ThreadActivity,
@@ -1003,7 +1004,8 @@ class ThreadActivity : BaseActivity(), View.OnClickListener, IThreadMenuFragment
 
                     })
             } else {
-                collect(object : CommonCallback<CommonResponse> {
+                collect(object :
+                    CommonCallback<CommonResponse> {
                     override fun onSuccess(data: CommonResponse) {
                         Toast.makeText(
                             this@ThreadActivity,

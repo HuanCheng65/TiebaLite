@@ -13,12 +13,17 @@ import android.widget.ImageView
 import android.widget.TextView
 import com.huanchengfly.tieba.post.App
 import com.huanchengfly.tieba.post.R
-import com.huanchengfly.tieba.post.api.interfaces.CommonCallback
 import com.huanchengfly.tieba.post.dpToPx
+import com.huanchengfly.tieba.post.interfaces.CommonCallback
 import com.huanchengfly.tieba.post.ui.common.theme.utils.ThemeUtils
-import com.huanchengfly.tieba.post.utils.*
+import com.huanchengfly.tieba.post.utils.DialogUtil
+import com.huanchengfly.tieba.post.utils.ImageUtil
+import com.huanchengfly.tieba.post.utils.QuickPreviewUtil
+import com.huanchengfly.tieba.post.utils.Util
+import com.huanchengfly.tieba.post.utils.getClipBoardText
+import com.huanchengfly.tieba.post.utils.getClipBoardTimestamp
 import org.intellij.lang.annotations.RegExp
-import java.util.*
+import java.util.Objects
 import java.util.regex.Pattern
 
 object ClipBoardLinkDetector : Application.ActivityLifecycleCallbacks {
@@ -144,7 +149,8 @@ object ClipBoardLinkDetector : Application.ActivityLifecycleCallbacks {
                     QuickPreviewUtil.getPreviewInfo(
                         activity,
                         url,
-                        object : CommonCallback<QuickPreviewUtil.PreviewInfo> {
+                        object :
+                            CommonCallback<QuickPreviewUtil.PreviewInfo> {
                             override fun onSuccess(data: QuickPreviewUtil.PreviewInfo) {
                                 updatePreviewView(activity, previewView, data)
                             }

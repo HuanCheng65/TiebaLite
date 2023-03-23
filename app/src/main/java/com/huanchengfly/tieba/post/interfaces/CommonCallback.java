@@ -1,4 +1,4 @@
-package com.huanchengfly.tieba.post.api.interfaces;
+package com.huanchengfly.tieba.post.interfaces;
 
 public interface CommonCallback<T> {
     void onSuccess(T data);
