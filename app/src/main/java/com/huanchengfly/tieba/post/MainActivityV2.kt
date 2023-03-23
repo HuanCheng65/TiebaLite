@@ -55,6 +55,7 @@ import com.huanchengfly.tieba.post.ui.widgets.compose.DialogNegativeButton
 import com.huanchengfly.tieba.post.ui.widgets.compose.DialogPositiveButton
 import com.huanchengfly.tieba.post.ui.widgets.compose.rememberDialogState
 import com.huanchengfly.tieba.post.utils.AccountUtil
+import com.huanchengfly.tieba.post.utils.ClientUtils
 import com.huanchengfly.tieba.post.utils.JobServiceUtil
 import com.huanchengfly.tieba.post.utils.PermissionUtils
 import com.huanchengfly.tieba.post.utils.TiebaUtil
@@ -176,6 +177,9 @@ class MainActivityV2 : BaseComposeActivity() {
         super.onCreate(savedInstanceState)
         window.decorView.setBackgroundColor(Color.TRANSPARENT)
         window.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        launch {
+            ClientUtils.setActiveTimestamp()
+        }
     }
 
     override fun onCreateContent(systemUiController: SystemUiController) {

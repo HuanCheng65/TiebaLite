@@ -1,6 +1,7 @@
 package com.huanchengfly.tieba.post.utils
 
 import android.content.Context
+import android.content.pm.PackageInfo
 
 fun Context.isPackageInstalled(packageName: String): Boolean {
     return try {
@@ -10,6 +11,9 @@ fun Context.isPackageInstalled(packageName: String): Boolean {
         false
     }
 }
+
+val Context.packageInfo: PackageInfo
+    get() = packageManager.getPackageInfo(packageName, 0)
 
 fun Context.isAnyPackageInstalled(packages: Array<String>): Boolean {
     return packages.any {

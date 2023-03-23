@@ -173,6 +173,9 @@ open class MainActivity : BaseActivity(), NavigationBarView.OnItemSelectedListen
                     .collect()
             }
         }
+        launch {
+            ClientUtils.setActiveTimestamp()
+        }
         mViewPager.post {
             Crashes.hasCrashedInLastSession()
                 .thenAccept { hasCrashed ->

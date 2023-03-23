@@ -50,6 +50,7 @@ import com.huanchengfly.tieba.post.utils.Util
 import com.huanchengfly.tieba.post.utils.appPreferences
 import com.huanchengfly.tieba.post.utils.applicationMetaData
 import com.huanchengfly.tieba.post.utils.launchUrl
+import com.huanchengfly.tieba.post.utils.packageInfo
 import com.microsoft.appcenter.AppCenter
 import com.microsoft.appcenter.analytics.Analytics
 import com.microsoft.appcenter.crashes.Crashes
@@ -208,10 +209,11 @@ class App : Application(), IApp, SketchFactory {
         var encodedOAID: String = ""
         var isTrackLimited: Boolean = false
         var userAgent: String? = null
+        var appFirstInstallTime: Long = 0L
+        var appLastUpdateTime: Long = 0L
 
         fun init(context: Context) {
             if (!inited) {
-                userAgent = WebSettings.getDefaultUserAgent(context)
                 isOAIDSupported = DeviceID.supportedOAID(context)
                 if (isOAIDSupported) {
                     DeviceID.getOAID(context, OAIDGetter)
@@ -219,6 +221,9 @@ class App : Application(), IApp, SketchFactory {
                     statusCode = -200
                     isTrackLimited = false
                 }
+                userAgent = WebSettings.getDefaultUserAgent(context)
+                appFirstInstallTime = context.packageInfo.firstInstallTime
+                appLastUpdateTime = context.packageInfo.lastUpdateTime
                 inited = true
             }
         }

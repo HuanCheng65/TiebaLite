@@ -112,5 +112,15 @@ fun buildCommonRequest(
             pversion = "1.0.3",
             sample_id = ClientUtils.sampleId,
             stoken = AccountUtil.getSToken(),
+            scr_dip = App.ScreenInfo.DENSITY.toDouble(),
+            scr_h = getScreenHeight(),
+            scr_w = getScreenWidth(),
+            sdk_ver = "2.34.0",
+            framework_ver = "3340042",
+            swan_game_ver = "1038000",
+            cmode = 1,
+            active_timestamp = ClientUtils.activeTimestamp,
+            first_install_time = App.Config.appFirstInstallTime,
+            user_agent = getUserAgent("tieba/${ClientVersion.TIEBA_V12}")
         )
 }
