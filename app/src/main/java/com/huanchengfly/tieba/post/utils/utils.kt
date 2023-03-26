@@ -172,6 +172,13 @@ fun launchUrl(context: Context, url: String) {
         return
     }
     if (!path.contains("android_asset")) {
+        if (path == "/mo/q/checkurl") {
+            launchUrl(
+                context,
+                uri.getQueryParameter("url").toString().replace("http://https://", "https://")
+            )
+            return
+        }
         if (host == "tieba.baidu.com" && path.startsWith("/p/")) {
             context.goToActivity<ThreadActivity> {
                 putExtra("url", url)
