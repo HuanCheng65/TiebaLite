@@ -94,9 +94,7 @@ object ImageUtil {
         if (inputStream == null) return false
         val bytes = ByteArray(4)
         try {
-            inputStream.mark(0)
             inputStream.read(bytes)
-            inputStream.reset()
             val str = String(bytes)
             return str.equals("GIF8", ignoreCase = true)
         } catch (e: IOException) {
