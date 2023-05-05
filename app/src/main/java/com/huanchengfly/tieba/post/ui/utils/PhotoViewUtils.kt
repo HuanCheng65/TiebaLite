@@ -1,7 +1,10 @@
 package com.huanchengfly.tieba.post.ui.utils
 
+import androidx.compose.runtime.Stable
 import com.huanchengfly.tieba.post.api.models.protos.Post
 import com.huanchengfly.tieba.post.api.models.protos.ThreadInfo
+import com.huanchengfly.tieba.post.arch.ImmutableHolder
+import com.huanchengfly.tieba.post.arch.wrapImmutable
 import com.huanchengfly.tieba.post.models.protos.LoadPicPageData
 import com.huanchengfly.tieba.post.models.protos.PhotoViewData
 import com.huanchengfly.tieba.post.models.protos.PicItem
@@ -37,6 +40,14 @@ fun getPhotoViewData(
             )
         )
     )
+}
+
+@Stable
+fun getImmutablePhotoViewData(
+    threadInfo: ThreadInfo,
+    index: Int
+): ImmutableHolder<PhotoViewData> {
+    return wrapImmutable(getPhotoViewData(threadInfo, index))
 }
 
 fun getPhotoViewData(

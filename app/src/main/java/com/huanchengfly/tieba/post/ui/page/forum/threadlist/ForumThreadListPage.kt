@@ -28,7 +28,6 @@ import androidx.compose.material.pullrefresh.PullRefreshIndicator
 import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -41,11 +40,13 @@ import androidx.compose.ui.unit.sp
 import com.huanchengfly.tieba.post.R
 import com.huanchengfly.tieba.post.activities.ThreadActivity
 import com.huanchengfly.tieba.post.api.abstractText
+import com.huanchengfly.tieba.post.api.models.protos.ThreadInfo
+import com.huanchengfly.tieba.post.api.models.protos.frsPage.Classify
 import com.huanchengfly.tieba.post.arch.BaseComposeActivity.Companion.LocalWindowSizeClass
+import com.huanchengfly.tieba.post.arch.ImmutableHolder
 import com.huanchengfly.tieba.post.arch.collectPartialAsState
 import com.huanchengfly.tieba.post.arch.onEvent
 import com.huanchengfly.tieba.post.arch.pageViewModel
-import com.huanchengfly.tieba.post.arch.wrapImmutable
 import com.huanchengfly.tieba.post.ui.common.windowsizeclass.WindowWidthSizeClass
 import com.huanchengfly.tieba.post.ui.page.forum.getSortType
 import com.huanchengfly.tieba.post.ui.widgets.Chip
@@ -55,8 +56,6 @@ import com.huanchengfly.tieba.post.ui.widgets.compose.LoadMoreLayout
 import com.huanchengfly.tieba.post.ui.widgets.compose.LocalSnackbarHostState
 import com.huanchengfly.tieba.post.ui.widgets.compose.VerticalDivider
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.filterIsInstance
-import kotlinx.coroutines.launch
 
 private fun getFirstLoadIntent(
     context: Context,
@@ -100,6 +99,138 @@ private enum class ItemType {
     Top, PlainText, SingleMedia, MultiMedia, Video
 }
 
+@Composable
+private fun GoodClassifyTabs(
+    goodClassifyHoldersProvider: () -> List<ImmutableHolder<Classify>>,
+    selectedItem: Int?,
+    onSelected: (Int) -> Unit,
+) {
+    val goodClassifyHolders = goodClassifyHoldersProvider()
+    Row(
+        modifier = Modifier
+            .horizontalScroll(rememberScrollState())
+            .padding(vertical = 8.dp, horizontal = 16.dp),
+        horizontalArrangement = Arrangement.spacedBy(8.dp)
+    ) {
+        goodClassifyHolders.forEach { holder ->
+            val (classify) = holder
+            Chip(
+                text = classify.class_name,
+                modifier = Modifier
+                    .clip(RoundedCornerShape(100))
+                    .clickable {
+                        onSelected(classify.class_id)
+                    },
+                invertColor = selectedItem == classify.class_id
+            )
+        }
+    }
+}
+
+@Composable
+private fun ThreadList(
+    state: LazyListState,
+    itemHoldersProvider: () -> List<ImmutableHolder<ThreadInfo>>,
+    isGood: Boolean,
+    goodClassifyId: Int?,
+    goodClassifyHoldersProvider: () -> List<ImmutableHolder<Classify>>,
+    onItemClicked: (ThreadInfo) -> Unit,
+    onAgree: (ThreadInfo) -> Unit,
+    onClassifySelected: (Int) -> Unit
+) {
+    val itemHolders = itemHoldersProvider()
+    LazyColumn(
+        state = state,
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = Modifier.fillMaxWidth(),
+        contentPadding = WindowInsets.navigationBars.asPaddingValues()
+    ) {
+        if (isGood) {
+            item(key = "GoodClassifyHeader") {
+                GoodClassifyTabs(
+                    goodClassifyHoldersProvider = goodClassifyHoldersProvider,
+                    selectedItem = goodClassifyId,
+                    onSelected = onClassifySelected
+                )
+            }
+        }
+        itemsIndexed(
+            items = itemHolders,
+            key = { index, holder ->
+                val (item) = holder
+                "${index}_${item.id}"
+            },
+            contentType = { _, holder ->
+                val (item) = holder
+                if (item.isTop == 1) ItemType.Top
+                else {
+                    if (item.media.isNotEmpty())
+                        if (item.media.size == 1) ItemType.SingleMedia else ItemType.MultiMedia
+                    else if (item.videoInfo != null)
+                        ItemType.Video
+                    else ItemType.PlainText
+                }
+            }
+        ) { index, holder ->
+            val (item) = holder
+            val windowSizeClass = LocalWindowSizeClass.current
+            val fraction = when (windowSizeClass.widthSizeClass) {
+                WindowWidthSizeClass.Expanded -> 0.5f
+                else -> 1f
+            }
+            Column(
+                modifier = Modifier.fillMaxWidth(fraction)
+            ) {
+                if (item.isTop == 1) {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clickable {
+                                onItemClicked(item)
+                            }
+                            .padding(horizontal = 16.dp, vertical = 8.dp),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(16.dp)
+                    ) {
+                        Chip(
+                            text = stringResource(id = R.string.content_top),
+                            shape = RoundedCornerShape(3.dp)
+                        )
+                        var title = item.title
+                        if (title.isBlank()) {
+                            title = item.abstractText
+                        }
+                        Text(
+                            text = title,
+                            style = MaterialTheme.typography.subtitle2,
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis,
+                            modifier = Modifier.weight(1f),
+                            fontSize = 15.sp
+                        )
+                    }
+                } else {
+                    if (index > 0) {
+                        if (itemHolders[index - 1].item.isTop == 1) {
+                            Spacer(modifier = Modifier.height(8.dp))
+                        }
+                        VerticalDivider(modifier = Modifier.padding(horizontal = 16.dp))
+                    }
+                    FeedCard(
+                        item = holder,
+                        onClick = {
+                            onItemClicked(item)
+                        },
+                        onAgree = {
+                            onAgree(item)
+                        },
+                    )
+                }
+            }
+        }
+    }
+}
+
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun ForumThreadListPage(
@@ -116,21 +247,11 @@ fun ForumThreadListPage(
         viewModel.send(getFirstLoadIntent(context, forumName, isGood))
         viewModel.initialized = true
     }
-    LaunchedEffect(null) {
-        launch {
-            eventFlow
-                .filterIsInstance<ForumThreadListUiEvent.Refresh>()
-                .collect {
-                    viewModel.send(getRefreshIntent(context, forumName, isGood, it.sortType))
-                }
-        }
-        launch {
-            eventFlow
-                .filterIsInstance<ForumThreadListUiEvent.BackToTop>()
-                .collect {
-                    lazyListState.animateScrollToItem(0)
-                }
-        }
+    eventFlow.onEvent<ForumThreadListUiEvent.Refresh> {
+        viewModel.send(getRefreshIntent(context, forumName, isGood, it.sortType))
+    }
+    eventFlow.onEvent<ForumThreadListUiEvent.BackToTop> {
+        lazyListState.animateScrollToItem(0)
     }
     viewModel.onEvent<ForumThreadListUiEvent.AgreeFail> {
         val snackbarResult = snackbarHostState.showSnackbar(
@@ -205,123 +326,38 @@ fun ForumThreadListPage(
             },
             loadEnd = !hasMore
         ) {
-            LazyColumn(
+            ThreadList(
                 state = lazyListState,
-                horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = Modifier.fillMaxWidth(),
-                contentPadding = WindowInsets.navigationBars.asPaddingValues()
-            ) {
-                if (isGood) {
-                    item(key = "GoodClassifyHeader") {
-                        Row(
-                            modifier = Modifier
-                                .horizontalScroll(rememberScrollState())
-                                .padding(vertical = 8.dp, horizontal = 16.dp),
-                            horizontalArrangement = Arrangement.spacedBy(8.dp)
-                        ) {
-                            goodClassifies.forEach {
-                                Chip(
-                                    text = it.class_name,
-                                    modifier = Modifier
-                                        .clip(RoundedCornerShape(100))
-                                        .clickable {
-                                            viewModel.send(
-                                                getRefreshIntent(
-                                                    context,
-                                                    forumName,
-                                                    true,
-                                                    goodClassifyId = it.class_id
-                                                )
-                                            )
-                                        },
-                                    invertColor = goodClassifyId == it.class_id
-                                )
-                            }
-                        }
-                    }
+                itemHoldersProvider = { threadList },
+                isGood = isGood,
+                goodClassifyId = goodClassifyId,
+                goodClassifyHoldersProvider = { goodClassifies },
+                onItemClicked = {
+                    ThreadActivity.launch(
+                        context,
+                        it.threadId.toString()
+                    )
+                },
+                onAgree = {
+                    viewModel.send(
+                        ForumThreadListUiIntent.Agree(
+                            it.threadId,
+                            it.firstPostId,
+                            it.agree?.hasAgree ?: 0
+                        )
+                    )
+                },
+                onClassifySelected = {
+                    viewModel.send(
+                        getRefreshIntent(
+                            context,
+                            forumName,
+                            true,
+                            goodClassifyId = it
+                        )
+                    )
                 }
-                itemsIndexed(
-                    items = threadList,
-                    key = { index, item -> "${index}_${item.id}" },
-                    contentType = { _, item ->
-                        if (item.isTop == 1) ItemType.Top
-                        else {
-                            if (item.media.isNotEmpty())
-                                if (item.media.size == 1) ItemType.SingleMedia else ItemType.MultiMedia
-                            else if (item.videoInfo != null)
-                                ItemType.Video
-                            else ItemType.PlainText
-                        }
-                    }
-                ) { index, item ->
-                    val windowSizeClass = LocalWindowSizeClass.current
-                    val fraction = when (windowSizeClass.widthSizeClass) {
-                        WindowWidthSizeClass.Expanded -> 0.5f
-                        else -> 1f
-                    }
-                    Column(
-                        modifier = Modifier.fillMaxWidth(fraction)
-                    ) {
-                        if (item.isTop == 1) {
-                            Row(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .clickable {
-                                        ThreadActivity.launch(
-                                            context,
-                                            item.threadId.toString()
-                                        )
-                                    }
-                                    .padding(horizontal = 16.dp, vertical = 8.dp),
-                                verticalAlignment = Alignment.CenterVertically,
-                                horizontalArrangement = Arrangement.spacedBy(16.dp)
-                            ) {
-                                Chip(
-                                    text = stringResource(id = R.string.content_top),
-                                    shape = RoundedCornerShape(3.dp)
-                                )
-                                var title = item.title
-                                if (title.isBlank()) {
-                                    title = item.abstractText
-                                }
-                                Text(
-                                    text = title,
-                                    style = MaterialTheme.typography.subtitle2,
-                                    maxLines = 1,
-                                    overflow = TextOverflow.Ellipsis,
-                                    modifier = Modifier.weight(1f),
-                                    fontSize = 15.sp
-                                )
-                            }
-                        } else {
-                            if (index > 0) {
-                                if (threadList[index - 1].isTop == 1) {
-                                    Spacer(modifier = Modifier.height(8.dp))
-                                }
-                                VerticalDivider(modifier = Modifier.padding(horizontal = 16.dp))
-                            }
-                            FeedCard(
-                                info = wrapImmutable(item),
-                                onClick = {
-                                    ThreadActivity.launch(
-                                        context,
-                                        item.threadId.toString()
-                                    )
-                                },
-                                onAgree = {
-                                    viewModel.send(
-                                        ForumThreadListUiIntent.Agree(
-                                            item.threadId,
-                                            item.firstPostId,
-                                            item.agree?.hasAgree ?: 0
-                                        )
-                                    )
-                                },
-                            )
-                        }
-                    }
-                }
-            }
+            )
         }
 
         PullRefreshIndicator(

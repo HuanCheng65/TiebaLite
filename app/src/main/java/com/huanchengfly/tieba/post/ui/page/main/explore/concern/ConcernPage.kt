@@ -82,7 +82,7 @@ fun ConcernPage(
                     if (item.recommendType == 1) {
                         Column {
                             FeedCard(
-                                info = wrapImmutable(item.threadList!!),
+                                item = wrapImmutable(item.threadList!!),
                                 onClick = {
                                     ThreadActivity.launch(
                                         context,

@@ -40,6 +40,28 @@ class ImmutableHolder<T>(val item: T) {
     override fun hashCode(): Int {
         return item?.hashCode() ?: 0
     }
+
+    @Stable
+    fun get(): T = item
+
+    @Stable
+    fun <R> get(getter: T.() -> R): R {
+        return getter(item)
+    }
+
+    fun <R> getImmutable(getter: T.() -> R): ImmutableHolder<R> {
+        return wrapImmutable(getter(item))
+    }
+
+    fun <R> getImmutableList(getter: T.() -> List<R>): List<ImmutableHolder<R>> {
+        return getter(item).map { wrapImmutable(it) }
+    }
+
+    @Stable
+    fun isNotNull(): Boolean = item != null
+
+    @Stable
+    fun <R> isNotNull(getter: T.() -> R): Boolean = getter(item) != null
 }
 
 fun <T> wrapStable(item: T): StableHolder<T> = StableHolder(item)

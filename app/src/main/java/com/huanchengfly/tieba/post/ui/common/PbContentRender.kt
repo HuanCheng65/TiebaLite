@@ -13,6 +13,7 @@ import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.huanchengfly.tieba.post.arch.BaseComposeActivity.Companion.LocalWindowSizeClass
+import com.huanchengfly.tieba.post.arch.ImmutableHolder
 import com.huanchengfly.tieba.post.models.protos.PhotoViewData
 import com.huanchengfly.tieba.post.ui.common.windowsizeclass.WindowWidthSizeClass
 import com.huanchengfly.tieba.post.ui.widgets.compose.EmoticonText
@@ -39,7 +40,7 @@ data class TextContentRender(
 
     @Composable
     override fun Render() {
-        EmoticonText(text = text, style = MaterialTheme.typography.body1, fontSize = 15.sp)
+        EmoticonText(text = text, fontSize = 15.sp, style = MaterialTheme.typography.body1)
     }
 }
 
@@ -51,7 +52,7 @@ data class PicContentRender(
     val width: Int,
     val height: Int,
     val picId: String,
-    var photoViewData: PhotoViewData? = null
+    val photoViewData: ImmutableHolder<PhotoViewData>? = null
 ) : PbContentRender {
     @Composable
     override fun Render() {

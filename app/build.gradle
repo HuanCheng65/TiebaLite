@@ -63,6 +63,9 @@ android {
         }
     }
     buildTypes {
+        debug {
+            signingConfig signingConfigs.release
+        }
         release {
             minifyEnabled true
             shrinkResources true
@@ -162,6 +165,7 @@ dependencies {
     implementation composeBom
     androidTestImplementation composeBom
 
+    implementation 'androidx.compose.runtime:runtime-tracing'
     implementation 'androidx.compose.material:material'
     implementation 'androidx.compose.material:material-icons-core'
     // Optional - Add full set of material icons

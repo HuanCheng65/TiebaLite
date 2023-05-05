@@ -10,6 +10,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import com.github.panpf.sketch.compose.AsyncImage
 import com.github.panpf.sketch.request.DisplayRequest
+import com.huanchengfly.tieba.post.arch.ImmutableHolder
 import com.huanchengfly.tieba.post.goToActivity
 import com.huanchengfly.tieba.post.models.protos.PhotoViewData
 import com.huanchengfly.tieba.post.ui.page.photoview.PhotoViewActivity
@@ -21,7 +22,7 @@ fun NetworkImage(
     imageUri: String,
     contentDescription: String?,
     modifier: Modifier = Modifier,
-    photoViewData: PhotoViewData? = null,
+    photoViewData: ImmutableHolder<PhotoViewData>? = null,
     contentScale: ContentScale = ContentScale.Fit,
 ) {
     val context = LocalContext.current
@@ -33,7 +34,42 @@ fun NetworkImage(
             }
         ) {
             context.goToActivity<PhotoViewActivity> {
-                putExtra(EXTRA_PHOTO_VIEW_DATA, photoViewData as Parcelable)
+                putExtra(EXTRA_PHOTO_VIEW_DATA, photoViewData.get() as Parcelable)
+            }
+        }
+    } else Modifier
+    AsyncImage(
+        request = DisplayRequest(context, imageUri) {
+            placeholder(ImageUtil.getPlaceHolder(context, 0))
+            crossfade()
+        },
+        contentDescription = contentDescription,
+        modifier = modifier.then(clickableModifier),
+        contentScale = contentScale,
+    )
+}
+
+@Composable
+fun NetworkImage(
+    imageUriProvider: () -> String,
+    contentDescription: String?,
+    modifier: Modifier = Modifier,
+    photoViewDataProvider: (() -> ImmutableHolder<PhotoViewData>)? = null,
+    contentScale: ContentScale = ContentScale.Fit,
+) {
+    val imageUri = imageUriProvider()
+    val photoViewData = photoViewDataProvider?.invoke()
+
+    val context = LocalContext.current
+    val clickableModifier = if (photoViewData != null) {
+        Modifier.clickable(
+            indication = null,
+            interactionSource = remember {
+                MutableInteractionSource()
+            }
+        ) {
+            context.goToActivity<PhotoViewActivity> {
+                putExtra(EXTRA_PHOTO_VIEW_DATA, photoViewData.get() as Parcelable)
             }
         }
     } else Modifier

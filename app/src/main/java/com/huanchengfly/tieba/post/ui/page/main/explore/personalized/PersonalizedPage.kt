@@ -52,10 +52,10 @@ import com.huanchengfly.tieba.post.activities.ThreadActivity
 import com.huanchengfly.tieba.post.api.models.protos.ThreadInfo
 import com.huanchengfly.tieba.post.api.models.protos.personalized.DislikeReason
 import com.huanchengfly.tieba.post.api.models.protos.personalized.ThreadPersonalized
+import com.huanchengfly.tieba.post.arch.ImmutableHolder
 import com.huanchengfly.tieba.post.arch.collectPartialAsState
 import com.huanchengfly.tieba.post.arch.onEvent
 import com.huanchengfly.tieba.post.arch.pageViewModel
-import com.huanchengfly.tieba.post.arch.wrapImmutable
 import com.huanchengfly.tieba.post.ui.common.theme.compose.ExtendedTheme
 import com.huanchengfly.tieba.post.ui.page.main.MainUiEvent
 import com.huanchengfly.tieba.post.ui.widgets.compose.FeedCard
@@ -174,7 +174,7 @@ fun PersonalizedPage(
                 onRefresh = { viewModel.send(PersonalizedUiIntent.Refresh) },
                 state = lazyStaggeredGridState
             )
-            LaunchedEffect(data.firstOrNull()?.id) {
+            LaunchedEffect(data.firstOrNull()?.get { id }) {
                 //delay(50)
                 lazyStaggeredGridState.scrollToItem(0, 0)
             }
@@ -215,7 +215,7 @@ fun PersonalizedPage(
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 private fun FeedList(
-    dataProvider: () -> List<ThreadInfo>,
+    dataProvider: () -> List<ImmutableHolder<ThreadInfo>>,
     personalizedDataProvider: () -> List<ThreadPersonalized>,
     refreshPositionProvider: () -> Int,
     hiddenThreadIdsProvider: () -> List<Long>,
@@ -235,40 +235,40 @@ private fun FeedList(
     ) {
         itemsIndexed(
             items = data,
-            key = { _, item -> "${item.id}" },
+            key = { _, item -> "${item.get { id }}" },
             contentType = { _, item ->
                 when {
-                    item.videoInfo != null -> "Video"
-                    item.media.size == 1 -> "SingleMedia"
-                    item.media.size > 1 -> "MultiMedia"
+                    item.get { videoInfo } != null -> "Video"
+                    item.get { media }.size == 1 -> "SingleMedia"
+                    item.get { media }.size > 1 -> "MultiMedia"
                     else -> "PlainText"
                 }
             }
         ) { index, item ->
             Column {
                 AnimatedVisibility(
-                    visible = !hiddenThreadIds.contains(item.threadId),
+                    visible = !hiddenThreadIds.contains(item.get { threadId }),
                     enter = EnterTransition.None,
                     exit = shrinkVertically() + fadeOut()
                 ) {
                     FeedCard(
-                        info = wrapImmutable(item),
+                        item = item,
                         onClick = {
-                            onItemClick(item)
+                            onItemClick(item.get())
                         },
                         onAgree = {
-                            onAgree(item)
+                            onAgree(item.get())
                         },
                     ) {
                         Dislike(
                             personalized = threadPersonalizedData[index],
                             onDislike = { clickTime, reasons ->
-                                onDislike(item, clickTime, reasons)
+                                onDislike(item.get(), clickTime, reasons)
                             }
                         )
                     }
                 }
-                if (!hiddenThreadIds.contains(item.threadId)) {
+                if (!hiddenThreadIds.contains(item.get { threadId })) {
                     if ((refreshPosition == 0 || index + 1 != refreshPosition) && index < data.size - 1) {
                         VerticalDivider(
                             modifier = Modifier.padding(horizontal = 16.dp),

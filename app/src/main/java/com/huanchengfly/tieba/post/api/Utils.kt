@@ -14,6 +14,7 @@ import com.huanchengfly.tieba.post.R
 import com.huanchengfly.tieba.post.api.models.protos.PbContent
 import com.huanchengfly.tieba.post.api.models.protos.Post
 import com.huanchengfly.tieba.post.api.models.protos.ThreadInfo
+import com.huanchengfly.tieba.post.arch.wrapImmutable
 import com.huanchengfly.tieba.post.ui.common.PbContentRender
 import com.huanchengfly.tieba.post.ui.common.PicContentRender
 import com.huanchengfly.tieba.post.ui.common.TextContentRender
@@ -219,9 +220,9 @@ val Post.contentRenders: List<PbContentRender>
     get() {
         val renders = content.renders
 
-        renders.forEach {
+        renders.map {
             if (it is PicContentRender) {
-                it.photoViewData = getPhotoViewData(
+                val data = getPhotoViewData(
                     this,
                     it.picId,
                     it.picUrl,
@@ -229,7 +230,8 @@ val Post.contentRenders: List<PbContentRender>
                     it.showOriginBtn,
                     it.originSize
                 )
-            }
+                if (data != null) it.copy(photoViewData = wrapImmutable(data)) else it
+            } else it
         }
 
         return renders
