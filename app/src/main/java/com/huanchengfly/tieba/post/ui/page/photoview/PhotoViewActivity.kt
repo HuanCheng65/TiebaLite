@@ -5,6 +5,7 @@ import android.net.Uri
 import android.os.Build
 import android.view.MotionEvent
 import androidx.activity.viewModels
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
@@ -13,6 +14,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
@@ -40,9 +43,6 @@ import com.github.panpf.sketch.displayImage
 import com.github.panpf.sketch.zoom.Edge
 import com.github.panpf.sketch.zoom.ReadModeDecider
 import com.github.panpf.sketch.zoom.SketchZoomImageView
-import com.google.accompanist.pager.ExperimentalPagerApi
-import com.google.accompanist.pager.HorizontalPager
-import com.google.accompanist.pager.rememberPagerState
 import com.huanchengfly.tieba.post.R
 import com.huanchengfly.tieba.post.arch.BaseComposeActivityWithParcelable
 import com.huanchengfly.tieba.post.arch.collectPartialAsState
@@ -50,6 +50,7 @@ import com.huanchengfly.tieba.post.models.protos.PhotoViewData
 import com.huanchengfly.tieba.post.toastShort
 import com.huanchengfly.tieba.post.ui.common.theme.compose.ExtendedTheme
 import com.huanchengfly.tieba.post.ui.widgets.compose.LazyLoad
+import com.huanchengfly.tieba.post.ui.widgets.compose.ProvideContentColor
 import com.huanchengfly.tieba.post.utils.ImageUtil
 import com.huanchengfly.tieba.post.utils.download
 import kotlinx.coroutines.launch
@@ -137,7 +138,7 @@ class PhotoViewActivity : BaseComposeActivityWithParcelable<PhotoViewData>() {
 
     override val dataExtraKey: String = EXTRA_PHOTO_VIEW_DATA
 
-    @OptIn(ExperimentalPagerApi::class)
+    @OptIn(ExperimentalFoundationApi::class)
     @Composable
     override fun createContent(data: PhotoViewData) {
         LazyLoad(loaded = viewModel.initialized) {
@@ -174,7 +175,7 @@ class PhotoViewActivity : BaseComposeActivityWithParcelable<PhotoViewData>() {
                 }
                 Box(modifier = Modifier.fillMaxSize()) {
                     HorizontalPager(
-                        count = pageCount,
+                        pageCount = pageCount,
                         state = pagerState,
                         key = {
                             "${items[it].originUrl}_${items[it].overallIndex}"
@@ -207,71 +208,73 @@ class PhotoViewActivity : BaseComposeActivityWithParcelable<PhotoViewData>() {
                             .fillMaxWidth()
                             .align(Alignment.BottomCenter)
                     ) {
-                        Row(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .background(
-                                    Brush.verticalGradient(
-                                        listOf(
-                                            Color.Black.copy(alpha = 0.0f),
-                                            Color.Black.copy(alpha = 0.5f)
+                        ProvideContentColor(color = Color.White) {
+                            Row(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .background(
+                                        Brush.verticalGradient(
+                                            listOf(
+                                                Color.Black.copy(alpha = 0.0f),
+                                                Color.Black.copy(alpha = 0.5f)
+                                            )
                                         )
                                     )
-                                )
-                                .padding(horizontal = 16.dp),
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            val index = pagerState.currentPage
-                            if (totalAmount > 1) {
-                                val picIndex = items[index].overallIndex ?: (index + 1)
-                                Text(
-                                    text = "$picIndex / $totalAmount",
-                                    modifier = Modifier.weight(1f)
-                                )
-                            } else {
-                                Spacer(modifier = Modifier.weight(1f))
-                            }
-                            IconButton(onClick = {
-                                toastShort(R.string.toast_preparing_share_pic)
-                                ImageUtil.download(
-                                    this@PhotoViewActivity,
-                                    items[index].originUrl,
-                                    true
-                                ) { uri: Uri ->
-                                    val chooser = Intent(Intent.ACTION_SEND).apply {
-                                        type = Intent.normalizeMimeType("image/jpeg")
-                                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                                            putExtra(Intent.EXTRA_STREAM, uri)
-                                            addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-                                        } else {
-                                            putExtra(Intent.EXTRA_STREAM, uri)
-                                        }
-                                    }.let {
-                                        Intent.createChooser(
-                                            it,
-                                            getString(R.string.title_share_pic)
-                                        )
-                                    }
-                                    runCatching {
-                                        startActivity(chooser)
-                                    }
+                                    .padding(horizontal = 16.dp),
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                val index = pagerState.currentPage
+                                if (totalAmount > 1) {
+                                    val picIndex = items[index].overallIndex ?: (index + 1)
+                                    Text(
+                                        text = "$picIndex / $totalAmount",
+                                        modifier = Modifier.weight(1f)
+                                    )
+                                } else {
+                                    Spacer(modifier = Modifier.weight(1f))
                                 }
-                            }) {
-                                Icon(
-                                    imageVector = Icons.Rounded.Share,
-                                    contentDescription = stringResource(id = R.string.title_share_pic)
-                                )
-                            }
-                            IconButton(onClick = {
-                                ImageUtil.download(
-                                    this@PhotoViewActivity,
-                                    items[index].originUrl
-                                )
-                            }) {
-                                Icon(
-                                    imageVector = Icons.Rounded.Download,
-                                    contentDescription = stringResource(id = R.string.desc_download_pic)
-                                )
+                                IconButton(onClick = {
+                                    toastShort(R.string.toast_preparing_share_pic)
+                                    ImageUtil.download(
+                                        this@PhotoViewActivity,
+                                        items[index].originUrl,
+                                        true
+                                    ) { uri: Uri ->
+                                        val chooser = Intent(Intent.ACTION_SEND).apply {
+                                            type = Intent.normalizeMimeType("image/jpeg")
+                                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                                                putExtra(Intent.EXTRA_STREAM, uri)
+                                                addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                                            } else {
+                                                putExtra(Intent.EXTRA_STREAM, uri)
+                                            }
+                                        }.let {
+                                            Intent.createChooser(
+                                                it,
+                                                getString(R.string.title_share_pic)
+                                            )
+                                        }
+                                        runCatching {
+                                            startActivity(chooser)
+                                        }
+                                    }
+                                }) {
+                                    Icon(
+                                        imageVector = Icons.Rounded.Share,
+                                        contentDescription = stringResource(id = R.string.title_share_pic)
+                                    )
+                                }
+                                IconButton(onClick = {
+                                    ImageUtil.download(
+                                        this@PhotoViewActivity,
+                                        items[index].originUrl
+                                    )
+                                }) {
+                                    Icon(
+                                        imageVector = Icons.Rounded.Download,
+                                        contentDescription = stringResource(id = R.string.desc_download_pic)
+                                    )
+                                }
                             }
                         }
                     }
