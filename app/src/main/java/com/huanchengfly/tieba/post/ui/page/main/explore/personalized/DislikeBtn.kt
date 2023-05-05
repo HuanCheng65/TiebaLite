@@ -36,6 +36,7 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import com.huanchengfly.tieba.post.R
 import com.huanchengfly.tieba.post.api.models.protos.personalized.DislikeReason
 import com.huanchengfly.tieba.post.api.models.protos.personalized.ThreadPersonalized
+import com.huanchengfly.tieba.post.arch.ImmutableHolder
 import com.huanchengfly.tieba.post.ui.common.theme.compose.ExtendedTheme
 import com.huanchengfly.tieba.post.ui.widgets.compose.ClickMenu
 import com.huanchengfly.tieba.post.ui.widgets.compose.VerticalGrid
@@ -44,12 +45,13 @@ import com.huanchengfly.tieba.post.ui.widgets.compose.rememberMenuState
 
 @Composable
 fun Dislike(
-    personalized: ThreadPersonalized,
-    onDislike: (clickTime: Long, reasons: List<DislikeReason>) -> Unit,
+    personalized: ImmutableHolder<ThreadPersonalized>,
+    onDislike: (clickTime: Long, reasons: List<ImmutableHolder<DislikeReason>>) -> Unit,
 ) {
     var clickTime by remember { mutableStateOf(0L) }
-    val selectedReasons = remember { mutableStateListOf<DislikeReason>() }
+    val selectedReasons = remember { mutableStateListOf<ImmutableHolder<DislikeReason>>() }
     val menuState = rememberMenuState()
+    val dislikeResource = personalized.getImmutableList { dislikeResource }
     ClickMenu(
         menuState = menuState,
         menuContent = {
@@ -109,8 +111,8 @@ fun Dislike(
                     verticalArrangement = Arrangement.spacedBy(4.dp),
                 ) {
                     items(
-                        items = personalized.dislikeResource,
-                        span = { if (it.dislikeId == 7) 2 else 1 }
+                        items = dislikeResource,
+                        span = { if (it.get { dislikeId } == 7) 2 else 1 }
                     ) {
                         val backgroundColor by animateColorAsState(
                             targetValue = if (selectedReasons.contains(it)) ExtendedTheme.colors.accent else ExtendedTheme.colors.chip
@@ -119,7 +121,7 @@ fun Dislike(
                             targetValue = if (selectedReasons.contains(it)) ExtendedTheme.colors.onAccent else ExtendedTheme.colors.onChip
                         )
                         Text(
-                            text = it.dislikeReason,
+                            text = it.get { dislikeReason },
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .clip(RoundedCornerShape(6.dp))

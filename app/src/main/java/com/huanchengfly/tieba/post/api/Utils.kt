@@ -111,7 +111,8 @@ val List<PbContent>.renders: List<PbContentRender>
                 0, 9, 27 -> {
                     val lastRender = renders.lastOrNull()
                     if (lastRender is TextContentRender) {
-                        lastRender.append(it.text)
+                        renders.removeLast()
+                        renders.add(lastRender + it.text)
                     } else
                         renders.add(TextContentRender(it.text))
                 }
@@ -136,7 +137,8 @@ val List<PbContent>.renders: List<PbContentRender>
                     }
                     val lastRender = renders.lastOrNull()
                     if (lastRender is TextContentRender) {
-                        lastRender.append(text)
+                        renders.removeLast()
+                        renders.add(lastRender + text)
                     } else
                         renders.add(TextContentRender(text))
                 }
@@ -149,7 +151,8 @@ val List<PbContent>.renders: List<PbContentRender>
                     val emoticonText = "#(${it.c})".emoticonString
                     val lastRender = renders.lastOrNull()
                     if (lastRender is TextContentRender) {
-                        lastRender.append(emoticonText)
+                        renders.removeLast()
+                        renders.add(lastRender + emoticonText)
                     } else
                         renders.add(TextContentRender(emoticonText))
                 }
@@ -190,7 +193,8 @@ val List<PbContent>.renders: List<PbContentRender>
                     }
                     val lastRender = renders.lastOrNull()
                     if (lastRender is TextContentRender) {
-                        lastRender.append(text)
+                        renders.removeLast()
+                        renders.add(lastRender + text)
                     } else
                         renders.add(TextContentRender(text))
                 }

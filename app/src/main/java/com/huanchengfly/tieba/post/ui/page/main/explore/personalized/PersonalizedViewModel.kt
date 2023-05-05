@@ -62,7 +62,8 @@ class PersonalizedViewModel @Inject constructor() :
                 .map<PersonalizedResponse, PersonalizedPartialChange.Refresh> {
                     PersonalizedPartialChange.Refresh.Success(
                         data = it.toData(),
-                        threadPersonalizedData = it.data_?.thread_personalized ?: emptyList(),
+                        threadPersonalizedData = (it.data_?.thread_personalized
+                            ?: emptyList()).wrapImmutable(),
                     )
                 }
                 .onStart { emit(PersonalizedPartialChange.Refresh.Start) }
@@ -74,7 +75,8 @@ class PersonalizedViewModel @Inject constructor() :
                     PersonalizedPartialChange.LoadMore.Success(
                         currentPage = page,
                         data = it.toData(),
-                        threadPersonalizedData = it.data_?.thread_personalized ?: emptyList(),
+                        threadPersonalizedData = (it.data_?.thread_personalized
+                            ?: emptyList()).wrapImmutable(),
                     )
                 }
                 .onStart { emit(PersonalizedPartialChange.LoadMore.Start) }
@@ -84,10 +86,10 @@ class PersonalizedViewModel @Inject constructor() :
             TiebaApi.getInstance().submitDislikeFlow(
                 DislikeBean(
                     threadId.toString(),
-                    reasons.joinToString(",") { it.dislikeId.toString() },
+                    reasons.joinToString(",") { it.get { dislikeId }.toString() },
                     forumId?.toString(),
                     clickTime,
-                    reasons.joinToString(",") { it.extra },
+                    reasons.joinToString(",") { it.get { extra } },
                 )
             ).map<CommonResponse, PersonalizedPartialChange.Dislike> { PersonalizedPartialChange.Dislike.Success(threadId) }
                 .catch { emit(PersonalizedPartialChange.Dislike.Failure(threadId, it)) }
@@ -125,7 +127,7 @@ sealed interface PersonalizedUiIntent : UiIntent {
     data class Dislike(
         val forumId: Long?,
         val threadId: Long,
-        val reasons: List<DislikeReason>,
+        val reasons: List<ImmutableHolder<DislikeReason>>,
         val clickTime: Long
     ) : PersonalizedUiIntent
 }
@@ -256,7 +258,7 @@ sealed interface PersonalizedPartialChange : PartialChange<PersonalizedUiState> 
 
         data class Success(
             val data: List<ImmutableHolder<ThreadInfo>>,
-            val threadPersonalizedData: List<ThreadPersonalized>,
+            val threadPersonalizedData: List<ImmutableHolder<ThreadPersonalized>>,
         ) : Refresh()
 
         data class Failure(
@@ -282,7 +284,7 @@ sealed interface PersonalizedPartialChange : PartialChange<PersonalizedUiState> 
         data class Success(
             val currentPage: Int,
             val data: List<ImmutableHolder<ThreadInfo>>,
-            val threadPersonalizedData: List<ThreadPersonalized>,
+            val threadPersonalizedData: List<ImmutableHolder<ThreadPersonalized>>,
         ) : LoadMore()
 
         data class Failure(
@@ -297,7 +299,7 @@ data class PersonalizedUiState(
     val isLoadingMore: Boolean = false,
     val currentPage: Int = 1,
     val data: List<ImmutableHolder<ThreadInfo>> = emptyList(),
-    val threadPersonalizedData: List<ThreadPersonalized> = emptyList(),
+    val threadPersonalizedData: List<ImmutableHolder<ThreadPersonalized>> = emptyList(),
     val hiddenThreadIds: List<Long> = emptyList(),
     val refreshPosition: Int = 0,
 ): UiState

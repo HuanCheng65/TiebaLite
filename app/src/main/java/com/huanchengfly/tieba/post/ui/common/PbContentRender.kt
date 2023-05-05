@@ -26,21 +26,21 @@ interface PbContentRender {
 }
 
 data class TextContentRender(
-    var text: AnnotatedString
+    val text: AnnotatedString
 ) : PbContentRender {
     constructor(text: String) : this(AnnotatedString(text))
-
-    fun append(text: String) {
-        append(AnnotatedString(text))
-    }
-
-    fun append(text: AnnotatedString) {
-        this.text += text
-    }
 
     @Composable
     override fun Render() {
         EmoticonText(text = text, fontSize = 15.sp, style = MaterialTheme.typography.body1)
+    }
+
+    operator fun plus(text: String): TextContentRender {
+        return TextContentRender(this.text + AnnotatedString(text))
+    }
+
+    operator fun plus(text: AnnotatedString): TextContentRender {
+        return TextContentRender(this.text + text)
     }
 }
 

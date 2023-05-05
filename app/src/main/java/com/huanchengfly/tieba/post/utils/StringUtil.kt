@@ -8,6 +8,7 @@ import android.text.Spanned
 import android.text.TextUtils
 import android.text.style.ForegroundColorSpan
 import android.widget.TextView
+import androidx.compose.runtime.Stable
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.SpanStyle
@@ -90,6 +91,7 @@ object StringUtil {
         return nickname ?: ""
     }
 
+    @Stable
     fun getUsernameAnnotatedString(
         context: Context,
         username: String,
@@ -110,6 +112,7 @@ object StringUtil {
     }
 
     @JvmStatic
+    @Stable
     fun getAvatarUrl(portrait: String?): String {
         if (portrait.isNullOrEmpty()) {
             return ""

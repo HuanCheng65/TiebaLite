@@ -85,7 +85,7 @@ private val ImmutableHolder<Media>.url: String
 
 @Composable
 private fun DefaultUserHeader(
-    user: User,
+    user: ImmutableHolder<User>,
     time: Int,
     content: @Composable RowScope.() -> Unit
 ) {
@@ -93,7 +93,7 @@ private fun DefaultUserHeader(
     UserHeader(
         avatar = {
             Avatar(
-                data = StringUtil.getAvatarUrl(user.portrait),
+                data = user.get { StringUtil.getAvatarUrl(portrait) },
                 size = Sizes.Small,
                 contentDescription = null
             )
@@ -102,8 +102,8 @@ private fun DefaultUserHeader(
             Text(
                 text = StringUtil.getUsernameAnnotatedString(
                     context = LocalContext.current,
-                    username = user.name,
-                    nickname = user.nameShow,
+                    username = user.get { name },
+                    nickname = user.get { nameShow },
                     color = LocalContentColor.current
                 ),
                 color = ExtendedTheme.colors.text
@@ -112,8 +112,8 @@ private fun DefaultUserHeader(
         onClick = {
             UserActivity.launch(
                 context,
-                user.id.toString(),
-                StringUtil.getAvatarUrl(user.portrait)
+                user.get { id }.toString(),
+                user.get { StringUtil.getAvatarUrl(portrait) }
             )
         },
         desc = {
@@ -315,8 +315,8 @@ fun FeedCard(
 ) {
     Card(
         header = {
-            val author = item.get { author }
-            if (author != null) {
+            if (item.isNotNull { author }) {
+                val author = item.getImmutable { author!! }
                 DefaultUserHeader(
                     user = author,
                     time = item.get { lastTimeInt }) { dislikeAction() }

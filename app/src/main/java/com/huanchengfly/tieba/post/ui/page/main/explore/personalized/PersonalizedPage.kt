@@ -216,12 +216,12 @@ fun PersonalizedPage(
 @Composable
 private fun FeedList(
     dataProvider: () -> List<ImmutableHolder<ThreadInfo>>,
-    personalizedDataProvider: () -> List<ThreadPersonalized>,
+    personalizedDataProvider: () -> List<ImmutableHolder<ThreadPersonalized>>,
     refreshPositionProvider: () -> Int,
     hiddenThreadIdsProvider: () -> List<Long>,
     onItemClick: (ThreadInfo) -> Unit,
     onAgree: (ThreadInfo) -> Unit,
-    onDislike: (ThreadInfo, Long, List<DislikeReason>) -> Unit,
+    onDislike: (ThreadInfo, Long, List<ImmutableHolder<DislikeReason>>) -> Unit,
     onRefresh: () -> Unit,
     state: LazyStaggeredGridState,
 ) {

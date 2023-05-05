@@ -175,7 +175,8 @@
     <string name="toast_play_failed">播放失败</string>
     <string name="toast_cannot_view">抱歉，当前暂时无法浏览本吧</string>
     <string name="tip_thread_item">第 %1$s 楼 %2$s</string>
-    <string name="text_ip_location">来自%1$s</string>
+    <string name="text_ip_location">来自%s</string>
+    <string name="tip_post_floor">第 %d 楼</string>
     <string name="tip_floor_more_count">查看更多回复(%1$s)</string>
     <string name="update_tip_title">发现新版本 %1$s(%2$s)</string>
     <string name="update_tip_header">更新 · %1$s</string>
