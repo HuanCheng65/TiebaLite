@@ -30,14 +30,23 @@ abstract class BaseMultiTypeDelegateAdapter<Item> @JvmOverloads constructor(
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
         holder.setItemOnClickListener {
-            onItemClickListener?.onClick(holder, getItem(position), position)
+            if (position in 0 until itemCount) onItemClickListener?.onClick(
+                holder,
+                getItem(position),
+                position
+            )
         }
         holder.setItemOnLongClickListener {
-            onItemLongClickListener?.onLongClick(holder, getItem(position), position) ?: false
+            if (position !in 0 until itemCount) false
+            else onItemLongClickListener?.onLongClick(holder, getItem(position), position) ?: false
         }
         onItemChildClickListeners.forEach {
             holder.setOnClickListener(it.key) { _ ->
-                it.value?.onItemChildClick(holder, getItem(position), position)
+                if (position in 0 until itemCount) it.value?.onItemChildClick(
+                    holder,
+                    getItem(position),
+                    position
+                )
             }
         }
         convert(holder, getItem(position), position, getItemViewType(position))

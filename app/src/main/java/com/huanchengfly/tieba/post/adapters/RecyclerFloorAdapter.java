@@ -174,7 +174,7 @@ public class RecyclerFloorAdapter extends BaseSingleTypeAdapter<SubFloorListBean
                 })
                 .setInitMenuCallback(menu -> {
                     PluginManager.INSTANCE.initPluginMenu(menu, PluginManager.MENU_SUB_POST_ITEM);
-                    if (TextUtils.equals(AccountUtil.getLoginInfo().getUid(), postInfo.getAuthor().getId())) {
+                    if (AccountUtil.isLoggedIn() && TextUtils.equals(AccountUtil.getLoginInfo().getUid(), postInfo.getAuthor().getId())) {
                         menu.findItem(R.id.menu_delete).setVisible(true);
                     }
                 })

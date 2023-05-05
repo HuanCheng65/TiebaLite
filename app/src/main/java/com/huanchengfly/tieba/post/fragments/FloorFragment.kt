@@ -22,6 +22,7 @@ import com.huanchengfly.tieba.post.activities.ThreadActivity
 import com.huanchengfly.tieba.post.adapters.RecyclerFloorAdapter
 import com.huanchengfly.tieba.post.api.TiebaApi
 import com.huanchengfly.tieba.post.api.models.SubFloorListBean
+import com.huanchengfly.tieba.post.api.retrofit.exception.getErrorMessage
 import com.huanchengfly.tieba.post.components.MyLinearLayoutManager
 import com.huanchengfly.tieba.post.components.dividers.ThreadDivider
 import com.huanchengfly.tieba.post.components.transformations.RadiusTransformation
@@ -184,7 +185,7 @@ class FloorFragment : BaseBottomSheetDialogFragment() {
             .floor(tid, pn, pid, spid)
             .enqueue(object : Callback<SubFloorListBean> {
                 override fun onFailure(call: Call<SubFloorListBean>, t: Throwable) {
-                    Toast.makeText(attachContext, t.message, Toast.LENGTH_SHORT).show()
+                    Toast.makeText(attachContext, t.getErrorMessage(), Toast.LENGTH_SHORT).show()
                     refreshLayout.finishRefresh(false)
                 }
 

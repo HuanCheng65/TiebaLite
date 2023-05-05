@@ -26,8 +26,9 @@ import kotlin.properties.ReadWriteProperty
 import kotlin.reflect.KProperty
 
 
-open class AppPreferencesUtils(context: Context) {
-    private val preferencesDataStore: DataStore<Preferences> = context.dataStore
+open class AppPreferencesUtils(private val context: Context) {
+    private val preferencesDataStore: DataStore<Preferences>
+        get() = context.dataStore
     private val coroutineScope: CoroutineScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
 
     var userLikeLastRequestUnix by DataStoreDelegates.long(defaultValue = 0L)
