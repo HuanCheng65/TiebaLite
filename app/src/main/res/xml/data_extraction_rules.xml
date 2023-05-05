@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<data-extraction-rules>
+<data-extraction-rules xmlns:tools="http://schemas.android.com/tools">
     <cloud-backup>
         <exclude
             domain="sharedpref"
@@ -15,9 +15,33 @@
             path="com.microsoft.appcenter.persistence-journal" />
         <exclude
             domain="file"
-            path="error" />
+            path="error"
+            tools:ignore="FullBackupContent" />
         <exclude
             domain="file"
-            path="appcenter" />
+            path="appcenter"
+            tools:ignore="FullBackupContent" />
     </cloud-backup>
+    <device-transfer>
+        <exclude
+            domain="sharedpref"
+            path="crash.xml" />
+        <exclude
+            domain="sharedpref"
+            path="AppCenter.xml" />
+        <exclude
+            domain="database"
+            path="com.microsoft.appcenter.persistence" />
+        <exclude
+            domain="database"
+            path="com.microsoft.appcenter.persistence-journal" />
+        <exclude
+            domain="file"
+            path="error"
+            tools:ignore="FullBackupContent" />
+        <exclude
+            domain="file"
+            path="appcenter"
+            tools:ignore="FullBackupContent" />
+    </device-transfer>
 </data-extraction-rules>

@@ -6,7 +6,7 @@ plugins {
     id 'kotlinx-serialization'
     id 'dagger.hilt.android.plugin'
     id 'com.squareup.wire'
-    id 'com.google.devtools.ksp' version "$kotlin_version-1.0.9"
+    id 'com.google.devtools.ksp' version "$kotlin_version-1.0.11"
 }
 
 def keystoreProperties = new Properties()
@@ -80,7 +80,7 @@ android {
     }
     kotlinOptions {
         jvmTarget = '1.8'
-        freeCompilerArgs += ["-P", "plugin:androidx.compose.compiler.plugins.kotlin:suppressKotlinVersionCompatibilityCheck=true"]
+//        freeCompilerArgs += ["-P", "plugin:androidx.compose.compiler.plugins.kotlin:suppressKotlinVersionCompatibilityCheck=true"]
         freeCompilerArgs += ["-P", "plugin:androidx.compose.compiler.plugins.kotlin:reportsDestination=" + project.buildDir.absolutePath + "/compose_metrics"]
         freeCompilerArgs += ["-P", "plugin:androidx.compose.compiler.plugins.kotlin:metricsDestination=" + project.buildDir.absolutePath + "/compose_metrics"]
     }
@@ -122,11 +122,11 @@ dependencies {
     implementation 'org.jetbrains.kotlinx:kotlinx-serialization-json:1.4.1'
 //    implementation 'androidx.compose.material3:material3:1.0.0'
 
-    def media3_version = "1.0.0-rc02"
+    def media3_version = "1.0.1"
     implementation "androidx.media3:media3-exoplayer:$media3_version"
     implementation "androidx.media3:media3-ui:$media3_version"
 
-    def compose_destinations_version = '1.7.33-beta'
+    def compose_destinations_version = '1.8.41-beta'
     implementation "io.github.raamcosta.compose-destinations:animations-core:$compose_destinations_version"
     ksp "io.github.raamcosta.compose-destinations:ksp:$compose_destinations_version"
 
@@ -140,7 +140,7 @@ dependencies {
     implementation "androidx.hilt:hilt-navigation-compose:$hilt_androidx_version"
     kapt "androidx.hilt:hilt-compiler:$hilt_androidx_version"
 
-    def accompanist_version = '0.28.0'
+    def accompanist_version = '0.30.1'
     implementation "com.google.accompanist:accompanist-drawablepainter:$accompanist_version"
     implementation "com.google.accompanist:accompanist-insets-ui:$accompanist_version"
     implementation "com.google.accompanist:accompanist-systemuicontroller:$accompanist_version"
@@ -176,11 +176,10 @@ dependencies {
     androidTestImplementation 'androidx.compose.ui:ui-test-junit4'
     debugImplementation 'androidx.compose.ui:ui-test-manifest'
 
-    implementation 'androidx.activity:activity-compose:1.6.1'
     implementation "com.google.android.material:compose-theme-adapter:1.2.1"
     implementation "androidx.constraintlayout:constraintlayout-compose:1.0.1"
 
-    def activity_version = "1.6.1"
+    def activity_version = "1.7.1"
 
     implementation "androidx.activity:activity-ktx:$activity_version"
     implementation "androidx.activity:activity-compose:$activity_version"
@@ -193,7 +192,7 @@ dependencies {
     api 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4'
     api 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4'
 
-    def lifecycle_version = "2.6.0"
+    def lifecycle_version = "2.6.1"
 
     implementation "androidx.lifecycle:lifecycle-runtime-ktx:$lifecycle_version"
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version"
@@ -206,8 +205,8 @@ dependencies {
     implementation "androidx.appcompat:appcompat:1.6.1"
     implementation "androidx.annotation:annotation:1.6.0"
     implementation "androidx.constraintlayout:constraintlayout:2.1.4"
-    implementation "androidx.core:core-ktx:1.9.0"
-    implementation 'androidx.core:core-splashscreen:1.0.0'
+    implementation "androidx.core:core-ktx:1.10.0"
+    implementation 'androidx.core:core-splashscreen:1.0.1'
     implementation "androidx.preference:preference-ktx:1.2.0"
     implementation "androidx.gridlayout:gridlayout:1.0.0"
     implementation "androidx.browser:browser:1.5.0"
@@ -230,7 +229,7 @@ dependencies {
     kapt "com.github.bumptech.glide:compiler:$glide_version"
     implementation "com.github.bumptech.glide:okhttp3-integration:$glide_version"
 
-    implementation "com.google.android.material:material:1.8.0"
+    implementation "com.google.android.material:material:1.9.0"
 
     implementation "com.squareup.okhttp3:okhttp:4.10.0"
     implementation "com.squareup.retrofit2:retrofit:$retrofit_version"

@@ -55,6 +55,7 @@ fun EmoticonText(
     overflow: TextOverflow = TextOverflow.Clip,
     softWrap: Boolean = true,
     maxLines: Int = Int.MAX_VALUE,
+    minLines: Int = 1,
     onTextLayout: (TextLayoutResult) -> Unit = {},
     style: TextStyle = LocalTextStyle.current,
 ) {
@@ -75,9 +76,10 @@ fun EmoticonText(
         overflow,
         softWrap,
         maxLines,
-        emptyMap(),
-        onTextLayout,
-        style
+        minLines,
+        inlineContent = emptyMap(),
+        onTextLayout = onTextLayout,
+        style = style
     )
 }
 
@@ -97,6 +99,7 @@ fun EmoticonText(
     overflow: TextOverflow = TextOverflow.Clip,
     softWrap: Boolean = true,
     maxLines: Int = Int.MAX_VALUE,
+    minLines: Int = 1,
     inlineContent: Map<String, InlineTextContent> = emptyMap(),
     onTextLayout: (TextLayoutResult) -> Unit = {},
     style: TextStyle = LocalTextStyle.current
@@ -137,6 +140,7 @@ fun EmoticonText(
         overflow,
         softWrap,
         maxLines,
+        minLines,
         emoticonInlineContent + inlineContent,
         onTextLayout,
         style
@@ -159,6 +163,7 @@ fun IconText(
     overflow: TextOverflow = TextOverflow.Clip,
     softWrap: Boolean = true,
     maxLines: Int = Int.MAX_VALUE,
+    minLines: Int = 1,
     inlineContent: Map<String, InlineTextContent> = emptyMap(),
     onTextLayout: (TextLayoutResult) -> Unit = {},
     style: TextStyle = LocalTextStyle.current
@@ -234,6 +239,7 @@ fun IconText(
         overflow,
         softWrap,
         maxLines,
+        minLines,
         iconInlineContent + inlineContent,
         onTextLayout,
         style

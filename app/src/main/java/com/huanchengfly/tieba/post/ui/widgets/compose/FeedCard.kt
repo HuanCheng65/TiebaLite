@@ -213,12 +213,12 @@ fun ThreadContent(
 
     EmoticonText(
         text = content,
-        style = MaterialTheme.typography.body1,
+        modifier = Modifier.fillMaxWidth(),
         fontSize = 15.sp,
-        maxLines = 5,
-        overflow = TextOverflow.Ellipsis,
         lineHeight = 22.sp,
-        modifier = Modifier.fillMaxWidth()
+        overflow = TextOverflow.Ellipsis,
+        maxLines = 5,
+        style = MaterialTheme.typography.body1
     )
 }
 
