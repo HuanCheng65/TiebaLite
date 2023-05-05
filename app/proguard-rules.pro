@@ -248,3 +248,11 @@
 -dontwarn org.openjsse.javax.net.ssl.SSLParameters
 -dontwarn org.openjsse.javax.net.ssl.SSLSocket
 -dontwarn org.openjsse.net.ssl.OpenJSSE
+
+# Compose Runtime Tracing
+-assumenosideeffects public class androidx.compose.runtime.ComposerKt {
+   boolean isTraceInProgress();
+   void traceEventStart(int,int,int,java.lang.String);
+   void traceEventStart(int,java.lang.String);
+   void traceEventEnd();
+}
