@@ -1,7 +1,10 @@
 package com.huanchengfly.tieba.post.ui.page.main.explore
 
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Tab
 import androidx.compose.material.TabRow
@@ -17,9 +20,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import com.google.accompanist.pager.ExperimentalPagerApi
-import com.google.accompanist.pager.HorizontalPager
-import com.google.accompanist.pager.rememberPagerState
 import com.huanchengfly.tieba.post.R
 import com.huanchengfly.tieba.post.activities.NewSearchActivity
 import com.huanchengfly.tieba.post.arch.onEvent
@@ -39,7 +39,7 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.launch
 
 
-@OptIn(ExperimentalPagerApi::class)
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun ExplorePage(
     eventFlow: Flow<MainUiEvent>,
@@ -127,7 +127,7 @@ fun ExplorePage(
     ) { paddingValues ->
         HorizontalPager(
             contentPadding = paddingValues,
-            count = pages.size,
+            pageCount = pages.size,
             state = pagerState,
             key = { pages[it].first },
             modifier = Modifier.fillMaxSize(),
