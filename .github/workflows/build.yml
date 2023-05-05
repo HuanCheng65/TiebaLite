@@ -65,7 +65,8 @@ jobs:
         env:
           version_code: ${{ fromJSON(steps.read_output_metadata.outputs.content).elements[0].versionCode }}
           version_name: ${{ fromJSON(steps.read_output_metadata.outputs.content).elements[0].versionName }}
-        uses: vhsantos26/app-center-cli-action@v1
+        uses: saurav-aggarwal/appcenter-cli-action@1.0.1
         with:
-          user_token: ${{ secrets.APP_CENTER_TOKEN }}
+          node-version: 16.0.0
+          token: ${{ secrets.APP_CENTER_TOKEN }}
           command: appcenter crashes upload-mappings -c ${{ env.version_code }} -n ${{ env.version_name }} -m /github/workspace/app/build/outputs/mapping/release/mapping.txt -a huanchengfly/TiebaLite
