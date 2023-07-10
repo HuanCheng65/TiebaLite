@@ -877,7 +877,7 @@ object MixedTiebaApiImpl : ITiebaApi {
         sortType: Int,
         goodClassifyId: Int?
     ): Flow<FrsPageResponse> {
-        return RetrofitTiebaApi.OFFICIAL_PROTOBUF_TIEBA_API.frsPageFlow(
+        return RetrofitTiebaApi.OFFICIAL_PROTOBUF_TIEBA_V12_API.frsPageFlow(
             buildProtobufRequestBody(
                 FrsPageRequest(
                     FrsPageRequestData(
@@ -886,7 +886,7 @@ object MixedTiebaApiImpl : ITiebaApi {
                         call_from = 0,
                         category_id = 0,
                         cid = goodClassifyId ?: 0,
-                        common = buildCommonRequest(),
+                        common = buildCommonRequest(clientVersion = ClientVersion.TIEBA_V12),
                         ctime = 0,
                         data_size = 0,
                         hot_thread_id = 0,
