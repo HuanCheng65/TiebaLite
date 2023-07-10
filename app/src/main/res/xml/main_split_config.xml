@@ -6,9 +6,9 @@
     </ActivityRule>
     <SplitPairRule
         window:splitRatio="0.5"
-        window:splitMinWidth="600dp"
-        window:finishPrimaryWithSecondary="false"
-        window:finishSecondaryWithPrimary="true">
+        window:finishPrimaryWithSecondary="never"
+        window:finishSecondaryWithPrimary="always"
+        window:splitMinWidthDp="600">
         <SplitPairFilter
             window:primaryActivityName=".activities.MainActivity"
             window:secondaryActivityName="*/*" />

@@ -122,18 +122,19 @@ dependencies {
 
     implementation "com.github.germainkevinbusiness:CollapsingTopBarCompose:1.1.7"
 
-    implementation 'org.jetbrains.kotlinx:kotlinx-serialization-json:1.4.1'
+    implementation 'org.jetbrains.kotlinx:kotlinx-serialization-json:1.5.1'
+    implementation 'org.jetbrains.kotlinx:kotlinx-collections-immutable:0.3.5'
 //    implementation 'androidx.compose.material3:material3:1.0.0'
 
-    def media3_version = "1.0.1"
+    def media3_version = "1.1.0"
     implementation "androidx.media3:media3-exoplayer:$media3_version"
     implementation "androidx.media3:media3-ui:$media3_version"
 
-    def compose_destinations_version = '1.8.41-beta'
+    def compose_destinations_version = '1.8.42-beta'
     implementation "io.github.raamcosta.compose-destinations:animations-core:$compose_destinations_version"
     ksp "io.github.raamcosta.compose-destinations:ksp:$compose_destinations_version"
 
-    implementation "androidx.navigation:navigation-compose:2.5.3"
+    implementation "androidx.navigation:navigation-compose:2.6.0"
 
     api "com.squareup.wire:wire-runtime:$wire_version"
 
@@ -150,7 +151,7 @@ dependencies {
     implementation "com.google.accompanist:accompanist-placeholder-material:$accompanist_version"
     implementation "com.google.accompanist:accompanist-webview:$accompanist_version"
 
-    def sketch_version = "3.2.0"
+    def sketch_version = "3.2.4"
     implementation "io.github.panpf.sketch3:sketch:$sketch_version"
     implementation "io.github.panpf.sketch3:sketch-compose:$sketch_version"
     implementation "io.github.panpf.sketch3:sketch-extensions:$sketch_version"
@@ -180,18 +181,18 @@ dependencies {
     implementation "com.google.android.material:compose-theme-adapter:1.2.1"
     implementation "androidx.constraintlayout:constraintlayout-compose:1.0.1"
 
-    def activity_version = "1.7.1"
+    def activity_version = "1.7.2"
 
     implementation "androidx.activity:activity-ktx:$activity_version"
     implementation "androidx.activity:activity-compose:$activity_version"
 
     implementation 'com.github.gzu-liyujiang:Android_CN_OAID:4.2.4'
 
-    implementation 'org.jetbrains:annotations:24.0.0'
+    implementation 'org.jetbrains:annotations:24.0.1'
 
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
-    api 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4'
-    api 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4'
+    api "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutines_version"
+    api "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutines_version"
 
     def lifecycle_version = "2.6.1"
 
@@ -206,14 +207,14 @@ dependencies {
     implementation "androidx.appcompat:appcompat:1.6.1"
     implementation "androidx.annotation:annotation:1.6.0"
     implementation "androidx.constraintlayout:constraintlayout:2.1.4"
-    implementation "androidx.core:core-ktx:1.10.0"
+    implementation "androidx.core:core-ktx:1.10.1"
     implementation 'androidx.core:core-splashscreen:1.0.1'
     implementation "androidx.preference:preference-ktx:1.2.0"
     implementation "androidx.gridlayout:gridlayout:1.0.0"
     implementation "androidx.browser:browser:1.5.0"
     implementation "androidx.viewpager2:viewpager2:1.0.0"
     implementation "androidx.palette:palette-ktx:1.0.0"
-    implementation "androidx.window:window:1.0.0"
+    implementation "androidx.window:window:1.1.0"
     implementation "androidx.startup:startup-runtime:1.1.1"
     implementation "androidx.datastore:datastore-preferences:1.0.0"
 
@@ -227,7 +228,7 @@ dependencies {
 
     //Glide
     implementation "com.github.bumptech.glide:glide:$glide_version"
-    kapt "com.github.bumptech.glide:compiler:$glide_version"
+    ksp "com.github.bumptech.glide:ksp:$glide_version"
     implementation "com.github.bumptech.glide:okhttp3-integration:$glide_version"
 
     implementation "com.google.android.material:material:1.9.0"
@@ -262,7 +263,7 @@ dependencies {
         transitive = true
     }
 
-    def appCenterSdkVersion = '5.0.0'
+    def appCenterSdkVersion = '5.0.2'
     implementation "com.microsoft.appcenter:appcenter-analytics:${appCenterSdkVersion}"
     implementation "com.microsoft.appcenter:appcenter-crashes:${appCenterSdkVersion}"
     implementation "com.microsoft.appcenter:appcenter-distribute:${appCenterSdkVersion}"
