@@ -57,6 +57,8 @@ import com.huanchengfly.tieba.post.arch.collectPartialAsState
 import com.huanchengfly.tieba.post.arch.onEvent
 import com.huanchengfly.tieba.post.arch.pageViewModel
 import com.huanchengfly.tieba.post.ui.common.theme.compose.ExtendedTheme
+import com.huanchengfly.tieba.post.ui.page.LocalNavigator
+import com.huanchengfly.tieba.post.ui.page.destinations.ForumPageDestination
 import com.huanchengfly.tieba.post.ui.page.main.MainUiEvent
 import com.huanchengfly.tieba.post.ui.widgets.compose.FeedCard
 import com.huanchengfly.tieba.post.ui.widgets.compose.LazyLoad
@@ -76,6 +78,7 @@ fun PersonalizedPage(
         viewModel.initialized = true
     }
     val context = LocalContext.current
+    val navigator = LocalNavigator.current
     val isRefreshing by viewModel.uiState.collectPartialAsState(
         prop1 = PersonalizedUiState::isRefreshing,
         initial = false
@@ -172,6 +175,9 @@ fun PersonalizedPage(
                     )
                 },
                 onRefresh = { viewModel.send(PersonalizedUiIntent.Refresh) },
+                onOpenForum = {
+                    navigator.navigate(ForumPageDestination(it))
+                },
                 state = lazyStaggeredGridState
             )
             LaunchedEffect(data.firstOrNull()?.get { id }) {
@@ -223,6 +229,7 @@ private fun FeedList(
     onAgree: (ThreadInfo) -> Unit,
     onDislike: (ThreadInfo, Long, List<ImmutableHolder<DislikeReason>>) -> Unit,
     onRefresh: () -> Unit,
+    onOpenForum: (forumName: String) -> Unit = {},
     state: LazyStaggeredGridState,
 ) {
     val data = dataProvider()
@@ -259,6 +266,9 @@ private fun FeedList(
                         onAgree = {
                             onAgree(item.get())
                         },
+                        onClickForum = {
+                            onOpenForum(item.get { forumInfo?.name ?: "" })
+                        }
                     ) {
                         Dislike(
                             personalized = threadPersonalizedData[index],

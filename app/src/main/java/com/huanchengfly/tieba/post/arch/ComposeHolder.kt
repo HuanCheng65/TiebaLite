@@ -2,6 +2,8 @@ package com.huanchengfly.tieba.post.arch
 
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.Stable
+import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.toImmutableList
 
 @Stable
 class StableHolder<T>(val item: T) {
@@ -53,8 +55,8 @@ class ImmutableHolder<T>(val item: T) {
         return wrapImmutable(getter(item))
     }
 
-    fun <R> getImmutableList(getter: T.() -> List<R>): List<ImmutableHolder<R>> {
-        return getter(item).map { wrapImmutable(it) }
+    fun <R> getImmutableList(getter: T.() -> List<R>): ImmutableList<ImmutableHolder<R>> {
+        return getter(item).map { wrapImmutable(it) }.toImmutableList()
     }
 
     @Stable
@@ -68,4 +70,5 @@ fun <T> wrapStable(item: T): StableHolder<T> = StableHolder(item)
 
 fun <T> wrapImmutable(item: T): ImmutableHolder<T> = ImmutableHolder(item)
 
-fun <T> List<T>.wrapImmutable(): List<ImmutableHolder<T>> = map { wrapImmutable(it) }
+fun <T> List<T>.wrapImmutable(): ImmutableList<ImmutableHolder<T>> =
+    map { wrapImmutable(it) }.toImmutableList()

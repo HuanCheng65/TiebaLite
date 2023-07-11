@@ -29,6 +29,7 @@ import androidx.compose.material.icons.rounded.SwapCalls
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -62,8 +63,6 @@ import com.huanchengfly.tieba.post.api.models.protos.User
 import com.huanchengfly.tieba.post.arch.ImmutableHolder
 import com.huanchengfly.tieba.post.arch.wrapImmutable
 import com.huanchengfly.tieba.post.ui.common.theme.compose.ExtendedTheme
-import com.huanchengfly.tieba.post.ui.page.LocalNavigator
-import com.huanchengfly.tieba.post.ui.page.destinations.ForumPageDestination
 import com.huanchengfly.tieba.post.ui.utils.getImmutablePhotoViewData
 import com.huanchengfly.tieba.post.ui.widgets.VideoPlayerStandard
 import com.huanchengfly.tieba.post.utils.DateTimeUtils
@@ -307,19 +306,186 @@ private fun ForumInfoChip(
 }
 
 @Composable
+private fun ThreadMedia(
+    item: ImmutableHolder<ThreadInfo>
+) {
+    val isVideo = remember(item) {
+        item.isNotNull { videoInfo }
+    }
+    val medias = remember(item) {
+        item.getImmutableList { media }
+    }
+
+    if (isVideo) {
+        val videoInfo = item.getImmutable { videoInfo!! }
+        VideoPlayer(
+            videoUrl = videoInfo.get { videoUrl },
+            thumbnailUrl = videoInfo.get { thumbnailUrl },
+            modifier = Modifier
+                .fillMaxWidth()
+                .aspectRatio(
+                    max(
+                        videoInfo
+                            .get { thumbnailWidth }
+                            .toFloat() / videoInfo.get { thumbnailHeight },
+                        16f / 9
+                    )
+                )
+                .clip(RoundedCornerShape(8.dp))
+        )
+    } else if (medias.isNotEmpty()) {
+        Box {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .aspectRatio(if (medias.size == 1) 2f else 3f)
+                    .clip(RoundedCornerShape(8.dp)),
+                horizontalArrangement = Arrangement.spacedBy(4.dp)
+            ) {
+                medias.subList(0, min(medias.size, 3))
+                    .forEachIndexed { index, media ->
+                        val photoViewData = remember(item, index) {
+                            getImmutablePhotoViewData(item.get(), index)
+                        }
+                        NetworkImage(
+                            imageUri = media.url,
+                            contentDescription = null,
+                            modifier = Modifier.weight(1f),
+                            photoViewData = photoViewData,
+                            contentScale = ContentScale.Crop
+                        )
+                    }
+            }
+            if (medias.size > 3) {
+                Badge(
+                    icon = Icons.Rounded.PhotoSizeSelectActual,
+                    text = "${medias.size}",
+                    modifier = Modifier
+                        .align(Alignment.BottomEnd)
+                        .padding(8.dp)
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun ThreadForumInfo(
+    item: ImmutableHolder<ThreadInfo>,
+    onClick: () -> Unit
+) {
+    val hasForumInfo = remember(item) { item.isNotNull { forumInfo } }
+    if (hasForumInfo) {
+        val forumInfo = remember(item) { item.getImmutable { forumInfo!! } }
+        if (forumInfo.get { name }.isNotBlank()) {
+            ForumInfoChip(
+                imageUriProvider = { StringUtil.getAvatarUrl(forumInfo.get { avatar }) },
+                nameProvider = { forumInfo.get { name } },
+                onClick = onClick
+            )
+        }
+    }
+}
+
+@Composable
+private fun ThreadCommentBtn(
+    commentNum: Int,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    ActionBtn(
+        icon = {
+            Icon(
+                imageVector = ImageVector.vectorResource(id = R.drawable.ic_comment_new),
+                contentDescription = stringResource(id = R.string.desc_comment),
+            )
+        },
+        text = {
+            Text(
+                text = if (commentNum == 0)
+                    stringResource(id = R.string.title_reply)
+                else "$commentNum"
+            )
+        },
+        modifier = modifier,
+        onClick = onClick
+    )
+}
+
+@Composable
+private fun ThreadAgreeBtn(
+    hasAgree: Boolean,
+    agreeNum: Int,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    val contentColor =
+        if (hasAgree) ExtendedTheme.colors.accent else ExtendedTheme.colors.textSecondary
+    val animatedColor by animateColorAsState(contentColor, label = "agreeBtnContentColor")
+
+    ActionBtn(
+        icon = {
+            Icon(
+                imageVector = if (hasAgree) Icons.Rounded.Favorite else Icons.Rounded.FavoriteBorder,
+                contentDescription = stringResource(id = R.string.desc_like),
+            )
+        },
+        text = {
+            Text(
+                text = if (agreeNum == 0)
+                    stringResource(id = R.string.title_agree)
+                else "$agreeNum"
+            )
+        },
+        modifier = modifier,
+        color = animatedColor,
+        onClick = onClick
+    )
+}
+
+@Composable
+private fun ThreadShareBtn(
+    shareNum: Long,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    ActionBtn(
+        icon = {
+            Icon(
+                imageVector = Icons.Rounded.SwapCalls,
+                contentDescription = stringResource(id = R.string.desc_share),
+            )
+        },
+        text = {
+            Text(
+                text = if (shareNum == 0L)
+                    stringResource(id = R.string.title_share)
+                else "$shareNum"
+            )
+        },
+        modifier = modifier,
+        onClick = onClick
+    )
+}
+
+@Composable
 fun FeedCard(
     item: ImmutableHolder<ThreadInfo>,
     onClick: () -> Unit,
     onAgree: () -> Unit,
+    onClickForum: () -> Unit = {},
     dislikeAction: @Composable () -> Unit = {},
 ) {
     Card(
         header = {
-            if (item.isNotNull { author }) {
-                val author = item.getImmutable { author!! }
+            val hasAuthor = remember(item) { item.isNotNull { author } }
+            if (hasAuthor) {
+                val author = remember(item) { item.getImmutable { author!! } }
+                val time = remember(item) { item.get { lastTimeInt } }
                 DefaultUserHeader(
                     user = author,
-                    time = item.get { lastTimeInt }) { dislikeAction() }
+                    time = time
+                ) { dislikeAction() }
             }
         },
         content = {
@@ -332,130 +498,29 @@ fun FeedCard(
                 isGood = item.get { isGood == 1 }
             )
 
-            if (item.isNotNull { videoInfo }) {
-                val videoInfo = item.getImmutable { videoInfo!! }
-                VideoPlayer(
-                    videoUrl = videoInfo.get { videoUrl },
-                    thumbnailUrl = videoInfo.get { thumbnailUrl },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .aspectRatio(
-                            max(
-                                videoInfo
-                                    .get { thumbnailWidth }
-                                    .toFloat() / videoInfo.get { thumbnailHeight },
-                                16f / 9
-                            )
-                        )
-                        .clip(RoundedCornerShape(8.dp))
-                )
-            } else if (item.getImmutableList { media }.isNotEmpty()) {
-                val media = item.getImmutableList { media }
-                Box {
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .aspectRatio(if (media.size == 1) 2f else 3f)
-                            .clip(RoundedCornerShape(8.dp)),
-                        horizontalArrangement = Arrangement.spacedBy(4.dp)
-                    ) {
-                        media.subList(0, min(media.size, 3))
-                            .forEachIndexed { index, media ->
-                                NetworkImage(
-                                    imageUri = media.url,
-                                    contentDescription = null,
-                                    modifier = Modifier.weight(1f),
-                                    photoViewData = getImmutablePhotoViewData(item.get(), index),
-                                    contentScale = ContentScale.Crop
-                                )
-                            }
-                    }
-                    if (media.size > 3) {
-                        Badge(
-                            icon = Icons.Rounded.PhotoSizeSelectActual,
-                            text = "${media.size}",
-                            modifier = Modifier
-                                .align(Alignment.BottomEnd)
-                                .padding(8.dp)
-                        )
-                    }
-                }
-            }
+            ThreadMedia(item = item)
 
-            if (item.isNotNull { forumInfo }) {
-                val navigator = LocalNavigator.current
-                val forumInfo = item.getImmutable { forumInfo!! }
-                ForumInfoChip(
-                    imageUriProvider = { StringUtil.getAvatarUrl(forumInfo.get { avatar }) },
-                    nameProvider = { forumInfo.get { name } },
-                    onClick = {
-                        navigator.navigate(ForumPageDestination(forumInfo.get { name }))
-                    }
-                )
-            }
+            ThreadForumInfo(item = item, onClick = onClickForum)
         },
         action = {
             Row(modifier = Modifier.fillMaxWidth()) {
-                ActionBtn(
-                    icon = {
-                        Icon(
-                            imageVector = ImageVector.vectorResource(id = R.drawable.ic_comment_new),
-                            contentDescription = stringResource(id = R.string.desc_comment)
-                        )
-                    },
-                    text = {
-                        val replyNum = item.get { replyNum }
-
-                        Text(
-                            text = if (replyNum == 0)
-                                stringResource(id = R.string.title_reply)
-                            else "$replyNum"
-                        )
-                    },
-                    modifier = Modifier.weight(1f),
-                    color = ExtendedTheme.colors.textSecondary,
-                    onClick = {},
+                ThreadCommentBtn(
+                    commentNum = item.get { commentNum },
+                    onClick = onClick,
+                    modifier = Modifier.weight(1f)
                 )
 
-                val hasAgree = item.get { agree?.hasAgree == 1 }
-                ActionBtn(
-                    icon = {
-                        Icon(
-                            imageVector = if (hasAgree) Icons.Rounded.Favorite else Icons.Rounded.FavoriteBorder,
-                            contentDescription = stringResource(id = R.string.desc_like)
-                        )
-                    },
-                    text = {
-                        val agreeNum = item.get { agreeNum }
-                        Text(
-                            text = if (agreeNum == 0)
-                                stringResource(id = R.string.title_agree)
-                            else "$agreeNum"
-                        )
-                    },
-                    modifier = Modifier.weight(1f),
-                    color = if (hasAgree) ExtendedTheme.colors.accent else ExtendedTheme.colors.textSecondary,
-                    onClick = onAgree
+                ThreadAgreeBtn(
+                    hasAgree = item.get { agree?.hasAgree == 1 },
+                    agreeNum = item.get { agreeNum },
+                    onClick = onAgree,
+                    modifier = Modifier.weight(1f)
                 )
 
-                ActionBtn(
-                    icon = {
-                        Icon(
-                            imageVector = Icons.Rounded.SwapCalls,
-                            contentDescription = stringResource(id = R.string.desc_share)
-                        )
-                    },
-                    text = {
-                        val shareNum = item.get { shareNum }
-                        Text(
-                            text = if (shareNum == 0L)
-                                stringResource(id = R.string.title_share)
-                            else shareNum.toString()
-                        )
-                    },
-                    modifier = Modifier.weight(1f),
-                    color = ExtendedTheme.colors.textSecondary,
+                ThreadShareBtn(
+                    shareNum = item.get { shareNum },
                     onClick = {},
+                    modifier = Modifier.weight(1f)
                 )
             }
         },
@@ -488,42 +553,12 @@ private fun ActionBtnPlaceholder(
 
 @Composable
 private fun ActionBtn(
-    icon: ImageVector,
-    contentDescription: String?,
-    text: String,
-    modifier: Modifier = Modifier,
-    color: Color = LocalContentColor.current,
-    onClick: (() -> Unit)? = null,
-) {
-    val animatedColor by animateColorAsState(targetValue = color)
-    val clickableModifier = if (onClick != null) Modifier.clickable(onClick = onClick) else Modifier
-    Row(
-        modifier = clickableModifier
-            .padding(vertical = 16.dp)
-            .then(modifier),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.Center,
-    ) {
-        Icon(
-            imageVector = icon,
-            contentDescription = contentDescription,
-            modifier = Modifier.size(18.dp),
-            tint = animatedColor,
-        )
-        Spacer(modifier = Modifier.width(8.dp))
-        Text(text = text, style = MaterialTheme.typography.caption, color = animatedColor)
-    }
-}
-
-@Composable
-private fun ActionBtn(
     icon: @Composable () -> Unit,
     text: @Composable () -> Unit,
     modifier: Modifier = Modifier,
     color: Color = LocalContentColor.current,
     onClick: (() -> Unit)? = null,
 ) {
-    val animatedColor by animateColorAsState(targetValue = color)
     val clickableModifier = if (onClick != null) Modifier.clickable(onClick = onClick) else Modifier
     Row(
         modifier = clickableModifier
@@ -532,12 +567,12 @@ private fun ActionBtn(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.Center,
     ) {
-        Box(modifier = Modifier.size(18.dp)) {
-            icon()
-        }
-        Spacer(modifier = Modifier.width(8.dp))
-        ProvideTextStyle(value = MaterialTheme.typography.caption) {
-            ProvideContentColor(color = animatedColor) {
+        ProvideContentColor(color = color) {
+            Box(modifier = Modifier.size(18.dp)) {
+                icon()
+            }
+            Spacer(modifier = Modifier.width(8.dp))
+            ProvideTextStyle(value = MaterialTheme.typography.caption) {
                 text()
             }
         }
@@ -548,8 +583,8 @@ private fun ActionBtn(
 fun VideoPlayer(
     videoUrl: String,
     thumbnailUrl: String,
-    title: String = "",
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    title: String = ""
 ) {
     AndroidView(
         factory = { context ->
