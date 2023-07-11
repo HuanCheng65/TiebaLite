@@ -55,6 +55,7 @@ import com.huanchengfly.tieba.post.ui.widgets.compose.AccountNavIcon
 import com.huanchengfly.tieba.post.ui.widgets.compose.Avatar
 import com.huanchengfly.tieba.post.ui.widgets.compose.Sizes
 import com.huanchengfly.tieba.post.utils.AccountUtil.LocalAccount
+import kotlinx.collections.immutable.ImmutableList
 
 enum class LayoutType {
     HEADER, CONTENT
@@ -130,7 +131,7 @@ fun NavigationDrawerContent(
     currentPosition: Int,
     onChangePosition: (position: Int) -> Unit,
     onReselected: (position: Int) -> Unit,
-    navigationItems: List<NavigationItem>,
+    navigationItems: ImmutableList<NavigationItem>,
     navigationContentPosition: MainNavigationContentPosition
 ) {
     PositionLayout(
@@ -199,12 +200,12 @@ fun NavigationDrawerContent(
                                 onChangePosition(index)
                             }
                         },
-                        label = { Text(text = navigationItem.title) },
+                        label = { Text(text = navigationItem.title(index == currentPosition)) },
                         icon = {
                             Box {
                                 Icon(
                                     imageVector = navigationItem.icon(index == currentPosition),
-                                    contentDescription = navigationItem.title
+                                    contentDescription = navigationItem.title(index == currentPosition)
                                 )
                                 if (navigationItem.badge) {
                                     Text(
@@ -283,7 +284,7 @@ fun NavigationRail(
     currentPosition: Int,
     onChangePosition: (position: Int) -> Unit,
     onReselected: (position: Int) -> Unit,
-    navigationItems: List<NavigationItem>,
+    navigationItems: ImmutableList<NavigationItem>,
     navigationContentPosition: MainNavigationContentPosition
 ) {
     NavigationRail(
@@ -315,7 +316,7 @@ fun NavigationRail(
                         Box {
                             Icon(
                                 imageVector = navigationItem.icon(index == currentPosition),
-                                contentDescription = navigationItem.title
+                                contentDescription = navigationItem.title(index == currentPosition)
                             )
                             if (navigationItem.badge) {
                                 Text(
@@ -360,7 +361,7 @@ fun BottomNavigation(
     currentPosition: Int,
     onChangePosition: (position: Int) -> Unit,
     onReselected: (position: Int) -> Unit,
-    navigationItems: List<NavigationItem>,
+    navigationItems: ImmutableList<NavigationItem>,
     themeColors: ExtendedColors = ExtendedTheme.colors
 ) {
     Column(modifier = Modifier.navigationBarsPadding()) {
@@ -384,7 +385,7 @@ fun BottomNavigation(
                         Box {
                             Icon(
                                 imageVector = navigationItem.icon(index == currentPosition),
-                                contentDescription = navigationItem.title
+                                contentDescription = navigationItem.title(index == currentPosition)
                             )
                             if (navigationItem.badge) {
                                 Text(
@@ -414,8 +415,9 @@ fun BottomNavigation(
 }
 
 data class NavigationItem(
+    val id: String,
     val icon: @Composable (selected: Boolean) -> ImageVector,
-    val title: String,
+    val title: @Composable (selected: Boolean) -> String,
     val badge: Boolean = false,
     val badgeText: String? = null,
     val onClick: (() -> Unit)? = null,

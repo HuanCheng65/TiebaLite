@@ -24,6 +24,8 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.State
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.res.stringResource
@@ -83,6 +85,8 @@ import kotlinx.coroutines.launch
 
 val LocalNotificationCountFlow =
     staticCompositionLocalOf<Flow<Int>> { throw IllegalStateException("not allowed here!") }
+val LocalDevicePosture =
+    staticCompositionLocalOf<State<DevicePosture>> { throw IllegalStateException("not allowed here!") }
 
 @AndroidEntryPoint
 class MainActivityV2 : BaseComposeActivity() {
@@ -219,7 +223,10 @@ class MainActivityV2 : BaseComposeActivity() {
                 okSignAlertDialogState.show()
             }
         }
-        CompositionLocalProvider(LocalNotificationCountFlow provides notificationCountFlow) {
+        CompositionLocalProvider(
+            LocalNotificationCountFlow provides notificationCountFlow,
+            LocalDevicePosture provides devicePostureFlow.collectAsState(),
+        ) {
             Surface(
                 color = ExtendedTheme.colors.background
             ) {
@@ -274,7 +281,6 @@ class MainActivityV2 : BaseComposeActivity() {
                         engine = engine,
                         dependenciesContainerBuilder = {
                             dependency(MainPageDestination) { this@MainActivityV2 }
-                            dependency(devicePostureFlow)
                         }
                     )
                 }

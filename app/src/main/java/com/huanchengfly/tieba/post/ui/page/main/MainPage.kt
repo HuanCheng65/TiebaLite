@@ -19,7 +19,6 @@ import androidx.compose.material.icons.rounded.Inventory2
 import androidx.compose.material.icons.rounded.Notifications
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -30,6 +29,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
+import com.huanchengfly.tieba.post.LocalDevicePosture
 import com.huanchengfly.tieba.post.LocalNotificationCountFlow
 import com.huanchengfly.tieba.post.R
 import com.huanchengfly.tieba.post.arch.BaseComposeActivity.Companion.LocalWindowSizeClass
@@ -50,8 +50,9 @@ import com.huanchengfly.tieba.post.utils.appPreferences
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.annotation.RootNavGraph
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
+import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
 @Composable
@@ -59,7 +60,7 @@ private fun NavigationWrapper(
     currentPosition: Int,
     onChangePosition: (position: Int) -> Unit,
     onReselected: (position: Int) -> Unit,
-    navigationItems: List<NavigationItem>,
+    navigationItems: ImmutableList<NavigationItem>,
     navigationType: MainNavigationType,
     navigationContentPosition: MainNavigationContentPosition,
     content: @Composable () -> Unit,
@@ -97,7 +98,6 @@ private fun NavigationWrapper(
 @Composable
 fun MainPage(
     navigator: DestinationsNavigator,
-    devicePostureFlow: StateFlow<DevicePosture>,
     viewModel: MainViewModel = pageViewModel<MainUiIntent, MainViewModel>(emptyList()),
 ) {
     val messageCount by viewModel.uiState.collectPartialAsState(
@@ -125,11 +125,12 @@ fun MainPage(
     val coroutineScope = rememberCoroutineScope()
     val themeColors = ExtendedTheme.colors
     val windowSizeClass = LocalWindowSizeClass.current
-    val foldingDevicePosture by devicePostureFlow.collectAsState()
+    val foldingDevicePosture by LocalDevicePosture.current
     val navigationItems = listOfNotNull(
         NavigationItem(
+            id = "home",
             icon = { if (it) Icons.Rounded.Inventory2 else Icons.Outlined.Inventory2 },
-            title = stringResource(id = R.string.title_main),
+            title = { stringResource(id = R.string.title_main) },
             content = {
                 HomePage(
                     eventFlow = eventFlows[0],
@@ -143,19 +144,21 @@ fun MainPage(
         ),
         if (LocalContext.current.appPreferences.hideExplore) null
         else NavigationItem(
+            id = "explore",
             icon = {
                 if (it) ImageVector.vectorResource(id = R.drawable.ic_round_toys) else ImageVector.vectorResource(
                     id = R.drawable.ic_outline_toys
                 )
             },
-            title = stringResource(id = R.string.title_explore),
+            title = { stringResource(id = R.string.title_explore) },
             content = {
                 ExplorePage(eventFlows[1])
             }
         ),
         NavigationItem(
+            id = "notification",
             icon = { if (it) Icons.Rounded.Notifications else Icons.Outlined.Notifications },
-            title = stringResource(id = R.string.title_notifications),
+            title = { stringResource(id = R.string.title_notifications) },
             badge = messageCount > 0,
             badgeText = "$messageCount",
             onClick = {
@@ -166,13 +169,14 @@ fun MainPage(
             }
         ),
         NavigationItem(
+            id = "user",
             icon = { if (it) Icons.Rounded.AccountCircle else Icons.Outlined.AccountCircle },
-            title = stringResource(id = R.string.title_user),
+            title = { stringResource(id = R.string.title_user) },
             content = {
                 UserPage()
             }
         ),
-    )
+    ).toImmutableList()
 
     val navigationType = when (windowSizeClass.widthSizeClass) {
         WindowWidthSizeClass.Compact -> {
@@ -245,7 +249,7 @@ fun MainPage(
                 contentPadding = paddingValues,
                 pageCount = navigationItems.size,
                 state = pagerState,
-                key = { navigationItems[it].title },
+                key = { navigationItems[it].id },
                 modifier = Modifier.fillMaxSize(),
                 verticalAlignment = Alignment.Top,
                 userScrollEnabled = false
