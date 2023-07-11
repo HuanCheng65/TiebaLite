@@ -37,6 +37,17 @@ import kotlinx.coroutines.launch
 import java.io.File
 import java.lang.ref.WeakReference
 
+@OptIn(ExperimentalTextApi::class)
+@Composable
+fun getEmoticonHeightPx(style: TextStyle): Int {
+    val textMeasurer = rememberTextMeasurer()
+    val textLayoutResult = textMeasurer.measure(
+        AnnotatedString(stringResource(id = R.string.emoticon_default)),
+        style
+    )
+    return textLayoutResult.size.height
+}
+
 object EmoticonManager {
     private val DEFAULT_EMOTICON_MAPPING: Map<String, String> = mapOf(
         "呵呵" to "image_emoticon1",
@@ -105,17 +116,6 @@ object EmoticonManager {
     private val emoticonMapping: MutableMap<String, String> = mutableMapOf()
     private val drawableCache: MutableMap<String, Drawable> = mutableMapOf()
     private val coroutineScope: CoroutineScope = CoroutineScope(Dispatchers.IO)
-
-    @OptIn(ExperimentalTextApi::class)
-    @Composable
-    fun getEmoticonHeightPx(style: TextStyle): Int {
-        val textMeasurer = rememberTextMeasurer()
-        val textLayoutResult = textMeasurer.measure(
-            AnnotatedString(stringResource(id = R.string.emoticon_default)),
-            style
-        )
-        return textLayoutResult.size.height
-    }
 
     fun getEmoticonInlineContent(
         sizePx: Int

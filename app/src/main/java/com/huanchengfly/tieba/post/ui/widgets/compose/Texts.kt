@@ -35,8 +35,8 @@ import com.huanchengfly.tieba.post.pxToDp
 import com.huanchengfly.tieba.post.pxToSp
 import com.huanchengfly.tieba.post.ui.common.theme.compose.ExtendedTheme
 import com.huanchengfly.tieba.post.utils.EmoticonManager
-import com.huanchengfly.tieba.post.utils.EmoticonManager.getEmoticonHeightPx
 import com.huanchengfly.tieba.post.utils.EmoticonUtil.emoticonString
+import com.huanchengfly.tieba.post.utils.getEmoticonHeightPx
 
 
 @Composable
