@@ -27,7 +27,7 @@ if (!isSelfBuild) {
 }
 
 android {
-    compileSdkVersion 33
+    compileSdk 33
     buildToolsVersion '33.0.0'
     defaultConfig {
         applicationId "com.huanchengfly.tieba.post"
@@ -57,7 +57,8 @@ android {
             keyPassword keystoreProperties["releaseKeyPassword"]
             storeFile file(rootDir.getCanonicalPath() + "/" + keystoreProperties["releaseKeyStore"])
             storePassword keystoreProperties["releaseStorePassword"]
-            v2SigningEnabled true
+            enableV1Signing true
+            enableV2Signing true
             enableV3Signing true
             enableV4Signing true
         }
