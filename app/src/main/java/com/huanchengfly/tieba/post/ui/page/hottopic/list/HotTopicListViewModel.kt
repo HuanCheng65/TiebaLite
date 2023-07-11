@@ -1,5 +1,6 @@
 package com.huanchengfly.tieba.post.ui.page.hottopic.list
 
+import androidx.compose.runtime.Stable
 import com.huanchengfly.tieba.post.api.TiebaApi
 import com.huanchengfly.tieba.post.api.models.protos.topicList.NewTopicList
 import com.huanchengfly.tieba.post.api.models.protos.topicList.TopicListResponse
@@ -20,6 +21,7 @@ import kotlinx.coroutines.flow.merge
 import kotlinx.coroutines.flow.onStart
 import javax.inject.Inject
 
+@Stable
 @HiltViewModel
 class HotTopicListViewModel @Inject constructor() :
     BaseViewModel<HotTopicListUiIntent, HotTopicListPartialChange, HotTopicListUiState, UiEvent>() {

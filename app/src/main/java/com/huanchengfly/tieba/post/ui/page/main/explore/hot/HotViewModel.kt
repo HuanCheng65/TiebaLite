@@ -1,5 +1,6 @@
 package com.huanchengfly.tieba.post.ui.page.main.explore.hot
 
+import androidx.compose.runtime.Stable
 import com.huanchengfly.tieba.post.api.TiebaApi
 import com.huanchengfly.tieba.post.api.models.protos.FrsTabInfo
 import com.huanchengfly.tieba.post.api.models.protos.RecommendTopicList
@@ -22,6 +23,7 @@ import kotlinx.coroutines.flow.merge
 import kotlinx.coroutines.flow.onStart
 import javax.inject.Inject
 
+@Stable
 @HiltViewModel
 class HotViewModel @Inject constructor() :
     BaseViewModel<HotUiIntent, HotPartialChange, HotUiState, HotUiEvent>() {

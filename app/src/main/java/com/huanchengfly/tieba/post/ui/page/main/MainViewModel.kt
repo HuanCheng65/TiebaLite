@@ -1,5 +1,6 @@
 package com.huanchengfly.tieba.post.ui.page.main
 
+import androidx.compose.runtime.Stable
 import com.huanchengfly.tieba.post.arch.BaseViewModel
 import com.huanchengfly.tieba.post.arch.PartialChange
 import com.huanchengfly.tieba.post.arch.PartialChangeProducer
@@ -13,6 +14,7 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.merge
 import javax.inject.Inject
 
+@Stable
 @HiltViewModel
 class MainViewModel @Inject constructor() : BaseViewModel<MainUiIntent, MainPartialChange, MainUiState, MainUiEvent>() {
     override fun createInitialState(): MainUiState = MainUiState()

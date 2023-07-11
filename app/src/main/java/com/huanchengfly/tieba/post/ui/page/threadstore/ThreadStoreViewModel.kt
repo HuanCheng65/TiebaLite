@@ -1,5 +1,6 @@
 package com.huanchengfly.tieba.post.ui.page.threadstore
 
+import androidx.compose.runtime.Stable
 import com.huanchengfly.tieba.post.api.TiebaApi
 import com.huanchengfly.tieba.post.api.models.CommonResponse
 import com.huanchengfly.tieba.post.api.models.ThreadStoreBean
@@ -24,6 +25,7 @@ import kotlinx.coroutines.flow.merge
 import kotlinx.coroutines.flow.onStart
 import javax.inject.Inject
 
+@Stable
 @HiltViewModel
 class ThreadStoreViewModel @Inject constructor() :
     BaseViewModel<ThreadStoreUiIntent, ThreadStorePartialChange, ThreadStoreUiState, ThreadStoreUiEvent>() {

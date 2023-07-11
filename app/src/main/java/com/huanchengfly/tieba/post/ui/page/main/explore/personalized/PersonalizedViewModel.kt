@@ -1,5 +1,6 @@
 package com.huanchengfly.tieba.post.ui.page.main.explore.personalized
 
+import androidx.compose.runtime.Stable
 import com.huanchengfly.tieba.post.api.TiebaApi
 import com.huanchengfly.tieba.post.api.models.AgreeBean
 import com.huanchengfly.tieba.post.api.models.CommonResponse
@@ -29,6 +30,7 @@ import kotlinx.coroutines.flow.merge
 import kotlinx.coroutines.flow.onStart
 import javax.inject.Inject
 
+@Stable
 @HiltViewModel
 class PersonalizedViewModel @Inject constructor() :
     BaseViewModel<PersonalizedUiIntent, PersonalizedPartialChange, PersonalizedUiState, PersonalizedUiEvent>() {
@@ -44,6 +46,7 @@ class PersonalizedViewModel @Inject constructor() :
             is PersonalizedPartialChange.Refresh.Success -> PersonalizedUiEvent.RefreshSuccess(
                 partialChange.data.size
             )
+
             else -> null
         }
 

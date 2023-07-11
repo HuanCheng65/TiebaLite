@@ -1,5 +1,6 @@
 package com.huanchengfly.tieba.post.ui.page.main.user
 
+import androidx.compose.runtime.Stable
 import com.huanchengfly.tieba.post.api.TiebaApi
 import com.huanchengfly.tieba.post.api.models.Profile
 import com.huanchengfly.tieba.post.api.retrofit.exception.getErrorMessage
@@ -11,6 +12,7 @@ import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.*
 import javax.inject.Inject
 
+@Stable
 @HiltViewModel
 class UserViewModel @Inject constructor() : BaseViewModel<UserUiIntent, UserPartialChange, UserUiState, UserUiEvent>() {
     override fun createInitialState(): UserUiState =

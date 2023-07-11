@@ -1,5 +1,6 @@
 package com.huanchengfly.tieba.post.ui.page.forum.threadlist
 
+import androidx.compose.runtime.Stable
 import com.huanchengfly.tieba.post.api.TiebaApi
 import com.huanchengfly.tieba.post.api.models.AgreeBean
 import com.huanchengfly.tieba.post.api.models.protos.ThreadInfo
@@ -56,12 +57,14 @@ enum class ForumThreadListType {
     Latest, Good
 }
 
+@Stable
 @HiltViewModel
 class LatestThreadListViewModel @Inject constructor() : ForumThreadListViewModel() {
     override fun createPartialChangeProducer(): PartialChangeProducer<ForumThreadListUiIntent, ForumThreadListPartialChange, ForumThreadListUiState> =
         ForumThreadListPartialChangeProducer(ForumThreadListType.Latest)
 }
 
+@Stable
 @HiltViewModel
 class GoodThreadListViewModel @Inject constructor() : ForumThreadListViewModel() {
     override fun createPartialChangeProducer(): PartialChangeProducer<ForumThreadListUiIntent, ForumThreadListPartialChange, ForumThreadListUiState> =

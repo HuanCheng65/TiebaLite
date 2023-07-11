@@ -1,5 +1,6 @@
 package com.huanchengfly.tieba.post.ui.page.main.notifications.list
 
+import androidx.compose.runtime.Stable
 import com.huanchengfly.tieba.post.api.TiebaApi
 import com.huanchengfly.tieba.post.api.models.MessageListBean
 import com.huanchengfly.tieba.post.api.retrofit.exception.getErrorMessage
@@ -22,6 +23,7 @@ abstract class NotificationsListViewModel :
         }
 }
 
+@Stable
 @HiltViewModel
 class ReplyMeListViewModel @Inject constructor() : NotificationsListViewModel() {
     override fun createPartialChangeProducer():
@@ -30,6 +32,7 @@ class ReplyMeListViewModel @Inject constructor() : NotificationsListViewModel() 
     }
 }
 
+@Stable
 @HiltViewModel
 class AtMeListViewModel @Inject constructor() : NotificationsListViewModel() {
     override fun createPartialChangeProducer():

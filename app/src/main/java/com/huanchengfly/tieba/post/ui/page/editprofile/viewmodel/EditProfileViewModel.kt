@@ -1,5 +1,6 @@
 package com.huanchengfly.tieba.post.ui.page.editprofile.viewmodel
 
+import androidx.compose.runtime.Stable
 import com.huanchengfly.tieba.post.api.TiebaApi
 import com.huanchengfly.tieba.post.api.interfaces.ITiebaApi
 import com.huanchengfly.tieba.post.api.retrofit.exception.getErrorCode
@@ -17,6 +18,7 @@ import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.*
 import javax.inject.Inject
 
+@Stable
 @HiltViewModel
 class EditProfileViewModel @Inject constructor() :
     BaseViewModel<EditProfileIntent, EditProfilePartialChange, EditProfileState, EditProfileEvent>() {
@@ -113,24 +115,30 @@ class EditProfileViewModel @Inject constructor() :
                 false,
                 message = partialChange.error
             )
+
             EditProfilePartialChange.Submit.Success -> EditProfileEvent.Submit.Result(
                 true,
                 changed = false
             )
+
             EditProfilePartialChange.Submit.SuccessWithoutChange -> EditProfileEvent.Submit.Result(
                 true
             )
+
             EditProfilePartialChange.ModifyNickname.Start -> EditProfileEvent.ModifyNickname.Start
             is EditProfilePartialChange.ModifyNickname.Finish -> EditProfileEvent.ModifyNickname.Finish(
                 partialChange.result
             )
+
             EditProfilePartialChange.UploadPortrait.Start -> EditProfileEvent.UploadPortrait.Pick
             is EditProfilePartialChange.UploadPortrait.Success -> EditProfileEvent.UploadPortrait.Success(
                 partialChange.message
             )
+
             is EditProfilePartialChange.UploadPortrait.Fail -> EditProfileEvent.UploadPortrait.Fail(
                 partialChange.error
             )
+
             else -> null
         }
     }

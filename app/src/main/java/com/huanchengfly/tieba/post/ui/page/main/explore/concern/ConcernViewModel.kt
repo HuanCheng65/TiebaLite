@@ -1,5 +1,6 @@
 package com.huanchengfly.tieba.post.ui.page.main.explore.concern
 
+import androidx.compose.runtime.Stable
 import com.huanchengfly.tieba.post.App
 import com.huanchengfly.tieba.post.api.TiebaApi
 import com.huanchengfly.tieba.post.api.models.AgreeBean
@@ -26,6 +27,7 @@ import kotlinx.coroutines.flow.merge
 import kotlinx.coroutines.flow.onStart
 import javax.inject.Inject
 
+@Stable
 @HiltViewModel
 class ConcernViewModel @Inject constructor() :
     BaseViewModel<ConcernUiIntent, ConcernPartialChange, ConcernUiState, ConcernUiEvent>() {
