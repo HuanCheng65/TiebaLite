@@ -118,7 +118,7 @@ object EmoticonManager {
     private val coroutineScope: CoroutineScope = CoroutineScope(Dispatchers.IO)
 
     fun getEmoticonInlineContent(
-        sizePx: Int
+        sizePx: Float
     ): Map<String, InlineTextContent> {
         return emoticonIds.associate { id ->
             "Emoticon#$id" to InlineTextContent(

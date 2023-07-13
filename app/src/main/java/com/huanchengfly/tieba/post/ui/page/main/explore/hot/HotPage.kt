@@ -126,8 +126,8 @@ fun HotPage(
                 item(key = "TopicList") {
                     VerticalGrid(
                         column = 2,
-                        horizontalArrangement = Arrangement.spacedBy(16.dp),
-                        modifier = Modifier.padding(horizontal = 16.dp)
+                        modifier = Modifier.padding(horizontal = 16.dp),
+                        horizontalArrangement = Arrangement.spacedBy(16.dp)
                     ) {
                         itemsIndexed(
                             items = topicList,

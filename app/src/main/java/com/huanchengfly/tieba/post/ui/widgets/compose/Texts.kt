@@ -1,5 +1,6 @@
 package com.huanchengfly.tieba.post.ui.widgets.compose
 
+import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.text.InlineTextContent
 import androidx.compose.material.Icon
@@ -10,6 +11,7 @@ import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.AccountCircle
 import androidx.compose.material.icons.rounded.Link
+import androidx.compose.material.icons.rounded.SlowMotionVideo
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -17,6 +19,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.takeOrElse
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.ExperimentalTextApi
 import androidx.compose.ui.text.Placeholder
 import androidx.compose.ui.text.PlaceholderVerticalAlign
 import androidx.compose.ui.text.TextLayoutResult
@@ -24,6 +27,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
@@ -37,7 +41,6 @@ import com.huanchengfly.tieba.post.ui.common.theme.compose.ExtendedTheme
 import com.huanchengfly.tieba.post.utils.EmoticonManager
 import com.huanchengfly.tieba.post.utils.EmoticonUtil.emoticonString
 import com.huanchengfly.tieba.post.utils.getEmoticonHeightPx
-
 
 @Composable
 fun EmoticonText(
@@ -100,6 +103,7 @@ fun EmoticonText(
     softWrap: Boolean = true,
     maxLines: Int = Int.MAX_VALUE,
     minLines: Int = 1,
+    emoticonSize: Float = 0.9f,
     inlineContent: Map<String, InlineTextContent> = emptyMap(),
     onTextLayout: (TextLayoutResult) -> Unit = {},
     style: TextStyle = LocalTextStyle.current
@@ -122,7 +126,7 @@ fun EmoticonText(
             letterSpacing = letterSpacing
         )
     )
-    val sizePx = getEmoticonHeightPx(mergedStyle)
+    val sizePx = getEmoticonHeightPx(mergedStyle) * emoticonSize
     val emoticonInlineContent =
         remember(sizePx) { EmoticonManager.getEmoticonInlineContent(sizePx) }
     IconText(
@@ -203,7 +207,22 @@ fun IconText(
                             Icons.Rounded.Link,
                             contentDescription = stringResource(id = R.string.link),
                             modifier = Modifier.size(sizeDp),
-                            tint = ExtendedTheme.colors.accent,
+                            tint = ExtendedTheme.colors.primary,
+                        )
+                    }
+                ),
+                "video_icon" to InlineTextContent(
+                    placeholder = Placeholder(
+                        width = sizeSp,
+                        height = sizeSp,
+                        placeholderVerticalAlign = PlaceholderVerticalAlign.TextCenter
+                    ),
+                    children = {
+                        Icon(
+                            Icons.Rounded.SlowMotionVideo,
+                            contentDescription = stringResource(id = R.string.desc_video),
+                            modifier = Modifier.size(sizeDp),
+                            tint = ExtendedTheme.colors.primary,
                         )
                     }
                 ),
@@ -218,7 +237,7 @@ fun IconText(
                             Icons.Rounded.AccountCircle,
                             contentDescription = stringResource(id = R.string.user),
                             modifier = Modifier.size(sizeDp),
-                            tint = ExtendedTheme.colors.accent,
+                            tint = ExtendedTheme.colors.primary,
                         )
                     }
                 ),
@@ -243,5 +262,62 @@ fun IconText(
         iconInlineContent + inlineContent,
         onTextLayout,
         style
+    )
+}
+
+/**
+ * A [Text] composable that supports setting its minimum width to width of the specified number of Chinese characters
+ */
+@OptIn(ExperimentalTextApi::class)
+@Composable
+fun TextWithMinWidth(
+    text: String,
+    modifier: Modifier = Modifier,
+    color: Color = Color.Unspecified,
+    fontSize: TextUnit = TextUnit.Unspecified,
+    fontStyle: FontStyle? = null,
+    fontWeight: FontWeight? = null,
+    fontFamily: FontFamily? = null,
+    letterSpacing: TextUnit = TextUnit.Unspecified,
+    textDecoration: TextDecoration? = null,
+    textAlign: TextAlign? = null,
+    lineHeight: TextUnit = TextUnit.Unspecified,
+    overflow: TextOverflow = TextOverflow.Clip,
+    softWrap: Boolean = true,
+    maxLines: Int = Int.MAX_VALUE,
+    minLines: Int = 1,
+    minLength: Int = 0,
+    onTextLayout: (TextLayoutResult) -> Unit = {},
+    style: TextStyle = LocalTextStyle.current,
+) {
+    val textMeasurer = rememberTextMeasurer()
+    val singleChar = stringResource(id = R.string.single_chinese_char)
+    val singleCharWidth = remember(style) {
+        textMeasurer.measure(
+            text = singleChar,
+            style = style
+        ).size.width.pxToDp().dp
+    }
+
+    Text(
+        text = text,
+        modifier = Modifier
+            .defaultMinSize(minWidth = singleCharWidth * minLength)
+            .then(modifier),
+        color = color,
+        fontSize = fontSize,
+        fontStyle = fontStyle,
+        fontWeight = fontWeight,
+        fontFamily = fontFamily,
+        letterSpacing = letterSpacing,
+        textDecoration = textDecoration,
+        textAlign = textAlign,
+        lineHeight = lineHeight,
+        overflow = overflow,
+        softWrap = softWrap,
+        maxLines = maxLines,
+        minLines = minLines,
+        onTextLayout = onTextLayout,
+        style = style
     )
 }

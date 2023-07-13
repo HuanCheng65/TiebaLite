@@ -60,6 +60,7 @@ import com.huanchengfly.tieba.post.ui.page.destinations.SettingsPageDestination
 import com.huanchengfly.tieba.post.ui.page.destinations.ThreadStorePageDestination
 import com.huanchengfly.tieba.post.ui.widgets.compose.Avatar
 import com.huanchengfly.tieba.post.ui.widgets.compose.HorizontalDivider
+import com.huanchengfly.tieba.post.ui.widgets.compose.ListMenuItem
 import com.huanchengfly.tieba.post.ui.widgets.compose.Sizes
 import com.huanchengfly.tieba.post.ui.widgets.compose.Switch
 import com.huanchengfly.tieba.post.ui.widgets.compose.VerticalDivider
@@ -375,38 +376,5 @@ fun UserPage(
                 modifier = Modifier.align(Alignment.TopCenter)
             )
         }
-    }
-}
-
-@Composable
-private fun ListMenuItem(
-    icon: ImageVector,
-    text: String,
-    modifier: Modifier = Modifier,
-    onClick: (() -> Unit)? = null,
-    customContent: @Composable (RowScope.() -> Unit)? = null,
-) {
-    val menuModifier = if (onClick != null) {
-        Modifier.clickable(onClick = onClick)
-    } else {
-        Modifier
-    }
-    Row(
-        verticalAlignment = Alignment.CenterVertically,
-        modifier = modifier
-            .then(menuModifier)
-            .padding(horizontal = 16.dp, vertical = 12.dp),
-    ) {
-        Icon(imageVector = icon, contentDescription = text, tint = ExtendedTheme.colors.accent)
-        Spacer(modifier = Modifier.width(16.dp))
-        Text(
-            text = text,
-            fontSize = 14.sp,
-            fontWeight = FontWeight.Bold,
-            maxLines = 1,
-            modifier = Modifier.weight(1f),
-        )
-        Spacer(modifier = Modifier.width(16.dp))
-        customContent?.invoke(this)
     }
 }

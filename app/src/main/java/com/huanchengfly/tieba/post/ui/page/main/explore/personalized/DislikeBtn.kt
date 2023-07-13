@@ -107,8 +107,8 @@ fun Dislike(
                             bottom.linkTo(parent.bottom)
                         }
                         .padding(horizontal = 16.dp),
-                    horizontalArrangement = Arrangement.spacedBy(4.dp),
                     verticalArrangement = Arrangement.spacedBy(4.dp),
+                    horizontalArrangement = Arrangement.spacedBy(4.dp),
                 ) {
                     items(
                         items = dislikeResource,

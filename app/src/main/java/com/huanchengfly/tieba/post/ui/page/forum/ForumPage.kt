@@ -132,8 +132,6 @@ import kotlinx.coroutines.launch
 import kotlin.math.max
 import kotlin.math.min
 
-private val TabWidth = 100.dp
-
 fun getSortType(
     context: Context,
     forumName: String

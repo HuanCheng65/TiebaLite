@@ -108,6 +108,7 @@ private fun calcRows(column: Int, items: List<GridScopeImpl.Item>): List<List<Gr
 fun VerticalGrid(
     column: Int,
     modifier: Modifier = Modifier,
+    rowModifier: Modifier = Modifier,
     verticalArrangement: Arrangement.Vertical = Arrangement.Top,
     horizontalArrangement: Arrangement.Horizontal = Arrangement.Start,
     content: GridScope.() -> Unit
@@ -118,7 +119,8 @@ fun VerticalGrid(
         rows.forEach {
             Row(
                 verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = horizontalArrangement
+                horizontalArrangement = horizontalArrangement,
+                modifier = rowModifier
             ) {
                 it.forEach {
                     Box(

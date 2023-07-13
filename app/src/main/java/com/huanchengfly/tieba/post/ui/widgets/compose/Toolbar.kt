@@ -232,6 +232,58 @@ fun TitleCentredToolbar(
 }
 
 @Composable
+fun TitleCentredToolbar(
+    title: @Composable () -> Unit,
+    modifier: Modifier = Modifier,
+    navigationIcon: @Composable (() -> Unit)? = null,
+    actions: @Composable (RowScope.() -> Unit) = {},
+    content: @Composable (ColumnScope.() -> Unit) = {},
+) {
+    Column(
+        modifier = Modifier
+            .background(ExtendedTheme.colors.topBar)
+            .then(modifier)
+    ) {
+        TopAppBar(
+            backgroundColor = ExtendedTheme.colors.topBar,
+            contentColor = ExtendedTheme.colors.onTopBar,
+            elevation = 0.dp
+        ) {
+            Box(modifier = Modifier.fillMaxSize()) {
+                Row(
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier.fillMaxHeight()
+                ) {
+                    navigationIcon?.invoke()
+
+                    Spacer(modifier = Modifier.weight(1f))
+
+                    actions()
+                }
+
+                Row(
+                    Modifier
+                        .fillMaxHeight()
+                        .align(Alignment.Center),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.Center
+                ) {
+                    title()
+                }
+            }
+        }
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(color = ExtendedTheme.colors.topBar)
+        ) {
+            content()
+        }
+    }
+}
+
+@Composable
 fun Toolbar(
     title: String,
     navigationIcon: @Composable (() -> Unit)? = null,
