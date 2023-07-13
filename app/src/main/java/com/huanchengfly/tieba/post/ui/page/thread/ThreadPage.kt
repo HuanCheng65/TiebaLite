@@ -110,6 +110,7 @@ import com.huanchengfly.tieba.post.toastShort
 import com.huanchengfly.tieba.post.ui.common.PbContentRender
 import com.huanchengfly.tieba.post.ui.common.theme.compose.ExtendedTheme
 import com.huanchengfly.tieba.post.ui.page.ProvideNavigator
+import com.huanchengfly.tieba.post.ui.page.destinations.ForumPageDestination
 import com.huanchengfly.tieba.post.ui.widgets.compose.Avatar
 import com.huanchengfly.tieba.post.ui.widgets.compose.BackNavigationIcon
 import com.huanchengfly.tieba.post.ui.widgets.compose.Button
@@ -816,6 +817,14 @@ fun ThreadPage(
                             TopBar(
                                 forum = forum,
                                 onBack = { navigator.navigateUp() },
+                                onForumClick = {
+                                    val forumName = forum?.get { name }
+                                    if (forumName != null) navigator.navigate(
+                                        ForumPageDestination(
+                                            forumName
+                                        )
+                                    )
+                                },
                                 modifier = Modifier.statusBarsPadding()
                             )
                         },
@@ -1076,6 +1085,7 @@ fun ThreadPage(
 private fun TopBar(
     forum: ImmutableHolder<SimpleForum>?,
     onBack: () -> Unit,
+    onForumClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     TitleCentredToolbar(
@@ -1087,6 +1097,7 @@ private fun TopBar(
                             .height(IntrinsicSize.Min)
                             .clip(RoundedCornerShape(100))
                             .background(ExtendedTheme.colors.chip)
+                            .clickable(onClick = onForumClick)
                             .padding(4.dp),
                         verticalAlignment = Alignment.CenterVertically
                     ) {
