@@ -238,7 +238,12 @@ private fun HistoryItem(
                         contentDescription = null
                     )
                 },
-                name = { Text(text = if (info.type == HistoryUtil.TYPE_THREAD) info.username else info.title) },
+                name = {
+                    Text(
+                        text = (if (info.type == HistoryUtil.TYPE_THREAD) info.username else info.title)
+                            ?: ""
+                    )
+                },
             ) {
                 Text(
                     text = DateTimeUtils.getRelativeTimeString(

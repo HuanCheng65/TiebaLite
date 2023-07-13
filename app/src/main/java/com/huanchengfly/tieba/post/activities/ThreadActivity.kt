@@ -664,16 +664,15 @@ class ThreadActivity : BaseActivity(), View.OnClickListener, IThreadMenuFragment
                     .setSeeLz(seeLz)
                     .toString()
             }
-            val history = History()
-                .setData(threadId)
-                .setExtras(extras)
-                .setTitle(dataBean!!.thread?.title)
-                .setType(HistoryUtil.TYPE_THREAD)
-            if (dataBean!!.thread?.author != null) {
-                history.avatar = dataBean!!.thread?.author?.portrait
-                history.username = dataBean!!.thread?.author?.nameShow
-            }
-            HistoryUtil.writeHistory(history, async)
+            val history = History(
+                title = dataBean!!.thread?.title ?: "",
+                data = dataBean!!.thread?.id ?: threadId!!,
+                type = HistoryUtil.TYPE_THREAD,
+                extras = extras,
+                avatar = dataBean!!.thread?.author?.portrait,
+                username = dataBean!!.thread?.author?.nameShow
+            )
+            HistoryUtil.saveHistory(history, async)
         }
     }
 

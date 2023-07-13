@@ -2,7 +2,6 @@ package com.huanchengfly.tieba.post.utils
 
 import com.huanchengfly.tieba.post.models.database.History
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
@@ -11,6 +10,7 @@ import org.litepal.LitePal.order
 import org.litepal.LitePal.where
 import org.litepal.crud.async.FindMultiExecutor
 import org.litepal.extension.find
+import org.litepal.extension.findFirstAsync
 
 object HistoryUtil {
     const val PAGE_SIZE = 100
@@ -21,8 +21,12 @@ object HistoryUtil {
     }
 
     @JvmOverloads
-    fun writeHistory(history: History, async: Boolean = false) {
-        add(history, async)
+    fun saveHistory(history: History, async: Boolean = true) {
+        if (async) {
+            saveOrUpdateAsync(history)
+        } else {
+            saveOrUpdate(history)
+        }
     }
 
     val all: List<History>
@@ -50,14 +54,13 @@ object HistoryUtil {
         type: Int,
         page: Int
     ): Flow<List<History>> {
-        return flow {
-            delay(100)
+        return flow<List<History>> {
             emit(
                 where("type = ?", "$type")
                     .order("timestamp desc, count desc")
                     .limit(PAGE_SIZE)
                     .offset(page * 100)
-                    .find<History>()
+                    .find()
             )
         }.flowOn(Dispatchers.IO)
     }
@@ -67,27 +70,62 @@ object HistoryUtil {
             History::class.java
         )
         if (historyBean != null) {
-            historyBean.setTimestamp(System.currentTimeMillis())
-                .setTitle(history.title)
-                .setExtras(history.extras)
-                .setAvatar(history.avatar)
-                .setUsername(history.username)
-                .setCount(historyBean.count + 1)
-                .update(historyBean.id.toLong())
+            historyBean.copy(
+                timestamp = System.currentTimeMillis(),
+                title = history.title,
+                extras = history.extras,
+                avatar = history.avatar,
+                username = history.username,
+                count = historyBean.count + 1
+            ).update(historyBean.id)
             return true
         }
         return false
     }
 
-    private fun add(history: History, async: Boolean = false) {
+    private fun updateAsync(
+        data: String,
+        callback: ((Boolean) -> Unit)? = null
+    ) {
+        where("data = ?", data).findFirstAsync<History?>()
+            .listen {
+                if (it == null) {
+                    callback?.invoke(false)
+                } else {
+                    it.copy(
+                        timestamp = System.currentTimeMillis(),
+                        count = it.count + 1
+                    ).updateAsync(it.id).listen {
+                        callback?.invoke(true)
+                    }
+                }
+            }
+    }
+
+    private fun saveOrUpdate(history: History, async: Boolean = false) {
         if (update(history)) {
             return
         }
-        history.setCount(1).timestamp = System.currentTimeMillis()
+        val saveHistory = history.copy(count = 1, timestamp = System.currentTimeMillis())
         if (async) {
-            history.saveAsync().listen(null)
+            saveHistory.saveAsync().listen(null)
         } else {
-            history.save()
+            saveHistory.save()
+        }
+    }
+
+    private fun saveOrUpdateAsync(
+        history: History,
+        callback: ((Boolean) -> Unit)? = null
+    ) {
+        updateAsync(history.data) { success ->
+            if (!success) {
+                history.copy(count = 1, timestamp = System.currentTimeMillis())
+                    .saveAsync()
+                    .listen {
+                        callback?.invoke(it)
+                    }
+            }
         }
     }
 }

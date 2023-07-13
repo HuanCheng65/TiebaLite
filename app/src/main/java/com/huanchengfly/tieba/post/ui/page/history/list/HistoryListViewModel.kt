@@ -114,7 +114,7 @@ sealed interface HistoryListUiIntent : UiIntent {
 
     data class LoadMore(val page: Int) : HistoryListUiIntent
 
-    data class Delete(val id: Int) : HistoryListUiIntent
+    data class Delete(val id: Long) : HistoryListUiIntent
 
     object DeleteAll : HistoryListUiIntent
 }
@@ -189,7 +189,7 @@ sealed interface HistoryListPartialChange : PartialChange<HistoryListUiState> {
         }
 
         data class Success(
-            val id: Int
+            val id: Long
         ) : Delete()
 
         data class Failure(

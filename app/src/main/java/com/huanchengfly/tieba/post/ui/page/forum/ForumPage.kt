@@ -449,15 +449,16 @@ fun ForumPage(
 
     val unlikeDialogState = rememberDialogState()
 
-    if (forum != null) {
-        LaunchedEffect(forum) {
-            HistoryUtil.writeHistory(
-                History()
-                    .setTitle(context.getString(R.string.title_forum, forumName))
-                    .setTimestamp(System.currentTimeMillis())
-                    .setAvatar(forum.avatar)
-                    .setType(HistoryUtil.TYPE_FORUM)
-                    .setData(forumName),
+    LaunchedEffect(forum) {
+        if (forum != null) {
+            HistoryUtil.saveHistory(
+                History(
+                    title = context.getString(R.string.title_forum, forum.name),
+                    timestamp = System.currentTimeMillis(),
+                    avatar = forum.avatar,
+                    type = HistoryUtil.TYPE_FORUM,
+                    data = forum.name
+                ),
                 true
             )
         }

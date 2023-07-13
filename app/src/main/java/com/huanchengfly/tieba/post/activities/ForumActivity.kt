@@ -786,13 +786,14 @@ class ForumActivity : BaseActivity(), View.OnClickListener, OnRefreshedListener,
         }
         if (firstLoaded) {
             firstLoaded = false
-            HistoryUtil.writeHistory(
-                History()
-                    .setTitle(getString(R.string.title_forum, forumName))
-                    .setTimestamp(System.currentTimeMillis())
-                    .setAvatar(forumPageBean.forum?.avatar)
-                    .setType(HistoryUtil.TYPE_FORUM)
-                    .setData(forumName)
+            if (forumName != null) HistoryUtil.saveHistory(
+                History(
+                    title = getString(R.string.title_forum, forumName),
+                    timestamp = System.currentTimeMillis(),
+                    data = forumName!!,
+                    type = HistoryUtil.TYPE_FORUM,
+                    avatar = forumPageBean.forum?.avatar,
+                )
             )
         }
     }
