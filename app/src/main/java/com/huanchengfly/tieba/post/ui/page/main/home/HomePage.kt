@@ -249,7 +249,7 @@ private fun ForumItem(
             dialogState = dialogState,
             onConfirm = { viewModel.send(HomeUiIntent.Unfollow(item.forumId, item.forumName)) },
             modifier = Modifier,
-            onCancel = {
+            onDismiss = {
                 willUnfollow = false
             },
             title = {

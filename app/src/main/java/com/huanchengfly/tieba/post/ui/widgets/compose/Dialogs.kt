@@ -189,6 +189,7 @@ fun ConfirmDialog(
     onConfirm: () -> Unit,
     modifier: Modifier = Modifier,
     onCancel: (() -> Unit)? = null,
+    onDismiss: (() -> Unit)? = null,
     confirmText: String = stringResource(id = R.string.button_sure_default),
     cancelText: String = stringResource(id = R.string.button_cancel),
     title: @Composable (DialogScope.() -> Unit) = {},
@@ -197,7 +198,7 @@ fun ConfirmDialog(
     Dialog(
         modifier = modifier,
         dialogState = dialogState,
-        onDismiss = onCancel,
+        onDismiss = onDismiss,
         title = title,
         buttons = {
             DialogPositiveButton(text = confirmText, onClick = onConfirm)
