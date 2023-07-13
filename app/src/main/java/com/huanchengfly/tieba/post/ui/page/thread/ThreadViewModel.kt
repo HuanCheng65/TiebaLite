@@ -775,28 +775,19 @@ sealed interface ThreadPartialChange : PartialChange<ThreadUiState> {
             return when (this) {
                 is Start -> oldState.copy(
                     threadInfo = oldState.threadInfo?.getImmutable {
-                        updateCollectStatus(
-                            newStatus = 0,
-                            markPostId = 0
-                        )
+                        updateAgreeStatus(hasAgree = if (hasAgree) 1 else 0)
                     }
                 )
 
                 is Success -> oldState.copy(
                     threadInfo = oldState.threadInfo?.getImmutable {
-                        updateCollectStatus(
-                            newStatus = 0,
-                            markPostId = 0
-                        )
+                        updateAgreeStatus(hasAgree = if (hasAgree) 1 else 0)
                     }
                 )
 
                 is Failure -> oldState.copy(
                     threadInfo = oldState.threadInfo?.getImmutable {
-                        updateCollectStatus(
-                            newStatus = 0,
-                            markPostId = 0
-                        )
+                        updateAgreeStatus(hasAgree = if (hasAgree) 1 else 0)
                     }
                 )
             }
