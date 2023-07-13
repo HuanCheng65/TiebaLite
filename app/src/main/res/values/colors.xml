@@ -143,11 +143,11 @@
     <color name="theme_color_on_toolbar_bar_light">#BFBFBF</color>
     <color name="theme_color_on_toolbar_bar_dark">#5C5C5C</color>
 
-    <color name="theme_color_nav_bar_surface_light">#FFF3F7F9</color>
+    <color name="theme_color_nav_bar_surface_light">#FFF8F8F8</color>
     <color name="theme_color_nav_bar_surface_grey_dark">#242424</color>
     <color name="theme_color_nav_bar_surface_amoled_dark">#282828</color>
 
-    <color name="theme_color_on_nav_bar_surface_light">#FF8D9194</color>
+    <color name="theme_color_on_nav_bar_surface_light">#FFBFBFBF</color>
     <color name="theme_color_on_nav_bar_surface_dark">#5C5C5C</color>
 
     <color name="theme_color_background_light">#FFFFFFFF</color>
