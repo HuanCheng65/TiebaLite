@@ -17,7 +17,8 @@ fun getPhotoViewData(
     picUrl: String,
     originUrl: String,
     showOriginBtn: Boolean,
-    originSize: Int
+    originSize: Int,
+    seeLz: Boolean = false
 ): PhotoViewData? {
     if (post.from_forum == null) return null
     return PhotoViewData(
@@ -28,7 +29,8 @@ fun getPhotoViewData(
             postId = post.id,
             objType = "pb",
             picId = picId,
-            picIndex = 1
+            picIndex = 1,
+            seeLz = seeLz
         ),
         picItems = listOf(
             PicItem(
@@ -50,6 +52,7 @@ fun getImmutablePhotoViewData(
 ): ImmutableHolder<PhotoViewData> {
     return wrapImmutable(getPhotoViewData(threadInfo, index))
 }
+
 
 fun getPhotoViewData(
     threadInfo: ThreadInfo,

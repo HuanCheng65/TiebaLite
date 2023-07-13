@@ -3,9 +3,12 @@ package com.huanchengfly.tieba.post.arch
 import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.InternalComposeApi
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.State
+import androidx.compose.runtime.currentComposer
 import androidx.compose.runtime.produceState
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -14,6 +17,7 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.Flow
@@ -79,26 +83,26 @@ inline fun <reified Event : UiEvent> Flow<UiEvent>.onEvent(
     }
 }
 
+@OptIn(InternalComposeApi::class)
 @Composable
 inline fun <reified Event : UiEvent> BaseViewModel<*, *, *, *>.onEvent(
     noinline listener: suspend (Event) -> Unit
 ) {
-    val coroutineScope = rememberCoroutineScope()
+    val applyContext = currentComposer.applyCoroutineContext
+    val coroutineScope = remember(applyContext) { CoroutineScope(applyContext) }
     DisposableEffect(key1 = listener, key2 = this) {
-        with(coroutineScope) {
-            val job = launch {
-                uiEventFlow
-                    .filterIsInstance<Event>()
-                    .cancellable()
-                    .collect {
-                        launch {
-                            listener(it)
-                        }
+        val job = coroutineScope.launch {
+            uiEventFlow
+                .filterIsInstance<Event>()
+                .cancellable()
+                .collect {
+                    coroutineScope.launch {
+                        listener(it)
                     }
-            }
-
-            onDispose { job.cancel() }
+                }
         }
+
+        onDispose { job.cancel() }
     }
 }
 

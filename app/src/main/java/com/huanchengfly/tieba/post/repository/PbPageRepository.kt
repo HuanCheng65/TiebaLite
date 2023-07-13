@@ -58,7 +58,11 @@ object PbPageRepository {
                     )
                 }
                 val firstPost = postList.firstOrNull { it.floor == 1 }
-                    ?: response.data_.first_floor_post?.copy(author = response.data_.thread.author)
+                    ?: response.data_.first_floor_post?.copy(
+                        author = response.data_.thread.author,
+                        from_forum = response.data_.forum,
+                        tid = response.data_.thread.id,
+                    )
 
                 response.copy(
                     data_ = response.data_.copy(
