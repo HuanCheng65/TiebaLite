@@ -7,8 +7,8 @@ import com.huanchengfly.tieba.post.models.BaseBean
 
 data class CommonResponse(
     @SerializedName("error_code", alternate = ["errno", "no"])
-    var errorCode: Int?,
+    val errorCode: Int = 0,
     @JsonAdapter(ErrorMsgAdapter::class)
     @SerializedName("error_msg", alternate = ["errmsg", "error"])
-    var errorMsg: String?
+    val errorMsg: String = ""
 ) : BaseBean()

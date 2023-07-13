@@ -49,6 +49,7 @@ import com.huanchengfly.tieba.post.interfaces.CommonCallback
 import com.huanchengfly.tieba.post.models.ReplyInfoBean
 import com.huanchengfly.tieba.post.models.ThreadHistoryInfoBean
 import com.huanchengfly.tieba.post.models.database.History
+import com.huanchengfly.tieba.post.toJson
 import com.huanchengfly.tieba.post.toastShort
 import com.huanchengfly.tieba.post.ui.common.theme.utils.ThemeUtils
 import com.huanchengfly.tieba.post.ui.widgets.VideoPlayerStandard
@@ -488,15 +489,7 @@ class ThreadActivity : BaseActivity(), View.OnClickListener, IThreadMenuFragment
         }
     }
 
-    fun getItemByPosition(itemPosition: Int): PostListItemBean? {
-        return if (itemPosition == 0) {
-            threadMainPostAdapter.threadPostBean
-        } else {
-            replyAdapter.getItem(itemPosition - 1)
-        }
-    }
-
-    fun getItemPositionByPid(pid: String): Int {
+    private fun getItemPositionByPid(pid: String): Int {
         val threadPostId = threadMainPostAdapter.threadBean.postId
         return if (threadPostId == pid) {
             0
@@ -659,10 +652,10 @@ class ThreadActivity : BaseActivity(), View.OnClickListener, IThreadMenuFragment
             }
             var extras = ""
             if (postListItemBean != null) {
-                extras = ThreadHistoryInfoBean()
-                    .setPid(postListItemBean.id)
-                    .setSeeLz(seeLz)
-                    .toString()
+                extras = ThreadHistoryInfoBean(
+                    pid = postListItemBean.id,
+                    isSeeLz = seeLz
+                ).toJson()
             }
             val history = History(
                 title = dataBean!!.thread?.title ?: "",

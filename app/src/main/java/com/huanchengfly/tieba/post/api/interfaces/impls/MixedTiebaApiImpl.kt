@@ -400,8 +400,8 @@ object MixedTiebaApiImpl : ITiebaApi {
         RetrofitTiebaApi.NEW_TIEBA_API.addStore(
             listOf(
                 CollectDataBean(
-                    postId,
                     threadId,
+                    postId,
                     "0",
                     "0"
                 )
