@@ -26,6 +26,7 @@ import androidx.compose.material.icons.rounded.Download
 import androidx.compose.material.icons.rounded.Share
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -46,6 +47,7 @@ import com.github.panpf.sketch.zoom.SketchZoomImageView
 import com.huanchengfly.tieba.post.R
 import com.huanchengfly.tieba.post.arch.BaseComposeActivityWithParcelable
 import com.huanchengfly.tieba.post.arch.collectPartialAsState
+import com.huanchengfly.tieba.post.models.protos.LoadPicPageData
 import com.huanchengfly.tieba.post.models.protos.PhotoViewData
 import com.huanchengfly.tieba.post.toastShort
 import com.huanchengfly.tieba.post.ui.common.theme.compose.ExtendedTheme
@@ -165,7 +167,11 @@ class PhotoViewActivity : BaseComposeActivityWithParcelable<PhotoViewData>() {
             prop1 = PhotoViewUiState::hasNext,
             initial = false
         )
-        val pageCount = items.size
+        val loadPicPageData by viewModel.uiState.collectPartialAsState(
+            prop1 = PhotoViewUiState::loadPicPageData,
+            initial = LoadPicPageData()
+        )
+        val pageCount by remember { derivedStateOf { items.size } }
         Surface(color = Color.Black) {
             if (items.isNotEmpty()) {
                 val coroutineScope = rememberCoroutineScope()
@@ -173,12 +179,34 @@ class PhotoViewActivity : BaseComposeActivityWithParcelable<PhotoViewData>() {
                 LaunchedEffect(initialIndex) {
                     if (pagerState.currentPage != initialIndex) pagerState.scrollToPage(initialIndex)
                 }
+                LaunchedEffect(pagerState.currentPage, pageCount, loadPicPageData) {
+                    loadPicPageData?.let {
+                        val item = items[pagerState.currentPage]
+                        if (pagerState.currentPage == 0 && hasPrev) {
+                            viewModel.send(
+                                PhotoViewUiIntent.LoadPrev(
+                                    item.picId,
+                                    item.overallIndex,
+                                    it
+                                )
+                            )
+                        } else if (pagerState.currentPage == pageCount - 1 && hasNext) {
+                            viewModel.send(
+                                PhotoViewUiIntent.LoadMore(
+                                    item.picId,
+                                    item.overallIndex,
+                                    it
+                                )
+                            )
+                        }
+                    }
+                }
                 Box(modifier = Modifier.fillMaxSize()) {
                     HorizontalPager(
                         pageCount = pageCount,
                         state = pagerState,
                         key = {
-                            "${items[it].originUrl}_${items[it].overallIndex}"
+                            "${items[it].overallIndex}"
                         }
                     ) {
                         val item = items[it]
@@ -186,9 +214,10 @@ class PhotoViewActivity : BaseComposeActivityWithParcelable<PhotoViewData>() {
                             imageUri = item.originUrl,
                             modifier = Modifier.fillMaxSize(),
                             onDrag = { dx, dy, isAtEdge ->
+                                val currentPage = pagerState.currentPage
                                 if (abs(dy) < 15 && abs(dx) > 25 && isAtEdge) {
-                                    val prevPage = it - 1
-                                    val nextPage = it + 1
+                                    val prevPage = currentPage - 1
+                                    val nextPage = currentPage + 1
                                     if (dx > 0 && prevPage >= 0) {
                                         coroutineScope.launch {
                                             pagerState.animateScrollToPage(prevPage)
@@ -225,7 +254,7 @@ class PhotoViewActivity : BaseComposeActivityWithParcelable<PhotoViewData>() {
                             ) {
                                 val index = pagerState.currentPage
                                 if (totalAmount > 1) {
-                                    val picIndex = items[index].overallIndex ?: (index + 1)
+                                    val picIndex = items[index].overallIndex
                                     Text(
                                         text = "$picIndex / $totalAmount",
                                         modifier = Modifier.weight(1f)
