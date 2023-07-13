@@ -4,7 +4,14 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.*
+import androidx.compose.material.icons.outlined.CalendarViewDay
+import androidx.compose.material.icons.outlined.ExitToApp
+import androidx.compose.material.icons.outlined.Extension
+import androidx.compose.material.icons.outlined.PhotoSizeSelectActual
+import androidx.compose.material.icons.outlined.SecurityUpdateWarning
+import androidx.compose.material.icons.outlined.StarOutline
+import androidx.compose.material.icons.outlined.Verified
+import androidx.compose.material.icons.rounded.VideocamOff
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
@@ -23,7 +30,11 @@ import com.huanchengfly.tieba.post.ui.common.prefs.widgets.ListPref
 import com.huanchengfly.tieba.post.ui.common.prefs.widgets.SwitchPref
 import com.huanchengfly.tieba.post.ui.common.prefs.widgets.TextPref
 import com.huanchengfly.tieba.post.ui.page.settings.LeadingIcon
-import com.huanchengfly.tieba.post.ui.widgets.compose.*
+import com.huanchengfly.tieba.post.ui.widgets.compose.AvatarIcon
+import com.huanchengfly.tieba.post.ui.widgets.compose.BackNavigationIcon
+import com.huanchengfly.tieba.post.ui.widgets.compose.MyScaffold
+import com.huanchengfly.tieba.post.ui.widgets.compose.Sizes
+import com.huanchengfly.tieba.post.ui.widgets.compose.TitleCentredToolbar
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 
@@ -90,6 +101,22 @@ fun HabitSettingsPage(
                             )
                         }
                     },
+                )
+            }
+            prefsItem {
+                SwitchPref(
+                    key = "blockVideo",
+                    title = stringResource(id = R.string.settings_block_video),
+                    defaultChecked = false,
+                    leadingIcon = {
+                        LeadingIcon {
+                            AvatarIcon(
+                                icon = Icons.Rounded.VideocamOff,
+                                size = Sizes.Small,
+                                contentDescription = null,
+                            )
+                        }
+                    }
                 )
             }
             prefsItem {

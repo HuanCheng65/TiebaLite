@@ -47,6 +47,8 @@ open class AppPreferencesUtils(private val context: Context) {
         key = "auto_sign_time"
     )
 
+    var blockVideo by DataStoreDelegates.boolean(defaultValue = false)
+
     var checkCIUpdate by DataStoreDelegates.boolean(
         defaultValue = false
     )

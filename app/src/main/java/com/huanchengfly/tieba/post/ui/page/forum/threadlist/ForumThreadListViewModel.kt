@@ -1,6 +1,7 @@
 package com.huanchengfly.tieba.post.ui.page.forum.threadlist
 
 import androidx.compose.runtime.Stable
+import com.huanchengfly.tieba.post.App
 import com.huanchengfly.tieba.post.api.TiebaApi
 import com.huanchengfly.tieba.post.api.models.AgreeBean
 import com.huanchengfly.tieba.post.api.models.protos.ThreadInfo
@@ -18,6 +19,7 @@ import com.huanchengfly.tieba.post.arch.UiIntent
 import com.huanchengfly.tieba.post.arch.UiState
 import com.huanchengfly.tieba.post.arch.wrapImmutable
 import com.huanchengfly.tieba.post.repository.FrsPageRepository
+import com.huanchengfly.tieba.post.utils.appPreferences
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.Flow
@@ -102,7 +104,7 @@ private class ForumThreadListPartialChangeProducer(val type: ForumThreadListType
                     val userList = response.data_.user_list
                     val threadList = response.data_.thread_list.map { threadInfo ->
                         threadInfo.copy(author = userList.find { it.id == threadInfo.authorId })
-                    }
+                    }.filter { !App.INSTANCE.appPreferences.blockVideo || it.videoInfo == null }
                     ForumThreadListPartialChange.FirstLoad.Success(
                         threadList.wrapImmutable(),
                         response.data_.thread_id_list,

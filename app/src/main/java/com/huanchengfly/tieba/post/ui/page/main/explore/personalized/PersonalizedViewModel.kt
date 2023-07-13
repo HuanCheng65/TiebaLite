@@ -1,6 +1,7 @@
 package com.huanchengfly.tieba.post.ui.page.main.explore.personalized
 
 import androidx.compose.runtime.Stable
+import com.huanchengfly.tieba.post.App
 import com.huanchengfly.tieba.post.api.TiebaApi
 import com.huanchengfly.tieba.post.api.models.AgreeBean
 import com.huanchengfly.tieba.post.api.models.CommonResponse
@@ -19,6 +20,7 @@ import com.huanchengfly.tieba.post.arch.UiIntent
 import com.huanchengfly.tieba.post.arch.UiState
 import com.huanchengfly.tieba.post.arch.wrapImmutable
 import com.huanchengfly.tieba.post.models.DislikeBean
+import com.huanchengfly.tieba.post.utils.appPreferences
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.Flow
@@ -28,6 +30,7 @@ import kotlinx.coroutines.flow.flatMapConcat
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.merge
 import kotlinx.coroutines.flow.onStart
+import okhttp3.internal.toImmutableList
 import javax.inject.Inject
 
 @Stable
@@ -62,11 +65,17 @@ class PersonalizedViewModel @Inject constructor() :
 
         private fun produceRefreshPartialChange(): Flow<PersonalizedPartialChange.Refresh> =
             TiebaApi.getInstance().personalizedProtoFlow(1, 1)
-                .map<PersonalizedResponse, PersonalizedPartialChange.Refresh> {
+                .map<PersonalizedResponse, PersonalizedPartialChange.Refresh> { response ->
+                    val data = response.toData().filter {
+                        !App.INSTANCE.appPreferences.blockVideo || it.get { videoInfo } == null
+                    }
+                    val threadPersonalizedData = data.map { thread ->
+                        response.data_?.thread_personalized?.firstOrNull { thread.get { id } == it.tid }
+                            ?.wrapImmutable()
+                    }
                     PersonalizedPartialChange.Refresh.Success(
-                        data = it.toData(),
-                        threadPersonalizedData = (it.data_?.thread_personalized
-                            ?: emptyList()).wrapImmutable(),
+                        data = data,
+                        threadPersonalizedData = threadPersonalizedData.toImmutableList(),
                     )
                 }
                 .onStart { emit(PersonalizedPartialChange.Refresh.Start) }
@@ -74,12 +83,18 @@ class PersonalizedViewModel @Inject constructor() :
 
         private fun PersonalizedUiIntent.LoadMore.producePartialChange(): Flow<PersonalizedPartialChange.LoadMore> =
             TiebaApi.getInstance().personalizedProtoFlow(2, page)
-                .map<PersonalizedResponse, PersonalizedPartialChange.LoadMore> {
+                .map<PersonalizedResponse, PersonalizedPartialChange.LoadMore> { response ->
+                    val data = response.toData().filter {
+                        !App.INSTANCE.appPreferences.blockVideo || it.get { videoInfo } == null
+                    }
+                    val threadPersonalizedData = data.map { thread ->
+                        response.data_?.thread_personalized?.firstOrNull { thread.get { id } == it.tid }
+                            ?.wrapImmutable()
+                    }
                     PersonalizedPartialChange.LoadMore.Success(
                         currentPage = page,
-                        data = it.toData(),
-                        threadPersonalizedData = (it.data_?.thread_personalized
-                            ?: emptyList()).wrapImmutable(),
+                        data = data,
+                        threadPersonalizedData = threadPersonalizedData.toImmutableList(),
                     )
                 }
                 .onStart { emit(PersonalizedPartialChange.LoadMore.Start) }
@@ -261,7 +276,7 @@ sealed interface PersonalizedPartialChange : PartialChange<PersonalizedUiState> 
 
         data class Success(
             val data: List<ImmutableHolder<ThreadInfo>>,
-            val threadPersonalizedData: List<ImmutableHolder<ThreadPersonalized>>,
+            val threadPersonalizedData: List<ImmutableHolder<ThreadPersonalized>?>,
         ) : Refresh()
 
         data class Failure(
@@ -287,7 +302,7 @@ sealed interface PersonalizedPartialChange : PartialChange<PersonalizedUiState> 
         data class Success(
             val currentPage: Int,
             val data: List<ImmutableHolder<ThreadInfo>>,
-            val threadPersonalizedData: List<ImmutableHolder<ThreadPersonalized>>,
+            val threadPersonalizedData: List<ImmutableHolder<ThreadPersonalized>?>,
         ) : LoadMore()
 
         data class Failure(
@@ -302,7 +317,7 @@ data class PersonalizedUiState(
     val isLoadingMore: Boolean = false,
     val currentPage: Int = 1,
     val data: List<ImmutableHolder<ThreadInfo>> = emptyList(),
-    val threadPersonalizedData: List<ImmutableHolder<ThreadPersonalized>> = emptyList(),
+    val threadPersonalizedData: List<ImmutableHolder<ThreadPersonalized>?> = emptyList(),
     val hiddenThreadIds: List<Long> = emptyList(),
     val refreshPosition: Int = 0,
 ): UiState

@@ -226,7 +226,7 @@ fun PersonalizedPage(
 @Composable
 private fun FeedList(
     dataProvider: () -> List<ImmutableHolder<ThreadInfo>>,
-    personalizedDataProvider: () -> List<ImmutableHolder<ThreadPersonalized>>,
+    personalizedDataProvider: () -> List<ImmutableHolder<ThreadPersonalized>?>,
     refreshPositionProvider: () -> Int,
     hiddenThreadIdsProvider: () -> List<Long>,
     onItemClick: (ThreadInfo) -> Unit,
@@ -278,7 +278,7 @@ private fun FeedList(
 
                         if (personalized != null) {
                             Dislike(
-                                personalized = threadPersonalizedData[index],
+                                personalized = personalized,
                                 onDislike = { clickTime, reasons ->
                                     onDislike(item.get(), clickTime, reasons)
                                 }
