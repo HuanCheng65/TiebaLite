@@ -4,10 +4,9 @@ import com.huanchengfly.tieba.post.api.retrofit.exception.getErrorMessage
 import com.huanchengfly.tieba.post.arch.*
 import com.huanchengfly.tieba.post.models.database.Block
 import com.huanchengfly.tieba.post.toJson
+import com.huanchengfly.tieba.post.utils.BlockManager
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.*
-import org.litepal.LitePal
-import org.litepal.extension.delete
 
 class BlockSettingsViewModel :
     BaseViewModel<BlockSettingsUiIntent, BlockSettingsPartialChange, BlockSettingsUiState, BlockSettingsUiEvent>() {
@@ -36,22 +35,27 @@ class BlockSettingsViewModel :
             )
 
         private fun produceLoadPartialChange(): Flow<BlockSettingsPartialChange.Load> =
-            flow<BlockSettingsPartialChange.Load> {
-                val blocks = LitePal.findAll(Block::class.java)
-                val blackList = blocks.filter { it.category == Block.CATEGORY_BLACK_LIST }
-                val whiteList = blocks.filter { it.category == Block.CATEGORY_WHITE_LIST }
-                emit(BlockSettingsPartialChange.Load.Success(blackList, whiteList))
-            }.onStart { BlockSettingsPartialChange.Load.Start }
+            flowOf<BlockSettingsPartialChange.Load>(
+                BlockSettingsPartialChange.Load.Success(
+                    BlockManager.blackList,
+                    BlockManager.whiteList
+                )
+            )
+                .onStart { BlockSettingsPartialChange.Load.Start }
                 .catch { emit(BlockSettingsPartialChange.Load.Failure(it)) }
 
         private fun BlockSettingsUiIntent.Add.producePartialChange(): Flow<BlockSettingsPartialChange.Add> =
             flow<BlockSettingsPartialChange.Add> {
-                emit(BlockSettingsPartialChange.Add.Success(Block(category = category, type = Block.TYPE_KEYWORD, keywords = keywords.toJson()).apply { save() }))
+                val block = Block(
+                    category = category, type = Block.TYPE_KEYWORD, keywords = keywords.toJson()
+                )
+                BlockManager.addBlock(block)
+                emit(BlockSettingsPartialChange.Add.Success(block))
             }.catch { emit(BlockSettingsPartialChange.Add.Failure(it)) }
 
         private fun BlockSettingsUiIntent.Delete.producePartialChange(): Flow<BlockSettingsPartialChange.Delete> =
             flow<BlockSettingsPartialChange.Delete> {
-                LitePal.delete<Block>(id = id)
+                BlockManager.removeBlock(id)
                 emit(BlockSettingsPartialChange.Delete.Success(id))
             }.catch { emit(BlockSettingsPartialChange.Delete.Failure(it)) }
     }
@@ -91,11 +95,17 @@ sealed interface BlockSettingsPartialChange : PartialChange<BlockSettingsUiState
             when (this) {
                 is Success -> {
                     val newBlackList =
-                        if (item.category == Block.CATEGORY_BLACK_LIST) oldState.blackList + item
-                        else oldState.blackList
+                        if (item.category == Block.CATEGORY_BLACK_LIST) {
+                            oldState.blackList + item
+                        } else {
+                            oldState.blackList
+                        }
                     val newWhiteList =
-                        if (item.category == Block.CATEGORY_WHITE_LIST) oldState.whiteList + item
-                        else oldState.whiteList
+                        if (item.category == Block.CATEGORY_WHITE_LIST) {
+                            oldState.whiteList + item
+                        } else {
+                            oldState.whiteList
+                        }
                     oldState.copy(blackList = newBlackList, whiteList = newWhiteList)
                 }
                 is Failure -> oldState

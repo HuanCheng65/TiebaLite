@@ -17,12 +17,15 @@ import com.huanchengfly.tieba.post.api.models.protos.ThreadInfo
 import com.huanchengfly.tieba.post.arch.wrapImmutable
 import com.huanchengfly.tieba.post.ui.common.PbContentRender
 import com.huanchengfly.tieba.post.ui.common.PicContentRender
-import com.huanchengfly.tieba.post.ui.common.TextContentRender
+import com.huanchengfly.tieba.post.ui.common.TextContentRender.Companion.appendText
+import com.huanchengfly.tieba.post.ui.common.VideoContentRender
 import com.huanchengfly.tieba.post.ui.common.theme.utils.ThemeUtils
 import com.huanchengfly.tieba.post.ui.utils.getPhotoViewData
 import com.huanchengfly.tieba.post.utils.EmoticonManager
 import com.huanchengfly.tieba.post.utils.EmoticonUtil.emoticonString
 import com.huanchengfly.tieba.post.utils.ImageUtil
+import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.toImmutableList
 
 
 private val defaultUserAgent: String =
@@ -100,6 +103,17 @@ private val PbContent.picUrl: String
             cdnSrcActive,
             src
         )
+
+val List<PbContent>.plainText: String
+    get() = joinToString(separator = "") {
+        when (it.type) {
+            0, 1, 4, 9, 27 -> it.text
+            2 -> "#(${it.c})"
+            3, 20 -> "[图片]"
+            5 -> "[视频]"
+            else -> ""
+        }
+    }
 
 @OptIn(ExperimentalTextApi::class)
 val List<PbContent>.renders: List<PbContentRender>

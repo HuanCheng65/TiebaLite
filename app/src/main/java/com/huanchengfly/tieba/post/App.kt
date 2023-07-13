@@ -40,6 +40,7 @@ import com.huanchengfly.tieba.post.utils.AccountUtil
 import com.huanchengfly.tieba.post.utils.AppIconUtil
 import com.huanchengfly.tieba.post.utils.AppIconUtil.disableComponent
 import com.huanchengfly.tieba.post.utils.AppIconUtil.enableComponent
+import com.huanchengfly.tieba.post.utils.BlockManager
 import com.huanchengfly.tieba.post.utils.ClientUtils
 import com.huanchengfly.tieba.post.utils.EmoticonManager
 import com.huanchengfly.tieba.post.utils.Icons
@@ -60,10 +61,8 @@ import com.microsoft.appcenter.distribute.ReleaseDetails
 import com.microsoft.appcenter.distribute.UpdateAction
 import com.microsoft.appcenter.distribute.UpdateTrack
 import dagger.hilt.android.HiltAndroidApp
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import org.litepal.LitePal
+import kotlin.concurrent.thread
 
 
 @HiltAndroidApp
@@ -141,13 +140,10 @@ class App : Application(), IApp, SketchFactory {
         registerActivityLifecycleCallbacks(ClipBoardLinkDetector)
         registerActivityLifecycleCallbacks(OAIDGetter)
         PluginManager.init(this)
-        CoroutineScope(Dispatchers.IO).apply {
-            launch {
-                EmoticonManager.init(this@App)
-            }
-            launch {
-                ClientUtils.init(this@App)
-            }
+        thread {
+            BlockManager.init()
+            EmoticonManager.init(this@App)
+            ClientUtils.init(this@App)
         }
     }
 

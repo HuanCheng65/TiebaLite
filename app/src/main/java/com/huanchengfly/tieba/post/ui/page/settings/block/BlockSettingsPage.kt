@@ -27,6 +27,7 @@ import androidx.compose.material.icons.outlined.AccountCircle
 import androidx.compose.material.icons.outlined.Block
 import androidx.compose.material.icons.outlined.CheckCircle
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -77,10 +78,15 @@ fun BlockSettingsPage(
     var addBlockCategory by remember { mutableStateOf(Block.CATEGORY_BLACK_LIST) }
     val dialogState = rememberDialogState()
     PromptDialog(
-        dialogState = dialogState,
         onConfirm = {
-            viewModel.send(BlockSettingsUiIntent.Add(category = addBlockCategory, keywords = it.split(" ")))
+            viewModel.send(
+                BlockSettingsUiIntent.Add(
+                    category = addBlockCategory,
+                    keywords = it.split(" ")
+                )
+            )
         },
+        dialogState = dialogState,
         title = {
             Text(
                 text = if (addBlockCategory == Block.CATEGORY_WHITE_LIST) stringResource(id = R.string.title_add_white)
@@ -199,7 +205,11 @@ fun BlockSettingsPage(
             contentPadding = paddingValues,
             verticalAlignment = Alignment.Top
         ) { position ->
-            val items = if (position == 0) blackList else whiteList
+            val items by remember {
+                derivedStateOf {
+                    if (position == 0) blackList else whiteList
+                }
+            }
             StateScreen(
                 isEmpty = items.isEmpty(),
                 isError = false,

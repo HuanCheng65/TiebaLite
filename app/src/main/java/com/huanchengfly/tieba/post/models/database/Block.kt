@@ -1,13 +1,14 @@
 package com.huanchengfly.tieba.post.models.database
 
+import com.huanchengfly.tieba.post.fromJson
 import org.litepal.crud.LitePalSupport
 
 data class Block @JvmOverloads constructor(
-    var category: Int = 0,
-    var type: Int = 0,
-    var keywords: String? = null,
-    var username: String? = null,
-    var uid: String? = null,
+    val category: Int = 0,
+    val type: Int = 0,
+    val keywords: String? = null,
+    val username: String? = null,
+    val uid: String? = null,
 ) : LitePalSupport() {
     val id: Long = 0L
     companion object {
@@ -16,5 +17,9 @@ data class Block @JvmOverloads constructor(
 
         const val TYPE_KEYWORD = 0
         const val TYPE_USER = 1
+
+        fun Block.getKeywords(): List<String> {
+            return keywords?.fromJson() ?: emptyList()
+        }
     }
 }
