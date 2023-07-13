@@ -338,11 +338,14 @@
 
     <style name="Theme.NewAppTheme" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <item name="android:windowIsTranslucent">true</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:navigationBarColor">@android:color/transparent</item>
     </style>
 
     <style name="Theme.Splash" parent="Theme.SplashScreen">
         <item name="android:windowBackground">@drawable/splash</item>
-        <item name="android:statusBarColor">@color/colorSplashBg</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:navigationBarColor">@android:color/transparent</item>
         <item name="windowSplashScreenBackground">@color/colorSplashBg</item>
         <item name="windowSplashScreenAnimatedIcon">@drawable/ic_splash_screen_anim</item>
         <item name="windowSplashScreenAnimationDuration">1000</item>

@@ -15,13 +15,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
-import com.huanchengfly.tieba.post.activities.ThreadActivity
 import com.huanchengfly.tieba.post.arch.collectPartialAsState
 import com.huanchengfly.tieba.post.arch.onEvent
 import com.huanchengfly.tieba.post.arch.pageViewModel
 import com.huanchengfly.tieba.post.arch.wrapImmutable
+import com.huanchengfly.tieba.post.ui.page.LocalNavigator
+import com.huanchengfly.tieba.post.ui.page.destinations.ThreadPageDestination
 import com.huanchengfly.tieba.post.ui.page.main.MainUiEvent
 import com.huanchengfly.tieba.post.ui.widgets.compose.FeedCard
 import com.huanchengfly.tieba.post.ui.widgets.compose.LazyLoad
@@ -39,7 +39,7 @@ fun ConcernPage(
         viewModel.send(ConcernUiIntent.Refresh)
         viewModel.initialized = true
     }
-    val context = LocalContext.current
+    val navigator = LocalNavigator.current
     val isRefreshing by viewModel.uiState.collectPartialAsState(
         prop1 = ConcernUiState::isRefreshing,
         initial = false
@@ -84,10 +84,14 @@ fun ConcernPage(
                             FeedCard(
                                 item = wrapImmutable(item.threadList!!),
                                 onClick = {
-                                    ThreadActivity.launch(
-                                        context,
-                                        item.threadList.threadId.toString()
+                                    navigator.navigate(
+                                        ThreadPageDestination(
+                                            item.threadList.threadId,
+                                            item.threadList.forumId,
+                                            threadInfo = item.threadList
+                                        )
                                     )
+
                                 },
                                 onAgree = {
                                     viewModel.send(

@@ -43,12 +43,10 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.github.panpf.sketch.request.PauseLoadWhenScrollingDrawableDecodeInterceptor
 import com.huanchengfly.tieba.post.R
-import com.huanchengfly.tieba.post.activities.ThreadActivity
 import com.huanchengfly.tieba.post.api.models.protos.ThreadInfo
 import com.huanchengfly.tieba.post.api.models.protos.personalized.DislikeReason
 import com.huanchengfly.tieba.post.api.models.protos.personalized.ThreadPersonalized
@@ -59,6 +57,7 @@ import com.huanchengfly.tieba.post.arch.pageViewModel
 import com.huanchengfly.tieba.post.ui.common.theme.compose.ExtendedTheme
 import com.huanchengfly.tieba.post.ui.page.LocalNavigator
 import com.huanchengfly.tieba.post.ui.page.destinations.ForumPageDestination
+import com.huanchengfly.tieba.post.ui.page.destinations.ThreadPageDestination
 import com.huanchengfly.tieba.post.ui.page.main.MainUiEvent
 import com.huanchengfly.tieba.post.ui.widgets.compose.FeedCard
 import com.huanchengfly.tieba.post.ui.widgets.compose.LazyLoad
@@ -77,7 +76,6 @@ fun PersonalizedPage(
         viewModel.send(PersonalizedUiIntent.Refresh)
         viewModel.initialized = true
     }
-    val context = LocalContext.current
     val navigator = LocalNavigator.current
     val isRefreshing by viewModel.uiState.collectPartialAsState(
         prop1 = PersonalizedUiState::isRefreshing,
@@ -153,7 +151,13 @@ fun PersonalizedPage(
                 refreshPositionProvider = { refreshPosition },
                 hiddenThreadIdsProvider = { hiddenThreadIds },
                 onItemClick = { threadInfo ->
-                    ThreadActivity.launch(context, threadInfo.id.toString())
+                    navigator.navigate(
+                        ThreadPageDestination(
+                            threadInfo.id,
+                            threadInfo.forumId,
+                            threadInfo = threadInfo
+                        )
+                    )
                 },
                 onAgree = { item ->
                     viewModel.send(
@@ -270,12 +274,16 @@ private fun FeedList(
                             onOpenForum(item.get { forumInfo?.name ?: "" })
                         }
                     ) {
-                        Dislike(
-                            personalized = threadPersonalizedData[index],
-                            onDislike = { clickTime, reasons ->
-                                onDislike(item.get(), clickTime, reasons)
-                            }
-                        )
+                        val personalized = threadPersonalizedData.getOrNull(index)
+
+                        if (personalized != null) {
+                            Dislike(
+                                personalized = threadPersonalizedData[index],
+                                onDislike = { clickTime, reasons ->
+                                    onDislike(item.get(), clickTime, reasons)
+                                }
+                            )
+                        }
                     }
                 }
                 if (!hiddenThreadIds.contains(item.get { threadId })) {

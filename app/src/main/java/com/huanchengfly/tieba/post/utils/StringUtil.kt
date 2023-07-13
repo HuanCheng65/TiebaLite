@@ -96,11 +96,11 @@ object StringUtil {
         context: Context,
         username: String,
         nickname: String?,
-        color: Color
+        color: Color = Color.Unspecified
     ): AnnotatedString {
         val showBoth = context.appPreferences.showBothUsernameAndNickname
         return buildAnnotatedString {
-            if (showBoth && !nickname.isNullOrEmpty() && username != nickname) {
+            if (showBoth && !nickname.isNullOrBlank() && username != nickname && username.isNotBlank()) {
                 append(nickname)
                 withStyle(SpanStyle(color = color)) {
                     append("(${username})")

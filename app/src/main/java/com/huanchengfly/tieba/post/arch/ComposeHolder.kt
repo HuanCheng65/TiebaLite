@@ -70,5 +70,8 @@ fun <T> wrapStable(item: T): StableHolder<T> = StableHolder(item)
 
 fun <T> wrapImmutable(item: T): ImmutableHolder<T> = ImmutableHolder(item)
 
+@JvmName("wrapImmutableExt")
+fun <T> T.wrapImmutable(): ImmutableHolder<T> = ImmutableHolder(this)
+
 fun <T> List<T>.wrapImmutable(): ImmutableList<ImmutableHolder<T>> =
     map { wrapImmutable(it) }.toImmutableList()

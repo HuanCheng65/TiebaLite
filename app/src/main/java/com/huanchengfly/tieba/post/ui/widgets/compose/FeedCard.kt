@@ -388,8 +388,8 @@ private fun ThreadForumInfo(
 }
 
 @Composable
-private fun ThreadCommentBtn(
-    commentNum: Int,
+private fun ThreadReplyBtn(
+    replyNum: Int,
     onClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -402,13 +402,14 @@ private fun ThreadCommentBtn(
         },
         text = {
             Text(
-                text = if (commentNum == 0)
+                text = if (replyNum == 0)
                     stringResource(id = R.string.title_reply)
-                else "$commentNum"
+                else "$replyNum"
             )
         },
         modifier = modifier,
-        onClick = onClick
+        onClick = onClick,
+        color = ExtendedTheme.colors.textSecondary,
     )
 }
 
@@ -464,7 +465,8 @@ private fun ThreadShareBtn(
             )
         },
         modifier = modifier,
-        onClick = onClick
+        onClick = onClick,
+        color = ExtendedTheme.colors.textSecondary,
     )
 }
 
@@ -504,8 +506,8 @@ fun FeedCard(
         },
         action = {
             Row(modifier = Modifier.fillMaxWidth()) {
-                ThreadCommentBtn(
-                    commentNum = item.get { commentNum },
+                ThreadReplyBtn(
+                    replyNum = item.get { replyNum },
                     onClick = onClick,
                     modifier = Modifier.weight(1f)
                 )

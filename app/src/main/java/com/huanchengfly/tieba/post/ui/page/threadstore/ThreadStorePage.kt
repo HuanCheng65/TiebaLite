@@ -40,7 +40,6 @@ import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.huanchengfly.tieba.post.R
-import com.huanchengfly.tieba.post.activities.ThreadActivity
 import com.huanchengfly.tieba.post.activities.UserActivity
 import com.huanchengfly.tieba.post.api.models.ThreadStoreBean
 import com.huanchengfly.tieba.post.arch.collectPartialAsState
@@ -49,6 +48,9 @@ import com.huanchengfly.tieba.post.arch.pageViewModel
 import com.huanchengfly.tieba.post.dpToPxFloat
 import com.huanchengfly.tieba.post.pxToSp
 import com.huanchengfly.tieba.post.ui.common.theme.compose.ExtendedTheme
+import com.huanchengfly.tieba.post.ui.page.destinations.ThreadPageDestination
+import com.huanchengfly.tieba.post.ui.page.thread.ThreadPageFrom
+import com.huanchengfly.tieba.post.ui.page.thread.ThreadPageFromStoreExtra
 import com.huanchengfly.tieba.post.ui.widgets.compose.Avatar
 import com.huanchengfly.tieba.post.ui.widgets.compose.BackNavigationIcon
 import com.huanchengfly.tieba.post.ui.widgets.compose.ErrorScreen
@@ -181,13 +183,25 @@ fun ThreadStorePage(
                                     }
                                 },
                                 onClick = {
-                                    ThreadActivity.launch(
-                                        context,
-                                        info.threadId,
-                                        info.markPid,
-                                        context.appPreferences.collectThreadSeeLz,
-                                        "collect",
-                                        info.maxPid
+//                                    ThreadActivity.launch(
+//                                        context,
+//                                        info.threadId,
+//                                        info.markPid,
+//                                        context.appPreferences.collectThreadSeeLz,
+//                                        "collect",
+//                                        info.maxPid
+//                                    )
+                                    navigator.navigate(
+                                        ThreadPageDestination(
+                                            threadId = info.threadId.toLong(),
+                                            postId = info.markPid.toLong(),
+                                            seeLz = context.appPreferences.collectThreadSeeLz,
+                                            from = ThreadPageFrom.FROM_STORE,
+                                            extra = ThreadPageFromStoreExtra(
+                                                maxPid = info.maxPid.toLong(),
+                                                maxFloor = info.postNo.toInt()
+                                            )
+                                        )
                                     )
                                 }
                             ) {

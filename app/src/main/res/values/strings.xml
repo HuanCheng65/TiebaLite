@@ -660,4 +660,18 @@
     <string name="btn_reload">重新加载</string>
     <string name="title_not_logged_in">你尚未登录</string>
     <string name="message_not_logged_in">请登录后继续访问</string>
+    <string name="text_all">全部</string>
+    <string name="tip_reply_thread">评论一番</string>
+    <string name="btn_load_previous">查看上一页</string>
+    <string name="desc_video">视频</string>
+    <string name="tag_video">[视频]</string>
+    <string name="message_add_favorite_success">已收藏至第 %d 楼</string>
+    <string name="message_remove_favorite_success">取消收藏成功</string>
+    <string name="message_update_collect_mark">本次阅读到第 %d 楼，是否更新收藏楼层？</string>
+    <string name="message_update_collect_mark_failed">更新收藏楼层失败 %s</string>
+    <string name="message_update_collect_mark_success">更新收藏楼层成功</string>
+    <string name="single_chinese_char" translatable="false">国</string>
+    <string name="open_all_sub_posts">查看全部 %d 条回复</string>
+    <string name="message_store_thread_update">贴子更新到了第 %d 楼</string>
+    <string name="tip_blocked_post">由于你的屏蔽设置，第 %d 楼已被屏蔽</string>
 </resources>
