@@ -327,25 +327,6 @@ interface OfficialTiebaApi {
         @Field("user_id") user_id: String? = AccountUtil.getUid(),
     ): Flow<ThreadStoreBean>
 
-    @POST("/c/c/post/rmstore")
-    @FormUrlEncoded
-    @Headers(
-        "${Header.FORCE_LOGIN}: ${Header.FORCE_LOGIN_TRUE}",
-        "${Header.COOKIE}: ka=open",
-        "${Header.DROP_HEADERS}: ${Header.CHARSET},${Header.CLIENT_TYPE}",
-        "${Header.NO_COMMON_PARAMS}: ${Param.OAID}",
-    )
-    fun removeStoreFlow(
-        @Field("tid") threadId: String,
-        @Field("tbs") tbs: String = AccountUtil.getLoginInfo()!!.tbs,
-        @Field("stoken") stoken: String = AccountUtil.getSToken()!!,
-        @Field("user_id") user_id: String? = AccountUtil.getUid(),
-        @Field("fid") fid: String = "null",
-        @Field("_client_version") client_version: String = "11.10.8.6",
-        @retrofit2.http.Header(Header.USER_AGENT) user_agent: String = "bdtb for Android $client_version",
-        @retrofit2.http.Header("client_user_token") client_user_token: String? = user_id,
-    ): Flow<CommonResponse>
-
     @Headers(
         "${Header.COOKIE}: ka=open",
         "${Header.DROP_HEADERS}: ${Header.CHARSET},${Header.CLIENT_TYPE}",
@@ -414,4 +395,57 @@ interface OfficialTiebaApi {
         @Field("stoken") sToken: String? = AccountUtil.getSToken(),
         @retrofit2.http.Header("client_user_token") client_user_token: String? = AccountUtil.getUid(),
     ): Flow<AddPostBean>
+
+    @POST("/c/c/post/rmstore")
+    @FormUrlEncoded
+    @Headers(
+        "${Header.FORCE_LOGIN}: ${Header.FORCE_LOGIN_TRUE}",
+        "${Header.COOKIE}: ka=open",
+        "${Header.DROP_HEADERS}: ${Header.CHARSET},${Header.CLIENT_TYPE}",
+        "${Header.NO_COMMON_PARAMS}: ${Param.OAID}",
+    )
+    fun removeStoreFlow(
+        @Field("tid") threadId: String,
+        @Field("fid") forumId: String = "null",
+        @Field("tbs") tbs: String = AccountUtil.getLoginInfo()!!.tbs,
+        @Field("stoken") stoken: String = AccountUtil.getSToken()!!,
+        @Field("user_id") user_id: String? = AccountUtil.getUid(),
+        @retrofit2.http.Header("client_user_token") client_user_token: String? = user_id,
+    ): Flow<CommonResponse>
+
+    @POST("/c/c/post/addstore")
+    @FormUrlEncoded
+    @Headers(
+        "${Header.FORCE_LOGIN}: ${Header.FORCE_LOGIN_TRUE}",
+        "${Header.COOKIE}: ka=open",
+        "${Header.DROP_HEADERS}: ${Header.CHARSET},${Header.CLIENT_TYPE}",
+        "${Header.NO_COMMON_PARAMS}: ${Param.OAID}",
+    )
+    fun addStoreFlow(
+        @Field("data") data: String,
+        @Field("stoken") stoken: String = AccountUtil.getSToken()!!,
+        @retrofit2.http.Header("client_user_token") client_user_token: String? = AccountUtil.getUid(),
+    ): Flow<CommonResponse>
+
+    @Headers(
+        "${Header.FORCE_LOGIN}: ${Header.FORCE_LOGIN_TRUE}",
+        "${Header.COOKIE}: ka=open",
+        "${Header.DROP_HEADERS}: ${Header.CHARSET},${Header.CLIENT_TYPE}",
+        "${Header.NO_COMMON_PARAMS}: ${Param.OAID}",
+    )
+    @POST("/c/c/agree/opAgree")
+    @FormUrlEncoded
+    fun agreeFlow(
+        @Field("thread_id") threadId: String,
+        @Field("post_id") postId: String? = null,
+        @Field("op_type") opType: Int = 0,
+        @Field("obj_type") objType: Int = 1,
+        @Field("agree_type") agreeType: Int = 2,
+        @retrofit2.http.Header("client_user_token") client_user_token: String? = AccountUtil.getUid(),
+        @Field("cuid_gid") cuid_gid: String = "",
+        @Field("forum_id") forumId: String = "",
+        @Field("personalized_rec_switch") personalizedRecSwitch: Int = 1,
+        @Field("tbs") tbs: String = AccountUtil.getLoginInfo()!!.tbs,
+        @Field("stoken") stoken: String = AccountUtil.getSToken()!!
+    ): Flow<AgreeBean>
 }

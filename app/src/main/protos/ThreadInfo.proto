@@ -36,8 +36,10 @@ message ThreadInfo {
   int32 createTime = 45;
   int32 collectStatus = 50;
   string collectMarkPid = 51;
+  int64 post_id = 52;
   int32 isMemberTop = 54;
   int64 authorId = 56;
+  string pids = 61;
   optional VideoInfo videoInfo = 79;
   repeated PbContent richTitle = 111;
   repeated PbContent richAbstract = 112;

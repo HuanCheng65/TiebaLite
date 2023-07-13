@@ -96,8 +96,9 @@ interface ITiebaApi {
      */
     fun opAgreeFlow(
         threadId: String,
-        postId: String,
-        opType: Int
+        opType: Int,
+        postId: String? = null,
+        isSubPost: Boolean = false,
     ): Flow<AgreeBean>
 
     /**
@@ -533,6 +534,20 @@ interface ITiebaApi {
      * **需登录**
      *
      * @param threadId 贴子 ID
+     * @param tbs tbs
+     */
+    fun removeStoreFlow(
+        threadId: Long,
+        forumId: Long,
+        tbs: String?
+    ): Flow<CommonResponse>
+
+    /**
+     * 移除收藏
+     *
+     * **需登录**
+     *
+     * @param threadId 贴子 ID
      */
     fun removeStoreFlow(
         threadId: String
@@ -552,6 +567,19 @@ interface ITiebaApi {
         postId: String,
         tbs: String
     ): Call<CommonResponse>
+
+    /**
+     * 添加/更新收藏
+     *
+     * **需登录**
+     *
+     * @param threadId 贴子 ID
+     * @param postId 收藏到的回复 ID
+     */
+    fun addStoreFlow(
+        threadId: Long,
+        postId: Long
+    ): Flow<CommonResponse>
 
     /**
      * 回复我的消息列表
@@ -1231,11 +1259,17 @@ interface ITiebaApi {
      * 贴子页（Flow）
      *
      * @param threadId 贴子 ID
+     * @param page 页码（从 1 开始）
      */
     fun pbPageFlow(
         threadId: Long,
-        page: Int,
+        page: Int = 0,
+        postId: Long = 0L,
+        seeLz: Boolean = false,
+        back: Boolean = false,
         sortType: Int = 0,
         forumId: Long? = null,
+        stType: String = "",
+        mark: Int = 0,
     ): Flow<PbPageResponse>
 }

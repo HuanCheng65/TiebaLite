@@ -13,4 +13,10 @@ message Page {
   int32 has_more = 6;
   int32 has_prev = 7;
   int32 cur_good_id = 8;
+  int32 req_num = 9;
+  int32 pnum = 10;
+  int32 tnum = 11;
+  int32 total_num = 12;
+  int32 lz_total_floor = 13;
+  int32 new_total_page = 14;
 }

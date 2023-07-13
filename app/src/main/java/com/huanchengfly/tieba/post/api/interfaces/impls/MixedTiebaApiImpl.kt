@@ -31,6 +31,7 @@ import com.huanchengfly.tieba.post.api.models.LoginBean
 import com.huanchengfly.tieba.post.api.models.MSignBean
 import com.huanchengfly.tieba.post.api.models.MessageListBean
 import com.huanchengfly.tieba.post.api.models.MsgBean
+import com.huanchengfly.tieba.post.api.models.NewCollectDataBean
 import com.huanchengfly.tieba.post.api.models.PersonalizedBean
 import com.huanchengfly.tieba.post.api.models.PicPageBean
 import com.huanchengfly.tieba.post.api.models.Profile
@@ -159,10 +160,16 @@ object MixedTiebaApiImpl : ITiebaApi {
 
     override fun opAgreeFlow(
         threadId: String,
-        postId: String,
-        opType: Int
+        opType: Int,
+        postId: String?,
+        isSubPost: Boolean
     ): Flow<AgreeBean> =
-        RetrofitTiebaApi.MINI_TIEBA_API.agreeFlow(postId, threadId, op_type = opType)
+        RetrofitTiebaApi.OFFICIAL_TIEBA_API.agreeFlow(
+            threadId,
+            postId,
+            opType = opType,
+            objType = if (postId == null) 3 else if (isSubPost) 2 else 1
+        )
 
     override fun disagreeFlow(
         threadId: String,
@@ -393,6 +400,17 @@ object MixedTiebaApiImpl : ITiebaApi {
     override fun removeStore(threadId: String, tbs: String): Call<CommonResponse> =
         RetrofitTiebaApi.NEW_TIEBA_API.removeStore(threadId, tbs)
 
+    override fun removeStoreFlow(
+        threadId: Long,
+        forumId: Long,
+        tbs: String?
+    ): Flow<CommonResponse> =
+        RetrofitTiebaApi.OFFICIAL_TIEBA_API.removeStoreFlow(
+            threadId.toString(),
+            forumId.toString(),
+            tbs ?: AccountUtil.getLoginInfo()!!.tbs
+        )
+
     override fun removeStoreFlow(threadId: String): Flow<CommonResponse> =
         RetrofitTiebaApi.OFFICIAL_TIEBA_API.removeStoreFlow(threadId)
 
@@ -405,8 +423,21 @@ object MixedTiebaApiImpl : ITiebaApi {
                     "0",
                     "0"
                 )
-            ).toJson(), tbs
+            ).toJson(),
+            tbs
         )
+
+    override fun addStoreFlow(threadId: Long, postId: Long): Flow<CommonResponse> =
+        RetrofitTiebaApi.OFFICIAL_TIEBA_API.addStoreFlow(
+            listOf(
+                NewCollectDataBean(
+                    threadId.toString(),
+                    postId.toString(),
+                    status = 1
+                )
+            ).toJson()
+        )
+
 
     override fun replyMe(page: Int): Call<MessageListBean> =
         RetrofitTiebaApi.NEW_TIEBA_API.replyMe(page)
@@ -1009,8 +1040,13 @@ object MixedTiebaApiImpl : ITiebaApi {
     override fun pbPageFlow(
         threadId: Long,
         page: Int,
+        postId: Long,
+        seeLz: Boolean,
+        back: Boolean,
         sortType: Int,
-        forumId: Long?
+        forumId: Long?,
+        stType: String,
+        mark: Int,
     ): Flow<PbPageResponse> {
         return RetrofitTiebaApi.OFFICIAL_PROTOBUF_TIEBA_V12_API.pbPageFlow(
             buildProtobufRequestBody(
@@ -1018,18 +1054,23 @@ object MixedTiebaApiImpl : ITiebaApi {
                     PbPageRequestData(
                         common = buildCommonRequest(clientVersion = ClientVersion.TIEBA_V12),
                         kz = threadId,
+                        pid = postId,
+                        pn = page,
+                        r = sortType,
+                        lz = if (seeLz) 1 else 0,
+                        forum_id = forumId ?: 0,
                         ad_param = com.huanchengfly.tieba.post.api.models.protos.pbPage.AdParam(
                             load_count = 0,
                             refresh_count = 1,
                             is_req_ad = 1
                         ),
+                        mark = mark,
                         app_pos = buildAppPosInfo(),
-                        back = 0,
+                        back = if (back) 1 else 0,
                         banner = 1,
                         broadcast_id = 0,
                         floor_rn = 4,
                         floor_sort_type = 1,
-                        forum_id = forumId ?: 0,
                         from_push = 0,
                         from_smart_frs = 0,
                         immersion_video_comment_source = 0,
@@ -1043,17 +1084,14 @@ object MixedTiebaApiImpl : ITiebaApi {
                         obj_source = "",
                         ori_ugc_type = 0,
                         pb_rn = 0,
-                        pid = 0,
-                        pn = page,
                         q_type = 1,
-                        r = sortType,
                         rn = 15,
                         s_model = 0,
                         scr_dip = App.ScreenInfo.DENSITY.toDouble(),
                         scr_h = getScreenHeight(),
                         scr_w = getScreenWidth(),
                         source_type = 2,
-                        st_type = "personalize_page",
+                        st_type = stType,
                         thread_type = 0,
                         weipost = 0,
                         with_floor = 1

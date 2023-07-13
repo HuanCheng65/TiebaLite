@@ -79,7 +79,7 @@ class ConcernViewModel @Inject constructor() :
 
         private fun ConcernUiIntent.Agree.producePartialChange(): Flow<ConcernPartialChange.Agree> =
             TiebaApi.getInstance().opAgreeFlow(
-                threadId.toString(), postId.toString(), hasAgree,
+                threadId.toString(), hasAgree
             ).map<AgreeBean, ConcernPartialChange.Agree> { ConcernPartialChange.Agree.Success(threadId, hasAgree xor 1) }
                 .catch { emit(ConcernPartialChange.Agree.Failure(threadId, hasAgree, it)) }
                 .onStart { emit(ConcernPartialChange.Agree.Start(threadId, hasAgree xor 1)) }

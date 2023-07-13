@@ -90,6 +90,46 @@ fun ThreadInfo.updateAgreeStatus(
     )
 }
 
+fun ThreadInfo.updateCollectStatus(
+    newStatus: Int,
+    markPostId: Long
+) = if (collectStatus != newStatus) {
+    this.copy(
+        collectStatus = newStatus,
+        collectMarkPid = markPostId.toString()
+    )
+} else {
+    this
+}
+
+fun Post.updateAgreeStatus(
+    hasAgree: Int
+) = if (agree != null) {
+    if (hasAgree != agree.hasAgree) {
+        if (hasAgree == 1) {
+            copy(
+                agree = agree.copy(
+                    agreeNum = agree.agreeNum + 1,
+                    diffAgreeNum = agree.diffAgreeNum + 1,
+                    hasAgree = 1
+                )
+            )
+        } else {
+            copy(
+                agree = agree.copy(
+                    agreeNum = agree.agreeNum - 1,
+                    diffAgreeNum = agree.diffAgreeNum - 1,
+                    hasAgree = 0
+                )
+            )
+        }
+    } else {
+        this
+    }
+} else {
+    this
+}
+
 private val PbContent.picUrl: String
     get() =
         ImageUtil.getUrl(
@@ -123,12 +163,7 @@ val List<PbContent>.renders: List<PbContentRender>
         forEach {
             when (it.type) {
                 0, 9, 27 -> {
-                    val lastRender = renders.lastOrNull()
-                    if (lastRender is TextContentRender) {
-                        renders.removeLast()
-                        renders.add(lastRender + it.text)
-                    } else
-                        renders.add(TextContentRender(it.text))
+                    renders.appendText(it.text)
                 }
 
                 1 -> {
@@ -149,12 +184,7 @@ val List<PbContent>.renders: List<PbContentRender>
                             }
                         }
                     }
-                    val lastRender = renders.lastOrNull()
-                    if (lastRender is TextContentRender) {
-                        renders.removeLast()
-                        renders.add(lastRender + text)
-                    } else
-                        renders.add(TextContentRender(text))
+                    renders.appendText(text)
                 }
 
                 2 -> {
@@ -163,12 +193,7 @@ val List<PbContent>.renders: List<PbContentRender>
                         it.c
                     )
                     val emoticonText = "#(${it.c})".emoticonString
-                    val lastRender = renders.lastOrNull()
-                    if (lastRender is TextContentRender) {
-                        renders.removeLast()
-                        renders.add(lastRender + emoticonText)
-                    } else
-                        renders.add(TextContentRender(emoticonText))
+                    renders.appendText(emoticonText)
                 }
 
                 3 -> {
@@ -189,7 +214,6 @@ val List<PbContent>.renders: List<PbContentRender>
 
                 4 -> {
                     val text = buildAnnotatedString {
-                        appendInlineContent("user_icon", alternateText = "🧑")
                         withAnnotation(tag = "user", annotation = "${it.uid}") {
                             withStyle(
                                 SpanStyle(
@@ -205,12 +229,43 @@ val List<PbContent>.renders: List<PbContentRender>
                             }
                         }
                     }
-                    val lastRender = renders.lastOrNull()
-                    if (lastRender is TextContentRender) {
-                        renders.removeLast()
-                        renders.add(lastRender + text)
-                    } else
-                        renders.add(TextContentRender(text))
+                    renders.appendText(text)
+                }
+
+                5 -> {
+                    if (it.src.isNotBlank()) {
+                        val width = it.bsize.split(",")[0].toInt()
+                        val height = it.bsize.split(",")[1].toInt()
+                        renders.add(
+                            VideoContentRender(
+                                videoUrl = it.link,
+                                picUrl = it.src,
+                                webUrl = it.text,
+                                width = width,
+                                height = height
+                            )
+                        )
+                    } else {
+                        val text = buildAnnotatedString {
+                            appendInlineContent("video_icon", alternateText = "🎥")
+                            withAnnotation(tag = "url", annotation = it.text) {
+                                withStyle(
+                                    SpanStyle(
+                                        color = Color(
+                                            ThemeUtils.getColorByAttr(
+                                                App.INSTANCE,
+                                                R.attr.colorPrimary
+                                            )
+                                        )
+                                    )
+                                ) {
+                                    append(App.INSTANCE.getString(R.string.tag_video))
+                                    append(it.text)
+                                }
+                            }
+                        }
+                        renders.appendText(text)
+                    }
                 }
 
                 20 -> {
@@ -234,7 +289,7 @@ val List<PbContent>.renders: List<PbContentRender>
         return renders
     }
 
-val Post.contentRenders: List<PbContentRender>
+val Post.contentRenders: ImmutableList<PbContentRender>
     get() {
         val renders = content.renders
 
@@ -252,5 +307,5 @@ val Post.contentRenders: List<PbContentRender>
             } else it
         }
 
-        return renders
+        return renders.toImmutableList()
     }
