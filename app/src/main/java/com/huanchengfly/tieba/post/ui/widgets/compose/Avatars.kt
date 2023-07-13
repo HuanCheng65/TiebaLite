@@ -29,6 +29,7 @@ import com.google.accompanist.placeholder.material.placeholder
 import com.huanchengfly.tieba.post.utils.ImageUtil
 
 object Sizes {
+    val Tiny = 24.dp
     val Small = 36.dp
     val Medium = 48.dp
     val Large = 56.dp
@@ -81,6 +82,15 @@ fun Avatar(
     contentDescription: String?,
     modifier: Modifier = Modifier,
 ) {
+    Avatar(data = data, contentDescription = contentDescription, modifier = modifier.size(size))
+}
+
+@Composable
+fun Avatar(
+    data: String?,
+    contentDescription: String?,
+    modifier: Modifier = Modifier,
+) {
     val context = LocalContext.current
 
     AsyncImage(
@@ -91,7 +101,6 @@ fun Avatar(
         contentDescription = contentDescription,
         contentScale = ContentScale.Crop,
         modifier = modifier
-            .size(size)
             .clip(CircleShape),
     )
 }
