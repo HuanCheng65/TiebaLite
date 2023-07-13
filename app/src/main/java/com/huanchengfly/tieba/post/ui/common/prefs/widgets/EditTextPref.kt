@@ -6,7 +6,14 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Size
@@ -119,19 +126,20 @@ fun EditTextPref(
         }
 
         PromptDialog(
-            dialogState = dialogState,
-            modifier = Modifier.onGloballyPositioned {
-                dialogSize = it.size.toSize()
-            },
-            value = textVal,
             onConfirm = {
                 textVal = it
                 onValueChange(it)
                 edit()
             },
-            onValueChange = {
-                textVal = it
-                onValueChange(it)
+            modifier = Modifier.onGloballyPositioned {
+                dialogSize = it.size.toSize()
+            },
+            dialogState = dialogState,
+            initialValue = textVal,
+            onValueChange = { newVal, _ ->
+                textVal = newVal
+                onValueChange(newVal)
+                true
             },
             title = {
                 if (dialogTitle != null) {

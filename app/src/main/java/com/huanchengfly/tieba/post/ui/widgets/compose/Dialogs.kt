@@ -215,24 +215,29 @@ fun ConfirmDialog(
     }
 }
 
+/**
+ * 带输入框的对话框
+ *
+ * @param onValueChange 输入框内容变化时的回调，返回true表示允许变化，false表示不允许变化
+ */
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun PromptDialog(
-    dialogState: DialogState = rememberDialogState(),
-    modifier: Modifier = Modifier,
-    value: String = "",
     onConfirm: (String) -> Unit,
-    onValueChange: ((String) -> Unit)? = null,
+    modifier: Modifier = Modifier,
+    dialogState: DialogState = rememberDialogState(),
+    initialValue: String = "",
+    onValueChange: (newVal: String, oldVal: String) -> Boolean = { _, _ -> true },
     onCancel: (() -> Unit)? = null,
     confirmText: String = stringResource(id = R.string.button_sure_default),
     cancelText: String = stringResource(id = R.string.button_cancel),
     title: @Composable (DialogScope.() -> Unit) = {},
     content: @Composable (DialogScope.() -> Unit) = {},
 ) {
-    var textVal by remember { mutableStateOf(value) }
+    var textVal by remember { mutableStateOf(initialValue) }
     // 每次显示时重置输入框内容
     LaunchedEffect(dialogState.show) {
-        textVal = value
+        textVal = initialValue
     }
     Dialog(
         modifier = modifier,
@@ -244,7 +249,7 @@ fun PromptDialog(
             DialogNegativeButton(text = cancelText, onClick = onCancel)
         },
     ) {
-        val focusRequester = FocusRequester.Default
+        val focusRequester = remember { FocusRequester() }
         val softwareKeyboardController = LocalSoftwareKeyboardController.current
         Column(
             modifier = Modifier
@@ -260,8 +265,7 @@ fun PromptDialog(
             OutlinedTextField(
                 value = textVal,
                 onValueChange = {
-                    textVal = it
-                    onValueChange?.invoke(it)
+                    if (onValueChange.invoke(it, textVal)) textVal = it
                 },
                 maxLines = 1,
                 keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
@@ -288,7 +292,6 @@ fun PromptDialog(
     }
 }
 
-@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun Dialog(
     modifier: Modifier = Modifier,
