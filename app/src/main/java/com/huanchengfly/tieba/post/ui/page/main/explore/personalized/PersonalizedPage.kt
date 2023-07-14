@@ -127,6 +127,7 @@ fun PersonalizedPage(
 
     if (showRefreshTip) {
         LaunchedEffect(Unit) {
+            lazyStaggeredGridState.scrollToItem(0, 0)
             delay(2000)
             showRefreshTip = false
         }
@@ -184,10 +185,6 @@ fun PersonalizedPage(
                 },
                 state = lazyStaggeredGridState
             )
-            LaunchedEffect(data.firstOrNull()?.get { id }) {
-                //delay(50)
-                lazyStaggeredGridState.scrollToItem(0, 0)
-            }
         }
 
         PullRefreshIndicator(
