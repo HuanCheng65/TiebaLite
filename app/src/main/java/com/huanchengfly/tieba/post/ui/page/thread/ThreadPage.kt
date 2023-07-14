@@ -1138,10 +1138,11 @@ private fun BottomBar(
     agreeNum: Long = 0,
 ) {
     Row(
-        modifier = modifier
+        modifier = Modifier
             .height(IntrinsicSize.Min)
             .background(ExtendedTheme.colors.bottomBar)
-            .padding(horizontal = 16.dp),
+            .padding(horizontal = 16.dp)
+            .then(modifier),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(8.dp)
     ) {
