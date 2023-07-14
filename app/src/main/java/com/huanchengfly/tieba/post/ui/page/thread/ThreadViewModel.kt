@@ -359,7 +359,9 @@ class ThreadViewModel @Inject constructor() :
             TiebaApi.getInstance()
                 .opAgreeFlow(
                     threadId.toString(),
+                    postId.toString(),
                     opType = if (agree) 0 else 1,
+                    objType = 3
                 )
                 .map<AgreeBean, ThreadPartialChange.AgreeThread> {
                     ThreadPartialChange.AgreeThread.Success(
@@ -381,8 +383,9 @@ class ThreadViewModel @Inject constructor() :
             TiebaApi.getInstance()
                 .opAgreeFlow(
                     threadId.toString(),
-                    if (agree) 0 else 1,
                     postId.toString(),
+                    if (agree) 0 else 1,
+                    objType = 1
                 )
                 .map<AgreeBean, ThreadPartialChange.AgreePost> {
                     ThreadPartialChange.AgreePost.Success(
@@ -469,6 +472,7 @@ sealed interface ThreadUiIntent : UiIntent {
 
     data class AgreeThread(
         val threadId: Long,
+        val postId: Long,
         val agree: Boolean
     ) : ThreadUiIntent
 

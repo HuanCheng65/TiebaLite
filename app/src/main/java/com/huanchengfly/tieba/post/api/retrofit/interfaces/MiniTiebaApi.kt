@@ -110,6 +110,21 @@ interface MiniTiebaApi {
     @Headers("${Header.FORCE_LOGIN}: ${Header.FORCE_LOGIN_TRUE}")
     @POST("/c/c/agree/opAgree")
     @FormUrlEncoded
+    fun opAgreeFlow(
+        @Field("thread_id") threadId: String,
+        @Field("post_id") postId: String,
+        @Field("agree_type") agreeType: Int = 2,
+        @Field("obj_type") objType: Int = 3,
+        @Field("op_type") opType: Int = 0,
+        @retrofit2.http.Header("client_user_token") client_user_token: String? = AccountUtil.getUid(),
+        @Field("cuid_gid") cuid_gid: String = "",
+        @Field("tbs") tbs: String = AccountUtil.getLoginInfo()!!.tbs,
+        @Field("stoken") stoken: String = AccountUtil.getSToken()!!
+    ): Flow<AgreeBean>
+
+    @Headers("${Header.FORCE_LOGIN}: ${Header.FORCE_LOGIN_TRUE}")
+    @POST("/c/c/agree/opAgree")
+    @FormUrlEncoded
     fun agreeFlow(
         @Field("post_id") postId: String,
         @Field("thread_id") threadId: String,

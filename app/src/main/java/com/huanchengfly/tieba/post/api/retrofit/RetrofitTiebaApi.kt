@@ -28,6 +28,7 @@ import com.huanchengfly.tieba.post.api.retrofit.interfaces.OfficialTiebaApi
 import com.huanchengfly.tieba.post.api.retrofit.interfaces.WebTiebaApi
 import com.huanchengfly.tieba.post.toJson
 import com.huanchengfly.tieba.post.utils.AccountUtil
+import com.huanchengfly.tieba.post.utils.CacheUtil.base64Encode
 import com.huanchengfly.tieba.post.utils.ClientUtils
 import com.huanchengfly.tieba.post.utils.CuidUtils
 import com.huanchengfly.tieba.post.utils.MobileInfoUtil
@@ -37,6 +38,9 @@ import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.wire.WireConverterFactory
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 import java.util.concurrent.TimeUnit
 import kotlin.math.roundToInt
 
@@ -128,6 +132,7 @@ object RetrofitTiebaApi {
             "http://c.tieba.baidu.com/",
             CommonHeaderInterceptor(
                 Header.USER_AGENT to { "bdtb for Android 12.25.1.0" },
+                Header.COOKIE to { "CUID=${CuidUtils.getNewCuid()};ka=open;TBBRAND=${Build.MODEL};BAIDUID=${ClientUtils.baiduId};" },
                 Header.CUID to { CuidUtils.getNewCuid() },
                 Header.CUID_GALAXY2 to { CuidUtils.getNewCuid() },
                 Header.CUID_GID to { "" },
@@ -137,10 +142,33 @@ object RetrofitTiebaApi {
                 "client_logid" to { "$initTime" }
             ),
             defaultCommonParamInterceptor + CommonParamInterceptor(
+                Param.ACTIVE_TIMESTAMP to { ClientUtils.activeTimestamp.toString() },
+                Param.ANDROID_ID to { base64Encode(UIDUtil.getAndroidId("000")) },
+                Param.BAIDU_ID to { ClientUtils.baiduId },
+                Param.BRAND to { Build.BRAND },
+                Param.CMODE to { "1" },
                 Param.CUID to { CuidUtils.getNewCuid() },
                 Param.CUID_GALAXY2 to { CuidUtils.getNewCuid() },
                 Param.CUID_GID to { "" },
+                Param.EVENT_DAY to {
+                    SimpleDateFormat("yyyyMdd", Locale.getDefault()).format(
+                        Date(
+                            System.currentTimeMillis()
+                        )
+                    )
+                },
+                Param.EXTRA to { "" },
+                Param.FIRST_INSTALL_TIME to { App.Config.appFirstInstallTime.toString() },
+                Param.FRAMEWORK_VER to { "3340042" },
                 Param.FROM to { "tieba" },
+                Param.IS_TEENAGER to { "0" },
+                Param.LAST_UPDATE_TIME to { App.Config.appLastUpdateTime.toString() },
+                Param.MAC to { "02:00:00:00:00:00" },
+                Param.SAMPLE_ID to { ClientUtils.sampleId },
+                Param.SDK_VER to { "2.34.0" },
+                Param.START_SCHEME to { "" },
+                Param.START_TYPE to { "1" },
+                Param.SWAN_GAME_VER to { "1038000" },
                 Param.CLIENT_VERSION to { "12.25.1.0" },
                 Param.CUID_GALAXY3 to { UIDUtil.getAid() },
                 Param.OAID to { OAID().toJson() },

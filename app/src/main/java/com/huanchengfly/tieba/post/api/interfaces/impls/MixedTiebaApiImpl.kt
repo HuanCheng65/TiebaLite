@@ -160,15 +160,17 @@ object MixedTiebaApiImpl : ITiebaApi {
 
     override fun opAgreeFlow(
         threadId: String,
+        postId: String,
         opType: Int,
-        postId: String?,
-        isSubPost: Boolean
+        objType: Int,
+        agreeType: Int,
     ): Flow<AgreeBean> =
-        RetrofitTiebaApi.OFFICIAL_TIEBA_API.agreeFlow(
+        RetrofitTiebaApi.MINI_TIEBA_API.opAgreeFlow(
             threadId,
             postId,
             opType = opType,
-            objType = if (postId == null) 3 else if (isSubPost) 2 else 1
+            objType = objType,
+            agreeType = agreeType
         )
 
     override fun disagreeFlow(

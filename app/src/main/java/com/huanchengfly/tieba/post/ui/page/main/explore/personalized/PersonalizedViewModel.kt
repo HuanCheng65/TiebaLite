@@ -115,7 +115,7 @@ class PersonalizedViewModel @Inject constructor() :
 
         private fun PersonalizedUiIntent.Agree.producePartialChange(): Flow<PersonalizedPartialChange.Agree> =
             TiebaApi.getInstance().opAgreeFlow(
-                threadId.toString(), hasAgree,
+                threadId.toString(), postId.toString(), hasAgree, objType = 3
             ).map<AgreeBean, PersonalizedPartialChange.Agree> {
                 PersonalizedPartialChange.Agree.Success(
                     threadId,

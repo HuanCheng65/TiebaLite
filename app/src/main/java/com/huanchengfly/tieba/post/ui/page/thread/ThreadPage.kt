@@ -1061,6 +1061,7 @@ fun ThreadPage(
                         if (firstPostId != 0L) viewModel.send(
                             ThreadUiIntent.AgreeThread(
                                 threadId,
+                                firstPostId,
                                 !hasThreadAgreed
                             )
                         )

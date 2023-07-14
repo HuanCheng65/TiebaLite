@@ -205,7 +205,9 @@ private class ForumThreadListPartialChangeProducer(val type: ForumThreadListType
     private fun ForumThreadListUiIntent.Agree.producePartialChange(): Flow<ForumThreadListPartialChange.Agree> =
         TiebaApi.getInstance().opAgreeFlow(
             threadId.toString(),
+            postId.toString(),
             hasAgree,
+            objType = 3
         ).map<AgreeBean, ForumThreadListPartialChange.Agree> {
             ForumThreadListPartialChange.Agree.Success(
                 threadId,

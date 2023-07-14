@@ -96,9 +96,10 @@ interface ITiebaApi {
      */
     fun opAgreeFlow(
         threadId: String,
+        postId: String,
         opType: Int,
-        postId: String? = null,
-        isSubPost: Boolean = false,
+        objType: Int,
+        agreeType: Int = 2,
     ): Flow<AgreeBean>
 
     /**
