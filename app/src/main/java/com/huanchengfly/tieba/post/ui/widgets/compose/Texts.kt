@@ -1,7 +1,16 @@
 package com.huanchengfly.tieba.post.ui.widgets.compose
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.calculateEndPadding
+import androidx.compose.foundation.layout.calculateStartPadding
 import androidx.compose.foundation.layout.defaultMinSize
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.InlineTextContent
 import androidx.compose.material.Icon
 import androidx.compose.material.LocalContentAlpha
@@ -14,9 +23,12 @@ import androidx.compose.material.icons.rounded.Link
 import androidx.compose.material.icons.rounded.SlowMotionVideo
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.takeOrElse
+import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.ExperimentalTextApi
@@ -28,6 +40,7 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.rememberTextMeasurer
+import androidx.compose.ui.text.style.LineHeightStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
@@ -35,8 +48,11 @@ import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.huanchengfly.tieba.post.R
+import com.huanchengfly.tieba.post.dpToPxFloat
 import com.huanchengfly.tieba.post.pxToDp
 import com.huanchengfly.tieba.post.pxToSp
+import com.huanchengfly.tieba.post.pxToSpFloat
+import com.huanchengfly.tieba.post.spToPxFloat
 import com.huanchengfly.tieba.post.ui.common.theme.compose.ExtendedTheme
 import com.huanchengfly.tieba.post.utils.EmoticonManager
 import com.huanchengfly.tieba.post.utils.EmoticonUtil.emoticonString
@@ -319,5 +335,63 @@ fun TextWithMinWidth(
         minLines = minLines,
         onTextLayout = onTextLayout,
         style = style
+    )
+}
+
+@OptIn(ExperimentalTextApi::class)
+@Composable
+fun buildChipInlineContent(
+    text: String,
+    padding: PaddingValues = PaddingValues(vertical = 2.dp, horizontal = 4.dp),
+    textStyle: TextStyle = LocalTextStyle.current,
+    chipTextStyle: TextStyle = LocalTextStyle.current,
+    backgroundColor: Color = ExtendedTheme.colors.chip,
+    color: Color = ExtendedTheme.colors.onChip
+): InlineTextContent {
+    val textMeasurer = rememberTextMeasurer()
+    val textSize = remember(text, textStyle) { textMeasurer.measure(text, textStyle).size }
+    val heightPx = textSize.height
+    val heightSp = heightPx.pxToSpFloat().sp
+    val textHeightPx = textStyle.fontSize.value.spToPxFloat() -
+            padding.calculateTopPadding().value.dpToPxFloat() -
+            padding.calculateBottomPadding().value.dpToPxFloat()
+    val fontSize = textHeightPx.pxToSpFloat().sp
+    val textWidthPx = textSize.width
+    val widthPx = textWidthPx +
+            padding.calculateStartPadding(LocalLayoutDirection.current).value.dpToPxFloat() +
+            padding.calculateEndPadding(LocalLayoutDirection.current).value.dpToPxFloat()
+    val widthSp = widthPx.pxToSpFloat().sp
+    return InlineTextContent(
+        placeholder = Placeholder(
+            width = widthSp,
+            height = heightSp,
+            placeholderVerticalAlign = PlaceholderVerticalAlign.TextCenter
+        ),
+        children = {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize(),
+                contentAlignment = Alignment.Center
+            ) {
+                Text(
+                    text = it.takeIf { it.isNotBlank() && it != "\uFFFD" } ?: text,
+                    style = chipTextStyle.copy(
+                        fontSize = fontSize,
+                        lineHeight = fontSize,
+                        lineHeightStyle = LineHeightStyle(
+                            alignment = LineHeightStyle.Alignment.Center,
+                            trim = LineHeightStyle.Trim.Both
+                        )
+                    ),
+                    textAlign = TextAlign.Center,
+                    color = color,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clip(RoundedCornerShape(100))
+                        .background(backgroundColor)
+                        .padding(padding)
+                )
+            }
+        }
     )
 }

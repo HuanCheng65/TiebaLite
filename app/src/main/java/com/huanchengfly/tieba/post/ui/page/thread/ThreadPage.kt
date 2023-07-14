@@ -28,11 +28,11 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.appendInlineContent
 import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Icon
-import androidx.compose.material.LocalContentColor
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.ModalBottomSheetLayout
 import androidx.compose.material.ModalBottomSheetValue
@@ -77,6 +77,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
@@ -90,6 +91,7 @@ import com.airbnb.lottie.compose.LottieConstants
 import com.airbnb.lottie.compose.rememberLottieComposition
 import com.huanchengfly.tieba.post.App
 import com.huanchengfly.tieba.post.R
+import com.huanchengfly.tieba.post.activities.UserActivity
 import com.huanchengfly.tieba.post.api.TiebaApi
 import com.huanchengfly.tieba.post.api.booleanToString
 import com.huanchengfly.tieba.post.api.models.protos.Post
@@ -129,6 +131,7 @@ import com.huanchengfly.tieba.post.ui.widgets.compose.TitleCentredToolbar
 import com.huanchengfly.tieba.post.ui.widgets.compose.UserHeader
 import com.huanchengfly.tieba.post.ui.widgets.compose.VerticalDivider
 import com.huanchengfly.tieba.post.ui.widgets.compose.VerticalGrid
+import com.huanchengfly.tieba.post.ui.widgets.compose.buildChipInlineContent
 import com.huanchengfly.tieba.post.ui.widgets.compose.rememberDialogState
 import com.huanchengfly.tieba.post.ui.widgets.compose.states.StateScreen
 import com.huanchengfly.tieba.post.utils.DateTimeUtils.getRelativeTimeString
@@ -137,6 +140,7 @@ import com.huanchengfly.tieba.post.utils.StringUtil
 import com.huanchengfly.tieba.post.utils.StringUtil.getShortNumString
 import com.huanchengfly.tieba.post.utils.ThemeUtil
 import com.huanchengfly.tieba.post.utils.TiebaUtil
+import com.huanchengfly.tieba.post.utils.Util.getIconColorByLevel
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import kotlinx.collections.immutable.ImmutableList
@@ -145,6 +149,7 @@ import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
 import kotlinx.serialization.Serializable
+import kotlin.math.max
 
 private fun getDescText(
     time: Long?,
@@ -944,7 +949,7 @@ fun ThreadPage(
                                         }
                                     }
                                     item(key = "LoadPreviousBtn") {
-                                        if (currentPageMin > 1) {
+                                        if (hasPrevious) {
                                             Row(
                                                 modifier = Modifier
                                                     .fillMaxWidth()
@@ -952,7 +957,7 @@ fun ThreadPage(
                                                         viewModel.send(
                                                             ThreadUiIntent.LoadPrevious(
                                                                 threadId,
-                                                                currentPageMax - 1,
+                                                                max(currentPageMax - 1, 1),
                                                                 forumId,
                                                                 postId = data
                                                                     .first()
@@ -989,8 +994,9 @@ fun ThreadPage(
                                         PostCard(
                                             postHolder = item,
                                             contentRenders = contentRenders[index],
-                                            immersiveMode = isImmersiveMode,
+                                            threadAuthorId = author?.get { id } ?: 0L,
                                             blocked = blocked,
+                                            immersiveMode = isImmersiveMode,
                                             onAgree = {
                                                 val postHasAgreed =
                                                     item.get { agree?.hasAgree == 1 }
@@ -1201,6 +1207,7 @@ private fun BottomBar(
 fun PostCard(
     postHolder: ImmutableHolder<Post>,
     contentRenders: ImmutableList<PbContentRender>,
+    threadAuthorId: Long = 0L,
     blocked: Boolean = false,
     immersiveMode: Boolean = false,
     onAgree: () -> Unit = {},
@@ -1279,17 +1286,21 @@ fun PostCard(
                         )
                     },
                     name = {
-                        Text(
-                            text = StringUtil.getUsernameAnnotatedString(
+                        UserNameText(
+                            userName = StringUtil.getUsernameAnnotatedString(
                                 LocalContext.current,
                                 author.name,
-                                author.nameShow,
-                                LocalContentColor.current
-                            )
+                                author.nameShow
+                            ),
+                            userLevel = author.level_id,
+                            isLz = author.id == threadAuthorId
                         )
                     },
                     desc = {
                         Text(text = getDescText(post.time.toLong(), post.floor, author.ip_address))
+                    },
+                    onClick = {
+                        UserActivity.launch(context, author.id.toString())
                     }
                 ) {
                     if (post.floor > 1) {
@@ -1357,6 +1368,46 @@ fun PostCard(
                 }
             }
         }
+    )
+}
+
+@Composable
+private fun UserNameText(
+    userName: AnnotatedString,
+    userLevel: Int,
+    modifier: Modifier = Modifier,
+    isLz: Boolean = false,
+    bawuType: String? = null,
+) {
+    val text = buildAnnotatedString {
+        append(userName)
+        append(" ")
+        appendInlineContent("Level", alternateText = "$userLevel")
+        if (!bawuType.isNullOrBlank()) {
+            append(" ")
+            appendInlineContent("Bawu", alternateText = bawuType)
+        }
+        if (isLz) {
+            append(" ")
+            appendInlineContent("Lz")
+        }
+    }
+    Text(
+        text = text,
+        inlineContent = mapOf(
+            "Level" to buildChipInlineContent(
+                "18",
+                color = Color(getIconColorByLevel("$userLevel")),
+                backgroundColor = Color(getIconColorByLevel("$userLevel")).copy(alpha = 0.25f)
+            ),
+            "Bawu" to buildChipInlineContent(
+                bawuType ?: "",
+                color = ExtendedTheme.colors.accent,
+                backgroundColor = ExtendedTheme.colors.accent.copy(alpha = 0.25f)
+            ),
+            "Lz" to buildChipInlineContent(stringResource(id = R.string.tip_lz)),
+        ),
+        modifier = modifier
     )
 }
 

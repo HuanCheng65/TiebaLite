@@ -33,8 +33,14 @@ fun Float.dpToPxFloat(): Float =
 fun Float.spToPx(): Int =
     (this * App.INSTANCE.resources.displayMetrics.scaledDensity + 0.5f).roundToInt()
 
+fun Float.spToPxFloat(): Float =
+    this * App.INSTANCE.resources.displayMetrics.scaledDensity + 0.5f
+
 fun Float.pxToDp(): Int =
     (this / App.ScreenInfo.DENSITY + 0.5f).roundToInt()
+
+fun Float.pxToDpFloat(): Float =
+    this / App.ScreenInfo.DENSITY + 0.5f
 
 fun Float.pxToSp(): Int =
     (this / App.INSTANCE.resources.displayMetrics.scaledDensity + 0.5f).roundToInt()
@@ -46,6 +52,13 @@ fun Int.spToPx(): Int = this.toFloat().spToPx()
 fun Int.pxToDp(): Int = this.toFloat().pxToDp()
 
 fun Int.pxToSp(): Int = this.toFloat().pxToSp()
+
+fun Float.pxToSpFloat(): Float = this / App.INSTANCE.resources.displayMetrics.scaledDensity + 0.5f
+
+fun Int.pxToSpFloat(): Float = this.toFloat().pxToSpFloat()
+
+fun Int.pxToDpFloat(): Float =
+    this.toFloat().pxToDpFloat()
 
 inline fun <reified Data> String.fromJson(): Data {
     val type = object : TypeToken<Data>() {}.type

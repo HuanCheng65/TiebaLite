@@ -269,11 +269,13 @@ private fun StoreItem(
             },
             onClick = onUserClick,
         )
-        val title = buildAnnotatedString {
-            append(info.title)
-            if (hasUpdate) {
-                append(" ")
-                appendInlineContent("Update", info.postNo)
+        val title = remember(info, hasUpdate) {
+            buildAnnotatedString {
+                append(info.title)
+                if (hasUpdate) {
+                    append(" ")
+                    appendInlineContent("Update", info.postNo)
+                }
             }
         }
         val updateTip = stringResource(
