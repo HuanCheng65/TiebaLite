@@ -420,7 +420,7 @@ class PostListAdapterHelper(
                 }
                 "10" -> {
                     val voiceUrl =
-                        "http://c.tieba.baidu.com/c/p/voice?voice_md5=" + contentBean.voiceMD5 + "&play_from=pb_voice_play"
+                        "https://tiebac.baidu.com/c/p/voice?voice_md5=" + contentBean.voiceMD5 + "&play_from=pb_voice_play"
                     val voicePlayerView = VoicePlayerView(context)
                     voicePlayerView.layoutParams = LinearLayout.LayoutParams(
                         ViewGroup.LayoutParams.WRAP_CONTENT,

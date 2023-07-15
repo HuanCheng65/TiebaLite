@@ -136,7 +136,7 @@ class ThreadReplyAdapter(context: Context) :
         }
         if (!subPostListItemBean.content.isNullOrEmpty() && "10" == subPostListItemBean.content[0].type) {
             val voiceUrl =
-                "http://c.tieba.baidu.com/c/p/voice?voice_md5=" + subPostListItemBean.content[0].voiceMD5 + "&play_from=pb_voice_play"
+                "https://tiebac.baidu.com/c/p/voice?voice_md5=" + subPostListItemBean.content[0].voiceMD5 + "&play_from=pb_voice_play"
             val container = RelativeLayout(context)
             container.layoutParams = defaultLayoutParamsWithNoMargins
             container.setPadding(

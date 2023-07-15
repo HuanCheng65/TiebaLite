@@ -3,7 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    tools:parentTag="RelativeLayout">
 
     <FrameLayout
         android:id="@+id/audio_play_icon_parent"
@@ -31,25 +32,24 @@
             app:progressTint="@color/default_color_primary" />
     </FrameLayout>
 
-    <com.huanchengfly.tieba.post.ui.widgets.theme.TintSeekBar
-        android:id="@+id/seek_progress"
-        android:layout_width="96dp"
+    <com.airbnb.lottie.LottieAnimationView
+        android:id="@+id/audio_wave_anim"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
         android:layout_marginEnd="8dp"
         android:layout_toEndOf="@id/audio_play_icon_parent"
-        android:max="100"
-        android:progress="0"
-        android:progressDrawable="@drawable/bg_seekbar_round"
         android:visibility="gone"
-        app:progressTint="@color/default_color_primary" />
+        app:lottie_autoPlay="true"
+        app:lottie_loop="true"
+        app:lottie_rawRes="@raw/lottie_audio_wave" />
 
     <com.huanchengfly.tieba.post.ui.widgets.theme.TintTextView
         android:id="@+id/audio_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
-        android:layout_toEndOf="@id/seek_progress"
+        android:layout_toEndOf="@id/audio_wave_anim"
         android:minWidth="24dp"
         android:textStyle="bold"
         app:tint="@color/default_color_accent"

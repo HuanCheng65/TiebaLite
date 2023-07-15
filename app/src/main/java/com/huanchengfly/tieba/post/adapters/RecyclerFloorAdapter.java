@@ -396,11 +396,11 @@ public class RecyclerFloorAdapter extends BaseSingleTypeAdapter<SubFloorListBean
                     }
                     break;
                 case "10":
-                    String voiceUrl = "http://c.tieba.baidu.com/c/p/voice?voice_md5=" + contentBean.getVoiceMD5() + "&play_from=pb_voice_play";
+                    String voiceUrl = "https://tiebac.baidu.com/c/p/voice?voice_md5=" + contentBean.getVoiceMD5() + "&play_from=pb_voice_play";
                     VoicePlayerView voicePlayerView = new VoicePlayerView(getContext());
                     voicePlayerView.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
                     //voicePlayerView.setMini(false);
-                    voicePlayerView.setDuration(Integer.valueOf(contentBean.getDuringTime()));
+                    voicePlayerView.setDuration(Integer.parseInt(contentBean.getDuringTime()));
                     voicePlayerView.setUrl(voiceUrl);
                     views.add(voicePlayerView);
                     break;

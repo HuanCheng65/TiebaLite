@@ -54,6 +54,7 @@ import com.huanchengfly.tieba.post.ui.common.windowsizeclass.WindowWidthSizeClas
 import com.huanchengfly.tieba.post.ui.widgets.compose.EmoticonText
 import com.huanchengfly.tieba.post.ui.widgets.compose.FullScreen
 import com.huanchengfly.tieba.post.ui.widgets.compose.NetworkImage
+import com.huanchengfly.tieba.post.ui.widgets.compose.VoicePlayer
 import com.huanchengfly.tieba.post.ui.widgets.compose.video.OnFullScreenModeChangedListener
 import com.huanchengfly.tieba.post.ui.widgets.compose.video.VideoPlayer
 import com.huanchengfly.tieba.post.ui.widgets.compose.video.VideoPlayerSource
@@ -146,6 +147,20 @@ data class PicContentRender(
             photoViewData = photoViewData,
             contentScale = ContentScale.Crop
         )
+    }
+}
+
+@Stable
+data class VoiceContentRender(
+    val voiceMd5: String,
+    val duration: Int
+) : PbContentRender {
+    @Composable
+    override fun Render() {
+        val voiceUrl = remember(voiceMd5) {
+            "https://tiebac.baidu.com/c/p/voice?voice_md5=$voiceMd5&play_from=pb_voice_play"
+        }
+        VoicePlayer(url = voiceUrl, duration = duration)
     }
 }
 

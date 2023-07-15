@@ -19,6 +19,7 @@ import com.huanchengfly.tieba.post.ui.common.PbContentRender
 import com.huanchengfly.tieba.post.ui.common.PicContentRender
 import com.huanchengfly.tieba.post.ui.common.TextContentRender.Companion.appendText
 import com.huanchengfly.tieba.post.ui.common.VideoContentRender
+import com.huanchengfly.tieba.post.ui.common.VoiceContentRender
 import com.huanchengfly.tieba.post.ui.common.theme.utils.ThemeUtils
 import com.huanchengfly.tieba.post.ui.utils.getPhotoViewData
 import com.huanchengfly.tieba.post.utils.EmoticonManager
@@ -266,6 +267,10 @@ val List<PbContent>.renders: List<PbContentRender>
                         }
                         renders.appendText(text)
                     }
+                }
+
+                10 -> {
+                    renders.add(VoiceContentRender(it.voiceMD5, it.duringTime))
                 }
 
                 20 -> {

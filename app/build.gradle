@@ -120,6 +120,7 @@ wire {
 }
 
 dependencies {
+    implementation "com.airbnb.android:lottie:$lottie_version"
     implementation "com.airbnb.android:lottie-compose:$lottie_version"
 
     implementation "com.github.germainkevinbusiness:CollapsingTopBarCompose:1.1.7"
@@ -131,6 +132,9 @@ dependencies {
     def media3_version = "1.1.0"
     implementation "androidx.media3:media3-exoplayer:$media3_version"
     implementation "androidx.media3:media3-ui:$media3_version"
+
+    implementation 'com.github.massoudss:waveformSeekBar:5.0.2'
+    implementation 'com.github.lincollincol:amplituda:2.2.2'
 
     def compose_destinations_version = '1.8.42-beta'
     implementation "io.github.raamcosta.compose-destinations:animations-core:$compose_destinations_version"
