@@ -49,6 +49,7 @@ import com.huanchengfly.tieba.post.api.models.protos.ThreadInfo
 import com.huanchengfly.tieba.post.api.models.protos.personalized.DislikeReason
 import com.huanchengfly.tieba.post.api.models.protos.personalized.ThreadPersonalized
 import com.huanchengfly.tieba.post.arch.BaseComposeActivity
+import com.huanchengfly.tieba.post.arch.CommonUiEvent.ScrollToTop.bindScrollToTopEvent
 import com.huanchengfly.tieba.post.arch.ImmutableHolder
 import com.huanchengfly.tieba.post.arch.collectPartialAsState
 import com.huanchengfly.tieba.post.arch.onEvent
@@ -111,6 +112,7 @@ fun PersonalizedPage(
         onRefresh = { viewModel.send(PersonalizedUiIntent.Refresh) }
     )
     val lazyListState = rememberLazyListState()
+    viewModel.bindScrollToTopEvent(lazyListState = lazyListState)
     var refreshCount by remember {
         mutableStateOf(0)
     }

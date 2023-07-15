@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.os.Parcelable
 import android.widget.Toast
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
@@ -106,6 +107,8 @@ abstract class BaseComposeActivity : BaseActivity() {
             is CommonUiEvent.Toast -> {
                 Toast.makeText(this, event.message, event.length).show()
             }
+
+            else -> {}
         }
     }
 
@@ -118,8 +121,17 @@ abstract class BaseComposeActivity : BaseActivity() {
 
 
 sealed interface CommonUiEvent : UiEvent {
+    object ScrollToTop : CommonUiEvent
+
     data class Toast(
         val message: CharSequence,
         val length: Int = android.widget.Toast.LENGTH_SHORT
     ) : CommonUiEvent
+
+    @Composable
+    fun BaseViewModel<*, *, *, *>.bindScrollToTopEvent(lazyListState: LazyListState) {
+        onEvent<ScrollToTop> {
+            lazyListState.scrollToItem(0, 0)
+        }
+    }
 }
