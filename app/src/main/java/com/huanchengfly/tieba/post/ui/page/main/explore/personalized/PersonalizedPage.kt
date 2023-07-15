@@ -7,7 +7,6 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.animation.shrinkVertically
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -18,11 +17,10 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.staggeredgrid.LazyStaggeredGridState
-import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
-import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
-import androidx.compose.foundation.lazy.staggeredgrid.itemsIndexed
-import androidx.compose.foundation.lazy.staggeredgrid.rememberLazyStaggeredGridState
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Icon
@@ -50,11 +48,13 @@ import com.huanchengfly.tieba.post.R
 import com.huanchengfly.tieba.post.api.models.protos.ThreadInfo
 import com.huanchengfly.tieba.post.api.models.protos.personalized.DislikeReason
 import com.huanchengfly.tieba.post.api.models.protos.personalized.ThreadPersonalized
+import com.huanchengfly.tieba.post.arch.BaseComposeActivity
 import com.huanchengfly.tieba.post.arch.ImmutableHolder
 import com.huanchengfly.tieba.post.arch.collectPartialAsState
 import com.huanchengfly.tieba.post.arch.onEvent
 import com.huanchengfly.tieba.post.arch.pageViewModel
 import com.huanchengfly.tieba.post.ui.common.theme.compose.ExtendedTheme
+import com.huanchengfly.tieba.post.ui.common.windowsizeclass.WindowWidthSizeClass
 import com.huanchengfly.tieba.post.ui.page.LocalNavigator
 import com.huanchengfly.tieba.post.ui.page.destinations.ForumPageDestination
 import com.huanchengfly.tieba.post.ui.page.destinations.ThreadPageDestination
@@ -65,8 +65,9 @@ import com.huanchengfly.tieba.post.ui.widgets.compose.LoadMoreLayout
 import com.huanchengfly.tieba.post.ui.widgets.compose.VerticalDivider
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalFoundationApi::class, ExperimentalMaterialApi::class)
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun PersonalizedPage(
     eventFlow: Flow<MainUiEvent>,
@@ -109,7 +110,7 @@ fun PersonalizedPage(
         refreshing = isRefreshing,
         onRefresh = { viewModel.send(PersonalizedUiIntent.Refresh) }
     )
-    val lazyStaggeredGridState = rememberLazyStaggeredGridState()
+    val lazyListState = rememberLazyListState()
     var refreshCount by remember {
         mutableStateOf(0)
     }
@@ -127,12 +128,15 @@ fun PersonalizedPage(
 
     if (showRefreshTip) {
         LaunchedEffect(Unit) {
-            lazyStaggeredGridState.scrollToItem(0, 0)
+            launch {
+                delay(20)
+                lazyListState.scrollToItem(0, 0)
+            }
             delay(2000)
             showRefreshTip = false
         }
     }
-    if (lazyStaggeredGridState.isScrollInProgress) {
+    if (lazyListState.isScrollInProgress) {
         DisposableEffect(Unit) {
             PauseLoadWhenScrollingDrawableDecodeInterceptor.scrolling = true
             onDispose {
@@ -183,7 +187,7 @@ fun PersonalizedPage(
                 onOpenForum = {
                     navigator.navigate(ForumPageDestination(it))
                 },
-                state = lazyStaggeredGridState
+                state = lazyListState
             )
         }
 
@@ -219,7 +223,6 @@ fun PersonalizedPage(
     }
 }
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 private fun FeedList(
     dataProvider: () -> List<ImmutableHolder<ThreadInfo>>,
@@ -231,15 +234,21 @@ private fun FeedList(
     onDislike: (ThreadInfo, Long, List<ImmutableHolder<DislikeReason>>) -> Unit,
     onRefresh: () -> Unit,
     onOpenForum: (forumName: String) -> Unit = {},
-    state: LazyStaggeredGridState,
+    state: LazyListState,
 ) {
     val data = dataProvider()
     val threadPersonalizedData = personalizedDataProvider()
     val refreshPosition = refreshPositionProvider()
     val hiddenThreadIds = hiddenThreadIdsProvider()
-    LazyVerticalStaggeredGrid(
-        columns = StaggeredGridCells.Adaptive(240.dp),
-        state = state
+    val windowSizeClass = BaseComposeActivity.LocalWindowSizeClass.current
+    val itemFraction = when (windowSizeClass.widthSizeClass) {
+        WindowWidthSizeClass.Expanded -> 0.5f
+        else -> 1f
+    }
+    LazyColumn(
+        state = state,
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = Modifier.fillMaxWidth(),
     ) {
         itemsIndexed(
             items = data,
@@ -253,7 +262,9 @@ private fun FeedList(
                 }
             }
         ) { index, item ->
-            Column {
+            Column(
+                modifier = Modifier.fillMaxWidth(itemFraction)
+            ) {
                 AnimatedVisibility(
                     visible = !hiddenThreadIds.contains(item.get { threadId }),
                     enter = EnterTransition.None,

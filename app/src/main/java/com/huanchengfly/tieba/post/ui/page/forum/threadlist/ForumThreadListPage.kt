@@ -140,6 +140,11 @@ private fun ThreadList(
     onClassifySelected: (Int) -> Unit
 ) {
     val itemHolders = itemHoldersProvider()
+    val windowSizeClass = LocalWindowSizeClass.current
+    val itemFraction = when (windowSizeClass.widthSizeClass) {
+        WindowWidthSizeClass.Expanded -> 0.5f
+        else -> 1f
+    }
     LazyColumn(
         state = state,
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -174,13 +179,8 @@ private fun ThreadList(
             }
         ) { index, holder ->
             val (item) = holder
-            val windowSizeClass = LocalWindowSizeClass.current
-            val fraction = when (windowSizeClass.widthSizeClass) {
-                WindowWidthSizeClass.Expanded -> 0.5f
-                else -> 1f
-            }
             Column(
-                modifier = Modifier.fillMaxWidth(fraction)
+                modifier = Modifier.fillMaxWidth(itemFraction)
             ) {
                 if (item.isTop == 1) {
                     Row(

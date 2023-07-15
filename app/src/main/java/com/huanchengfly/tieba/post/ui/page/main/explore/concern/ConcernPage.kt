@@ -3,10 +3,11 @@ package com.huanchengfly.tieba.post.ui.page.main.explore.concern
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
-import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
-import androidx.compose.foundation.lazy.staggeredgrid.itemsIndexed
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.pullrefresh.PullRefreshIndicator
 import androidx.compose.material.pullrefresh.pullRefresh
@@ -16,10 +17,13 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.huanchengfly.tieba.post.arch.BaseComposeActivity
+import com.huanchengfly.tieba.post.arch.CommonUiEvent.ScrollToTop.bindScrollToTopEvent
 import com.huanchengfly.tieba.post.arch.collectPartialAsState
 import com.huanchengfly.tieba.post.arch.onEvent
 import com.huanchengfly.tieba.post.arch.pageViewModel
 import com.huanchengfly.tieba.post.arch.wrapImmutable
+import com.huanchengfly.tieba.post.ui.common.windowsizeclass.WindowWidthSizeClass
 import com.huanchengfly.tieba.post.ui.page.LocalNavigator
 import com.huanchengfly.tieba.post.ui.page.destinations.ThreadPageDestination
 import com.huanchengfly.tieba.post.ui.page.main.MainUiEvent
@@ -64,6 +68,9 @@ fun ConcernPage(
         viewModel.send(ConcernUiIntent.Refresh)
     }
 
+    val lazyListState = rememberLazyListState()
+    viewModel.bindScrollToTopEvent(lazyListState = lazyListState)
+
     Box(
         modifier = Modifier.pullRefresh(pullRefreshState)
     ) {
@@ -71,8 +78,15 @@ fun ConcernPage(
             isLoading = isLoadingMore,
             onLoadMore = { viewModel.send(ConcernUiIntent.LoadMore(nextPageTag)) }
         ) {
-            LazyVerticalStaggeredGrid(
-                columns = StaggeredGridCells.Adaptive(240.dp),
+            val windowSizeClass = BaseComposeActivity.LocalWindowSizeClass.current
+            val itemFraction = when (windowSizeClass.widthSizeClass) {
+                WindowWidthSizeClass.Expanded -> 0.5f
+                else -> 1f
+            }
+            LazyColumn(
+                state = lazyListState,
+                horizontalAlignment = Alignment.CenterHorizontally,
+                modifier = Modifier.fillMaxWidth(),
             ) {
                 itemsIndexed(
                     items = data,
@@ -80,7 +94,9 @@ fun ConcernPage(
                     contentType = { _, item -> item.recommendType }
                 ) { index, item ->
                     if (item.recommendType == 1) {
-                        Column {
+                        Column(
+                            modifier = Modifier.fillMaxWidth(itemFraction)
+                        ) {
                             FeedCard(
                                 item = wrapImmutable(item.threadList!!),
                                 onClick = {
