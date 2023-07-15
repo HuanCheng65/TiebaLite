@@ -7,11 +7,14 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -282,6 +285,7 @@ private fun ForumInfoChip(
     val name = nameProvider()
     Row(
         modifier = Modifier
+            .height(IntrinsicSize.Min)
             .clip(RoundedCornerShape(4.dp))
             .background(color = ExtendedTheme.colors.chip)
             .clickable(onClick = onClick)
@@ -292,7 +296,8 @@ private fun ForumInfoChip(
             imageUri = imageUri,
             contentDescription = null,
             modifier = Modifier
-                .size(12.dp)
+                .fillMaxHeight()
+                .aspectRatio(1f)
                 .clip(RoundedCornerShape(4.dp))
         )
         Spacer(modifier = Modifier.width(8.dp))
