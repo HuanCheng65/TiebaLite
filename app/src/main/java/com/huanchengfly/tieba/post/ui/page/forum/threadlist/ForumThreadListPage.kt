@@ -38,7 +38,6 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.huanchengfly.tieba.post.R
-import com.huanchengfly.tieba.post.activities.ThreadActivity
 import com.huanchengfly.tieba.post.api.abstractText
 import com.huanchengfly.tieba.post.api.models.protos.ThreadInfo
 import com.huanchengfly.tieba.post.api.models.protos.frsPage.Classify
@@ -48,6 +47,8 @@ import com.huanchengfly.tieba.post.arch.collectPartialAsState
 import com.huanchengfly.tieba.post.arch.onEvent
 import com.huanchengfly.tieba.post.arch.pageViewModel
 import com.huanchengfly.tieba.post.ui.common.windowsizeclass.WindowWidthSizeClass
+import com.huanchengfly.tieba.post.ui.page.LocalNavigator
+import com.huanchengfly.tieba.post.ui.page.destinations.ThreadPageDestination
 import com.huanchengfly.tieba.post.ui.page.forum.getSortType
 import com.huanchengfly.tieba.post.ui.widgets.Chip
 import com.huanchengfly.tieba.post.ui.widgets.compose.FeedCard
@@ -242,6 +243,7 @@ fun ForumThreadListPage(
     viewModel: ForumThreadListViewModel = if (isGood) pageViewModel<GoodThreadListViewModel>() else pageViewModel<LatestThreadListViewModel>()
 ) {
     val context = LocalContext.current
+    val navigator = LocalNavigator.current
     val snackbarHostState = LocalSnackbarHostState.current
     LazyLoad(loaded = viewModel.initialized) {
         viewModel.send(getFirstLoadIntent(context, forumName, isGood))
@@ -333,10 +335,7 @@ fun ForumThreadListPage(
                 goodClassifyId = goodClassifyId,
                 goodClassifyHoldersProvider = { goodClassifies },
                 onItemClicked = {
-                    ThreadActivity.launch(
-                        context,
-                        it.threadId.toString()
-                    )
+                    navigator.navigate(ThreadPageDestination(it.threadId))
                 },
                 onAgree = {
                     viewModel.send(

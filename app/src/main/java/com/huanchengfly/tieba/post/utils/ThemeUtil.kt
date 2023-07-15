@@ -67,6 +67,7 @@ object ThemeUtil {
     const val THEME_PURPLE = "purple"
     const val THEME_PINK = "pink"
     const val THEME_RED = "red"
+    const val THEME_BLUE_DARK = "blue_dark"
     const val THEME_GREY_DARK = "grey_dark"
     const val THEME_AMOLED_DARK = "amoled_dark"
 
@@ -395,6 +396,7 @@ object ThemeUtil {
             THEME_PURPLE -> R.style.TiebaLite_Purple
             THEME_PINK -> R.style.TiebaLite_Pink
             THEME_RED -> R.style.TiebaLite_Red
+            THEME_BLUE_DARK -> R.style.TiebaLite_Dark_Blue
             THEME_GREY_DARK -> R.style.TiebaLite_Dark_Grey
             THEME_AMOLED_DARK -> R.style.TiebaLite_Dark_Amoled
             THEME_CUSTOM -> R.style.TiebaLite_Custom
@@ -415,6 +417,7 @@ object ThemeUtil {
             THEME_PURPLE,
             THEME_PINK,
             THEME_RED,
+            THEME_BLUE_DARK,
             THEME_GREY_DARK,
             THEME_AMOLED_DARK -> theme.lowercase(Locale.getDefault())
 

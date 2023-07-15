@@ -36,6 +36,7 @@
         <item>pink</item>
         <item>red</item>
         <item>purple</item>
+        <item>blue_dark</item>
         <item>grey_dark</item>
         <item>amoled_dark</item>
     </string-array>
@@ -46,16 +47,19 @@
         <item>少女粉</item>
         <item>新年红</item>
         <item>星空紫</item>
+        <item>静谧蓝</item>
         <item>深邃灰</item>
-        <item>A屏黑</item>
+        <item>纯黑</item>
     </string-array>
 
     <string-array name="dark_theme_names">
+        <item>静谧蓝</item>
         <item>深邃灰</item>
-        <item>A屏黑</item>
+        <item>纯黑</item>
     </string-array>
 
     <string-array name="dark_theme_values">
+        <item>blue_dark</item>
         <item>grey_dark</item>
         <item>amoled_dark</item>
     </string-array>

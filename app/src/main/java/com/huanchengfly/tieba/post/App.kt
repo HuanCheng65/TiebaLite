@@ -456,7 +456,13 @@ class App : Application(), IApp, SketchFactory {
                         return getColorByAttr(context, R.attr.colorTextSecondary, theme)
                     }
                     return if (ThemeUtil.isNightMode(theme)) {
-                        context.getColorCompat(R.color.theme_color_on_chip_night)
+                        context.getColorCompat(
+                            resources.getIdentifier(
+                                "theme_color_on_chip_$theme",
+                                "color",
+                                packageName
+                            )
+                        )
                     } else context.getColorCompat(R.color.theme_color_on_chip_light)
                 }
                 R.attr.colorUnselected -> {
@@ -589,8 +595,14 @@ class App : Application(), IApp, SketchFactory {
                     }
                 }
                 R.attr.colorOnToolbarBar -> {
-                    return if (ThemeUtil.isNightMode(theme) || ThemeUtil.getThemeTranslucent() == ThemeUtil.THEME_TRANSLUCENT_LIGHT) {
-                        context.getColorCompat(R.color.theme_color_on_toolbar_bar_dark)
+                    return if (ThemeUtil.isTranslucentTheme(theme) || ThemeUtil.isNightMode(theme)) {
+                        context.getColorCompat(
+                            resources.getIdentifier(
+                                "theme_color_on_toolbar_bar_$theme",
+                                "color",
+                                packageName
+                            )
+                        )
                     } else {
                         context.getColorCompat(R.color.theme_color_on_toolbar_bar_light)
                     }

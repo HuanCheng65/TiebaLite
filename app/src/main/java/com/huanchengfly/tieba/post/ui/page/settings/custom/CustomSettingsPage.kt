@@ -17,6 +17,7 @@ import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.google.accompanist.drawablepainter.rememberDrawablePainter
@@ -82,6 +83,8 @@ fun CustomSettingsPage(
                 )
             }
             prefsItem {
+                val darkThemeValues = stringArrayResource(id = R.array.dark_theme_values)
+                val darkThemeNames = stringArrayResource(id = R.array.dark_theme_names)
                 ListPref(
                     key = "dark_theme",
                     title = stringResource(id = R.string.settings_night_mode),
@@ -95,10 +98,11 @@ fun CustomSettingsPage(
                             )
                         }
                     },
-                    entries = mapOf(
-                        ThemeUtil.THEME_GREY_DARK to "深邃灰",
-                        ThemeUtil.THEME_AMOLED_DARK to "A屏黑"
-                    ),
+                    entries = darkThemeValues.associateWith { value ->
+                        darkThemeNames[darkThemeValues.indexOf(
+                            value
+                        )]
+                    },
                     useSelectedAsSummary = true,
                 )
             }

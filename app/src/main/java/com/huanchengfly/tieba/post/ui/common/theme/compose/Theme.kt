@@ -95,6 +95,7 @@ fun getColorPalette(
             onSecondary = Color(0xFFFFFFFF),
             background = extendedColors.background,
             onBackground = extendedColors.text,
+            surface = extendedColors.card
         )
     } else {
         lightColors(

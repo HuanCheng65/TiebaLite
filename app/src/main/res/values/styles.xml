@@ -238,6 +238,14 @@
         <item name="activeItemTint">@color/default_color_toolbar_item_active</item>
     </style>
 
+    <style name="Toolbar.Dark.Blue" parent="Toolbar.Dark">
+        <item name="android:popupTheme">@style/OverflowMenu.Dark.Blue</item>
+        <item name="popupTheme">@style/OverflowMenu.Dark.Blue</item>
+        <item name="android:actionOverflowMenuStyle">@style/OverflowMenu.Dark.Blue</item>
+        <item name="actionOverflowMenuStyle">@style/OverflowMenu.Dark.Blue</item>
+        <item name="android:colorBackground">@color/theme_color_background_blue_dark</item>
+    </style>
+
     <style name="Toolbar.Dark.Grey" parent="Toolbar.Dark">
         <item name="android:popupTheme">@style/OverflowMenu.Dark.Grey</item>
         <item name="popupTheme">@style/OverflowMenu.Dark.Grey</item>
@@ -494,6 +502,10 @@
         <item name="android:popupBackground">@drawable/bg_popup_dark</item>
     </style>
 
+    <style name="OverflowMenu.Dark.Blue" parent="OverflowMenu.Dark">
+        <item name="android:popupBackground">@drawable/bg_popup_dark_blue</item>
+    </style>
+
     <style name="OverflowMenu.Dark.Grey" parent="OverflowMenu.Dark">
         <item name="android:popupBackground">@drawable/bg_popup_dark_grey</item>
     </style>
@@ -613,6 +625,23 @@
         <item name="colorChip">@color/theme_color_window_background_dark</item>
         <item name="colorNavBar">#FF15202B</item>
         <item name="colorDivider">#FF10171D</item>
+    </style>
+
+    <style name="TiebaLite.Dark.Blue" parent="AppTheme.Dark">
+        <item name="toolbarStyle">@style/Toolbar.Dark.Blue</item>
+        <item name="actionOverflowMenuStyle">@style/OverflowMenu.Dark.Blue</item>
+        <item name="colorPrimary">@color/theme_color_primary_blue_dark</item>
+        <item name="colorAccent">@color/theme_color_accent_blue_dark</item>
+        <item name="colorToolbar">@color/theme_color_toolbar_blue_dark</item>
+        <item name="colorToolbarItem">@color/theme_color_toolbar_item_night</item>
+        <item name="colorToolbarItemActive">@color/theme_color_toolbar_item_active_blue_dark</item>
+        <item name="color_toolbar_item_secondary">
+            @color/theme_color_toolbar_item_secondary_blue_dark
+        </item>
+        <item name="colorBg">@color/theme_color_background_blue_dark</item>
+        <item name="colorChip">@color/theme_color_window_background_blue_dark</item>
+        <item name="colorNavBar">@color/theme_color_nav_blue_dark</item>
+        <item name="colorDivider">@color/theme_color_divider_blue_dark</item>
     </style>
 
     <style name="TiebaLite.Dark.Grey" parent="AppTheme.Dark">
