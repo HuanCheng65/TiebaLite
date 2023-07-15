@@ -4,6 +4,7 @@ import android.animation.LayoutTransition
 import android.app.Activity
 import android.app.PendingIntent
 import android.content.Context
+import android.content.ContextWrapper
 import android.content.Intent
 import android.content.res.ColorStateList
 import android.content.res.Configuration
@@ -126,6 +127,12 @@ val Configuration.isTablet: Boolean
 
 val Context.isTablet: Boolean
     get() = resources.configuration.isTablet
+
+fun Context.findActivity(): Activity? = when (this) {
+    is Activity -> this
+    is ContextWrapper -> baseContext.findActivity()
+    else -> null
+}
 
 fun pendingIntentFlagMutable(): Int {
     return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {

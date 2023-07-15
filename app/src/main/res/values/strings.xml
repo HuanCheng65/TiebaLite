@@ -675,4 +675,5 @@
     <string name="message_store_thread_update">贴子更新到了第 %d 楼</string>
     <string name="tip_blocked_post">由于你的屏蔽设置，第 %d 楼已被屏蔽</string>
     <string name="settings_block_video">屏蔽视频贴子</string>
+    <string name="btn_full_screen">全屏</string>
 </resources>

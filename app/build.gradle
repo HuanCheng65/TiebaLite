@@ -7,6 +7,7 @@ plugins {
     id 'dagger.hilt.android.plugin'
     id 'com.squareup.wire'
     id 'com.google.devtools.ksp' version "$kotlin_version-1.0.11"
+    id "org.jetbrains.kotlin.plugin.parcelize"
 }
 
 def keystoreProperties = new Properties()
