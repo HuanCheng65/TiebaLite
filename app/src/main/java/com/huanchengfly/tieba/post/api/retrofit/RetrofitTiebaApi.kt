@@ -179,7 +179,7 @@ object RetrofitTiebaApi {
 
     val OFFICIAL_PROTOBUF_TIEBA_API: OfficialProtobufTiebaApi by lazy {
         createProtobufApi<OfficialProtobufTiebaApi>(
-            "http://c.tieba.baidu.com/",
+            "https://tiebac.baidu.com/",
             CommonHeaderInterceptor(
                 Header.CHARSET to { "UTF-8" },
                 Header.CLIENT_TYPE to { "2" },
@@ -207,7 +207,7 @@ object RetrofitTiebaApi {
 
     val OFFICIAL_PROTOBUF_TIEBA_V12_API: OfficialProtobufTiebaApi by lazy {
         createProtobufApi<OfficialProtobufTiebaApi>(
-            "http://c.tieba.baidu.com/",
+            "https://tiebac.baidu.com/",
             CommonHeaderInterceptor(
                 Header.CHARSET to { "UTF-8" },
                 Header.CLIENT_TYPE to { "2" },
