@@ -5,7 +5,9 @@ import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class VideoPlayerState(
-    val isPlaying: Boolean = true,
+    val thumbnailUrl: String? = null,
+    val startedPlay: Boolean = false,
+    val isPlaying: Boolean = false,
     val controlsVisible: Boolean = true,
     val controlsEnabled: Boolean = true,
     val gesturesEnabled: Boolean = true,

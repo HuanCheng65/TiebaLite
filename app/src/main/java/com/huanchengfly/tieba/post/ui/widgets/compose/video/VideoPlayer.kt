@@ -4,8 +4,9 @@ import android.util.Log
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -14,12 +15,17 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.material.Icon
+import androidx.compose.material.IconButton
 import androidx.compose.material.LocalContentColor
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Fullscreen
 import androidx.compose.material.icons.rounded.FullscreenExit
+import androidx.compose.material.icons.rounded.PlayArrow
+import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.DisposableEffect
@@ -36,10 +42,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shadow
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
+import com.github.panpf.sketch.compose.AsyncImage
 import com.huanchengfly.tieba.post.R
 import com.huanchengfly.tieba.post.ui.widgets.compose.video.util.getDurationString
 
@@ -49,6 +57,7 @@ internal val LocalVideoPlayerController =
 @Composable
 fun rememberVideoPlayerController(
     source: VideoPlayerSource? = null,
+    thumbnailUrl: String? = null,
     fullScreenModeChangedListener: OnFullScreenModeChangedListener? = null,
     playWhenReady: Boolean = false,
 ): VideoPlayerController {
@@ -62,8 +71,11 @@ fun rememberVideoPlayerController(
                 return DefaultVideoPlayerController(
                     context = context,
                     initialState = value,
-                    coroutineScope = coroutineScope
-                )
+                    coroutineScope = coroutineScope,
+                    fullScreenModeChangedListener = fullScreenModeChangedListener
+                ).apply {
+                    source?.let { setSource(it) }
+                }
             }
 
             override fun SaverScope.save(value: DefaultVideoPlayerController): VideoPlayerState {
@@ -73,7 +85,10 @@ fun rememberVideoPlayerController(
         init = {
             DefaultVideoPlayerController(
                 context = context,
-                initialState = VideoPlayerState(isPlaying = playWhenReady),
+                initialState = VideoPlayerState(
+                    thumbnailUrl = thumbnailUrl,
+                    isPlaying = playWhenReady
+                ),
                 coroutineScope = coroutineScope,
                 fullScreenModeChangedListener = fullScreenModeChangedListener
             ).apply {
@@ -101,10 +116,18 @@ fun VideoPlayer(
         videoPlayerController.enableGestures(gesturesEnabled)
     }
 
+    DisposableEffect(Unit) {
+        videoPlayerController.initialize()
+        onDispose {
+            videoPlayerController.release()
+        }
+    }
+
     CompositionLocalProvider(
         LocalContentColor provides Color.White,
         LocalVideoPlayerController provides videoPlayerController
     ) {
+        val startedPlay by videoPlayerController.collect { startedPlay || playbackState != PlaybackState.IDLE }
         val aspectRatio by videoPlayerController.collect { videoSize.first / videoSize.second }
         val supportFullScreen =
             remember(videoPlayerController) { videoPlayerController.supportFullScreen() }
@@ -124,70 +147,96 @@ fun VideoPlayer(
                 .fillMaxSize()
                 .then(modifier)
         ) {
-            PlayerSurface(
-                modifier = Modifier
-                    .aspectRatio(aspectRatio.takeUnless { it.isNaN() || it == 0f } ?: 2f)
-                    .align(Alignment.Center)
-            ) {
-                videoPlayerController.playerViewAvailable(it)
-            }
-
-            DisposableEffect(Unit) {
-                videoPlayerController.initialize()
-                Log.i(
-                    "VideoPlayer",
-                    "${videoPlayerController.releaseCounter.get()} init $videoPlayerController"
-                )
-
-                onDispose {
-                    videoPlayerController.release()
-                    Log.i(
-                        "VideoPlayer",
-                        "${videoPlayerController.releaseCounter.get()} release $videoPlayerController"
-                    )
-                }
-            }
-
-            MediaControlGestures(modifier = Modifier.matchParentSize())
-            MediaControlButtons(
-                modifier = Modifier.matchParentSize()
-            )
-
-            val controlsVisible by videoPlayerController.collect { controlsVisible }
-
-            if (controlsVisible) {
-                Column(
+            if (startedPlay) {
+                PlayerSurface(
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 16.dp, vertical = 8.dp)
-                        .align(Alignment.BottomCenter),
-                    verticalArrangement = Arrangement.spacedBy(8.dp)
+                        .aspectRatio(aspectRatio.takeUnless { it.isNaN() || it == 0f } ?: 2f)
+                        .align(Alignment.Center)
                 ) {
-                    ProgressIndicator(
-                        modifier = Modifier.fillMaxWidth()
-                    )
-
-                    Row(verticalAlignment = Alignment.CenterVertically) {
-                        PositionAndDuration()
-                        Spacer(modifier = Modifier.weight(1f))
-                        if (videoPlayerController.supportFullScreen()) {
-                            FullScreenButton()
-                        }
-                    }
+                    videoPlayerController.playerViewAvailable(it)
                 }
+
+                MediaController()
             } else {
+                val thumbnailUrl by videoPlayerController.collect { thumbnailUrl }
+
                 Box(
                     modifier = Modifier
-                        .align(Alignment.BottomCenter)
-                        .offset(y = 12.dp)
+                        .fillMaxSize()
+                        .align(Alignment.Center),
+                    contentAlignment = Alignment.Center
                 ) {
-                    ProgressIndicator(
-                        modifier = Modifier.fillMaxWidth()
-                    )
+                    if (thumbnailUrl != null) {
+                        AsyncImage(
+                            imageUri = thumbnailUrl,
+                            contentDescription = null,
+                            modifier = Modifier.fillMaxSize(),
+                            contentScale = ContentScale.Crop
+                        )
+                    }
+
+                    IconButton(onClick = { videoPlayerController.play() }) {
+                        Icon(
+                            imageVector = Icons.Rounded.PlayArrow,
+                            contentDescription = stringResource(id = R.string.btn_play),
+                            modifier = Modifier.size(48.dp)
+                        )
+                    }
                 }
             }
         }
     }
+}
+
+@Composable
+fun BoxScope.MediaController() {
+    val videoPlayerController = LocalVideoPlayerController.current
+
+    MediaControlButtons(
+        modifier = Modifier.matchParentSize()
+    )
+
+    val controlsVisible by videoPlayerController.collect { controlsVisible }
+    val isFullScreen by videoPlayerController.collect { isFullScreen }
+
+    if (controlsVisible) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 8.dp)
+                .align(Alignment.BottomCenter),
+        ) {
+            if (isFullScreen) {
+                ProgressIndicator(
+                    modifier = Modifier.fillMaxWidth()
+                )
+            }
+
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                Spacer(modifier = Modifier.width(16.dp))
+                PositionAndDuration()
+                Spacer(modifier = Modifier.weight(1f))
+                if (videoPlayerController.supportFullScreen()) {
+                    FullScreenButton()
+                }
+            }
+        }
+    }
+    if (!isFullScreen || !controlsVisible) {
+        Box(
+            modifier = Modifier
+                .align(Alignment.BottomCenter)
+                .offset(y = 12.dp)
+        ) {
+            ProgressIndicator(
+                modifier = Modifier.fillMaxWidth()
+            )
+        }
+    }
+
+    MediaControlGestures(modifier = Modifier.matchParentSize())
 }
 
 @Composable
@@ -225,9 +274,14 @@ private fun FullScreenButton() {
         Icons.Rounded.Fullscreen
     }
     Box(
-        modifier = Modifier.clickable {
-            videoPlayerController.toggleFullScreen()
-        }
+        modifier = Modifier
+            .padding(8.dp)
+            .clickable(
+                indication = rememberRipple(bounded = false),
+                interactionSource = remember { MutableInteractionSource() }
+            ) {
+                videoPlayerController.toggleFullScreen()
+            }
     ) {
         Icon(
             imageVector = icon,

@@ -1,7 +1,9 @@
 package com.huanchengfly.tieba.post.ui.widgets.compose.video
 
+import androidx.compose.runtime.Stable
 import kotlinx.coroutines.flow.StateFlow
 
+@Stable
 interface VideoPlayerController {
     fun setSource(source: VideoPlayerSource)
 
@@ -9,7 +11,7 @@ interface VideoPlayerController {
 
     fun pause()
 
-    fun playPauseToggle()
+    fun togglePlaying()
 
     fun quickSeekForward()
 

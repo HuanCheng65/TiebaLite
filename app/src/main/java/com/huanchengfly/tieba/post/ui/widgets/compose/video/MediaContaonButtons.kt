@@ -92,7 +92,7 @@ fun PlayPauseButton(modifier: Modifier = Modifier) {
     val playbackState by controller.collect { playbackState }
 
     IconButton(
-        onClick = { controller.playPauseToggle() },
+        onClick = { controller.togglePlaying() },
         modifier = modifier
     ) {
         if (isPlaying) {

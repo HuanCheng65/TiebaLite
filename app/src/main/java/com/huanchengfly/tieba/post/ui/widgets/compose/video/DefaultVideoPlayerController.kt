@@ -2,6 +2,7 @@ package com.huanchengfly.tieba.post.ui.widgets.compose.video
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
@@ -9,6 +10,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.graphics.Color
 import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
+import androidx.media3.common.Player.STATE_ENDED
+import androidx.media3.common.Player.STATE_IDLE
+import androidx.media3.common.Player.STATE_READY
 import androidx.media3.common.VideoSize
 import androidx.media3.datasource.DataSource
 import androidx.media3.datasource.DefaultDataSource
@@ -29,7 +33,6 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import java.util.concurrent.atomic.AtomicBoolean
-import java.util.concurrent.atomic.AtomicInteger
 
 interface OnFullScreenModeChangedListener {
     fun onFullScreenModeChanged(isFullScreen: Boolean)
@@ -42,7 +45,6 @@ internal class DefaultVideoPlayerController(
     private val fullScreenModeChangedListener: OnFullScreenModeChangedListener? = null
 ) : VideoPlayerController {
     private val released = AtomicBoolean(false)
-    val releaseCounter = AtomicInteger(0)
 
     private val _state = MutableStateFlow(initialState)
     override val state: StateFlow<VideoPlayerState>
@@ -86,6 +88,7 @@ internal class DefaultVideoPlayerController(
     private var playerView: PlayerView? = null
 
     private var updateDurationAndPositionJob: Job? = null
+    private var autoHideControllerJob: Job? = null
 
     private val playerListener = object : Player.Listener {
         @androidx.annotation.OptIn(androidx.media3.common.util.UnstableApi::class)
@@ -107,7 +110,8 @@ internal class DefaultVideoPlayerController(
 
             _state.set {
                 copy(
-                    playbackState = PlaybackState.of(playbackState)
+                    playbackState = PlaybackState.of(playbackState),
+                    startedPlay = playbackState != STATE_IDLE
                 )
             }
         }
@@ -175,7 +179,18 @@ internal class DefaultVideoPlayerController(
     }
 
     fun initialize() {
-        releaseCounter.incrementAndGet()
+        Log.i("VideoPlayerController", "$this initialize")
+        val currentState = _state.value
+        exoPlayer.playWhenReady = currentState.isPlaying
+        initialStateRunner = {
+            exoPlayer.seekTo(currentState.currentPosition)
+        }
+        if (this::source.isInitialized) {
+            setSource(source)
+        }
+        if (playerView != null) {
+            playerViewAvailable(playerView!!)
+        }
     }
 
     /**
@@ -185,17 +200,19 @@ internal class DefaultVideoPlayerController(
     private val waitPlayerViewToPrepare = AtomicBoolean(false)
 
     override fun play() {
-        if (exoPlayer.playbackState == Player.STATE_ENDED) {
+        _state.set { copy(startedPlay = true) }
+        if (exoPlayer.playbackState == STATE_ENDED) {
             exoPlayer.seekTo(0)
         }
         exoPlayer.playWhenReady = true
+        autoHideControls()
     }
 
     override fun pause() {
         exoPlayer.playWhenReady = false
     }
 
-    override fun playPauseToggle() {
+    override fun togglePlaying() {
         if (exoPlayer.isPlaying) pause()
         else play()
     }
@@ -228,9 +245,6 @@ internal class DefaultVideoPlayerController(
     }
 
     override fun setSource(source: VideoPlayerSource) {
-        if (released.get()) {
-            initialize()
-        }
         this.source = source
         if (playerView == null) {
             waitPlayerViewToPrepare.set(true)
@@ -247,8 +261,27 @@ internal class DefaultVideoPlayerController(
         _state.set { copy(controlsEnabled = enabled) }
     }
 
-    fun showControls() {
+    fun showControls(autoHide: Boolean = true) {
         _state.set { copy(controlsVisible = true) }
+        if (autoHide) {
+            autoHideControls()
+        } else {
+            cancelAutoHideControls()
+        }
+    }
+
+    private fun cancelAutoHideControls() {
+        Log.i("VideoPlayerController", "cancelAutoHideControls")
+        autoHideControllerJob?.cancel()
+    }
+
+    private fun autoHideControls() {
+        cancelAutoHideControls()
+        Log.i("VideoPlayerController", "autoHideControls")
+        autoHideControllerJob = coroutineScope.launch {
+            delay(5000)
+            hideControls()
+        }
     }
 
     fun hideControls() {
@@ -264,12 +297,15 @@ internal class DefaultVideoPlayerController(
     }
 
     private fun updateDurationAndPosition() {
-        _state.set {
-            copy(
-                duration = exoPlayer.duration.coerceAtLeast(0),
-                currentPosition = exoPlayer.currentPosition.coerceAtLeast(0),
-                secondaryProgress = exoPlayer.bufferedPosition.coerceAtLeast(0)
-            )
+        if (exoPlayer.playbackState == STATE_READY || exoPlayer.playbackState == STATE_ENDED) {
+            _state.set {
+                copy(
+                    duration = exoPlayer.duration.coerceAtLeast(0),
+                    currentPosition = exoPlayer.currentPosition.coerceAtLeast(0),
+                    secondaryProgress = exoPlayer.bufferedPosition.coerceAtLeast(0),
+                    isPlaying = exoPlayer.isPlaying
+                )
+            }
         }
     }
 
@@ -334,12 +370,12 @@ internal class DefaultVideoPlayerController(
     }
 
     override fun release() {
-        if (releaseCounter.decrementAndGet() <= 0 && released.compareAndSet(false, true)) {
+        Log.i("VideoPlayerController", "$this release")
+        if (released.compareAndSet(false, true)) {
             exoPlayer.release()
             previewExoPlayer.release()
             _exoPlayer = null
             _previewExoPlayer = null
-            playerView = null
         }
     }
 

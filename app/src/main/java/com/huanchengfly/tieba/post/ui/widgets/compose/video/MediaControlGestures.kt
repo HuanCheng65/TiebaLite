@@ -163,6 +163,21 @@ suspend fun PointerInputScope.detectMediaPlayerGesture(
     onDrag: (Float) -> Unit
 ) {
     coroutineScope {
+//        launch {
+//            detectVerticalDragGestures(
+//                onDragStart = {
+//                    Log.i("MediaControlGestures", "Vertical onDragStart $it")
+//                },
+//                onDragEnd = {
+//                    Log.i("MediaControlGestures", "Vertical onDragEnd")
+//                },
+//                onVerticalDrag = { change, dragAmount ->
+//                    Log.i("MediaControlGestures", "Vertical onVerticalDrag $change $dragAmount")
+//                    if (change.positionChange() != Offset.Zero) change.consume()
+//                },
+//            )
+//        }
+
         launch {
             detectHorizontalDragGestures(
                 onDragStart = onDragStart,

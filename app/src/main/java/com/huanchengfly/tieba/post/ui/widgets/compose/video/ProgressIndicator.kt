@@ -23,9 +23,11 @@ fun ProgressIndicator(
             max = duration,
             enabled = controlsVisible && controlsEnabled,
             onSeek = {
+                controller.showControls(autoHide = false)
                 controller.previewSeekTo(it)
             },
             onSeekStopped = {
+                controller.showControls(autoHide = true)
                 controller.seekTo(it)
             },
             secondaryProgress = secondaryProgress,

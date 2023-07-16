@@ -1,14 +1,10 @@
 package com.huanchengfly.tieba.post.ui.common
 
-import android.content.pm.ActivityInfo
-import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.awaitEachGesture
 import androidx.compose.foundation.gestures.awaitFirstDown
 import androidx.compose.foundation.gestures.waitForUpOrCancellation
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.InlineTextContent
@@ -16,11 +12,8 @@ import androidx.compose.material.LocalTextStyle
 import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.movableContentOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -42,23 +35,16 @@ import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.github.panpf.sketch.compose.AsyncImage
-import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.huanchengfly.tieba.post.R
 import com.huanchengfly.tieba.post.activities.UserActivity
 import com.huanchengfly.tieba.post.activities.WebViewActivity
 import com.huanchengfly.tieba.post.arch.BaseComposeActivity.Companion.LocalWindowSizeClass
 import com.huanchengfly.tieba.post.arch.ImmutableHolder
-import com.huanchengfly.tieba.post.findActivity
 import com.huanchengfly.tieba.post.models.protos.PhotoViewData
 import com.huanchengfly.tieba.post.ui.common.windowsizeclass.WindowWidthSizeClass
 import com.huanchengfly.tieba.post.ui.widgets.compose.EmoticonText
-import com.huanchengfly.tieba.post.ui.widgets.compose.FullScreen
 import com.huanchengfly.tieba.post.ui.widgets.compose.NetworkImage
 import com.huanchengfly.tieba.post.ui.widgets.compose.VoicePlayer
-import com.huanchengfly.tieba.post.ui.widgets.compose.video.OnFullScreenModeChangedListener
-import com.huanchengfly.tieba.post.ui.widgets.compose.video.VideoPlayer
-import com.huanchengfly.tieba.post.ui.widgets.compose.video.VideoPlayerSource
-import com.huanchengfly.tieba.post.ui.widgets.compose.video.rememberVideoPlayerController
 import com.huanchengfly.tieba.post.utils.appPreferences
 import com.huanchengfly.tieba.post.utils.launchUrl
 
@@ -179,72 +165,22 @@ data class VideoContentRender(
         val context = LocalContext.current
 
         if (picUrl.isNotBlank()) {
-            if (videoUrl.isNotBlank()) {
-                var fullScreen by remember { mutableStateOf(false) }
-                val systemUiController = rememberSystemUiController()
-                val videoPlayerController = rememberVideoPlayerController(
-                    source = VideoPlayerSource.Network(videoUrl),
-                    fullScreenModeChangedListener = object : OnFullScreenModeChangedListener {
-                        override fun onFullScreenModeChanged(isFullScreen: Boolean) {
-                            Log.i("VideoPlayer", "onFullScreenModeChanged $isFullScreen")
-                            fullScreen = isFullScreen
-                            systemUiController.isStatusBarVisible = !isFullScreen
-                            systemUiController.isNavigationBarVisible = !isFullScreen
-                            if (isFullScreen) {
-                                context.findActivity()?.requestedOrientation =
-                                    ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
-                            } else {
-                                context.findActivity()?.requestedOrientation =
-                                    ActivityInfo.SCREEN_ORIENTATION_USER_PORTRAIT
-                            }
-                        }
-                    }
-                )
-//                DisposableEffect(Unit) {
-//                    onDispose {
-//                        Log.i("VideoContentRender", "onDispose")
-//                        videoPlayerController.release()
-//                    }
-//                }
-                val videoPlayerContent =
-                    movableContentOf { isFullScreen: Boolean, modifier: Modifier ->
-                        VideoPlayer(
-                            videoPlayerController = videoPlayerController,
-                            modifier = modifier,
-                            backgroundColor = if (isFullScreen) Color.Black else Color.Transparent
-                        )
-                    }
+            val picModifier = Modifier
+                .clip(RoundedCornerShape(context.appPreferences.radius.dp))
+                .fillMaxWidth(widthFraction)
+                .aspectRatio(width * 1f / height)
 
-                if (fullScreen) {
-                    Spacer(
-                        modifier = Modifier
-                            .clip(RoundedCornerShape(context.appPreferences.radius.dp))
-                            .fillMaxWidth(widthFraction)
-                            .aspectRatio(width * 1f / height)
-                    )
-                    FullScreen {
-                        videoPlayerContent(
-                            true,
-                            Modifier.fillMaxSize()
-                        )
-                    }
-                } else {
-                    videoPlayerContent(
-                        false,
-                        Modifier
-                            .clip(RoundedCornerShape(context.appPreferences.radius.dp))
-                            .fillMaxWidth(widthFraction)
-                            .aspectRatio(width * 1f / height)
-                    )
-                }
+            if (videoUrl.isNotBlank()) {
+                com.huanchengfly.tieba.post.ui.widgets.compose.VideoPlayer(
+                    videoUrl = videoUrl,
+                    thumbnailUrl = picUrl,
+                    modifier = picModifier
+                )
             } else {
                 AsyncImage(
                     imageUri = picUrl,
                     contentDescription = stringResource(id = R.string.desc_video),
-                    modifier = Modifier
-                        .clip(RoundedCornerShape(context.appPreferences.radius.dp))
-                        .fillMaxWidth(widthFraction)
-                        .aspectRatio(width * 1f / height)
+                    modifier = picModifier
                         .clickable {
                             WebViewActivity.launch(context, webUrl)
                         },
