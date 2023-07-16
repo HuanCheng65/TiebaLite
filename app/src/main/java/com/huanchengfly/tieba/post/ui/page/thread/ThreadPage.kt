@@ -113,6 +113,7 @@ import com.huanchengfly.tieba.post.ui.common.PbContentRender
 import com.huanchengfly.tieba.post.ui.common.theme.compose.ExtendedTheme
 import com.huanchengfly.tieba.post.ui.page.ProvideNavigator
 import com.huanchengfly.tieba.post.ui.page.destinations.ForumPageDestination
+import com.huanchengfly.tieba.post.ui.page.destinations.SubPostsSheetPageDestination
 import com.huanchengfly.tieba.post.ui.widgets.compose.Avatar
 import com.huanchengfly.tieba.post.ui.widgets.compose.BackNavigationIcon
 import com.huanchengfly.tieba.post.ui.widgets.compose.Button
@@ -507,6 +508,9 @@ fun ThreadPage(
     }
     val threadTitle = remember(thread) {
         thread?.get { title } ?: ""
+    }
+    val curForumId = remember(forumId, forum) {
+        forumId ?: forum?.get { id }
     }
     val lazyListState = rememberLazyListState()
     val bottomSheetState = rememberModalBottomSheetState(
@@ -1007,6 +1011,19 @@ fun ThreadPage(
                                                         agree = !postHasAgreed
                                                     )
                                                 )
+                                            },
+                                            onOpenSubPosts = {
+                                                if (curForumId != null) {
+                                                    navigator.navigate(
+                                                        SubPostsSheetPageDestination(
+                                                            forumId = curForumId,
+                                                            threadId = threadId,
+                                                            postId = item.get { id },
+                                                            subPostsId = it,
+                                                            loadFromSubPost = false
+                                                        )
+                                                    )
+                                                }
                                             }
                                         )
                                     }
@@ -1210,8 +1227,10 @@ fun PostCard(
     threadAuthorId: Long = 0L,
     blocked: Boolean = false,
     immersiveMode: Boolean = false,
+    showSubPosts: Boolean = true,
     onAgree: () -> Unit = {},
     onReply: () -> Unit = {},
+    onOpenSubPosts: (subPostId: Long) -> Unit = {},
 ) {
     val (post) = postHolder
     if (blocked && !immersiveMode) {
@@ -1331,7 +1350,7 @@ fun PostCard(
                 }
             }
 
-            if (post.sub_post_number > 0 && !immersiveMode) {
+            if (showSubPosts && post.sub_post_number > 0 && !immersiveMode) {
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -1340,10 +1359,14 @@ fun PostCard(
                         .background(ExtendedTheme.colors.floorCard)
                         .padding(vertical = 12.dp)
                 ) {
-                    subPostContents.forEach {
+                    subPostContents.forEachIndexed { index, text ->
                         EmoticonText(
-                            text = it,
-                            modifier = Modifier.padding(horizontal = 12.dp),
+                            text = text,
+                            modifier = Modifier
+                                .clickable {
+                                    onOpenSubPosts(subPosts[index].id)
+                                }
+                                .padding(horizontal = 12.dp),
                             color = ExtendedTheme.colors.text,
                             fontSize = 13.sp,
                             style = MaterialTheme.typography.body2,
@@ -1361,8 +1384,12 @@ fun PostCard(
                             fontSize = 13.sp,
                             color = ExtendedTheme.colors.primary,
                             modifier = Modifier
-                                .padding(horizontal = 12.dp)
+                                .fillMaxWidth()
                                 .padding(top = 4.dp)
+                                .clickable {
+                                    onOpenSubPosts(0)
+                                }
+                                .padding(horizontal = 12.dp)
                         )
                     }
                 }
@@ -1372,7 +1399,7 @@ fun PostCard(
 }
 
 @Composable
-private fun UserNameText(
+fun UserNameText(
     userName: AnnotatedString,
     userLevel: Int,
     modifier: Modifier = Modifier,

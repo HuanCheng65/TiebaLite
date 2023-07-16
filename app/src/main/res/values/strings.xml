@@ -677,4 +677,7 @@
     <string name="settings_block_video">屏蔽视频贴子</string>
     <string name="btn_full_screen">全屏</string>
     <string name="btn_play">播放</string>
+    <string name="title_sub_posts">%d 楼的回复</string>
+    <string name="title_sub_posts_default">回复</string>
+    <string name="title_sub_posts_header">%d 条回复</string>
 </resources>

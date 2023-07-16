@@ -15,17 +15,23 @@ import android.os.Handler
 import android.os.Looper
 import androidx.compose.animation.AnimatedContentScope
 import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.animation.core.AnimationSpec
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.VisibilityThreshold
 import androidx.compose.animation.core.spring
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.ModalBottomSheetValue
 import androidx.compose.material.Surface
+import androidx.compose.material.SwipeableDefaults
 import androidx.compose.material.Text
+import androidx.compose.material.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.res.stringResource
@@ -39,9 +45,9 @@ import androidx.navigation.plusAssign
 import androidx.window.layout.FoldingFeature
 import androidx.window.layout.WindowInfoTracker
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
+import com.google.accompanist.navigation.material.BottomSheetNavigator
 import com.google.accompanist.navigation.material.ExperimentalMaterialNavigationApi
 import com.google.accompanist.navigation.material.ModalBottomSheetLayout
-import com.google.accompanist.navigation.material.rememberBottomSheetNavigator
 import com.google.accompanist.systemuicontroller.SystemUiController
 import com.huanchengfly.tieba.post.api.retrofit.exception.getErrorMessage
 import com.huanchengfly.tieba.post.arch.BaseComposeActivity
@@ -87,6 +93,20 @@ val LocalNotificationCountFlow =
     staticCompositionLocalOf<Flow<Int>> { throw IllegalStateException("not allowed here!") }
 val LocalDevicePosture =
     staticCompositionLocalOf<State<DevicePosture>> { throw IllegalStateException("not allowed here!") }
+
+@OptIn(ExperimentalMaterialApi::class, ExperimentalMaterialNavigationApi::class)
+@Composable
+fun rememberBottomSheetNavigator(
+    animationSpec: AnimationSpec<Float> = SwipeableDefaults.AnimationSpec,
+    skipHalfExpanded: Boolean = false
+): BottomSheetNavigator {
+    val sheetState = rememberModalBottomSheetState(
+        ModalBottomSheetValue.Hidden,
+        animationSpec = animationSpec,
+        skipHalfExpanded = skipHalfExpanded
+    )
+    return remember { BottomSheetNavigator(sheetState) }
+}
 
 @AndroidEntryPoint
 class MainActivityV2 : BaseComposeActivity() {
@@ -269,11 +289,14 @@ class MainActivityV2 : BaseComposeActivity() {
                 )
                 val navController = rememberAnimatedNavController()
                 val bottomSheetNavigator =
-                    rememberBottomSheetNavigator(animationSpec = spring(stiffness = Spring.StiffnessMediumLow))
+                    rememberBottomSheetNavigator(
+                        animationSpec = spring(stiffness = Spring.StiffnessMediumLow),
+                        skipHalfExpanded = true
+                    )
                 navController.navigatorProvider += bottomSheetNavigator
                 ModalBottomSheetLayout(
                     bottomSheetNavigator = bottomSheetNavigator,
-                    sheetShape = RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp)
+                    sheetShape = RoundedCornerShape(topStart = 12.dp, topEnd = 12.dp)
                 ) {
                     DestinationsNavHost(
                         navController = navController,

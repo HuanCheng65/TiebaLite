@@ -58,6 +58,9 @@ import com.huanchengfly.tieba.post.api.models.protos.frsPage.FrsPageResponse
 import com.huanchengfly.tieba.post.api.models.protos.hotThreadList.HotThreadListRequest
 import com.huanchengfly.tieba.post.api.models.protos.hotThreadList.HotThreadListRequestData
 import com.huanchengfly.tieba.post.api.models.protos.hotThreadList.HotThreadListResponse
+import com.huanchengfly.tieba.post.api.models.protos.pbFloor.PbFloorRequest
+import com.huanchengfly.tieba.post.api.models.protos.pbFloor.PbFloorRequestData
+import com.huanchengfly.tieba.post.api.models.protos.pbFloor.PbFloorResponse
 import com.huanchengfly.tieba.post.api.models.protos.pbPage.PbPageRequest
 import com.huanchengfly.tieba.post.api.models.protos.pbPage.PbPageRequestData
 import com.huanchengfly.tieba.post.api.models.protos.pbPage.PbPageResponse
@@ -1100,6 +1103,34 @@ object MixedTiebaApiImpl : ITiebaApi {
                     )
                 ),
                 clientVersion = ClientVersion.TIEBA_V12
+            )
+        )
+    }
+
+    override fun pbFloorFlow(
+        forumId: Long,
+        threadId: Long,
+        postId: Long,
+        page: Int,
+        subPostId: Long
+    ): Flow<PbFloorResponse> {
+        return RetrofitTiebaApi.OFFICIAL_PROTOBUF_TIEBA_V12_API.pbFloorFlow(
+            buildProtobufRequestBody(
+                PbFloorRequest(
+                    PbFloorRequestData(
+                        common = buildCommonRequest(clientVersion = ClientVersion.TIEBA_V12),
+                        forum_id = forumId,
+                        kz = threadId,
+                        pid = postId,
+                        pn = page,
+                        spid = subPostId,
+                        scr_dip = App.ScreenInfo.DENSITY.toDouble(),
+                        scr_h = getScreenHeight(),
+                        scr_w = getScreenWidth(),
+                        is_comm_reverse = 0,
+                        ori_ugc_type = 0
+                    )
+                )
             )
         )
     }

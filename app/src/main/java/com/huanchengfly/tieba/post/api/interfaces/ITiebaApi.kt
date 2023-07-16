@@ -7,6 +7,7 @@ import com.huanchengfly.tieba.post.api.models.*
 import com.huanchengfly.tieba.post.api.models.protos.forumRecommend.ForumRecommendResponse
 import com.huanchengfly.tieba.post.api.models.protos.frsPage.FrsPageResponse
 import com.huanchengfly.tieba.post.api.models.protos.hotThreadList.HotThreadListResponse
+import com.huanchengfly.tieba.post.api.models.protos.pbFloor.PbFloorResponse
 import com.huanchengfly.tieba.post.api.models.protos.pbPage.PbPageResponse
 import com.huanchengfly.tieba.post.api.models.protos.personalized.PersonalizedResponse
 import com.huanchengfly.tieba.post.api.models.protos.profile.ProfileResponse
@@ -1273,4 +1274,21 @@ interface ITiebaApi {
         stType: String = "",
         mark: Int = 0,
     ): Flow<PbPageResponse>
+
+    /**
+     * 楼中楼页面
+     *
+     * @param forumId 吧 ID
+     * @param threadId 贴 ID
+     * @param page 分页页码
+     * @param postId 回复 ID
+     * @param subPostId 楼中楼回复 ID
+     */
+    fun pbFloorFlow(
+        forumId: Long,
+        threadId: Long,
+        postId: Long,
+        page: Int = 1,
+        subPostId: Long = 0L
+    ): Flow<PbFloorResponse>
 }

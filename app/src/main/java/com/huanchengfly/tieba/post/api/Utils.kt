@@ -157,7 +157,7 @@ val List<PbContent>.plainText: String
     }
 
 @OptIn(ExperimentalTextApi::class)
-val List<PbContent>.renders: List<PbContentRender>
+val List<PbContent>.renders: ImmutableList<PbContentRender>
     get() {
         val renders = mutableListOf<PbContentRender>()
 
@@ -291,7 +291,7 @@ val List<PbContent>.renders: List<PbContentRender>
             }
         }
 
-        return renders
+        return renders.toImmutableList()
     }
 
 val Post.contentRenders: ImmutableList<PbContentRender>
