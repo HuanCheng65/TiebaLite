@@ -31,6 +31,8 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.compositionLocalOf
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.Alignment
@@ -41,6 +43,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.NavController
 import androidx.navigation.plusAssign
 import androidx.window.layout.FoldingFeature
 import androidx.window.layout.WindowInfoTracker
@@ -75,6 +78,8 @@ import com.ramcosta.composedestinations.DestinationsNavHost
 import com.ramcosta.composedestinations.animations.defaults.RootNavGraphDefaultAnimations
 import com.ramcosta.composedestinations.animations.rememberAnimatedNavHostEngine
 import com.ramcosta.composedestinations.navigation.dependency
+import com.ramcosta.composedestinations.spec.DestinationSpec
+import com.ramcosta.composedestinations.utils.currentDestinationAsState
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.BufferOverflow
@@ -93,6 +98,9 @@ val LocalNotificationCountFlow =
     staticCompositionLocalOf<Flow<Int>> { throw IllegalStateException("not allowed here!") }
 val LocalDevicePosture =
     staticCompositionLocalOf<State<DevicePosture>> { throw IllegalStateException("not allowed here!") }
+val LocalNavController =
+    staticCompositionLocalOf<NavController> { throw IllegalStateException("not allowed here!") }
+val LocalDestination = compositionLocalOf<DestinationSpec<*>?> { null }
 
 @OptIn(ExperimentalMaterialApi::class, ExperimentalMaterialNavigationApi::class)
 @Composable
@@ -294,18 +302,26 @@ class MainActivityV2 : BaseComposeActivity() {
                         skipHalfExpanded = true
                     )
                 navController.navigatorProvider += bottomSheetNavigator
-                ModalBottomSheetLayout(
-                    bottomSheetNavigator = bottomSheetNavigator,
-                    sheetShape = RoundedCornerShape(topStart = 12.dp, topEnd = 12.dp)
+
+                val currentDestination by navController.currentDestinationAsState()
+
+                CompositionLocalProvider(
+                    LocalNavController provides navController,
+                    LocalDestination provides currentDestination
                 ) {
-                    DestinationsNavHost(
-                        navController = navController,
-                        navGraph = NavGraphs.root,
-                        engine = engine,
-                        dependenciesContainerBuilder = {
-                            dependency(MainPageDestination) { this@MainActivityV2 }
-                        }
-                    )
+                    ModalBottomSheetLayout(
+                        bottomSheetNavigator = bottomSheetNavigator,
+                        sheetShape = RoundedCornerShape(topStart = 12.dp, topEnd = 12.dp)
+                    ) {
+                        DestinationsNavHost(
+                            navController = navController,
+                            navGraph = NavGraphs.root,
+                            engine = engine,
+                            dependenciesContainerBuilder = {
+                                dependency(MainPageDestination) { this@MainActivityV2 }
+                            }
+                        )
+                    }
                 }
             }
         }

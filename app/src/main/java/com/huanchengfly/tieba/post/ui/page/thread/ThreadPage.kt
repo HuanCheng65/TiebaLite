@@ -1,6 +1,5 @@
 package com.huanchengfly.tieba.post.ui.page.thread
 
-import androidx.activity.compose.BackHandler
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
@@ -114,6 +113,7 @@ import com.huanchengfly.tieba.post.ui.common.theme.compose.ExtendedTheme
 import com.huanchengfly.tieba.post.ui.page.ProvideNavigator
 import com.huanchengfly.tieba.post.ui.page.destinations.ForumPageDestination
 import com.huanchengfly.tieba.post.ui.page.destinations.SubPostsSheetPageDestination
+import com.huanchengfly.tieba.post.ui.page.destinations.ThreadPageDestination
 import com.huanchengfly.tieba.post.ui.widgets.compose.Avatar
 import com.huanchengfly.tieba.post.ui.widgets.compose.BackNavigationIcon
 import com.huanchengfly.tieba.post.ui.widgets.compose.Button
@@ -124,6 +124,7 @@ import com.huanchengfly.tieba.post.ui.widgets.compose.HorizontalDivider
 import com.huanchengfly.tieba.post.ui.widgets.compose.LazyLoad
 import com.huanchengfly.tieba.post.ui.widgets.compose.ListMenuItem
 import com.huanchengfly.tieba.post.ui.widgets.compose.LoadMoreLayout
+import com.huanchengfly.tieba.post.ui.widgets.compose.MyBackHandler
 import com.huanchengfly.tieba.post.ui.widgets.compose.MyScaffold
 import com.huanchengfly.tieba.post.ui.widgets.compose.PromptDialog
 import com.huanchengfly.tieba.post.ui.widgets.compose.Sizes
@@ -545,7 +546,10 @@ fun ThreadPage(
         }
     }
 
-    BackHandler(enabled = bottomSheetState.isVisible) {
+    MyBackHandler(
+        enabled = bottomSheetState.isVisible,
+        currentScreen = ThreadPageDestination
+    ) {
         closeBottomSheet()
     }
 
@@ -594,7 +598,10 @@ fun ThreadPage(
     ) {
         Text(text = stringResource(R.string.message_update_collect_mark, readFloorBeforeBack))
     }
-    BackHandler(enabled = isCollected && !bottomSheetState.isVisible) {
+    MyBackHandler(
+        enabled = isCollected && !bottomSheetState.isVisible,
+        currentScreen = ThreadPageDestination
+    ) {
         readFloorBeforeBack = getLastVisibilityPost()?.get { floor } ?: 0
         if (readFloorBeforeBack != 0) {
             updateCollectMarkDialogState.show()
