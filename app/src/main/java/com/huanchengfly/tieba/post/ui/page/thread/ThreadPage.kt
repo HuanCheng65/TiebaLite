@@ -77,10 +77,13 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.ExperimentalTextApi
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.text.withAnnotation
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -1238,6 +1241,7 @@ private fun BottomBar(
     }
 }
 
+@OptIn(ExperimentalTextApi::class)
 @Composable
 fun PostCard(
     postHolder: ImmutableHolder<Post>,
@@ -1296,14 +1300,16 @@ fun PostCard(
                         fontWeight = FontWeight.Bold
                     )
                 ) {
-                    append(
-                        StringUtil.getUsernameAnnotatedString(
-                            context,
-                            subPostList.author?.name ?: "",
-                            subPostList.author?.nameShow
+                    withAnnotation("user", "${subPostList.author?.id}") {
+                        append(
+                            StringUtil.getUsernameAnnotatedString(
+                                context,
+                                subPostList.author?.name ?: "",
+                                subPostList.author?.nameShow
+                            )
                         )
-                    )
-                    append(": ")
+                        append(": ")
+                    }
                 }
             }
             val contentStrings = subPostList.content.renders.map { it.toAnnotationString() }
@@ -1389,7 +1395,9 @@ fun PostCard(
                             color = ExtendedTheme.colors.text,
                             fontSize = 13.sp,
                             style = MaterialTheme.typography.body2,
-                            emoticonSize = 0.9f
+                            emoticonSize = 0.9f,
+                            overflow = TextOverflow.Ellipsis,
+                            maxLines = 4,
                         )
                     }
 
