@@ -11,6 +11,7 @@ import com.huanchengfly.tieba.post.api.models.protos.SimpleForum
 import com.huanchengfly.tieba.post.api.models.protos.ThreadInfo
 import com.huanchengfly.tieba.post.api.models.protos.User
 import com.huanchengfly.tieba.post.api.renders
+import com.huanchengfly.tieba.post.api.retrofit.exception.TiebaUnknownException
 import com.huanchengfly.tieba.post.api.retrofit.exception.getErrorCode
 import com.huanchengfly.tieba.post.api.retrofit.exception.getErrorMessage
 import com.huanchengfly.tieba.post.api.updateAgreeStatus
@@ -108,7 +109,7 @@ class ThreadViewModel @Inject constructor() :
         fun ThreadUiIntent.Init.producePartialChange(): Flow<ThreadPartialChange.Init> =
             flowOf<ThreadPartialChange.Init>(
                 ThreadPartialChange.Init.Success(
-                    threadInfo?.title ?: "",
+                    threadInfo?.title.orEmpty(),
                     threadInfo?.author,
                     threadInfo,
                     threadInfo?.firstPostContent?.renders ?: emptyList(),
@@ -116,18 +117,14 @@ class ThreadViewModel @Inject constructor() :
                     seeLz,
                     sortType,
                 )
-            ).catch {
-                emit(
-                    ThreadPartialChange.Init.Failure(
-                        it.getErrorCode(),
-                        it.getErrorMessage()
-                    )
-                )
-            }
+            ).catch { emit(ThreadPartialChange.Init.Failure(it)) }
 
         fun ThreadUiIntent.Load.producePartialChange(): Flow<ThreadPartialChange.Load> =
             PbPageRepository
-                .pbPage(threadId, page, postId, forumId, seeLz, sortType, from = from)
+                .pbPage(
+                    threadId, page, postId, forumId, seeLz, sortType,
+                    from = from.takeIf { it == ThreadPageFrom.FROM_STORE }.orEmpty()
+                )
                 .map { response ->
                     if (
                         response.data_?.page != null
@@ -170,17 +167,10 @@ class ThreadViewModel @Inject constructor() :
                             seeLz,
                             sortType,
                         )
-                    } else ThreadPartialChange.Load.Failure(-1, "未知错误")
+                    } else ThreadPartialChange.Load.Failure(TiebaUnknownException)
                 }
                 .onStart { emit(ThreadPartialChange.Load.Start) }
-                .catch {
-                    emit(
-                        ThreadPartialChange.Load.Failure(
-                            it.getErrorCode(),
-                            it.getErrorMessage()
-                        )
-                    )
-                }
+                .catch { emit(ThreadPartialChange.Load.Failure(it)) }
 
         fun ThreadUiIntent.LoadFirstPage.producePartialChange(): Flow<ThreadPartialChange.LoadFirstPage> =
             PbPageRepository
@@ -220,17 +210,10 @@ class ThreadViewModel @Inject constructor() :
                             seeLz,
                             sortType,
                         )
-                    } else ThreadPartialChange.LoadFirstPage.Failure(-1, "未知错误")
+                    } else ThreadPartialChange.LoadFirstPage.Failure(TiebaUnknownException)
                 }
                 .onStart { emit(ThreadPartialChange.LoadFirstPage.Start) }
-                .catch {
-                    emit(
-                        ThreadPartialChange.LoadFirstPage.Failure(
-                            it.getErrorCode(),
-                            it.getErrorMessage()
-                        )
-                    )
-                }
+                .catch { emit(ThreadPartialChange.LoadFirstPage.Failure(it)) }
 
         fun ThreadUiIntent.LoadMore.producePartialChange(): Flow<ThreadPartialChange.LoadMore> =
             PbPageRepository
@@ -488,6 +471,8 @@ sealed interface ThreadPartialChange : PartialChange<ThreadUiState> {
         override fun reduce(oldState: ThreadUiState): ThreadUiState = when (this) {
             is Success -> oldState.copy(
                 isRefreshing = true,
+                isError = false,
+                error = null,
                 title = title,
                 author = if (author != null) wrapImmutable(author) else null,
                 threadInfo = threadInfo?.wrapImmutable(),
@@ -506,7 +491,10 @@ sealed interface ThreadPartialChange : PartialChange<ThreadUiState> {
                 sortType = sortType,
             )
 
-            is Failure -> oldState
+            is Failure -> oldState.copy(
+                isError = true,
+                error = error.wrapImmutable()
+            )
         }
 
         data class Success(
@@ -520,8 +508,7 @@ sealed interface ThreadPartialChange : PartialChange<ThreadUiState> {
         ) : Init()
 
         data class Failure(
-            val errorCode: Int,
-            val errorMessage: String
+            val error: Throwable
         ) : Init()
     }
 
@@ -531,6 +518,8 @@ sealed interface ThreadPartialChange : PartialChange<ThreadUiState> {
 
             is Success -> oldState.copy(
                 isRefreshing = false,
+                isError = false,
+                error = null,
                 title = title,
                 author = wrapImmutable(author),
                 user = wrapImmutable(user),
@@ -553,7 +542,11 @@ sealed interface ThreadPartialChange : PartialChange<ThreadUiState> {
                 sortType = sortType,
             )
 
-            is Failure -> oldState.copy(isRefreshing = false)
+            is Failure -> oldState.copy(
+                isRefreshing = false,
+                isError = true,
+                error = error.wrapImmutable()
+            )
         }
 
         object Start : Load()
@@ -580,8 +573,7 @@ sealed interface ThreadPartialChange : PartialChange<ThreadUiState> {
         ) : Load()
 
         data class Failure(
-            val errorCode: Int,
-            val errorMessage: String
+            val error: Throwable,
         ) : Load()
     }
 
@@ -590,6 +582,8 @@ sealed interface ThreadPartialChange : PartialChange<ThreadUiState> {
             is Start -> oldState.copy(isRefreshing = true)
             is Success -> oldState.copy(
                 isRefreshing = false,
+                isError = false,
+                error = null,
                 title = title,
                 author = wrapImmutable(author),
                 data = data.toImmutableList(),
@@ -607,7 +601,11 @@ sealed interface ThreadPartialChange : PartialChange<ThreadUiState> {
                 sortType = sortType,
             )
 
-            is Failure -> oldState.copy(isRefreshing = false)
+            is Failure -> oldState.copy(
+                isRefreshing = false,
+                isError = true,
+                error = error.wrapImmutable(),
+            )
         }
 
         object Start : LoadFirstPage()
@@ -630,8 +628,7 @@ sealed interface ThreadPartialChange : PartialChange<ThreadUiState> {
         ) : LoadFirstPage()
 
         data class Failure(
-            val errorCode: Int,
-            val errorMessage: String
+            val error: Throwable
         ) : LoadFirstPage()
     }
 
@@ -866,6 +863,8 @@ sealed interface ThreadPartialChange : PartialChange<ThreadUiState> {
 data class ThreadUiState(
     val isRefreshing: Boolean = false,
     val isLoadingMore: Boolean = false,
+    val isError: Boolean = false,
+    val error: ImmutableHolder<Throwable>? = null,
 
     val hasMore: Boolean = true,
     val nextPagePostId: Long = 0,

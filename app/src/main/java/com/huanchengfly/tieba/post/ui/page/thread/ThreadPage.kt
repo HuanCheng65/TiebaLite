@@ -120,6 +120,7 @@ import com.huanchengfly.tieba.post.ui.widgets.compose.BackNavigationIcon
 import com.huanchengfly.tieba.post.ui.widgets.compose.Button
 import com.huanchengfly.tieba.post.ui.widgets.compose.Card
 import com.huanchengfly.tieba.post.ui.widgets.compose.ConfirmDialog
+import com.huanchengfly.tieba.post.ui.widgets.compose.ErrorScreen
 import com.huanchengfly.tieba.post.ui.widgets.compose.HorizontalDivider
 import com.huanchengfly.tieba.post.ui.widgets.compose.LazyLoad
 import com.huanchengfly.tieba.post.ui.widgets.compose.ListMenuItem
@@ -457,6 +458,14 @@ fun ThreadPage(
         prop1 = ThreadUiState::isLoadingMore,
         initial = false
     )
+    val isError by viewModel.uiState.collectPartialAsState(
+        prop1 = ThreadUiState::isError,
+        initial = false
+    )
+    val error by viewModel.uiState.collectPartialAsState(
+        prop1 = ThreadUiState::error,
+        initial = null
+    )
     val hasMore by viewModel.uiState.collectPartialAsState(
         prop1 = ThreadUiState::hasMore,
         initial = true
@@ -468,10 +477,6 @@ fun ThreadPage(
     val hasPrevious by viewModel.uiState.collectPartialAsState(
         prop1 = ThreadUiState::hasPrevious,
         initial = true
-    )
-    val currentPageMin by viewModel.uiState.collectPartialAsState(
-        prop1 = ThreadUiState::currentPageMin,
-        initial = 0
     )
     val currentPageMax by viewModel.uiState.collectPartialAsState(
         prop1 = ThreadUiState::currentPageMax,
@@ -707,8 +712,14 @@ fun ThreadPage(
     ProvideNavigator(navigator = navigator) {
         StateScreen(
             isEmpty = isEmpty,
-            isError = false,
+            isError = isError,
             isLoading = isRefreshing,
+            errorScreen = {
+                error?.let {
+                    val (e) = it
+                    ErrorScreen(error = e)
+                }
+            },
             onReload = {
                 viewModel.send(
                     ThreadUiIntent.Load(
