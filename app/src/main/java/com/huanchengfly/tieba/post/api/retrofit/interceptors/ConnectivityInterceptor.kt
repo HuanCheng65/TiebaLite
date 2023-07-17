@@ -7,6 +7,7 @@ import com.huanchengfly.tieba.post.utils.isNetworkConnected
 import okhttp3.Interceptor
 import okhttp3.Response
 import java.io.IOException
+import java.net.SocketException
 import java.net.SocketTimeoutException
 
 object ConnectivityInterceptor : Interceptor {
@@ -16,14 +17,14 @@ object ConnectivityInterceptor : Interceptor {
         val exception = response.exceptionOrNull()
 
         return when {
+            (exception is SocketTimeoutException || exception is SocketException) && isNetworkConnected() -> throw NoConnectivityException(
+                App.INSTANCE.getString(R.string.connectivity_timeout)
+            )
+
             exception is IOException && !isNetworkConnected() -> throw NoConnectivityException(
                 App.INSTANCE.getString(
                     R.string.no_internet_connectivity
                 )
-            )
-
-            exception is SocketTimeoutException && isNetworkConnected() -> throw NoConnectivityException(
-                App.INSTANCE.getString(R.string.connectivity_timeout)
             )
 
             else -> response.getOrThrow()
