@@ -151,18 +151,28 @@ object AccountUtil {
         return TiebaApi.getInstance()
             .initNickNameFlow(bduss, sToken)
             .zip(TiebaApi.getInstance().loginFlow(bduss, sToken)) { initNickNameBean, loginBean ->
-                getAccountInfoByUid(loginBean.user.id) ?: Account(
-                    loginBean.user.id,
-                    loginBean.user.name,
-                    bduss,
-                    loginBean.anti.tbs,
-                    loginBean.user.portrait,
-                    sToken,
-                    cookie ?: getBdussCookie(bduss),
-                    initNickNameBean.userInfo.nameShow,
-                    "",
-                    "0"
-                )
+                getAccountInfoByUid(loginBean.user.id)?.apply {
+                    this.bduss = bduss
+                    this.sToken = sToken
+                    this.tbs = loginBean.anti.tbs
+                    this.name = loginBean.user.name
+                    this.nameShow = initNickNameBean.userInfo.nameShow
+                    this.portrait = loginBean.user.portrait
+                    this.cookie = cookie ?: getBdussCookie(bduss)
+                    saveOrUpdate("uid = ?", loginBean.user.id)
+                }
+                    ?: Account(
+                        loginBean.user.id,
+                        loginBean.user.name,
+                        bduss,
+                        loginBean.anti.tbs,
+                        loginBean.user.portrait,
+                        sToken,
+                        cookie ?: getBdussCookie(bduss),
+                        initNickNameBean.userInfo.nameShow,
+                        "",
+                        "0"
+                    )
             }
     }
 
