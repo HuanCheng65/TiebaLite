@@ -1,6 +1,7 @@
 package com.huanchengfly.tieba.post.api.retrofit.interfaces
 
 import android.os.Build
+import com.huanchengfly.tieba.post.App
 import com.huanchengfly.tieba.post.App.ScreenInfo
 import com.huanchengfly.tieba.post.api.Header
 import com.huanchengfly.tieba.post.api.Param
@@ -10,6 +11,10 @@ import com.huanchengfly.tieba.post.api.models.*
 import com.huanchengfly.tieba.post.api.retrofit.ApiResult
 import com.huanchengfly.tieba.post.api.retrofit.body.MyMultipartBody
 import com.huanchengfly.tieba.post.utils.AccountUtil
+import com.huanchengfly.tieba.post.utils.CacheUtil.base64Encode
+import com.huanchengfly.tieba.post.utils.ClientUtils
+import com.huanchengfly.tieba.post.utils.MobileInfoUtil
+import com.huanchengfly.tieba.post.utils.UIDUtil
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.flow.Flow
 import retrofit2.Call
@@ -328,9 +333,8 @@ interface OfficialTiebaApi {
     ): Flow<ThreadStoreBean>
 
     @Headers(
-        "${Header.COOKIE}: ka=open",
         "${Header.DROP_HEADERS}: ${Header.CHARSET},${Header.CLIENT_TYPE}",
-        "${Header.NO_COMMON_PARAMS}: ${Param.OAID}",
+        "${Header.NO_COMMON_PARAMS}: ${Param.OAID},${Param.MAC},${Param.PHONE_IMEI},${Param.ANDROID_ID},${Param.SWAN_GAME_VER},${Param.SDK_VER}",
     )
     @POST("/c/s/sync")
     @FormUrlEncoded
@@ -341,17 +345,22 @@ interface OfficialTiebaApi {
         @Field("_pic_quality") picQuality: String = "0",
         @Field("board") board: String = Build.BOARD,
         @Field("brand") brand: String = Build.BRAND,
+        @Field("cam") cam: String = base64Encode("02:00:00:00:00:00"),
+        @Field("di_diordna") androidIdR: String = base64Encode(UIDUtil.getAndroidId("000")),
+        @Field("iemi") imeiR: String = base64Encode(MobileInfoUtil.getIMEI(App.INSTANCE)),
         @Field("incremental") incremental: String = Build.VERSION.INCREMENTAL,
-        @Field("md5") md5: String = "E0F995CA7286059FC61F649796A0D757",
+        @Field("md5") md5: String = "F86F4C238491AB3BEBFA33AC42C1582B",
         @Field("signmd5") signmd5: String = "225172691",
         @Field("package") packageName: String = "com.baidu.tieba",
-        @Field("versioncode") versionCode: String = "185204737",
+        @Field("versioncode") versionCode: String = "202965248",
+        @Field("running_abi") runningAbi: Int = 64,
+        @Field("support_abi") supportAbi: Int = 64,
         @Field("scr_dip") scr_dip: String = ScreenInfo.DENSITY.toString(),
         @Field("scr_h") scr_h: String = getScreenHeight().toString(),
         @Field("scr_w") scr_w: String = getScreenWidth().toString(),
-        @Field("_client_version") client_version: String = "11.10.8.6",
-        @retrofit2.http.Header(Header.USER_AGENT) user_agent: String = "bdtb for Android $client_version",
         @Field("stoken") sToken: String? = AccountUtil.getSToken(),
+        @retrofit2.http.Header(Header.COOKIE) cookie: String = "ka=open;BAIDUID=${ClientUtils.baiduId}".takeIf { ClientUtils.baiduId != null }
+            ?: "ka=open"
     ): Flow<Sync>
 
     @Headers(

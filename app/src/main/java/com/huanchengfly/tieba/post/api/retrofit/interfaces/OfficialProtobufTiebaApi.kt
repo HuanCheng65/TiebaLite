@@ -13,6 +13,7 @@ import com.huanchengfly.tieba.post.api.models.protos.userLike.UserLikeResponse
 import com.huanchengfly.tieba.post.api.retrofit.body.MyMultipartBody
 import kotlinx.coroutines.flow.Flow
 import retrofit2.http.Body
+import retrofit2.http.Header
 import retrofit2.http.POST
 
 interface OfficialProtobufTiebaApi {
@@ -44,6 +45,7 @@ interface OfficialProtobufTiebaApi {
     @POST("/c/f/frs/page?cmd=301001")
     fun frsPageFlow(
         @Body body: MyMultipartBody,
+        @Header("forum_name") forumName: String? = null,
     ): Flow<FrsPageResponse>
 
     @POST("/c/f/frs/threadlist?cmd=301002")
