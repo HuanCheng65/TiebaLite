@@ -86,6 +86,7 @@ import com.huanchengfly.tieba.post.api.models.web.HotMessageListBean
 import com.huanchengfly.tieba.post.api.retrofit.ApiResult
 import com.huanchengfly.tieba.post.api.retrofit.RetrofitTiebaApi
 import com.huanchengfly.tieba.post.api.retrofit.body.MyMultipartBody
+import com.huanchengfly.tieba.post.api.urlEncode
 import com.huanchengfly.tieba.post.models.DislikeBean
 import com.huanchengfly.tieba.post.models.MyInfoBean
 import com.huanchengfly.tieba.post.models.PhotoInfoBean
@@ -950,7 +951,7 @@ object MixedTiebaApiImpl : ITiebaApi {
                 ),
                 clientVersion = ClientVersion.TIEBA_V12
             ),
-            forumName = forumName
+            forumName = forumName.urlEncode()
         )
     }
 
