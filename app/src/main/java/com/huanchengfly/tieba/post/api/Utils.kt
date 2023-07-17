@@ -13,6 +13,7 @@ import com.huanchengfly.tieba.post.App.ScreenInfo
 import com.huanchengfly.tieba.post.R
 import com.huanchengfly.tieba.post.api.models.protos.PbContent
 import com.huanchengfly.tieba.post.api.models.protos.Post
+import com.huanchengfly.tieba.post.api.models.protos.SubPostList
 import com.huanchengfly.tieba.post.api.models.protos.ThreadInfo
 import com.huanchengfly.tieba.post.arch.wrapImmutable
 import com.huanchengfly.tieba.post.ui.common.PbContentRender
@@ -104,6 +105,34 @@ fun ThreadInfo.updateCollectStatus(
 }
 
 fun Post.updateAgreeStatus(
+    hasAgree: Int
+) = if (agree != null) {
+    if (hasAgree != agree.hasAgree) {
+        if (hasAgree == 1) {
+            copy(
+                agree = agree.copy(
+                    agreeNum = agree.agreeNum + 1,
+                    diffAgreeNum = agree.diffAgreeNum + 1,
+                    hasAgree = 1
+                )
+            )
+        } else {
+            copy(
+                agree = agree.copy(
+                    agreeNum = agree.agreeNum - 1,
+                    diffAgreeNum = agree.diffAgreeNum - 1,
+                    hasAgree = 0
+                )
+            )
+        }
+    } else {
+        this
+    }
+} else {
+    this
+}
+
+fun SubPostList.updateAgreeStatus(
     hasAgree: Int
 ) = if (agree != null) {
     if (hasAgree != agree.hasAgree) {

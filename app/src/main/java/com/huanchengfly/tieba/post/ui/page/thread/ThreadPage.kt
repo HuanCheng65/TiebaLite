@@ -109,6 +109,7 @@ import com.huanchengfly.tieba.post.models.database.History
 import com.huanchengfly.tieba.post.toJson
 import com.huanchengfly.tieba.post.toastShort
 import com.huanchengfly.tieba.post.ui.common.PbContentRender
+import com.huanchengfly.tieba.post.ui.common.PbContentText
 import com.huanchengfly.tieba.post.ui.common.theme.compose.ExtendedTheme
 import com.huanchengfly.tieba.post.ui.page.ProvideNavigator
 import com.huanchengfly.tieba.post.ui.page.destinations.ForumPageDestination
@@ -119,7 +120,6 @@ import com.huanchengfly.tieba.post.ui.widgets.compose.BackNavigationIcon
 import com.huanchengfly.tieba.post.ui.widgets.compose.Button
 import com.huanchengfly.tieba.post.ui.widgets.compose.Card
 import com.huanchengfly.tieba.post.ui.widgets.compose.ConfirmDialog
-import com.huanchengfly.tieba.post.ui.widgets.compose.EmoticonText
 import com.huanchengfly.tieba.post.ui.widgets.compose.HorizontalDivider
 import com.huanchengfly.tieba.post.ui.widgets.compose.LazyLoad
 import com.huanchengfly.tieba.post.ui.widgets.compose.ListMenuItem
@@ -171,7 +171,7 @@ private fun getDescText(
 }
 
 @Composable
-private fun PostAgreeBtn(
+fun PostAgreeBtn(
     hasAgreed: Boolean,
     agreeNum: Long,
     onClick: () -> Unit,
@@ -1239,7 +1239,6 @@ fun PostCard(
     onReply: () -> Unit = {},
     onOpenSubPosts: (subPostId: Long) -> Unit = {},
 ) {
-    val (post) = postHolder
     if (blocked && !immersiveMode) {
         Column(
             modifier = Modifier
@@ -1257,6 +1256,7 @@ fun PostCard(
         }
         return
     }
+    val (post) = postHolder
     val hasPadding = remember(key1 = postHolder, key2 = immersiveMode) {
         postHolder.get { floor > 1 } && !immersiveMode
     }
@@ -1264,16 +1264,16 @@ fun PostCard(
     val context = LocalContext.current
     val accentColor = ExtendedTheme.colors.accent
     val author = postHolder.get { author!! }
-    val showTitle by remember(key1 = post.title, key2 = post.floor) {
-        derivedStateOf { post.title.isNotBlank() && post.floor <= 1 }
+    val showTitle = remember(postHolder) {
+        post.title.isNotBlank() && post.floor <= 1
     }
-    val hasAgreed by remember(key1 = post.agree?.hasAgree) {
-        derivedStateOf { post.agree?.hasAgree == 1 }
+    val hasAgreed = remember(postHolder) {
+        post.agree?.hasAgree == 1
     }
-    val agreeNum by remember(key1 = post.agree?.diffAgreeNum) {
-        derivedStateOf { post.agree?.diffAgreeNum ?: 0L }
+    val agreeNum = remember(postHolder) {
+        post.agree?.diffAgreeNum ?: 0L
     }
-    val subPosts = remember(key1 = post.sub_post_list) {
+    val subPosts = remember(postHolder) {
         post.sub_post_list?.sub_post_list?.toImmutableList() ?: persistentListOf()
     }
     val subPostContents = remember(key1 = subPosts, key2 = accentColor) {
@@ -1367,9 +1367,10 @@ fun PostCard(
                         .padding(vertical = 12.dp)
                 ) {
                     subPostContents.forEachIndexed { index, text ->
-                        EmoticonText(
+                        PbContentText(
                             text = text,
                             modifier = Modifier
+                                .fillMaxWidth()
                                 .clickable {
                                     onOpenSubPosts(subPosts[index].id)
                                 }

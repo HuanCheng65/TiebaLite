@@ -3,10 +3,12 @@ package com.huanchengfly.tieba.post.ui.page.subposts
 import androidx.compose.runtime.Stable
 import com.huanchengfly.tieba.post.api.TiebaApi
 import com.huanchengfly.tieba.post.api.contentRenders
+import com.huanchengfly.tieba.post.api.models.AgreeBean
 import com.huanchengfly.tieba.post.api.models.protos.Post
 import com.huanchengfly.tieba.post.api.models.protos.SubPostList
 import com.huanchengfly.tieba.post.api.models.protos.pbFloor.PbFloorResponse
 import com.huanchengfly.tieba.post.api.renders
+import com.huanchengfly.tieba.post.api.updateAgreeStatus
 import com.huanchengfly.tieba.post.arch.BaseViewModel
 import com.huanchengfly.tieba.post.arch.ImmutableHolder
 import com.huanchengfly.tieba.post.arch.PartialChange
@@ -50,7 +52,11 @@ class SubPostsViewModel @Inject constructor() :
         override fun toPartialChangeFlow(intentFlow: Flow<SubPostsUiIntent>): Flow<SubPostsPartialChange> =
             merge(
                 intentFlow.filterIsInstance<SubPostsUiIntent.Load>()
-                    .flatMapConcat { it.producePartialChange() }
+                    .flatMapConcat { it.producePartialChange() },
+                intentFlow.filterIsInstance<SubPostsUiIntent.LoadMore>()
+                    .flatMapConcat { it.producePartialChange() },
+                intentFlow.filterIsInstance<SubPostsUiIntent.Agree>()
+                    .flatMapConcat { it.producePartialChange() },
             )
 
         private fun SubPostsUiIntent.Load.producePartialChange(): Flow<SubPostsPartialChange.Load> =
@@ -89,6 +95,20 @@ class SubPostsViewModel @Inject constructor() :
                 }
                 .onStart { emit(SubPostsPartialChange.LoadMore.Start) }
                 .catch { emit(SubPostsPartialChange.LoadMore.Failure(it)) }
+
+        private fun SubPostsUiIntent.Agree.producePartialChange(): Flow<SubPostsPartialChange.Agree> =
+            TiebaApi.getInstance()
+                .opAgreeFlow(
+                    threadId.toString(),
+                    (subPostId ?: postId).toString(),
+                    if (agree) 0 else 1,
+                    objType = if (subPostId == null) 1 else 2
+                )
+                .map<AgreeBean, SubPostsPartialChange.Agree> {
+                    SubPostsPartialChange.Agree.Success(subPostId, agree)
+                }
+                .onStart { emit(SubPostsPartialChange.Agree.Start(subPostId, agree)) }
+                .catch { emit(SubPostsPartialChange.Agree.Failure(subPostId, !agree, it)) }
     }
 
 }
@@ -108,6 +128,14 @@ sealed interface SubPostsUiIntent : UiIntent {
         val postId: Long,
         val page: Int = 1,
         val subPostId: Long = 0L
+    ) : SubPostsUiIntent
+
+    data class Agree(
+        val forumId: Long,
+        val threadId: Long,
+        val postId: Long,
+        val subPostId: Long? = null,
+        val agree: Boolean
     ) : SubPostsUiIntent
 }
 
@@ -178,6 +206,72 @@ sealed interface SubPostsPartialChange : PartialChange<SubPostsUiState> {
         ) : LoadMore()
 
         data class Failure(val throwable: Throwable) : LoadMore()
+    }
+
+    sealed class Agree : SubPostsPartialChange {
+        private fun List<ImmutableHolder<SubPostList>>.updateAgreeStatus(
+            subPostId: Long,
+            hasAgreed: Boolean
+        ): ImmutableList<ImmutableHolder<SubPostList>> =
+            map {
+                if (it.get { id } == subPostId) {
+                    it.getImmutable { updateAgreeStatus(if (hasAgreed) 1 else 0) }
+                } else {
+                    it
+                }
+            }.toImmutableList()
+
+        override fun reduce(oldState: SubPostsUiState): SubPostsUiState =
+            when (this) {
+                is Start -> oldState.copy(
+                    post = if (subPostId == null)
+                        oldState.post?.getImmutable { updateAgreeStatus(if (hasAgreed) 1 else 0) }
+                    else
+                        oldState.post,
+                    subPosts = if (subPostId != null)
+                        oldState.subPosts.updateAgreeStatus(subPostId, hasAgreed)
+                    else
+                        oldState.subPosts,
+                )
+
+                is Success -> oldState.copy(
+                    post = if (subPostId == null)
+                        oldState.post?.getImmutable { updateAgreeStatus(if (hasAgreed) 1 else 0) }
+                    else
+                        oldState.post,
+                    subPosts = if (subPostId != null)
+                        oldState.subPosts.updateAgreeStatus(subPostId, hasAgreed)
+                    else
+                        oldState.subPosts,
+                )
+
+                is Failure -> oldState.copy(
+                    post = if (subPostId == null)
+                        oldState.post?.getImmutable { updateAgreeStatus(if (hasAgreed) 1 else 0) }
+                    else
+                        oldState.post,
+                    subPosts = if (subPostId != null)
+                        oldState.subPosts.updateAgreeStatus(subPostId, hasAgreed)
+                    else
+                        oldState.subPosts,
+                )
+            }
+
+        data class Start(
+            val subPostId: Long?,
+            val hasAgreed: Boolean
+        ) : Agree()
+
+        data class Success(
+            val subPostId: Long?,
+            val hasAgreed: Boolean
+        ) : Agree()
+
+        data class Failure(
+            val subPostId: Long?,
+            val hasAgreed: Boolean,
+            val throwable: Throwable,
+        ) : Agree()
     }
 }
 

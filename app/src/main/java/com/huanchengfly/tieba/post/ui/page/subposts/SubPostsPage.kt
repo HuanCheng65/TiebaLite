@@ -37,6 +37,7 @@ import com.huanchengfly.tieba.post.ui.common.PbContentRender
 import com.huanchengfly.tieba.post.ui.common.theme.compose.ExtendedTheme
 import com.huanchengfly.tieba.post.ui.page.LocalNavigator
 import com.huanchengfly.tieba.post.ui.page.ProvideNavigator
+import com.huanchengfly.tieba.post.ui.page.thread.PostAgreeBtn
 import com.huanchengfly.tieba.post.ui.page.thread.PostCard
 import com.huanchengfly.tieba.post.ui.page.thread.UserNameText
 import com.huanchengfly.tieba.post.ui.widgets.compose.Avatar
@@ -221,7 +222,18 @@ internal fun SubPostsContent(
                                 PostCard(
                                     postHolder = it,
                                     contentRenders = postContentRenders,
-                                    showSubPosts = false
+                                    showSubPosts = false,
+                                    onAgree = {
+                                        val hasAgreed = it.get { agree?.hasAgree != 0 }
+                                        viewModel.send(
+                                            SubPostsUiIntent.Agree(
+                                                forumId,
+                                                threadId,
+                                                postId,
+                                                agree = !hasAgreed
+                                            )
+                                        )
+                                    },
                                 )
                                 VerticalDivider(thickness = 2.dp)
                             }
@@ -249,7 +261,19 @@ internal fun SubPostsContent(
                     ) { index, item ->
                         SubPostItem(
                             subPost = item,
-                            contentRenders = subPostsContentRenders[index]
+                            contentRenders = subPostsContentRenders[index],
+                            onAgree = {
+                                val hasAgreed = it.agree?.hasAgree != 0
+                                viewModel.send(
+                                    SubPostsUiIntent.Agree(
+                                        forumId,
+                                        threadId,
+                                        postId,
+                                        subPostId = it.id,
+                                        agree = !hasAgreed
+                                    )
+                                )
+                            },
                         )
                     }
                 }
@@ -277,10 +301,17 @@ private fun getDescText(
 private fun SubPostItem(
     subPost: ImmutableHolder<SubPostList>,
     contentRenders: ImmutableList<PbContentRender>,
-    threadAuthorId: Long = 0L
+    threadAuthorId: Long = 0L,
+    onAgree: (SubPostList) -> Unit = {},
 ) {
     val context = LocalContext.current
     val author = remember(subPost) { subPost.getImmutable { author } }
+    val hasAgreed = remember(subPost) {
+        subPost.get { agree?.hasAgree == 1 }
+    }
+    val agreeNum = remember(subPost) {
+        subPost.get { agree?.diffAgreeNum ?: 0L }
+    }
     Card(
         header = {
             if (author.isNotNull()) {
@@ -314,7 +345,13 @@ private fun SubPostItem(
                     onClick = {
                         UserActivity.launch(context, author.get { id }.toString())
                     }
-                )
+                ) {
+                    PostAgreeBtn(
+                        hasAgreed = hasAgreed,
+                        agreeNum = agreeNum,
+                        onClick = { onAgree(subPost.get()) }
+                    )
+                }
             }
         },
         content = {
