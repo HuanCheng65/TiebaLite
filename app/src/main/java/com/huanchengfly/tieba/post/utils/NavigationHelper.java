@@ -91,10 +91,8 @@ public final class NavigationHelper {
     }
 
     public void navigationByData(int action) {
-        switch (action) {
-            case ACTION_LOGIN:
-                startActivity(new Intent(mContext, LoginActivity.class));
-                break;
+        if (action == ACTION_LOGIN) {
+            startActivity(new Intent(mContext, LoginActivity.class));
         }
     }
 
@@ -239,12 +237,12 @@ public final class NavigationHelper {
                 if (!(activityName.startsWith("WebViewActivity") || activityName.startsWith("LoginActivity"))) {
                     boolean isTiebaLink = host.contains("tieba.baidu.com") || host.contains("wappass.baidu.com") || host.contains("ufosdk.baidu.com") || host.contains("m.help.baidu.com");
                     if (isTiebaLink ||
-                            AppPreferencesUtilsKt.getAppPreferences(mContext).getUseWebView()
+                            AppPreferencesUtilsKt.getAppPreferences().getUseWebView()
                     ) {
                         startActivity(new Intent(mContext, WebViewActivity.class).putExtra("url", url));
                         return true;
                     } else {
-                        if (AppPreferencesUtilsKt.getAppPreferences(mContext).getUseCustomTabs()) {
+                        if (AppPreferencesUtilsKt.getAppPreferences().getUseCustomTabs()) {
                             CustomTabsIntent.Builder intentBuilder = new CustomTabsIntent.Builder()
                                     .setShowTitle(true)
                                     .setToolbarColor(ThemeUtils.getColorByAttr(mContext, R.attr.colorToolbar));

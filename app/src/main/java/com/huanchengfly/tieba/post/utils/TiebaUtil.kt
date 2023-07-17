@@ -51,7 +51,7 @@ object TiebaUtil {
 
     fun initAutoSign(context: Context) {
         val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
-        val autoSign = context.appPreferences.autoSign
+        val autoSign = appPreferences.autoSign
         val pendingIntent = PendingIntent.getBroadcast(
             context,
             0,
@@ -59,7 +59,7 @@ object TiebaUtil {
             pendingIntentFlagMutable()
         )
         if (autoSign) {
-            val autoSignTimeStr = context.appPreferences.autoSignTime!!
+            val autoSignTimeStr = appPreferences.autoSignTime!!
             val time = autoSignTimeStr.split(":").toTypedArray()
             val hour = time[0].toInt()
             val minute = time[1].toInt()
@@ -81,7 +81,7 @@ object TiebaUtil {
 
     @JvmStatic
     fun startSign(context: Context) {
-        context.appPreferences.signDay = Calendar.getInstance()[Calendar.DAY_OF_MONTH]
+        appPreferences.signDay = Calendar.getInstance()[Calendar.DAY_OF_MONTH]
 //        OKSignService.enqueueWork(
 //            context,
 //            Intent()

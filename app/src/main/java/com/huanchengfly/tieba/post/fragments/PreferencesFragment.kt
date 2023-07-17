@@ -55,7 +55,7 @@ class PreferencesFragment : PreferencesFragment() {
             attachContext.resources.getStringArray(R.array.experimental_features)
         experimentalFeatures.forEach {
             findPreference<Preference>(it)?.isVisible =
-                attachContext.appPreferences.showExperimentalFeatures
+                appPreferences.showExperimentalFeatures
         }
         loginInfo = AccountUtil.getLoginInfo()
         val accounts = AccountUtil.allAccounts

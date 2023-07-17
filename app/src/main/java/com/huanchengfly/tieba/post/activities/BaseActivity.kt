@@ -37,8 +37,16 @@ import com.huanchengfly.tieba.post.ui.common.theme.interfaces.ExtraRefreshable
 import com.huanchengfly.tieba.post.ui.common.theme.utils.ThemeUtils
 import com.huanchengfly.tieba.post.ui.widgets.VoicePlayerView
 import com.huanchengfly.tieba.post.ui.widgets.theme.TintToolbar
-import com.huanchengfly.tieba.post.utils.*
-import kotlinx.coroutines.*
+import com.huanchengfly.tieba.post.utils.AppPreferencesUtils
+import com.huanchengfly.tieba.post.utils.DialogUtil
+import com.huanchengfly.tieba.post.utils.HandleBackUtil
+import com.huanchengfly.tieba.post.utils.ThemeUtil
+import com.huanchengfly.tieba.post.utils.calcStatusBarColorInt
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.CoroutineStart
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 import kotlin.coroutines.CoroutineContext
 
 abstract class BaseActivity : AppCompatActivity(), ExtraRefreshable, CoroutineScope {
@@ -54,7 +62,7 @@ abstract class BaseActivity : AppCompatActivity(), ExtraRefreshable, CoroutineSc
     private var customStatusColor = -1
     private var statusBarTinted = false
 
-    val appPreferences: AppPreferencesUtils by lazy { AppPreferencesUtils(this) }
+    val appPreferences: AppPreferencesUtils by lazy { AppPreferencesUtils }
 
     override fun onPause() {
         super.onPause()

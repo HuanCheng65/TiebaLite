@@ -243,7 +243,7 @@ public class PersonalizedFeedAdapter extends BaseMultiTypeAdapter<PersonalizedBe
             case TYPE_THREAD_MULTI_PIC:
                 GridLayout gridLayout = viewHolder.getView(R.id.forum_item_content_pics);
                 CardView cardView = viewHolder.getView(R.id.forum_item_content_pics_card);
-                cardView.setRadius(DisplayUtil.dp2px(getContext(), AppPreferencesUtilsKt.getAppPreferences(getContext()).getRadius()));
+                cardView.setRadius(DisplayUtil.dp2px(getContext(), AppPreferencesUtilsKt.getAppPreferences().getRadius()));
                 MarkedImageView firstImageView = viewHolder.getView(R.id.forum_item_content_pic_1);
                 MarkedImageView secondImageView = viewHolder.getView(R.id.forum_item_content_pic_2);
                 MarkedImageView thirdImageView = viewHolder.getView(R.id.forum_item_content_pic_3);

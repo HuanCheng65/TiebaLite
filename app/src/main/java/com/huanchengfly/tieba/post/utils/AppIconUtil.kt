@@ -23,9 +23,6 @@ object AppIconUtil {
     private val context: Context
         get() = App.INSTANCE
 
-    private val appPreferences: AppPreferencesUtils
-        get() = context.appPreferences
-
     fun setIcon(icon: String = appPreferences.appIcon ?: Icons.NEW_ICON) {
         val newIcon = if (Icons.ICONS.contains(icon) || icon == Icons.DISABLE) {
             icon

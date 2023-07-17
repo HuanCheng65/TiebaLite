@@ -1,7 +1,6 @@
 package com.huanchengfly.tieba.post.ui.page.main.explore.concern
 
 import androidx.compose.runtime.Stable
-import com.huanchengfly.tieba.post.App
 import com.huanchengfly.tieba.post.api.TiebaApi
 import com.huanchengfly.tieba.post.api.models.AgreeBean
 import com.huanchengfly.tieba.post.api.models.protos.userLike.ConcernData
@@ -53,9 +52,9 @@ class ConcernViewModel @Inject constructor() :
             )
 
         private fun produceRefreshPartialChange(): Flow<ConcernPartialChange.Refresh> =
-            TiebaApi.getInstance().userLikeFlow("", App.INSTANCE.appPreferences.userLikeLastRequestUnix, 1)
+            TiebaApi.getInstance().userLikeFlow("", appPreferences.userLikeLastRequestUnix, 1)
                 .map<UserLikeResponse, ConcernPartialChange.Refresh> {
-                    App.INSTANCE.appPreferences.userLikeLastRequestUnix = it.data_?.requestUnix ?: 0L
+                    appPreferences.userLikeLastRequestUnix = it.data_?.requestUnix ?: 0L
                     ConcernPartialChange.Refresh.Success(
                         data = it.toData(),
                         hasMore = it.data_?.hasMore == 1,
@@ -66,7 +65,7 @@ class ConcernViewModel @Inject constructor() :
                 .catch { emit(ConcernPartialChange.Refresh.Failure(it)) }
 
         private fun ConcernUiIntent.LoadMore.producePartialChange(): Flow<ConcernPartialChange.LoadMore> =
-            TiebaApi.getInstance().userLikeFlow(pageTag, App.INSTANCE.appPreferences.userLikeLastRequestUnix, 2)
+            TiebaApi.getInstance().userLikeFlow(pageTag, appPreferences.userLikeLastRequestUnix, 2)
                 .map<UserLikeResponse, ConcernPartialChange.LoadMore> {
                     ConcernPartialChange.LoadMore.Success(
                         data = it.toData(),

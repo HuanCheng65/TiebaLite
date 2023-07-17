@@ -187,7 +187,7 @@ fun ThreadStorePage(
                                         ThreadPageDestination(
                                             threadId = info.threadId.toLong(),
                                             postId = info.markPid.toLong(),
-                                            seeLz = context.appPreferences.collectThreadSeeLz,
+                                            seeLz = appPreferences.collectThreadSeeLz,
                                             from = ThreadPageFrom.FROM_STORE,
                                             extra = ThreadPageFromStoreExtra(
                                                 maxPid = info.maxPid.toLong(),

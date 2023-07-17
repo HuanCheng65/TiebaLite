@@ -127,7 +127,7 @@ data class PicContentRender(
             imageUri = picUrl,
             contentDescription = null,
             modifier = Modifier
-                .clip(RoundedCornerShape(context.appPreferences.radius.dp))
+                .clip(RoundedCornerShape(appPreferences.radius.dp))
                 .fillMaxWidth(widthFraction)
                 .aspectRatio(width * 1f / height),
             photoViewData = photoViewData,
@@ -166,7 +166,7 @@ data class VideoContentRender(
 
         if (picUrl.isNotBlank()) {
             val picModifier = Modifier
-                .clip(RoundedCornerShape(context.appPreferences.radius.dp))
+                .clip(RoundedCornerShape(appPreferences.radius.dp))
                 .fillMaxWidth(widthFraction)
                 .aspectRatio(width * 1f / height)
 

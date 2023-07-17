@@ -1,7 +1,6 @@
 package com.huanchengfly.tieba.post.ui.page.forum.threadlist
 
 import androidx.compose.runtime.Stable
-import com.huanchengfly.tieba.post.App
 import com.huanchengfly.tieba.post.api.TiebaApi
 import com.huanchengfly.tieba.post.api.models.AgreeBean
 import com.huanchengfly.tieba.post.api.models.protos.ThreadInfo
@@ -104,7 +103,7 @@ private class ForumThreadListPartialChangeProducer(val type: ForumThreadListType
                     val userList = response.data_.user_list
                     val threadList = response.data_.thread_list.map { threadInfo ->
                         threadInfo.copy(author = userList.find { it.id == threadInfo.authorId })
-                    }.filter { !App.INSTANCE.appPreferences.blockVideo || it.videoInfo == null }
+                    }.filter { !appPreferences.blockVideo || it.videoInfo == null }
                     ForumThreadListPartialChange.FirstLoad.Success(
                         threadList.wrapImmutable(),
                         response.data_.thread_id_list,

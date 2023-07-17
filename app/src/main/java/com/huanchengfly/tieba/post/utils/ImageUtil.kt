@@ -31,7 +31,6 @@ import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.bumptech.glide.request.RequestOptions
 import com.github.panpf.sketch.request.DownloadRequest
 import com.github.panpf.sketch.request.DownloadResult
-import com.huanchengfly.tieba.post.App.Companion.INSTANCE
 import com.huanchengfly.tieba.post.R
 import com.huanchengfly.tieba.post.activities.PhotoViewActivity.Companion.launch
 import com.huanchengfly.tieba.post.components.transformations.RadiusTransformation
@@ -507,11 +506,11 @@ object ImageUtil {
 
     @JvmStatic
     fun getRadiusPx(context: Context): Int {
-        return DisplayUtil.dp2px(context, getRadiusDp(context).toFloat())
+        return DisplayUtil.dp2px(context, getRadiusDp().toFloat())
     }
 
-    private fun getRadiusDp(context: Context): Int {
-        return context.appPreferences.radius
+    private fun getRadiusDp(): Int {
+        return appPreferences.radius
     }
 
     fun clear(imageView: ImageView?) {
@@ -540,7 +539,7 @@ object ImageUtil {
         if (!Util.canLoadGlide(imageView.context)) {
             return
         }
-        val radius = getRadiusDp(imageView.context)
+        val radius = getRadiusDp()
         val requestBuilder =
             if (skipNetworkCheck ||
                 type == LOAD_TYPE_AVATAR ||
@@ -645,7 +644,7 @@ object ImageUtil {
 
     @get:ImageLoadSettings
     private val imageLoadSettings: Int
-        get() = INSTANCE.appPreferences.imageLoadType!!.toInt()
+        get() = appPreferences.imageLoadType!!.toInt()
 
     fun imageToBase64(inputStream: InputStream?): String? {
         if (inputStream == null) {

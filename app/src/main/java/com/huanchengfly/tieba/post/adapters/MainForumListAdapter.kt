@@ -11,7 +11,12 @@ import com.huanchengfly.tieba.post.api.models.ForumRecommend
 import com.huanchengfly.tieba.post.components.MyViewHolder
 import com.huanchengfly.tieba.post.dpToPx
 import com.huanchengfly.tieba.post.ui.common.theme.utils.ColorStateListUtils
-import com.huanchengfly.tieba.post.utils.*
+import com.huanchengfly.tieba.post.utils.ImageUtil
+import com.huanchengfly.tieba.post.utils.ThemeUtil
+import com.huanchengfly.tieba.post.utils.Util
+import com.huanchengfly.tieba.post.utils.appPreferences
+import com.huanchengfly.tieba.post.utils.getRadiusDrawable
+import com.huanchengfly.tieba.post.utils.wrapRipple
 
 class MainForumListAdapter(
     context: Context,
@@ -57,7 +62,7 @@ class MainForumListAdapter(
                         getRadiusDrawable()
                     }
                 )
-                if (context.appPreferences.listItemsBackgroundIntermixed) {
+                if (appPreferences.listItemsBackgroundIntermixed) {
                     if (position % 2 == 1) {
                         viewHolder.itemView.backgroundTintList =
                             ColorStateList.valueOf(Color.TRANSPARENT)

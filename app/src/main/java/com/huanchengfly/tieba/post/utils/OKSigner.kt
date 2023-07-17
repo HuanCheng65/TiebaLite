@@ -34,7 +34,7 @@ abstract class IOKSigner(
     }
 
     fun getSignDelay(): Long {
-        return if (context.appPreferences.oksignSlowMode) {
+        return if (appPreferences.oksignSlowMode) {
             ThreadLocalRandom.current().nextInt(3500, 8000).toLong()
         } else {
             2000
@@ -125,7 +125,7 @@ class SingleAccountSigner(
             .zip(
                 TiebaApi.getInstance().forumRecommendFlow()
             ) { getForumListBean, forumRecommendBean ->
-                val useMSign = context.appPreferences.oksignUseOfficialOksign
+                val useMSign = appPreferences.oksignUseOfficialOksign
                 val mSignLevel = getForumListBean.level.toInt()
                 val mSignMax = getForumListBean.msignStepNum.toInt()
                 signData.addAll(

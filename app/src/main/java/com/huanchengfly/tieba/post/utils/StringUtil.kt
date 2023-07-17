@@ -72,7 +72,7 @@ object StringUtil {
 
     @JvmStatic
     fun getUsernameString(context: Context, username: String, nickname: String?): CharSequence {
-        val showBoth = context.appPreferences.showBothUsernameAndNickname
+        val showBoth = appPreferences.showBothUsernameAndNickname
         if (TextUtils.isEmpty(nickname)) {
             return if (TextUtils.isEmpty(username)) "" else username
         } else if (showBoth && !TextUtils.isEmpty(username) && !TextUtils.equals(
@@ -98,7 +98,7 @@ object StringUtil {
         nickname: String?,
         color: Color = Color.Unspecified
     ): AnnotatedString {
-        val showBoth = context.appPreferences.showBothUsernameAndNickname
+        val showBoth = appPreferences.showBothUsernameAndNickname
         return buildAnnotatedString {
             if (showBoth && !nickname.isNullOrBlank() && username != nickname && username.isNotBlank()) {
                 append(nickname)
