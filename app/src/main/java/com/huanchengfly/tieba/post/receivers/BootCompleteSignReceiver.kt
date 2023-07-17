@@ -14,13 +14,13 @@ import java.util.Calendar
 class BootCompleteSignReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
         if (Intent.ACTION_BOOT_COMPLETED == intent.action) {
-            val autoSign = appPreferences.autoSign
+            val autoSign = context.appPreferences.autoSign
             if (autoSign) {
-                val autoSignTimeStr = appPreferences.autoSignTime
+                val autoSignTimeStr = context.appPreferences.autoSignTime
                 if (Util.getTimeInMillis(autoSignTimeStr) > System.currentTimeMillis()) {
                     TiebaUtil.initAutoSign(context)
                 } else {
-                    val signDay = appPreferences.signDay
+                    val signDay = context.appPreferences.signDay
                     if (signDay != Calendar.getInstance()[Calendar.DAY_OF_MONTH]) {
                         TiebaUtil.startSign(context)
                     }

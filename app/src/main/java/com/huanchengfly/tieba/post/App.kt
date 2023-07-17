@@ -302,12 +302,12 @@ class App : Application(), IApp, SketchFactory {
             when (attrId) {
                 R.attr.colorPrimary -> {
                     if (ThemeUtil.THEME_CUSTOM == theme) {
-                        val customPrimaryColorStr = appPreferences.customPrimaryColor
+                        val customPrimaryColorStr = context.appPreferences.customPrimaryColor
                         return if (customPrimaryColorStr != null) {
                             Color.parseColor(customPrimaryColorStr)
                         } else getColorByAttr(context, attrId, ThemeUtil.THEME_BLUE)
                     } else if (ThemeUtil.isTranslucentTheme(theme)) {
-                        val primaryColorStr = appPreferences.translucentPrimaryColor
+                        val primaryColorStr = context.appPreferences.translucentPrimaryColor
                         return if (primaryColorStr != null) {
                             Color.parseColor(primaryColorStr)
                         } else getColorByAttr(context, attrId, ThemeUtil.THEME_BLUE)
@@ -363,7 +363,7 @@ class App : Application(), IApp, SketchFactory {
                             )
                         )
                     } else {
-                        val isPrimaryColor = appPreferences.toolbarPrimaryColor
+                        val isPrimaryColor = context.appPreferences.toolbarPrimaryColor
                         if (isPrimaryColor) {
                             getColorByAttr(context, R.attr.colorPrimary, theme)
                         } else {

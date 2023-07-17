@@ -1,6 +1,7 @@
 package com.huanchengfly.tieba.post.ui.page.main.explore.personalized
 
 import androidx.compose.runtime.Stable
+import com.huanchengfly.tieba.post.App
 import com.huanchengfly.tieba.post.api.TiebaApi
 import com.huanchengfly.tieba.post.api.models.AgreeBean
 import com.huanchengfly.tieba.post.api.models.CommonResponse
@@ -66,7 +67,7 @@ class PersonalizedViewModel @Inject constructor() :
             TiebaApi.getInstance().personalizedProtoFlow(1, 1)
                 .map<PersonalizedResponse, PersonalizedPartialChange.Refresh> { response ->
                     val data = response.toData().filter {
-                        !appPreferences.blockVideo || it.get { videoInfo } == null
+                        !App.INSTANCE.appPreferences.blockVideo || it.get { videoInfo } == null
                     }
                     val threadPersonalizedData = data.map { thread ->
                         response.data_?.thread_personalized?.firstOrNull { thread.get { id } == it.tid }
@@ -84,7 +85,7 @@ class PersonalizedViewModel @Inject constructor() :
             TiebaApi.getInstance().personalizedProtoFlow(2, page)
                 .map<PersonalizedResponse, PersonalizedPartialChange.LoadMore> { response ->
                     val data = response.toData().filter {
-                        !appPreferences.blockVideo || it.get { videoInfo } == null
+                        !App.INSTANCE.appPreferences.blockVideo || it.get { videoInfo } == null
                     }
                     val threadPersonalizedData = data.map { thread ->
                         response.data_?.thread_personalized?.firstOrNull { thread.get { id } == it.tid }

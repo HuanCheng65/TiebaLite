@@ -189,7 +189,7 @@ fun AccountManagePage(
                 )
             }
             prefsItem {
-                val littleTail = remember { appPreferences.littleTail }
+                val littleTail = remember { context.appPreferences.littleTail }
                 EditTextPref(
                     key = "little_tail",
                     title = stringResource(id = R.string.title_my_tail),

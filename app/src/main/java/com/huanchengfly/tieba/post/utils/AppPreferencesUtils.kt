@@ -1,5 +1,6 @@
 package com.huanchengfly.tieba.post.utils
 
+import android.content.Context
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
@@ -8,7 +9,6 @@ import androidx.datastore.preferences.core.floatPreferencesKey
 import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.core.longPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
-import com.huanchengfly.tieba.post.App
 import com.huanchengfly.tieba.post.dataStore
 import com.huanchengfly.tieba.post.getBoolean
 import com.huanchengfly.tieba.post.getFloat
@@ -26,10 +26,9 @@ import kotlin.properties.ReadWriteProperty
 import kotlin.reflect.KProperty
 
 
-object AppPreferencesUtils {
+open class AppPreferencesUtils(private val context: Context) {
     private val preferencesDataStore: DataStore<Preferences>
-        get() = App.INSTANCE.dataStore
-
+        get() = context.dataStore
     private val coroutineScope: CoroutineScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
 
     var userLikeLastRequestUnix by DataStoreDelegates.long(defaultValue = 0L)
@@ -88,8 +87,6 @@ object AppPreferencesUtils {
     var fontScale by DataStoreDelegates.float(defaultValue = 1.0f)
 
     var forumFabFunction by DataStoreDelegates.string(defaultValue = "post")
-
-    var hideBlockedContent by DataStoreDelegates.boolean(defaultValue = false)
 
     var hideExplore by DataStoreDelegates.boolean(defaultValue = false)
 
@@ -377,5 +374,5 @@ object AppPreferencesUtils {
     }
 }
 
-val appPreferences: AppPreferencesUtils
-    get() = AppPreferencesUtils
+val Context.appPreferences: AppPreferencesUtils
+    get() = AppPreferencesUtils(this)

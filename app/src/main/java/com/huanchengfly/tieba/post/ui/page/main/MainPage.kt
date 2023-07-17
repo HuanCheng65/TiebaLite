@@ -25,6 +25,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import com.huanchengfly.tieba.post.LocalDevicePosture
@@ -133,7 +134,7 @@ fun MainPage(
             content = {
                 HomePage(
                     eventFlow = eventFlows[0],
-                    canOpenExplore = !appPreferences.hideExplore
+                    canOpenExplore = !LocalContext.current.appPreferences.hideExplore
                 ) {
                     coroutineScope.launch {
                         pagerState.scrollToPage(1)
@@ -141,7 +142,7 @@ fun MainPage(
                 }
             }
         ),
-        if (appPreferences.hideExplore) null
+        if (LocalContext.current.appPreferences.hideExplore) null
         else NavigationItem(
             id = "explore",
             icon = {

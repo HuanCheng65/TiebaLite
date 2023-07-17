@@ -136,7 +136,7 @@ fun getSortType(
     context: Context,
     forumName: String
 ): Int {
-    val defaultSortType = appPreferences.defaultSortType?.toIntOrNull() ?: 0
+    val defaultSortType = context.appPreferences.defaultSortType?.toIntOrNull() ?: 0
     return context.dataStore.getInt("${forumName}_sort_type", defaultSortType)
 }
 
@@ -766,7 +766,7 @@ fun ForumPage(
                 floatingActionButton = {
                     FloatingActionButton(
                         onClick = {
-                            when (appPreferences.forumFabFunction) {
+                            when (context.appPreferences.forumFabFunction) {
                                 "refresh" -> {
                                     coroutineScope.launch {
                                         eventFlows[pagerState.currentPage].emit(
@@ -801,7 +801,7 @@ fun ForumPage(
                         modifier = Modifier.navigationBarsPadding()
                     ) {
                         Icon(
-                            imageVector = when (appPreferences.forumFabFunction) {
+                            imageVector = when (context.appPreferences.forumFabFunction) {
                                 "refresh" -> Icons.Rounded.Refresh
                                 "back_to_top" -> Icons.Rounded.VerticalAlignTop
                                 else -> Icons.Rounded.Add

@@ -248,7 +248,7 @@ class ThreadMainPostAdapter(
         val forumNameView = forumView.findViewById<TextView>(R.id.forum_bar_name)
         val forumAvatarView: ImageView = forumView.findViewById(R.id.forum_bar_avatar)
         if (!showForum ||
-            !appPreferences.showShortcutInThread ||
+            !context.appPreferences.showShortcutInThread ||
             "0" == forumInfoBean.isExists ||
             forumInfoBean.name.isNullOrEmpty()
         ) {

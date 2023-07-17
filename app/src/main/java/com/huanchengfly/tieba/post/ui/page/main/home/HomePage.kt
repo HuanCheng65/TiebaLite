@@ -1,5 +1,6 @@
 package com.huanchengfly.tieba.post.ui.page.main.home
 
+import android.content.Context
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.Image
@@ -96,7 +97,7 @@ import com.huanchengfly.tieba.post.utils.TiebaUtil
 import com.huanchengfly.tieba.post.utils.appPreferences
 import kotlinx.coroutines.flow.Flow
 
-private fun getGridCells(listSingle: Boolean = appPreferences.listSingle): GridCells {
+private fun getGridCells(context: Context, listSingle: Boolean = context.appPreferences.listSingle): GridCells {
     return if (listSingle) {
         GridCells.Fixed(1)
     } else {
@@ -400,8 +401,8 @@ fun HomePage(
         initial = null
     )
     val isError by remember { derivedStateOf { error != null } }
-    var listSingle by remember { mutableStateOf(appPreferences.listSingle) }
-    val gridCells by remember { derivedStateOf { getGridCells(listSingle) } }
+    var listSingle by remember { mutableStateOf(context.appPreferences.listSingle) }
+    val gridCells by remember { derivedStateOf { getGridCells(context, listSingle) } }
 
     eventFlow.onEvent<MainUiEvent.Refresh> {
         viewModel.send(HomeUiIntent.Refresh)
@@ -424,7 +425,7 @@ fun HomePage(
                         icon = Icons.Outlined.ViewAgenda,
                         contentDescription = stringResource(id = R.string.title_switch_list_single)
                     ) {
-                        appPreferences.listSingle = !listSingle
+                        context.appPreferences.listSingle = !listSingle
                         listSingle = !listSingle
                     }
                 }

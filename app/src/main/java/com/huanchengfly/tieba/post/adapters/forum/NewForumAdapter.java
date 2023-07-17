@@ -263,7 +263,7 @@ public class NewForumAdapter extends BaseMultiTypeDelegateAdapter<ForumPageBean.
                 cardView.setRadius(
                         DisplayUtil.dp2px(
                                 getContext(),
-                                AppPreferencesUtilsKt.getAppPreferences().getRadius()
+                                AppPreferencesUtilsKt.getAppPreferences(getContext()).getRadius()
                         )
                 );
                 MarkedImageView firstImageView = viewHolder.getView(R.id.forum_item_content_pic_1);

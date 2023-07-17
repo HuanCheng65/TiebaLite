@@ -395,7 +395,7 @@ class MyInfoFragment : BaseFragment(), View.OnClickListener, CompoundButton.OnCh
                     refreshNightModeStatus()
                 }
                 .setNegativeButton(R.string.btn_close_following) { _, _ ->
-                    appPreferences.followSystemNight = false
+                    attachContext.appPreferences.followSystemNight = false
                     switchNightMode(isChecked)
                 }
                 .show()
