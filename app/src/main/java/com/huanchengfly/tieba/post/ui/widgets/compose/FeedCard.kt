@@ -77,6 +77,7 @@ import com.huanchengfly.tieba.post.utils.DateTimeUtils
 import com.huanchengfly.tieba.post.utils.EmoticonUtil.emoticonString
 import com.huanchengfly.tieba.post.utils.ImageUtil
 import com.huanchengfly.tieba.post.utils.StringUtil
+import com.huanchengfly.tieba.post.utils.StringUtil.getShortNumString
 import kotlin.math.max
 import kotlin.math.min
 
@@ -414,7 +415,7 @@ private fun ThreadReplyBtn(
             Text(
                 text = if (replyNum == 0)
                     stringResource(id = R.string.title_reply)
-                else "$replyNum"
+                else replyNum.getShortNumString()
             )
         },
         modifier = modifier,
@@ -445,7 +446,7 @@ private fun ThreadAgreeBtn(
             Text(
                 text = if (agreeNum == 0)
                     stringResource(id = R.string.title_agree)
-                else "$agreeNum"
+                else agreeNum.getShortNumString()
             )
         },
         modifier = modifier,
@@ -471,7 +472,7 @@ private fun ThreadShareBtn(
             Text(
                 text = if (shareNum == 0L)
                     stringResource(id = R.string.title_share)
-                else "$shareNum"
+                else shareNum.getShortNumString()
             )
         },
         modifier = modifier,
@@ -483,7 +484,7 @@ private fun ThreadShareBtn(
 @Composable
 fun FeedCard(
     item: ImmutableHolder<ThreadInfo>,
-    onClick: () -> Unit,
+    onClick: (ThreadInfo) -> Unit,
     onAgree: () -> Unit,
     onClickForum: () -> Unit = {},
     dislikeAction: @Composable () -> Unit = {},
@@ -518,7 +519,7 @@ fun FeedCard(
             Row(modifier = Modifier.fillMaxWidth()) {
                 ThreadReplyBtn(
                     replyNum = item.get { replyNum },
-                    onClick = onClick,
+                    onClick = { onClick(item.get()) },
                     modifier = Modifier.weight(1f)
                 )
 
@@ -536,7 +537,7 @@ fun FeedCard(
                 )
             }
         },
-        onClick = onClick
+        onClick = { onClick(item.get()) },
     )
 }
 
