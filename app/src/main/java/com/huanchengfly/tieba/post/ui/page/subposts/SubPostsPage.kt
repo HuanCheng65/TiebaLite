@@ -63,10 +63,10 @@ import kotlinx.coroutines.delay
 @Composable
 fun SubPostsPage(
     navigator: DestinationsNavigator,
-    forumId: Long,
     threadId: Long,
-    postId: Long,
-    subPostsId: Long = 0L,
+    forumId: Long = 0L,
+    postId: Long = 0L,
+    subPostId: Long = 0L,
     loadFromSubPost: Boolean = false,
     viewModel: SubPostsViewModel = pageViewModel()
 ) {
@@ -76,7 +76,7 @@ fun SubPostsPage(
             forumId = forumId,
             threadId = threadId,
             postId = postId,
-            subPostsId = subPostsId,
+            subPostId = subPostId,
             loadFromSubPost = loadFromSubPost
         )
     }
@@ -88,10 +88,10 @@ fun SubPostsPage(
 @Composable
 fun SubPostsSheetPage(
     navigator: DestinationsNavigator,
-    forumId: Long,
     threadId: Long,
-    postId: Long,
-    subPostsId: Long = 0L,
+    forumId: Long = 0L,
+    postId: Long = 0L,
+    subPostId: Long = 0L,
     loadFromSubPost: Boolean = false,
     viewModel: SubPostsViewModel = pageViewModel()
 ) {
@@ -101,7 +101,7 @@ fun SubPostsSheetPage(
             forumId = forumId,
             threadId = threadId,
             postId = postId,
-            subPostsId = subPostsId,
+            subPostId = subPostId,
             loadFromSubPost = loadFromSubPost
         )
     }
@@ -114,7 +114,7 @@ internal fun SubPostsContent(
     forumId: Long,
     threadId: Long,
     postId: Long,
-    subPostsId: Long = 0L,
+    subPostId: Long = 0L,
     loadFromSubPost: Boolean = false,
 ) {
     val navigator = LocalNavigator.current
@@ -125,7 +125,9 @@ internal fun SubPostsContent(
                 forumId,
                 threadId,
                 postId,
-                subPostId = subPostsId.takeIf { loadFromSubPost } ?: 0L))
+                subPostId.takeIf { loadFromSubPost } ?: 0L
+            )
+        )
     }
 
     val isRefreshing by viewModel.uiState.collectPartialAsState(
@@ -164,12 +166,8 @@ internal fun SubPostsContent(
     val lazyListState = rememberLazyListState()
 
     viewModel.onEvent<SubPostsUiEvent.ScrollToSubPosts> {
-        if (!loadFromSubPost) {
-            delay(20)
-            lazyListState.scrollToItem(2 + subPosts.indexOfFirst { it.get { id } == subPostsId })
-        } else {
-            lazyListState.scrollToItem(1)
-        }
+        delay(20)
+        lazyListState.scrollToItem(2 + subPosts.indexOfFirst { it.get { id } == subPostId })
     }
 
     StateScreen(
@@ -206,8 +204,8 @@ internal fun SubPostsContent(
                             forumId,
                             threadId,
                             postId,
+                            subPostId,
                             currentPage + 1,
-                            subPostsId,
                         )
                     )
                 }

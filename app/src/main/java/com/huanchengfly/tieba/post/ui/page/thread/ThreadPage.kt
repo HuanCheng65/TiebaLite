@@ -1026,7 +1026,7 @@ fun ThreadPage(
                                                             forumId = curForumId,
                                                             threadId = threadId,
                                                             postId = item.get { id },
-                                                            subPostsId = it,
+                                                            subPostId = it,
                                                             loadFromSubPost = false
                                                         )
                                                     )

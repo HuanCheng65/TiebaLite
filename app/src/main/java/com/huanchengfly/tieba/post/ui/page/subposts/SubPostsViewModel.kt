@@ -61,7 +61,7 @@ class SubPostsViewModel @Inject constructor() :
 
         private fun SubPostsUiIntent.Load.producePartialChange(): Flow<SubPostsPartialChange.Load> =
             TiebaApi.getInstance()
-                .pbFloorFlow(forumId, threadId, postId, page, subPostId)
+                .pbFloorFlow(threadId, postId, forumId, page, subPostId)
                 .map<PbFloorResponse, SubPostsPartialChange.Load> { response ->
                     val post = checkNotNull(response.data_?.post)
                     val page = checkNotNull(response.data_?.page)
@@ -81,7 +81,7 @@ class SubPostsViewModel @Inject constructor() :
 
         private fun SubPostsUiIntent.LoadMore.producePartialChange(): Flow<SubPostsPartialChange.LoadMore> =
             TiebaApi.getInstance()
-                .pbFloorFlow(forumId, threadId, postId, page, subPostId)
+                .pbFloorFlow(threadId, postId, forumId, page, subPostId)
                 .map<PbFloorResponse, SubPostsPartialChange.LoadMore> { response ->
                     val post = checkNotNull(response.data_?.post)
                     val page = checkNotNull(response.data_?.page)
@@ -118,16 +118,16 @@ sealed interface SubPostsUiIntent : UiIntent {
         val forumId: Long,
         val threadId: Long,
         val postId: Long,
+        val subPostId: Long = 0L,
         val page: Int = 1,
-        val subPostId: Long = 0L
     ) : SubPostsUiIntent
 
     data class LoadMore(
         val forumId: Long,
         val threadId: Long,
         val postId: Long,
+        val subPostId: Long = 0L,
         val page: Int = 1,
-        val subPostId: Long = 0L
     ) : SubPostsUiIntent
 
     data class Agree(

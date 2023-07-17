@@ -1110,9 +1110,9 @@ object MixedTiebaApiImpl : ITiebaApi {
     }
 
     override fun pbFloorFlow(
-        forumId: Long,
         threadId: Long,
         postId: Long,
+        forumId: Long,
         page: Int,
         subPostId: Long
     ): Flow<PbFloorResponse> {

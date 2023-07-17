@@ -1285,9 +1285,9 @@ interface ITiebaApi {
      * @param subPostId 楼中楼回复 ID
      */
     fun pbFloorFlow(
-        forumId: Long,
         threadId: Long,
         postId: Long,
+        forumId: Long = 0L,
         page: Int = 1,
         subPostId: Long = 0L
     ): Flow<PbFloorResponse>
