@@ -680,4 +680,6 @@
     <string name="title_sub_posts">%d 楼的回复</string>
     <string name="title_sub_posts_default">回复</string>
     <string name="title_sub_posts_header">%d 条回复</string>
+    <string name="pull_to_load">继续上拉加载</string>
+    <string name="release_to_load">松开加载</string>
 </resources>

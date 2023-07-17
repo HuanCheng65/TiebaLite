@@ -30,7 +30,13 @@ fun LoadMoreLayout(
     onLoadMore: () -> Unit,
     enableLoadMore: Boolean = true,
     loadEnd: Boolean = false,
-    indicator: @Composable (loadEnd: Boolean) -> Unit = { DefaultIndicator(loadEnd = it) },
+    indicator: @Composable (Boolean, Boolean, Boolean) -> Unit = { loading, end, willLoad ->
+        DefaultIndicator(
+            isLoading = loading,
+            loadEnd = end,
+            willLoad = willLoad
+        )
+    },
     content: @Composable () -> Unit
 ) {
     val loadDistance = with(LocalDensity.current) { LoadDistance.toPx() }
@@ -68,7 +74,7 @@ fun LoadMoreLayout(
             .offset { IntOffset(0, swipeableState.offset.value.roundToInt()) }
         ) {
             if (enableLoadMore && swipeableState.offset.value != loadDistance) {
-                indicator(loadEnd)
+                indicator(isLoading, loadEnd, swipeableState.targetValue)
             }
         }
 
@@ -78,9 +84,13 @@ fun LoadMoreLayout(
 
 @Composable
 fun DefaultIndicator(
+    isLoading: Boolean,
     loadEnd: Boolean,
+    willLoad: Boolean,
     loadingText: String = stringResource(id = R.string.text_loading),
     loadEndText: String = stringResource(id = R.string.no_more),
+    pullToLoadText: String = stringResource(id = R.string.pull_to_load),
+    releaseToLoadText: String = stringResource(id = R.string.release_to_load),
 ) {
     Surface(
         elevation = 8.dp,
@@ -89,16 +99,26 @@ fun DefaultIndicator(
     ) {
         Row(
             modifier = Modifier
+                .height(IntrinsicSize.Min)
                 .padding(10.dp)
                 .animateContentSize(),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            if (!loadEnd) {
-                CircularProgressIndicator(modifier = Modifier.size(20.dp), strokeWidth = 3.dp, color = MaterialTheme.colors.onSurface)
+            if (isLoading) {
+                CircularProgressIndicator(
+                    modifier = Modifier.size(20.dp),
+                    strokeWidth = 3.dp,
+                    color = MaterialTheme.colors.onSurface
+                )
                 Spacer(modifier = Modifier.width(8.dp))
                 Text(text = loadingText, modifier = Modifier.padding(horizontal = 8.dp))
-            } else {
+            } else if (loadEnd) {
                 Text(text = loadEndText, modifier = Modifier.padding(horizontal = 8.dp))
+            } else {
+                Text(
+                    text = if (willLoad) releaseToLoadText else pullToLoadText,
+                    modifier = Modifier.padding(horizontal = 8.dp)
+                )
             }
         }
     }
