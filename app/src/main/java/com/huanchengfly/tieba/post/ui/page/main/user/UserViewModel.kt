@@ -8,7 +8,7 @@ import com.huanchengfly.tieba.post.arch.*
 import com.huanchengfly.tieba.post.models.database.Account
 import com.huanchengfly.tieba.post.utils.AccountUtil
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.*
 import javax.inject.Inject
 
@@ -28,7 +28,7 @@ class UserViewModel @Inject constructor() : BaseViewModel<UserUiIntent, UserPart
         }
 
     object UserPartialChangeProducer :PartialChangeProducer<UserUiIntent, UserPartialChange, UserUiState> {
-        @OptIn(FlowPreview::class)
+        @OptIn(ExperimentalCoroutinesApi::class)
         override fun toPartialChangeFlow(intentFlow: Flow<UserUiIntent>): Flow<UserPartialChange> =
             merge(
                 intentFlow.filterIsInstance<UserUiIntent.Refresh>().flatMapConcat { it.toPartialChangeFlow() }

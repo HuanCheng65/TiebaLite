@@ -13,7 +13,7 @@ import com.huanchengfly.tieba.post.arch.UiEvent
 import com.huanchengfly.tieba.post.arch.UiIntent
 import com.huanchengfly.tieba.post.arch.UiState
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.filterIsInstance
@@ -34,7 +34,7 @@ class HotViewModel @Inject constructor() :
 
     private object HotPartialChangeProducer :
         PartialChangeProducer<HotUiIntent, HotPartialChange, HotUiState> {
-        @OptIn(FlowPreview::class)
+        @OptIn(ExperimentalCoroutinesApi::class)
         override fun toPartialChangeFlow(intentFlow: Flow<HotUiIntent>): Flow<HotPartialChange> =
             merge(
                 intentFlow.filterIsInstance<HotUiIntent.Load>()

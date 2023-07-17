@@ -8,7 +8,7 @@ import com.huanchengfly.tieba.post.arch.*
 import com.huanchengfly.tieba.post.models.database.TopForum
 import com.huanchengfly.tieba.post.utils.AccountUtil
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.*
 import org.litepal.LitePal
 
@@ -27,7 +27,7 @@ class HomeViewModel : BaseViewModel<HomeUiIntent, HomePartialChange, HomeUiState
 
     object HomePartialChangeProducer :
         PartialChangeProducer<HomeUiIntent, HomePartialChange, HomeUiState> {
-        @OptIn(FlowPreview::class)
+        @OptIn(ExperimentalCoroutinesApi::class)
         override fun toPartialChangeFlow(intentFlow: Flow<HomeUiIntent>): Flow<HomePartialChange> {
             return merge(
                 intentFlow.filterIsInstance<HomeUiIntent.Refresh>()

@@ -14,7 +14,7 @@ import com.huanchengfly.tieba.post.ui.page.editprofile.EditProfilePartialChange
 import com.huanchengfly.tieba.post.ui.page.editprofile.EditProfileState
 import com.huanchengfly.tieba.post.utils.AccountUtil
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.*
 import javax.inject.Inject
 
@@ -30,7 +30,7 @@ class EditProfileViewModel @Inject constructor() :
     class EditProfilePartialChangeProducer(
         private val tiebaApi: ITiebaApi
     ) : PartialChangeProducer<EditProfileIntent, EditProfilePartialChange, EditProfileState> {
-        @OptIn(FlowPreview::class)
+        @OptIn(ExperimentalCoroutinesApi::class)
         override fun toPartialChangeFlow(intentFlow: Flow<EditProfileIntent>): Flow<EditProfilePartialChange> =
             merge(
                 intentFlow.filterIsInstance<EditProfileIntent.Init>()
@@ -63,7 +63,7 @@ class EditProfileViewModel @Inject constructor() :
             tiebaApi.profileModifyFlow(birthdayShowStatus, "${birthdayTime / 1000L}", intro, "$sex")
                 .map {
                     if (it.errorCode == 0) EditProfilePartialChange.Submit.Success else EditProfilePartialChange.Submit.Fail(
-                        it.errorMsg ?: "unknown error"
+                        it.errorMsg
                     )
                 }
                 .onStart {
@@ -94,9 +94,9 @@ class EditProfileViewModel @Inject constructor() :
             tiebaApi.imgPortrait(file)
                 .map {
                     if (it.errorCode == 0 || it.errorCode == 300003)
-                        EditProfilePartialChange.UploadPortrait.Success(it.errorMsg ?: "success")
+                        EditProfilePartialChange.UploadPortrait.Success(it.errorMsg)
                     else
-                        EditProfilePartialChange.UploadPortrait.Fail(it.errorMsg ?: "")
+                        EditProfilePartialChange.UploadPortrait.Fail(it.errorMsg)
                 }
                 .onStart { EditProfilePartialChange.UploadPortrait.Uploading }
                 .catch {

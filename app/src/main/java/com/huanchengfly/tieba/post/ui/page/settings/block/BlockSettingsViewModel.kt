@@ -5,7 +5,7 @@ import com.huanchengfly.tieba.post.arch.*
 import com.huanchengfly.tieba.post.models.database.Block
 import com.huanchengfly.tieba.post.toJson
 import com.huanchengfly.tieba.post.utils.BlockManager
-import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.*
 
 class BlockSettingsViewModel :
@@ -26,7 +26,7 @@ class BlockSettingsViewModel :
         }
 
     private object BlockSettingsPartialChangeProducer : PartialChangeProducer<BlockSettingsUiIntent, BlockSettingsPartialChange, BlockSettingsUiState> {
-        @OptIn(FlowPreview::class)
+        @OptIn(ExperimentalCoroutinesApi::class)
         override fun toPartialChangeFlow(intentFlow: Flow<BlockSettingsUiIntent>): Flow<BlockSettingsPartialChange> =
             merge(
                 intentFlow.filterIsInstance<BlockSettingsUiIntent.Load>().flatMapConcat { produceLoadPartialChange() },

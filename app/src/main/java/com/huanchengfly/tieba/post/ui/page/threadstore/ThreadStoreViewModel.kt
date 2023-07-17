@@ -15,7 +15,7 @@ import com.huanchengfly.tieba.post.arch.UiIntent
 import com.huanchengfly.tieba.post.arch.UiState
 import com.huanchengfly.tieba.post.arch.wrapImmutable
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.filterIsInstance
@@ -48,7 +48,7 @@ class ThreadStoreViewModel @Inject constructor() :
 
     private object ThreadStorePartialChangeProducer :
         PartialChangeProducer<ThreadStoreUiIntent, ThreadStorePartialChange, ThreadStoreUiState> {
-        @OptIn(FlowPreview::class)
+        @OptIn(ExperimentalCoroutinesApi::class)
         override fun toPartialChangeFlow(intentFlow: Flow<ThreadStoreUiIntent>): Flow<ThreadStorePartialChange> =
             merge(
                 intentFlow.filterIsInstance<ThreadStoreUiIntent.Refresh>()

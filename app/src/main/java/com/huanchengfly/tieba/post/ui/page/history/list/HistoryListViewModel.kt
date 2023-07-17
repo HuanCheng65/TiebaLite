@@ -13,7 +13,7 @@ import com.huanchengfly.tieba.post.utils.DateTimeUtils
 import com.huanchengfly.tieba.post.utils.HistoryUtil
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.filterIsInstance
@@ -60,7 +60,7 @@ class ForumHistoryListViewModel @Inject constructor() : HistoryListViewModel() {
 
 private class HistoryListPartialChangeProducer(val type: Int) :
     PartialChangeProducer<HistoryListUiIntent, HistoryListPartialChange, HistoryListUiState> {
-    @OptIn(FlowPreview::class)
+    @OptIn(ExperimentalCoroutinesApi::class)
     override fun toPartialChangeFlow(intentFlow: Flow<HistoryListUiIntent>): Flow<HistoryListPartialChange> =
         merge(
             intentFlow.filterIsInstance<HistoryListUiIntent.Refresh>()
