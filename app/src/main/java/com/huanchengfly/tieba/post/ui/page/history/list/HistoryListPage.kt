@@ -32,6 +32,8 @@ import com.huanchengfly.tieba.post.models.database.History
 import com.huanchengfly.tieba.post.ui.common.theme.compose.ExtendedTheme
 import com.huanchengfly.tieba.post.ui.page.LocalNavigator
 import com.huanchengfly.tieba.post.ui.page.destinations.ForumPageDestination
+import com.huanchengfly.tieba.post.ui.page.destinations.ThreadPageDestination
+import com.huanchengfly.tieba.post.ui.page.thread.ThreadPageFrom
 import com.huanchengfly.tieba.post.ui.widgets.Chip
 import com.huanchengfly.tieba.post.ui.widgets.compose.Avatar
 import com.huanchengfly.tieba.post.ui.widgets.compose.LazyLoad
@@ -144,12 +146,13 @@ fun HistoryListPage(
                                     HistoryUtil.TYPE_THREAD -> {
                                         val extra =
                                             if (it.extras != null) it.extras.fromJson<ThreadHistoryInfoBean>() else null
-                                        ThreadActivity.launch(
-                                            context,
-                                            it.data,
-                                            extra?.pid,
-                                            extra?.isSeeLz,
-                                            ThreadActivity.FROM_HISTORY
+                                        navigator.navigate(
+                                            ThreadPageDestination(
+                                                it.data.toLong(),
+                                                postId = extra?.pid?.toLongOrNull() ?: 0L,
+                                                seeLz = extra?.isSeeLz ?: false,
+                                                from = ThreadPageFrom.FROM_HISTORY
+                                            )
                                         )
                                     }
                                 }

@@ -335,7 +335,12 @@ fun ForumThreadListPage(
                 goodClassifyId = goodClassifyId,
                 goodClassifyHoldersProvider = { goodClassifies },
                 onItemClicked = {
-                    navigator.navigate(ThreadPageDestination(it.threadId))
+                    navigator.navigate(
+                        ThreadPageDestination(
+                            it.threadId,
+                            threadInfo = it
+                        )
+                    )
                 },
                 onAgree = {
                     viewModel.send(

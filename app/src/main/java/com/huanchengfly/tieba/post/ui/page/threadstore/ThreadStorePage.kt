@@ -183,14 +183,6 @@ fun ThreadStorePage(
                                     }
                                 },
                                 onClick = {
-//                                    ThreadActivity.launch(
-//                                        context,
-//                                        info.threadId,
-//                                        info.markPid,
-//                                        context.appPreferences.collectThreadSeeLz,
-//                                        "collect",
-//                                        info.maxPid
-//                                    )
                                     navigator.navigate(
                                         ThreadPageDestination(
                                             threadId = info.threadId.toLong(),
