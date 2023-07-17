@@ -26,12 +26,13 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.huanchengfly.tieba.post.R
-import com.huanchengfly.tieba.post.activities.FloorActivity
-import com.huanchengfly.tieba.post.activities.ThreadActivity
 import com.huanchengfly.tieba.post.activities.UserActivity
 import com.huanchengfly.tieba.post.arch.collectPartialAsState
 import com.huanchengfly.tieba.post.arch.pageViewModel
 import com.huanchengfly.tieba.post.ui.common.theme.compose.ExtendedTheme
+import com.huanchengfly.tieba.post.ui.page.LocalNavigator
+import com.huanchengfly.tieba.post.ui.page.destinations.SubPostsPageDestination
+import com.huanchengfly.tieba.post.ui.page.destinations.ThreadPageDestination
 import com.huanchengfly.tieba.post.ui.widgets.compose.Avatar
 import com.huanchengfly.tieba.post.ui.widgets.compose.EmoticonText
 import com.huanchengfly.tieba.post.ui.widgets.compose.LazyLoad
@@ -55,6 +56,7 @@ fun NotificationsListPage(
         viewModel.initialized = true
     }
     val context = LocalContext.current
+    val navigator = LocalNavigator.current
     val isRefreshing by viewModel.uiState.collectPartialAsState(
         prop1 = NotificationsListUiState::isRefreshing,
         initial = false
@@ -97,13 +99,20 @@ fun NotificationsListPage(
                         modifier = Modifier
                             .clickable {
                                 if (it.isFloor == "1") {
-                                    FloorActivity.launch(
-                                        context,
-                                        it.threadId!!,
-                                        subPostId = it.postId
+                                    navigator.navigate(
+                                        SubPostsPageDestination(
+                                            threadId = it.threadId!!.toLong(),
+                                            subPostId = it.postId!!.toLong(),
+                                            loadFromSubPost = true
+                                        )
                                     )
                                 } else {
-                                    ThreadActivity.launch(context, it.threadId!!, it.postId)
+                                    navigator.navigate(
+                                        ThreadPageDestination(
+                                            threadId = it.threadId!!.toLong(),
+                                            postId = it.postId!!.toLong()
+                                        )
+                                    )
                                 }
                             }
                             .padding(horizontal = 16.dp, vertical = 12.dp),
@@ -158,13 +167,19 @@ fun NotificationsListPage(
                                     .clip(RoundedCornerShape(6.dp))
                                     .clickable {
                                         if ("1" == it.isFloor && it.quotePid != null) {
-                                            FloorActivity.launch(
-                                                context,
-                                                it.threadId!!,
-                                                postId = it.quotePid
+                                            navigator.navigate(
+                                                SubPostsPageDestination(
+                                                    threadId = it.threadId!!.toLong(),
+                                                    postId = it.quotePid.toLong(),
+                                                    loadFromSubPost = true,
+                                                )
                                             )
                                         } else {
-                                            ThreadActivity.launch(context, it.threadId!!)
+                                            navigator.navigate(
+                                                ThreadPageDestination(
+                                                    threadId = it.threadId!!.toLong(),
+                                                )
+                                            )
                                         }
                                     }
                                     .background(ExtendedTheme.colors.chip, RoundedCornerShape(6.dp))
