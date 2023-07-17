@@ -147,6 +147,7 @@ import com.huanchengfly.tieba.post.utils.StringUtil.getShortNumString
 import com.huanchengfly.tieba.post.utils.ThemeUtil
 import com.huanchengfly.tieba.post.utils.TiebaUtil
 import com.huanchengfly.tieba.post.utils.Util.getIconColorByLevel
+import com.huanchengfly.tieba.post.utils.appPreferences
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import kotlinx.collections.immutable.ImmutableList
@@ -1254,20 +1255,24 @@ fun PostCard(
     onReply: () -> Unit = {},
     onOpenSubPosts: (subPostId: Long) -> Unit = {},
 ) {
+    val context = LocalContext.current
     if (blocked && !immersiveMode) {
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(vertical = 8.dp, horizontal = 16.dp)
-                .clip(RoundedCornerShape(6.dp))
-                .background(ExtendedTheme.colors.floorCard)
-                .padding(vertical = 8.dp, horizontal = 16.dp)
-        ) {
-            Text(
-                text = stringResource(id = R.string.tip_blocked_post, postHolder.get { floor }),
-                style = MaterialTheme.typography.caption,
-                color = ExtendedTheme.colors.textSecondary
-            )
+        val hideBlockedContent = context.appPreferences.hideBlockedContent
+        if (!hideBlockedContent) {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 8.dp, horizontal = 16.dp)
+                    .clip(RoundedCornerShape(6.dp))
+                    .background(ExtendedTheme.colors.floorCard)
+                    .padding(vertical = 8.dp, horizontal = 16.dp)
+            ) {
+                Text(
+                    text = stringResource(id = R.string.tip_blocked_post, postHolder.get { floor }),
+                    style = MaterialTheme.typography.caption,
+                    color = ExtendedTheme.colors.textSecondary
+                )
+            }
         }
         return
     }
@@ -1276,7 +1281,6 @@ fun PostCard(
         postHolder.get { floor > 1 } && !immersiveMode
     }
     val paddingModifier = Modifier.padding(start = if (hasPadding) Sizes.Small + 8.dp else 0.dp)
-    val context = LocalContext.current
     val accentColor = ExtendedTheme.colors.accent
     val author = postHolder.get { author!! }
     val showTitle = remember(postHolder) {

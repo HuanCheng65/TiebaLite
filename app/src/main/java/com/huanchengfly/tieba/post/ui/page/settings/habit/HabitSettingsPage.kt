@@ -11,7 +11,6 @@ import androidx.compose.material.icons.outlined.PhotoSizeSelectActual
 import androidx.compose.material.icons.outlined.SecurityUpdateWarning
 import androidx.compose.material.icons.outlined.StarOutline
 import androidx.compose.material.icons.outlined.Verified
-import androidx.compose.material.icons.rounded.VideocamOff
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
@@ -101,22 +100,6 @@ fun HabitSettingsPage(
                             )
                         }
                     },
-                )
-            }
-            prefsItem {
-                SwitchPref(
-                    key = "blockVideo",
-                    title = stringResource(id = R.string.settings_block_video),
-                    defaultChecked = false,
-                    leadingIcon = {
-                        LeadingIcon {
-                            AvatarIcon(
-                                icon = Icons.Rounded.VideocamOff,
-                                size = Sizes.Small,
-                                contentDescription = null,
-                            )
-                        }
-                    }
                 )
             }
             prefsItem {

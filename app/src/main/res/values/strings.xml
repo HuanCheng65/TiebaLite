@@ -54,7 +54,7 @@
     <string name="tip_floor_more"><![CDATA[查看更多回复 >]]></string>
     <string name="tip_floor_btn">查看回复</string>
     <string name="title_account_manage">账号管理</string>
-    <string name="title_block_settings">屏蔽管理</string>
+    <string name="title_block_settings">屏蔽设置</string>
     <string name="tip_verify_code">请输入图中的验证码</string>
     <string name="title_verify_code">请输入验证码</string>
     <string name="title_submit">提交</string>
@@ -591,7 +591,7 @@
     <string name="summary_now_account">已登录账号 %s</string>
     <string name="summary_not_logged_in">未登录，点击登录</string>
     <string name="title_settings_more">更多</string>
-    <string name="summary_account_manage">黑名单与白名单</string>
+    <string name="summary_block_settings">眼不见心不烦</string>
     <string name="summary_settings_custom">个性你的 UI 界面</string>
     <string name="summary_settings_habit">万般功能不如自己顺手</string>
     <string name="summary_settings_oksign">一键签到功能设定</string>
@@ -674,7 +674,7 @@
     <string name="open_all_sub_posts">查看全部 %d 条回复</string>
     <string name="message_store_thread_update">贴子更新到了第 %d 楼</string>
     <string name="tip_blocked_post">由于你的屏蔽设置，第 %d 楼已被屏蔽</string>
-    <string name="settings_block_video">屏蔽视频贴子</string>
+    <string name="settings_block_video">不看视频贴</string>
     <string name="btn_full_screen">全屏</string>
     <string name="btn_play">播放</string>
     <string name="title_sub_posts">%d 楼的回复</string>
@@ -682,4 +682,7 @@
     <string name="title_sub_posts_header">%d 条回复</string>
     <string name="pull_to_load">继续上拉加载</string>
     <string name="release_to_load">松开加载</string>
+    <string name="title_block_list">屏蔽词管理</string>
+    <string name="settings_hide_blocked_content">彻底隐藏被屏蔽的内容</string>
+    <string name="settings_block_video_summary">隐藏动态页面和吧页面的所有视频贴</string>
 </resources>

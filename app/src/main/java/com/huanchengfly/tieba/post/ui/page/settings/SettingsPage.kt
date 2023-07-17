@@ -123,7 +123,7 @@ fun SettingsPage(
                 prefsItem {
                     TextPref(
                         title = stringResource(id = R.string.title_block_settings),
-                        summary = stringResource(id = R.string.summary_account_manage),
+                        summary = stringResource(id = R.string.summary_block_settings),
                         leadingIcon = {
                             LeadingIcon {
                                 AvatarIcon(

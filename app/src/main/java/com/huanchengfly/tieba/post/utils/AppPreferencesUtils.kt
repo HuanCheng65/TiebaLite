@@ -88,6 +88,8 @@ open class AppPreferencesUtils(private val context: Context) {
 
     var forumFabFunction by DataStoreDelegates.string(defaultValue = "post")
 
+    var hideBlockedContent by DataStoreDelegates.boolean(defaultValue = false)
+
     var hideExplore by DataStoreDelegates.boolean(defaultValue = false)
 
     var hideForumIntroAndStat by DataStoreDelegates.boolean(defaultValue = false)
