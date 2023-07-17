@@ -32,11 +32,13 @@ fun buildProtobufRequestBody(
     return MyMultipartBody.Builder(BOUNDARY)
         .apply {
             setType(MyMultipartBody.FORM)
+            if (clientVersion != ClientVersion.TIEBA_V12) {
+                addFormDataPart(Param.CLIENT_VERSION, clientVersion.version)
+            }
             if (needSToken) {
                 val sToken = AccountUtil.getSToken()
                 if (sToken != null) addFormDataPart(Param.STOKEN, sToken)
             }
-            addFormDataPart(Param.CLIENT_VERSION, clientVersion.version)
             addFormDataPart("data", "file", data.encode().toRequestBody())
         }
         .build()

@@ -947,8 +947,10 @@ object MixedTiebaApiImpl : ITiebaApi {
                         with_group = 1,
                         yuelaou_locate = ""
                     )
-                )
-            )
+                ),
+                clientVersion = ClientVersion.TIEBA_V12
+            ),
+            forumName = forumName
         )
     }
 
@@ -1130,7 +1132,9 @@ object MixedTiebaApiImpl : ITiebaApi {
                         is_comm_reverse = 0,
                         ori_ugc_type = 0
                     )
-                )
+                ),
+                clientVersion = ClientVersion.TIEBA_V12,
+                needSToken = false
             )
         )
     }

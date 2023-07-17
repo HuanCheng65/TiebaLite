@@ -220,15 +220,6 @@ object RetrofitTiebaApi {
                 Header.USER_AGENT to { "bdtb for Android ${ClientVersion.TIEBA_V12.version}" },
                 Header.X_BD_DATA_TYPE to { "protobuf" },
             ),
-            defaultCommonParamInterceptor - Param.OS_VERSION + CommonParamInterceptor(
-                Param.CUID to { CuidUtils.getNewCuid() },
-                Param.CUID_GALAXY2 to { CuidUtils.getNewCuid() },
-                Param.CUID_GID to { "" },
-                Param.FROM to { "tieba" },
-                Param.CLIENT_VERSION to { ClientVersion.TIEBA_V12.version },
-                Param.CUID_GALAXY3 to { UIDUtil.getAid() },
-                Param.OAID to { UIDUtil.getOAID() },
-            ),
             stParamInterceptor,
         )
     }
