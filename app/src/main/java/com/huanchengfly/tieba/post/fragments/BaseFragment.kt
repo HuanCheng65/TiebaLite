@@ -67,7 +67,7 @@ abstract class BaseFragment : Fragment(), BackHandledInterface, CoroutineScope {
             return mContext!!
         }
     protected val appPreferences: AppPreferencesUtils
-        get() = AppPreferencesUtils(attachContext)
+        get() = AppPreferencesUtils.getInstance(attachContext)
 
     @TargetApi(23)
     override fun onAttach(context: Context) {
