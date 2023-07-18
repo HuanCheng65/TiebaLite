@@ -11,4 +11,10 @@
 贴吧 Lite 是一个**非官方**的贴吧客户端。
 
 ## 说明
+
 **本软件及源码仅供学习交流使用，严禁用于商业用途。**
+
+## 友情链接
+
++ [Starry-OvO/aiotieba: Asynchronous I/O Client for Baidu Tieba](https://github.com/Starry-OvO/aiotieba)
++ [n0099/tbclient.protobuf: 百度贴吧客户端 Protocol Buffers 定义文件合集](https://github.com/n0099/tbclient.protobuf)
