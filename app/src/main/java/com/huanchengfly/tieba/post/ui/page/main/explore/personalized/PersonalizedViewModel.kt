@@ -114,14 +114,16 @@ class PersonalizedViewModel @Inject constructor() :
                 .onStart { emit(PersonalizedPartialChange.Dislike.Start(threadId)) }
 
         private fun PersonalizedUiIntent.Agree.producePartialChange(): Flow<PersonalizedPartialChange.Agree> =
-            TiebaApi.getInstance().opAgreeFlow(
-                threadId.toString(), postId.toString(), hasAgree, objType = 3
-            ).map<AgreeBean, PersonalizedPartialChange.Agree> {
-                PersonalizedPartialChange.Agree.Success(
-                    threadId,
-                    hasAgree xor 1
+            TiebaApi.getInstance()
+                .opAgreeFlow(
+                    threadId.toString(), postId.toString(), hasAgree, objType = 3
                 )
-            }
+                .map<AgreeBean, PersonalizedPartialChange.Agree> {
+                    PersonalizedPartialChange.Agree.Success(
+                        threadId,
+                        hasAgree xor 1
+                    )
+                }
                 .catch { emit(PersonalizedPartialChange.Agree.Failure(threadId, hasAgree, it)) }
                 .onStart { emit(PersonalizedPartialChange.Agree.Start(threadId, hasAgree xor 1)) }
 

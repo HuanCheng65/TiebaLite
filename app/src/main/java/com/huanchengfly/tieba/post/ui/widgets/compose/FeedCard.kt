@@ -485,7 +485,7 @@ private fun ThreadShareBtn(
 fun FeedCard(
     item: ImmutableHolder<ThreadInfo>,
     onClick: (ThreadInfo) -> Unit,
-    onAgree: () -> Unit,
+    onAgree: (ThreadInfo) -> Unit,
     onClickForum: () -> Unit = {},
     dislikeAction: @Composable () -> Unit = {},
 ) {
@@ -526,7 +526,7 @@ fun FeedCard(
                 ThreadAgreeBtn(
                     hasAgree = item.get { agree?.hasAgree == 1 },
                     agreeNum = item.get { agreeNum },
-                    onClick = onAgree,
+                    onClick = { onAgree(item.get()) },
                     modifier = Modifier.weight(1f)
                 )
 

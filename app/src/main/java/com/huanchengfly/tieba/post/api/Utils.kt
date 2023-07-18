@@ -57,6 +57,12 @@ val ThreadInfo.abstractText: String
         }
     }
 
+val ThreadInfo.hasAgree: Int
+    get() = agree?.hasAgree ?: 0
+
+val ThreadInfo.hasAgreed: Boolean
+    get() = hasAgree == 1
+
 val ThreadInfo.hasAbstract: Boolean
     get() = richAbstract.any { (it.type == 0 && it.text.isNotBlank()) || it.type == 2 }
 

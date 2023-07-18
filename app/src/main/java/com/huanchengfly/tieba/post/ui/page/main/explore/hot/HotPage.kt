@@ -31,6 +31,7 @@ import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -45,7 +46,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.google.accompanist.placeholder.material.placeholder
 import com.huanchengfly.tieba.post.R
+import com.huanchengfly.tieba.post.api.hasAgree
 import com.huanchengfly.tieba.post.api.models.protos.ThreadInfo
+import com.huanchengfly.tieba.post.arch.ImmutableHolder
 import com.huanchengfly.tieba.post.arch.collectPartialAsState
 import com.huanchengfly.tieba.post.arch.onEvent
 import com.huanchengfly.tieba.post.arch.pageViewModel
@@ -56,7 +59,9 @@ import com.huanchengfly.tieba.post.ui.common.theme.compose.White
 import com.huanchengfly.tieba.post.ui.common.theme.compose.Yellow
 import com.huanchengfly.tieba.post.ui.page.LocalNavigator
 import com.huanchengfly.tieba.post.ui.page.destinations.HotTopicListPageDestination
+import com.huanchengfly.tieba.post.ui.page.destinations.ThreadPageDestination
 import com.huanchengfly.tieba.post.ui.page.main.MainUiEvent
+import com.huanchengfly.tieba.post.ui.widgets.compose.FeedCard
 import com.huanchengfly.tieba.post.ui.widgets.compose.LazyLoad
 import com.huanchengfly.tieba.post.ui.widgets.compose.NetworkImage
 import com.huanchengfly.tieba.post.ui.widgets.compose.ProvideContentColor
@@ -155,12 +160,12 @@ fun HotPage(
                                     modifier = Modifier.padding(bottom = 2.dp)
                                 )
                                 Text(
-                                    text = item.topicName,
+                                    text = item.get { topicName },
                                     maxLines = 1,
                                     overflow = TextOverflow.Ellipsis,
                                     modifier = Modifier.weight(1f)
                                 )
-                                when (item.tag) {
+                                when (item.get { tag }) {
                                     2 -> Text(
                                         text = stringResource(id = R.string.topic_tag_hot),
                                         fontSize = 10.sp,
@@ -220,7 +225,7 @@ fun HotPage(
             }
             if (threadList.isNotEmpty()) {
                 if (tabList.isNotEmpty()) {
-                    stickyHeader(key = "ThreadTabs") {
+                    item(key = "ThreadTabs") {
                         VerticalGrid(
                             column = 5,
                             modifier = Modifier
@@ -239,9 +244,9 @@ fun HotPage(
                             }
                             items(tabList) {
                                 ThreadListTab(
-                                    text = it.tabName,
-                                    selected = currentTabCode == it.tabCode,
-                                    onSelected = { viewModel.send(HotUiIntent.RefreshThreadList(it.tabCode)) }
+                                    text = it.get { tabName },
+                                    selected = currentTabCode == it.get { tabCode },
+                                    onSelected = { viewModel.send(HotUiIntent.RefreshThreadList(it.get { tabCode })) }
                                 )
                             }
                         }
@@ -266,8 +271,68 @@ fun HotPage(
                 } else {
                     itemsIndexed(
                         items = threadList,
-                        key = { _, item -> "Thread_${item.threadId}" }) { index, item ->
-                        ThreadListItem(index = index, item = item)
+                        key = { _, item -> "Thread_${item.get { threadId }}" }
+                    ) { index, item ->
+                        FeedCard(
+                            item = item,
+                            onClick = {
+                                navigator.navigate(
+                                    ThreadPageDestination(
+                                        threadId = it.id,
+                                        threadInfo = it
+                                    )
+                                )
+                            },
+                            onAgree = {
+                                viewModel.send(
+                                    HotUiIntent.Agree(
+                                        threadId = it.threadId,
+                                        postId = it.firstPostId,
+                                        hasAgree = it.hasAgree
+                                    )
+                                )
+                            },
+                        ) {
+                            Column(
+                                horizontalAlignment = Alignment.End,
+                                verticalArrangement = Arrangement.spacedBy(4.dp)
+                            ) {
+                                val color = when (index) {
+                                    0 -> RedA700
+                                    1 -> OrangeA700
+                                    2 -> Yellow
+                                    else -> MaterialTheme.colors.onBackground.copy(
+                                        ContentAlpha.medium
+                                    )
+                                }
+                                Text(
+                                    text = "${index + 1}",
+                                    color = color,
+                                    fontWeight = FontWeight.Bold,
+                                    fontSize = 16.sp
+                                )
+                                Text(
+                                    text = stringResource(
+                                        id = R.string.hot_num,
+                                        item.get { hotNum }.getShortNumString()
+                                    ),
+                                    style = MaterialTheme.typography.caption,
+                                    color = color
+                                )
+                            }
+                        }
+//                        ThreadListItem(
+//                            index = index,
+//                            itemHolder = item,
+//                            onClick = {
+//                                navigator.navigate(
+//                                    ThreadPageDestination(
+//                                        threadId = it.id,
+//                                        threadInfo = it
+//                                    )
+//                                )
+//                            }
+//                        )
                     }
                 }
             }
@@ -322,13 +387,14 @@ private fun ThreadListItemPlaceholder() {
 @Composable
 private fun ThreadListItem(
     index: Int,
-    item: ThreadInfo,
-    onClick: () -> Unit = {}
+    itemHolder: ImmutableHolder<ThreadInfo>,
+    onClick: (ThreadInfo) -> Unit = {}
 ) {
+    val item = remember(itemHolder) { itemHolder.get() }
     val heightModifier = if (item.media.isEmpty()) Modifier else Modifier.height(80.dp)
     Row(
         modifier = Modifier
-            .clickable(onClick = onClick)
+            .clickable { onClick(item) }
             .padding(all = 16.dp),
         horizontalArrangement = Arrangement.spacedBy(16.dp)
     ) {
@@ -368,7 +434,14 @@ private fun ThreadListItem(
                 )
             }
         }
-        if (item.media.isNotEmpty()) {
+        if (!item.videoInfo?.thumbnailUrl.isNullOrBlank()) {
+            NetworkImage(
+                imageUri = item.videoInfo?.thumbnailUrl!!,
+                contentDescription = null,
+                modifier = heightModifier.aspectRatio(16f / 9),
+                contentScale = ContentScale.Crop
+            )
+        } else if (!item.media.firstOrNull()?.dynamicPic.isNullOrBlank()) {
             NetworkImage(
                 imageUri = item.media.first().dynamicPic,
                 contentDescription = null,
@@ -397,7 +470,7 @@ private fun ThreadListTab(
             .clip(RoundedCornerShape(100))
             .background(backgroundColor)
             .clickable(onClick = onSelected)
-            .padding(horizontal = 16.dp, vertical = 4.dp),
+            .padding(vertical = 4.dp),
         fontSize = 12.sp,
         fontWeight = FontWeight.Bold
     )
