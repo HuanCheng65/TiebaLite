@@ -62,7 +62,6 @@ import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.material.rememberModalBottomSheetState
 import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
@@ -156,6 +155,7 @@ import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
 import kotlinx.serialization.Serializable
+import kotlin.concurrent.thread
 import kotlin.math.max
 
 private fun getDescText(
@@ -516,6 +516,9 @@ fun ThreadPage(
     val hasThreadAgreed = remember(thread) {
         thread?.get { agree?.hasAgree == 1 } == true
     }
+    val threadAgreeNum = remember(thread) {
+        thread?.get { agree?.diffAgreeNum } ?: 0L
+    }
     val threadTitle = remember(thread) {
         thread?.get { title } ?: ""
     }
@@ -669,32 +672,30 @@ fun ThreadPage(
     }
 
     var savedHistory by remember { mutableStateOf(false) }
-    DisposableEffect(threadId, threadTitle, author, lastVisibilityPostId) {
+    LaunchedEffect(threadId, threadTitle, author, lastVisibilityPostId) {
         val saveHistory = {
-            if (threadTitle.isNotBlank()) {
-                HistoryUtil.saveHistory(
-                    History(
-                        title = threadTitle,
-                        data = threadId.toString(),
-                        type = HistoryUtil.TYPE_THREAD,
-                        extras = ThreadHistoryInfoBean(
-                            pid = lastVisibilityPostId.toString(),
-                            isSeeLz = seeLz
-                        ).toJson(),
-                        avatar = StringUtil.getAvatarUrl(author?.get { portrait }),
-                        username = author?.get { nameShow }
-                    ),
-                    async = true
-                )
-                savedHistory = true
+            thread {
+                if (threadTitle.isNotBlank()) {
+                    HistoryUtil.saveHistory(
+                        History(
+                            title = threadTitle,
+                            data = threadId.toString(),
+                            type = HistoryUtil.TYPE_THREAD,
+                            extras = ThreadHistoryInfoBean(
+                                pid = lastVisibilityPostId.toString(),
+                                isSeeLz = seeLz
+                            ).toJson(),
+                            avatar = StringUtil.getAvatarUrl(author?.get { portrait }),
+                            username = author?.get { nameShow }
+                        ),
+                        async = true
+                    )
+                    savedHistory = true
+                }
             }
         }
 
         if (!savedHistory || lastVisibilityPostId != 0L) {
-            saveHistory()
-        }
-
-        onDispose {
             saveHistory()
         }
     }
@@ -1119,7 +1120,7 @@ fun ThreadPage(
                         }
                     },
                     hasAgreed = hasThreadAgreed,
-                    agreeNum = thread?.get { agree?.diffAgreeNum } ?: 0L,
+                    agreeNum = threadAgreeNum,
                     modifier = Modifier.navigationBarsPadding()
                 )
             }
