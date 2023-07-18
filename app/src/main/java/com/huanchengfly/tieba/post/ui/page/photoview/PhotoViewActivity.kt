@@ -215,7 +215,7 @@ class PhotoViewActivity : BaseComposeActivityWithParcelable<PhotoViewData>() {
                             modifier = Modifier.fillMaxSize(),
                             onDrag = { dx, dy, isAtEdge ->
                                 val currentPage = pagerState.currentPage
-                                if (abs(dy) < 15 && abs(dx) > 25 && isAtEdge) {
+                                if (abs(dy) < 15 && abs(dx) > 30 && isAtEdge) {
                                     val prevPage = currentPage - 1
                                     val nextPage = currentPage + 1
                                     if (dx > 0 && prevPage >= 0) {
