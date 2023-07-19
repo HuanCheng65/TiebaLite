@@ -6,19 +6,31 @@ import java.io.File
 import java.io.IOException
 import java.util.Locale
 import java.util.regex.Pattern
+import kotlin.math.round
 
 object DeviceUtils {
     var coreNum = -1
     private const val CPU_MAX_INFO_FORMAT = "/sys/devices/system/cpu/cpu%d/cpufreq/cpuinfo_max_freq"
     private const val MEM_INFO_FILE = "/proc/meminfo"
 
+    fun roundUpRom(f: Float): Int {
+        var i = 1
+        while (f > i * 1.5) {
+            i *= 2
+            if (i > 0x10000000) break
+        }
+        return i
+    }
+
     fun getDeviceScore(): Float {
-        val cpuCores = getDeviceCpuCore().takeIf { it > 0 } ?: 6.9822063f
+        val cpuCores = getDeviceCpuCore().toFloat().takeIf { it > 0 } ?: 6.9822063f
         val cpuAverageFrequency = getDeviceCpuAverageFrequency().takeIf { it > 0 } ?: 1.7859616f
         val totalMemory = getTotalMemory().takeIf { it > 0 } ?: 3.5425532f
         val totalSDCardSize = getTotalSDCardSize().takeIf { it >= 0 } ?: 51.957294f
-//        val deviceScore = round(totalMemory)*0.0572301f + roundUpRom
-        return 0f
+        return round(totalMemory) * 0.0572301f +
+                roundUpRom(totalSDCardSize) * 4.1613E-4f +
+                (round(cpuCores) * cpuAverageFrequency) * 0.01155649f +
+                0.0231852f
     }
 
     fun getTotalSDCardSize(): Float {
