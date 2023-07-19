@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <litepal>
     <dbname value="tblite" />
-    <version value="33" />
+    <version value="35" />
     <list>
         <mapping class="com.huanchengfly.tieba.post.models.database.Account" />
         <mapping class="com.huanchengfly.tieba.post.models.database.Draft" />

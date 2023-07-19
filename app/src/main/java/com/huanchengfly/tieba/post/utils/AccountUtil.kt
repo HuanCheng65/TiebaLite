@@ -12,13 +12,20 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.staticCompositionLocalOf
 import com.huanchengfly.tieba.post.R
 import com.huanchengfly.tieba.post.api.TiebaApi
+import com.huanchengfly.tieba.post.api.models.InitNickNameBean
+import com.huanchengfly.tieba.post.api.models.LoginBean
 import com.huanchengfly.tieba.post.arch.GlobalEvent
 import com.huanchengfly.tieba.post.arch.emitGlobalEvent
 import com.huanchengfly.tieba.post.models.database.Account
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.zip
+import org.litepal.LitePal
 import org.litepal.LitePal.findAll
 import org.litepal.LitePal.where
+import org.litepal.extension.findAllAsync
+import org.litepal.extension.findFirst
+import java.util.UUID
 
 object AccountUtil {
     const val TAG = "AccountUtil"
@@ -67,6 +74,11 @@ object AccountUtil {
         return currentAccount
     }
 
+    @JvmStatic
+    fun <T> getAccountInfo(getter: Account.() -> T): T? {
+        return currentAccount?.getter()
+    }
+
     fun newAccount(uid: String, account: Account, callback: (Boolean) -> Unit) {
         account.saveOrUpdateAsync("uid = ?", uid).listen {
             mutableAllAccountsState.value = findAll(Account::class.java)
@@ -80,7 +92,7 @@ object AccountUtil {
 
     @JvmStatic
     fun getAccountInfoByUid(uid: String): Account? {
-        return where("uid = ?", uid).findFirst(Account::class.java)
+        return where("uid = ?", uid).findFirst<Account>()
     }
 
     @JvmStatic
@@ -103,44 +115,23 @@ object AccountUtil {
             .putInt("now", id).commit()
     }
 
-    fun fetchAccountFlow(): Flow<Account> {
-        return TiebaApi.getInstance()
-            .initNickNameFlow()
-            .zip(TiebaApi.getInstance().loginFlow()) { initNickNameBean, loginBean ->
-                getLoginInfo()!!.apply {
-                    uid = loginBean.user.id
-                    name = loginBean.user.name
-                    nameShow = initNickNameBean.userInfo.nameShow
-                    portrait = loginBean.user.portrait
-                    tbs = loginBean.anti.tbs
-                    saveOrUpdate("uid = ?", loginBean.user.id)
-                    mutableAllAccountsState.value = findAll(Account::class.java)
-                }
-            }
+    private fun updateAccount(
+        account: Account,
+        initNickNameBean: InitNickNameBean,
+        loginBean: LoginBean,
+    ) {
+        account.apply {
+            uid = loginBean.user.id
+            name = loginBean.user.name
+            nameShow = initNickNameBean.userInfo.nameShow
+            portrait = loginBean.user.portrait
+            tbs = loginBean.anti.tbs
+            if (uuid.isNullOrBlank()) uuid = UUID.randomUUID().toString()
+        }
     }
 
-    fun fetchAccountFlow(account: Account): Flow<Account> {
-        return TiebaApi.getInstance()
-            .initNickNameFlow(
-                account.bduss,
-                account.sToken
-            )
-            .zip(
-                TiebaApi.getInstance().loginFlow(
-                    account.bduss,
-                    account.sToken
-                )
-            ) { initNickNameBean, loginBean ->
-                account.apply {
-                    uid = loginBean.user.id
-                    name = loginBean.user.name
-                    nameShow = initNickNameBean.userInfo.nameShow
-                    portrait = loginBean.user.portrait
-                    tbs = loginBean.anti.tbs
-                    saveOrUpdate("uid = ?", loginBean.user.id)
-                    mutableAllAccountsState.value = findAll(Account::class.java)
-                }
-            }
+    fun fetchAccountFlow(account: Account = getLoginInfo()!!): Flow<Account> {
+        return fetchAccountFlow(account.bduss, account.sToken, account.cookie)
     }
 
     fun fetchAccountFlow(
@@ -154,25 +145,34 @@ object AccountUtil {
                 getAccountInfoByUid(loginBean.user.id)?.apply {
                     this.bduss = bduss
                     this.sToken = sToken
-                    this.tbs = loginBean.anti.tbs
-                    this.name = loginBean.user.name
-                    this.nameShow = initNickNameBean.userInfo.nameShow
-                    this.portrait = loginBean.user.portrait
                     this.cookie = cookie ?: getBdussCookie(bduss)
-                    saveOrUpdate("uid = ?", loginBean.user.id)
-                }
-                    ?: Account(
-                        loginBean.user.id,
-                        loginBean.user.name,
-                        bduss,
-                        loginBean.anti.tbs,
-                        loginBean.user.portrait,
-                        sToken,
-                        cookie ?: getBdussCookie(bduss),
-                        initNickNameBean.userInfo.nameShow,
-                        "",
-                        "0"
-                    )
+                    updateAccount(this, initNickNameBean, loginBean)
+                } ?: Account(
+                    loginBean.user.id,
+                    loginBean.user.name,
+                    bduss,
+                    loginBean.anti.tbs,
+                    loginBean.user.portrait,
+                    sToken,
+                    cookie ?: getBdussCookie(bduss),
+                    initNickNameBean.userInfo.nameShow,
+                    "",
+                    "0"
+                )
+            }
+            .zip(SofireUtils.fetchZid()) { account, zid ->
+                account.apply { this.zid = zid }
+            }
+            .onEach { account ->
+                account.updateAllAsync("uid = ?", account.uid)
+                    .listen { rowAffected ->
+                        if (rowAffected > 0) {
+                            LitePal.findAllAsync<Account>()
+                                .listen {
+                                    mutableAllAccountsState.value = it
+                                }
+                        }
+                    }
             }
     }
 

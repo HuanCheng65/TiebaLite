@@ -25,6 +25,7 @@ import com.huanchengfly.tieba.post.api.retrofit.interfaces.MiniTiebaApi
 import com.huanchengfly.tieba.post.api.retrofit.interfaces.NewTiebaApi
 import com.huanchengfly.tieba.post.api.retrofit.interfaces.OfficialProtobufTiebaApi
 import com.huanchengfly.tieba.post.api.retrofit.interfaces.OfficialTiebaApi
+import com.huanchengfly.tieba.post.api.retrofit.interfaces.SofireApi
 import com.huanchengfly.tieba.post.api.retrofit.interfaces.WebTiebaApi
 import com.huanchengfly.tieba.post.toJson
 import com.huanchengfly.tieba.post.utils.AccountUtil
@@ -222,6 +223,21 @@ object RetrofitTiebaApi {
             ),
             stParamInterceptor,
         )
+    }
+
+    val SOFIRE_API: SofireApi by lazy {
+        Retrofit.Builder()
+            .baseUrl("https://sofire.baidu.com/")
+            .addCallAdapterFactory(DeferredCallAdapterFactory())
+            .addCallAdapterFactory(FlowCallAdapterFactory.create())
+            .addConverterFactory(NullOnEmptyConverterFactory())
+            .addConverterFactory(gsonConverterFactory)
+            .client(OkHttpClient.Builder().apply {
+//                addInterceptor()
+                connectionPool(connectionPool)
+            }.build())
+            .build()
+            .create(SofireApi::class.java)
     }
 
     private inline fun <reified T : Any> createJsonApi(
