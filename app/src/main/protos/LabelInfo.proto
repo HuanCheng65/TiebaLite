@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+package tieba;
+
+option java_package = "com.huanchengfly.tieba.post.api.models.protos";
+
+message LabelInfo {
+  int32 labelHot = 1;
+  string labelContent = 2;
+  string labelId = 3;
+}

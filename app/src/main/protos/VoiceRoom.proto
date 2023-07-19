@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+package tieba;
+
+option java_package = "com.huanchengfly.tieba.post.api.models.protos";
+
+import "User.proto";
+
+message VoiceRoom {
+    int64 room_id = 2;
+    User author = 4;
+    repeated User talker = 5;
+    int64 joined_num = 6;
+    int64 talker_num = 7;
+    uint32 status = 8;
+    string room_name = 9;
+}

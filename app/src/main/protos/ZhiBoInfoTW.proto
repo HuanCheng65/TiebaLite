@@ -1,0 +1,37 @@
+syntax = "proto3";
+
+package tieba;
+
+option java_package = "com.huanchengfly.tieba.post.api.models.protos";
+
+import "HotTWThreadInfo.proto";
+import "LabelInfo.proto";
+import "LiveCoverStatus.proto";
+import "NoticeInfo.proto";
+import "User.proto";
+import "Zan.proto";
+
+message ZhiBoInfoTW {
+  uint64 thread_id = 1;
+  string livecover_src = 2;
+  string livecover_src_bsize = 3;
+  uint32 post_num = 4;
+  uint32 reply_num = 5;
+  Zan zan = 6;
+  string forum_name = 7;
+  uint64 forum_id = 8;
+  uint64 last_modified_time = 9;
+  string title = 10;
+  string content = 11;
+  User user = 12;
+  HotTWThreadInfo hot_tw_info = 13;
+  repeated LabelInfo labelInfo = 14;
+  string livecover_src_status = 15;
+  NoticeInfo notice_info = 16;
+  int32 is_headline = 17;
+  LiveCoverStatus livecover_status = 18;
+  uint32 freq_num = 19;
+  uint32 copythread_remind = 20;
+  uint32 is_copytwzhibo = 21;
+  string field_ex = 22;
+}

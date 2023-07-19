@@ -1,0 +1,77 @@
+syntax = "proto3";
+
+package tieba.addPost;
+
+option java_package = "com.huanchengfly.tieba.post.api.models.protos.addPost";
+
+import "CommonRequest.proto";
+
+message AddPostRequestData {
+    CommonRequest common = 1;
+    string authsid = 2;
+    string sig = 3;
+    string tbs = 4;
+    string video_other = 5;
+    string anonymous = 6;
+    string can_no_forum = 7;
+    string is_feedback = 8;
+    string takephoto_num = 9;
+    string entrance_type = 10;
+    string voice_md5 = 11;
+    string during_time = 12;
+    string vcode = 13;
+    string vcode_md5 = 14;
+    string vcode_type = 15;
+    string vcode_tag = 16;
+    string topic_id = 17;
+  string new_vcode = 18;
+  string content = 19;
+  optional string reply_uid = 20;
+  string meme_text = 21;
+  string meme_cont_sign = 22;
+  string item_id = 23;
+  string comment_head = 24;
+  string works_tag = 25;
+  string fid = 26;
+  string transform_forums = 27;
+  optional string v_fid = 28;
+  optional string v_fname = 29;
+  string kw = 30;
+  string is_barrage = 31;
+  string barrage_time = 32;
+  string st_param = 33;
+  string ptype = 34;
+  string ori_ugc_nid = 35;
+  string ori_ugc_vid = 36;
+  string ori_ugc_tid = 37;
+  string ori_ugc_type = 38;
+  string is_location = 39;
+    string lat = 40;
+    string lng = 41;
+    string name = 42;
+    string sn = 43;
+    string from_fourm_id = 44;
+  string tid = 45;
+  optional string quote_id = 46;
+  string is_twzhibo_thread = 47;
+  string floor_num = 48;
+  optional string repostid = 49;
+  string sub_post_id = 50;
+    string is_ad = 51;
+    string is_addition = 52;
+    string is_giftpost = 53;
+    string st_type = 54;
+    string post_from = 55;
+    string real_lat = 56;
+    string real_lng = 57;
+    string name_show = 58;
+    string is_works = 59;
+    string is_pictxt = 60;
+    string is_story = 61;
+    string jid = 62;
+  string jfrom = 63;
+  optional int32 show_custom_figure = 64;
+  string from_category_id = 65;
+  string to_category_id = 66;
+  optional int32 is_show_bless = 67;
+}

@@ -22,6 +22,7 @@ message CommonRequest {
   string _os_version = 25;
   string brand = 26;
   string lego_lib_version = 28;
+  optional string applist = 29;
   optional string stoken = 30;
   optional string z_id = 31;
   string cuid_galaxy2 = 32;
@@ -43,9 +44,10 @@ message CommonRequest {
   string event_day = 53;
   string android_id = 54;
   int32 cmode = 55;
-  string start_scheme = 56;
+  optional string start_scheme = 56;
   int32 start_type = 57;
   optional string extra = 61;
   string user_agent = 62;
   int32 personalized_rec_switch = 63;
+  string device_score = 70;
 }

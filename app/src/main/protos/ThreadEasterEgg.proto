@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+package tieba;
+
+option java_package = "com.huanchengfly.tieba.post.api.models.protos";
+
+import "ShareInfo.proto";
+
+message ThreadEasterEgg {
+  string activity_id = 1;
+  string video_url = 2;
+  string pop_text = 3;
+  string pop_imageurl = 4;
+  ShareInfo share_info = 5;
+}

@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+package tieba;
+
+option java_package = "com.huanchengfly.tieba.post.api.models.protos";
+
+message ShareInfo {
+  string title = 1;
+  string content = 2;
+  string url = 3;
+  string imageurl = 4;
+}

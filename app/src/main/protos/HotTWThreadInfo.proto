@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+package tieba;
+
+option java_package = "com.huanchengfly.tieba.post.api.models.protos";
+
+import "User.proto";
+
+message HotTWThreadInfo {
+  repeated User user_list = 1;
+  uint32 fans_count = 2;
+}

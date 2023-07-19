@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+package tieba;
+
+option java_package = "com.huanchengfly.tieba.post.api.models.protos";
+
+message UserSessionInfo {
+  string bduss = 1;
+  string mobile = 2;
+  string email = 3;
+}

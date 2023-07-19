@@ -1,0 +1,14 @@
+syntax = "proto3";
+
+package tieba;
+
+option java_package = "com.huanchengfly.tieba.post.api.models.protos";
+
+import "VcodeExtra.proto";
+
+message VcodeInfo {
+  string vcode_md5 = 1;
+  string vcode_pic_url = 2;
+  string vcode_type = 3;
+  VcodeExtra vcode_extra = 4;
+}

@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+package tieba;
+
+option java_package = "com.huanchengfly.tieba.post.api.models.protos";
+
+import "UserSessionInfo.proto";
+
+message AccessState {
+    string type = 1;
+    string token = 2;
+    UserSessionInfo userinfo = 3;
+}
