@@ -265,6 +265,12 @@ private fun BottomBarPlaceholder() {
         modifier = Modifier
             .height(IntrinsicSize.Min)
             .background(ExtendedTheme.colors.bottomBar)
+            // 拦截点击事件
+            .clickable(
+                interactionSource = remember { MutableInteractionSource() },
+                indication = null,
+                onClick = {}
+            )
             .padding(horizontal = 16.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(8.dp)
@@ -1118,7 +1124,13 @@ fun ThreadPage(
                     },
                     hasAgreed = hasThreadAgreed,
                     agreeNum = threadAgreeNum,
-                    modifier = Modifier.navigationBarsPadding()
+                    modifier = Modifier
+                        .navigationBarsPadding()
+                        .clickable(
+                            interactionSource = remember { MutableInteractionSource() },
+                            indication = null,
+                            onClick = {}
+                        )
                 )
             }
         }
@@ -1184,8 +1196,8 @@ private fun BottomBar(
         modifier = Modifier
             .height(IntrinsicSize.Min)
             .background(ExtendedTheme.colors.bottomBar)
-            .padding(horizontal = 16.dp)
-            .then(modifier),
+            .then(modifier)
+            .padding(horizontal = 16.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(8.dp)
     ) {
