@@ -97,9 +97,9 @@ class TranslucentThemeActivity : BaseActivity(), View.OnClickListener, OnSeekBar
     @BindView(R.id.color_theme)
     lateinit var colorTheme: ViewGroup
 
-    private val selectImageLauncher = registerPickMediasLauncher {
-        if (it.isNotEmpty()) {
-            val sourceUri = it[0]
+    private val selectImageLauncher = registerPickMediasLauncher { (_, uris) ->
+        if (uris.isNotEmpty()) {
+            val sourceUri = uris[0]
             launchUCrop(sourceUri)
         }
     }

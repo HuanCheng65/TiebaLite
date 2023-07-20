@@ -69,9 +69,9 @@ class EditProfileActivity : BaseActivity() {
         }
 
     private val pickMediasLauncher =
-        registerPickMediasLauncher {
-            if (it.isNotEmpty()) {
-                val sourceUri = it[0]
+        registerPickMediasLauncher { (_, uris) ->
+            if (uris.isNotEmpty()) {
+                val sourceUri = uris[0]
                 Glide.with(this)
                     .asFile()
                     .load(sourceUri)

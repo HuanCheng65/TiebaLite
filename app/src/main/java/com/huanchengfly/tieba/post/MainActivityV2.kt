@@ -54,6 +54,9 @@ import com.google.accompanist.navigation.material.ModalBottomSheetLayout
 import com.google.accompanist.systemuicontroller.SystemUiController
 import com.huanchengfly.tieba.post.api.retrofit.exception.getErrorMessage
 import com.huanchengfly.tieba.post.arch.BaseComposeActivity
+import com.huanchengfly.tieba.post.arch.GlobalEvent
+import com.huanchengfly.tieba.post.arch.emitGlobalEvent
+import com.huanchengfly.tieba.post.arch.onGlobalEvent
 import com.huanchengfly.tieba.post.services.NotifyJobService
 import com.huanchengfly.tieba.post.ui.common.theme.compose.ExtendedTheme
 import com.huanchengfly.tieba.post.ui.page.NavGraphs
@@ -69,9 +72,11 @@ import com.huanchengfly.tieba.post.utils.AccountUtil
 import com.huanchengfly.tieba.post.utils.ClientUtils
 import com.huanchengfly.tieba.post.utils.JobServiceUtil
 import com.huanchengfly.tieba.post.utils.PermissionUtils
+import com.huanchengfly.tieba.post.utils.PickMediasRequest
 import com.huanchengfly.tieba.post.utils.TiebaUtil
 import com.huanchengfly.tieba.post.utils.isIgnoringBatteryOptimizations
 import com.huanchengfly.tieba.post.utils.newIntentFilter
+import com.huanchengfly.tieba.post.utils.registerPickMediasLauncher
 import com.huanchengfly.tieba.post.utils.requestIgnoreBatteryOptimizations
 import com.huanchengfly.tieba.post.utils.requestPermission
 import com.ramcosta.composedestinations.DestinationsNavHost
@@ -123,6 +128,11 @@ class MainActivityV2 : BaseComposeActivity() {
 
     private val notificationCountFlow: MutableSharedFlow<Int> =
         MutableSharedFlow(replay = 1, onBufferOverflow = BufferOverflow.DROP_OLDEST)
+
+    private val pickMediasLauncher =
+        registerPickMediasLauncher {
+            emitGlobalEvent(GlobalEvent.SelectedImages(it.id, it.uris))
+        }
 
     private val devicePostureFlow: StateFlow<DevicePosture> by lazy {
         WindowInfoTracker.getOrCreate(this)
@@ -250,6 +260,11 @@ class MainActivityV2 : BaseComposeActivity() {
             if (appPreferences.autoSign && !isIgnoringBatteryOptimizations() && !appPreferences.ignoreBatteryOptimizationsDialog) {
                 okSignAlertDialogState.show()
             }
+        }
+        onGlobalEvent<GlobalEvent.StartSelectImages> {
+            pickMediasLauncher.launch(
+                PickMediasRequest(it.id, it.maxCount, it.mediaType)
+            )
         }
         CompositionLocalProvider(
             LocalNotificationCountFlow provides notificationCountFlow,

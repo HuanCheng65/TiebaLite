@@ -99,9 +99,9 @@ class ReplyActivity : BaseActivity(), View.OnClickListener,
         get() = false
 
     @JvmField
-    val pickMediasLauncher = registerPickMediasLauncher {
+    val pickMediasLauncher = registerPickMediasLauncher { (_, uris) ->
         val photoInfoBeans = insertPhotoAdapter.getFileList().toMutableList()
-        for (uri in it) {
+        for (uri in uris) {
             photoInfoBeans.add(PhotoInfoBean(this, uri))
         }
         insertPhotoAdapter.setFileList(photoInfoBeans)

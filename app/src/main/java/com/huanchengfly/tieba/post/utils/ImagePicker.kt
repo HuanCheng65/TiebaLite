@@ -1,5 +1,6 @@
 package com.huanchengfly.tieba.post.utils
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
@@ -16,9 +17,9 @@ import com.zhihu.matisse.MimeType
 import com.zhihu.matisse.engine.impl.GlideEngine
 import com.zhihu.matisse.ui.MatisseActivity
 
-fun AppCompatActivity.registerPickMediasLauncher(callback: (List<Uri>) -> Unit): ActivityResultLauncher<PickMediasRequest> {
+fun AppCompatActivity.registerPickMediasLauncher(callback: (PickMediasResult) -> Unit): ActivityResultLauncher<PickMediasRequest> {
     return registerForActivityResult(
-        PickMediasContract()
+        PickMediasContract
     ) {
         callback(it)
     }
@@ -55,15 +56,17 @@ private fun Intent.getClipDataUris(): List<Uri> {
     return ArrayList(resultSet)
 }
 
+@SuppressLint("NewApi")
 private fun getMaxItems() = if (isPhotoPickerAvailable()) {
     MediaStore.getPickImagesMaxLimit()
 } else {
     Integer.MAX_VALUE
 }
 
-class PickMediasRequest(
-    var maxItems: Int = 1,
-    var mediaType: MediaType = ImageAndVideo
+data class PickMediasRequest(
+    val id: String = "",
+    val maxItems: Int = 1,
+    val mediaType: MediaType = ImageAndVideo
 ) {
     sealed interface MediaType
 
@@ -73,7 +76,7 @@ class PickMediasRequest(
 
     object ImageAndVideo : MediaType
 
-    class SingleMimeType(val mimeType: String) : MediaType
+    data class SingleMimeType(val mimeType: String) : MediaType
 
     companion object {
         internal fun getMimeType(input: MediaType): String? {
@@ -87,8 +90,19 @@ class PickMediasRequest(
     }
 }
 
-class PickMediasContract : ActivityResultContract<PickMediasRequest, List<Uri>>() {
+data class PickMediasResult(
+    val id: String,
+    val uris: List<Uri>
+)
+
+object PickMediasContract : ActivityResultContract<PickMediasRequest, PickMediasResult>() {
+    private var curRequestId: String? = null
+
+    val hasCurrentRequest: Boolean
+        get() = curRequestId != null
+
     override fun createIntent(context: Context, input: PickMediasRequest): Intent {
+        curRequestId = input.id
         if (isPhotoPickerAvailable()) {
             return Intent(MediaStore.ACTION_PICK_IMAGES).apply {
                 type = PickMediasRequest.getMimeType(input.mediaType)
@@ -112,13 +126,15 @@ class PickMediasContract : ActivityResultContract<PickMediasRequest, List<Uri>>(
         return Intent(context, MatisseActivity::class.java)
     }
 
-    override fun parseResult(resultCode: Int, intent: Intent?): List<Uri> {
+    override fun parseResult(resultCode: Int, intent: Intent?): PickMediasResult {
+        val id = curRequestId + ""
+        curRequestId = null
         if (resultCode != Activity.RESULT_OK || intent == null) {
-            return emptyList()
+            return PickMediasResult(id, emptyList())
         }
         if (isPhotoPickerAvailable()) {
-            return intent.getClipDataUris()
+            return PickMediasResult(id, intent.getClipDataUris())
         }
-        return Matisse.obtainResult(intent)
+        return PickMediasResult(id, Matisse.obtainResult(intent))
     }
 }

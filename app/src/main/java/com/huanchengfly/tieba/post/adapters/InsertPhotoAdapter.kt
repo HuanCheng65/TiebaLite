@@ -70,10 +70,14 @@ class InsertPhotoAdapter(private val mContext: Context) : RecyclerView.Adapter<M
                 holder.setItemOnClickListener {
                     if (mContext is AppCompatActivity && mContext is PickMediasLauncherProvider) {
                         askPermission {
-                            mContext.getPickMediasLauncher().launch(PickMediasRequest().apply {
-                                maxItems = 10 - fileList.size
-                                mediaType = PickMediasRequest.ImageOnly
-                            })
+                            mContext.getPickMediasLauncher()
+                                .launch(
+                                    PickMediasRequest(
+                                        "",
+                                        10 - fileList.size,
+                                        mediaType = PickMediasRequest.ImageOnly
+                                    )
+                                )
                         }
                     }
                 }

@@ -1,35 +1,60 @@
 package com.huanchengfly.tieba.post.arch
 
+import android.net.Uri
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.rememberCoroutineScope
+import com.huanchengfly.tieba.post.utils.PickMediasRequest
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.cancellable
 import kotlinx.coroutines.flow.filterIsInstance
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 
 sealed interface GlobalEvent {
     object AccountSwitched : GlobalEvent
+
+    data class StartSelectImages(
+        val id: String,
+        val maxCount: Int,
+        val mediaType: PickMediasRequest.MediaType
+    ) : GlobalEvent
+
+    data class SelectedImages(
+        val id: String,
+        val images: List<Uri>
+    ) : GlobalEvent
 }
 
-private val mutableGlobalEventFlow by lazy(mode = LazyThreadSafetyMode.SYNCHRONIZED) { MutableSharedFlow<GlobalEvent>() }
+private val globalEventChannel: Channel<GlobalEvent> = Channel()
 
-val GlobalEventFlow by lazy { mutableGlobalEventFlow }
+val GlobalEventFlow: Flow<GlobalEvent>
+    get() = globalEventChannel.receiveAsFlow()
 
 fun emitGlobalEvent(event: GlobalEvent) {
-    mutableGlobalEventFlow.tryEmit(event)
+    globalEventChannel.trySend(event)
 }
 
-inline fun <reified Event : GlobalEvent> CoroutineScope.onGlobalEvent(
+@Composable
+inline fun <reified Event : GlobalEvent> onGlobalEvent(
+    coroutineScope: CoroutineScope = rememberCoroutineScope(),
     noinline listener: suspend (Event) -> Unit
-): Job {
-    return launch {
-        GlobalEventFlow
-            .filterIsInstance<Event>()
-            .cancellable()
-            .collect {
-                launch {
-                    listener(it)
+) {
+    DisposableEffect(listener) {
+        val job = coroutineScope.launch {
+            GlobalEventFlow
+                .filterIsInstance<Event>()
+                .cancellable()
+                .collect {
+                    launch {
+                        listener(it)
+                    }
                 }
-            }
+        }
+        onDispose {
+            job.cancel()
+        }
     }
 }
