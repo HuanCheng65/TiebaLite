@@ -8,11 +8,13 @@ import com.huanchengfly.tieba.post.api.models.protos.frsPage.ForumInfo
 import com.huanchengfly.tieba.post.api.retrofit.exception.getErrorCode
 import com.huanchengfly.tieba.post.api.retrofit.exception.getErrorMessage
 import com.huanchengfly.tieba.post.arch.BaseViewModel
+import com.huanchengfly.tieba.post.arch.ImmutableHolder
 import com.huanchengfly.tieba.post.arch.PartialChange
 import com.huanchengfly.tieba.post.arch.PartialChangeProducer
 import com.huanchengfly.tieba.post.arch.UiEvent
 import com.huanchengfly.tieba.post.arch.UiIntent
 import com.huanchengfly.tieba.post.arch.UiState
+import com.huanchengfly.tieba.post.arch.wrapImmutable
 import com.huanchengfly.tieba.post.repository.FrsPageRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -20,6 +22,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.filterIsInstance
 import kotlinx.coroutines.flow.flatMapConcat
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.merge
 import kotlinx.coroutines.flow.onStart
@@ -74,7 +77,9 @@ class ForumViewModel @Inject constructor() :
                 intentFlow.filterIsInstance<ForumUiIntent.Like>()
                     .flatMapConcat { it.produceLoadPartialChange() },
                 intentFlow.filterIsInstance<ForumUiIntent.Unlike>()
-                    .flatMapConcat { it.produceLoadPartialChange() }
+                    .flatMapConcat { it.produceLoadPartialChange() },
+                intentFlow.filterIsInstance<ForumUiIntent.ToggleShowHeader>()
+                    .flatMapConcat { it.produceLoadPartialChange() },
             )
 
         private fun ForumUiIntent.Load.produceLoadPartialChange() =
@@ -127,6 +132,9 @@ class ForumViewModel @Inject constructor() :
                     ForumPartialChange.Unlike.Success
                 }
                 .catch { emit(ForumPartialChange.Unlike.Failure(it)) }
+
+        private fun ForumUiIntent.ToggleShowHeader.produceLoadPartialChange() =
+            flowOf(ForumPartialChange.ToggleShowHeader(showHeader))
     }
 }
 
@@ -153,13 +161,23 @@ sealed interface ForumUiIntent : UiIntent {
         val forumName: String,
         val tbs: String
     ) : ForumUiIntent
+
+    data class ToggleShowHeader(
+        val showHeader: Boolean
+    ) : ForumUiIntent
 }
 
 sealed interface ForumPartialChange : PartialChange<ForumUiState> {
     sealed class Load : ForumPartialChange {
         override fun reduce(oldState: ForumUiState): ForumUiState = when (this) {
             Start -> oldState.copy(isLoading = true)
-            is Success -> oldState.copy(isLoading = true, isError = false, forum = forum, tbs = tbs)
+            is Success -> oldState.copy(
+                isLoading = true,
+                isError = false,
+                forum = forum.wrapImmutable(),
+                tbs = tbs
+            )
+
             is Failure -> oldState.copy(isLoading = false, isError = true)
         }
 
@@ -179,19 +197,21 @@ sealed interface ForumPartialChange : PartialChange<ForumUiState> {
         override fun reduce(oldState: ForumUiState): ForumUiState = when (this) {
             is Failure -> oldState
             is Success -> oldState.copy(
-                forum = oldState.forum?.copy(
-                    user_level = level,
-                    level_name = levelName,
-                    cur_score = oldState.forum.cur_score + signBonusPoint,
-                    levelup_score = levelUpScore,
-                    sign_in_info = oldState.forum.sign_in_info?.copy(
-                        user_info = oldState.forum.sign_in_info.user_info?.copy(
-                            is_sign_in = isSignIn,
-                            user_sign_rank = userSignRank,
-                            cont_sign_num = contSignNum
+                forum = oldState.forum?.getImmutable {
+                    copy(
+                        user_level = level,
+                        level_name = levelName,
+                        cur_score = oldState.forum.get { cur_score } + signBonusPoint,
+                        levelup_score = levelUpScore,
+                        sign_in_info = oldState.forum.get { sign_in_info }?.copy(
+                            user_info = oldState.forum.get { sign_in_info }?.user_info?.copy(
+                                is_sign_in = isSignIn,
+                                user_sign_rank = userSignRank,
+                                cont_sign_num = contSignNum
+                            )
                         )
                     )
-                )
+                }
             )
         }
 
@@ -214,14 +234,16 @@ sealed interface ForumPartialChange : PartialChange<ForumUiState> {
         override fun reduce(oldState: ForumUiState): ForumUiState = when (this) {
             is Failure -> oldState
             is Success -> oldState.copy(
-                forum = oldState.forum?.copy(
-                    is_like = 1,
-                    cur_score = data.info.curScore.toInt(),
-                    levelup_score = data.info.levelUpScore.toInt(),
-                    user_level = data.info.levelId.toInt(),
-                    level_name = data.info.levelName,
-                    member_num = data.info.memberSum.toInt()
-                )
+                forum = oldState.forum?.getImmutable {
+                    copy(
+                        is_like = 1,
+                        cur_score = data.info.curScore.toInt(),
+                        levelup_score = data.info.levelUpScore.toInt(),
+                        user_level = data.info.levelId.toInt(),
+                        level_name = data.info.levelName,
+                        member_num = data.info.memberSum.toInt()
+                    )
+                }
             )
         }
 
@@ -234,9 +256,7 @@ sealed interface ForumPartialChange : PartialChange<ForumUiState> {
         override fun reduce(oldState: ForumUiState): ForumUiState = when (this) {
             is Failure -> oldState
             is Success -> oldState.copy(
-                forum = oldState.forum?.copy(
-                    is_like = 0,
-                )
+                forum = oldState.forum?.getImmutable { copy(is_like = 0) }
             )
         }
 
@@ -244,13 +264,19 @@ sealed interface ForumPartialChange : PartialChange<ForumUiState> {
 
         data class Failure(val error: Throwable) : Unlike()
     }
+
+    data class ToggleShowHeader(val showHeader: Boolean) : ForumPartialChange {
+        override fun reduce(oldState: ForumUiState): ForumUiState =
+            oldState.copy(showForumHeader = showHeader)
+    }
 }
 
 data class ForumUiState(
     val isLoading: Boolean = false,
     val isError: Boolean = false,
-    val forum: ForumInfo? = null,
-    val tbs: String? = null
+    val forum: ImmutableHolder<ForumInfo>? = null,
+    val tbs: String? = null,
+    val showForumHeader: Boolean = true
 ) : UiState
 
 sealed interface ForumUiEvent : UiEvent {

@@ -123,8 +123,6 @@ dependencies {
     implementation "com.airbnb.android:lottie:$lottie_version"
     implementation "com.airbnb.android:lottie-compose:$lottie_version"
 
-    implementation "com.github.germainkevinbusiness:CollapsingTopBarCompose:1.1.7"
-
     implementation 'org.jetbrains.kotlinx:kotlinx-serialization-json:1.5.1'
     implementation 'org.jetbrains.kotlinx:kotlinx-collections-immutable:0.3.5'
 //    implementation 'androidx.compose.material3:material3:1.0.0'
