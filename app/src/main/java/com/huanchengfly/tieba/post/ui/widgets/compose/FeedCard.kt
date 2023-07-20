@@ -62,6 +62,7 @@ import com.huanchengfly.tieba.post.R
 import com.huanchengfly.tieba.post.activities.UserActivity
 import com.huanchengfly.tieba.post.api.abstractText
 import com.huanchengfly.tieba.post.api.models.protos.Media
+import com.huanchengfly.tieba.post.api.models.protos.SimpleForum
 import com.huanchengfly.tieba.post.api.models.protos.ThreadInfo
 import com.huanchengfly.tieba.post.api.models.protos.User
 import com.huanchengfly.tieba.post.arch.ImmutableHolder
@@ -383,7 +384,7 @@ private fun ThreadMedia(
 @Composable
 private fun ThreadForumInfo(
     item: ImmutableHolder<ThreadInfo>,
-    onClick: () -> Unit
+    onClick: (SimpleForum) -> Unit
 ) {
     val hasForumInfo = remember(item) { item.isNotNull { forumInfo } }
     if (hasForumInfo) {
@@ -392,7 +393,7 @@ private fun ThreadForumInfo(
             ForumInfoChip(
                 imageUriProvider = { StringUtil.getAvatarUrl(forumInfo.get { avatar }) },
                 nameProvider = { forumInfo.get { name } },
-                onClick = onClick
+                onClick = { onClick(forumInfo.get()) }
             )
         }
     }
@@ -486,7 +487,8 @@ fun FeedCard(
     item: ImmutableHolder<ThreadInfo>,
     onClick: (ThreadInfo) -> Unit,
     onAgree: (ThreadInfo) -> Unit,
-    onClickForum: () -> Unit = {},
+    onReplyClick: (ThreadInfo) -> Unit = {},
+    onClickForum: (SimpleForum) -> Unit = {},
     dislikeAction: @Composable () -> Unit = {},
 ) {
     Card(
@@ -519,7 +521,7 @@ fun FeedCard(
             Row(modifier = Modifier.fillMaxWidth()) {
                 ThreadReplyBtn(
                     replyNum = item.get { replyNum },
-                    onClick = { onClick(item.get()) },
+                    onClick = { onReplyClick(item.get()) },
                     modifier = Modifier.weight(1f)
                 )
 

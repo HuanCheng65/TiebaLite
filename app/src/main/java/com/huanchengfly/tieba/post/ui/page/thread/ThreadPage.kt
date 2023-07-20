@@ -397,6 +397,7 @@ fun ThreadPage(
     from: String = "",
     extra: ThreadPageExtra = ThreadPageNoExtra,
     threadInfo: ThreadInfo? = null,
+    scrollToReply: Boolean = false,
     viewModel: ThreadViewModel = pageViewModel()
 ) {
     LazyLoad(loaded = viewModel.initialized) {
@@ -528,6 +529,8 @@ fun ThreadPage(
     val curForumId = remember(forumId, forum) {
         forumId ?: forum?.get { id }
     }
+    var waitLoadSuccessAndScrollToFirstReply by remember { mutableStateOf(scrollToReply) }
+
     val lazyListState = rememberLazyListState()
     val bottomSheetState = rememberModalBottomSheetState(
         initialValue = ModalBottomSheetValue.Hidden,
@@ -570,6 +573,12 @@ fun ThreadPage(
 
     viewModel.onEvent<ThreadUiEvent.ScrollToFirstReply> {
         lazyListState.animateScrollToItem(3)
+    }
+    viewModel.onEvent<ThreadUiEvent.LoadSuccess> {
+        if (it.page > 1 || waitLoadSuccessAndScrollToFirstReply) {
+            waitLoadSuccessAndScrollToFirstReply = false
+            lazyListState.animateScrollToItem(3)
+        }
     }
     viewModel.onEvent<ThreadUiEvent.AddFavoriteSuccess> {
         scaffoldState.snackbarHostState.showSnackbar(
@@ -1050,7 +1059,7 @@ fun ThreadPage(
                                                         )
                                                     )
                                                 }
-                                            }
+                                            },
                                         )
                                     }
                                     if (data.isEmpty()) {

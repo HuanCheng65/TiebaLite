@@ -74,7 +74,7 @@ class ThreadViewModel @Inject constructor() :
             )
 
             ThreadPartialChange.RemoveFavorite.Success -> ThreadUiEvent.RemoveFavoriteSuccess
-            is ThreadPartialChange.Load.Success -> if (partialChange.currentPage > 1) ThreadUiEvent.ScrollToFirstReply else null
+            is ThreadPartialChange.Load.Success -> ThreadUiEvent.LoadSuccess(partialChange.currentPage)
             else -> null
         }
     }
@@ -894,6 +894,10 @@ data class ThreadUiState(
 
 sealed interface ThreadUiEvent : UiEvent {
     object ScrollToFirstReply : ThreadUiEvent
+
+    data class LoadSuccess(
+        val page: Int
+    ) : ThreadUiEvent
 
     data class AddFavoriteSuccess(val floor: Int) : ThreadUiEvent
 

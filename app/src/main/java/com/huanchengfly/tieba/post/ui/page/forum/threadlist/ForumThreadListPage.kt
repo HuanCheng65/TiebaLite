@@ -136,6 +136,7 @@ private fun ThreadList(
     goodClassifyId: Int?,
     goodClassifyHoldersProvider: () -> List<ImmutableHolder<Classify>>,
     onItemClicked: (ThreadInfo) -> Unit,
+    onItemReplyClicked: (ThreadInfo) -> Unit,
     onAgree: (ThreadInfo) -> Unit,
     onClassifySelected: (Int) -> Unit
 ) {
@@ -219,12 +220,9 @@ private fun ThreadList(
                     }
                     FeedCard(
                         item = holder,
-                        onClick = {
-                            onItemClicked(item)
-                        },
-                        onAgree = {
-                            onAgree(item)
-                        },
+                        onClick = onItemClicked,
+                        onReplyClick = onItemReplyClicked,
+                        onAgree = onAgree,
                     )
                 }
             }
@@ -338,7 +336,17 @@ fun ForumThreadListPage(
                     navigator.navigate(
                         ThreadPageDestination(
                             it.threadId,
+                            forumId = it.forumId,
                             threadInfo = it
+                        )
+                    )
+                },
+                onItemReplyClicked = {
+                    navigator.navigate(
+                        ThreadPageDestination(
+                            it.threadId,
+                            forumId = it.forumId,
+                            scrollToReply = true
                         )
                     )
                 },

@@ -157,21 +157,30 @@ fun PersonalizedPage(
                 personalizedDataProvider = { threadPersonalizedData },
                 refreshPositionProvider = { refreshPosition },
                 hiddenThreadIdsProvider = { hiddenThreadIds },
-                onItemClick = { threadInfo ->
+                onItemClick = {
                     navigator.navigate(
                         ThreadPageDestination(
-                            threadInfo.id,
-                            threadInfo.forumId,
-                            threadInfo = threadInfo
+                            it.id,
+                            it.forumId,
+                            threadInfo = it
                         )
                     )
                 },
-                onAgree = { item ->
+                onItemReplyClick = {
+                    navigator.navigate(
+                        ThreadPageDestination(
+                            it.id,
+                            it.forumId,
+                            scrollToReply = true
+                        )
+                    )
+                },
+                onAgree = {
                     viewModel.send(
                         PersonalizedUiIntent.Agree(
-                            item.threadId,
-                            item.firstPostId,
-                            item.agree?.hasAgree ?: 0
+                            it.threadId,
+                            it.firstPostId,
+                            it.agree?.hasAgree ?: 0
                         )
                     )
                 },
@@ -232,6 +241,7 @@ private fun FeedList(
     refreshPositionProvider: () -> Int,
     hiddenThreadIdsProvider: () -> List<Long>,
     onItemClick: (ThreadInfo) -> Unit,
+    onItemReplyClick: (ThreadInfo) -> Unit,
     onAgree: (ThreadInfo) -> Unit,
     onDislike: (ThreadInfo, Long, List<ImmutableHolder<DislikeReason>>) -> Unit,
     onRefresh: () -> Unit,
@@ -274,14 +284,11 @@ private fun FeedList(
                 ) {
                     FeedCard(
                         item = item,
-                        onClick = {
-                            onItemClick(item.get())
-                        },
-                        onAgree = {
-                            onAgree(item.get())
-                        },
+                        onClick = onItemClick,
+                        onReplyClick = onItemReplyClick,
+                        onAgree = onAgree,
                         onClickForum = {
-                            onOpenForum(item.get { forumInfo?.name ?: "" })
+                            onOpenForum(it.name)
                         }
                     ) {
                         val personalized = threadPersonalizedData.getOrNull(index)

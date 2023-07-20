@@ -283,6 +283,14 @@ fun HotPage(
                                     )
                                 )
                             },
+                            onReplyClick = {
+                                navigator.navigate(
+                                    ThreadPageDestination(
+                                        threadId = it.id,
+                                        scrollToReply = true
+                                    )
+                                )
+                            },
                             onAgree = {
                                 viewModel.send(
                                     HotUiIntent.Agree(

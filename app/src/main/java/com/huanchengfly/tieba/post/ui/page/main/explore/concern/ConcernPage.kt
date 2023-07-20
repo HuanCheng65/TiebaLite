@@ -17,6 +17,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.huanchengfly.tieba.post.api.hasAgree
 import com.huanchengfly.tieba.post.arch.BaseComposeActivity
 import com.huanchengfly.tieba.post.arch.CommonUiEvent.ScrollToTop.bindScrollToTopEvent
 import com.huanchengfly.tieba.post.arch.collectPartialAsState
@@ -102,19 +103,27 @@ fun ConcernPage(
                                 onClick = {
                                     navigator.navigate(
                                         ThreadPageDestination(
-                                            item.threadList.threadId,
-                                            item.threadList.forumId,
-                                            threadInfo = item.threadList
+                                            it.threadId,
+                                            it.forumId,
+                                            threadInfo = it
                                         )
                                     )
-
+                                },
+                                onReplyClick = {
+                                    navigator.navigate(
+                                        ThreadPageDestination(
+                                            it.threadId,
+                                            it.forumId,
+                                            scrollToReply = true
+                                        )
+                                    )
                                 },
                                 onAgree = {
                                     viewModel.send(
                                         ConcernUiIntent.Agree(
-                                            item.threadList.threadId,
-                                            item.threadList.firstPostId,
-                                            item.threadList.agree?.hasAgree ?: 0
+                                            it.threadId,
+                                            it.firstPostId,
+                                            it.hasAgree
                                         )
                                     )
                                 },
