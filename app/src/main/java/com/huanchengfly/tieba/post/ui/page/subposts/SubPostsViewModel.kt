@@ -5,6 +5,7 @@ import com.huanchengfly.tieba.post.api.TiebaApi
 import com.huanchengfly.tieba.post.api.contentRenders
 import com.huanchengfly.tieba.post.api.models.AgreeBean
 import com.huanchengfly.tieba.post.api.models.protos.Post
+import com.huanchengfly.tieba.post.api.models.protos.SimpleForum
 import com.huanchengfly.tieba.post.api.models.protos.SubPostList
 import com.huanchengfly.tieba.post.api.models.protos.pbFloor.PbFloorResponse
 import com.huanchengfly.tieba.post.api.renders
@@ -65,8 +66,10 @@ class SubPostsViewModel @Inject constructor() :
                 .map<PbFloorResponse, SubPostsPartialChange.Load> { response ->
                     val post = checkNotNull(response.data_?.post)
                     val page = checkNotNull(response.data_?.page)
+                    val forum = checkNotNull(response.data_?.forum)
                     val subPosts = response.data_?.subpost_list.orEmpty()
                     SubPostsPartialChange.Load.Success(
+                        forum.wrapImmutable(),
                         post.wrapImmutable(),
                         post.contentRenders,
                         subPosts.wrapImmutable(),
@@ -152,6 +155,7 @@ sealed interface SubPostsPartialChange : PartialChange<SubPostsUiState> {
                     hasMore = hasMore,
                     currentPage = currentPage,
                     totalPage = totalPage,
+                    forum = forum,
                     post = post,
                     postContentRenders = postContentRenders,
                     subPosts = subPosts,
@@ -165,6 +169,7 @@ sealed interface SubPostsPartialChange : PartialChange<SubPostsUiState> {
 
         object Start : Load()
         data class Success(
+            val forum: ImmutableHolder<SimpleForum>,
             val post: ImmutableHolder<Post>,
             val postContentRenders: ImmutableList<PbContentRender>,
             val subPosts: ImmutableList<ImmutableHolder<SubPostList>>,
@@ -283,6 +288,7 @@ data class SubPostsUiState(
     val currentPage: Int = 1,
     val totalPage: Int = 1,
 
+    val forum: ImmutableHolder<SimpleForum>? = null,
     val post: ImmutableHolder<Post>? = null,
     val postContentRenders: ImmutableList<PbContentRender> = persistentListOf(),
     val subPosts: ImmutableList<ImmutableHolder<SubPostList>> = persistentListOf(),

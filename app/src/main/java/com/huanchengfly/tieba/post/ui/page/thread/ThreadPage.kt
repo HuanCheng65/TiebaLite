@@ -115,6 +115,7 @@ import com.huanchengfly.tieba.post.ui.common.PbContentText
 import com.huanchengfly.tieba.post.ui.common.theme.compose.ExtendedTheme
 import com.huanchengfly.tieba.post.ui.page.ProvideNavigator
 import com.huanchengfly.tieba.post.ui.page.destinations.ForumPageDestination
+import com.huanchengfly.tieba.post.ui.page.destinations.ReplyPageDestination
 import com.huanchengfly.tieba.post.ui.page.destinations.SubPostsSheetPageDestination
 import com.huanchengfly.tieba.post.ui.page.destinations.ThreadPageDestination
 import com.huanchengfly.tieba.post.ui.widgets.compose.Avatar
@@ -1047,6 +1048,20 @@ fun ThreadPage(
                                                     )
                                                 )
                                             },
+                                            onClickContent = {
+                                                navigator.navigate(
+                                                    ReplyPageDestination(
+                                                        forumId = curForumId ?: 0,
+                                                        forumName = forum?.get { name } ?: "",
+                                                        threadId = threadId,
+                                                        postId = it.id,
+                                                        replyUserId = it.author?.id ?: it.author_id,
+                                                        replyUserName = it.author?.nameShow.takeIf { name -> !name.isNullOrEmpty() }
+                                                            ?: it.author?.name,
+                                                        replyUserPortrait = it.author?.portrait,
+                                                    )
+                                                )
+                                            },
                                             onOpenSubPosts = {
                                                 if (curForumId != null) {
                                                     navigator.navigate(
@@ -1111,7 +1126,15 @@ fun ThreadPage(
 
                 BottomBar(
                     user = user,
-                    onClickReply = { /*TODO*/ },
+                    onClickReply = {
+                        navigator.navigate(
+                            ReplyPageDestination(
+                                forumId = curForumId ?: 0,
+                                forumName = forum?.get { name }.orEmpty(),
+                                threadId = threadId,
+                            )
+                        )
+                    },
                     onAgree = {
                         val firstPostId =
                             thread?.get { firstPostId }.takeIf { it != 0L } ?: firstPost?.get { id }
@@ -1271,7 +1294,7 @@ fun PostCard(
     immersiveMode: Boolean = false,
     showSubPosts: Boolean = true,
     onAgree: () -> Unit = {},
-    onReply: () -> Unit = {},
+    onClickContent: (Post) -> Unit = {},
     onOpenSubPosts: (subPostId: Long) -> Unit = {},
 ) {
     val context = LocalContext.current
@@ -1384,6 +1407,13 @@ fun PostCard(
                 Column(
                     verticalArrangement = Arrangement.spacedBy(8.dp),
                     modifier = paddingModifier
+                        .fillMaxWidth()
+                        .clickable(
+                            interactionSource = remember { MutableInteractionSource() },
+                            indication = null
+                        ) {
+                            onClickContent(post)
+                        }
                 ) {
                     if (showTitle) {
                         Text(
@@ -1404,7 +1434,8 @@ fun PostCard(
                         .then(paddingModifier)
                         .clip(RoundedCornerShape(6.dp))
                         .background(ExtendedTheme.colors.floorCard)
-                        .padding(vertical = 12.dp)
+                        .padding(vertical = 12.dp),
+                    verticalArrangement = Arrangement.spacedBy(2.dp)
                 ) {
                     subPostContents.forEachIndexed { index, text ->
                         PbContentText(
@@ -1435,7 +1466,7 @@ fun PostCard(
                             color = ExtendedTheme.colors.primary,
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .padding(top = 4.dp)
+                                .padding(top = 2.dp)
                                 .clickable {
                                     onOpenSubPosts(0)
                                 }
@@ -1459,7 +1490,7 @@ fun UserNameText(
     val text = buildAnnotatedString {
         append(userName)
         append(" ")
-        appendInlineContent("Level", alternateText = "$userLevel")
+        if (userLevel > 0) appendInlineContent("Level", alternateText = "$userLevel")
         if (!bawuType.isNullOrBlank()) {
             append(" ")
             appendInlineContent("Bawu", alternateText = bawuType)

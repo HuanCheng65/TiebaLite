@@ -573,7 +573,7 @@ class ReplyActivity : BaseActivity(), View.OnClickListener,
                             if (loadingDialog != null) loadingDialog!!.cancel()
                             Toast.makeText(
                                 this@ReplyActivity,
-                                R.string.toast_reply_success,
+                                R.string.toast_reply_success_default,
                                 Toast.LENGTH_SHORT
                             ).show()
                             sendBroadcast(

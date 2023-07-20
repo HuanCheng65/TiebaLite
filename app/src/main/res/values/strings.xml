@@ -58,7 +58,8 @@
     <string name="tip_verify_code">请输入图中的验证码</string>
     <string name="title_verify_code">请输入验证码</string>
     <string name="title_submit">提交</string>
-    <string name="toast_reply_success">回贴成功</string>
+    <string name="toast_reply_success_default">回贴成功</string>
+    <string name="toast_reply_success">回贴成功，经验 +%s</string>
     <string name="toast_verify_code_empty">不能为空</string>
     <string name="title_black_list">黑名单</string>
     <string name="title_input">请输入</string>

@@ -169,7 +169,7 @@ dependencies {
     implementation 'androidx.compose.material:material-icons-core'
     // Optional - Add full set of material icons
     implementation 'androidx.compose.material:material-icons-extended'
-
+    implementation 'androidx.compose.ui:ui-util'
 
     // Android Studio Preview support
     implementation 'androidx.compose.ui:ui-tooling-preview'
