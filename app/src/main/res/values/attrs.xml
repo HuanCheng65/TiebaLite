@@ -150,6 +150,7 @@
     </declare-styleable>
 
     <declare-styleable name="TintUndoableEditText">
+        <attr name="cursorColor" format="color" />
         <attr name="hintTextColor" format="color" />
         <attr name="textColor" />
     </declare-styleable>
