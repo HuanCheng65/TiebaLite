@@ -504,11 +504,8 @@ fun ThreadPage(
         initial = false
     )
 
-    val showFirstPostContent by remember {
-        derivedStateOf { firstPostContentRenders.isNotEmpty() && author != null }
-    }
     val isEmpty by remember {
-        derivedStateOf { data.isEmpty() && !showFirstPostContent }
+        derivedStateOf { data.isEmpty() && firstPost == null }
     }
     val isCollected = remember(thread) {
         thread?.get { collectStatus != 0 } == true
@@ -890,7 +887,7 @@ fun ThreadPage(
                                     modifier = Modifier.fillMaxWidth()
                                 ) {
                                     item(key = "FirstPost") {
-                                        if (showFirstPostContent && firstPost != null) {
+                                        if (firstPost != null) {
                                             Column {
                                                 PostCard(
                                                     postHolder = firstPost!!,

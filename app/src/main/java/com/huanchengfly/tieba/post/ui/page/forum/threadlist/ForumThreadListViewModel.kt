@@ -1,11 +1,12 @@
 package com.huanchengfly.tieba.post.ui.page.forum.threadlist
 
 import androidx.compose.runtime.Stable
-import com.huanchengfly.tieba.post.App
 import com.huanchengfly.tieba.post.api.TiebaApi
 import com.huanchengfly.tieba.post.api.models.AgreeBean
 import com.huanchengfly.tieba.post.api.models.protos.ThreadInfo
 import com.huanchengfly.tieba.post.api.models.protos.frsPage.Classify
+import com.huanchengfly.tieba.post.api.models.protos.frsPage.FrsPageResponse
+import com.huanchengfly.tieba.post.api.retrofit.exception.TiebaUnknownException
 import com.huanchengfly.tieba.post.api.retrofit.exception.getErrorCode
 import com.huanchengfly.tieba.post.api.retrofit.exception.getErrorMessage
 import com.huanchengfly.tieba.post.api.updateAgreeStatus
@@ -19,7 +20,6 @@ import com.huanchengfly.tieba.post.arch.UiIntent
 import com.huanchengfly.tieba.post.arch.UiState
 import com.huanchengfly.tieba.post.arch.wrapImmutable
 import com.huanchengfly.tieba.post.repository.FrsPageRepository
-import com.huanchengfly.tieba.post.utils.appPreferences
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
@@ -96,52 +96,36 @@ private class ForumThreadListPartialChangeProducer(val type: ForumThreadListType
             sortType.takeIf { type == ForumThreadListType.Latest } ?: -1,
             goodClassifyId.takeIf { type == ForumThreadListType.Good }
         )
-            .map { response ->
-                if (response.data_?.page == null) ForumThreadListPartialChange.FirstLoad.Failure(
-                    NullPointerException("未知错误")
+            .map<FrsPageResponse, ForumThreadListPartialChange.FirstLoad> { response ->
+                if (response.data_?.page == null) throw TiebaUnknownException
+                ForumThreadListPartialChange.FirstLoad.Success(
+                    response.data_.thread_list.wrapImmutable(),
+                    response.data_.thread_id_list,
+                    (response.data_.forum?.good_classify ?: emptyList()).wrapImmutable(),
+                    goodClassifyId.takeIf { type == ForumThreadListType.Good },
+                    response.data_.page.has_more == 1
                 )
-                else {
-                    val userList = response.data_.user_list
-                    val threadList = response.data_.thread_list.map { threadInfo ->
-                        threadInfo.copy(author = userList.find { it.id == threadInfo.authorId })
-                    }.filter { !App.INSTANCE.appPreferences.blockVideo || it.videoInfo == null }
-                    ForumThreadListPartialChange.FirstLoad.Success(
-                        threadList.wrapImmutable(),
-                        response.data_.thread_id_list,
-                        (response.data_.forum?.good_classify ?: emptyList()).wrapImmutable(),
-                        goodClassifyId.takeIf { type == ForumThreadListType.Good },
-                        response.data_.page.has_more == 1
-                    )
-                }
             }
             .onStart { emit(ForumThreadListPartialChange.FirstLoad.Start) }
             .catch { emit(ForumThreadListPartialChange.FirstLoad.Failure(it)) }
 
     private fun ForumThreadListUiIntent.Refresh.producePartialChange() =
-        TiebaApi.getInstance().frsPage(
+        FrsPageRepository.frsPage(
             forumName,
             1,
             1,
             sortType.takeIf { type == ForumThreadListType.Latest } ?: -1,
             goodClassifyId.takeIf { type == ForumThreadListType.Good }
         )
-            .map { response ->
-                if (response.data_?.page == null) ForumThreadListPartialChange.Refresh.Failure(
-                    NullPointerException("未知错误")
+            .map<FrsPageResponse, ForumThreadListPartialChange.Refresh> { response ->
+                if (response.data_?.page == null) throw TiebaUnknownException
+                ForumThreadListPartialChange.Refresh.Success(
+                    response.data_.thread_list.wrapImmutable(),
+                    response.data_.thread_id_list,
+                    (response.data_.forum?.good_classify ?: emptyList()).wrapImmutable(),
+                    goodClassifyId.takeIf { type == ForumThreadListType.Good },
+                    response.data_.page.has_more == 1
                 )
-                else {
-                    val userList = response.data_.user_list
-                    val threadList = response.data_.thread_list.map { threadInfo ->
-                        threadInfo.copy(author = userList.find { it.id == threadInfo.authorId })
-                    }
-                    ForumThreadListPartialChange.Refresh.Success(
-                        threadList.wrapImmutable(),
-                        response.data_.thread_id_list,
-                        (response.data_.forum?.good_classify ?: emptyList()).wrapImmutable(),
-                        goodClassifyId.takeIf { type == ForumThreadListType.Good },
-                        response.data_.page.has_more == 1
-                    )
-                }
             }
             .onStart { emit(ForumThreadListPartialChange.Refresh.Start) }
             .catch { emit(ForumThreadListPartialChange.Refresh.Failure(it)) }
@@ -149,53 +133,38 @@ private class ForumThreadListPartialChangeProducer(val type: ForumThreadListType
     private fun ForumThreadListUiIntent.LoadMore.producePartialChange(): Flow<ForumThreadListPartialChange.LoadMore> {
         val flow = if (threadListIds.isNotEmpty()) {
             val size = min(threadListIds.size, 30)
-            TiebaApi.getInstance().threadList(
+            FrsPageRepository.threadList(
                 forumId,
                 forumName,
                 currentPage,
                 sortType,
                 threadListIds.subList(0, size).joinToString(separator = ",") { "$it" }
             ).map { response ->
-                if (response.data_ == null) ForumThreadListPartialChange.LoadMore.Failure(
-                    NullPointerException("未知错误")
+                if (response.data_ == null) throw TiebaUnknownException
+                ForumThreadListPartialChange.LoadMore.Success(
+                    threadList = response.data_.thread_list.wrapImmutable(),
+                    threadListIds = threadListIds.drop(size),
+                    currentPage = currentPage,
+                    hasMore = response.data_.thread_list.isNotEmpty()
                 )
-                else {
-                    val userList = response.data_.user_list
-                    val threadList = response.data_.thread_list.map { threadInfo ->
-                        threadInfo.copy(author = userList.find { it.id == threadInfo.authorId })
-                    }
-                    ForumThreadListPartialChange.LoadMore.Success(
-                        threadList = threadList.wrapImmutable(),
-                        threadListIds = threadListIds.drop(size),
-                        currentPage = currentPage,
-                        hasMore = threadList.isNotEmpty()
-                    )
-                }
             }
         } else {
-            TiebaApi.getInstance().frsPage(
+            FrsPageRepository.frsPage(
                 forumName,
                 currentPage + 1,
                 2,
                 sortType.takeIf { type == ForumThreadListType.Latest } ?: -1,
                 goodClassifyId.takeIf { type == ForumThreadListType.Good }
-            ).map { response ->
-                if (response.data_ == null) ForumThreadListPartialChange.LoadMore.Failure(
-                    NullPointerException("未知错误")
-                )
-                else {
-                    val userList = response.data_.user_list
-                    val threadList = response.data_.thread_list.map { threadInfo ->
-                        threadInfo.copy(author = userList.find { it.id == threadInfo.authorId })
-                    }
+            )
+                .map<FrsPageResponse, ForumThreadListPartialChange.LoadMore> { response ->
+                    if (response.data_?.page == null) throw TiebaUnknownException
                     ForumThreadListPartialChange.LoadMore.Success(
-                        threadList = threadList.wrapImmutable(),
+                        threadList = response.data_.thread_list.wrapImmutable(),
                         threadListIds = response.data_.thread_id_list,
                         currentPage = currentPage + 1,
-                        hasMore = threadList.isNotEmpty()
+                        response.data_.page.has_more == 1
                     )
                 }
-            }
         }
         return flow
             .onStart { emit(ForumThreadListPartialChange.LoadMore.Start) }
