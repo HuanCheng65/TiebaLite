@@ -213,7 +213,7 @@ class ThreadReplyAdapter(context: Context) :
         }
         textView.text = replaceVideoNumberSpan(
             context,
-            StringUtil.getEmoticonContent(EmoticonUtil.EMOTICON_ALL_TYPE, textView, builder)
+            StringUtil.getEmoticonContent(textView, builder, EmoticonUtil.EMOTICON_ALL_TYPE)
         )
         textView.setPadding(
             DisplayUtil.dp2px(context, 8f),

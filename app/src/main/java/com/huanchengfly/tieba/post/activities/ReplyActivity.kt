@@ -346,9 +346,9 @@ class ReplyActivity : BaseActivity(), View.OnClickListener,
             editText.mgr.disable()
             editText.setText(
                 StringUtil.getEmoticonContent(
-                    EmoticonUtil.EMOTICON_ALL_WEB_TYPE,
                     editText,
-                    content
+                    content,
+                    EmoticonUtil.EMOTICON_ALL_WEB_TYPE
                 )
             )
             editText.mgr.enable()

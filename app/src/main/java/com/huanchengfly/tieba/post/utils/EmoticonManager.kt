@@ -6,11 +6,12 @@ import android.graphics.Bitmap
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
 import androidx.appcompat.content.res.AppCompatResources
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.text.InlineTextContent
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
@@ -21,6 +22,9 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.github.panpf.sketch.compose.AsyncImage
+import com.github.panpf.sketch.fetch.newFileUri
+import com.github.panpf.sketch.fetch.newResourceUri
 import com.github.panpf.sketch.request.LoadRequest
 import com.github.panpf.sketch.request.LoadResult
 import com.google.accompanist.drawablepainter.rememberDrawablePainter
@@ -47,6 +51,11 @@ fun getEmoticonHeightPx(style: TextStyle): Int {
     )
     return textLayoutResult.size.height
 }
+
+data class Emoticon(
+    val id: String,
+    val name: String
+)
 
 object EmoticonManager {
     private val DEFAULT_EMOTICON_MAPPING: Map<String, String> = mapOf(
@@ -128,13 +137,8 @@ object EmoticonManager {
                     PlaceholderVerticalAlign.TextCenter
                 ),
                 children = {
-                    Image(
-                        painter = rememberDrawablePainter(
-                            drawable = getEmoticonDrawable(
-                                LocalContext.current,
-                                id
-                            )
-                        ),
+                    AsyncImage(
+                        imageUri = rememberEmoticonUri(id = id),
                         contentDescription = stringResource(
                             id = R.string.emoticon,
                             getEmoticonNameById(id) ?: ""
@@ -212,6 +216,15 @@ object EmoticonManager {
         return File(getEmoticonCacheDir(), "$id.png")
     }
 
+    fun getAllEmoticon(): List<Emoticon> {
+        return emoticonIds.map { id ->
+            Emoticon(
+                id = id,
+                name = getEmoticonNameById(id) ?: ""
+            )
+        }
+    }
+
     fun getEmoticonIdByName(name: String): String? {
         return emoticonMapping[name]
     }
@@ -250,6 +263,32 @@ object EmoticonManager {
             getContext().resources,
             emoticonFile.inputStream()
         ).also { drawableCache[id] = it }
+    }
+
+    fun getEmoticonUri(context: Context, id: String?): String {
+        id ?: return ""
+        val resId = getEmoticonResId(context, id)
+        if (resId != 0) {
+            return newResourceUri(resId)
+        }
+        val emoticonFile = getEmoticonFile(id)
+        if (!emoticonFile.exists()) {
+            return ""
+        }
+        return newFileUri(emoticonFile)
+    }
+
+    @Composable
+    fun rememberEmoticonPainter(id: String): Painter {
+        val context = LocalContext.current
+        val drawable = remember(id) { getEmoticonDrawable(context, id) }
+        return rememberDrawablePainter(drawable = drawable)
+    }
+
+    @Composable
+    fun rememberEmoticonUri(id: String): String {
+        val context = LocalContext.current
+        return remember(id) { getEmoticonUri(context, id) }
     }
 
     private suspend fun fetchEmoticons(context: Context) {

@@ -257,7 +257,7 @@ public class RecyclerFloorAdapter extends BaseSingleTypeAdapter<SubFloorListBean
 
     private void setText(TextView textView, CharSequence content) {
         content = BilibiliUtil.replaceVideoNumberSpan(getContext(), content);
-        content = StringUtil.getEmoticonContent(EmoticonUtil.EMOTICON_ALL_TYPE, textView, content);
+        content = StringUtil.getEmoticonContent(textView, content, EmoticonUtil.EMOTICON_ALL_TYPE);
         textView.setText(content);
     }
 

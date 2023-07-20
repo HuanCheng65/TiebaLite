@@ -10,7 +10,12 @@ import com.huanchengfly.tieba.post.api.models.MessageListBean
 import com.huanchengfly.tieba.post.api.models.MessageListBean.MessageInfoBean
 import com.huanchengfly.tieba.post.components.MyViewHolder
 import com.huanchengfly.tieba.post.fragments.MessageFragment
-import com.huanchengfly.tieba.post.utils.*
+import com.huanchengfly.tieba.post.utils.DateTimeUtils
+import com.huanchengfly.tieba.post.utils.EmoticonUtil
+import com.huanchengfly.tieba.post.utils.ImageUtil
+import com.huanchengfly.tieba.post.utils.NavigationHelper
+import com.huanchengfly.tieba.post.utils.StringUtil
+import com.huanchengfly.tieba.post.utils.getItemBackgroundDrawable
 
 class MessageListAdapter(
     context: Context, private val type: Int
@@ -73,13 +78,12 @@ class MessageListAdapter(
         )
         val contentTextView = viewHolder.getView<TextView>(R.id.message_list_item_content)
         contentTextView.text = StringUtil.getEmoticonContent(
-            EmoticonUtil.EMOTICON_ALL_TYPE,
             contentTextView,
-            item.content
+            item.content,
+            EmoticonUtil.EMOTICON_ALL_TYPE
         )
         val textView = viewHolder.getView<TextView>(R.id.message_list_item_quote)
         textView.text = StringUtil.getEmoticonContent(
-            EmoticonUtil.EMOTICON_ALL_TYPE,
             textView,
             if (type == MessageFragment.TYPE_REPLY_ME) {
                 if ("1" == item.isFloor) {
@@ -89,7 +93,8 @@ class MessageListAdapter(
                 }
             } else {
                 item.title
-            }
+            },
+            EmoticonUtil.EMOTICON_ALL_TYPE
         )
         textView.setOnClickListener {
             if ("1" == item.isFloor && item.quotePid != null) {

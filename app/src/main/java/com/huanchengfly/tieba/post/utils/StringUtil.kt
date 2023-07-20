@@ -25,9 +25,9 @@ import kotlin.math.roundToInt
 object StringUtil {
     @JvmStatic
     fun getEmoticonContent(
-        emoticon_map_type: Int,
         tv: TextView,
-        source: CharSequence?
+        source: CharSequence?,
+        emoticonType: Int = EmoticonUtil.EMOTICON_ALL_TYPE
     ): SpannableString {
         return try {
             if (source == null) {
@@ -38,7 +38,7 @@ object StringUtil {
             } else {
                 SpannableString(source)
             }
-            val regexEmoticon = EmoticonUtil.getRegex(emoticon_map_type)
+            val regexEmoticon = EmoticonUtil.getRegex(emoticonType)
             val patternEmoticon = Pattern.compile(regexEmoticon)
             val matcherEmoticon = patternEmoticon.matcher(spannableString)
             while (matcherEmoticon.find()) {

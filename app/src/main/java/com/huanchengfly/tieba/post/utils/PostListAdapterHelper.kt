@@ -133,7 +133,7 @@ class PostListAdapterHelper(
     private fun setText(textView: TextView, content: CharSequence?) {
         var text = content
         text = replaceVideoNumberSpan(context, text)
-        text = StringUtil.getEmoticonContent(EmoticonUtil.EMOTICON_ALL_TYPE, textView, text)
+        text = StringUtil.getEmoticonContent(textView, text, EmoticonUtil.EMOTICON_ALL_TYPE)
         textView.text = text
     }
 

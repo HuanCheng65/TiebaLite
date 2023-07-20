@@ -172,8 +172,8 @@ object EmoticonUtil {
                     // 特殊文字处理,将表情等转换一下
                     mEditText!!.setText(
                         getEmoticonContent(
-                            emoticon_map_type,
-                            mEditText!!, sb
+                            mEditText!!,
+                            sb, emoticon_map_type
                         )
                     )
 
