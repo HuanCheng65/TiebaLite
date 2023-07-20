@@ -14,6 +14,7 @@ import com.huanchengfly.tieba.post.utils.AccountUtil
 import com.huanchengfly.tieba.post.utils.CacheUtil.base64Encode
 import com.huanchengfly.tieba.post.utils.ClientUtils
 import com.huanchengfly.tieba.post.utils.CuidUtils
+import com.huanchengfly.tieba.post.utils.DeviceUtils
 import com.huanchengfly.tieba.post.utils.MobileInfoUtil
 import com.huanchengfly.tieba.post.utils.UIDUtil
 import com.squareup.wire.Message
@@ -32,7 +33,7 @@ fun buildProtobufRequestBody(
     return MyMultipartBody.Builder(BOUNDARY)
         .apply {
             setType(MyMultipartBody.FORM)
-            if (clientVersion != ClientVersion.TIEBA_V12) {
+            if (clientVersion != ClientVersion.TIEBA_V12 && clientVersion != ClientVersion.TIEBA_V12_POST) {
                 addFormDataPart(Param.CLIENT_VERSION, clientVersion.version)
             }
             if (needSToken) {
@@ -68,9 +69,10 @@ fun buildAppPosInfo(): AppPosInfo {
 
 fun buildCommonRequest(
     context: Context = App.INSTANCE,
-    clientVersion: ClientVersion = ClientVersion.TIEBA_V11
+    clientVersion: ClientVersion = ClientVersion.TIEBA_V11,
+    tbs: String? = null,
 ): CommonRequest = when (clientVersion) {
-    ClientVersion.TIEBA_V11 ->
+    ClientVersion.TIEBA_V11 -> {
         CommonRequest(
             BDUSS = AccountUtil.getBduss(),
             _client_id = ClientUtils.clientId ?: RetrofitTiebaApi.randomClientId,
@@ -94,8 +96,9 @@ fun buildCommonRequest(
             sample_id = ClientUtils.sampleId,
             stoken = AccountUtil.getSToken(),
         )
+    }
 
-    ClientVersion.TIEBA_V12 ->
+    ClientVersion.TIEBA_V12 -> {
         CommonRequest(
             BDUSS = AccountUtil.getBduss(),
             _client_id = ClientUtils.clientId ?: RetrofitTiebaApi.randomClientId,
@@ -139,6 +142,59 @@ fun buildCommonRequest(
             start_type = 1,
             stoken = AccountUtil.getSToken(),
             swan_game_ver = "1038000",
-            user_agent = getUserAgent("tieba/${ClientVersion.TIEBA_V12}")
+            user_agent = getUserAgent("tieba/${clientVersion.version}")
         )
+    }
+
+    ClientVersion.TIEBA_V12_POST -> {
+        CommonRequest(
+            BDUSS = AccountUtil.getBduss(),
+            _client_id = ClientUtils.clientId ?: RetrofitTiebaApi.randomClientId,
+            _client_type = 2,
+            _client_version = clientVersion.version,
+            _os_version = "${Build.VERSION.SDK_INT}", // TODO
+            _phone_imei = MobileInfoUtil.getIMEI(context),
+            _timestamp = System.currentTimeMillis(),
+            active_timestamp = ClientUtils.activeTimestamp,
+            android_id = UIDUtil.getAndroidId("000"),
+            applist = "",
+            brand = Build.BRAND,
+            c3_aid = UIDUtil.getAid(),
+            cmode = 1,
+            cuid = CuidUtils.getNewCuid(),
+            cuid_galaxy2 = CuidUtils.getNewCuid(),
+            cuid_gid = "",
+            device_score = "${DeviceUtils.getDeviceScore()}",
+            event_day = SimpleDateFormat("yyyyMdd", Locale.getDefault()).format(
+                Date(
+                    System.currentTimeMillis()
+                )
+            ),
+            extra = "",
+            first_install_time = App.Config.appFirstInstallTime,
+            framework_ver = "3340042",
+            from = "1020031h",
+            is_teenager = 0,
+            last_update_time = App.Config.appLastUpdateTime,
+            lego_lib_version = "3.0.0",
+            model = Build.MODEL,
+            net_type = 1,
+            oaid = App.Config.encodedOAID,
+            personalized_rec_switch = 1,
+            pversion = "1.0.3",
+            q_type = 0,
+            sample_id = ClientUtils.sampleId,
+            scr_dip = App.ScreenInfo.DENSITY.toDouble(),
+            scr_h = getScreenHeight(),
+            scr_w = getScreenWidth(),
+            sdk_ver = "2.34.0",
+            start_scheme = "",
+            start_type = 1,
+            stoken = AccountUtil.getSToken(),
+            swan_game_ver = "1038000",
+            tbs = tbs,
+            user_agent = getUserAgent("tieba/${clientVersion.version}"),
+            z_id = AccountUtil.getAccountInfo { zid }
+        )
+    }
 }

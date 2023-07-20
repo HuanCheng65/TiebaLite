@@ -4,6 +4,7 @@ import com.huanchengfly.tieba.post.api.ForumSortType
 import com.huanchengfly.tieba.post.api.SearchThreadFilter
 import com.huanchengfly.tieba.post.api.SearchThreadOrder
 import com.huanchengfly.tieba.post.api.models.*
+import com.huanchengfly.tieba.post.api.models.protos.addPost.AddPostResponse
 import com.huanchengfly.tieba.post.api.models.protos.forumRecommend.ForumRecommendResponse
 import com.huanchengfly.tieba.post.api.models.protos.frsPage.FrsPageResponse
 import com.huanchengfly.tieba.post.api.models.protos.hotThreadList.HotThreadListResponse
@@ -1243,10 +1244,12 @@ interface ITiebaApi {
         forumId: String,
         forumName: String,
         threadId: String,
-        tbs: String,
+        tbs: String? = null,
+        nameShow: String? = null,
         postId: String? = null,
+        subPostId: String? = null,
         replyUserId: String? = null
-    ): Flow<AddPostBean>
+    ): Flow<AddPostResponse>
 
     /**
      * 用户信息（Flow）

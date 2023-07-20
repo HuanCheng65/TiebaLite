@@ -69,6 +69,7 @@ object Param {
     const val CUID_GALAXY3 = "c3_aid"
     const val OAID = "oaid"
     const val CUID_GID = "cuid_gid"
+    const val DEVICE_SCORE = "device_score"
     const val EVENT_DAY = "event_day"
     const val EXTRA = "extra"
     const val FIRST_INSTALL_TIME = "first_install_time"
@@ -89,4 +90,5 @@ object Param {
     const val STOKEN = "stoken"
     const val SWAN_GAME_VER = "swan_game_ver"
     const val TIMESTAMP = "timestamp"
+    const val Z_ID = "z_id"
 }

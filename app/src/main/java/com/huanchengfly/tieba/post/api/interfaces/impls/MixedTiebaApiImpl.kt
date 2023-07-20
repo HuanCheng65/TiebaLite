@@ -16,7 +16,6 @@ import com.huanchengfly.tieba.post.api.buildProtobufRequestBody
 import com.huanchengfly.tieba.post.api.getScreenHeight
 import com.huanchengfly.tieba.post.api.getScreenWidth
 import com.huanchengfly.tieba.post.api.interfaces.ITiebaApi
-import com.huanchengfly.tieba.post.api.models.AddPostBean
 import com.huanchengfly.tieba.post.api.models.AgreeBean
 import com.huanchengfly.tieba.post.api.models.CheckReportBean
 import com.huanchengfly.tieba.post.api.models.CollectDataBean
@@ -49,6 +48,9 @@ import com.huanchengfly.tieba.post.api.models.UserLikeForumBean
 import com.huanchengfly.tieba.post.api.models.UserPostBean
 import com.huanchengfly.tieba.post.api.models.WebReplyResultBean
 import com.huanchengfly.tieba.post.api.models.WebUploadPicBean
+import com.huanchengfly.tieba.post.api.models.protos.addPost.AddPostRequest
+import com.huanchengfly.tieba.post.api.models.protos.addPost.AddPostRequestData
+import com.huanchengfly.tieba.post.api.models.protos.addPost.AddPostResponse
 import com.huanchengfly.tieba.post.api.models.protos.forumRecommend.ForumRecommendRequest
 import com.huanchengfly.tieba.post.api.models.protos.forumRecommend.ForumRecommendRequestData
 import com.huanchengfly.tieba.post.api.models.protos.forumRecommend.ForumRecommendResponse
@@ -996,25 +998,55 @@ object MixedTiebaApiImpl : ITiebaApi {
         forumId: String,
         forumName: String,
         threadId: String,
-        tbs: String,
+        tbs: String?,
+        nameShow: String?,
         postId: String?,
+        subPostId: String?,
         replyUserId: String?
-    ): Flow<AddPostBean> {
-        return RetrofitTiebaApi.OFFICIAL_TIEBA_API.addPostFlow(
-            content,
-            forumId,
-            forumName,
-            tbs,
-            threadId,
-            quoteId = postId,
-            replyUserId = replyUserId ?: if (postId == null) "null" else "",
-            repostId = postId,
-            is_addition = if (postId == null) null else "0",
-            is_barrage = if (postId == null) "0" else null,
-            is_giftpost = if (postId == null) null else "0",
-            is_twzhibo_thread = if (postId == null) null else "0",
-            post_from = if (postId == null) "3" else "11"
-        )
+    ): Flow<AddPostResponse> {
+        return RetrofitTiebaApi.OFFICIAL_PROTOBUF_TIEBA_POST_API
+            .addPostFlow(
+                buildProtobufRequestBody(
+                    AddPostRequest(
+                        AddPostRequestData(
+                            anonymous = "1",
+                            barrage_time = "0".takeIf { postId.isNullOrEmpty() },
+                            can_no_forum = "0",
+                            common = buildCommonRequest(
+                                clientVersion = ClientVersion.TIEBA_V12_POST,
+                                tbs = tbs ?: AccountUtil.getAccountInfo { this.tbs }
+                            ),
+                            content = content,
+                            entrance_type = "0",
+                            fid = forumId,
+                            floor_num = "0".takeIf { postId.isNullOrEmpty() },
+                            is_ad = "0",
+                            is_addition = "0".takeIf { postId.isNullOrEmpty() },
+                            is_barrage = "0".takeIf { postId.isNullOrEmpty() },
+                            is_feedback = "0",
+                            is_giftpost = "0".takeIf { postId.isNullOrEmpty() },
+                            is_pictxt = "0",
+                            is_show_bless = 0,
+                            is_twzhibo_thread = "0".takeIf { postId.isNullOrEmpty() },
+                            name_show = nameShow ?: AccountUtil.getAccountInfo { this.nameShow }
+                                .orEmpty(),
+                            new_vcode = "1",
+                            post_from = if (postId.isNullOrEmpty() && subPostId.isNullOrEmpty()) "13" else if (subPostId.isNullOrEmpty()) "0" else null,
+                            quote_id = postId,
+                            reply_uid = replyUserId.takeIf { !postId.isNullOrEmpty() },
+                            repostid = postId,
+                            sub_post_id = subPostId,
+                            show_custom_figure = 0,
+                            takephoto_num = "0",
+                            tid = threadId,
+                            v_fid = "".takeIf { postId.isNullOrEmpty() },
+                            v_fname = "".takeIf { postId.isNullOrEmpty() },
+                            vcode_tag = "12",
+                        )
+                    ),
+                    clientVersion = ClientVersion.TIEBA_V12_POST
+                )
+            )
     }
 
     override fun userProfileFlow(uid: Long): Flow<ProfileResponse> {
