@@ -579,6 +579,19 @@ interface ITiebaApi {
      * @param threadId 贴子 ID
      * @param postId 收藏到的回复 ID
      */
+    fun addStoreAsync(
+        threadId: Long,
+        postId: Long
+    ): Deferred<ApiResult<CommonResponse>>
+
+    /**
+     * 添加/更新收藏
+     *
+     * **需登录**
+     *
+     * @param threadId 贴子 ID
+     * @param postId 收藏到的回复 ID
+     */
     fun addStoreFlow(
         threadId: Long,
         postId: Long

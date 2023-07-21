@@ -39,6 +39,7 @@ import com.huanchengfly.tieba.post.api.models.ThreadContentBean.PostListItemBean
 import com.huanchengfly.tieba.post.api.retrofit.doIfFailure
 import com.huanchengfly.tieba.post.api.retrofit.doIfSuccess
 import com.huanchengfly.tieba.post.api.retrofit.exception.TiebaException
+import com.huanchengfly.tieba.post.api.retrofit.exception.getErrorCode
 import com.huanchengfly.tieba.post.api.retrofit.exception.getErrorMessage
 import com.huanchengfly.tieba.post.components.FillVirtualLayoutManager
 import com.huanchengfly.tieba.post.components.dialogs.EditTextDialog
@@ -613,25 +614,16 @@ class ThreadActivity : BaseActivity(), View.OnClickListener, IThreadMenuFragment
     private fun collect(commonCallback: CommonCallback<CommonResponse>?, update: Boolean) {
         if (dataBean == null || threadId == null) return
         val postListItemBean = firstVisibleItem ?: return
-        TiebaApi.getInstance()
-            .addStore(threadId!!, postListItemBean.id!!, tbs = dataBean!!.anti?.tbs!!)
-            .enqueue(object : Callback<CommonResponse> {
-                override fun onFailure(call: Call<CommonResponse>, t: Throwable) {
-                    if (t is TiebaException) {
-                        commonCallback?.onFailure(t.code, t.message)
-                    } else {
-                        commonCallback?.onFailure(-1, t.message)
-                    }
+        launchIO {
+            TiebaApi.getInstance()
+                .addStoreAsync(threadId!!.toLong(), postListItemBean.id!!.toLong())
+                .doIfSuccess {
+                    commonCallback?.onSuccess(it)
                 }
-
-                override fun onResponse(
-                    call: Call<CommonResponse>,
-                    response: Response<CommonResponse>
-                ) {
-                    commonCallback?.onSuccess(response.body()!!)
+                .doIfFailure {
+                    commonCallback?.onFailure(it.getErrorCode(), it.getErrorMessage())
                 }
-
-            })
+        }
         if (!update) Util.miuiFav(
             this,
             getString(R.string.title_miui_fav, dataBean!!.thread?.title),

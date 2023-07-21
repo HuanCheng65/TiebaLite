@@ -435,6 +435,17 @@ object MixedTiebaApiImpl : ITiebaApi {
             tbs
         )
 
+    override fun addStoreAsync(threadId: Long, postId: Long): Deferred<ApiResult<CommonResponse>> =
+        RetrofitTiebaApi.OFFICIAL_TIEBA_API.addStoreAsync(
+            listOf(
+                NewCollectDataBean(
+                    threadId.toString(),
+                    postId.toString(),
+                    status = 1
+                )
+            ).toJson()
+        )
+
     override fun addStoreFlow(threadId: Long, postId: Long): Flow<CommonResponse> =
         RetrofitTiebaApi.OFFICIAL_TIEBA_API.addStoreFlow(
             listOf(
