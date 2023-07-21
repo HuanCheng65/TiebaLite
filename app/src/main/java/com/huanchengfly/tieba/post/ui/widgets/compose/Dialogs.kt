@@ -192,7 +192,7 @@ fun ConfirmDialog(
     onDismiss: (() -> Unit)? = null,
     confirmText: String = stringResource(id = R.string.button_sure_default),
     cancelText: String = stringResource(id = R.string.button_cancel),
-    title: @Composable (DialogScope.() -> Unit) = {},
+    title: @Composable (DialogScope.() -> Unit)? = null,
     content: @Composable (DialogScope.() -> Unit) = {},
 ) {
     Dialog(
@@ -205,7 +205,7 @@ fun ConfirmDialog(
             DialogNegativeButton(text = cancelText, onClick = onCancel)
         },
     ) {
-        Column(modifier = Modifier.padding(horizontal = 12.dp)) {
+        Column(modifier = Modifier.padding(horizontal = 24.dp)) {
             ProvideTextStyle(value = MaterialTheme.typography.body1) {
                 ProvideContentColor(color = ExtendedTheme.colors.text) {
                     content()
@@ -231,7 +231,7 @@ fun PromptDialog(
     onCancel: (() -> Unit)? = null,
     confirmText: String = stringResource(id = R.string.button_sure_default),
     cancelText: String = stringResource(id = R.string.button_cancel),
-    title: @Composable (DialogScope.() -> Unit) = {},
+    title: @Composable (DialogScope.() -> Unit)? = null,
     content: @Composable (DialogScope.() -> Unit) = {},
 ) {
     var textVal by remember { mutableStateOf(initialValue) }
@@ -256,6 +256,7 @@ fun PromptDialog(
                 .padding(horizontal = 24.dp)
                 .padding(bottom = 16.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             ProvideTextStyle(value = MaterialTheme.typography.body1) {
                 ProvideContentColor(color = ExtendedTheme.colors.text) {
@@ -297,7 +298,7 @@ fun Dialog(
     modifier: Modifier = Modifier,
     dialogState: DialogState = rememberDialogState(),
     onDismiss: (() -> Unit)? = null,
-    title: @Composable (DialogScope.() -> Unit) = {},
+    title: @Composable (DialogScope.() -> Unit)? = null,
     cancelable: Boolean = true,
     cancelableOnTouchOutside: Boolean = true,
     buttons: @Composable (DialogScope.() -> Unit) = {},
@@ -344,13 +345,15 @@ fun Dialog(
                     verticalArrangement = Arrangement.spacedBy(16.dp)
                 ) {
                     ProvideContentColor(color = ExtendedTheme.colors.text) {
-                        Box(
-                            modifier = Modifier
-                                .padding(horizontal = 24.dp)
-                                .align(Alignment.CenterHorizontally)
-                        ) {
-                            ProvideTextStyle(value = MaterialTheme.typography.h6.copy(fontWeight = FontWeight.Bold)) {
-                                dialogScope.title()
+                        if (title != null) {
+                            Box(
+                                modifier = Modifier
+                                    .padding(horizontal = 24.dp)
+                                    .align(Alignment.CenterHorizontally)
+                            ) {
+                                ProvideTextStyle(value = MaterialTheme.typography.h6.copy(fontWeight = FontWeight.Bold)) {
+                                    dialogScope.title()
+                                }
                             }
                         }
                         Box(modifier = Modifier.align(Alignment.CenterHorizontally)) {
