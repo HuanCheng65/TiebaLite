@@ -1383,7 +1383,8 @@ fun PostCard(
                                 author.nameShow
                             ),
                             userLevel = author.level_id,
-                            isLz = author.id == threadAuthorId
+                            isLz = author.id == threadAuthorId,
+                            bawuType = author.bawuType,
                         )
                     },
                     desc = {

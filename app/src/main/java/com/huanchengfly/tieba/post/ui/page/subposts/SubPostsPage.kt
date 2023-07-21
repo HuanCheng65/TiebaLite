@@ -35,6 +35,7 @@ import com.huanchengfly.tieba.post.R
 import com.huanchengfly.tieba.post.activities.UserActivity
 import com.huanchengfly.tieba.post.api.models.protos.SubPostList
 import com.huanchengfly.tieba.post.api.models.protos.User
+import com.huanchengfly.tieba.post.api.models.protos.bawuType
 import com.huanchengfly.tieba.post.arch.ImmutableHolder
 import com.huanchengfly.tieba.post.arch.collectPartialAsState
 import com.huanchengfly.tieba.post.arch.onEvent
@@ -425,7 +426,8 @@ private fun SubPostItem(
                                 author.get { nameShow }
                             ),
                             userLevel = author.get { level_id },
-                            isLz = author.get { id } == threadAuthorId
+                            isLz = author.get { id } == threadAuthorId,
+                            bawuType = author.get { bawuType },
                         )
                     },
                     desc = {
