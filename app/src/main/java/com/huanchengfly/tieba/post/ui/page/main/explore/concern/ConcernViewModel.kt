@@ -4,10 +4,10 @@ import androidx.compose.runtime.Stable
 import com.huanchengfly.tieba.post.App
 import com.huanchengfly.tieba.post.api.TiebaApi
 import com.huanchengfly.tieba.post.api.models.AgreeBean
+import com.huanchengfly.tieba.post.api.models.protos.updateAgreeStatus
 import com.huanchengfly.tieba.post.api.models.protos.userLike.ConcernData
 import com.huanchengfly.tieba.post.api.models.protos.userLike.UserLikeResponse
 import com.huanchengfly.tieba.post.api.retrofit.exception.getErrorMessage
-import com.huanchengfly.tieba.post.api.updateAgreeStatus
 import com.huanchengfly.tieba.post.arch.BaseViewModel
 import com.huanchengfly.tieba.post.arch.CommonUiEvent
 import com.huanchengfly.tieba.post.arch.PartialChange

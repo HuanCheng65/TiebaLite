@@ -2,14 +2,14 @@ package com.huanchengfly.tieba.post.ui.page.subposts
 
 import androidx.compose.runtime.Stable
 import com.huanchengfly.tieba.post.api.TiebaApi
-import com.huanchengfly.tieba.post.api.contentRenders
 import com.huanchengfly.tieba.post.api.models.AgreeBean
 import com.huanchengfly.tieba.post.api.models.protos.Post
 import com.huanchengfly.tieba.post.api.models.protos.SimpleForum
 import com.huanchengfly.tieba.post.api.models.protos.SubPostList
+import com.huanchengfly.tieba.post.api.models.protos.contentRenders
 import com.huanchengfly.tieba.post.api.models.protos.pbFloor.PbFloorResponse
-import com.huanchengfly.tieba.post.api.renders
-import com.huanchengfly.tieba.post.api.updateAgreeStatus
+import com.huanchengfly.tieba.post.api.models.protos.renders
+import com.huanchengfly.tieba.post.api.models.protos.updateAgreeStatus
 import com.huanchengfly.tieba.post.arch.BaseViewModel
 import com.huanchengfly.tieba.post.arch.ImmutableHolder
 import com.huanchengfly.tieba.post.arch.PartialChange

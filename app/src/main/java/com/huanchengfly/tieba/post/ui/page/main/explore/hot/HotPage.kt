@@ -46,8 +46,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.google.accompanist.placeholder.material.placeholder
 import com.huanchengfly.tieba.post.R
-import com.huanchengfly.tieba.post.api.hasAgree
 import com.huanchengfly.tieba.post.api.models.protos.ThreadInfo
+import com.huanchengfly.tieba.post.api.models.protos.hasAgree
 import com.huanchengfly.tieba.post.arch.ImmutableHolder
 import com.huanchengfly.tieba.post.arch.collectPartialAsState
 import com.huanchengfly.tieba.post.arch.onEvent

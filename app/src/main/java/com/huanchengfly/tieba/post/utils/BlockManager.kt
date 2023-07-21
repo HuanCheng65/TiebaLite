@@ -1,9 +1,9 @@
 package com.huanchengfly.tieba.post.utils
 
-import com.huanchengfly.tieba.post.api.abstractText
 import com.huanchengfly.tieba.post.api.models.protos.Post
 import com.huanchengfly.tieba.post.api.models.protos.ThreadInfo
-import com.huanchengfly.tieba.post.api.plainText
+import com.huanchengfly.tieba.post.api.models.protos.abstractText
+import com.huanchengfly.tieba.post.api.models.protos.plainText
 import com.huanchengfly.tieba.post.models.database.Block
 import com.huanchengfly.tieba.post.models.database.Block.Companion.getKeywords
 import org.litepal.LitePal

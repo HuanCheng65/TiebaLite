@@ -99,7 +99,8 @@ import com.huanchengfly.tieba.post.api.models.protos.Post
 import com.huanchengfly.tieba.post.api.models.protos.SimpleForum
 import com.huanchengfly.tieba.post.api.models.protos.ThreadInfo
 import com.huanchengfly.tieba.post.api.models.protos.User
-import com.huanchengfly.tieba.post.api.renders
+import com.huanchengfly.tieba.post.api.models.protos.bawuType
+import com.huanchengfly.tieba.post.api.models.protos.renders
 import com.huanchengfly.tieba.post.api.retrofit.exception.getErrorMessage
 import com.huanchengfly.tieba.post.arch.ImmutableHolder
 import com.huanchengfly.tieba.post.arch.collectPartialAsState

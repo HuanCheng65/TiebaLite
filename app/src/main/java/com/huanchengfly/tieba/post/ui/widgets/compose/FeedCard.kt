@@ -60,11 +60,11 @@ import com.google.accompanist.placeholder.material.placeholder
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.huanchengfly.tieba.post.R
 import com.huanchengfly.tieba.post.activities.UserActivity
-import com.huanchengfly.tieba.post.api.abstractText
 import com.huanchengfly.tieba.post.api.models.protos.Media
 import com.huanchengfly.tieba.post.api.models.protos.SimpleForum
 import com.huanchengfly.tieba.post.api.models.protos.ThreadInfo
 import com.huanchengfly.tieba.post.api.models.protos.User
+import com.huanchengfly.tieba.post.api.models.protos.abstractText
 import com.huanchengfly.tieba.post.arch.ImmutableHolder
 import com.huanchengfly.tieba.post.arch.wrapImmutable
 import com.huanchengfly.tieba.post.findActivity

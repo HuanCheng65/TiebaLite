@@ -6,10 +6,10 @@ import com.huanchengfly.tieba.post.api.models.AgreeBean
 import com.huanchengfly.tieba.post.api.models.protos.ThreadInfo
 import com.huanchengfly.tieba.post.api.models.protos.frsPage.Classify
 import com.huanchengfly.tieba.post.api.models.protos.frsPage.FrsPageResponse
+import com.huanchengfly.tieba.post.api.models.protos.updateAgreeStatus
 import com.huanchengfly.tieba.post.api.retrofit.exception.TiebaUnknownException
 import com.huanchengfly.tieba.post.api.retrofit.exception.getErrorCode
 import com.huanchengfly.tieba.post.api.retrofit.exception.getErrorMessage
-import com.huanchengfly.tieba.post.api.updateAgreeStatus
 import com.huanchengfly.tieba.post.arch.BaseViewModel
 import com.huanchengfly.tieba.post.arch.CommonUiEvent
 import com.huanchengfly.tieba.post.arch.ImmutableHolder

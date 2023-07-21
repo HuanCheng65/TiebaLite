@@ -38,8 +38,8 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.huanchengfly.tieba.post.R
-import com.huanchengfly.tieba.post.api.abstractText
 import com.huanchengfly.tieba.post.api.models.protos.ThreadInfo
+import com.huanchengfly.tieba.post.api.models.protos.abstractText
 import com.huanchengfly.tieba.post.api.models.protos.frsPage.Classify
 import com.huanchengfly.tieba.post.arch.BaseComposeActivity.Companion.LocalWindowSizeClass
 import com.huanchengfly.tieba.post.arch.ImmutableHolder
