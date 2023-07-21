@@ -15,7 +15,4 @@
     app:cursorColor="@color/default_color_accent"
     app:hintTextColor="@color/default_color_text_secondary"
     app:textColor="@color/default_color_text"
-    tools:ignore="UnusedAttribute">
-
-    <requestFocus />
-</com.huanchengfly.tieba.post.ui.widgets.theme.TintUndoableEditText>
+    tools:ignore="UnusedAttribute" />

@@ -103,12 +103,26 @@ object ImageUtil {
         return false
     }
 
-    @JvmOverloads
-    fun compressImage(bitmap: Bitmap, output: File, maxSize: Int = 100): File {
+    fun compressImage(
+        bitmap: Bitmap,
+        quality: Int = 100
+    ): ByteArray {
         val baos = ByteArrayOutputStream()
-        var quality = 100
+        bitmap.compress(CompressFormat.JPEG, quality, baos)
+        return baos.use { it.toByteArray() }
+    }
+
+    @JvmOverloads
+    fun compressImage(
+        bitmap: Bitmap,
+        output: File,
+        maxSizeKb: Int = 100,
+        initialQuality: Int = 100
+    ): File {
+        val baos = ByteArrayOutputStream()
+        var quality = initialQuality
         bitmap.compress(CompressFormat.JPEG, quality, baos) //质量压缩方法，这里100表示不压缩，把压缩后的数据存放到baos中
-        while (baos.toByteArray().size / 1024 > maxSize && quality > 0) {  //循环判断如果压缩后图片是否大于20kb,大于继续压缩 友盟缩略图要求不大于18kb
+        while (baos.toByteArray().size / 1024 > maxSizeKb && quality > 0) {  //循环判断如果压缩后图片是否大于设置的最大值,大于继续压缩
             baos.reset() //重置baos即清空baos
             quality -= 5 //每次都减少5
             bitmap.compress(CompressFormat.JPEG, quality, baos) //这里压缩options%，把压缩后的数据存放到baos中
@@ -132,7 +146,7 @@ object ImageUtil {
     fun bitmapToFile(
         bitmap: Bitmap,
         output: File,
-        format: CompressFormat? = CompressFormat.JPEG
+        format: CompressFormat = CompressFormat.JPEG
     ): File {
         val baos = ByteArrayOutputStream()
         bitmap.compress(format, 100, baos)

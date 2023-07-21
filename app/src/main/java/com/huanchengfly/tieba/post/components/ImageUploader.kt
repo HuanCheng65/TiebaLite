@@ -1,5 +1,6 @@
 package com.huanchengfly.tieba.post.components
 
+import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.util.Log
 import com.huanchengfly.tieba.post.api.BOUNDARY
@@ -11,6 +12,7 @@ import com.huanchengfly.tieba.post.api.retrofit.body.buildMultipartBody
 import com.huanchengfly.tieba.post.api.retrofit.exception.TiebaException
 import com.huanchengfly.tieba.post.api.retrofit.exception.getErrorCode
 import com.huanchengfly.tieba.post.api.retrofit.exception.getErrorMessage
+import com.huanchengfly.tieba.post.utils.ImageUtil
 import com.huanchengfly.tieba.post.utils.MD5Util
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -21,7 +23,7 @@ import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.flatMapConcat
 import kotlinx.coroutines.flow.last
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.onCompletion
 import kotlinx.coroutines.flow.runningFold
 import kotlinx.coroutines.withContext
 import okhttp3.RequestBody.Companion.toRequestBody
@@ -58,6 +60,44 @@ class ImageUploader(
             .filter { it.size == filePaths.size }
     }
 
+    private suspend fun compressImage(
+        filePath: String,
+        isOriginImage: Boolean
+    ): File {
+        val originFile = File(filePath)
+        val fileLength = originFile.length()
+        val maxSize = if (isOriginImage) ORIGIN_IMAGE_MAX_SIZE else IMAGE_MAX_SIZE
+        val tempFile = withContext(Dispatchers.IO) {
+            File.createTempFile("temp", ".tmp")
+        }
+        withContext<Unit>(Dispatchers.IO) {
+            if (isOriginImage && fileLength <= maxSize) {
+                originFile.copyTo(tempFile, true)
+            } else {
+                val bitmap = BitmapFactory.decodeFile(filePath)
+                val firstCompressResult = ImageUtil.compressImage(bitmap, quality = 95)
+                tempFile.writeBytes(firstCompressResult)
+                if (firstCompressResult.size > maxSize) {
+                    // 压缩尺寸至 1080P
+                    val width = bitmap.width
+                    val height = bitmap.height
+                    val scale = if (width > height) {
+                        1080f / width
+                    } else {
+                        1080f / height
+                    }
+                    if (scale < 1) {
+                        val newWidth = (width * scale).toInt()
+                        val newHeight = (height * scale).toInt()
+                        val newBitmap = Bitmap.createScaledBitmap(bitmap, newWidth, newHeight, true)
+                        tempFile.writeBytes(ImageUtil.compressImage(newBitmap, quality = 95))
+                    }
+                }
+            }
+        }
+        return tempFile
+    }
+
     @OptIn(ExperimentalCoroutinesApi::class)
     suspend fun uploadSinglePicture(
         filePath: String,
@@ -70,7 +110,7 @@ class ImageUploader(
         val width = option.outWidth
         val height = option.outHeight
         check(width > 0 && height > 0) { "图片宽高不正确" }
-        val file = File(filePath)
+        val file = compressImage(filePath, isOriginImage)
         val fileLength = file.length()
         val maxSize = if (isOriginImage) ORIGIN_IMAGE_MAX_SIZE else IMAGE_MAX_SIZE
         check(fileLength <= maxSize) { "图片大小超过限制" }
@@ -119,8 +159,10 @@ class ImageUploader(
             .catch {
                 throw UploadPictureFailedException(it.getErrorCode(), it.getErrorMessage())
             }
-            .onEach {
-                Log.i("ImageUploader", "uploadSinglePicture: $it")
+            .onCompletion {
+                withContext(Dispatchers.IO) {
+                    file.delete()
+                }
             }
             .last()
     }

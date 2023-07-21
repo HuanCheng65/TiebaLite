@@ -686,4 +686,9 @@
     <string name="title_block_list">屏蔽词管理</string>
     <string name="settings_hide_blocked_content">彻底隐藏被屏蔽的内容</string>
     <string name="settings_block_video_summary">隐藏动态页面和吧页面的所有视频贴</string>
+    <string name="desc_image">图片</string>
+    <string name="desc_add_image">添加图片</string>
+    <string name="toast_upload_image_failed">上传图片失败 %s</string>
+    <string name="origin_image">原图</string>
+    <string name="desc_remove_image">删除图片</string>
 </resources>
