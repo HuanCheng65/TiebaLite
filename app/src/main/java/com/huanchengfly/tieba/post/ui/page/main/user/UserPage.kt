@@ -59,14 +59,17 @@ import com.huanchengfly.tieba.post.ui.page.destinations.HistoryPageDestination
 import com.huanchengfly.tieba.post.ui.page.destinations.SettingsPageDestination
 import com.huanchengfly.tieba.post.ui.page.destinations.ThreadStorePageDestination
 import com.huanchengfly.tieba.post.ui.widgets.compose.Avatar
+import com.huanchengfly.tieba.post.ui.widgets.compose.ConfirmDialog
 import com.huanchengfly.tieba.post.ui.widgets.compose.HorizontalDivider
 import com.huanchengfly.tieba.post.ui.widgets.compose.ListMenuItem
 import com.huanchengfly.tieba.post.ui.widgets.compose.Sizes
 import com.huanchengfly.tieba.post.ui.widgets.compose.Switch
 import com.huanchengfly.tieba.post.ui.widgets.compose.VerticalDivider
+import com.huanchengfly.tieba.post.ui.widgets.compose.rememberDialogState
 import com.huanchengfly.tieba.post.utils.CuidUtils
 import com.huanchengfly.tieba.post.utils.StringUtil
 import com.huanchengfly.tieba.post.utils.ThemeUtil
+import com.huanchengfly.tieba.post.utils.appPreferences
 
 @Composable
 private fun StatCardPlaceholder(modifier: Modifier = Modifier) {
@@ -243,6 +246,21 @@ fun UserPage(
         prop1 = UserUiState::account,
         initial = null
     )
+
+    val switchToNightDialogState = rememberDialogState()
+    ConfirmDialog(
+        dialogState = switchToNightDialogState,
+        onConfirm = {},
+        onCancel = {
+            context.appPreferences.followSystemNight = false
+            ThemeUtil.switchNightMode()
+        },
+        confirmText = stringResource(id = R.string.btn_keep_following),
+        cancelText = stringResource(id = R.string.btn_close_following)
+    ) {
+        Text(text = stringResource(id = R.string.message_dialog_follow_system_night))
+    }
+
     Scaffold(
         backgroundColor = Color.Transparent,
         modifier = Modifier
@@ -340,7 +358,13 @@ fun UserPage(
                     Spacer(modifier = Modifier.width(16.dp))
                     Switch(
                         checked = ThemeUtil.isNightMode(ThemeUtil.themeState.value),
-                        onCheckedChange = { ThemeUtil.switchNightMode() }
+                        onCheckedChange = {
+                            if (context.appPreferences.followSystemNight) {
+                                switchToNightDialogState.show()
+                            } else {
+                                ThemeUtil.switchNightMode()
+                            }
+                        }
                     )
                 }
                 if (account != null) {
