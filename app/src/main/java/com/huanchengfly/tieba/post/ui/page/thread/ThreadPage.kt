@@ -140,6 +140,7 @@ import com.huanchengfly.tieba.post.ui.widgets.compose.VerticalDivider
 import com.huanchengfly.tieba.post.ui.widgets.compose.VerticalGrid
 import com.huanchengfly.tieba.post.ui.widgets.compose.buildChipInlineContent
 import com.huanchengfly.tieba.post.ui.widgets.compose.rememberDialogState
+import com.huanchengfly.tieba.post.ui.widgets.compose.rememberMenuState
 import com.huanchengfly.tieba.post.ui.widgets.compose.states.StateScreen
 import com.huanchengfly.tieba.post.utils.DateTimeUtils.getRelativeTimeString
 import com.huanchengfly.tieba.post.utils.HistoryUtil
@@ -1384,22 +1385,38 @@ fun PostCard(
     val subPosts = remember(postHolder) {
         post.sub_post_list?.sub_post_list?.toImmutableList() ?: persistentListOf()
     }
+    val menuState = rememberMenuState()
     LongClickMenu(
         indication = null,
         onClick = {
             onReplyClick(post)
         },
         menuContent = {
-            DropdownMenuItem(onClick = { onReplyClick(post) }) {
+            DropdownMenuItem(
+                onClick = {
+                    onReplyClick(post)
+                    menuState.expanded = false
+                }
+            ) {
                 Text(text = stringResource(id = R.string.btn_reply))
             }
             if (onMenuCopyClick != null) {
-                DropdownMenuItem(onClick = { onMenuCopyClick(post) }) {
+                DropdownMenuItem(
+                    onClick = {
+                        onMenuCopyClick(post)
+                        menuState.expanded = false
+                    }
+                ) {
                     Text(text = stringResource(id = R.string.menu_copy))
                 }
             }
             if (onMenuFavoriteClick != null) {
-                DropdownMenuItem(onClick = { onMenuFavoriteClick(post) }) {
+                DropdownMenuItem(
+                    onClick = {
+                        onMenuFavoriteClick(post)
+                        menuState.expanded = false
+                    }
+                ) {
                     if (isCollected(post)) {
                         Text(text = stringResource(id = R.string.title_collect_on))
                     } else {
@@ -1408,12 +1425,22 @@ fun PostCard(
                 }
             }
             if (onMenuReportClick != null) {
-                DropdownMenuItem(onClick = { onMenuReportClick(post) }) {
+                DropdownMenuItem(
+                    onClick = {
+                        onMenuReportClick(post)
+                        menuState.expanded = false
+                    }
+                ) {
                     Text(text = stringResource(id = R.string.title_report))
                 }
             }
             if (canDelete(post) && onMenuDeleteClick != null) {
-                DropdownMenuItem(onClick = { onMenuDeleteClick(post) }) {
+                DropdownMenuItem(
+                    onClick = {
+                        onMenuDeleteClick(post)
+                        menuState.expanded = false
+                    }
+                ) {
                     Text(text = stringResource(id = R.string.title_delete))
                 }
             }
