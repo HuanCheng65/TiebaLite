@@ -116,9 +116,9 @@ import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.sample
 import kotlinx.coroutines.launch
 import org.litepal.LitePal
 import org.litepal.extension.deleteAllAsync
@@ -210,7 +210,7 @@ fun ReplyPage(
     val curText by curTextFlow.collectAsState()
     LaunchedEffect(Unit) {
         curTextFlow
-            .debounce(500)
+            .sample(500)
             .distinctUntilChanged()
             .collect {
                 Log.i("ReplyPage", "collect: $it")
