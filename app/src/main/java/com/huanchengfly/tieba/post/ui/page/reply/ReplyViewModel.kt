@@ -5,7 +5,6 @@ import android.util.Log
 import androidx.compose.runtime.Stable
 import com.huanchengfly.tieba.post.App
 import com.huanchengfly.tieba.post.R
-import com.huanchengfly.tieba.post.api.TiebaApi
 import com.huanchengfly.tieba.post.api.models.UploadPictureResultBean
 import com.huanchengfly.tieba.post.api.models.protos.addPost.AddPostResponse
 import com.huanchengfly.tieba.post.api.retrofit.exception.TiebaUnknownException
@@ -19,6 +18,7 @@ import com.huanchengfly.tieba.post.arch.UiEvent
 import com.huanchengfly.tieba.post.arch.UiIntent
 import com.huanchengfly.tieba.post.arch.UiState
 import com.huanchengfly.tieba.post.components.ImageUploader
+import com.huanchengfly.tieba.post.repository.AddPostRepository
 import com.huanchengfly.tieba.post.utils.FileUtil
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.collections.immutable.ImmutableList
@@ -98,8 +98,8 @@ class ReplyViewModel @Inject constructor() :
             )
 
         private fun ReplyUiIntent.Send.producePartialChange(): Flow<ReplyPartialChange.Send> {
-            return TiebaApi.getInstance()
-                .addPostFlow(
+            return AddPostRepository
+                .addPost(
                     content,
                     forumId.toString(),
                     forumName,

@@ -26,6 +26,12 @@ sealed interface GlobalEvent {
         val id: String,
         val images: List<Uri>
     ) : GlobalEvent
+
+    data class ReplySuccess(
+        val threadId: String,
+        val postId: String? = null,
+        val subPostId: String? = null,
+    ) : GlobalEvent
 }
 
 private val globalEventChannel: Channel<GlobalEvent> = Channel()
