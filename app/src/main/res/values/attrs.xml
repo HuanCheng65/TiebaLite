@@ -2,22 +2,22 @@
 <resources>
     <declare-styleable name="Theme">
         <attr name="colorPrimary" format="color" />
+        <attr name="colorNewPrimary" format="color" />
         <attr name="colorAccent" format="color" />
-        <attr name="colorNewAccent" format="color" />
         <attr name="colorOnAccent" format="color" />
         <attr name="colorToolbar" format="color" />
         <attr name="colorToolbarItem" format="color" />
-        <attr name="color_toolbar_item_secondary" format="color" />
+        <attr name="colorToolbarItemSecondary" format="color" />
         <attr name="colorToolbarItemActive" format="color" />
-        <attr name="colorToolbarBar" format="color" />
-        <attr name="colorOnToolbarBar" format="color" />
+        <attr name="colorToolbarSurface" format="color" />
+        <attr name="colorOnToolbarSurface" format="color" />
         <attr name="colorNavBarSurface" format="color" />
         <attr name="colorOnNavBarSurface" format="color" />
         <attr name="colorText" format="color" />
         <attr name="colorTextOnPrimary" format="color" />
         <attr name="colorTextSecondary" format="color" />
         <attr name="color_text_disabled" format="color" />
-        <attr name="colorBg" format="color" />
+        <attr name="colorBackground" format="color" />
         <attr name="colorWindowBackground" format="color" />
         <attr name="colorChip" format="color" />
         <attr name="colorOnChip" format="color" />
@@ -27,7 +27,7 @@
         <attr name="colorCard" format="color" />
         <attr name="colorDivider" format="color" />
         <attr name="shadow_color" format="color" />
-        <attr name="color_swipe_refresh_layout_background" format="color" />
+        <attr name="colorIndicator" format="color" />
     </declare-styleable>
 
     <declare-styleable name="ShadowLayout">

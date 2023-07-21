@@ -23,7 +23,7 @@ fun ListMenuItem(
     icon: ImageVector,
     text: String,
     modifier: Modifier = Modifier,
-    iconColor: Color = ExtendedTheme.colors.accent,
+    iconColor: Color = ExtendedTheme.colors.primary,
     onClick: (() -> Unit)? = null,
     customContent: @Composable (RowScope.() -> Unit)? = null,
 ) {

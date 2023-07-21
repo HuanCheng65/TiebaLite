@@ -308,12 +308,12 @@ class App : Application(), IApp, SketchFactory {
                         val customPrimaryColorStr = context.appPreferences.customPrimaryColor
                         return if (customPrimaryColorStr != null) {
                             Color.parseColor(customPrimaryColorStr)
-                        } else getColorByAttr(context, attrId, ThemeUtil.THEME_BLUE)
+                        } else getColorByAttr(context, attrId, ThemeUtil.THEME_DEFAULT)
                     } else if (ThemeUtil.isTranslucentTheme(theme)) {
                         val primaryColorStr = context.appPreferences.translucentPrimaryColor
                         return if (primaryColorStr != null) {
                             Color.parseColor(primaryColorStr)
-                        } else getColorByAttr(context, attrId, ThemeUtil.THEME_BLUE)
+                        } else getColorByAttr(context, attrId, ThemeUtil.THEME_DEFAULT)
                     }
                     return context.getColorCompat(
                         resources.getIdentifier(
@@ -323,6 +323,22 @@ class App : Application(), IApp, SketchFactory {
                         )
                     )
                 }
+
+                R.attr.colorNewPrimary -> {
+                    return if (ThemeUtil.isNightMode(theme)) {
+                        context.getColorCompat(R.color.theme_color_new_primary_night)
+                    } else if (
+                        theme == ThemeUtil.THEME_CUSTOM
+                        || ThemeUtil.isTranslucentTheme(theme)
+                    ) {
+                        getColorByAttr(context, R.attr.colorPrimary, theme)
+                    } else {
+                        context.getColorCompat(
+                            R.color.theme_color_new_primary_light
+                        )
+                    }
+                }
+
                 R.attr.colorAccent -> {
                     return if (ThemeUtil.THEME_CUSTOM == theme || ThemeUtil.isTranslucentTheme(theme)) {
                         getColorByAttr(context, R.attr.colorPrimary, theme)
@@ -333,17 +349,6 @@ class App : Application(), IApp, SketchFactory {
                                 "color",
                                 packageName
                             )
-                        )
-                    }
-                }
-                R.attr.colorNewAccent -> {
-                    return if (ThemeUtil.THEME_CUSTOM == theme || ThemeUtil.isTranslucentTheme(theme)) {
-                        getColorByAttr(context, R.attr.colorPrimary, theme)
-                    } else if (ThemeUtil.isNightMode(theme)) {
-                        context.getColorCompat(R.color.theme_color_accent_night)
-                    } else {
-                        context.getColorCompat(
-                            R.color.theme_color_accent_light
                         )
                     }
                 }
@@ -409,12 +414,14 @@ class App : Application(), IApp, SketchFactory {
                         )
                     } else context.getColorCompat(if (ThemeUtil.isNightMode(theme)) R.color.color_text_secondary_night else R.color.color_text_secondary)
                 }
+
                 R.attr.colorTextOnPrimary -> {
                     return if (ThemeUtil.isTranslucentTheme(theme)) {
                         context.getColorCompat(R.color.white)
-                    } else getColorByAttr(context, R.attr.colorBg, theme)
+                    } else getColorByAttr(context, R.attr.colorBackground, theme)
                 }
-                R.attr.colorBg -> {
+
+                R.attr.colorBackground -> {
                     if (ThemeUtil.isTranslucentTheme(theme)) {
                         return context.getColorCompat(R.color.transparent)
                     }
@@ -578,7 +585,8 @@ class App : Application(), IApp, SketchFactory {
                     }
                     return context.getColorCompat(if (ThemeUtil.isStatusBarFontDark()) R.color.theme_color_toolbar_item_light else R.color.theme_color_toolbar_item_dark)
                 }
-                R.attr.color_toolbar_item_secondary -> {
+
+                R.attr.colorToolbarItemSecondary -> {
                     return if (
                         ThemeUtil.isNightMode(theme) ||
                         ThemeUtil.isTranslucentTheme(theme)
@@ -592,41 +600,44 @@ class App : Application(), IApp, SketchFactory {
                         )
                     } else context.getColorCompat(if (ThemeUtil.isStatusBarFontDark()) R.color.theme_color_toolbar_item_secondary_white else R.color.theme_color_toolbar_item_secondary_light)
                 }
-                R.attr.color_swipe_refresh_layout_background -> {
+
+                R.attr.colorIndicator -> {
                     return if (ThemeUtil.isNightMode(theme) || ThemeUtil.isTranslucentTheme(theme)) {
                         context.getColorCompat(
                             resources.getIdentifier(
-                                "theme_color_swipe_refresh_view_background_$theme",
+                                "theme_color_indicator_$theme",
                                 "color",
                                 packageName
                             )
                         )
-                    } else context.getColorCompat(R.color.theme_color_swipe_refresh_view_background_light)
+                    } else context.getColorCompat(R.color.theme_color_indicator_light)
                 }
-                R.attr.colorToolbarBar -> {
+
+                R.attr.colorToolbarSurface -> {
                     return if (ThemeUtil.isTranslucentTheme(theme) || ThemeUtil.isNightMode(theme)) {
                         context.getColorCompat(
                             resources.getIdentifier(
-                                "theme_color_toolbar_bar_$theme",
+                                "theme_color_toolbar_surface_$theme",
                                 "color",
                                 packageName
                             )
                         )
                     } else {
-                        context.getColorCompat(R.color.theme_color_toolbar_bar_light)
+                        context.getColorCompat(R.color.theme_color_toolbar_surface_light)
                     }
                 }
-                R.attr.colorOnToolbarBar -> {
+
+                R.attr.colorOnToolbarSurface -> {
                     return if (ThemeUtil.isTranslucentTheme(theme) || ThemeUtil.isNightMode(theme)) {
                         context.getColorCompat(
                             resources.getIdentifier(
-                                "theme_color_on_toolbar_bar_$theme",
+                                "theme_color_on_toolbar_surface_$theme",
                                 "color",
                                 packageName
                             )
                         )
                     } else {
-                        context.getColorCompat(R.color.theme_color_on_toolbar_bar_light)
+                        context.getColorCompat(R.color.theme_color_on_toolbar_surface_light)
                     }
                 }
                 R.attr.colorNavBarSurface -> {
@@ -673,7 +684,7 @@ class App : Application(), IApp, SketchFactory {
 
                 R.color.default_color_background -> return getColorByAttr(
                     context,
-                    R.attr.colorBg
+                    R.attr.colorBackground
                 )
 
                 R.color.default_color_window_background -> return getColorByAttr(
@@ -693,15 +704,15 @@ class App : Application(), IApp, SketchFactory {
                 )
                 R.color.default_color_toolbar_item_secondary -> return getColorByAttr(
                     context,
-                    R.attr.color_toolbar_item_secondary
+                    R.attr.colorToolbarItemSecondary
                 )
                 R.color.default_color_toolbar_bar -> return getColorByAttr(
                     context,
-                    R.attr.colorToolbarBar
+                    R.attr.colorToolbarSurface
                 )
                 R.color.default_color_on_toolbar_bar -> return getColorByAttr(
                     context,
-                    R.attr.colorOnToolbarBar
+                    R.attr.colorOnToolbarSurface
                 )
                 R.color.default_color_nav_bar_surface -> return getColorByAttr(
                     context,
@@ -738,7 +749,7 @@ class App : Application(), IApp, SketchFactory {
                 R.color.default_color_divider -> return getColorByAttr(context, R.attr.colorDivider)
                 R.color.default_color_swipe_refresh_view_background -> return getColorByAttr(
                     context,
-                    R.attr.color_swipe_refresh_layout_background
+                    R.attr.colorIndicator
                 )
             }
             return context.getColorCompat(colorId)

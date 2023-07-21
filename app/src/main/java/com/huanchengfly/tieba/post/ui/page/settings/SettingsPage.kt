@@ -39,7 +39,7 @@ import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 internal fun LeadingIcon(
     content: @Composable () -> Unit
 ) {
-    CompositionLocalProvider(LocalContentColor provides ExtendedTheme.colors.accent) {
+    CompositionLocalProvider(LocalContentColor provides ExtendedTheme.colors.primary) {
         content()
         Spacer(modifier = Modifier.width(56.dp))
     }

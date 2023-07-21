@@ -278,7 +278,7 @@ abstract class BaseActivity : AppCompatActivity(), ExtraRefreshable, CoroutineSc
                 }
                 fitsSystemWindowsInt(
                     true,
-                    ThemeUtils.getColorByAttr(this@BaseActivity, R.attr.colorBg)
+                    ThemeUtils.getColorByAttr(this@BaseActivity, R.attr.colorBackground)
                 )
                 navigationBarColorInt(
                     ThemeUtils.getColorByAttr(

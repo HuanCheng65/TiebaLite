@@ -6,8 +6,18 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.*
-import androidx.compose.runtime.*
+import androidx.compose.material.ContentAlpha
+import androidx.compose.material.LocalContentAlpha
+import androidx.compose.material.LocalContentColor
+import androidx.compose.material.LocalTextStyle
+import androidx.compose.material.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.Immutable
+import androidx.compose.runtime.Stable
+import androidx.compose.runtime.State
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
@@ -256,7 +266,7 @@ object TextFieldDefaults {
         textColor: Color = ExtendedTheme.colors.text,
         disabledTextColor: Color = textColor.copy(alpha = ContentAlpha.disabled),
         backgroundColor: Color = Color.Transparent,
-        cursorColor: Color = ExtendedTheme.colors.primary,
+        cursorColor: Color = ExtendedTheme.colors.accent,
         placeholderColor: Color = ExtendedTheme.colors.text.copy(alpha = ContentAlpha.medium),
         disabledPlaceholderColor: Color = placeholderColor.copy(alpha = ContentAlpha.disabled),
     ): TextFieldColors =
@@ -274,7 +284,7 @@ object TextFieldDefaults {
         textColor: Color = ExtendedTheme.colors.text,
         disabledTextColor: Color = textColor.copy(alpha = ContentAlpha.disabled),
         backgroundColor: Color = Color.Transparent,
-        cursorColor: Color = ExtendedTheme.colors.primary,
+        cursorColor: Color = ExtendedTheme.colors.accent,
         placeholderColor: Color = ExtendedTheme.colors.text.copy(alpha = ContentAlpha.medium),
         disabledPlaceholderColor: Color = placeholderColor.copy(alpha = ContentAlpha.disabled),
         counterColor: Color = ExtendedTheme.colors.text.copy(alpha = ContentAlpha.medium),

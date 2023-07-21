@@ -169,8 +169,8 @@
     <style name="Toolbar.Subtitle">
         <item name="android:textStyle">bold</item>
         <item name="android:textSize">14sp</item>
-        <item name="android:textColor">?attr/color_toolbar_item_secondary</item>
-        <item name="textColor">?attr/color_toolbar_item_secondary</item>
+        <item name="android:textColor">?attr/colorToolbarItemSecondary</item>
+        <item name="textColor">?attr/colorToolbarItemSecondary</item>
     </style>
 
     <style name="TextAppearance.ListTitle" parent="Widget.AppCompat.TextView.SpinnerItem">
@@ -445,14 +445,14 @@
         <item name="colorText">@color/color_text</item>
         <item name="colorTextSecondary">@color/color_text_secondary</item>
         <item name="colorDivider">@color/color_divider</item>
-        <item name="colorBg">@color/theme_color_background_light</item>
+        <item name="colorBackground">@color/theme_color_background_light</item>
         <item name="colorChip">@color/theme_color_window_background_light</item>
         <item name="colorUnselected">@color/colorUnselected</item>
         <item name="colorNavBar">@color/white</item>
         <item name="colorFloorCard">@color/default_color_floor_card</item>
         <item name="colorCard">@color/white</item>
         <item name="shadow_color">@color/color_shadow</item>
-        <item name="color_toolbar_item_secondary">@color/white</item>
+        <item name="colorToolbarItemSecondary">@color/white</item>
     </style>
 
     <style name="AppTheme.Dark" parent="Base.AppTheme.Dark">
@@ -475,7 +475,7 @@
         <item name="colorToolbarItemActive">?attr/colorToolbarItem</item>
         <item name="colorText">@color/color_text_night</item>
         <item name="colorTextSecondary">@color/color_text_secondary_night</item>
-        <item name="colorBg">@color/theme_color_background_dark</item>
+        <item name="colorBackground">@color/theme_color_background_dark</item>
         <item name="colorChip">@color/theme_color_window_background_dark</item>
         <item name="colorUnselected">#415c68</item>
         <item name="colorFloorCard">#FF1A2A39</item>
@@ -535,7 +535,7 @@
         <item name="colorAccent">#FF4477E0</item>
         <item name="colorToolbarItem">@color/colorToolbarText</item>
         <item name="colorToolbarItemActive">?attr/colorAccent</item>
-        <item name="color_toolbar_item_secondary">@color/color_text_secondary</item>
+        <item name="colorToolbarItemSecondary">@color/color_text_secondary</item>
     </style>
 
     <style name="TiebaLite.Translucent.Light" parent="AppTheme">
@@ -545,14 +545,14 @@
         <item name="colorAccent">@color/theme_color_primary_tieba</item>
         <item name="colorOnAccent">@color/theme_color_on_accent_translucent_light</item>
         <item name="colorToolbar">@color/transparent</item>
-        <item name="colorBg">@color/transparent</item>
+        <item name="colorBackground">@color/transparent</item>
         <item name="colorChip">@color/transparent</item>
         <item name="colorNavBar">@color/transparent</item>
         <item name="colorToolbarItem">@color/theme_color_toolbar_item_translucent_light</item>
         <item name="colorToolbarItemActive">
             @color/theme_color_toolbar_item_active_translucent_light
         </item>
-        <item name="color_toolbar_item_secondary">
+        <item name="colorToolbarItemSecondary">
             @color/theme_color_toolbar_item_secondary_translucent_light
         </item>
         <item name="colorText">@color/color_text_translucent_light</item>
@@ -569,13 +569,13 @@
         <item name="colorAccent">@color/theme_color_primary_tieba</item>
         <item name="colorOnAccent">@color/theme_color_on_accent_translucent_dark</item>
         <item name="colorToolbar">@color/transparent</item>
-        <item name="colorBg">@color/transparent</item>
+        <item name="colorBackground">@color/transparent</item>
         <item name="colorNavBar">@color/transparent</item>
         <item name="colorToolbarItem">@color/theme_color_toolbar_item_translucent_dark</item>
         <item name="colorToolbarItemActive">
             @color/theme_color_toolbar_item_active_translucent_dark
         </item>
-        <item name="color_toolbar_item_secondary">
+        <item name="colorToolbarItemSecondary">
             @color/theme_color_toolbar_item_secondary_translucent_dark
         </item>
         <item name="colorText">@color/color_text_translucent_dark</item>
@@ -620,8 +620,8 @@
         <item name="colorToolbar">#FF15202B</item>
         <item name="colorToolbarItem">#FFE6E7EE</item>
         <item name="colorToolbarItemActive">@color/white</item>
-        <item name="color_toolbar_item_secondary">#CCE6E7EE</item>
-        <item name="colorBg">@color/theme_color_background_dark</item>
+        <item name="colorToolbarItemSecondary">#CCE6E7EE</item>
+        <item name="colorBackground">@color/theme_color_background_dark</item>
         <item name="colorChip">@color/theme_color_window_background_dark</item>
         <item name="colorNavBar">#FF15202B</item>
         <item name="colorDivider">#FF10171D</item>
@@ -635,10 +635,10 @@
         <item name="colorToolbar">@color/theme_color_toolbar_blue_dark</item>
         <item name="colorToolbarItem">@color/theme_color_toolbar_item_night</item>
         <item name="colorToolbarItemActive">@color/theme_color_toolbar_item_active_blue_dark</item>
-        <item name="color_toolbar_item_secondary">
+        <item name="colorToolbarItemSecondary">
             @color/theme_color_toolbar_item_secondary_blue_dark
         </item>
-        <item name="colorBg">@color/theme_color_background_blue_dark</item>
+        <item name="colorBackground">@color/theme_color_background_blue_dark</item>
         <item name="colorChip">@color/theme_color_window_background_blue_dark</item>
         <item name="colorNavBar">@color/theme_color_nav_blue_dark</item>
         <item name="colorDivider">@color/theme_color_divider_blue_dark</item>
@@ -652,10 +652,10 @@
         <item name="colorToolbar">@color/theme_color_toolbar_grey_dark</item>
         <item name="colorToolbarItem">@color/theme_color_toolbar_item_night</item>
         <item name="colorToolbarItemActive">@color/theme_color_toolbar_item_active_grey_dark</item>
-        <item name="color_toolbar_item_secondary">
+        <item name="colorToolbarItemSecondary">
             @color/theme_color_toolbar_item_secondary_grey_dark
         </item>
-        <item name="colorBg">@color/theme_color_background_grey_dark</item>
+        <item name="colorBackground">@color/theme_color_background_grey_dark</item>
         <item name="colorChip">@color/theme_color_window_background_grey_dark</item>
         <item name="colorNavBar">@color/theme_color_nav_grey_dark</item>
         <item name="colorDivider">@color/theme_color_divider_grey_dark</item>
@@ -668,10 +668,10 @@
         <item name="colorToolbar">@color/black</item>
         <item name="colorToolbarItem">#FFE6E7EE</item>
         <item name="colorToolbarItemActive">@color/white</item>
-        <item name="color_toolbar_item_secondary">#CCE6E7EE</item>
+        <item name="colorToolbarItemSecondary">#CCE6E7EE</item>
         <item name="colorFloorCard">#FF151515</item>
         <item name="colorCard">#FF101010</item>
-        <item name="colorBg">@color/theme_color_background_amoled_dark</item>
+        <item name="colorBackground">@color/theme_color_background_amoled_dark</item>
         <item name="colorChip">@color/theme_color_window_background_amoled_dark</item>
         <item name="colorNavBar">@color/black</item>
         <item name="colorDivider">#FF101010</item>

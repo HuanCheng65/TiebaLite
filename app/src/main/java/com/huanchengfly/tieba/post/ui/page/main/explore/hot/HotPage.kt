@@ -190,7 +190,7 @@ fun HotPage(
                             }
                         }
                         item {
-                            ProvideContentColor(color = ExtendedTheme.colors.accent) {
+                            ProvideContentColor(color = ExtendedTheme.colors.primary) {
                                 Row(
                                     verticalAlignment = Alignment.CenterVertically,
                                     horizontalArrangement = Arrangement.spacedBy(8.dp),
@@ -352,7 +352,7 @@ fun HotPage(
             state = pullRefreshState,
             modifier = Modifier.align(Alignment.TopCenter),
             backgroundColor = ExtendedTheme.colors.pullRefreshIndicator,
-            contentColor = ExtendedTheme.colors.accent,
+            contentColor = ExtendedTheme.colors.primary,
         )
     }
 }
@@ -470,7 +470,7 @@ private fun ThreadListTab(
     onSelected: () -> Unit
 ) {
     val textColor by animateColorAsState(targetValue = if (selected) ExtendedTheme.colors.onAccent else ExtendedTheme.colors.onChip)
-    val backgroundColor by animateColorAsState(targetValue = if (selected) ExtendedTheme.colors.accent else ExtendedTheme.colors.chip)
+    val backgroundColor by animateColorAsState(targetValue = if (selected) ExtendedTheme.colors.primary else ExtendedTheme.colors.chip)
     Text(
         text = text,
         textAlign = TextAlign.Center,

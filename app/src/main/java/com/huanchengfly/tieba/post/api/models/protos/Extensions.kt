@@ -338,7 +338,7 @@ val Post.subPostContents: ImmutableList<AnnotatedString>
 val SubPostList.contentText: AnnotatedString
     get() {
         val context = App.INSTANCE
-        val accentColor = Color(ThemeUtils.getColorByAttr(context, R.attr.colorNewAccent))
+        val accentColor = Color(ThemeUtils.getColorByAttr(context, R.attr.colorNewPrimary))
 
         val userNameString = buildAnnotatedString {
             withStyle(

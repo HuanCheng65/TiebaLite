@@ -44,7 +44,7 @@ import java.util.Locale
 
 object ThemeUtil {
     val themeState: MutableState<String> by lazy(mode = LazyThreadSafetyMode.SYNCHRONIZED) {
-        mutableStateOf(dataStore.getString(KEY_THEME, THEME_BLUE))
+        mutableStateOf(dataStore.getString(KEY_THEME, THEME_DEFAULT))
     }
 
     const val TAG = "ThemeUtil"
@@ -62,8 +62,9 @@ object ThemeUtil {
     const val THEME_TRANSLUCENT_LIGHT = "translucent_light"
     const val THEME_TRANSLUCENT_DARK = "translucent_dark"
     const val THEME_CUSTOM = "custom"
-    const val THEME_BLUE = "tieba"
+    const val THEME_DEFAULT = "tieba"
     const val THEME_BLACK = "black"
+    const val THEME_BLUE = "blue"
     const val THEME_PURPLE = "purple"
     const val THEME_PINK = "pink"
     const val THEME_RED = "red"
@@ -109,7 +110,7 @@ object ThemeUtil {
 
     fun switchNightMode() {
         if (isNightMode()) {
-            switchTheme(dataStore.getString(KEY_OLD_THEME, THEME_BLUE), recordOldTheme = false)
+            switchTheme(dataStore.getString(KEY_OLD_THEME, THEME_DEFAULT), recordOldTheme = false)
         } else {
             switchTheme(dataStore.getString(KEY_DARK_THEME, THEME_AMOLED_DARK))
         }
@@ -124,7 +125,7 @@ object ThemeUtil {
 
     @JvmOverloads
     fun switchFromNightMode(context: Activity, recreate: Boolean = true) {
-        switchTheme(dataStore.getString(KEY_OLD_THEME, THEME_BLUE), recordOldTheme = false)
+        switchTheme(dataStore.getString(KEY_OLD_THEME, THEME_DEFAULT), recordOldTheme = false)
         if (recreate) {
             refreshUI(context)
         }
@@ -393,7 +394,7 @@ object ThemeUtil {
         return when (themeName.lowercase(Locale.getDefault())) {
             THEME_TRANSLUCENT, THEME_TRANSLUCENT_LIGHT -> R.style.TiebaLite_Translucent_Light
             THEME_TRANSLUCENT_DARK -> R.style.TiebaLite_Translucent_Dark
-            THEME_BLUE -> R.style.TiebaLite_Tieba
+            THEME_DEFAULT -> R.style.TiebaLite_Tieba
             THEME_BLACK -> R.style.TiebaLite_Black
             THEME_PURPLE -> R.style.TiebaLite_Purple
             THEME_PINK -> R.style.TiebaLite_Pink
@@ -414,7 +415,7 @@ object ThemeUtil {
             THEME_TRANSLUCENT_LIGHT,
             THEME_TRANSLUCENT_DARK,
             THEME_CUSTOM,
-            THEME_BLUE,
+            THEME_DEFAULT,
             THEME_BLACK,
             THEME_PURPLE,
             THEME_PINK,
@@ -423,7 +424,7 @@ object ThemeUtil {
             THEME_GREY_DARK,
             THEME_AMOLED_DARK -> theme.lowercase(Locale.getDefault())
 
-            else -> THEME_BLUE
+            else -> THEME_DEFAULT
         }
     }
 }

@@ -98,7 +98,7 @@ fun HistoryPage(
                     },
                     divider = {},
                     backgroundColor = Color.Transparent,
-                    contentColor = ExtendedTheme.colors.accent,
+                    contentColor = ExtendedTheme.colors.primary,
                     modifier = Modifier
                         .width(100.dp * 2)
                         .align(Alignment.CenterHorizontally)
@@ -116,7 +116,7 @@ fun HistoryPage(
                                 pagerState.animateScrollToPage(0)
                             }
                         },
-                        selectedContentColor = ExtendedTheme.colors.accent,
+                        selectedContentColor = ExtendedTheme.colors.primary,
                         unselectedContentColor = ExtendedTheme.colors.onTopBarSecondary
                     )
                     Tab(
@@ -132,7 +132,7 @@ fun HistoryPage(
                                 pagerState.animateScrollToPage(1)
                             }
                         },
-                        selectedContentColor = ExtendedTheme.colors.accent,
+                        selectedContentColor = ExtendedTheme.colors.primary,
                         unselectedContentColor = ExtendedTheme.colors.onTopBarSecondary
                     )
                 }

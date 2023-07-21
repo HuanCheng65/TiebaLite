@@ -93,8 +93,8 @@
     <color name="theme_color_accent_grey_dark">@color/tieba</color>
     <color name="theme_color_accent_amoled_dark">@color/tieba</color>
 
-    <color name="theme_color_accent_light">#FF000000</color>
-    <color name="theme_color_accent_night">#FF5588D7</color>
+    <color name="theme_color_new_primary_light">#FF000000</color>
+    <color name="theme_color_new_primary_night">#FF5588D7</color>
 
     <color name="theme_color_chip_light">#FFF8F8F8</color>
     <color name="theme_color_chip_blue_dark">#242F3D</color>
@@ -153,23 +153,23 @@
     <color name="theme_color_toolbar_item_active_grey_dark">@color/white</color>
     <color name="theme_color_toolbar_item_active_amoled_dark">@color/white</color>
 
-    <color name="theme_color_toolbar_bar_light">#F8F8F8</color>
-    <color name="theme_color_toolbar_bar_blue_dark">#242F3D</color>
-    <color name="theme_color_toolbar_bar_grey_dark">#2C2C2C</color>
-    <color name="theme_color_toolbar_bar_amoled_dark">#1E1E1E</color>
-    <color name="theme_color_toolbar_bar_translucent_light">#10FFFFFF</color>
-    <color name="theme_color_toolbar_bar_translucent_dark">#20000000</color>
+    <color name="theme_color_toolbar_surface_light">#F8F8F8</color>
+    <color name="theme_color_toolbar_surface_blue_dark">#242F3D</color>
+    <color name="theme_color_toolbar_surface_grey_dark">#2C2C2C</color>
+    <color name="theme_color_toolbar_surface_amoled_dark">#1E1E1E</color>
+    <color name="theme_color_toolbar_surface_translucent_light">#10FFFFFF</color>
+    <color name="theme_color_toolbar_surface_translucent_dark">#20000000</color>
 
-    <color name="theme_color_on_toolbar_bar_light">#BFBFBF</color>
-    <color name="theme_color_on_toolbar_bar_dark">#5C5C5C</color>
-    <color name="theme_color_on_toolbar_bar_blue_dark">#626C79</color>
-    <color name="theme_color_on_toolbar_bar_grey_dark">#5C5C5C</color>
-    <color name="theme_color_on_toolbar_bar_amoled_dark">#5C5C5C</color>
-    <color name="theme_color_on_toolbar_bar_translucent_light">
-        @color/theme_color_on_toolbar_bar_light
+    <color name="theme_color_on_toolbar_surface_light">#BFBFBF</color>
+    <color name="theme_color_on_toolbar_surface_dark">#5C5C5C</color>
+    <color name="theme_color_on_toolbar_surface_blue_dark">#626C79</color>
+    <color name="theme_color_on_toolbar_surface_grey_dark">#5C5C5C</color>
+    <color name="theme_color_on_toolbar_surface_amoled_dark">#5C5C5C</color>
+    <color name="theme_color_on_toolbar_surface_translucent_light">
+        @color/theme_color_on_toolbar_surface_light
     </color>
-    <color name="theme_color_on_toolbar_bar_translucent_dark">
-        @color/theme_color_on_toolbar_bar_grey_dark
+    <color name="theme_color_on_toolbar_surface_translucent_dark">
+        @color/theme_color_on_toolbar_surface_grey_dark
     </color>
 
     <color name="theme_color_nav_bar_surface_light">#FFF8F8F8</color>
@@ -224,13 +224,13 @@
     <color name="theme_color_card_grey_dark">#FF2A2A2A</color>
     <color name="theme_color_card_amoled_dark">#FF101010</color>
 
-    <color name="theme_color_swipe_refresh_view_background_light">#FFFFFFFF</color>
-    <color name="theme_color_swipe_refresh_view_background_translucent_light">#FFFFFFFF</color>
-    <color name="theme_color_swipe_refresh_view_background_translucent_dark">#FF1C1C1C</color>
-    <color name="theme_color_swipe_refresh_view_background_dark">#FF1C2938</color>
-    <color name="theme_color_swipe_refresh_view_background_blue_dark">#202B37</color>
-    <color name="theme_color_swipe_refresh_view_background_grey_dark">#FF252525</color>
-    <color name="theme_color_swipe_refresh_view_background_amoled_dark">#FF1C1C1C</color>
+    <color name="theme_color_indicator_light">#FFFFFFFF</color>
+    <color name="theme_color_indicator_translucent_light">#FFFFFFFF</color>
+    <color name="theme_color_indicator_translucent_dark">#FF1C1C1C</color>
+    <color name="theme_color_indicator_dark">#FF1C2938</color>
+    <color name="theme_color_indicator_blue_dark">#202B37</color>
+    <color name="theme_color_indicator_grey_dark">#FF252525</color>
+    <color name="theme_color_indicator_amoled_dark">#FF1C1C1C</color>
 
     <color name="theme_color_divider_light">#FFF5F5F5</color>
     <color name="theme_color_divider_translucent_light">#10FFFFFF</color>

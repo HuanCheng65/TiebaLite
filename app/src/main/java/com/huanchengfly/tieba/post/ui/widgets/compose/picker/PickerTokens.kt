@@ -38,7 +38,7 @@ object PickerDefaults {
     fun pickerColors(
         itemColor: Color = ExtendedTheme.colors.text,
         disabledItemColor: Color = itemColor.copy(alpha = ContentAlpha.disabled),
-        selectedItemColor: Color = ExtendedTheme.colors.primary,
+        selectedItemColor: Color = ExtendedTheme.colors.accent,
         disabledSelectedItemColor: Color = disabledItemColor
     ): PickerColors =
         DefaultPickerColors(

@@ -16,3 +16,9 @@ val ExtendedColors.loadMoreIndicator: Color
     } else {
         indicator
     }
+
+val ExtendedColors.invertChipBackground: Color
+    get() = if (ThemeUtil.isNightMode(theme)) accent else onAccent
+
+val ExtendedColors.invertChipContent: Color
+    get() = if (ThemeUtil.isNightMode(theme)) accent.copy(alpha = 0.3f) else accent

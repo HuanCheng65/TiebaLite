@@ -208,7 +208,7 @@ fun PersonalizedPage(
             state = pullRefreshState,
             modifier = Modifier.align(Alignment.TopCenter),
             backgroundColor = ExtendedTheme.colors.pullRefreshIndicator,
-            contentColor = ExtendedTheme.colors.accent,
+            contentColor = ExtendedTheme.colors.primary,
         )
 
         AnimatedVisibility(
@@ -222,7 +222,7 @@ fun PersonalizedPage(
                     .padding(top = 72.dp)
                     .clip(RoundedCornerShape(100))
                     .background(
-                        color = ExtendedTheme.colors.accent,
+                        color = ExtendedTheme.colors.primary,
                         shape = RoundedCornerShape(100)
                     )
                     .padding(horizontal = 16.dp, vertical = 8.dp)

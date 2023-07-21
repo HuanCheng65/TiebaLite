@@ -149,7 +149,7 @@ fun ConcernPage(
             state = pullRefreshState,
             modifier = Modifier.align(Alignment.TopCenter),
             backgroundColor = ExtendedTheme.colors.pullRefreshIndicator,
-            contentColor = ExtendedTheme.colors.accent,
+            contentColor = ExtendedTheme.colors.primary,
         )
     }
 }

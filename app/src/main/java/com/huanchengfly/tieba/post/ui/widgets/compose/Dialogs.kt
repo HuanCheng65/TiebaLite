@@ -277,9 +277,9 @@ fun PromptDialog(
                     .focusRequester(focusRequester)
                     .fillMaxWidth(),
                 colors = TextFieldDefaults.outlinedTextFieldColors(
-                    cursorColor = ExtendedTheme.colors.accent,
-                    focusedBorderColor = ExtendedTheme.colors.accent,
-                    focusedLabelColor = ExtendedTheme.colors.accent
+                    cursorColor = ExtendedTheme.colors.primary,
+                    focusedBorderColor = ExtendedTheme.colors.primary,
+                    focusedLabelColor = ExtendedTheme.colors.primary
                 )
             )
             LaunchedEffect(focusRequester) {

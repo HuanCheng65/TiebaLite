@@ -179,7 +179,7 @@ fun NavigationDrawerContent(
                         Text(
                             text = stringResource(id = R.string.app_name).uppercase(),
                             style = MaterialTheme.typography.h6,
-                            color = ExtendedTheme.colors.accent
+                            color = ExtendedTheme.colors.primary
                         )
                     }
                 }

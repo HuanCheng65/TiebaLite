@@ -477,7 +477,7 @@ fun ReplyPage(
                         badge = {
                             if (selectedImageList.isNotEmpty()) {
                                 Badge(
-                                    backgroundColor = ExtendedTheme.colors.primary,
+                                    backgroundColor = ExtendedTheme.colors.accent,
                                     contentColor = ExtendedTheme.colors.background,
                                 ) {
                                     Text(
@@ -511,7 +511,7 @@ fun ReplyPage(
                 CircularProgressIndicator(
                     modifier = Modifier.size(24.dp),
                     strokeWidth = 2.dp,
-                    color = ExtendedTheme.colors.accent
+                    color = ExtendedTheme.colors.primary
                 )
             } else {
                 IconButton(

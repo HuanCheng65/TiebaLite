@@ -257,8 +257,8 @@ private fun ForumHeader(
                             modifier = Modifier
                                 .clip(RoundedCornerShape(100))
                                 .height(8.dp),
-                            color = ExtendedTheme.colors.accent,
-                            backgroundColor = ExtendedTheme.colors.accent.copy(alpha = 0.25f)
+                            color = ExtendedTheme.colors.primary,
+                            backgroundColor = ExtendedTheme.colors.primary.copy(alpha = 0.25f)
                         )
                         Text(
                             text = stringResource(
@@ -281,7 +281,7 @@ private fun ForumHeader(
                     elevation = null,
                     shape = RoundedCornerShape(100),
                     colors = ButtonDefaults.buttonColors(
-                        backgroundColor = ExtendedTheme.colors.accent,
+                        backgroundColor = ExtendedTheme.colors.primary,
                         contentColor = ExtendedTheme.colors.onAccent
                     ),
                     contentPadding = PaddingValues(horizontal = 18.dp, vertical = 6.dp),
@@ -628,7 +628,7 @@ fun ForumPage(
                             }
                         },
                         backgroundColor = ExtendedTheme.colors.windowBackground,
-                        contentColor = ExtendedTheme.colors.accent,
+                        contentColor = ExtendedTheme.colors.primary,
                         modifier = Modifier.navigationBarsPadding()
                     ) {
                         Icon(
@@ -712,7 +712,7 @@ fun ForumPage(
                         },
                         divider = {},
                         backgroundColor = Color.Transparent,
-                        contentColor = ExtendedTheme.colors.accent,
+                        contentColor = ExtendedTheme.colors.primary,
                         modifier = Modifier
                             .width(tabWidth.dp)
                             .align(Alignment.Start)
@@ -777,7 +777,7 @@ fun ForumPage(
                                         menuState.expanded = true
                                     }
                                 },
-                                selectedContentColor = ExtendedTheme.colors.accent,
+                                selectedContentColor = ExtendedTheme.colors.primary,
                                 unselectedContentColor = ExtendedTheme.colors.onTopBarSecondary,
                                 interactionSource = interactionSource,
                             ) {
@@ -809,7 +809,7 @@ fun ForumPage(
                                     pagerState.animateScrollToPage(1)
                                 }
                             },
-                            selectedContentColor = ExtendedTheme.colors.accent,
+                            selectedContentColor = ExtendedTheme.colors.primary,
                             unselectedContentColor = ExtendedTheme.colors.onTopBarSecondary
                         ) {
                             Row(

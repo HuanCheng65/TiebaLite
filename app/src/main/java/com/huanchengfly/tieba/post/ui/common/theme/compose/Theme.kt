@@ -87,8 +87,8 @@ fun getColorPalette(
     darkTheme: Boolean,
     extendedColors: ExtendedColors
 ): Colors {
-    val primaryColor = extendedColors.primary
-    val secondaryColor = extendedColors.accent
+    val primaryColor = extendedColors.accent
+    val secondaryColor = extendedColors.primary
     return if (darkTheme) {
         darkColors(
             primary = primaryColor,
@@ -124,15 +124,15 @@ private fun getThemeColorForTheme(theme: String): ExtendedColors {
     return ExtendedColors(
         nowTheme,
         ThemeUtil.isNightMode(nowTheme),
+        Color(App.ThemeDelegate.getColorByAttr(App.INSTANCE, R.attr.colorNewPrimary, nowTheme)),
         Color(App.ThemeDelegate.getColorByAttr(App.INSTANCE, R.attr.colorPrimary, nowTheme)),
-        Color(App.ThemeDelegate.getColorByAttr(App.INSTANCE, R.attr.colorNewAccent, nowTheme)),
         Color(App.ThemeDelegate.getColorByAttr(App.INSTANCE, R.attr.colorOnAccent, nowTheme)),
         Color(App.ThemeDelegate.getColorByAttr(App.INSTANCE, R.attr.colorToolbar, nowTheme)),
         Color(App.ThemeDelegate.getColorByAttr(App.INSTANCE, R.attr.colorToolbarItem, nowTheme)),
         Color(
             App.ThemeDelegate.getColorByAttr(
                 App.INSTANCE,
-                R.attr.color_toolbar_item_secondary,
+                R.attr.colorToolbarItemSecondary,
                 nowTheme
             )
         ),
@@ -143,8 +143,14 @@ private fun getThemeColorForTheme(theme: String): ExtendedColors {
                 nowTheme
             )
         ),
-        Color(App.ThemeDelegate.getColorByAttr(App.INSTANCE, R.attr.colorToolbarBar, nowTheme)),
-        Color(App.ThemeDelegate.getColorByAttr(App.INSTANCE, R.attr.colorOnToolbarBar, nowTheme)),
+        Color(App.ThemeDelegate.getColorByAttr(App.INSTANCE, R.attr.colorToolbarSurface, nowTheme)),
+        Color(
+            App.ThemeDelegate.getColorByAttr(
+                App.INSTANCE,
+                R.attr.colorOnToolbarSurface,
+                nowTheme
+            )
+        ),
         bottomBarColor,
         Color(App.ThemeDelegate.getColorByAttr(App.INSTANCE, R.attr.colorNavBarSurface, nowTheme)),
         Color(
@@ -158,7 +164,7 @@ private fun getThemeColorForTheme(theme: String): ExtendedColors {
         textColor.copy(alpha = ContentAlpha.medium),
         textColor.copy(alpha = ContentAlpha.disabled),
         Color(App.ThemeDelegate.getColorByAttr(App.INSTANCE, R.attr.color_text_disabled, nowTheme)),
-        Color(App.ThemeDelegate.getColorByAttr(App.INSTANCE, R.attr.colorBg, nowTheme)),
+        Color(App.ThemeDelegate.getColorByAttr(App.INSTANCE, R.attr.colorBackground, nowTheme)),
         Color(App.ThemeDelegate.getColorByAttr(App.INSTANCE, R.attr.colorChip, nowTheme)),
         Color(App.ThemeDelegate.getColorByAttr(App.INSTANCE, R.attr.colorOnChip, nowTheme)),
         Color(App.ThemeDelegate.getColorByAttr(App.INSTANCE, R.attr.colorUnselected, nowTheme)),
@@ -169,7 +175,7 @@ private fun getThemeColorForTheme(theme: String): ExtendedColors {
         Color(
             App.ThemeDelegate.getColorByAttr(
                 App.INSTANCE,
-                R.attr.color_swipe_refresh_layout_background,
+                R.attr.colorIndicator,
                 nowTheme
             )
         ),

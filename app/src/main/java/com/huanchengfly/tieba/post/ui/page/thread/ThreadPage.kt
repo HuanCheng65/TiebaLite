@@ -109,6 +109,8 @@ import com.huanchengfly.tieba.post.toastShort
 import com.huanchengfly.tieba.post.ui.common.PbContentRender
 import com.huanchengfly.tieba.post.ui.common.PbContentText
 import com.huanchengfly.tieba.post.ui.common.theme.compose.ExtendedTheme
+import com.huanchengfly.tieba.post.ui.common.theme.compose.invertChipBackground
+import com.huanchengfly.tieba.post.ui.common.theme.compose.invertChipContent
 import com.huanchengfly.tieba.post.ui.common.theme.compose.pullRefreshIndicator
 import com.huanchengfly.tieba.post.ui.page.ProvideNavigator
 import com.huanchengfly.tieba.post.ui.page.destinations.ForumPageDestination
@@ -141,7 +143,6 @@ import com.huanchengfly.tieba.post.utils.DateTimeUtils.getRelativeTimeString
 import com.huanchengfly.tieba.post.utils.HistoryUtil
 import com.huanchengfly.tieba.post.utils.StringUtil
 import com.huanchengfly.tieba.post.utils.StringUtil.getShortNumString
-import com.huanchengfly.tieba.post.utils.ThemeUtil
 import com.huanchengfly.tieba.post.utils.TiebaUtil
 import com.huanchengfly.tieba.post.utils.Util.getIconColorByLevel
 import com.huanchengfly.tieba.post.utils.appPreferences
@@ -181,7 +182,7 @@ fun PostAgreeBtn(
     modifier: Modifier = Modifier
 ) {
     val animatedColor by animateColorAsState(
-        targetValue = if (hasAgreed) ExtendedTheme.colors.primary else ExtendedTheme.colors.textSecondary,
+        targetValue = if (hasAgreed) ExtendedTheme.colors.accent else ExtendedTheme.colors.textSecondary,
         label = "postAgreeBtnColor"
     )
     Button(
@@ -223,7 +224,7 @@ private fun BottomBarAgreeBtn(
     onClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val color = if (hasAgreed) ExtendedTheme.colors.primary else ExtendedTheme.colors.textSecondary
+    val color = if (hasAgreed) ExtendedTheme.colors.accent else ExtendedTheme.colors.textSecondary
     val animatedColor by animateColorAsState(color, label = "agreeBtnColor")
 
     Button(
@@ -318,10 +319,8 @@ private fun ToggleButton(
     icon: @Composable (() -> Unit)? = null,
     backgroundColor: Color = ExtendedTheme.colors.chip,
     contentColor: Color = ExtendedTheme.colors.text,
-    selectedBackgroundColor: Color = if (ThemeUtil.isNightMode()) MaterialTheme.colors.secondary.copy(
-        alpha = 0.3f
-    ) else MaterialTheme.colors.secondary,
-    selectedContentColor: Color = if (ThemeUtil.isNightMode()) MaterialTheme.colors.secondary else MaterialTheme.colors.onSecondary,
+    selectedBackgroundColor: Color = ExtendedTheme.colors.invertChipBackground,
+    selectedContentColor: Color = ExtendedTheme.colors.invertChipContent,
 ) {
     val animatedColor by animateColorAsState(
         if (checked) selectedContentColor else contentColor,
@@ -1122,7 +1121,7 @@ fun ThreadPage(
                                 state = pullRefreshState,
                                 modifier = Modifier.align(Alignment.TopCenter),
                                 backgroundColor = ExtendedTheme.colors.pullRefreshIndicator,
-                                contentColor = ExtendedTheme.colors.accent,
+                                contentColor = ExtendedTheme.colors.primary,
                             )
                         }
                     }
@@ -1441,7 +1440,7 @@ fun PostCard(
                             ),
                             style = MaterialTheme.typography.caption,
                             fontSize = 13.sp,
-                            color = ExtendedTheme.colors.primary,
+                            color = ExtendedTheme.colors.accent,
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .padding(top = 2.dp)
@@ -1488,8 +1487,8 @@ fun UserNameText(
             ),
             "Bawu" to buildChipInlineContent(
                 bawuType ?: "",
-                color = ExtendedTheme.colors.accent,
-                backgroundColor = ExtendedTheme.colors.accent.copy(alpha = 0.1f)
+                color = ExtendedTheme.colors.primary,
+                backgroundColor = ExtendedTheme.colors.primary.copy(alpha = 0.1f)
             ),
             "Lz" to buildChipInlineContent(stringResource(id = R.string.tip_lz)),
         ),

@@ -174,7 +174,7 @@ open class AppPreferencesUtils private constructor(ctx: Context) {
         key = "status_bar_darker"
     )
 
-    var theme by DataStoreDelegates.string(defaultValue = ThemeUtil.THEME_BLUE)
+    var theme by DataStoreDelegates.string(defaultValue = ThemeUtil.THEME_DEFAULT)
 
     var translucentBackgroundAlpha by DataStoreDelegates.int(
         defaultValue = 255,

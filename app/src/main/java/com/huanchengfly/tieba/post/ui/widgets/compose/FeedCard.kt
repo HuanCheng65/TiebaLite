@@ -206,7 +206,7 @@ fun ThreadContent(
         if (showTitle) {
             withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
                 if (isGood) {
-                    withStyle(style = SpanStyle(color = ExtendedTheme.colors.primary)) {
+                    withStyle(style = SpanStyle(color = ExtendedTheme.colors.accent)) {
                         append(stringResource(id = R.string.tip_good))
                     }
                     append(" ")
@@ -433,7 +433,7 @@ private fun ThreadAgreeBtn(
     modifier: Modifier = Modifier
 ) {
     val contentColor =
-        if (hasAgree) ExtendedTheme.colors.accent else ExtendedTheme.colors.textSecondary
+        if (hasAgree) ExtendedTheme.colors.primary else ExtendedTheme.colors.textSecondary
     val animatedColor by animateColorAsState(contentColor, label = "agreeBtnContentColor")
 
     ActionBtn(

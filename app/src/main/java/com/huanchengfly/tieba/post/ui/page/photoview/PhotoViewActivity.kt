@@ -121,13 +121,13 @@ private fun ViewPhoto(
             ) {
                 CircularProgressIndicator(
                     progress = progress,
-                    color = ExtendedTheme.colors.primary,
+                    color = ExtendedTheme.colors.accent,
                     strokeWidth = 2.dp,
                     modifier = Modifier.size(48.dp)
                 )
                 Text(
                     text = "${(progress * 100).roundToInt()}%",
-                    color = ExtendedTheme.colors.primary,
+                    color = ExtendedTheme.colors.accent,
                     fontSize = 12.sp
                 )
             }
