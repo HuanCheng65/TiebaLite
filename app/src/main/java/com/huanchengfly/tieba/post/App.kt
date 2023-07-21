@@ -119,6 +119,7 @@ class App : Application(), IApp, SketchFactory {
     override fun onCreate() {
         INSTANCE = this
         super.onCreate()
+        ClientUtils.init(this)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
             setWebViewPath(this)
         }
@@ -143,7 +144,6 @@ class App : Application(), IApp, SketchFactory {
         thread {
             BlockManager.init()
             EmoticonManager.init(this@App)
-            ClientUtils.init(this@App)
         }
     }
 
