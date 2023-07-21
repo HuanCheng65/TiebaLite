@@ -17,6 +17,7 @@ import com.huanchengfly.tieba.post.utils.MobileInfoUtil
 import com.huanchengfly.tieba.post.utils.UIDUtil
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.flow.Flow
+import okhttp3.RequestBody
 import retrofit2.Call
 import retrofit2.http.*
 
@@ -457,4 +458,16 @@ interface OfficialTiebaApi {
         @Field("tbs") tbs: String = AccountUtil.getLoginInfo()!!.tbs,
         @Field("stoken") stoken: String = AccountUtil.getSToken()!!
     ): Flow<AgreeBean>
+
+    @Headers(
+        "${Header.FORCE_LOGIN}: ${Header.FORCE_LOGIN_TRUE}",
+        "${Header.DROP_HEADERS}: ${Header.CHARSET},${Header.CLIENT_TYPE}",
+        "${Header.NO_COMMON_PARAMS}: ${Param.SWAN_GAME_VER},${Param.SDK_VER}",
+    )
+    @POST("/c/s/uploadPicture")
+    fun uploadPicture(
+        @Body body: RequestBody,
+        @retrofit2.http.Header(Header.COOKIE) cookie: String = "ka=open;BAIDUID=${ClientUtils.baiduId}".takeIf { ClientUtils.baiduId != null }
+            ?: "ka=open",
+    ): Flow<UploadPictureResultBean>
 }

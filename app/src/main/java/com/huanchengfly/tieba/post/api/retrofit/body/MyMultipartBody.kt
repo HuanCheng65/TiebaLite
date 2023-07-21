@@ -12,6 +12,15 @@ import okio.ByteString.Companion.encodeUtf8
 import java.io.IOException
 import java.util.*
 
+fun buildMultipartBody(
+    boundary: String = UUID.randomUUID().toString(),
+    builder: MyMultipartBody.Builder.() -> Unit
+): MyMultipartBody {
+    return MyMultipartBody.Builder(boundary)
+        .apply(builder)
+        .build()
+}
+
 @Suppress("NAME_SHADOWING")
 class MyMultipartBody internal constructor(
     private val boundaryByteString: ByteString,

@@ -1,5 +1,9 @@
 package com.huanchengfly.tieba.post.utils;
 
+import androidx.annotation.NonNull;
+
+import java.io.File;
+import java.io.FileInputStream;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -50,5 +54,28 @@ public class MD5Util {
             e.printStackTrace();
         }
         return null;
+    }
+
+    @NonNull
+    public static String toMd5(@NonNull File file) {
+        if (!file.isFile()) {
+            return "";
+        }
+        MessageDigest digest;
+        FileInputStream in;
+        byte[] buffer = new byte[1024];
+        int len;
+        try {
+            digest = MessageDigest.getInstance("MD5");
+            in = new FileInputStream(file);
+            while ((len = in.read(buffer, 0, 1024)) != -1) {
+                digest.update(buffer, 0, len);
+            }
+            in.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "";
+        }
+        return toHexString(digest.digest());
     }
 }
