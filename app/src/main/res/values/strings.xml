@@ -697,4 +697,6 @@
     <string name="title_image_watermark_forum_name">显示吧名</string>
     <string name="title_modify_username">修改用户名</string>
     <string name="btn_reply">回复</string>
+    <string name="title_collect_floor">收藏到此楼</string>
+    <string name="title_collected_floor">已收藏到本楼</string>
 </resources>

@@ -118,6 +118,7 @@ import com.huanchengfly.tieba.post.ui.page.destinations.ForumPageDestination
 import com.huanchengfly.tieba.post.ui.page.destinations.ReplyPageDestination
 import com.huanchengfly.tieba.post.ui.page.destinations.SubPostsSheetPageDestination
 import com.huanchengfly.tieba.post.ui.page.destinations.ThreadPageDestination
+import com.huanchengfly.tieba.post.ui.widgets.Chip
 import com.huanchengfly.tieba.post.ui.widgets.compose.Avatar
 import com.huanchengfly.tieba.post.ui.widgets.compose.BackNavigationIcon
 import com.huanchengfly.tieba.post.ui.widgets.compose.Button
@@ -916,6 +917,42 @@ fun ThreadPage(
                                                     postHolder = firstPost!!,
                                                     contentRenders = firstPostContentRenders,
                                                     immersiveMode = isImmersiveMode,
+                                                    isCollected = {
+                                                        it.id == thread?.get { collectMarkPid }
+                                                            ?.toLongOrNull()
+                                                    },
+                                                    showSubPosts = false,
+                                                    onReplyClick = {
+                                                        navigator.navigate(
+                                                            ReplyPageDestination(
+                                                                forumId = curForumId ?: 0,
+                                                                forumName = forum?.get { name }
+                                                                    .orEmpty(),
+                                                                threadId = threadId,
+                                                            )
+                                                        )
+                                                    },
+                                                    onMenuCopyClick = {
+                                                        TiebaUtil.copyText(
+                                                            context,
+                                                            it.content.plainText
+                                                        )
+                                                    },
+                                                    onMenuReportClick = {
+                                                        TiebaUtil.reportPost(
+                                                            context,
+                                                            it.id.toString()
+                                                        )
+                                                    },
+                                                    onMenuFavoriteClick = {
+                                                        viewModel.send(
+                                                            ThreadUiIntent.AddFavorite(
+                                                                threadId,
+                                                                it.id,
+                                                                it.floor
+                                                            )
+                                                        )
+                                                    },
                                                 )
 
                                                 VerticalDivider(
@@ -1421,7 +1458,7 @@ fun PostCard(
                     if (isCollected(post)) {
                         Text(text = stringResource(id = R.string.title_collect_on))
                     } else {
-                        Text(text = stringResource(id = R.string.title_collect))
+                        Text(text = stringResource(id = R.string.title_collect_floor))
                     }
                 }
             }
@@ -1504,6 +1541,20 @@ fun PostCard(
                             text = post.title,
                             style = MaterialTheme.typography.subtitle1,
                             fontSize = 15.sp
+                        )
+                    }
+
+                    if (isCollected(post)) {
+                        Chip(
+                            text = stringResource(id = R.string.title_collected_floor),
+                            invertColor = true,
+                            icon = {
+                                Icon(
+                                    imageVector = Icons.Rounded.Star,
+                                    contentDescription = null,
+                                    modifier = Modifier.size(16.dp)
+                                )
+                            }
                         )
                     }
 
