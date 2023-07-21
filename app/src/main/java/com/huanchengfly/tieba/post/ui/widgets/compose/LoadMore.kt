@@ -7,6 +7,11 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberUpdatedState
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
@@ -21,6 +26,7 @@ import androidx.compose.ui.unit.dp
 import com.huanchengfly.tieba.post.R
 import com.huanchengfly.tieba.post.ui.common.theme.compose.ExtendedTheme
 import com.huanchengfly.tieba.post.ui.common.theme.compose.loadMoreIndicator
+import kotlin.math.abs
 import kotlin.math.roundToInt
 
 private val LoadDistance = 70.dp
@@ -43,16 +49,25 @@ fun LoadMoreLayout(
 ) {
     val loadDistance = with(LocalDensity.current) { LoadDistance.toPx() }
 
-    val canLoadMore = (enableLoadMore && !loadEnd)
+    var waitingStateReset by remember { mutableStateOf(false) }
 
-    val swipeableState = if (canLoadMore) {
-        rememberSwipeableState(isLoading) { newValue ->
-            if (newValue && !isLoading) onLoadMore()
+    val curIsLoading by rememberUpdatedState(newValue = isLoading)
+    val canLoadMore = remember(enableLoadMore, loadEnd) { enableLoadMore && !loadEnd }
+    val curCanLoadMore by rememberUpdatedState(newValue = canLoadMore)
+    val swipeableState = rememberSwipeableState(false) { newValue ->
+        if (newValue && !curIsLoading && curCanLoadMore) {
+            onLoadMore()
+            waitingStateReset = true
             true
-        }
-    } else {
-        rememberSwipeableState(false)
+        } else !newValue
     }
+    val stateOffset by swipeableState.offset
+    LaunchedEffect(stateOffset) {
+        if (waitingStateReset && abs(stateOffset - loadDistance) < 1f) {
+            waitingStateReset = false
+        }
+    }
+
 
     Box(
         modifier = Modifier
@@ -65,7 +80,7 @@ fun LoadMoreLayout(
                 ),
                 thresholds = { _, _ -> FractionalThreshold(0.5f) },
                 orientation = Orientation.Vertical,
-                enabled = enableLoadMore,
+                enabled = enableLoadMore && !swipeableState.isAnimationRunning && !waitingStateReset,
             )
             .fillMaxSize()
     ) {
