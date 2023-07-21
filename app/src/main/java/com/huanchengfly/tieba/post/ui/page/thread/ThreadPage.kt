@@ -1387,6 +1387,7 @@ fun PostCard(
     }
     val menuState = rememberMenuState()
     LongClickMenu(
+        menuState = menuState,
         indication = null,
         onClick = {
             onReplyClick(post)
