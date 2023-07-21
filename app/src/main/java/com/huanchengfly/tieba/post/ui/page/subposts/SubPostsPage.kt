@@ -298,7 +298,7 @@ internal fun SubPostsContent(
                                             )
                                         )
                                     },
-                                    onClickContent = {
+                                    onReplyClick = {
                                         navigator.navigate(
                                             ReplyPageDestination(
                                                 forumId = forumId,

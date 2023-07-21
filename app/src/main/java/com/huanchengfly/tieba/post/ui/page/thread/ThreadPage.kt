@@ -28,8 +28,8 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.appendInlineContent
-import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.material.ButtonDefaults
+import androidx.compose.material.DropdownMenuItem
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
@@ -96,6 +96,7 @@ import com.huanchengfly.tieba.post.api.models.protos.SimpleForum
 import com.huanchengfly.tieba.post.api.models.protos.ThreadInfo
 import com.huanchengfly.tieba.post.api.models.protos.User
 import com.huanchengfly.tieba.post.api.models.protos.bawuType
+import com.huanchengfly.tieba.post.api.models.protos.plainText
 import com.huanchengfly.tieba.post.api.retrofit.exception.getErrorMessage
 import com.huanchengfly.tieba.post.arch.ImmutableHolder
 import com.huanchengfly.tieba.post.arch.collectPartialAsState
@@ -127,6 +128,7 @@ import com.huanchengfly.tieba.post.ui.widgets.compose.HorizontalDivider
 import com.huanchengfly.tieba.post.ui.widgets.compose.LazyLoad
 import com.huanchengfly.tieba.post.ui.widgets.compose.ListMenuItem
 import com.huanchengfly.tieba.post.ui.widgets.compose.LoadMoreLayout
+import com.huanchengfly.tieba.post.ui.widgets.compose.LongClickMenu
 import com.huanchengfly.tieba.post.ui.widgets.compose.MyBackHandler
 import com.huanchengfly.tieba.post.ui.widgets.compose.MyScaffold
 import com.huanchengfly.tieba.post.ui.widgets.compose.PromptDialog
@@ -1041,7 +1043,9 @@ fun ThreadPage(
                                             subPostContents = subPostContents[index],
                                             threadAuthorId = author?.get { id } ?: 0L,
                                             blocked = blocked,
+                                            canDelete = { it.author_id == user.get { id } },
                                             immersiveMode = isImmersiveMode,
+                                            isCollected = { it.id == thread?.get { collectMarkPid.toLongOrNull() } },
                                             onAgree = {
                                                 val postHasAgreed =
                                                     item.get { agree?.hasAgree == 1 }
@@ -1053,7 +1057,7 @@ fun ThreadPage(
                                                     )
                                                 )
                                             },
-                                            onClickContent = {
+                                            onReplyClick = {
                                                 navigator.navigate(
                                                     ReplyPageDestination(
                                                         forumId = curForumId ?: 0,
@@ -1080,6 +1084,37 @@ fun ThreadPage(
                                                     )
                                                 }
                                             },
+                                            onMenuCopyClick = {
+                                                TiebaUtil.copyText(context, it.content.plainText)
+                                            },
+                                            onMenuReportClick = {
+                                                TiebaUtil.reportPost(context, it.id.toString())
+                                            },
+                                            onMenuFavoriteClick = {
+                                                val isPostCollected =
+                                                    it.id == thread?.get { collectMarkPid.toLongOrNull() }
+                                                val fid = forum?.get { id } ?: forumId
+                                                val tbs = anti?.get { tbs }
+                                                if (fid != null) {
+                                                    if (isPostCollected) {
+                                                        viewModel.send(
+                                                            ThreadUiIntent.RemoveFavorite(
+                                                                threadId = threadId,
+                                                                forumId = fid,
+                                                                tbs = tbs
+                                                            )
+                                                        )
+                                                    } else {
+                                                        viewModel.send(
+                                                            ThreadUiIntent.AddFavorite(
+                                                                threadId = threadId,
+                                                                postId = it.id,
+                                                                floor = it.floor
+                                                            )
+                                                        )
+                                                    }
+                                                }
+                                            }
                                         )
                                     }
                                     if (data.isEmpty()) {
@@ -1298,11 +1333,17 @@ fun PostCard(
     subPostContents: ImmutableList<AnnotatedString> = persistentListOf(),
     threadAuthorId: Long = 0L,
     blocked: Boolean = false,
+    canDelete: (Post) -> Boolean = { false },
     immersiveMode: Boolean = false,
+    isCollected: (Post) -> Boolean = { false },
     showSubPosts: Boolean = true,
     onAgree: () -> Unit = {},
-    onClickContent: (Post) -> Unit = {},
+    onReplyClick: (Post) -> Unit = {},
     onOpenSubPosts: (subPostId: Long) -> Unit = {},
+    onMenuCopyClick: ((Post) -> Unit)? = null,
+    onMenuFavoriteClick: ((Post) -> Unit)? = null,
+    onMenuReportClick: ((Post) -> Unit)? = null,
+    onMenuDeleteClick: ((Post) -> Unit)? = null,
 ) {
     val context = LocalContext.current
     if (blocked && !immersiveMode) {
@@ -1325,7 +1366,7 @@ fun PostCard(
         }
         return
     }
-    val (post) = postHolder
+    val post = remember(postHolder) { postHolder.get() }
     val hasPadding = remember(key1 = postHolder, key2 = immersiveMode) {
         postHolder.get { floor > 1 } && !immersiveMode
     }
@@ -1343,58 +1384,92 @@ fun PostCard(
     val subPosts = remember(postHolder) {
         post.sub_post_list?.sub_post_list?.toImmutableList() ?: persistentListOf()
     }
-    Card(
-        header = {
-            if (!immersiveMode) {
-                UserHeader(
-                    avatar = {
-                        Avatar(
-                            data = StringUtil.getAvatarUrl(author.portrait),
-                            size = Sizes.Small,
-                            contentDescription = null
-                        )
-                    },
-                    name = {
-                        UserNameText(
-                            userName = StringUtil.getUsernameAnnotatedString(
-                                LocalContext.current,
-                                author.name,
-                                author.nameShow
-                            ),
-                            userLevel = author.level_id,
-                            isLz = author.id == threadAuthorId,
-                            bawuType = author.bawuType,
-                        )
-                    },
-                    desc = {
-                        Text(text = getDescText(post.time.toLong(), post.floor, author.ip_address))
-                    },
-                    onClick = {
-                        UserActivity.launch(context, author.id.toString())
-                    }
-                ) {
-                    if (post.floor > 1) {
-                        PostAgreeBtn(
-                            hasAgreed = hasAgreed,
-                            agreeNum = agreeNum,
-                            onClick = onAgree
-                        )
+    LongClickMenu(
+        indication = null,
+        onClick = {
+            onReplyClick(post)
+        },
+        menuContent = {
+            DropdownMenuItem(onClick = { onReplyClick(post) }) {
+                Text(text = stringResource(id = R.string.btn_reply))
+            }
+            if (onMenuCopyClick != null) {
+                DropdownMenuItem(onClick = { onMenuCopyClick(post) }) {
+                    Text(text = stringResource(id = R.string.menu_copy))
+                }
+            }
+            if (onMenuFavoriteClick != null) {
+                DropdownMenuItem(onClick = { onMenuFavoriteClick(post) }) {
+                    if (isCollected(post)) {
+                        Text(text = stringResource(id = R.string.title_collect))
+                    } else {
+                        Text(text = stringResource(id = R.string.title_collect_on))
                     }
                 }
             }
-        },
-        content = {
-            SelectionContainer {
+            if (onMenuReportClick != null) {
+                DropdownMenuItem(onClick = { onMenuReportClick(post) }) {
+                    Text(text = stringResource(id = R.string.title_report))
+                }
+            }
+            if (canDelete(post) && onMenuDeleteClick != null) {
+                DropdownMenuItem(onClick = { onMenuDeleteClick(post) }) {
+                    Text(text = stringResource(id = R.string.title_delete))
+                }
+            }
+        }
+    ) {
+        Card(
+            header = {
+                if (!immersiveMode) {
+                    UserHeader(
+                        avatar = {
+                            Avatar(
+                                data = StringUtil.getAvatarUrl(author.portrait),
+                                size = Sizes.Small,
+                                contentDescription = null
+                            )
+                        },
+                        name = {
+                            UserNameText(
+                                userName = StringUtil.getUsernameAnnotatedString(
+                                    LocalContext.current,
+                                    author.name,
+                                    author.nameShow
+                                ),
+                                userLevel = author.level_id,
+                                isLz = author.id == threadAuthorId,
+                                bawuType = author.bawuType,
+                            )
+                        },
+                        desc = {
+                            Text(
+                                text = getDescText(
+                                    post.time.toLong(),
+                                    post.floor,
+                                    author.ip_address
+                                )
+                            )
+                        },
+                        onClick = {
+                            UserActivity.launch(context, author.id.toString())
+                        }
+                    ) {
+                        if (post.floor > 1) {
+                            PostAgreeBtn(
+                                hasAgreed = hasAgreed,
+                                agreeNum = agreeNum,
+                                onClick = onAgree
+                            )
+                        }
+                    }
+                }
+            },
+            content = {
                 Column(
                     verticalArrangement = Arrangement.spacedBy(8.dp),
                     modifier = paddingModifier
                         .fillMaxWidth()
-                        .clickable(
-                            interactionSource = remember { MutableInteractionSource() },
-                            indication = null
-                        ) {
-                            onClickContent(post)
-                        }
                 ) {
                     if (showTitle) {
                         Text(
@@ -1406,58 +1481,58 @@ fun PostCard(
 
                     contentRenders.forEach { it.Render() }
                 }
-            }
 
-            if (showSubPosts && post.sub_post_number > 0 && subPostContents.isNotEmpty() && !immersiveMode) {
-                Column(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .then(paddingModifier)
-                        .clip(RoundedCornerShape(6.dp))
-                        .background(ExtendedTheme.colors.floorCard)
-                        .padding(vertical = 12.dp),
-                    verticalArrangement = Arrangement.spacedBy(2.dp)
-                ) {
-                    subPostContents.forEachIndexed { index, text ->
-                        PbContentText(
-                            text = text,
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .clickable {
-                                    onOpenSubPosts(subPosts[index].id)
-                                }
-                                .padding(horizontal = 12.dp),
-                            color = ExtendedTheme.colors.text,
-                            fontSize = 13.sp,
-                            style = MaterialTheme.typography.body2,
-                            emoticonSize = 0.9f,
-                            overflow = TextOverflow.Ellipsis,
-                            maxLines = 4,
-                        )
-                    }
+                if (showSubPosts && post.sub_post_number > 0 && subPostContents.isNotEmpty() && !immersiveMode) {
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .then(paddingModifier)
+                            .clip(RoundedCornerShape(6.dp))
+                            .background(ExtendedTheme.colors.floorCard)
+                            .padding(vertical = 12.dp),
+                        verticalArrangement = Arrangement.spacedBy(2.dp)
+                    ) {
+                        subPostContents.forEachIndexed { index, text ->
+                            PbContentText(
+                                text = text,
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .clickable {
+                                        onOpenSubPosts(subPosts[index].id)
+                                    }
+                                    .padding(horizontal = 12.dp),
+                                color = ExtendedTheme.colors.text,
+                                fontSize = 13.sp,
+                                style = MaterialTheme.typography.body2,
+                                emoticonSize = 0.9f,
+                                overflow = TextOverflow.Ellipsis,
+                                maxLines = 4,
+                            )
+                        }
 
-                    if (post.sub_post_number > subPostContents.size) {
-                        Text(
-                            text = stringResource(
-                                id = R.string.open_all_sub_posts,
-                                post.sub_post_number
-                            ),
-                            style = MaterialTheme.typography.caption,
-                            fontSize = 13.sp,
-                            color = ExtendedTheme.colors.accent,
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(top = 2.dp)
-                                .clickable {
-                                    onOpenSubPosts(0)
-                                }
-                                .padding(horizontal = 12.dp)
-                        )
+                        if (post.sub_post_number > subPostContents.size) {
+                            Text(
+                                text = stringResource(
+                                    id = R.string.open_all_sub_posts,
+                                    post.sub_post_number
+                                ),
+                                style = MaterialTheme.typography.caption,
+                                fontSize = 13.sp,
+                                color = ExtendedTheme.colors.accent,
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(top = 2.dp)
+                                    .clickable {
+                                        onOpenSubPosts(0)
+                                    }
+                                    .padding(horizontal = 12.dp)
+                            )
+                        }
                     }
                 }
             }
-        }
-    )
+        )
+    }
 }
 
 @Composable

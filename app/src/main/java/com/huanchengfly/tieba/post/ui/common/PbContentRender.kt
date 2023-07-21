@@ -64,6 +64,10 @@ data class TextContentRender(
 ) : PbContentRender {
     constructor(text: String) : this(AnnotatedString(text))
 
+    override fun toString(): String {
+        return text.toString()
+    }
+
     @Composable
     override fun Render() {
         PbContentText(text = text, fontSize = 15.sp, style = MaterialTheme.typography.body1)
@@ -134,6 +138,10 @@ data class PicContentRender(
             contentScale = ContentScale.Crop
         )
     }
+
+    override fun toString(): String {
+        return "[图片]"
+    }
 }
 
 @Stable
@@ -147,6 +155,10 @@ data class VoiceContentRender(
             "https://tiebac.baidu.com/c/p/voice?voice_md5=$voiceMd5&play_from=pb_voice_play"
         }
         VoicePlayer(url = voiceUrl, duration = duration)
+    }
+
+    override fun toString(): String {
+        return "[视频]"
     }
 }
 
@@ -188,6 +200,10 @@ data class VideoContentRender(
                 )
             }
         }
+    }
+
+    override fun toString(): String {
+        return "[语音]"
     }
 }
 

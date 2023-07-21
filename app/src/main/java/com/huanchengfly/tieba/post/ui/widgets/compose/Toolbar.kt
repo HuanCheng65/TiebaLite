@@ -78,7 +78,6 @@ fun AccountNavIcon(
         val context = LocalContext.current
         val menuState = rememberMenuState()
         LongClickMenu(
-            menuState = menuState,
             menuContent = {
                 val allAccounts = AccountUtil.allAccounts
                 allAccounts.forEach {
@@ -129,6 +128,7 @@ fun AccountNavIcon(
                     Text(text = stringResource(id = R.string.title_new_account))
                 }
             },
+            menuState = menuState,
             onClick = onClick,
             shape = CircleShape
         ) {

@@ -217,7 +217,6 @@ private fun HistoryItem(
 ) {
     val menuState = rememberMenuState()
     LongClickMenu(
-        menuState = menuState,
         menuContent = {
             DropdownMenuItem(onClick = {
                 onDelete(info)
@@ -226,6 +225,7 @@ private fun HistoryItem(
                 Text(text = stringResource(id = R.string.title_delete))
             }
         },
+        menuState = menuState,
         onClick = { onClick(info) }
     ) {
         Column(

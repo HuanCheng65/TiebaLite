@@ -159,16 +159,9 @@ private val PbContent.picUrl: String
             cdnSrcActive,
             src
         )
+
 val List<PbContent>.plainText: String
-    get() = joinToString(separator = "") {
-        when (it.type) {
-            0, 1, 4, 9, 27 -> it.text
-            2 -> "#(${it.c})"
-            3, 20 -> "[图片]"
-            5 -> "[视频]"
-            else -> ""
-        }
-    }
+    get() = renders.joinToString("\n") { toString() }
 
 @OptIn(ExperimentalTextApi::class)
 val List<PbContent>.renders: ImmutableList<PbContentRender>
@@ -307,6 +300,7 @@ val List<PbContent>.renders: ImmutableList<PbContentRender>
 
         return renders.toImmutableList()
     }
+
 val Post.contentRenders: ImmutableList<PbContentRender>
     get() {
         val renders = content.renders
@@ -325,6 +319,7 @@ val Post.contentRenders: ImmutableList<PbContentRender>
             } else it
         }.toImmutableList()
     }
+
 val User.bawuType: String?
     get() = if (is_bawu == 1) {
         if (bawu_type == "manager") "吧主" else "小吧主"

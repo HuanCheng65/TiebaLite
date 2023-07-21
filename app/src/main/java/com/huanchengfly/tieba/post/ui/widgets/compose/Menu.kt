@@ -2,6 +2,7 @@ package com.huanchengfly.tieba.post.ui.widgets.compose
 
 import android.util.Log
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.Indication
 import androidx.compose.foundation.LocalIndication
 import androidx.compose.foundation.background
 import androidx.compose.foundation.combinedClickable
@@ -24,7 +25,6 @@ import androidx.compose.runtime.saveable.Saver
 import androidx.compose.runtime.saveable.listSaver
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Offset
@@ -106,19 +106,19 @@ fun ClickMenu(
     }
 }
 
-@OptIn(ExperimentalFoundationApi::class, ExperimentalComposeUiApi::class)
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun LongClickMenu(
+    menuContent: @Composable() (ColumnScope.() -> Unit),
+    modifier: Modifier = Modifier,
     menuState: MenuState = rememberMenuState(),
-    menuContent: @Composable ColumnScope.() -> Unit,
     onClick: (() -> Unit)? = null,
     shape: Shape = RoundedCornerShape(14.dp),
-    modifier: Modifier = Modifier,
+    interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
+    indication: Indication? = LocalIndication.current,
     content: @Composable () -> Unit
 ) {
     val coroutineScope = rememberCoroutineScope()
-    val interactionSource = remember { MutableInteractionSource() }
-    val indication = LocalIndication.current
     LaunchedEffect(key1 = null) {
         coroutineScope.launch {
             interactionSource.interactions

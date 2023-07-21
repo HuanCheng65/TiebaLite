@@ -268,7 +268,6 @@ private fun ForumItem(
         }
     }
     LongClickMenu(
-        menuState = menuState,
         menuContent = {
             if (isTopForum) {
                 DropdownMenuItem(
@@ -306,6 +305,7 @@ private fun ForumItem(
                 Text(text = stringResource(id = R.string.button_unfollow))
             }
         },
+        menuState = menuState,
         onClick = {
             navigator.navigate(ForumPageDestination(item.forumName))
         }
