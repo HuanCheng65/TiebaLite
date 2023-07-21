@@ -790,7 +790,7 @@ object MixedTiebaApiImpl : ITiebaApi {
         )
 
     override fun checkReportPost(postId: String): Call<CheckReportBean> =
-        RetrofitTiebaApi.MINI_TIEBA_API.checkReport(
+        RetrofitTiebaApi.OFFICIAL_TIEBA_API.checkReport(
             category = "1",
             reportParam = mapOf(
                 "pid" to postId

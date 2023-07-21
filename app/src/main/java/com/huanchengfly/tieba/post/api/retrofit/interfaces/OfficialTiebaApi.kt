@@ -470,4 +470,14 @@ interface OfficialTiebaApi {
         @retrofit2.http.Header(Header.COOKIE) cookie: String = "ka=open;BAIDUID=${ClientUtils.baiduId}".takeIf { ClientUtils.baiduId != null }
             ?: "ka=open",
     ): Flow<UploadPictureResultBean>
+
+    @Headers("${Header.FORCE_LOGIN}: ${Header.FORCE_LOGIN_TRUE}")
+    @POST("/c/f/ueg/checkjubao")
+    @FormUrlEncoded
+    fun checkReport(
+        @Field("category") category: String,
+        @FieldMap reportParam: Map<String, String>,
+        @Field("stoken") stoken: String? = AccountUtil.getLoginInfo()
+            ?.sToken
+    ): Call<CheckReportBean>
 }

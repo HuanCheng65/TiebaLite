@@ -843,9 +843,13 @@ fun ThreadPage(
                                 )
                             },
                             onReportClick = {
+                                val firstPostId =
+                                    thread?.get { firstPostId }.takeIf { it != 0L }
+                                        ?: firstPost?.get { id }
+                                        ?: 0L
                                 TiebaUtil.reportPost(
                                     context,
-                                    thread?.get { postId }.toString()
+                                    firstPostId.toString()
                                 )
                             },
                             modifier = Modifier
