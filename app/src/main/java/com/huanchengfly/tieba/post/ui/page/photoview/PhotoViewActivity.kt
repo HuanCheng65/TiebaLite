@@ -142,7 +142,7 @@ class PhotoViewActivity : BaseComposeActivityWithParcelable<PhotoViewData>() {
 
     @OptIn(ExperimentalFoundationApi::class)
     @Composable
-    override fun createContent(data: PhotoViewData) {
+    override fun Content(data: PhotoViewData) {
         LazyLoad(loaded = viewModel.initialized) {
             viewModel.send(PhotoViewUiIntent.Init(data))
             viewModel.initialized = true

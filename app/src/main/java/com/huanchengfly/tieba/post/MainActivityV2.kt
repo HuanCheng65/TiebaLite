@@ -232,7 +232,7 @@ class MainActivityV2 : BaseComposeActivity() {
 
     @OptIn(ExperimentalAnimationApi::class, ExperimentalMaterialNavigationApi::class)
     @Composable
-    override fun createContent() {
+    override fun Content() {
         val okSignAlertDialogState = rememberDialogState()
         AlertDialog(
             dialogState = okSignAlertDialogState,

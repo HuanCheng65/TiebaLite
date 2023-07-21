@@ -41,12 +41,12 @@ abstract class BaseComposeActivityWithData<DATA> : BaseComposeActivity() {
     }
 
     @Composable
-    final override fun createContent() {
-        createContent(data!!)
+    final override fun Content() {
+        Content(data!!)
     }
 
     @Composable
-    abstract fun createContent(data: DATA)
+    abstract fun Content(data: DATA)
 }
 
 abstract class BaseComposeActivity : BaseActivity() {
@@ -83,7 +83,7 @@ abstract class BaseComposeActivity : BaseActivity() {
                     CompositionLocalProvider(
                         LocalWindowSizeClass provides calculateWindowSizeClass(activity = this)
                     ) {
-                        createContent()
+                        Content()
                     }
                 }
             }
@@ -100,7 +100,7 @@ abstract class BaseComposeActivity : BaseActivity() {
     ) {}
 
     @Composable
-    abstract fun createContent()
+    abstract fun Content()
 
     fun handleCommonEvent(event: CommonUiEvent) {
         when (event) {
