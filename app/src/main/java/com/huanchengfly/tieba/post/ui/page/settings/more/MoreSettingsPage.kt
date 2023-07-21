@@ -27,10 +27,11 @@ import com.huanchengfly.tieba.post.ui.common.prefs.widgets.TextPref
 import com.huanchengfly.tieba.post.ui.page.destinations.AboutPageDestination
 import com.huanchengfly.tieba.post.ui.page.settings.LeadingIcon
 import com.huanchengfly.tieba.post.ui.widgets.compose.*
-import com.huanchengfly.tieba.post.utils.GlideCacheUtil
+import com.huanchengfly.tieba.post.utils.ImageCacheUtil
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import kotlinx.coroutines.launch
+import kotlin.concurrent.thread
 
 @OptIn(ExperimentalMaterialApi::class)
 @Destination
@@ -54,7 +55,9 @@ fun MoreSettingsPage(
         val context = LocalContext.current
         var cacheSize by remember { mutableStateOf("0.0B") }
         LaunchedEffect(Unit) {
-            cacheSize = GlideCacheUtil.getInstance().getCacheSize(context)
+            thread {
+                cacheSize = ImageCacheUtil.getCacheSize(context)
+            }
         }
         PrefsScreen(
             dataStore = LocalContext.current.dataStore,
@@ -156,7 +159,7 @@ fun MoreSettingsPage(
                     title = stringResource(id = R.string.title_clear_picture_cache),
                     onClick = {
                         coroutineScope.launch {
-                            GlideCacheUtil.getInstance().clearImageAllCache(context)
+                            ImageCacheUtil.clearImageAllCache(context)
                             cacheSize = "0.0B"
                             snackbarHostState.showSnackbar(context.getString(R.string.toast_clear_picture_cache_success))
                         }

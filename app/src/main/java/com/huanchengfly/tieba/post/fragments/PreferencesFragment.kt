@@ -212,11 +212,11 @@ class PreferencesFragment : PreferencesFragment() {
         val clearCache = findPreference<Preference>("clear_cache")
         clearCache!!.summary = attachContext.getString(
             R.string.tip_cache,
-            GlideCacheUtil.getInstance().getCacheSize(attachContext)
+            ImageCacheUtil.getCacheSize(attachContext)
         )
         clearCache.onPreferenceClickListener =
             Preference.OnPreferenceClickListener { preference: Preference ->
-                GlideCacheUtil.getInstance().clearImageAllCache(attachContext)
+                ImageCacheUtil.clearImageAllCache(attachContext)
                 if (view != null) Util.createSnackbar(
                     requireView(),
                     R.string.toast_clear_picture_cache_success,

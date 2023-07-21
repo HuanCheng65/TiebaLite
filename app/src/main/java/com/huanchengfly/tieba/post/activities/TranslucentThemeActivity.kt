@@ -471,7 +471,7 @@ class TranslucentThemeActivity : BaseActivity(), View.OnClickListener, OnSeekBar
     }
 
     override fun finish() {
-        GlideCacheUtil.getInstance().clearImageMemoryCache(this)
+        ImageCacheUtil.clearImageMemoryCache(this)
         super.finish()
     }
 
