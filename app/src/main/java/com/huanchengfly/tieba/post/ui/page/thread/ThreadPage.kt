@@ -758,7 +758,7 @@ fun ThreadPage(
                 ModalBottomSheetLayout(
                     sheetState = bottomSheetState,
                     sheetShape = RoundedCornerShape(topStart = 12.dp, topEnd = 12.dp),
-                    sheetBackgroundColor = ExtendedTheme.colors.background,
+                    sheetBackgroundColor = ExtendedTheme.colors.windowBackground,
                     sheetContent = {
                         ThreadMenu(
                             isSeeLz = isSeeLz,

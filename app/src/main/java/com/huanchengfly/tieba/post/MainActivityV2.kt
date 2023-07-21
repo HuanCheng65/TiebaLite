@@ -352,7 +352,8 @@ class MainActivityV2 : BaseComposeActivity() {
                     ) {
                         ModalBottomSheetLayout(
                             bottomSheetNavigator = bottomSheetNavigator,
-                            sheetShape = RoundedCornerShape(topStart = 12.dp, topEnd = 12.dp)
+                            sheetShape = RoundedCornerShape(topStart = 12.dp, topEnd = 12.dp),
+                            sheetBackgroundColor = ExtendedTheme.colors.windowBackground,
                         ) {
                             DestinationsNavHost(
                                 navController = navController,
