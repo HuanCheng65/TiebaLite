@@ -161,7 +161,7 @@ private val PbContent.picUrl: String
         )
 
 val List<PbContent>.plainText: String
-    get() = renders.joinToString("\n") { toString() }
+    get() = renders.joinToString("\n") { it.toString() }
 
 @OptIn(ExperimentalTextApi::class)
 val List<PbContent>.renders: ImmutableList<PbContentRender>
