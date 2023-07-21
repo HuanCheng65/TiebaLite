@@ -333,7 +333,7 @@ fun Dialog(
                         .fillMaxWidth()
                         .padding(16.dp)
                         .background(
-                            color = ExtendedTheme.colors.background,
+                            color = ExtendedTheme.colors.windowBackground,
                             shape = RoundedCornerShape(24.dp)
                         )
                         .padding(vertical = 24.dp)

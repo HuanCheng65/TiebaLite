@@ -627,7 +627,7 @@ fun ForumPage(
                                 }
                             }
                         },
-                        backgroundColor = ExtendedTheme.colors.background,
+                        backgroundColor = ExtendedTheme.colors.windowBackground,
                         contentColor = ExtendedTheme.colors.accent,
                         modifier = Modifier.navigationBarsPadding()
                     ) {

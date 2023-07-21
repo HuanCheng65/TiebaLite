@@ -220,6 +220,8 @@ object ThemeUtil {
             dataStore.getBoolean(KEY_CUSTOM_TOOLBAR_PRIMARY_COLOR, false)
         return if (theme == THEME_CUSTOM) {
             dataStore.getBoolean(KEY_CUSTOM_STATUS_BAR_FONT_DARK, false)
+        } else if (isTranslucentTheme(theme)) {
+            theme.contains("dark", ignoreCase = true)
         } else if (!isToolbarPrimaryColor) {
             !isNightMode(theme)
         } else {

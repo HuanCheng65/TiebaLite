@@ -401,7 +401,9 @@ class TranslucentThemeActivity : BaseActivity(), View.OnClickListener, OnSeekBar
                     val bitmap = ImageUtil.drawableToBitmap(resource)
                     val file = ImageUtil.compressImage(
                         bitmap,
-                        File(filesDir, "background_${System.currentTimeMillis()}.jpg")
+                        File(filesDir, "background_${System.currentTimeMillis()}.jpg"),
+                        maxSizeKb = 512,
+                        initialQuality = 97
                     )
                     mPalette = Palette.from(bitmap).generate()
                     appPreferences.translucentThemeBackgroundPath = file.absolutePath

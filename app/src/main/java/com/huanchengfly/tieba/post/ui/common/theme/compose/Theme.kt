@@ -8,6 +8,7 @@ import androidx.compose.material.lightColors
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.Stable
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.staticCompositionLocalOf
@@ -46,6 +47,7 @@ data class ExtendedColors(
     val divider: Color,
     val shadow: Color,
     val indicator: Color,
+    val windowBackground: Color,
 )
 
 val LocalExtendedColors = staticCompositionLocalOf {
@@ -76,7 +78,8 @@ val LocalExtendedColors = staticCompositionLocalOf {
         Color.Unspecified,
         Color.Unspecified,
         Color.Unspecified,
-        Color.Unspecified
+        Color.Unspecified,
+        Color.Unspecified,
     )
 }
 
@@ -95,7 +98,7 @@ fun getColorPalette(
             onSecondary = Color(0xFFFFFFFF),
             background = extendedColors.background,
             onBackground = extendedColors.text,
-            surface = extendedColors.card
+            surface = extendedColors.card,
         )
     } else {
         lightColors(
@@ -106,6 +109,7 @@ fun getColorPalette(
             onSecondary = Color(0xFFFFFFFF),
             background = extendedColors.background,
             onBackground = extendedColors.text,
+            surface = extendedColors.card,
         )
     }
 }
@@ -169,19 +173,31 @@ private fun getThemeColorForTheme(theme: String): ExtendedColors {
                 nowTheme
             )
         ),
+        Color(
+            App.ThemeDelegate.getColorByAttr(
+                App.INSTANCE,
+                R.attr.colorWindowBackground,
+                nowTheme
+            )
+        ),
     )
 }
 
 @Composable
 fun TiebaLiteTheme(
-    darkTheme: Boolean = ThemeUtil.isNightMode(),
     content: @Composable () -> Unit
 ) {
     val theme by remember { ThemeUtil.themeState }
+    val isDarkColorPalette by remember {
+        derivedStateOf {
+            ThemeUtil.isNightMode(theme)
+                    || (ThemeUtil.isTranslucentTheme(theme) && theme.contains("light"))
+        }
+    }
 
     val extendedColors = getThemeColorForTheme(theme)
 
-    val colors = getColorPalette(darkTheme, extendedColors)
+    val colors = getColorPalette(isDarkColorPalette, extendedColors)
 
     CompositionLocalProvider(LocalExtendedColors provides extendedColors) {
         MaterialTheme(

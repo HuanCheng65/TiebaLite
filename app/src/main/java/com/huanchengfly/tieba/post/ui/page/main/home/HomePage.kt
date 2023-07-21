@@ -74,6 +74,7 @@ import com.huanchengfly.tieba.post.arch.onEvent
 import com.huanchengfly.tieba.post.arch.pageViewModel
 import com.huanchengfly.tieba.post.goToActivity
 import com.huanchengfly.tieba.post.ui.common.theme.compose.ExtendedTheme
+import com.huanchengfly.tieba.post.ui.common.theme.compose.pullRefreshIndicator
 import com.huanchengfly.tieba.post.ui.page.LocalNavigator
 import com.huanchengfly.tieba.post.ui.page.destinations.ForumPageDestination
 import com.huanchengfly.tieba.post.ui.page.main.MainUiEvent
@@ -514,7 +515,9 @@ fun HomePage(
                 PullRefreshIndicator(
                     refreshing = isLoading,
                     state = pullRefreshState,
-                    modifier = Modifier.align(Alignment.TopCenter)
+                    modifier = Modifier.align(Alignment.TopCenter),
+                    backgroundColor = ExtendedTheme.colors.pullRefreshIndicator,
+                    contentColor = ExtendedTheme.colors.accent,
                 )
             }
         }

@@ -293,6 +293,9 @@ class App : Application(), IApp, SketchFactory {
 
         private val nightMode: Int
             get() = INSTANCE.resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
+
+        private val isNewUi: Boolean
+            get() = INSTANCE.applicationMetaData.getBoolean("enable_new_ui") || INSTANCE.appPreferences.enableNewUi
     }
 
     object ThemeDelegate : ThemeSwitcher {
@@ -334,7 +337,9 @@ class App : Application(), IApp, SketchFactory {
                     }
                 }
                 R.attr.colorNewAccent -> {
-                    return if (ThemeUtil.isNightMode(theme)) {
+                    return if (ThemeUtil.THEME_CUSTOM == theme || ThemeUtil.isTranslucentTheme(theme)) {
+                        getColorByAttr(context, R.attr.colorPrimary, theme)
+                    } else if (ThemeUtil.isNightMode(theme)) {
                         context.getColorCompat(R.color.theme_color_accent_night)
                     } else {
                         context.getColorCompat(
@@ -424,24 +429,44 @@ class App : Application(), IApp, SketchFactory {
                     } else context.getColorCompat(R.color.theme_color_background_light)
                 }
                 R.attr.colorWindowBackground -> {
-                    if (ThemeUtil.isTranslucentTheme(theme)) {
-                        return context.getColorCompat(R.color.transparent)
-                    }
-                    return if (ThemeUtil.isNightMode()) {
-                        context.getColorCompat(
-                            resources.getIdentifier(
-                                "theme_color_window_background_$theme",
-                                "color",
-                                packageName
+                    return if (isNewUi) {
+                        if (ThemeUtil.isTranslucentTheme(theme)) {
+                            context.getColorCompat(
+                                resources.getIdentifier(
+                                    "theme_color_window_background_$theme",
+                                    "color",
+                                    packageName
+                                )
                             )
-                        )
-                    } else context.getColorCompat(R.color.theme_color_window_background_light)
+                        } else if (ThemeUtil.isNightMode()) {
+                            context.getColorCompat(
+                                resources.getIdentifier(
+                                    "theme_color_background_$theme",
+                                    "color",
+                                    packageName
+                                )
+                            )
+                        } else {
+                            context.getColorCompat(R.color.theme_color_background_light)
+                        }
+                    } else {
+                        if (ThemeUtil.isTranslucentTheme(theme)) {
+                            context.getColorCompat(R.color.transparent)
+                        } else if (ThemeUtil.isNightMode()) {
+                            context.getColorCompat(
+                                resources.getIdentifier(
+                                    "theme_color_window_background_$theme",
+                                    "color",
+                                    packageName
+                                )
+                            )
+                        } else {
+                            context.getColorCompat(R.color.theme_color_window_background_light)
+                        }
+                    }
                 }
                 R.attr.colorChip -> {
-                    if (ThemeUtil.isTranslucentTheme(theme)) {
-                        return context.getColorCompat(R.color.transparent)
-                    }
-                    return if (ThemeUtil.isNightMode(theme)) {
+                    return if (ThemeUtil.isNightMode(theme) || ThemeUtil.isTranslucentTheme(theme)) {
                         context.getColorCompat(
                             resources.getIdentifier(
                                 "theme_color_chip_$theme",
@@ -452,10 +477,7 @@ class App : Application(), IApp, SketchFactory {
                     } else context.getColorCompat(R.color.theme_color_chip_light)
                 }
                 R.attr.colorOnChip -> {
-                    if (ThemeUtil.isTranslucentTheme(theme)) {
-                        return getColorByAttr(context, R.attr.colorTextSecondary, theme)
-                    }
-                    return if (ThemeUtil.isNightMode(theme)) {
+                    return if (ThemeUtil.isNightMode(theme) || ThemeUtil.isTranslucentTheme(theme)) {
                         context.getColorCompat(
                             resources.getIdentifier(
                                 "theme_color_on_chip_$theme",

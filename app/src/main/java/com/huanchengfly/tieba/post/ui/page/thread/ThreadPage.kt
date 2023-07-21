@@ -109,6 +109,7 @@ import com.huanchengfly.tieba.post.toastShort
 import com.huanchengfly.tieba.post.ui.common.PbContentRender
 import com.huanchengfly.tieba.post.ui.common.PbContentText
 import com.huanchengfly.tieba.post.ui.common.theme.compose.ExtendedTheme
+import com.huanchengfly.tieba.post.ui.common.theme.compose.pullRefreshIndicator
 import com.huanchengfly.tieba.post.ui.page.ProvideNavigator
 import com.huanchengfly.tieba.post.ui.page.destinations.ForumPageDestination
 import com.huanchengfly.tieba.post.ui.page.destinations.ReplyPageDestination
@@ -1119,7 +1120,9 @@ fun ThreadPage(
                             PullRefreshIndicator(
                                 refreshing = isRefreshing,
                                 state = pullRefreshState,
-                                modifier = Modifier.align(Alignment.TopCenter)
+                                modifier = Modifier.align(Alignment.TopCenter),
+                                backgroundColor = ExtendedTheme.colors.pullRefreshIndicator,
+                                contentColor = ExtendedTheme.colors.accent,
                             )
                         }
                     }

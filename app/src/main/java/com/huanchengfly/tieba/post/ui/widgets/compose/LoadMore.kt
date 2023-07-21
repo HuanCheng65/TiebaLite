@@ -19,6 +19,8 @@ import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.Velocity
 import androidx.compose.ui.unit.dp
 import com.huanchengfly.tieba.post.R
+import com.huanchengfly.tieba.post.ui.common.theme.compose.ExtendedTheme
+import com.huanchengfly.tieba.post.ui.common.theme.compose.loadMoreIndicator
 import kotlin.math.roundToInt
 
 private val LoadDistance = 70.dp
@@ -95,7 +97,8 @@ fun DefaultIndicator(
     Surface(
         elevation = 8.dp,
         shape = RoundedCornerShape(100),
-        color = MaterialTheme.colors.surface,
+        color = ExtendedTheme.colors.loadMoreIndicator,
+        contentColor = ExtendedTheme.colors.text
     ) {
         Row(
             modifier = Modifier
@@ -106,9 +109,9 @@ fun DefaultIndicator(
         ) {
             if (isLoading) {
                 CircularProgressIndicator(
-                    modifier = Modifier.size(20.dp),
+                    modifier = Modifier.size(24.dp),
                     strokeWidth = 3.dp,
-                    color = MaterialTheme.colors.onSurface
+                    color = ExtendedTheme.colors.accent
                 )
                 Spacer(modifier = Modifier.width(8.dp))
                 Text(text = loadingText, modifier = Modifier.padding(horizontal = 8.dp))

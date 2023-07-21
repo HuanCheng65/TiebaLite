@@ -19,6 +19,8 @@ import androidx.compose.animation.core.AnimationSpec
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.VisibilityThreshold
 import androidx.compose.animation.core.spring
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.ModalBottomSheetValue
@@ -36,17 +38,22 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.plusAssign
 import androidx.window.layout.FoldingFeature
 import androidx.window.layout.WindowInfoTracker
+import com.github.panpf.sketch.compose.AsyncImage
+import com.github.panpf.sketch.fetch.newFileUri
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import com.google.accompanist.navigation.material.BottomSheetNavigator
 import com.google.accompanist.navigation.material.ExperimentalMaterialNavigationApi
@@ -73,6 +80,7 @@ import com.huanchengfly.tieba.post.utils.ClientUtils
 import com.huanchengfly.tieba.post.utils.JobServiceUtil
 import com.huanchengfly.tieba.post.utils.PermissionUtils
 import com.huanchengfly.tieba.post.utils.PickMediasRequest
+import com.huanchengfly.tieba.post.utils.ThemeUtil
 import com.huanchengfly.tieba.post.utils.TiebaUtil
 import com.huanchengfly.tieba.post.utils.isIgnoringBatteryOptimizations
 import com.huanchengfly.tieba.post.utils.newIntentFilter
@@ -270,72 +278,91 @@ class MainActivityV2 : BaseComposeActivity() {
             LocalNotificationCountFlow provides notificationCountFlow,
             LocalDevicePosture provides devicePostureFlow.collectAsState(),
         ) {
-            Surface(
-                color = ExtendedTheme.colors.background
-            ) {
-                val animationSpec = spring(
-                    stiffness = Spring.StiffnessMediumLow,
-                    visibilityThreshold = IntOffset.VisibilityThreshold
-                )
-                val engine = rememberAnimatedNavHostEngine(
-                    navHostContentAlignment = Alignment.TopStart,
-                    rootDefaultAnimations = RootNavGraphDefaultAnimations(
-                        enterTransition = {
-                            slideIntoContainer(
-                                AnimatedContentScope.SlideDirection.Start,
-                                animationSpec = animationSpec,
-                                initialOffset = { it }
-                            )
-                        },
-                        exitTransition = {
-                            slideOutOfContainer(
-                                AnimatedContentScope.SlideDirection.End,
-                                animationSpec = animationSpec,
-                                targetOffset = { -it }
-                            )
-                        },
-                        popEnterTransition = {
-                            slideIntoContainer(
-                                AnimatedContentScope.SlideDirection.Start,
-                                animationSpec = animationSpec,
-                                initialOffset = { -it }
-                            )
-                        },
-                        popExitTransition = {
-                            slideOutOfContainer(
-                                AnimatedContentScope.SlideDirection.End,
-                                animationSpec = animationSpec,
-                                targetOffset = { it }
-                            )
-                        },
-                    ),
-                )
-                val navController = rememberAnimatedNavController()
-                val bottomSheetNavigator =
-                    rememberBottomSheetNavigator(
-                        animationSpec = spring(stiffness = Spring.StiffnessMediumLow),
-                        skipHalfExpanded = true
+            Box {
+                if (ThemeUtil.isTranslucentTheme(ExtendedTheme.colors.theme)) {
+                    val backgroundPath by rememberPreferenceAsMutableState(
+                        key = stringPreferencesKey(
+                            "translucent_theme_background_path"
+                        ),
+                        defaultValue = ""
                     )
-                navController.navigatorProvider += bottomSheetNavigator
-
-                val currentDestination by navController.currentDestinationAsState()
-
-                CompositionLocalProvider(
-                    LocalNavController provides navController,
-                    LocalDestination provides currentDestination
-                ) {
-                    ModalBottomSheetLayout(
-                        bottomSheetNavigator = bottomSheetNavigator,
-                        sheetShape = RoundedCornerShape(topStart = 12.dp, topEnd = 12.dp)
-                    ) {
-                        DestinationsNavHost(
-                            navController = navController,
-                            navGraph = NavGraphs.root,
-                            engine = engine,
-                            dependenciesContainerBuilder = {
-                                dependency(MainPageDestination) { this@MainActivityV2 }
-                            }
+                    if (backgroundPath.isNotEmpty()) {
+                        AsyncImage(
+                            imageUri = newFileUri(backgroundPath),
+                            contentDescription = null,
+                            modifier = Modifier.fillMaxSize(),
+                            contentScale = ContentScale.Crop
                         )
+                    }
+                }
+
+                Surface(
+                    color = ExtendedTheme.colors.background
+                ) {
+                    val animationSpec = spring(
+                        stiffness = Spring.StiffnessMediumLow,
+                        visibilityThreshold = IntOffset.VisibilityThreshold
+                    )
+                    val engine = rememberAnimatedNavHostEngine(
+                        navHostContentAlignment = Alignment.TopStart,
+                        rootDefaultAnimations = RootNavGraphDefaultAnimations(
+                            enterTransition = {
+                                slideIntoContainer(
+                                    AnimatedContentScope.SlideDirection.Start,
+                                    animationSpec = animationSpec,
+                                    initialOffset = { it }
+                                )
+                            },
+                            exitTransition = {
+                                slideOutOfContainer(
+                                    AnimatedContentScope.SlideDirection.End,
+                                    animationSpec = animationSpec,
+                                    targetOffset = { -it }
+                                )
+                            },
+                            popEnterTransition = {
+                                slideIntoContainer(
+                                    AnimatedContentScope.SlideDirection.Start,
+                                    animationSpec = animationSpec,
+                                    initialOffset = { -it }
+                                )
+                            },
+                            popExitTransition = {
+                                slideOutOfContainer(
+                                    AnimatedContentScope.SlideDirection.End,
+                                    animationSpec = animationSpec,
+                                    targetOffset = { it }
+                                )
+                            },
+                        ),
+                    )
+                    val navController = rememberAnimatedNavController()
+                    val bottomSheetNavigator =
+                        rememberBottomSheetNavigator(
+                            animationSpec = spring(stiffness = Spring.StiffnessMediumLow),
+                            skipHalfExpanded = true
+                        )
+                    navController.navigatorProvider += bottomSheetNavigator
+
+                    val currentDestination by navController.currentDestinationAsState()
+
+                    CompositionLocalProvider(
+                        LocalNavController provides navController,
+                        LocalDestination provides currentDestination
+                    ) {
+                        ModalBottomSheetLayout(
+                            bottomSheetNavigator = bottomSheetNavigator,
+                            sheetShape = RoundedCornerShape(topStart = 12.dp, topEnd = 12.dp)
+                        ) {
+                            DestinationsNavHost(
+                                navController = navController,
+                                navGraph = NavGraphs.root,
+                                engine = engine,
+                                dependenciesContainerBuilder = {
+                                    dependency(MainPageDestination) { this@MainActivityV2 }
+                                }
+                            )
+                        }
                     }
                 }
             }

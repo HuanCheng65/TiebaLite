@@ -18,6 +18,7 @@ import androidx.datastore.preferences.preferencesDataStore
 import androidx.preference.PreferenceDataStore
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
@@ -62,7 +63,8 @@ fun <T> rememberPreferenceAsMutableState(
     val state = remember { mutableStateOf(defaultValue) }
 
     LaunchedEffect(Unit) {
-        dataStore.data.map { it[key] ?: defaultValue }.collect { state.value = it }
+        dataStore.data.map { it[key] ?: defaultValue }.distinctUntilChanged()
+            .collect { state.value = it }
     }
 
     LaunchedEffect(state.value) {
