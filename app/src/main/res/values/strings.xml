@@ -493,12 +493,12 @@
     <string name="toast_experimental_features_enabled">已启用实验性特性</string>
     <string name="toast_experimental_features_disabled">已禁用实验性特性</string>
     <string name="title_thread_post_recommend">建议使用官方途径发贴</string>
-    <string name="message_thread_post_recommend">使用本 App 发贴可能会出现发贴失败、被吞等问题，甚至导致账户永久封禁等严重后果。\n我们建议你使用官方途径进行回贴。</string>
+    <string name="message_thread_post_recommend">使用本 App 发贴可能会出现发贴失败、被吞等问题，甚至导致账户永久封禁等严重后果。\n建议你通过官方途径发贴。</string>
     <string name="button_official_client_post">使用官方客户端发贴</string>
     <string name="btn_cancel_post">放弃发贴</string>
     <string name="btn_continue_post">无视风险，继续发帖</string>
     <string name="title_dialog_reply_warning">建议使用官方途径回贴</string>
-    <string name="message_dialog_reply_warning">使用本 App 回贴可能会遇到回贴失败、需验证码等问题，甚至导致账户永久封禁等严重后果。\n我们建议你使用官方途径进行回贴。</string>
+    <string name="message_dialog_reply_warning">使用本 App 回贴可能会遇到回贴失败、需验证码等问题，甚至导致账户永久封禁等严重后果。\n建议你通过官方途径回贴。</string>
     <string name="btn_cancel_reply">放弃回贴</string>
     <string name="btn_continue_reply">无视风险，继续回贴</string>
     <string name="button_official_client_reply">使用官方客户端回贴</string>
