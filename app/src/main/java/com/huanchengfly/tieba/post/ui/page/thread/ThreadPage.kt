@@ -1401,9 +1401,9 @@ fun PostCard(
             if (onMenuFavoriteClick != null) {
                 DropdownMenuItem(onClick = { onMenuFavoriteClick(post) }) {
                     if (isCollected(post)) {
-                        Text(text = stringResource(id = R.string.title_collect))
-                    } else {
                         Text(text = stringResource(id = R.string.title_collect_on))
+                    } else {
+                        Text(text = stringResource(id = R.string.title_collect))
                     }
                 }
             }
