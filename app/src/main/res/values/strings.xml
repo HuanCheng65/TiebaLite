@@ -691,4 +691,8 @@
     <string name="toast_upload_image_failed">上传图片失败 %s</string>
     <string name="origin_image">原图</string>
     <string name="desc_remove_image">删除图片</string>
+    <string name="title_settings_image_watermark">图片添加水印</string>
+    <string name="title_image_watermark_none">无水印</string>
+    <string name="title_image_watermark_user_name">显示用户名</string>
+    <string name="title_image_watermark_forum_name">显示吧名</string>
 </resources>

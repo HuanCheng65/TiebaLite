@@ -4,9 +4,9 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.BrandingWatermark
 import androidx.compose.material.icons.outlined.CalendarViewDay
 import androidx.compose.material.icons.outlined.ExitToApp
-import androidx.compose.material.icons.outlined.Extension
 import androidx.compose.material.icons.outlined.PhotoSizeSelectActual
 import androidx.compose.material.icons.outlined.SecurityUpdateWarning
 import androidx.compose.material.icons.outlined.StarOutline
@@ -21,13 +21,10 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
 import com.huanchengfly.tieba.post.R
-import com.huanchengfly.tieba.post.activities.PluginManageActivity
 import com.huanchengfly.tieba.post.dataStore
-import com.huanchengfly.tieba.post.goToActivity
 import com.huanchengfly.tieba.post.ui.common.prefs.PrefsScreen
 import com.huanchengfly.tieba.post.ui.common.prefs.widgets.ListPref
 import com.huanchengfly.tieba.post.ui.common.prefs.widgets.SwitchPref
-import com.huanchengfly.tieba.post.ui.common.prefs.widgets.TextPref
 import com.huanchengfly.tieba.post.ui.page.settings.LeadingIcon
 import com.huanchengfly.tieba.post.ui.widgets.compose.AvatarIcon
 import com.huanchengfly.tieba.post.ui.widgets.compose.BackNavigationIcon
@@ -63,23 +60,6 @@ fun HabitSettingsPage(
                 .fillMaxSize(),
         ) {
             prefsItem {
-                TextPref(
-                    title = stringResource(id = R.string.title_plugin_manage),
-                    onClick = {
-                        context.goToActivity<PluginManageActivity>()
-                    },
-                    leadingIcon = {
-                        LeadingIcon {
-                            AvatarIcon(
-                                icon = Icons.Outlined.Extension,
-                                size = Sizes.Small,
-                                contentDescription = null,
-                            )
-                        }
-                    },
-                )
-            }
-            prefsItem {
                 ListPref(
                     key = "image_load_type",
                     title = stringResource(id = R.string.title_settings_image_load_type),
@@ -95,6 +75,28 @@ fun HabitSettingsPage(
                         LeadingIcon {
                             AvatarIcon(
                                 icon = Icons.Outlined.PhotoSizeSelectActual,
+                                size = Sizes.Small,
+                                contentDescription = null,
+                            )
+                        }
+                    },
+                )
+            }
+            prefsItem {
+                ListPref(
+                    key = "pic_watermark_type",
+                    title = stringResource(id = R.string.title_settings_image_watermark),
+                    entries = mapOf(
+                        "0" to stringResource(id = R.string.title_image_watermark_none),
+                        "1" to stringResource(id = R.string.title_image_watermark_user_name),
+                        "2" to stringResource(id = R.string.title_image_watermark_forum_name)
+                    ),
+                    useSelectedAsSummary = true,
+                    defaultValue = "2",
+                    leadingIcon = {
+                        LeadingIcon {
+                            AvatarIcon(
+                                icon = Icons.Outlined.BrandingWatermark,
                                 size = Sizes.Small,
                                 contentDescription = null,
                             )

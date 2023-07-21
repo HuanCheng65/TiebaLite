@@ -142,6 +142,11 @@ open class AppPreferencesUtils private constructor(ctx: Context) {
         key = "oksign_use_official_oksign"
     )
 
+    var picWatermarkType by DataStoreDelegates.string(
+        defaultValue = "2",
+        key = "pic_watermark_type",
+    )
+
     var postOrReplyWarning by DataStoreDelegates.boolean(defaultValue = true)
 
     var radius by DataStoreDelegates.int(defaultValue = 8)

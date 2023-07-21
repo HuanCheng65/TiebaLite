@@ -318,7 +318,6 @@ fun ReplyPage(
             .filter { it > 0 }
             .distinctUntilChanged()
             .collect {
-                Log.i("ReplyPage", "imeVisibleHeight: $it")
                 context.appPreferences.imeHeight = it
                 value = it
             }
