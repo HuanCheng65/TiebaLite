@@ -162,7 +162,7 @@ private fun getThemeColorForTheme(theme: String): ExtendedColors {
         ),
         textColor.copy(alpha = ContentAlpha.high),
         textColor.copy(alpha = ContentAlpha.medium),
-        textColor.copy(alpha = ContentAlpha.disabled),
+        Color(App.ThemeDelegate.getColorByAttr(App.INSTANCE, R.attr.colorOnAccent, nowTheme)),
         Color(App.ThemeDelegate.getColorByAttr(App.INSTANCE, R.attr.color_text_disabled, nowTheme)),
         Color(App.ThemeDelegate.getColorByAttr(App.INSTANCE, R.attr.colorBackground, nowTheme)),
         Color(App.ThemeDelegate.getColorByAttr(App.INSTANCE, R.attr.colorChip, nowTheme)),
