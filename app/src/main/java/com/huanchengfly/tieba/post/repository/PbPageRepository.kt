@@ -1,9 +1,8 @@
 package com.huanchengfly.tieba.post.repository
 
 import com.huanchengfly.tieba.post.api.TiebaApi
-import com.huanchengfly.tieba.post.api.models.CommonResponse
 import com.huanchengfly.tieba.post.api.models.protos.pbPage.PbPageResponse
-import com.huanchengfly.tieba.post.api.retrofit.exception.TiebaApiException
+import com.huanchengfly.tieba.post.api.retrofit.exception.TiebaUnknownException
 import com.huanchengfly.tieba.post.ui.page.thread.ThreadPageFrom
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
@@ -38,7 +37,7 @@ object PbPageRepository {
                     || response.data_.forum == null
                     || response.data_.anti == null
                 ) {
-                    throw TiebaApiException(CommonResponse(-1, "未知错误"))
+                    throw TiebaUnknownException
                 }
                 val userList = response.data_.user_list
                 val postList = response.data_.post_list.map {
@@ -62,6 +61,14 @@ object PbPageRepository {
                         author = response.data_.thread.author,
                         from_forum = response.data_.forum,
                         tid = response.data_.thread.id,
+                        sub_post_list = response.data_.first_floor_post.sub_post_list?.copy(
+                            sub_post_list = response.data_.first_floor_post.sub_post_list.sub_post_list.map { subPost ->
+                                subPost.copy(
+                                    author = subPost.author
+                                        ?: userList.first { user -> user.id == subPost.author_id }
+                                )
+                            }
+                        )
                     )
 
                 response.copy(

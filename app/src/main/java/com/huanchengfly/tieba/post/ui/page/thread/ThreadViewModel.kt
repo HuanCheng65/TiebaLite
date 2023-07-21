@@ -2,6 +2,7 @@ package com.huanchengfly.tieba.post.ui.page.thread
 
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.Stable
+import androidx.compose.ui.text.AnnotatedString
 import com.huanchengfly.tieba.post.api.TiebaApi
 import com.huanchengfly.tieba.post.api.models.AgreeBean
 import com.huanchengfly.tieba.post.api.models.protos.Anti
@@ -10,7 +11,9 @@ import com.huanchengfly.tieba.post.api.models.protos.SimpleForum
 import com.huanchengfly.tieba.post.api.models.protos.ThreadInfo
 import com.huanchengfly.tieba.post.api.models.protos.User
 import com.huanchengfly.tieba.post.api.models.protos.contentRenders
+import com.huanchengfly.tieba.post.api.models.protos.pbPage.PbPageResponse
 import com.huanchengfly.tieba.post.api.models.protos.renders
+import com.huanchengfly.tieba.post.api.models.protos.subPostContents
 import com.huanchengfly.tieba.post.api.models.protos.updateAgreeStatus
 import com.huanchengfly.tieba.post.api.models.protos.updateCollectStatus
 import com.huanchengfly.tieba.post.api.retrofit.exception.TiebaUnknownException
@@ -125,49 +128,35 @@ class ThreadViewModel @Inject constructor() :
                     threadId, page, postId, forumId, seeLz, sortType,
                     from = from.takeIf { it == ThreadPageFrom.FROM_STORE }.orEmpty()
                 )
-                .map { response ->
-                    if (
-                        response.data_?.page != null
-                        && response.data_.thread?.author != null
-                        && response.data_.forum != null
-                        && response.data_.anti != null
-                    ) {
-                        val userList = response.data_.user_list
-                        val postList = response.data_.post_list.map {
-                            it.copy(
-                                author = it.author
-                                    ?: userList.first { user -> user.id == it.author_id },
-                                from_forum = response.data_.forum,
-                                tid = response.data_.thread.id,
-                            )
-                        }
-                        val firstPost = postList.firstOrNull { it.floor == 1 }
-                            ?: response.data_.first_floor_post?.copy(author = response.data_.thread.author)
-                        val notFirstPosts = postList.filterNot { it.floor == 1 }
-                        ThreadPartialChange.Load.Success(
-                            response.data_.thread.title,
-                            response.data_.thread.author,
-                            response.data_.user ?: User(),
-                            firstPost,
-                            notFirstPosts.map { PostItemData(it.wrapImmutable()) },
-                            response.data_.thread,
-                            response.data_.forum,
-                            response.data_.anti,
-                            response.data_.page.current_page,
-                            response.data_.page.new_total_page,
-                            response.data_.page.has_more != 0,
-                            response.data_.thread.getNextPagePostId(
-                                postList.map { it.id },
-                                sortType
-                            ),
-                            response.data_.page.has_prev != 0,
-                            firstPost?.contentRenders,
-                            notFirstPosts.map { it.contentRenders },
-                            postId,
-                            seeLz,
-                            sortType,
-                        )
-                    } else ThreadPartialChange.Load.Failure(TiebaUnknownException)
+                .map<PbPageResponse, ThreadPartialChange.Load> { response ->
+                    if (response.data_?.page == null || response.data_.thread?.author == null || response.data_.forum == null || response.data_.anti == null) throw TiebaUnknownException
+                    val postList = response.data_.post_list
+                    val firstPost = response.data_.first_floor_post
+                    val notFirstPosts = postList.filterNot { it.floor == 1 }
+                    ThreadPartialChange.Load.Success(
+                        response.data_.thread.title,
+                        response.data_.thread.author,
+                        response.data_.user ?: User(),
+                        firstPost,
+                        notFirstPosts.map { PostItemData(it.wrapImmutable()) },
+                        response.data_.thread,
+                        response.data_.forum,
+                        response.data_.anti,
+                        response.data_.page.current_page,
+                        response.data_.page.new_total_page,
+                        response.data_.page.has_more != 0,
+                        response.data_.thread.getNextPagePostId(
+                            postList.map { it.id },
+                            sortType
+                        ),
+                        response.data_.page.has_prev != 0,
+                        firstPost?.contentRenders,
+                        notFirstPosts.map { it.contentRenders },
+                        notFirstPosts.map { it.subPostContents }.toImmutableList(),
+                        postId,
+                        seeLz,
+                        sortType,
+                    )
                 }
                 .onStart { emit(ThreadPartialChange.Load.Start) }
                 .catch { emit(ThreadPartialChange.Load.Failure(it)) }
@@ -206,6 +195,7 @@ class ThreadViewModel @Inject constructor() :
                             response.data_.page.has_prev != 0,
                             firstPost?.contentRenders ?: emptyList(),
                             notFirstPosts.map { it.contentRenders },
+                            notFirstPosts.map { it.subPostContents }.toImmutableList(),
                             postId = 0,
                             seeLz,
                             sortType,
@@ -241,7 +231,8 @@ class ThreadViewModel @Inject constructor() :
                                 postIds + posts.map { it.id },
                                 sortType
                             ),
-                            posts.map { it.contentRenders }
+                            posts.map { it.contentRenders },
+                            posts.map { it.subPostContents }.toImmutableList(),
                         )
                     } else ThreadPartialChange.LoadMore.Failure(-1, "未知错误")
                 }
@@ -277,7 +268,8 @@ class ThreadViewModel @Inject constructor() :
                             response.data_.page.current_page,
                             response.data_.page.new_total_page,
                             response.data_.page.has_prev != 0,
-                            posts.map { it.contentRenders }
+                            posts.map { it.contentRenders },
+                            posts.map { it.subPostContents }.toImmutableList(),
                         )
                     } else ThreadPartialChange.LoadPrevious.Failure(-1, "未知错误")
                 }
@@ -537,6 +529,7 @@ sealed interface ThreadPartialChange : PartialChange<ThreadUiState> {
                 firstPostContentRenders = firstPostContentRenders?.toImmutableList()
                     ?: oldState.firstPostContentRenders,
                 contentRenders = contentRenders.toImmutableList(),
+                subPostContents = subPostContents.toImmutableList(),
                 postId = postId,
                 seeLz = seeLz,
                 sortType = sortType,
@@ -567,6 +560,7 @@ sealed interface ThreadPartialChange : PartialChange<ThreadUiState> {
             val hasPrevious: Boolean,
             val firstPostContentRenders: List<PbContentRender>?,
             val contentRenders: List<ImmutableList<PbContentRender>>,
+            val subPostContents: List<ImmutableList<AnnotatedString>>,
             val postId: Long = 0,
             val seeLz: Boolean = false,
             val sortType: Int = 0,
@@ -596,6 +590,7 @@ sealed interface ThreadPartialChange : PartialChange<ThreadUiState> {
                 hasPrevious = hasPrevious,
                 firstPostContentRenders = firstPostContentRenders.toImmutableList(),
                 contentRenders = contentRenders.toImmutableList(),
+                subPostContents = subPostContents.toImmutableList(),
                 postId = postId,
                 seeLz = seeLz,
                 sortType = sortType,
@@ -622,6 +617,7 @@ sealed interface ThreadPartialChange : PartialChange<ThreadUiState> {
             val hasPrevious: Boolean,
             val firstPostContentRenders: List<PbContentRender>,
             val contentRenders: List<ImmutableList<PbContentRender>>,
+            val subPostContents: List<ImmutableList<AnnotatedString>>,
             val postId: Long,
             val seeLz: Boolean,
             val sortType: Int,
@@ -644,7 +640,8 @@ sealed interface ThreadPartialChange : PartialChange<ThreadUiState> {
                 totalPage = totalPage,
                 hasMore = hasMore,
                 nextPagePostId = nextPagePostId,
-                contentRenders = (oldState.contentRenders + contentRenders).toImmutableList()
+                contentRenders = (oldState.contentRenders + contentRenders).toImmutableList(),
+                subPostContents = (oldState.subPostContents + subPostContents).toImmutableList()
             )
 
             is Failure -> oldState.copy(isLoadingMore = false)
@@ -661,6 +658,7 @@ sealed interface ThreadPartialChange : PartialChange<ThreadUiState> {
             val hasMore: Boolean,
             val nextPagePostId: Long,
             val contentRenders: List<ImmutableList<PbContentRender>>,
+            val subPostContents: List<ImmutableList<AnnotatedString>>,
         ) : LoadMore()
 
         data class Failure(
@@ -680,7 +678,8 @@ sealed interface ThreadPartialChange : PartialChange<ThreadUiState> {
                 currentPageMin = currentPage,
                 totalPage = totalPage,
                 hasPrevious = hasPrevious,
-                contentRenders = (contentRenders + oldState.contentRenders).toImmutableList()
+                contentRenders = (contentRenders + oldState.contentRenders).toImmutableList(),
+                subPostContents = (subPostContents + oldState.subPostContents).toImmutableList()
             )
 
             is Failure -> oldState.copy(isRefreshing = false)
@@ -696,6 +695,7 @@ sealed interface ThreadPartialChange : PartialChange<ThreadUiState> {
             val totalPage: Int,
             val hasPrevious: Boolean,
             val contentRenders: List<ImmutableList<PbContentRender>>,
+            val subPostContents: List<ImmutableList<AnnotatedString>>,
         ) : LoadPrevious()
 
         data class Failure(
@@ -888,6 +888,7 @@ data class ThreadUiState(
     val data: ImmutableList<PostItemData> = persistentListOf(),
     val firstPostContentRenders: ImmutableList<PbContentRender> = persistentListOf(),
     val contentRenders: ImmutableList<ImmutableList<PbContentRender>> = persistentListOf(),
+    val subPostContents: ImmutableList<ImmutableList<AnnotatedString>> = persistentListOf(),
 
     val isImmersiveMode: Boolean = false,
 ) : UiState

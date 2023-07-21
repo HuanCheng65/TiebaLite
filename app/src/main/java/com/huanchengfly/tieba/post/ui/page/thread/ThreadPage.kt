@@ -76,14 +76,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
-import androidx.compose.ui.text.ExperimentalTextApi
-import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.text.withAnnotation
-import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.airbnb.lottie.compose.LottieAnimation
@@ -100,7 +96,6 @@ import com.huanchengfly.tieba.post.api.models.protos.SimpleForum
 import com.huanchengfly.tieba.post.api.models.protos.ThreadInfo
 import com.huanchengfly.tieba.post.api.models.protos.User
 import com.huanchengfly.tieba.post.api.models.protos.bawuType
-import com.huanchengfly.tieba.post.api.models.protos.renders
 import com.huanchengfly.tieba.post.api.retrofit.exception.getErrorMessage
 import com.huanchengfly.tieba.post.arch.ImmutableHolder
 import com.huanchengfly.tieba.post.arch.collectPartialAsState
@@ -433,6 +428,10 @@ fun ThreadPage(
     )
     val contentRenders by viewModel.uiState.collectPartialAsState(
         prop1 = ThreadUiState::contentRenders,
+        initial = persistentListOf()
+    )
+    val subPostContents by viewModel.uiState.collectPartialAsState(
+        prop1 = ThreadUiState::subPostContents,
         initial = persistentListOf()
     )
     val author by viewModel.uiState.collectPartialAsState(
@@ -1035,6 +1034,7 @@ fun ThreadPage(
                                         PostCard(
                                             postHolder = item,
                                             contentRenders = contentRenders[index],
+                                            subPostContents = subPostContents[index],
                                             threadAuthorId = author?.get { id } ?: 0L,
                                             blocked = blocked,
                                             immersiveMode = isImmersiveMode,
@@ -1285,11 +1285,11 @@ private fun BottomBar(
     }
 }
 
-@OptIn(ExperimentalTextApi::class)
 @Composable
 fun PostCard(
     postHolder: ImmutableHolder<Post>,
     contentRenders: ImmutableList<PbContentRender>,
+    subPostContents: ImmutableList<AnnotatedString> = persistentListOf(),
     threadAuthorId: Long = 0L,
     blocked: Boolean = false,
     immersiveMode: Boolean = false,
@@ -1324,7 +1324,6 @@ fun PostCard(
         postHolder.get { floor > 1 } && !immersiveMode
     }
     val paddingModifier = Modifier.padding(start = if (hasPadding) Sizes.Small + 8.dp else 0.dp)
-    val accentColor = ExtendedTheme.colors.accent
     val author = postHolder.get { author!! }
     val showTitle = remember(postHolder) {
         post.title.isNotBlank() && post.floor <= 1
@@ -1337,32 +1336,6 @@ fun PostCard(
     }
     val subPosts = remember(postHolder) {
         post.sub_post_list?.sub_post_list?.toImmutableList() ?: persistentListOf()
-    }
-    val subPostContents = remember(key1 = subPosts, key2 = accentColor) {
-        subPosts.map { subPostList ->
-            val userNameString = buildAnnotatedString {
-                withStyle(
-                    style = SpanStyle(
-                        color = accentColor,
-                        fontWeight = FontWeight.Bold
-                    )
-                ) {
-                    withAnnotation("user", "${subPostList.author?.id}") {
-                        append(
-                            StringUtil.getUsernameAnnotatedString(
-                                context,
-                                subPostList.author?.name ?: "",
-                                subPostList.author?.nameShow
-                            )
-                        )
-                        append(": ")
-                    }
-                }
-            }
-            val contentStrings = subPostList.content.renders.map { it.toAnnotationString() }
-
-            userNameString + contentStrings.reduce { acc, annotatedString -> acc + annotatedString }
-        }
     }
     Card(
         header = {
@@ -1429,7 +1402,7 @@ fun PostCard(
                 }
             }
 
-            if (showSubPosts && post.sub_post_number > 0 && !immersiveMode) {
+            if (showSubPosts && post.sub_post_number > 0 && subPostContents.isNotEmpty() && !immersiveMode) {
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -1513,7 +1486,7 @@ fun UserNameText(
             "Bawu" to buildChipInlineContent(
                 bawuType ?: "",
                 color = ExtendedTheme.colors.accent,
-                backgroundColor = ExtendedTheme.colors.accent.copy(alpha = 0.25f)
+                backgroundColor = ExtendedTheme.colors.accent.copy(alpha = 0.1f)
             ),
             "Lz" to buildChipInlineContent(stringResource(id = R.string.tip_lz)),
         ),
