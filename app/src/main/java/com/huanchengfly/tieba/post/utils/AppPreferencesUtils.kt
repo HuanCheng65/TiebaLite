@@ -118,6 +118,8 @@ open class AppPreferencesUtils private constructor(ctx: Context) {
         defaultValue = "0"
     )
 
+    var imeHeight by DataStoreDelegates.int(defaultValue = 800)
+
     var listItemsBackgroundIntermixed by DataStoreDelegates.boolean(defaultValue = true)
 
     var listSingle by DataStoreDelegates.boolean(defaultValue = false)

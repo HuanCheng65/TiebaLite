@@ -101,6 +101,7 @@ import com.huanchengfly.tieba.post.utils.Emoticon
 import com.huanchengfly.tieba.post.utils.EmoticonManager
 import com.huanchengfly.tieba.post.utils.PickMediasRequest
 import com.huanchengfly.tieba.post.utils.StringUtil
+import com.huanchengfly.tieba.post.utils.appPreferences
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import com.ramcosta.composedestinations.spec.DestinationStyle
@@ -308,11 +309,19 @@ fun ReplyPage(
             .collect { value = it }
     }
     val imeAnimationEnd by remember { derivedStateOf { imeCurrentHeight == imeAnimationTargetHeight } }
-    val imeVisibleHeight by produceState(initialValue = 0, imeAnimationTargetInset, density) {
+    val imeVisibleHeight by produceState(
+        initialValue = remember { context.appPreferences.imeHeight },
+        imeAnimationTargetInset,
+        density
+    ) {
         snapshotFlow { imeAnimationTargetInset.getBottom(density) }
             .filter { it > 0 }
             .distinctUntilChanged()
-            .collect { value = it }
+            .collect {
+                Log.i("ReplyPage", "imeVisibleHeight: $it")
+                context.appPreferences.imeHeight = it
+                value = it
+            }
     }
 
     val textMeasurer = rememberTextMeasurer()

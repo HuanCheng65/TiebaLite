@@ -3,8 +3,13 @@ package com.huanchengfly.tieba.post
 import android.annotation.SuppressLint
 import android.content.Context
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.ui.platform.LocalContext
 import androidx.datastore.core.DataMigration
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.SharedPreferencesMigration
@@ -47,6 +52,25 @@ private val dataStoreInstance by lazy(mode = LazyThreadSafetyMode.SYNCHRONIZED) 
 }
 
 val Context.dataStore: DataStore<Preferences> by dataStoreInstance
+
+@Composable
+fun <T> rememberPreferenceAsMutableState(
+    key: Preferences.Key<T>,
+    defaultValue: T
+): MutableState<T> {
+    val dataStore = LocalContext.current.dataStore
+    val state = remember { mutableStateOf(defaultValue) }
+
+    LaunchedEffect(Unit) {
+        dataStore.data.map { it[key] ?: defaultValue }.collect { state.value = it }
+    }
+
+    LaunchedEffect(state.value) {
+        dataStore.edit { it[key] = state.value }
+    }
+
+    return state
+}
 
 @SuppressLint("FlowOperatorInvokedInComposition")
 @Composable
