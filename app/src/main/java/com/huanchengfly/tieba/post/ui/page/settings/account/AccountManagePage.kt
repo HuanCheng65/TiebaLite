@@ -12,6 +12,7 @@ import androidx.compose.material.icons.outlined.AccountCircle
 import androidx.compose.material.icons.outlined.AddCircleOutline
 import androidx.compose.material.icons.outlined.ContentCopy
 import androidx.compose.material.icons.outlined.Edit
+import androidx.compose.material.icons.outlined.SupervisedUserCircle
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.ExperimentalComposeUiApi
@@ -47,6 +48,7 @@ import com.huanchengfly.tieba.post.utils.AccountUtil.AllAccounts
 import com.huanchengfly.tieba.post.utils.AccountUtil.LocalAccount
 import com.huanchengfly.tieba.post.utils.TiebaUtil
 import com.huanchengfly.tieba.post.utils.appPreferences
+import com.huanchengfly.tieba.post.utils.launchUrl
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 
@@ -169,6 +171,27 @@ fun AccountManagePage(
                             )
                         }
                     },
+                )
+            }
+            prefsItem {
+                TextPref(
+                    title = stringResource(id = R.string.title_modify_username),
+                    onClick = {
+                        launchUrl(
+                            context,
+                            "https://wappass.baidu.com/static/manage-chunk/change-username.html#/showUsername"
+                        )
+                    },
+                    leadingIcon = {
+                        LeadingIcon {
+                            AvatarIcon(
+                                icon = Icons.Outlined.SupervisedUserCircle,
+                                size = Sizes.Small,
+                                contentDescription = null,
+                            )
+                        }
+                    },
+                    enabled = account != null
                 )
             }
             prefsItem {
