@@ -21,7 +21,9 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.ArrowBack
 import androidx.compose.material.icons.rounded.Close
+import androidx.compose.material.icons.rounded.OpenInBrowser
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -49,6 +51,7 @@ import com.huanchengfly.tieba.post.ui.common.theme.compose.ExtendedTheme
 import com.huanchengfly.tieba.post.ui.page.LocalNavigator
 import com.huanchengfly.tieba.post.ui.page.ProvideNavigator
 import com.huanchengfly.tieba.post.ui.page.destinations.ReplyPageDestination
+import com.huanchengfly.tieba.post.ui.page.destinations.ThreadPageDestination
 import com.huanchengfly.tieba.post.ui.page.thread.PostAgreeBtn
 import com.huanchengfly.tieba.post.ui.page.thread.PostCard
 import com.huanchengfly.tieba.post.ui.page.thread.UserNameText
@@ -120,7 +123,8 @@ fun SubPostsSheetPage(
             threadId = threadId,
             postId = postId,
             subPostId = subPostId,
-            loadFromSubPost = loadFromSubPost
+            loadFromSubPost = loadFromSubPost,
+            isSheet = true
         )
     }
 }
@@ -134,6 +138,7 @@ internal fun SubPostsContent(
     postId: Long,
     subPostId: Long = 0L,
     loadFromSubPost: Boolean = false,
+    isSheet: Boolean = false
 ) {
     val navigator = LocalNavigator.current
     val account = LocalAccount.current
@@ -263,11 +268,29 @@ internal fun SubPostsContent(
                     navigationIcon = {
                         IconButton(onClick = { navigator.navigateUp() }) {
                             Icon(
-                                imageVector = Icons.Rounded.Close,
+                                imageVector = if (isSheet) Icons.Rounded.Close else Icons.Rounded.ArrowBack,
                                 contentDescription = stringResource(id = R.string.btn_close)
                             )
                         }
                     },
+                    actions = {
+                        if (!isSheet) {
+                            IconButton(onClick = {
+                                navigator.navigate(
+                                    ThreadPageDestination(
+                                        forumId = forumId,
+                                        threadId = threadId,
+                                        postId = postId
+                                    )
+                                )
+                            }) {
+                                Icon(
+                                    imageVector = Icons.Rounded.OpenInBrowser,
+                                    contentDescription = stringResource(id = R.string.btn_open_origin_thread)
+                                )
+                            }
+                        }
+                    }
                 )
             },
             bottomBar = {
