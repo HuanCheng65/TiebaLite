@@ -7,6 +7,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -49,11 +50,12 @@ fun LoadMoreLayout(
 ) {
     val loadDistance = with(LocalDensity.current) { LoadDistance.toPx() }
 
+    val canLoadMore = remember(enableLoadMore, loadEnd) { enableLoadMore && !loadEnd }
+    val curIsLoading by rememberUpdatedState(newValue = isLoading)
+    val curCanLoadMore by rememberUpdatedState(newValue = canLoadMore)
+
     var waitingStateReset by remember { mutableStateOf(false) }
 
-    val curIsLoading by rememberUpdatedState(newValue = isLoading)
-    val canLoadMore = remember(enableLoadMore, loadEnd) { enableLoadMore && !loadEnd }
-    val curCanLoadMore by rememberUpdatedState(newValue = canLoadMore)
     val swipeableState = rememberSwipeableState(false) { newValue ->
         if (newValue && !curIsLoading && curCanLoadMore) {
             onLoadMore()
@@ -61,13 +63,13 @@ fun LoadMoreLayout(
             true
         } else !newValue
     }
-    val stateOffset by swipeableState.offset
-    LaunchedEffect(stateOffset) {
-        if (waitingStateReset && abs(stateOffset - loadDistance) < 1f) {
+
+    val isStateReset by remember { derivedStateOf { abs(swipeableState.offset.value - loadDistance) < 1f } }
+    LaunchedEffect(waitingStateReset, isStateReset) {
+        if (waitingStateReset && isStateReset) {
             waitingStateReset = false
         }
     }
-
 
     Box(
         modifier = Modifier
@@ -80,7 +82,7 @@ fun LoadMoreLayout(
                 ),
                 thresholds = { _, _ -> FractionalThreshold(0.5f) },
                 orientation = Orientation.Vertical,
-                enabled = enableLoadMore && !swipeableState.isAnimationRunning && !waitingStateReset,
+                enabled = enableLoadMore && !waitingStateReset,
             )
             .fillMaxSize()
     ) {
