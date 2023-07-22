@@ -65,10 +65,12 @@ import com.huanchengfly.tieba.post.api.models.protos.SimpleForum
 import com.huanchengfly.tieba.post.api.models.protos.ThreadInfo
 import com.huanchengfly.tieba.post.api.models.protos.User
 import com.huanchengfly.tieba.post.api.models.protos.abstractText
+import com.huanchengfly.tieba.post.arch.BaseComposeActivity.Companion.LocalWindowSizeClass
 import com.huanchengfly.tieba.post.arch.ImmutableHolder
 import com.huanchengfly.tieba.post.arch.wrapImmutable
 import com.huanchengfly.tieba.post.findActivity
 import com.huanchengfly.tieba.post.ui.common.theme.compose.ExtendedTheme
+import com.huanchengfly.tieba.post.ui.common.windowsizeclass.WindowWidthSizeClass
 import com.huanchengfly.tieba.post.ui.utils.getImmutablePhotoViewData
 import com.huanchengfly.tieba.post.ui.widgets.compose.video.DefaultVideoPlayerController
 import com.huanchengfly.tieba.post.ui.widgets.compose.video.OnFullScreenModeChangedListener
@@ -327,6 +329,11 @@ private fun ThreadMedia(
     val medias = remember(item) {
         item.getImmutableList { media }
     }
+    val singleMediaFraction =
+        if (LocalWindowSizeClass.current.widthSizeClass == WindowWidthSizeClass.Compact)
+            1f
+        else 0.6f
+
 
     if (isVideo) {
         val videoInfo = item.getImmutable { videoInfo!! }
@@ -334,7 +341,7 @@ private fun ThreadMedia(
             videoUrl = videoInfo.get { videoUrl },
             thumbnailUrl = videoInfo.get { thumbnailUrl },
             modifier = Modifier
-                .fillMaxWidth()
+                .fillMaxWidth(singleMediaFraction)
                 .aspectRatio(
                     max(
                         videoInfo
@@ -349,7 +356,7 @@ private fun ThreadMedia(
         Box {
             Row(
                 modifier = Modifier
-                    .fillMaxWidth()
+                    .fillMaxWidth(if (medias.size == 1) singleMediaFraction else 1f)
                     .aspectRatio(if (medias.size == 1) 2f else 3f)
                     .clip(RoundedCornerShape(8.dp)),
                 horizontalArrangement = Arrangement.spacedBy(4.dp)
