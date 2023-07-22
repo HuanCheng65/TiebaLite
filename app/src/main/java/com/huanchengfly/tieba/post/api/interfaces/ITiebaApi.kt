@@ -409,6 +409,27 @@ interface ITiebaApi {
     ): Call<CommonResponse>
 
     /**
+     * 删除/隐藏贴子
+     *
+     * **需登录**
+     *
+     * @param forumId 吧 ID
+     * @param forumName 吧名
+     * @param threadId 贴子 ID
+     * @param tbs tbs
+     * @param delMyThread 是否为自己的贴子
+     * @param isHide 是否为隐藏贴子
+     */
+    fun delThreadFlow(
+        forumId: Long,
+        forumName: String,
+        threadId: Long,
+        tbs: String?,
+        delMyThread: Boolean,
+        isHide: Boolean
+    ): Flow<CommonResponse>
+
+    /**
      * 删除贴子中的回复
      *
      * **需登录**
@@ -429,6 +450,28 @@ interface ITiebaApi {
         isFloor: Boolean,
         delMyPost: Boolean
     ): Call<CommonResponse>
+
+    /**
+     * 删除贴子中的回复
+     *
+     * **需登录**
+     *
+     * @param forumId 吧 ID
+     * @param forumName 吧名
+     * @param threadId 贴子 ID
+     * @param postId 回复 ID
+     * @param isFloor 是否为楼中楼回复
+     * @param delMyPost 是否为当前登录用户回复
+     */
+    fun delPostFlow(
+        forumId: Long,
+        forumName: String,
+        threadId: Long,
+        postId: Long,
+        tbs: String?,
+        isFloor: Boolean = false,
+        delMyPost: Boolean = true
+    ): Flow<CommonResponse>
 
     /**
      * 吧内搜索

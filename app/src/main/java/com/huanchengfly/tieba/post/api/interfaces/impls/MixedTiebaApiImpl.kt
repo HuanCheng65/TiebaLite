@@ -332,6 +332,24 @@ object MixedTiebaApiImpl : ITiebaApi {
     ): Call<CommonResponse> =
         RetrofitTiebaApi.MINI_TIEBA_API.delThread(forumId, forumName, threadId, tbs)
 
+    override fun delThreadFlow(
+        forumId: Long,
+        forumName: String,
+        threadId: Long,
+        tbs: String?,
+        delMyThread: Boolean,
+        isHide: Boolean,
+    ): Flow<CommonResponse> =
+        RetrofitTiebaApi.OFFICIAL_TIEBA_API
+            .delThreadFlow(
+                forumId,
+                forumName,
+                threadId,
+                tbs,
+                deleteMyThread = if (delMyThread) 1 else 0,
+                isFrsMask = if (isHide) 1 else 0
+            )
+
     override fun delPost(
         forumId: String,
         forumName: String,
@@ -352,6 +370,28 @@ object MixedTiebaApiImpl : ITiebaApi {
             is_vip_del = if (delMyPost) 0 else 1,
             delete_my_post = if (delMyPost) 1 else 0
         )
+
+    override fun delPostFlow(
+        forumId: Long,
+        forumName: String,
+        threadId: Long,
+        postId: Long,
+        tbs: String?,
+        isFloor: Boolean,
+        delMyPost: Boolean
+    ): Flow<CommonResponse> =
+        RetrofitTiebaApi.OFFICIAL_TIEBA_API
+            .delPostFlow(
+                forumId,
+                forumName,
+                threadId,
+                postId,
+                isFloor = if (isFloor) 1 else 0,
+                src = if (isFloor) 3 else 1,
+                isVipDel = if (delMyPost) 0 else 1,
+                deleteMyPost = if (delMyPost) 1 else 0,
+                tbs = tbs
+            )
 
     override fun searchPost(
         keyword: String,

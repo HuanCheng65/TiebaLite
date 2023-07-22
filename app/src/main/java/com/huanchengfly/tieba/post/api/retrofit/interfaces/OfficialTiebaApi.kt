@@ -494,4 +494,33 @@ interface OfficialTiebaApi {
         @Field("stoken") stoken: String? = AccountUtil.getLoginInfo()
             ?.sToken
     ): Call<CheckReportBean>
+
+    @Headers("${Header.FORCE_LOGIN}: ${Header.FORCE_LOGIN_TRUE}")
+    @POST("/c/c/bawu/delthread")
+    @FormUrlEncoded
+    fun delThreadFlow(
+        @Field("fid") forumId: Long,
+        @Field("word") forumName: String,
+        @Field("z") threadId: Long,
+        @Field("tbs") tbs: String? = AccountUtil.getLoginInfo()?.tbs,
+        @Field("src") src: Int = 1,
+        @Field("is_vipdel") isVipDel: Int = 0,
+        @Field("delete_my_thread") deleteMyThread: Int = 1,
+        @Field("is_frs_mask") isFrsMask: Int = 0,
+    ): Flow<CommonResponse>
+
+    @Headers("${Header.FORCE_LOGIN}: ${Header.FORCE_LOGIN_TRUE}")
+    @POST("/c/c/bawu/delpost")
+    @FormUrlEncoded
+    fun delPostFlow(
+        @Field("fid") forumId: Long,
+        @Field("word") forumName: String,
+        @Field("z") threadId: Long,
+        @Field("pid") postId: Long,
+        @Field("isfloor") isFloor: Int,
+        @Field("src") src: Int,
+        @Field("is_vipdel") isVipDel: Int,
+        @Field("delete_my_post") deleteMyPost: Int,
+        @Field("tbs") tbs: String? = AccountUtil.getLoginInfo()?.tbs,
+    ): Flow<CommonResponse>
 }
