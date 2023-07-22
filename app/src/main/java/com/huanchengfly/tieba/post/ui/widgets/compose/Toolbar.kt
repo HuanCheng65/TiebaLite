@@ -199,11 +199,13 @@ fun TitleCentredToolbar(
                     verticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier.fillMaxHeight()
                 ) {
-                    navigationIcon?.invoke()
+                    ProvideContentColor(color = ExtendedTheme.colors.onTopBar) {
+                        navigationIcon?.invoke()
 
-                    Spacer(modifier = Modifier.weight(1f))
+                        Spacer(modifier = Modifier.weight(1f))
 
-                    actions()
+                        actions()
+                    }
                 }
 
                 Row(
