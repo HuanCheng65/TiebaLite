@@ -1,5 +1,7 @@
 package com.huanchengfly.tieba.post.ui.page.main.home
 
+import androidx.compose.runtime.Immutable
+import androidx.compose.runtime.Stable
 import com.huanchengfly.tieba.post.api.TiebaApi
 import com.huanchengfly.tieba.post.api.models.CommonResponse
 import com.huanchengfly.tieba.post.api.models.protos.forumRecommend.ForumRecommendResponse
@@ -12,6 +14,7 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.*
 import org.litepal.LitePal
 
+@Stable
 class HomeViewModel : BaseViewModel<HomeUiIntent, HomePartialChange, HomeUiState, HomeUiEvent>() {
     override fun createInitialState(): HomeUiState = HomeUiState()
 
@@ -184,12 +187,14 @@ sealed interface HomePartialChange : PartialChange<HomeUiState> {
     }
 }
 
+@Immutable
 data class HomeUiState(
     val isLoading: Boolean = true,
     val forums: List<Forum> = emptyList(),
     val topForums: List<Forum> = emptyList(),
     val error: Throwable? = null,
 ) : UiState {
+    @Immutable
     data class Forum(
         val avatar: String,
         val forumId: String,

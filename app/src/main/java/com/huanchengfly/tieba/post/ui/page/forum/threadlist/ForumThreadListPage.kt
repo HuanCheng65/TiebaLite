@@ -1,6 +1,7 @@
 package com.huanchengfly.tieba.post.ui.page.forum.threadlist
 
 import android.content.Context
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
@@ -45,6 +46,7 @@ import com.huanchengfly.tieba.post.arch.BaseComposeActivity.Companion.LocalWindo
 import com.huanchengfly.tieba.post.arch.ImmutableHolder
 import com.huanchengfly.tieba.post.arch.collectPartialAsState
 import com.huanchengfly.tieba.post.arch.onEvent
+import com.huanchengfly.tieba.post.arch.onGlobalEvent
 import com.huanchengfly.tieba.post.arch.pageViewModel
 import com.huanchengfly.tieba.post.ui.common.theme.compose.ExtendedTheme
 import com.huanchengfly.tieba.post.ui.common.theme.compose.pullRefreshIndicator
@@ -58,7 +60,9 @@ import com.huanchengfly.tieba.post.ui.widgets.compose.LazyLoad
 import com.huanchengfly.tieba.post.ui.widgets.compose.LoadMoreLayout
 import com.huanchengfly.tieba.post.ui.widgets.compose.LocalSnackbarHostState
 import com.huanchengfly.tieba.post.ui.widgets.compose.VerticalDivider
-import kotlinx.coroutines.flow.Flow
+import com.huanchengfly.tieba.post.utils.appPreferences
+import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.persistentListOf
 
 private fun getFirstLoadIntent(
     context: Context,
@@ -133,7 +137,7 @@ private fun GoodClassifyTabs(
 @Composable
 private fun ThreadList(
     state: LazyListState,
-    itemHoldersProvider: () -> List<ImmutableHolder<ThreadInfo>>,
+    items: ImmutableList<ThreadItemData>,
     isGood: Boolean,
     goodClassifyId: Int?,
     goodClassifyHoldersProvider: () -> List<ImmutableHolder<Classify>>,
@@ -142,7 +146,6 @@ private fun ThreadList(
     onAgree: (ThreadInfo) -> Unit,
     onClassifySelected: (Int) -> Unit
 ) {
-    val itemHolders = itemHoldersProvider()
     val windowSizeClass = LocalWindowSizeClass.current
     val itemFraction = when (windowSizeClass.widthSizeClass) {
         WindowWidthSizeClass.Expanded -> 0.5f
@@ -164,12 +167,12 @@ private fun ThreadList(
             }
         }
         itemsIndexed(
-            items = itemHolders,
-            key = { index, holder ->
+            items = items,
+            key = { index, (holder) ->
                 val (item) = holder
                 "${index}_${item.id}"
             },
-            contentType = { _, holder ->
+            contentType = { _, (holder) ->
                 val (item) = holder
                 if (item.isTop == 1) ItemType.Top
                 else {
@@ -180,7 +183,26 @@ private fun ThreadList(
                     else ItemType.PlainText
                 }
             }
-        ) { index, holder ->
+        ) { index, (holder, blocked) ->
+            if (blocked) {
+                if (!LocalContext.current.appPreferences.hideBlockedContent) {
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = 8.dp, horizontal = 16.dp)
+                            .clip(RoundedCornerShape(6.dp))
+                            .background(ExtendedTheme.colors.floorCard)
+                            .padding(vertical = 8.dp, horizontal = 16.dp)
+                    ) {
+                        Text(
+                            text = stringResource(id = R.string.tip_blocked_thread),
+                            style = MaterialTheme.typography.caption,
+                            color = ExtendedTheme.colors.textSecondary
+                        )
+                    }
+                }
+                return@itemsIndexed
+            }
             val (item) = holder
             Column(
                 modifier = Modifier.fillMaxWidth(itemFraction)
@@ -215,7 +237,7 @@ private fun ThreadList(
                     }
                 } else {
                     if (index > 0) {
-                        if (itemHolders[index - 1].item.isTop == 1) {
+                        if (items[index - 1].thread.get { isTop } == 1) {
                             Spacer(modifier = Modifier.height(8.dp))
                         }
                         VerticalDivider(modifier = Modifier.padding(horizontal = 16.dp))
@@ -237,7 +259,6 @@ private fun ThreadList(
 fun ForumThreadListPage(
     forumId: Long,
     forumName: String,
-    eventFlow: Flow<ForumThreadListUiEvent>,
     isGood: Boolean = false,
     lazyListState: LazyListState = rememberLazyListState(),
     viewModel: ForumThreadListViewModel = if (isGood) pageViewModel<GoodThreadListViewModel>() else pageViewModel<LatestThreadListViewModel>()
@@ -249,10 +270,10 @@ fun ForumThreadListPage(
         viewModel.send(getFirstLoadIntent(context, forumName, isGood))
         viewModel.initialized = true
     }
-    eventFlow.onEvent<ForumThreadListUiEvent.Refresh> {
+    onGlobalEvent<ForumThreadListUiEvent.Refresh> {
         viewModel.send(getRefreshIntent(context, forumName, isGood, it.sortType))
     }
-    eventFlow.onEvent<ForumThreadListUiEvent.BackToTop> {
+    onGlobalEvent<ForumThreadListUiEvent.BackToTop> {
         lazyListState.animateScrollToItem(0)
     }
     viewModel.onEvent<ForumThreadListUiEvent.AgreeFail> {
@@ -293,11 +314,11 @@ fun ForumThreadListPage(
     )
     val threadList by viewModel.uiState.collectPartialAsState(
         prop1 = ForumThreadListUiState::threadList,
-        initial = emptyList()
+        initial = persistentListOf()
     )
     val threadListIds by viewModel.uiState.collectPartialAsState(
         prop1 = ForumThreadListUiState::threadListIds,
-        initial = emptyList()
+        initial = persistentListOf()
     )
     val goodClassifyId by viewModel.uiState.collectPartialAsState(
         prop1 = ForumThreadListUiState::goodClassifyId,
@@ -305,7 +326,7 @@ fun ForumThreadListPage(
     )
     val goodClassifies by viewModel.uiState.collectPartialAsState(
         prop1 = ForumThreadListUiState::goodClassifies,
-        initial = emptyList()
+        initial = persistentListOf()
     )
     val pullRefreshState = rememberPullRefreshState(
         refreshing = isRefreshing,
@@ -330,7 +351,7 @@ fun ForumThreadListPage(
         ) {
             ThreadList(
                 state = lazyListState,
-                itemHoldersProvider = { threadList },
+                items = threadList,
                 isGood = isGood,
                 goodClassifyId = goodClassifyId,
                 goodClassifyHoldersProvider = { goodClassifies },

@@ -31,6 +31,7 @@ import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -414,6 +415,7 @@ fun BottomNavigation(
     }
 }
 
+@Immutable
 data class NavigationItem(
     val id: String,
     val icon: @Composable (selected: Boolean) -> ImageVector,

@@ -74,6 +74,26 @@ fun <T> rememberPreferenceAsMutableState(
     return state
 }
 
+@Composable
+fun <T> rememberPreferenceAsState(
+    key: Preferences.Key<T>,
+    defaultValue: T
+): State<T> {
+    val dataStore = LocalContext.current.dataStore
+    val state = remember { mutableStateOf(defaultValue) }
+
+    LaunchedEffect(Unit) {
+        dataStore.data.map { it[key] ?: defaultValue }.distinctUntilChanged()
+            .collect { state.value = it }
+    }
+
+    LaunchedEffect(state.value) {
+        dataStore.edit { it[key] = state.value }
+    }
+
+    return state
+}
+
 @SuppressLint("FlowOperatorInvokedInComposition")
 @Composable
 fun <T> DataStore<Preferences>.collectPreferenceAsState(

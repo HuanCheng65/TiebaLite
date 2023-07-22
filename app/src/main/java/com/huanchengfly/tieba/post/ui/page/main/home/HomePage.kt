@@ -21,6 +21,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -39,7 +40,6 @@ import androidx.compose.material.pullrefresh.PullRefreshIndicator
 import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -69,15 +69,15 @@ import com.google.accompanist.placeholder.placeholder
 import com.huanchengfly.tieba.post.R
 import com.huanchengfly.tieba.post.activities.LoginActivity
 import com.huanchengfly.tieba.post.activities.NewSearchActivity
+import com.huanchengfly.tieba.post.arch.GlobalEvent
 import com.huanchengfly.tieba.post.arch.collectPartialAsState
-import com.huanchengfly.tieba.post.arch.onEvent
+import com.huanchengfly.tieba.post.arch.onGlobalEvent
 import com.huanchengfly.tieba.post.arch.pageViewModel
 import com.huanchengfly.tieba.post.goToActivity
 import com.huanchengfly.tieba.post.ui.common.theme.compose.ExtendedTheme
 import com.huanchengfly.tieba.post.ui.common.theme.compose.pullRefreshIndicator
 import com.huanchengfly.tieba.post.ui.page.LocalNavigator
 import com.huanchengfly.tieba.post.ui.page.destinations.ForumPageDestination
-import com.huanchengfly.tieba.post.ui.page.main.MainUiEvent
 import com.huanchengfly.tieba.post.ui.widgets.Chip
 import com.huanchengfly.tieba.post.ui.widgets.compose.ActionItem
 import com.huanchengfly.tieba.post.ui.widgets.compose.Avatar
@@ -96,7 +96,6 @@ import com.huanchengfly.tieba.post.utils.AccountUtil.LocalAccount
 import com.huanchengfly.tieba.post.utils.ImageUtil
 import com.huanchengfly.tieba.post.utils.TiebaUtil
 import com.huanchengfly.tieba.post.utils.appPreferences
-import kotlinx.coroutines.flow.Flow
 
 private fun getGridCells(context: Context, listSingle: Boolean = context.appPreferences.listSingle): GridCells {
     return if (listSingle) {
@@ -232,47 +231,22 @@ private fun ForumItemPlaceholder(
 
 @Composable
 private fun ForumItem(
-    viewModel: HomeViewModel,
     item: HomeUiState.Forum,
     showAvatar: Boolean,
-    isTopForum: Boolean = false
+    onClick: (HomeUiState.Forum) -> Unit,
+    onUnfollow: (HomeUiState.Forum) -> Unit,
+    onAddTopForum: (HomeUiState.Forum) -> Unit,
+    onDeleteTopForum: (HomeUiState.Forum) -> Unit,
+    isTopForum: Boolean = false,
 ) {
-    val navigator = LocalNavigator.current
     val context = LocalContext.current
     val menuState = rememberMenuState()
-    var willUnfollow by remember {
-        mutableStateOf(false)
-    }
-    if (willUnfollow) {
-        val dialogState = rememberDialogState()
-
-        ConfirmDialog(
-            dialogState = dialogState,
-            onConfirm = { viewModel.send(HomeUiIntent.Unfollow(item.forumId, item.forumName)) },
-            modifier = Modifier,
-            onDismiss = {
-                willUnfollow = false
-            },
-            title = {
-                Text(
-                    text = stringResource(
-                        id = R.string.title_dialog_unfollow_forum,
-                        item.forumName
-                    )
-                )
-            }
-        )
-
-        LaunchedEffect(key1 = "launchUnfollowDialog") {
-            dialogState.show = true
-        }
-    }
     LongClickMenu(
         menuContent = {
             if (isTopForum) {
                 DropdownMenuItem(
                     onClick = {
-                        viewModel.send(HomeUiIntent.TopForums.Delete(item.forumId))
+                        onDeleteTopForum(item)
                         menuState.expanded = false
                     }
                 ) {
@@ -281,7 +255,7 @@ private fun ForumItem(
             } else {
                 DropdownMenuItem(
                     onClick = {
-                        viewModel.send(HomeUiIntent.TopForums.Add(item))
+                        onAddTopForum(item)
                         menuState.expanded = false
                     }
                 ) {
@@ -298,7 +272,7 @@ private fun ForumItem(
             }
             DropdownMenuItem(
                 onClick = {
-                    willUnfollow = true
+                    onUnfollow(item)
                     menuState.expanded = false
                 }
             ) {
@@ -307,7 +281,7 @@ private fun ForumItem(
         },
         menuState = menuState,
         onClick = {
-            navigator.navigate(ForumPageDestination(item.forumName))
+            onClick(item)
         }
     ) {
         Row(
@@ -374,7 +348,6 @@ private fun ForumItem(
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun HomePage(
-    eventFlow: Flow<MainUiEvent>,
     viewModel: HomeViewModel = pageViewModel<HomeUiIntent, HomeViewModel>(
         listOf(
             HomeUiIntent.Refresh
@@ -385,6 +358,7 @@ fun HomePage(
 ) {
     val account = LocalAccount.current
     val context = LocalContext.current
+    val navigator = LocalNavigator.current
     val isLoading by viewModel.uiState.collectPartialAsState(
         prop1 = HomeUiState::isLoading,
         initial = true
@@ -401,12 +375,35 @@ fun HomePage(
         prop1 = HomeUiState::error,
         initial = null
     )
-    val isError by remember { derivedStateOf { error != null } }
+    val isLoggedIn = remember(account) { account != null }
+    val isEmpty by remember { derivedStateOf { forums.isEmpty() } }
+    val hasTopForum by remember { derivedStateOf { topForums.isNotEmpty() } }
     var listSingle by remember { mutableStateOf(context.appPreferences.listSingle) }
+    val isError by remember { derivedStateOf { error != null } }
     val gridCells by remember { derivedStateOf { getGridCells(context, listSingle) } }
 
-    eventFlow.onEvent<MainUiEvent.Refresh> {
+    onGlobalEvent<GlobalEvent.Refresh>(
+        filter = { it.key == "home" }
+    ) {
         viewModel.send(HomeUiIntent.Refresh)
+    }
+
+    var unfollowForum by remember { mutableStateOf<HomeUiState.Forum?>(null) }
+    val confirmUnfollowDialog = rememberDialogState()
+    ConfirmDialog(
+        dialogState = confirmUnfollowDialog,
+        onConfirm = {
+            unfollowForum?.let {
+                viewModel.send(HomeUiIntent.Unfollow(it.forumId, it.forumName))
+            }
+        },
+    ) {
+        Text(
+            text = stringResource(
+                id = R.string.title_dialog_unfollow_forum,
+                unfollowForum?.forumName.orEmpty()
+            )
+        )
     }
 
     Scaffold(
@@ -435,7 +432,7 @@ fun HomePage(
         modifier = Modifier.fillMaxSize(),
     ) { contentPaddings ->
         StateScreen(
-            isEmpty = forums.isEmpty(),
+            isEmpty = isEmpty,
             isError = isError,
             isLoading = isLoading,
             modifier = Modifier.padding(contentPaddings),
@@ -444,7 +441,7 @@ fun HomePage(
             },
             emptyScreen = {
                 EmptyScreen(
-                    loggedIn = account != null,
+                    loggedIn = isLoggedIn,
                     canOpenExplore = canOpenExplore,
                     onOpenExplore = onOpenExplore
                 )
@@ -458,7 +455,8 @@ fun HomePage(
         ) {
             val pullRefreshState = rememberPullRefreshState(
                 refreshing = isLoading,
-                onRefresh = { viewModel.send(HomeUiIntent.Refresh) })
+                onRefresh = { viewModel.send(HomeUiIntent.Refresh) }
+            )
             Box(
                 modifier = Modifier
                     .pullRefresh(pullRefreshState)
@@ -468,15 +466,14 @@ fun HomePage(
                     state = gridState,
                     columns = gridCells,
                     contentPadding = PaddingValues(bottom = 12.dp),
-                    modifier = Modifier
-                        .fillMaxSize(),
+                    modifier = Modifier.fillMaxSize(),
                 ) {
                     item(key = "SearchBox", span = { GridItemSpan(maxLineSpan) }) {
                         SearchBox(modifier = Modifier.padding(bottom = 12.dp)) {
                             context.goToActivity<NewSearchActivity>()
                         }
                     }
-                    if (topForums.isNotEmpty()) {
+                    if (hasTopForum) {
                         item(key = "TopForumHeader", span = { GridItemSpan(maxLineSpan) }) {
                             Column {
                                 Header(
@@ -486,9 +483,28 @@ fun HomePage(
                                 Spacer(modifier = Modifier.height(8.dp))
                             }
                         }
-                        items(count = topForums.size, key = { "Top${topForums[it].forumId}" }) {
-                            val item = topForums[it]
-                            ForumItem(viewModel, item, listSingle, true)
+                        items(
+                            items = topForums,
+                            key = { "Top${it.forumId}" }
+                        ) { item ->
+                            ForumItem(
+                                item,
+                                listSingle,
+                                onClick = {
+                                    navigator.navigate(ForumPageDestination(it.forumName))
+                                },
+                                onUnfollow = {
+                                    unfollowForum = it
+                                    confirmUnfollowDialog.show()
+                                },
+                                onAddTopForum = {
+                                    viewModel.send(HomeUiIntent.TopForums.Add(it))
+                                },
+                                onDeleteTopForum = {
+                                    viewModel.send(HomeUiIntent.TopForums.Delete(it.forumId))
+                                },
+                                isTopForum = true
+                            )
                         }
                         item(
                             key = "Spacer",
@@ -506,9 +522,27 @@ fun HomePage(
                             }
                         }
                     }
-                    items(count = forums.size, key = { forums[it].forumId }) {
-                        val item = forums[it]
-                        ForumItem(viewModel, item, listSingle)
+                    items(
+                        items = forums,
+                        key = { it.forumId }
+                    ) { item ->
+                        ForumItem(
+                            item,
+                            listSingle,
+                            onClick = {
+                                navigator.navigate(ForumPageDestination(it.forumName))
+                            },
+                            onUnfollow = {
+                                unfollowForum = it
+                                confirmUnfollowDialog.show()
+                            },
+                            onAddTopForum = {
+                                viewModel.send(HomeUiIntent.TopForums.Add(it))
+                            },
+                            onDeleteTopForum = {
+                                viewModel.send(HomeUiIntent.TopForums.Delete(it.forumId))
+                            }
+                        )
                     }
                 }
 

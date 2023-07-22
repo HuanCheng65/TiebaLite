@@ -109,7 +109,7 @@ fun ClickMenu(
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun LongClickMenu(
-    menuContent: @Composable() (ColumnScope.() -> Unit),
+    menuContent: @Composable (ColumnScope.() -> Unit),
     modifier: Modifier = Modifier,
     menuState: MenuState = rememberMenuState(),
     onClick: (() -> Unit)? = null,

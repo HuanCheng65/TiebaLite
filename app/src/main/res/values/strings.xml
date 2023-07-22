@@ -706,4 +706,5 @@
     <string name="above_is_latest_post">以上为最新回复</string>
     <string name="below_is_latest_post">以下为最新回复</string>
     <string name="btn_open_origin_thread">查看原贴</string>
+    <string name="tip_blocked_thread">由于你的屏蔽设置，该贴已被屏蔽</string>
 </resources>

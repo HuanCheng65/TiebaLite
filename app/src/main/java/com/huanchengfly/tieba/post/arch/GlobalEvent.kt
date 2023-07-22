@@ -15,10 +15,12 @@ import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.filterIsInstance
 import kotlinx.coroutines.launch
 
-sealed interface GlobalEvent {
+sealed interface GlobalEvent : UiEvent {
     object AccountSwitched : GlobalEvent
 
     object NavigateUp : GlobalEvent
+
+    data class Refresh(val key: String) : GlobalEvent
 
     data class StartSelectImages(
         val id: String,
@@ -40,20 +42,24 @@ sealed interface GlobalEvent {
     ) : GlobalEvent
 }
 
-private val globalEventSharedFlow: MutableSharedFlow<GlobalEvent> by lazy(mode = LazyThreadSafetyMode.SYNCHRONIZED) {
+private val globalEventSharedFlow: MutableSharedFlow<UiEvent> by lazy(mode = LazyThreadSafetyMode.SYNCHRONIZED) {
     MutableSharedFlow(0, 1, BufferOverflow.DROP_OLDEST)
 }
 
 val GlobalEventFlow = globalEventSharedFlow.asSharedFlow()
 
-fun CoroutineScope.emitGlobalEvent(event: GlobalEvent) {
+fun CoroutineScope.emitGlobalEvent(event: UiEvent) {
     launch {
         globalEventSharedFlow.emit(event)
     }
 }
 
+suspend fun emitGlobalEvent(event: UiEvent) {
+    globalEventSharedFlow.emit(event)
+}
+
 @Composable
-inline fun <reified Event : GlobalEvent> onGlobalEvent(
+inline fun <reified Event : UiEvent> onGlobalEvent(
     coroutineScope: CoroutineScope = rememberCoroutineScope(),
     noinline filter: (Event) -> Boolean = { true },
     noinline listener: suspend (Event) -> Unit

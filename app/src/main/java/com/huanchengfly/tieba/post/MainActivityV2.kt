@@ -34,6 +34,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.compositionLocalOf
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.staticCompositionLocalOf
@@ -279,30 +280,17 @@ class MainActivityV2 : BaseComposeActivity() {
             LocalDevicePosture provides devicePostureFlow.collectAsState(),
         ) {
             Box {
-                if (ThemeUtil.isTranslucentTheme(ExtendedTheme.colors.theme)) {
-                    val backgroundPath by rememberPreferenceAsMutableState(
-                        key = stringPreferencesKey(
-                            "translucent_theme_background_path"
-                        ),
-                        defaultValue = ""
-                    )
-                    if (backgroundPath.isNotEmpty()) {
-                        AsyncImage(
-                            imageUri = newFileUri(backgroundPath),
-                            contentDescription = null,
-                            modifier = Modifier.fillMaxSize(),
-                            contentScale = ContentScale.Crop
-                        )
-                    }
-                }
+                TranslucentThemeBackground()
 
                 Surface(
                     color = ExtendedTheme.colors.background
                 ) {
-                    val animationSpec = spring(
-                        stiffness = Spring.StiffnessMediumLow,
-                        visibilityThreshold = IntOffset.VisibilityThreshold
-                    )
+                    val animationSpec = remember {
+                        spring(
+                            stiffness = Spring.StiffnessMediumLow,
+                            visibilityThreshold = IntOffset.VisibilityThreshold
+                        )
+                    }
                     val engine = rememberAnimatedNavHostEngine(
                         navHostContentAlignment = Alignment.TopStart,
                         rootDefaultAnimations = RootNavGraphDefaultAnimations(
@@ -337,9 +325,6 @@ class MainActivityV2 : BaseComposeActivity() {
                         ),
                     )
                     val navController = rememberAnimatedNavController()
-                    onGlobalEvent<GlobalEvent.NavigateUp> {
-                        navController.navigateUp()
-                    }
                     val bottomSheetNavigator =
                         rememberBottomSheetNavigator(
                             animationSpec = spring(stiffness = Spring.StiffnessMediumLow),
@@ -370,6 +355,23 @@ class MainActivityV2 : BaseComposeActivity() {
                     }
                 }
             }
+        }
+    }
+
+    @Composable
+    private fun TranslucentThemeBackground() {
+        if (ThemeUtil.isTranslucentTheme(ExtendedTheme.colors.theme)) {
+            val backgroundPath by rememberPreferenceAsMutableState(
+                key = stringPreferencesKey("translucent_theme_background_path"),
+                defaultValue = ""
+            )
+            val backgroundUri by remember { derivedStateOf { newFileUri(backgroundPath) } }
+            AsyncImage(
+                imageUri = backgroundUri,
+                contentDescription = null,
+                modifier = Modifier.fillMaxSize(),
+                contentScale = ContentScale.Crop
+            )
         }
     }
 

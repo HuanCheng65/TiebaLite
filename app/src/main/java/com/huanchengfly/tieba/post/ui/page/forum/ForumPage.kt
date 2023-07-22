@@ -92,6 +92,7 @@ import com.huanchengfly.tieba.post.activities.SearchPostActivity
 import com.huanchengfly.tieba.post.api.models.protos.frsPage.ForumInfo
 import com.huanchengfly.tieba.post.arch.ImmutableHolder
 import com.huanchengfly.tieba.post.arch.collectPartialAsState
+import com.huanchengfly.tieba.post.arch.emitGlobalEvent
 import com.huanchengfly.tieba.post.arch.onEvent
 import com.huanchengfly.tieba.post.arch.pageViewModel
 import com.huanchengfly.tieba.post.dataStore
@@ -99,6 +100,7 @@ import com.huanchengfly.tieba.post.getInt
 import com.huanchengfly.tieba.post.goToActivity
 import com.huanchengfly.tieba.post.models.database.History
 import com.huanchengfly.tieba.post.pxToDp
+import com.huanchengfly.tieba.post.toastShort
 import com.huanchengfly.tieba.post.ui.common.theme.compose.ExtendedTheme
 import com.huanchengfly.tieba.post.ui.page.LocalNavigator
 import com.huanchengfly.tieba.post.ui.page.ProvideNavigator
@@ -132,7 +134,6 @@ import com.ramcosta.composedestinations.annotation.DeepLink
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import kotlinx.collections.immutable.persistentListOf
-import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.filterIsInstance
 import kotlinx.coroutines.launch
 import kotlin.math.absoluteValue
@@ -468,13 +469,6 @@ fun ForumPage(
         }
     }
 
-    val eventFlows = remember {
-        listOf(
-            MutableSharedFlow<ForumThreadListUiEvent>(),
-            MutableSharedFlow<ForumThreadListUiEvent>()
-        )
-    }
-
     val unlikeDialogState = rememberDialogState()
 
     LaunchedEffect(forumInfo) {
@@ -600,11 +594,14 @@ fun ForumPage(
                             when (context.appPreferences.forumFabFunction) {
                                 "refresh" -> {
                                     coroutineScope.launch {
-                                        eventFlows[pagerState.currentPage].emit(
-                                            ForumThreadListUiEvent.BackToTop
+                                        emitGlobalEvent(
+                                            ForumThreadListUiEvent.BackToTop(
+                                                pagerState.currentPage == 1
+                                            )
                                         )
-                                        eventFlows[pagerState.currentPage].emit(
+                                        emitGlobalEvent(
                                             ForumThreadListUiEvent.Refresh(
+                                                pagerState.currentPage == 1,
                                                 getSortType(
                                                     context,
                                                     forumName
@@ -616,14 +613,16 @@ fun ForumPage(
 
                                 "back_to_top" -> {
                                     coroutineScope.launch {
-                                        eventFlows[pagerState.currentPage].emit(
-                                            ForumThreadListUiEvent.BackToTop
+                                        emitGlobalEvent(
+                                            ForumThreadListUiEvent.BackToTop(
+                                                pagerState.currentPage == 1
+                                            )
                                         )
                                     }
                                 }
 
                                 else -> {
-
+                                    context.toastShort(R.string.toast_feature_unavailable)
                                 }
                             }
                         },
@@ -752,8 +751,11 @@ fun ForumPage(
                                                 setSortType(context, forumName, value)
                                             }
                                             coroutineScope.launch {
-                                                eventFlows[pagerState.currentPage].emit(
-                                                    ForumThreadListUiEvent.Refresh(value)
+                                                emitGlobalEvent(
+                                                    ForumThreadListUiEvent.Refresh(
+                                                        pagerState.currentPage == 1,
+                                                        value
+                                                    )
                                                 )
                                             }
                                             currentSortType = value
@@ -837,7 +839,6 @@ fun ForumPage(
                             ForumThreadListPage(
                                 forumId = forumInfo!!.get { id },
                                 forumName = forumInfo!!.get { name },
-                                eventFlow = eventFlows[it],
                                 isGood = it == 1,
                                 lazyListState = lazyListStates[it]
                             )
