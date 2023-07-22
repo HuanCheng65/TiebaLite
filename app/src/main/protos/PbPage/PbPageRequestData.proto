@@ -12,10 +12,10 @@ import "PbPage/AdParam.proto";
 message PbPageRequestData {
   optional int32 pb_rn = 1;
   int32 mark = 2;
-  optional int32 back = 3;
+  int32 back = 3;
   int64 kz = 4;
   int32 lz = 5;
-  optional int32 r = 6;
+  int32 r = 6;
   optional int64 pid = 7;
   int32 with_floor = 8;
   int32 floor_rn = 9;
@@ -78,5 +78,7 @@ message PbPageRequestData {
   optional int32 immersion_video_comment_source = 76;
   AppTransmitData app_transmit_data = 77;
   optional int32 is_fold_comment_req = 78;
-  int32 is_edit_comment_req = 79;
+  optional int32 is_edit_comment_req = 79;
+  optional int32 request_times = 80;
+  optional int64 last_pid = 81;
 }

@@ -219,7 +219,7 @@ object RetrofitTiebaApi {
                 Header.CUID_GALAXY2 to { CuidUtils.getNewCuid() },
                 Header.CUID_GID to { "" },
                 Header.CUID_GALAXY3 to { UIDUtil.getAid() },
-                Header.USER_AGENT to { "bdtb for Android ${ClientVersion.TIEBA_V12.version}" },
+                Header.USER_AGENT to { getUserAgent("tieba/${ClientVersion.TIEBA_V12.version}") },
                 Header.X_BD_DATA_TYPE to { "protobuf" },
             ),
             stParamInterceptor,

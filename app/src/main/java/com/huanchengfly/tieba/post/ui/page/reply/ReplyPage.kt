@@ -717,10 +717,12 @@ private fun ImagePanel(
     modifier: Modifier = Modifier,
 ) {
     val id = remember { UUID.randomUUID().toString() }
-    onGlobalEvent<GlobalEvent.SelectedImages> {
-        if (it.id == id) {
-            onNewImageSelected(it.images)
-        }
+    val coroutineScope = rememberCoroutineScope()
+    onGlobalEvent<GlobalEvent.SelectedImages>(
+        coroutineScope,
+        filter = { it.id == id }
+    ) {
+        onNewImageSelected(it.images)
     }
 
     Column(
@@ -765,7 +767,7 @@ private fun ImagePanel(
                             .aspectRatio(1f)
                             .background(ExtendedTheme.colors.chip)
                             .clickable {
-                                emitGlobalEvent(
+                                coroutineScope.emitGlobalEvent(
                                     GlobalEvent.StartSelectImages(
                                         id,
                                         9 - selectedImages.size,

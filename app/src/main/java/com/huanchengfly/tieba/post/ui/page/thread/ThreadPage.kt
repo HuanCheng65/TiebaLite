@@ -24,6 +24,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -83,10 +84,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.airbnb.lottie.compose.LottieAnimation
-import com.airbnb.lottie.compose.LottieCompositionSpec
-import com.airbnb.lottie.compose.LottieConstants
-import com.airbnb.lottie.compose.rememberLottieComposition
 import com.huanchengfly.tieba.post.App
 import com.huanchengfly.tieba.post.R
 import com.huanchengfly.tieba.post.activities.UserActivity
@@ -99,9 +96,11 @@ import com.huanchengfly.tieba.post.api.models.protos.User
 import com.huanchengfly.tieba.post.api.models.protos.bawuType
 import com.huanchengfly.tieba.post.api.models.protos.plainText
 import com.huanchengfly.tieba.post.api.retrofit.exception.getErrorMessage
+import com.huanchengfly.tieba.post.arch.GlobalEvent
 import com.huanchengfly.tieba.post.arch.ImmutableHolder
 import com.huanchengfly.tieba.post.arch.collectPartialAsState
 import com.huanchengfly.tieba.post.arch.onEvent
+import com.huanchengfly.tieba.post.arch.onGlobalEvent
 import com.huanchengfly.tieba.post.arch.pageViewModel
 import com.huanchengfly.tieba.post.arch.wrapImmutable
 import com.huanchengfly.tieba.post.models.ThreadHistoryInfoBean
@@ -511,10 +510,21 @@ fun ThreadPage(
         prop1 = ThreadUiState::sortType,
         initial = sortType
     )
-
     val isImmersiveMode by viewModel.uiState.collectPartialAsState(
         prop1 = ThreadUiState::isImmersiveMode,
         initial = false
+    )
+    val latestPosts by viewModel.uiState.collectPartialAsState(
+        prop1 = ThreadUiState::latestPosts,
+        initial = persistentListOf()
+    )
+    val latestPostContentRenders by viewModel.uiState.collectPartialAsState(
+        prop1 = ThreadUiState::latestPostContentRenders,
+        initial = persistentListOf()
+    )
+    val latestPostSubPostContents by viewModel.uiState.collectPartialAsState(
+        prop1 = ThreadUiState::latestPostSubPostContents,
+        initial = persistentListOf()
     )
 
     val isEmpty by remember {
@@ -580,7 +590,14 @@ fun ThreadPage(
     }
 
     viewModel.onEvent<ThreadUiEvent.ScrollToFirstReply> {
-        lazyListState.animateScrollToItem(3)
+        lazyListState.animateScrollToItem(1)
+    }
+    viewModel.onEvent<ThreadUiEvent.ScrollToLatestReply> {
+        if (curSortType != ThreadSortType.SORT_TYPE_DESC) {
+            lazyListState.animateScrollToItem(2 + data.size)
+        } else {
+            lazyListState.animateScrollToItem(1)
+        }
     }
     viewModel.onEvent<ThreadUiEvent.LoadSuccess> {
         if (it.page > 1 || waitLoadSuccessAndScrollToFirstReply) {
@@ -596,6 +613,24 @@ fun ThreadPage(
     viewModel.onEvent<ThreadUiEvent.RemoveFavoriteSuccess> {
         scaffoldState.snackbarHostState.showSnackbar(
             context.getString(R.string.message_remove_favorite_success)
+        )
+    }
+
+    onGlobalEvent<GlobalEvent.ReplySuccess>(
+        filter = { it.threadId == threadId }
+    ) {
+        viewModel.send(
+            ThreadUiIntent.LoadLatestReply(
+                threadId = threadId,
+                postId = it.newPostId,
+                forumId = curForumId,
+                isDesc = curSortType == ThreadSortType.SORT_TYPE_DESC,
+                curLatestPostFloor = if (curSortType == ThreadSortType.SORT_TYPE_DESC) {
+                    data.firstOrNull()?.post?.get { floor } ?: 1
+                } else {
+                    data.lastOrNull()?.post?.get { floor } ?: 1
+                }
+            )
         )
     }
 
@@ -774,6 +809,146 @@ fun ThreadPage(
             )
         }
     )
+
+    @Composable
+    fun PostCard(
+        item: ImmutableHolder<Post>,
+        contentRenders: ImmutableList<PbContentRender>,
+        subPostContents: ImmutableList<AnnotatedString>,
+        blocked: Boolean
+    ) {
+        PostCard(
+            postHolder = item,
+            contentRenders = contentRenders,
+            subPostContents = subPostContents,
+            threadAuthorId = author?.get { id } ?: 0L,
+            blocked = blocked,
+            canDelete = { it.author_id == user.get { id } },
+            immersiveMode = isImmersiveMode,
+            isCollected = { it.id == thread?.get { collectMarkPid.toLongOrNull() } },
+            onAgree = {
+                val postHasAgreed =
+                    item.get { agree?.hasAgree == 1 }
+                viewModel.send(
+                    ThreadUiIntent.AgreePost(
+                        threadId = threadId,
+                        postId = item.get { id },
+                        agree = !postHasAgreed
+                    )
+                )
+            },
+            onReplyClick = {
+                navigator.navigate(
+                    ReplyPageDestination(
+                        forumId = curForumId ?: 0,
+                        forumName = forum?.get { name } ?: "",
+                        threadId = threadId,
+                        postId = it.id,
+                        replyUserId = it.author?.id ?: it.author_id,
+                        replyUserName = it.author?.nameShow.takeIf { name -> !name.isNullOrEmpty() }
+                            ?: it.author?.name,
+                        replyUserPortrait = it.author?.portrait,
+                    )
+                )
+            },
+            onOpenSubPosts = {
+                if (curForumId != null) {
+                    navigator.navigate(
+                        SubPostsSheetPageDestination(
+                            forumId = curForumId,
+                            threadId = threadId,
+                            postId = item.get { id },
+                            subPostId = it,
+                            loadFromSubPost = false
+                        )
+                    )
+                }
+            },
+            onMenuFavoriteClick = {
+                val isPostCollected =
+                    it.id == thread?.get { collectMarkPid.toLongOrNull() }
+                val fid = forum?.get { id } ?: forumId
+                val tbs = anti?.get { tbs }
+                if (fid != null) {
+                    if (isPostCollected) {
+                        viewModel.send(
+                            ThreadUiIntent.RemoveFavorite(
+                                threadId = threadId,
+                                forumId = fid,
+                                tbs = tbs
+                            )
+                        )
+                    } else {
+                        viewModel.send(
+                            ThreadUiIntent.AddFavorite(
+                                threadId = threadId,
+                                postId = it.id,
+                                floor = it.floor
+                            )
+                        )
+                    }
+                }
+            },
+            onMenuDeleteClick = {
+                deletePost = it.wrapImmutable()
+                confirmDeleteDialogState.show()
+            },
+        )
+    }
+
+    fun LazyListScope.latestPosts(desc: Boolean) {
+        if (latestPosts.isNotEmpty()) {
+            if (!desc) {
+                item("LatestPostsTip") {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 16.dp, vertical = 8.dp),
+                        horizontalArrangement = Arrangement.spacedBy(8.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        VerticalDivider(modifier = Modifier.weight(1f))
+                        Text(
+                            text = stringResource(id = R.string.below_is_latest_post),
+                            color = ExtendedTheme.colors.textSecondary,
+                            style = MaterialTheme.typography.caption,
+                        )
+                        VerticalDivider(modifier = Modifier.weight(1f))
+                    }
+                }
+            }
+            itemsIndexed(
+                items = latestPosts,
+                key = { _, (item) -> "LatestPost_${item.get { id }}" }
+            ) { index, (item, blocked) ->
+                PostCard(
+                    item,
+                    latestPostContentRenders[index],
+                    latestPostSubPostContents[index],
+                    blocked
+                )
+            }
+            if (desc) {
+                item("LatestPostsTip") {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 16.dp, vertical = 8.dp),
+                        horizontalArrangement = Arrangement.spacedBy(8.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        VerticalDivider(modifier = Modifier.weight(1f))
+                        Text(
+                            text = stringResource(id = R.string.above_is_latest_post),
+                            color = ExtendedTheme.colors.textSecondary,
+                            style = MaterialTheme.typography.caption,
+                        )
+                        VerticalDivider(modifier = Modifier.weight(1f))
+                    }
+                }
+            }
+        }
+    }
 
     ProvideNavigator(navigator = navigator) {
         StateScreen(
@@ -1073,6 +1248,9 @@ fun ThreadPage(
                                             )
                                         }
                                     }
+                                    if (curSortType == ThreadSortType.SORT_TYPE_DESC) {
+                                        latestPosts(true)
+                                    }
                                     item(key = "LoadPreviousBtn") {
                                         if (hasPrevious) {
                                             Row(
@@ -1114,119 +1292,17 @@ fun ThreadPage(
                                     }
                                     itemsIndexed(
                                         items = data,
-                                        key = { _, (item) -> item.get { id } }
+                                        key = { _, (item) -> "Post_${item.get { id }}" }
                                     ) { index, (item, blocked) ->
                                         PostCard(
-                                            postHolder = item,
-                                            contentRenders = contentRenders[index],
-                                            subPostContents = subPostContents[index],
-                                            threadAuthorId = author?.get { id } ?: 0L,
-                                            blocked = blocked,
-                                            canDelete = { it.author_id == user.get { id } },
-                                            immersiveMode = isImmersiveMode,
-                                            isCollected = { it.id == thread?.get { collectMarkPid.toLongOrNull() } },
-                                            onAgree = {
-                                                val postHasAgreed =
-                                                    item.get { agree?.hasAgree == 1 }
-                                                viewModel.send(
-                                                    ThreadUiIntent.AgreePost(
-                                                        threadId = threadId,
-                                                        postId = item.get { id },
-                                                        agree = !postHasAgreed
-                                                    )
-                                                )
-                                            },
-                                            onReplyClick = {
-                                                navigator.navigate(
-                                                    ReplyPageDestination(
-                                                        forumId = curForumId ?: 0,
-                                                        forumName = forum?.get { name } ?: "",
-                                                        threadId = threadId,
-                                                        postId = it.id,
-                                                        replyUserId = it.author?.id ?: it.author_id,
-                                                        replyUserName = it.author?.nameShow.takeIf { name -> !name.isNullOrEmpty() }
-                                                            ?: it.author?.name,
-                                                        replyUserPortrait = it.author?.portrait,
-                                                    )
-                                                )
-                                            },
-                                            onOpenSubPosts = {
-                                                if (curForumId != null) {
-                                                    navigator.navigate(
-                                                        SubPostsSheetPageDestination(
-                                                            forumId = curForumId,
-                                                            threadId = threadId,
-                                                            postId = item.get { id },
-                                                            subPostId = it,
-                                                            loadFromSubPost = false
-                                                        )
-                                                    )
-                                                }
-                                            },
-                                            onMenuFavoriteClick = {
-                                                val isPostCollected =
-                                                    it.id == thread?.get { collectMarkPid.toLongOrNull() }
-                                                val fid = forum?.get { id } ?: forumId
-                                                val tbs = anti?.get { tbs }
-                                                if (fid != null) {
-                                                    if (isPostCollected) {
-                                                        viewModel.send(
-                                                            ThreadUiIntent.RemoveFavorite(
-                                                                threadId = threadId,
-                                                                forumId = fid,
-                                                                tbs = tbs
-                                                            )
-                                                        )
-                                                    } else {
-                                                        viewModel.send(
-                                                            ThreadUiIntent.AddFavorite(
-                                                                threadId = threadId,
-                                                                postId = it.id,
-                                                                floor = it.floor
-                                                            )
-                                                        )
-                                                    }
-                                                }
-                                            },
-                                        ) {
-                                            deletePost = it.wrapImmutable()
-                                            confirmDeleteDialogState.show()
-                                        }
+                                            item,
+                                            contentRenders[index],
+                                            subPostContents[index],
+                                            blocked
+                                        )
                                     }
-                                    if (data.isEmpty()) {
-                                        item(key = "EmptyReplyTip") {
-                                            if (!isRefreshing) {
-                                                Column(
-                                                    modifier = Modifier
-                                                        .fillMaxWidth()
-                                                        .padding(16.dp),
-                                                    horizontalAlignment = Alignment.CenterHorizontally,
-                                                    verticalArrangement = Arrangement.spacedBy(16.dp)
-                                                ) {
-                                                    val composition by rememberLottieComposition(
-                                                        LottieCompositionSpec.RawRes(R.raw.lottie_empty_box)
-                                                    )
-                                                    LottieAnimation(
-                                                        composition = composition,
-                                                        iterations = LottieConstants.IterateForever,
-                                                        modifier = Modifier
-                                                            .fillMaxWidth()
-                                                            .aspectRatio(2f)
-                                                    )
-                                                    Text(
-                                                        text = stringResource(id = R.string.title_empty),
-                                                        style = MaterialTheme.typography.h6.copy(
-                                                            color = ExtendedTheme.colors.text,
-                                                            fontWeight = FontWeight.Bold,
-                                                            textAlign = TextAlign.Center
-                                                        )
-                                                    )
-                                                    Button(onClick = { reload() }) {
-                                                        Text(text = stringResource(id = R.string.btn_refresh))
-                                                    }
-                                                }
-                                            }
-                                        }
+                                    if (curSortType != ThreadSortType.SORT_TYPE_DESC) {
+                                        latestPosts(false)
                                     }
                                 }
                             }

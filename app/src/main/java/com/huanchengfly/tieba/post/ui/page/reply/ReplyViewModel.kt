@@ -101,13 +101,13 @@ class ReplyViewModel @Inject constructor() :
             return AddPostRepository
                 .addPost(
                     content,
-                    forumId.toString(),
+                    forumId,
                     forumName,
-                    threadId.toString(),
+                    threadId,
                     tbs,
-                    postId = postId?.toString(),
-                    subPostId = subPostId?.toString(),
-                    replyUserId = replyUserId?.toString()
+                    postId = postId,
+                    subPostId = subPostId,
+                    replyUserId = replyUserId
                 )
                 .map<AddPostResponse, ReplyPartialChange.Send> {
                     if (it.data_ == null) throw TiebaUnknownException

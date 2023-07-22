@@ -703,4 +703,7 @@
     <string name="message_confirm_delete">你确定要删除%s吗？</string>
     <string name="this_thread">本贴</string>
     <string name="this_reply">这条回复</string>
+    <string name="above_is_latest_post">以上为最新回复</string>
+    <string name="below_is_latest_post">以下为最新回复</string>
+    <string name="btn_open_origin_thread">查看原贴</string>
 </resources>

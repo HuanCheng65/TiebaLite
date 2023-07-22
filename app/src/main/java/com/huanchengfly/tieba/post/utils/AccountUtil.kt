@@ -17,9 +17,11 @@ import com.huanchengfly.tieba.post.api.models.LoginBean
 import com.huanchengfly.tieba.post.arch.GlobalEvent
 import com.huanchengfly.tieba.post.arch.emitGlobalEvent
 import com.huanchengfly.tieba.post.models.database.Account
+import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.zip
+import kotlinx.coroutines.launch
 import org.litepal.LitePal
 import org.litepal.LitePal.findAll
 import org.litepal.LitePal.where
@@ -110,7 +112,9 @@ object AccountUtil {
         context.sendBroadcast(Intent().setAction(ACTION_SWITCH_ACCOUNT))
         val account = runCatching { getAccountInfo(id) }.getOrNull() ?: return false
         mutableCurrentAccountState.value = account
-        emitGlobalEvent(GlobalEvent.AccountSwitched)
+        GlobalScope.launch {
+            emitGlobalEvent(GlobalEvent.AccountSwitched)
+        }
         return context.getSharedPreferences("accountData", Context.MODE_PRIVATE).edit()
             .putInt("now", id).commit()
     }

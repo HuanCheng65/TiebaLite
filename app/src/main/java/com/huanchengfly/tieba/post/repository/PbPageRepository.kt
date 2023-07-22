@@ -4,10 +4,15 @@ import com.huanchengfly.tieba.post.api.TiebaApi
 import com.huanchengfly.tieba.post.api.models.protos.pbPage.PbPageResponse
 import com.huanchengfly.tieba.post.api.retrofit.exception.TiebaUnknownException
 import com.huanchengfly.tieba.post.ui.page.thread.ThreadPageFrom
+import kotlinx.collections.immutable.persistentListOf
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
 object PbPageRepository {
+    const val ST_TYPE_MENTION = "mention"
+    const val ST_TYPE_STORE_THREAD = "store_thread"
+    private val ST_TYPES = persistentListOf(ST_TYPE_MENTION, ST_TYPE_STORE_THREAD)
+
     fun pbPage(
         threadId: Long,
         page: Int = 1,
@@ -27,7 +32,7 @@ object PbPageRepository {
                 sortType = sortType,
                 back = back,
                 forumId = forumId,
-                stType = from,
+                stType = from.takeIf { ST_TYPES.contains(it) }.orEmpty(),
                 mark = if (from == ThreadPageFrom.FROM_STORE) 1 else 0
             )
             .map { response ->
