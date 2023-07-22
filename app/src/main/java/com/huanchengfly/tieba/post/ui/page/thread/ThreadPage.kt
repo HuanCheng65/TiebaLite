@@ -91,10 +91,12 @@ import com.huanchengfly.tieba.post.api.TiebaApi
 import com.huanchengfly.tieba.post.api.booleanToString
 import com.huanchengfly.tieba.post.api.models.protos.Post
 import com.huanchengfly.tieba.post.api.models.protos.SimpleForum
+import com.huanchengfly.tieba.post.api.models.protos.SubPostList
 import com.huanchengfly.tieba.post.api.models.protos.ThreadInfo
 import com.huanchengfly.tieba.post.api.models.protos.User
 import com.huanchengfly.tieba.post.api.models.protos.bawuType
 import com.huanchengfly.tieba.post.api.models.protos.plainText
+import com.huanchengfly.tieba.post.api.models.protos.renders
 import com.huanchengfly.tieba.post.api.retrofit.exception.getErrorMessage
 import com.huanchengfly.tieba.post.arch.GlobalEvent
 import com.huanchengfly.tieba.post.arch.ImmutableHolder
@@ -154,7 +156,6 @@ import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
-import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
 import kotlinx.serialization.Serializable
@@ -851,6 +852,21 @@ fun ThreadPage(
                     )
                 )
             },
+            onSubPostReplyClick = { post, subPost ->
+                navigator.navigate(
+                    ReplyPageDestination(
+                        forumId = curForumId ?: 0,
+                        forumName = forum?.get { name } ?: "",
+                        threadId = threadId,
+                        postId = post.id,
+                        subPostId = subPost.id,
+                        replyUserId = subPost.author?.id ?: subPost.author_id,
+                        replyUserName = subPost.author?.nameShow.takeIf { name -> !name.isNullOrEmpty() }
+                            ?: subPost.author?.name,
+                        replyUserPortrait = subPost.author?.portrait,
+                    )
+                )
+            },
             onOpenSubPosts = {
                 if (curForumId != null) {
                     navigator.navigate(
@@ -1491,6 +1507,7 @@ fun PostCard(
     showSubPosts: Boolean = true,
     onAgree: () -> Unit = {},
     onReplyClick: (Post) -> Unit = {},
+    onSubPostReplyClick: ((Post, SubPostList) -> Unit)? = null,
     onOpenSubPosts: (subPostId: Long) -> Unit = {},
     onMenuFavoriteClick: ((Post) -> Unit)? = null,
     onMenuDeleteClick: ((Post) -> Unit)? = null,
@@ -1532,7 +1549,7 @@ fun PostCard(
         post.agree?.diffAgreeNum ?: 0L
     }
     val subPosts = remember(postHolder) {
-        post.sub_post_list?.sub_post_list?.toImmutableList() ?: persistentListOf()
+        postHolder.get { sub_post_list?.sub_post_list }?.wrapImmutable() ?: persistentListOf()
     }
     val menuState = rememberMenuState()
     LongClickMenu(
@@ -1680,20 +1697,14 @@ fun PostCard(
                         verticalArrangement = Arrangement.spacedBy(2.dp)
                     ) {
                         subPostContents.forEachIndexed { index, text ->
-                            PbContentText(
-                                text = text,
+                            SubPostItem(
+                                subPostList = subPosts[index],
+                                subPostContent = text,
                                 modifier = Modifier
                                     .fillMaxWidth()
-                                    .clickable {
-                                        onOpenSubPosts(subPosts[index].id)
-                                    }
                                     .padding(horizontal = 12.dp),
-                                color = ExtendedTheme.colors.text,
-                                fontSize = 13.sp,
-                                style = MaterialTheme.typography.body2,
-                                emoticonSize = 0.9f,
-                                overflow = TextOverflow.Ellipsis,
-                                maxLines = 4,
+                                onReplyClick = { onSubPostReplyClick?.invoke(post, it) },
+                                onOpenSubPosts = onOpenSubPosts,
                             )
                         }
 
@@ -1718,6 +1729,64 @@ fun PostCard(
                     }
                 }
             }
+        )
+    }
+}
+
+@Composable
+private fun SubPostItem(
+    subPostList: ImmutableHolder<SubPostList>,
+    subPostContent: AnnotatedString,
+    modifier: Modifier = Modifier,
+    onReplyClick: (SubPostList) -> Unit,
+    onOpenSubPosts: (Long) -> Unit,
+) {
+    val context = LocalContext.current
+    val menuState = rememberMenuState()
+    LongClickMenu(
+        menuState = menuState,
+        menuContent = {
+            DropdownMenuItem(
+                onClick = {
+                    onReplyClick(subPostList.get())
+                    menuState.expanded = false
+                }
+            ) {
+                Text(text = stringResource(id = R.string.title_reply))
+            }
+            DropdownMenuItem(
+                onClick = {
+                    TiebaUtil.copyText(
+                        context,
+                        subPostList.get { content.renders.joinToString(" ") { it.toString() } })
+                    menuState.expanded = false
+                }
+            ) {
+                Text(text = stringResource(id = R.string.menu_copy))
+            }
+            DropdownMenuItem(
+                onClick = {
+                    TiebaUtil.reportPost(context, subPostList.get { id }.toString())
+                    menuState.expanded = false
+                }
+            ) {
+                Text(text = stringResource(id = R.string.title_report))
+            }
+        },
+        shape = RoundedCornerShape(0),
+        onClick = {
+            onOpenSubPosts(subPostList.get { id })
+        }
+    ) {
+        PbContentText(
+            text = subPostContent,
+            modifier = modifier,
+            color = ExtendedTheme.colors.text,
+            fontSize = 13.sp,
+            style = MaterialTheme.typography.body2,
+            emoticonSize = 0.9f,
+            overflow = TextOverflow.Ellipsis,
+            maxLines = 4,
         )
     }
 }
