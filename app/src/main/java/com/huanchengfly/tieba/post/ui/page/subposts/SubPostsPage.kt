@@ -299,13 +299,12 @@ internal fun SubPostsContent(
                         elevation = 16.dp,
                         color = ExtendedTheme.colors.bottomBar,
                         contentColor = ExtendedTheme.colors.text,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .navigationBarsPadding()
+                        modifier = Modifier.fillMaxWidth()
                     ) {
                         Row(
                             modifier = Modifier
                                 .fillMaxWidth()
+                                .navigationBarsPadding()
                                 .padding(horizontal = 16.dp),
                             verticalAlignment = Alignment.CenterVertically,
                             horizontalArrangement = Arrangement.spacedBy(8.dp)
