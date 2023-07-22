@@ -74,9 +74,10 @@ class SubPostsViewModel @Inject constructor() :
                         post.contentRenders,
                         subPosts.wrapImmutable(),
                         subPosts.map { it.content.renders }.toImmutableList(),
-                        page.has_more == 1,
+                        page.current_page < page.total_page,
                         page.current_page,
-                        page.total_page
+                        page.total_page,
+                        page.total_count
                     )
                 }
                 .onStart { emit(SubPostsPartialChange.Load.Start) }
@@ -92,8 +93,10 @@ class SubPostsViewModel @Inject constructor() :
                     SubPostsPartialChange.LoadMore.Success(
                         subPosts.wrapImmutable(),
                         subPosts.map { it.content.renders }.toImmutableList(),
-                        page.has_more == 1,
-                        page.current_page
+                        page.current_page < page.total_page,
+                        page.current_page,
+                        page.total_page,
+                        page.total_count,
                     )
                 }
                 .onStart { emit(SubPostsPartialChange.LoadMore.Start) }
@@ -155,6 +158,7 @@ sealed interface SubPostsPartialChange : PartialChange<SubPostsUiState> {
                     hasMore = hasMore,
                     currentPage = currentPage,
                     totalPage = totalPage,
+                    totalCount = totalCount,
                     forum = forum,
                     post = post,
                     postContentRenders = postContentRenders,
@@ -177,6 +181,7 @@ sealed interface SubPostsPartialChange : PartialChange<SubPostsUiState> {
             val hasMore: Boolean,
             val currentPage: Int,
             val totalPage: Int,
+            val totalCount: Int,
         ) : Load()
 
         data class Failure(val throwable: Throwable) : Load()
@@ -193,6 +198,8 @@ sealed interface SubPostsPartialChange : PartialChange<SubPostsUiState> {
                     isLoading = false,
                     hasMore = hasMore,
                     currentPage = currentPage,
+                    totalPage = totalPage,
+                    totalCount = totalCount,
                     subPosts = (oldState.subPosts + subPosts).toImmutableList(),
                     subPostsContentRenders = (oldState.subPostsContentRenders + subPostsContentRenders).toImmutableList(),
                 )
@@ -208,6 +215,8 @@ sealed interface SubPostsPartialChange : PartialChange<SubPostsUiState> {
             val subPostsContentRenders: ImmutableList<ImmutableList<PbContentRender>>,
             val hasMore: Boolean,
             val currentPage: Int,
+            val totalPage: Int,
+            val totalCount: Int,
         ) : LoadMore()
 
         data class Failure(val throwable: Throwable) : LoadMore()
@@ -287,6 +296,7 @@ data class SubPostsUiState(
     val hasMore: Boolean = true,
     val currentPage: Int = 1,
     val totalPage: Int = 1,
+    val totalCount: Int = 0,
 
     val forum: ImmutableHolder<SimpleForum>? = null,
     val post: ImmutableHolder<Post>? = null,

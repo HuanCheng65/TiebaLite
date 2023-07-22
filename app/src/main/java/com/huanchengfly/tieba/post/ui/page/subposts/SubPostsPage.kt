@@ -173,9 +173,13 @@ internal fun SubPostsContent(
         prop1 = SubPostsUiState::currentPage,
         initial = 1
     )
+    val totalCount by viewModel.uiState.collectPartialAsState(
+        prop1 = SubPostsUiState::totalCount,
+        initial = 0
+    )
     val hasMore by viewModel.uiState.collectPartialAsState(
         prop1 = SubPostsUiState::hasMore,
-        initial = false
+        initial = true
     )
 
     val lazyListState = rememberLazyListState()
@@ -330,7 +334,7 @@ internal fun SubPostsContent(
                             Text(
                                 text = stringResource(
                                     id = R.string.title_sub_posts_header,
-                                    subPosts.size
+                                    totalCount
                                 ),
                                 style = MaterialTheme.typography.subtitle1
                             )
