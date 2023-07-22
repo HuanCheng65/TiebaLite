@@ -21,6 +21,8 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.huanchengfly.tieba.post.utils.GsonUtil
 import com.huanchengfly.tieba.post.utils.MD5Util
+import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.toImmutableList
 import java.io.File
 import kotlin.math.roundToInt
 
@@ -150,4 +152,8 @@ fun pendingIntentFlagImmutable(): Int {
     } else {
         0
     }
+}
+
+fun <T> ImmutableList<T>.removeAt(index: Int): ImmutableList<T> {
+    return this.toMutableList().apply { removeAt(index) }.toImmutableList()
 }

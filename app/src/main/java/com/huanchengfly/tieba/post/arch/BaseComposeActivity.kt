@@ -123,6 +123,8 @@ abstract class BaseComposeActivity : BaseActivity() {
 sealed interface CommonUiEvent : UiEvent {
     object ScrollToTop : CommonUiEvent
 
+    object NavigateUp : CommonUiEvent
+
     data class Toast(
         val message: CharSequence,
         val length: Int = android.widget.Toast.LENGTH_SHORT

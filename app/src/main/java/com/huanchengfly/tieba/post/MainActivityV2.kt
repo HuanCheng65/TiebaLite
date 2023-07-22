@@ -337,6 +337,9 @@ class MainActivityV2 : BaseComposeActivity() {
                         ),
                     )
                     val navController = rememberAnimatedNavController()
+                    onGlobalEvent<GlobalEvent.NavigateUp> {
+                        navController.navigateUp()
+                    }
                     val bottomSheetNavigator =
                         rememberBottomSheetNavigator(
                             animationSpec = spring(stiffness = Spring.StiffnessMediumLow),

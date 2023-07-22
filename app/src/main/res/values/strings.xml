@@ -699,4 +699,8 @@
     <string name="btn_reply">回复</string>
     <string name="title_collect_floor">收藏到此楼</string>
     <string name="title_collected_floor">已收藏到本楼</string>
+    <string name="toast_delete_failure">删除失败 %s</string>
+    <string name="message_confirm_delete">你确定要删除%s吗？</string>
+    <string name="this_thread">本贴</string>
+    <string name="this_reply">这条回复</string>
 </resources>

@@ -3,8 +3,11 @@ package com.huanchengfly.tieba.post.ui.page.thread
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.Stable
 import androidx.compose.ui.text.AnnotatedString
+import com.huanchengfly.tieba.post.App
+import com.huanchengfly.tieba.post.R
 import com.huanchengfly.tieba.post.api.TiebaApi
 import com.huanchengfly.tieba.post.api.models.AgreeBean
+import com.huanchengfly.tieba.post.api.models.CommonResponse
 import com.huanchengfly.tieba.post.api.models.protos.Anti
 import com.huanchengfly.tieba.post.api.models.protos.Post
 import com.huanchengfly.tieba.post.api.models.protos.SimpleForum
@@ -20,6 +23,7 @@ import com.huanchengfly.tieba.post.api.retrofit.exception.TiebaUnknownException
 import com.huanchengfly.tieba.post.api.retrofit.exception.getErrorCode
 import com.huanchengfly.tieba.post.api.retrofit.exception.getErrorMessage
 import com.huanchengfly.tieba.post.arch.BaseViewModel
+import com.huanchengfly.tieba.post.arch.CommonUiEvent
 import com.huanchengfly.tieba.post.arch.ImmutableHolder
 import com.huanchengfly.tieba.post.arch.PartialChange
 import com.huanchengfly.tieba.post.arch.PartialChangeProducer
@@ -27,6 +31,7 @@ import com.huanchengfly.tieba.post.arch.UiEvent
 import com.huanchengfly.tieba.post.arch.UiIntent
 import com.huanchengfly.tieba.post.arch.UiState
 import com.huanchengfly.tieba.post.arch.wrapImmutable
+import com.huanchengfly.tieba.post.removeAt
 import com.huanchengfly.tieba.post.repository.PbPageRepository
 import com.huanchengfly.tieba.post.ui.common.PbContentRender
 import com.huanchengfly.tieba.post.utils.BlockManager.shouldBlock
@@ -78,6 +83,19 @@ class ThreadViewModel @Inject constructor() :
 
             ThreadPartialChange.RemoveFavorite.Success -> ThreadUiEvent.RemoveFavoriteSuccess
             is ThreadPartialChange.Load.Success -> ThreadUiEvent.LoadSuccess(partialChange.currentPage)
+            is ThreadPartialChange.DeletePost.Success -> CommonUiEvent.Toast(
+                App.INSTANCE.getString(R.string.toast_delete_success)
+            )
+
+            is ThreadPartialChange.DeletePost.Failure -> CommonUiEvent.Toast(
+                App.INSTANCE.getString(R.string.toast_delete_failure, partialChange.errorMessage)
+            )
+
+            is ThreadPartialChange.DeleteThread.Success -> CommonUiEvent.NavigateUp
+            is ThreadPartialChange.DeleteThread.Failure -> CommonUiEvent.Toast(
+                App.INSTANCE.getString(R.string.toast_delete_failure, partialChange.errorMessage)
+            )
+
             else -> null
         }
     }
@@ -106,6 +124,10 @@ class ThreadViewModel @Inject constructor() :
                 intentFlow.filterIsInstance<ThreadUiIntent.AgreeThread>()
                     .flatMapConcat { it.producePartialChange() },
                 intentFlow.filterIsInstance<ThreadUiIntent.AgreePost>()
+                    .flatMapConcat { it.producePartialChange() },
+                intentFlow.filterIsInstance<ThreadUiIntent.DeletePost>()
+                    .flatMapConcat { it.producePartialChange() },
+                intentFlow.filterIsInstance<ThreadUiIntent.DeleteThread>()
                     .flatMapConcat { it.producePartialChange() },
             )
 
@@ -379,6 +401,36 @@ class ThreadViewModel @Inject constructor() :
                         )
                     )
                 }
+
+        fun ThreadUiIntent.DeletePost.producePartialChange(): Flow<ThreadPartialChange.DeletePost> =
+            TiebaApi.getInstance()
+                .delPostFlow(forumId, forumName, threadId, postId, tbs, false, deleteMyPost)
+                .map<CommonResponse, ThreadPartialChange.DeletePost> {
+                    ThreadPartialChange.DeletePost.Success(postId)
+                }
+                .catch {
+                    emit(
+                        ThreadPartialChange.DeletePost.Failure(
+                            it.getErrorCode(),
+                            it.getErrorMessage()
+                        )
+                    )
+                }
+
+        fun ThreadUiIntent.DeleteThread.producePartialChange(): Flow<ThreadPartialChange.DeleteThread> =
+            TiebaApi.getInstance()
+                .delThreadFlow(forumId, forumName, threadId, tbs, deleteMyThread, false)
+                .map<CommonResponse, ThreadPartialChange.DeleteThread> {
+                    ThreadPartialChange.DeleteThread.Success
+                }
+                .catch {
+                    emit(
+                        ThreadPartialChange.DeleteThread.Failure(
+                            it.getErrorCode(),
+                            it.getErrorMessage()
+                        )
+                    )
+                }
     }
 }
 
@@ -455,6 +507,23 @@ sealed interface ThreadUiIntent : UiIntent {
         val threadId: Long,
         val postId: Long,
         val agree: Boolean
+    ) : ThreadUiIntent
+
+    data class DeletePost(
+        val forumId: Long,
+        val forumName: String,
+        val threadId: Long,
+        val postId: Long,
+        val deleteMyPost: Boolean,
+        val tbs: String? = null
+    ) : ThreadUiIntent
+
+    data class DeleteThread(
+        val forumId: Long,
+        val forumName: String,
+        val threadId: Long,
+        val deleteMyThread: Boolean,
+        val tbs: String? = null
     ) : ThreadUiIntent
 }
 
@@ -857,6 +926,41 @@ sealed interface ThreadPartialChange : PartialChange<ThreadUiState> {
             val errorCode: Int,
             val errorMessage: String
         ) : AgreePost()
+    }
+
+    sealed class DeletePost : ThreadPartialChange {
+        override fun reduce(oldState: ThreadUiState): ThreadUiState = when (this) {
+            is Success -> {
+                val deletedPostIndex = oldState.data.indexOfFirst { it.post.get { id } == postId }
+                oldState.copy(
+                    data = oldState.data.removeAt(deletedPostIndex),
+                    contentRenders = oldState.contentRenders.removeAt(deletedPostIndex),
+                    subPostContents = oldState.subPostContents.removeAt(deletedPostIndex)
+                )
+            }
+
+            is Failure -> oldState
+        }
+
+        data class Success(
+            val postId: Long
+        ) : DeletePost()
+
+        data class Failure(
+            val errorCode: Int,
+            val errorMessage: String
+        ) : DeletePost()
+    }
+
+    sealed class DeleteThread : ThreadPartialChange {
+        override fun reduce(oldState: ThreadUiState): ThreadUiState = oldState
+
+        object Success : DeleteThread()
+
+        data class Failure(
+            val errorCode: Int,
+            val errorMessage: String
+        ) : DeleteThread()
     }
 }
 

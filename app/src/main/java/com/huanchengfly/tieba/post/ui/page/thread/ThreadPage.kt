@@ -45,6 +45,7 @@ import androidx.compose.material.icons.outlined.ChromeReaderMode
 import androidx.compose.material.icons.rounded.AlignVerticalTop
 import androidx.compose.material.icons.rounded.ChromeReaderMode
 import androidx.compose.material.icons.rounded.ContentCopy
+import androidx.compose.material.icons.rounded.Delete
 import androidx.compose.material.icons.rounded.Face6
 import androidx.compose.material.icons.rounded.FaceRetouchingOff
 import androidx.compose.material.icons.rounded.Favorite
@@ -534,6 +535,8 @@ fun ThreadPage(
     val curForumId = remember(forumId, forum) {
         forumId ?: forum?.get { id }
     }
+    val curForumName = remember(forum) { forum?.get { name } }
+    val curTbs = remember(anti) { anti?.get { tbs } }
     var waitLoadSuccessAndScrollToFirstReply by remember { mutableStateOf(scrollToReply) }
 
     val lazyListState = rememberLazyListState()
@@ -637,6 +640,47 @@ fun ThreadPage(
         } else {
             navigator.navigateUp()
         }
+    }
+
+    val confirmDeleteDialogState = rememberDialogState()
+    var deletePost by remember { mutableStateOf<ImmutableHolder<Post>?>(null) }
+    ConfirmDialog(
+        dialogState = confirmDeleteDialogState,
+        onConfirm = {
+            curForumId ?: return@ConfirmDialog
+            if (deletePost == null) {
+                val isSelfThread = author?.get { id } == user.get { id }
+                viewModel.send(
+                    ThreadUiIntent.DeleteThread(
+                        forumId = curForumId,
+                        forumName = curForumName.orEmpty(),
+                        threadId = threadId,
+                        deleteMyThread = isSelfThread,
+                        tbs = curTbs
+                    )
+                )
+            } else {
+                val isSelfPost = deletePost!!.get { author_id } == user.get { id }
+                viewModel.send(
+                    ThreadUiIntent.DeletePost(
+                        forumId = curForumId,
+                        forumName = curForumName.orEmpty(),
+                        threadId = threadId,
+                        postId = deletePost!!.get { id },
+                        deleteMyPost = isSelfPost,
+                        tbs = curTbs
+                    )
+                )
+            }
+        }
+    ) {
+        Text(
+            text = stringResource(
+                id = R.string.message_confirm_delete,
+                if (deletePost == null) stringResource(id = R.string.this_thread)
+                else stringResource(id = R.string.tip_post_floor, deletePost!!.get { floor })
+            )
+        )
     }
 
     val jumpToPageDialogState = rememberDialogState()
@@ -766,6 +810,7 @@ fun ThreadPage(
                             isCollected = isCollected,
                             isImmersiveMode = isImmersiveMode,
                             isDesc = curSortType == ThreadSortType.SORT_TYPE_DESC,
+                            canDelete = { author?.get { id } == user.get { id } },
                             onSeeLzClick = {
                                 viewModel.send(
                                     ThreadUiIntent.LoadFirstPage(
@@ -856,6 +901,10 @@ fun ThreadPage(
                                     firstPostId.toString()
                                 )
                             },
+                            onDeleteClick = {
+                                deletePost = null
+                                confirmDeleteDialogState.show()
+                            },
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .padding(vertical = 16.dp)
@@ -916,6 +965,7 @@ fun ThreadPage(
                                                 PostCard(
                                                     postHolder = firstPost!!,
                                                     contentRenders = firstPostContentRenders,
+                                                    canDelete = { it.author_id == user.get { id } },
                                                     immersiveMode = isImmersiveMode,
                                                     isCollected = {
                                                         it.id == thread?.get { collectMarkPid }
@@ -932,18 +982,6 @@ fun ThreadPage(
                                                             )
                                                         )
                                                     },
-                                                    onMenuCopyClick = {
-                                                        TiebaUtil.copyText(
-                                                            context,
-                                                            it.content.plainText
-                                                        )
-                                                    },
-                                                    onMenuReportClick = {
-                                                        TiebaUtil.reportPost(
-                                                            context,
-                                                            it.id.toString()
-                                                        )
-                                                    },
                                                     onMenuFavoriteClick = {
                                                         viewModel.send(
                                                             ThreadUiIntent.AddFavorite(
@@ -953,7 +991,10 @@ fun ThreadPage(
                                                             )
                                                         )
                                                     },
-                                                )
+                                                ) {
+                                                    deletePost = null
+                                                    confirmDeleteDialogState.show()
+                                                }
 
                                                 VerticalDivider(
                                                     modifier = Modifier
@@ -1122,12 +1163,6 @@ fun ThreadPage(
                                                     )
                                                 }
                                             },
-                                            onMenuCopyClick = {
-                                                TiebaUtil.copyText(context, it.content.plainText)
-                                            },
-                                            onMenuReportClick = {
-                                                TiebaUtil.reportPost(context, it.id.toString())
-                                            },
                                             onMenuFavoriteClick = {
                                                 val isPostCollected =
                                                     it.id == thread?.get { collectMarkPid.toLongOrNull() }
@@ -1152,8 +1187,11 @@ fun ThreadPage(
                                                         )
                                                     }
                                                 }
-                                            }
-                                        )
+                                            },
+                                        ) {
+                                            deletePost = it.wrapImmutable()
+                                            confirmDeleteDialogState.show()
+                                        }
                                     }
                                     if (data.isEmpty()) {
                                         item(key = "EmptyReplyTip") {
@@ -1378,9 +1416,7 @@ fun PostCard(
     onAgree: () -> Unit = {},
     onReplyClick: (Post) -> Unit = {},
     onOpenSubPosts: (subPostId: Long) -> Unit = {},
-    onMenuCopyClick: ((Post) -> Unit)? = null,
     onMenuFavoriteClick: ((Post) -> Unit)? = null,
-    onMenuReportClick: ((Post) -> Unit)? = null,
     onMenuDeleteClick: ((Post) -> Unit)? = null,
 ) {
     val context = LocalContext.current
@@ -1438,15 +1474,21 @@ fun PostCard(
             ) {
                 Text(text = stringResource(id = R.string.btn_reply))
             }
-            if (onMenuCopyClick != null) {
-                DropdownMenuItem(
-                    onClick = {
-                        onMenuCopyClick(post)
-                        menuState.expanded = false
-                    }
-                ) {
-                    Text(text = stringResource(id = R.string.menu_copy))
+            DropdownMenuItem(
+                onClick = {
+                    TiebaUtil.copyText(context, post.content.plainText)
+                    menuState.expanded = false
                 }
+            ) {
+                Text(text = stringResource(id = R.string.menu_copy))
+            }
+            DropdownMenuItem(
+                onClick = {
+                    TiebaUtil.reportPost(context, post.id.toString())
+                    menuState.expanded = false
+                }
+            ) {
+                Text(text = stringResource(id = R.string.title_report))
             }
             if (onMenuFavoriteClick != null) {
                 DropdownMenuItem(
@@ -1460,16 +1502,6 @@ fun PostCard(
                     } else {
                         Text(text = stringResource(id = R.string.title_collect_floor))
                     }
-                }
-            }
-            if (onMenuReportClick != null) {
-                DropdownMenuItem(
-                    onClick = {
-                        onMenuReportClick(post)
-                        menuState.expanded = false
-                    }
-                ) {
-                    Text(text = stringResource(id = R.string.title_report))
                 }
             }
             if (canDelete(post) && onMenuDeleteClick != null) {
@@ -1660,6 +1692,7 @@ private fun ThreadMenu(
     isCollected: Boolean,
     isImmersiveMode: Boolean,
     isDesc: Boolean,
+    canDelete: () -> Boolean,
     onSeeLzClick: () -> Unit,
     onCollectClick: () -> Unit,
     onImmersiveModeClick: () -> Unit,
@@ -1668,6 +1701,7 @@ private fun ThreadMenu(
     onShareClick: () -> Unit,
     onCopyLinkClick: () -> Unit,
     onReportClick: () -> Unit,
+    onDeleteClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -1802,6 +1836,15 @@ private fun ThreadMenu(
                 onClick = onReportClick,
                 modifier = Modifier.fillMaxWidth(),
             )
+            if (canDelete()) {
+                ListMenuItem(
+                    icon = Icons.Rounded.Delete,
+                    text = stringResource(id = R.string.title_delete),
+                    iconColor = ExtendedTheme.colors.text,
+                    onClick = onDeleteClick,
+                    modifier = Modifier.fillMaxWidth(),
+                )
+            }
         }
     }
 }

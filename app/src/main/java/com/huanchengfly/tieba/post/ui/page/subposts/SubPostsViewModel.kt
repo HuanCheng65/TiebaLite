@@ -3,6 +3,8 @@ package com.huanchengfly.tieba.post.ui.page.subposts
 import androidx.compose.runtime.Stable
 import com.huanchengfly.tieba.post.api.TiebaApi
 import com.huanchengfly.tieba.post.api.models.AgreeBean
+import com.huanchengfly.tieba.post.api.models.CommonResponse
+import com.huanchengfly.tieba.post.api.models.protos.Anti
 import com.huanchengfly.tieba.post.api.models.protos.Post
 import com.huanchengfly.tieba.post.api.models.protos.SimpleForum
 import com.huanchengfly.tieba.post.api.models.protos.SubPostList
@@ -10,6 +12,8 @@ import com.huanchengfly.tieba.post.api.models.protos.contentRenders
 import com.huanchengfly.tieba.post.api.models.protos.pbFloor.PbFloorResponse
 import com.huanchengfly.tieba.post.api.models.protos.renders
 import com.huanchengfly.tieba.post.api.models.protos.updateAgreeStatus
+import com.huanchengfly.tieba.post.api.retrofit.exception.getErrorCode
+import com.huanchengfly.tieba.post.api.retrofit.exception.getErrorMessage
 import com.huanchengfly.tieba.post.arch.BaseViewModel
 import com.huanchengfly.tieba.post.arch.ImmutableHolder
 import com.huanchengfly.tieba.post.arch.PartialChange
@@ -18,6 +22,7 @@ import com.huanchengfly.tieba.post.arch.UiEvent
 import com.huanchengfly.tieba.post.arch.UiIntent
 import com.huanchengfly.tieba.post.arch.UiState
 import com.huanchengfly.tieba.post.arch.wrapImmutable
+import com.huanchengfly.tieba.post.removeAt
 import com.huanchengfly.tieba.post.ui.common.PbContentRender
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.collections.immutable.ImmutableList
@@ -58,6 +63,8 @@ class SubPostsViewModel @Inject constructor() :
                     .flatMapConcat { it.producePartialChange() },
                 intentFlow.filterIsInstance<SubPostsUiIntent.Agree>()
                     .flatMapConcat { it.producePartialChange() },
+                intentFlow.filterIsInstance<SubPostsUiIntent.DeletePost>()
+                    .flatMapConcat { it.producePartialChange() },
             )
 
         private fun SubPostsUiIntent.Load.producePartialChange(): Flow<SubPostsPartialChange.Load> =
@@ -67,8 +74,10 @@ class SubPostsViewModel @Inject constructor() :
                     val post = checkNotNull(response.data_?.post)
                     val page = checkNotNull(response.data_?.page)
                     val forum = checkNotNull(response.data_?.forum)
+                    val anti = checkNotNull(response.data_?.anti)
                     val subPosts = response.data_?.subpost_list.orEmpty()
                     SubPostsPartialChange.Load.Success(
+                        anti.wrapImmutable(),
                         forum.wrapImmutable(),
                         post.wrapImmutable(),
                         post.contentRenders,
@@ -115,6 +124,29 @@ class SubPostsViewModel @Inject constructor() :
                 }
                 .onStart { emit(SubPostsPartialChange.Agree.Start(subPostId, agree)) }
                 .catch { emit(SubPostsPartialChange.Agree.Failure(subPostId, !agree, it)) }
+
+        fun SubPostsUiIntent.DeletePost.producePartialChange(): Flow<SubPostsPartialChange.DeletePost> =
+            TiebaApi.getInstance()
+                .delPostFlow(
+                    forumId,
+                    forumName,
+                    threadId,
+                    subPostId ?: postId,
+                    tbs,
+                    false,
+                    deleteMyPost
+                )
+                .map<CommonResponse, SubPostsPartialChange.DeletePost> {
+                    SubPostsPartialChange.DeletePost.Success(postId, subPostId)
+                }
+                .catch {
+                    emit(
+                        SubPostsPartialChange.DeletePost.Failure(
+                            it.getErrorCode(),
+                            it.getErrorMessage()
+                        )
+                    )
+                }
     }
 
 }
@@ -142,6 +174,16 @@ sealed interface SubPostsUiIntent : UiIntent {
         val postId: Long,
         val subPostId: Long? = null,
         val agree: Boolean
+    ) : SubPostsUiIntent
+
+    data class DeletePost(
+        val forumId: Long,
+        val forumName: String,
+        val threadId: Long,
+        val postId: Long,
+        val subPostId: Long? = null,
+        val deleteMyPost: Boolean,
+        val tbs: String? = null
     ) : SubPostsUiIntent
 }
 
@@ -173,6 +215,7 @@ sealed interface SubPostsPartialChange : PartialChange<SubPostsUiState> {
 
         object Start : Load()
         data class Success(
+            val anti: ImmutableHolder<Anti>,
             val forum: ImmutableHolder<SimpleForum>,
             val post: ImmutableHolder<Post>,
             val postContentRenders: ImmutableList<PbContentRender>,
@@ -287,6 +330,37 @@ sealed interface SubPostsPartialChange : PartialChange<SubPostsUiState> {
             val throwable: Throwable,
         ) : Agree()
     }
+
+    sealed class DeletePost : SubPostsPartialChange {
+        override fun reduce(oldState: SubPostsUiState): SubPostsUiState = when (this) {
+            is Success -> {
+                if (subPostId == null) {
+                    oldState
+                } else {
+                    val deletedSubPostIndex =
+                        oldState.subPosts.indexOfFirst { it.get { id } == postId }
+                    oldState.copy(
+                        subPosts = oldState.subPosts.removeAt(deletedSubPostIndex),
+                        subPostsContentRenders = oldState.subPostsContentRenders.removeAt(
+                            deletedSubPostIndex
+                        ),
+                    )
+                }
+            }
+
+            is Failure -> oldState
+        }
+
+        data class Success(
+            val postId: Long,
+            val subPostId: Long? = null,
+        ) : DeletePost()
+
+        data class Failure(
+            val errorCode: Int,
+            val errorMessage: String
+        ) : DeletePost()
+    }
 }
 
 data class SubPostsUiState(
@@ -298,6 +372,7 @@ data class SubPostsUiState(
     val totalPage: Int = 1,
     val totalCount: Int = 0,
 
+    val anti: ImmutableHolder<Anti>? = null,
     val forum: ImmutableHolder<SimpleForum>? = null,
     val post: ImmutableHolder<Post>? = null,
     val postContentRenders: ImmutableList<PbContentRender> = persistentListOf(),

@@ -3,7 +3,6 @@ package com.huanchengfly.tieba.post.ui.page.subposts
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -15,6 +14,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.DropdownMenuItem
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.MaterialTheme
@@ -24,7 +24,9 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Close
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -41,6 +43,7 @@ import com.huanchengfly.tieba.post.arch.ImmutableHolder
 import com.huanchengfly.tieba.post.arch.collectPartialAsState
 import com.huanchengfly.tieba.post.arch.onEvent
 import com.huanchengfly.tieba.post.arch.pageViewModel
+import com.huanchengfly.tieba.post.arch.wrapImmutable
 import com.huanchengfly.tieba.post.ui.common.PbContentRender
 import com.huanchengfly.tieba.post.ui.common.theme.compose.ExtendedTheme
 import com.huanchengfly.tieba.post.ui.page.LocalNavigator
@@ -51,17 +54,22 @@ import com.huanchengfly.tieba.post.ui.page.thread.PostCard
 import com.huanchengfly.tieba.post.ui.page.thread.UserNameText
 import com.huanchengfly.tieba.post.ui.widgets.compose.Avatar
 import com.huanchengfly.tieba.post.ui.widgets.compose.Card
+import com.huanchengfly.tieba.post.ui.widgets.compose.ConfirmDialog
 import com.huanchengfly.tieba.post.ui.widgets.compose.LazyLoad
 import com.huanchengfly.tieba.post.ui.widgets.compose.LoadMoreLayout
+import com.huanchengfly.tieba.post.ui.widgets.compose.LongClickMenu
 import com.huanchengfly.tieba.post.ui.widgets.compose.MyScaffold
 import com.huanchengfly.tieba.post.ui.widgets.compose.Sizes
 import com.huanchengfly.tieba.post.ui.widgets.compose.TitleCentredToolbar
 import com.huanchengfly.tieba.post.ui.widgets.compose.UserHeader
 import com.huanchengfly.tieba.post.ui.widgets.compose.VerticalDivider
+import com.huanchengfly.tieba.post.ui.widgets.compose.rememberDialogState
+import com.huanchengfly.tieba.post.ui.widgets.compose.rememberMenuState
 import com.huanchengfly.tieba.post.ui.widgets.compose.states.StateScreen
 import com.huanchengfly.tieba.post.utils.AccountUtil.LocalAccount
 import com.huanchengfly.tieba.post.utils.DateTimeUtils
 import com.huanchengfly.tieba.post.utils.StringUtil
+import com.huanchengfly.tieba.post.utils.TiebaUtil
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import com.ramcosta.composedestinations.spec.DestinationStyle
@@ -149,6 +157,10 @@ internal fun SubPostsContent(
         prop1 = SubPostsUiState::isLoading,
         initial = false
     )
+    val anti by viewModel.uiState.collectPartialAsState(
+        prop1 = SubPostsUiState::anti,
+        initial = null
+    )
     val forum by viewModel.uiState.collectPartialAsState(
         prop1 = SubPostsUiState::forum,
         initial = null
@@ -187,6 +199,51 @@ internal fun SubPostsContent(
     viewModel.onEvent<SubPostsUiEvent.ScrollToSubPosts> {
         delay(20)
         lazyListState.scrollToItem(2 + subPosts.indexOfFirst { it.get { id } == subPostId })
+    }
+
+    val confirmDeleteDialogState = rememberDialogState()
+    var deleteSubPost by remember { mutableStateOf<ImmutableHolder<SubPostList>?>(null) }
+    ConfirmDialog(
+        dialogState = confirmDeleteDialogState,
+        onConfirm = {
+            if (deleteSubPost == null) {
+                val isSelfPost = post?.get { author_id } == account?.uid?.toLongOrNull()
+                viewModel.send(
+                    SubPostsUiIntent.DeletePost(
+                        forumId = forumId,
+                        forumName = forum?.get { name }.orEmpty(),
+                        threadId = threadId,
+                        postId = postId,
+                        deleteMyPost = isSelfPost,
+                        tbs = anti?.get { tbs },
+                    )
+                )
+            } else {
+                val isSelfSubPost =
+                    deleteSubPost!!.get { author_id } == account?.uid?.toLongOrNull()
+                viewModel.send(
+                    SubPostsUiIntent.DeletePost(
+                        forumId = forumId,
+                        forumName = forum?.get { name }.orEmpty(),
+                        threadId = threadId,
+                        postId = postId,
+                        subPostId = deleteSubPost!!.get { id },
+                        deleteMyPost = isSelfSubPost,
+                        tbs = anti?.get { tbs },
+                    )
+                )
+            }
+        }
+    ) {
+        Text(
+            text = stringResource(
+                id = R.string.message_confirm_delete,
+                if (deleteSubPost == null && post != null) stringResource(
+                    id = R.string.tip_post_floor,
+                    post!!.get { floor })
+                else stringResource(id = R.string.this_reply)
+            )
+        )
     }
 
     StateScreen(
@@ -293,6 +350,7 @@ internal fun SubPostsContent(
                                 PostCard(
                                     postHolder = it,
                                     contentRenders = postContentRenders,
+                                    canDelete = { it.author_id == account?.uid?.toLongOrNull() },
                                     showSubPosts = false,
                                     onAgree = {
                                         val hasAgreed = it.get { agree?.hasAgree != 0 }
@@ -318,8 +376,11 @@ internal fun SubPostsContent(
                                                 replyUserPortrait = it.author?.portrait,
                                             )
                                         )
-                                    }
-                                )
+                                    },
+                                ) {
+                                    deleteSubPost = null
+                                    confirmDeleteDialogState.show()
+                                }
                                 VerticalDivider(thickness = 2.dp)
                             }
                         }
@@ -347,6 +408,7 @@ internal fun SubPostsContent(
                         SubPostItem(
                             subPost = item,
                             contentRenders = subPostsContentRenders[index],
+                            canDelete = { it.author_id == account?.uid?.toLongOrNull() },
                             onAgree = {
                                 val hasAgreed = it.agree?.hasAgree != 0
                                 viewModel.send(
@@ -359,7 +421,7 @@ internal fun SubPostsContent(
                                     )
                                 )
                             },
-                            onClickContent = {
+                            onReplyClick = {
                                 navigator.navigate(
                                     ReplyPageDestination(
                                         forumId = forumId,
@@ -373,7 +435,11 @@ internal fun SubPostsContent(
                                         replyUserPortrait = it.author?.portrait,
                                     )
                                 )
-                            }
+                            },
+                            onMenuDeleteClick = {
+                                deleteSubPost = it.wrapImmutable()
+                                confirmDeleteDialogState.show()
+                            },
                         )
                     }
                 }
@@ -402,8 +468,10 @@ private fun SubPostItem(
     subPost: ImmutableHolder<SubPostList>,
     contentRenders: ImmutableList<PbContentRender>,
     threadAuthorId: Long = 0L,
+    canDelete: (SubPostList) -> Boolean = { false },
     onAgree: (SubPostList) -> Unit = {},
-    onClickContent: (SubPostList) -> Unit = {}
+    onReplyClick: (SubPostList) -> Unit = {},
+    onMenuDeleteClick: ((SubPostList) -> Unit)? = null,
 ) {
     val context = LocalContext.current
     val author = remember(subPost) { subPost.getImmutable { author } }
@@ -413,64 +481,101 @@ private fun SubPostItem(
     val agreeNum = remember(subPost) {
         subPost.get { agree?.diffAgreeNum ?: 0L }
     }
-    Card(
-        header = {
-            if (author.isNotNull()) {
-                author as ImmutableHolder<User>
-                UserHeader(
-                    avatar = {
-                        Avatar(
-                            data = StringUtil.getAvatarUrl(author.get { portrait }),
-                            size = Sizes.Small,
-                            contentDescription = null
-                        )
-                    },
-                    name = {
-                        UserNameText(
-                            userName = StringUtil.getUsernameAnnotatedString(
-                                LocalContext.current,
-                                author.get { name },
-                                author.get { nameShow }
-                            ),
-                            userLevel = author.get { level_id },
-                            isLz = author.get { id } == threadAuthorId,
-                            bawuType = author.get { bawuType },
-                        )
-                    },
-                    desc = {
-                        Text(
-                            text = getDescText(
-                                subPost.get { time }.toLong(),
-                                author.get { ip_address })
-                        )
-                    },
+    val menuState = rememberMenuState()
+    LongClickMenu(
+        menuState = menuState,
+        indication = null,
+        menuContent = {
+            DropdownMenuItem(
+                onClick = {
+                    onReplyClick(subPost.get())
+                    menuState.expanded = false
+                }
+            ) {
+                Text(text = stringResource(id = R.string.btn_reply))
+            }
+            DropdownMenuItem(
+                onClick = {
+                    TiebaUtil.copyText(context, contentRenders.joinToString("\n") { it.toString() })
+                    menuState.expanded = false
+                }
+            ) {
+                Text(text = stringResource(id = R.string.menu_copy))
+            }
+            DropdownMenuItem(
+                onClick = {
+                    TiebaUtil.reportPost(context, subPost.get { id }.toString())
+                    menuState.expanded = false
+                }
+            ) {
+                Text(text = stringResource(id = R.string.title_report))
+            }
+            if (canDelete(subPost.get()) && onMenuDeleteClick != null) {
+                DropdownMenuItem(
                     onClick = {
-                        UserActivity.launch(context, author.get { id }.toString())
+                        onMenuDeleteClick(subPost.get())
+                        menuState.expanded = false
                     }
                 ) {
-                    PostAgreeBtn(
-                        hasAgreed = hasAgreed,
-                        agreeNum = agreeNum,
-                        onClick = { onAgree(subPost.get()) }
-                    )
+                    Text(text = stringResource(id = R.string.title_delete))
                 }
             }
         },
-        content = {
-            Column(
-                verticalArrangement = Arrangement.spacedBy(8.dp),
-                modifier = Modifier
-                    .padding(start = Sizes.Small + 8.dp)
-                    .fillMaxWidth()
-                    .clickable(
-                        interactionSource = remember { MutableInteractionSource() },
-                        indication = null,
+        onClick = { onReplyClick(subPost.get()) }
+    ) {
+        Card(
+            header = {
+                if (author.isNotNull()) {
+                    author as ImmutableHolder<User>
+                    UserHeader(
+                        avatar = {
+                            Avatar(
+                                data = StringUtil.getAvatarUrl(author.get { portrait }),
+                                size = Sizes.Small,
+                                contentDescription = null
+                            )
+                        },
+                        name = {
+                            UserNameText(
+                                userName = StringUtil.getUsernameAnnotatedString(
+                                    LocalContext.current,
+                                    author.get { name },
+                                    author.get { nameShow }
+                                ),
+                                userLevel = author.get { level_id },
+                                isLz = author.get { id } == threadAuthorId,
+                                bawuType = author.get { bawuType },
+                            )
+                        },
+                        desc = {
+                            Text(
+                                text = getDescText(
+                                    subPost.get { time }.toLong(),
+                                    author.get { ip_address })
+                            )
+                        },
+                        onClick = {
+                            UserActivity.launch(context, author.get { id }.toString())
+                        }
                     ) {
-                        onClickContent(subPost.get())
+                        PostAgreeBtn(
+                            hasAgreed = hasAgreed,
+                            agreeNum = agreeNum,
+                            onClick = { onAgree(subPost.get()) }
+                        )
                     }
-            ) {
-                contentRenders.forEach { it.Render() }
+                }
+            },
+            content = {
+                Column(
+                    verticalArrangement = Arrangement.spacedBy(8.dp),
+                    modifier = Modifier
+                        .padding(start = Sizes.Small + 8.dp)
+                        .fillMaxWidth()
+                ) {
+                    contentRenders.forEach { it.Render() }
+                }
             }
-        }
-    )
+        )
+    }
 }

@@ -16,6 +16,8 @@ import kotlinx.coroutines.launch
 sealed interface GlobalEvent {
     object AccountSwitched : GlobalEvent
 
+    object NavigateUp : GlobalEvent
+
     data class StartSelectImages(
         val id: String,
         val maxCount: Int,
