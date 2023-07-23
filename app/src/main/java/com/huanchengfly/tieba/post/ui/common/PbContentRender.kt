@@ -271,6 +271,7 @@ fun PbContentText(
         textDecoration = textDecoration,
         textAlign = textAlign,
         lineHeight = lineHeight,
+        lineSpacing = 0.8.sp,
         overflow = overflow,
         softWrap = softWrap,
         maxLines = maxLines,

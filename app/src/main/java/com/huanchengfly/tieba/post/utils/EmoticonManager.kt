@@ -44,10 +44,10 @@ import java.lang.ref.WeakReference
 
 @OptIn(ExperimentalTextApi::class)
 @Composable
-fun getEmoticonHeightPx(style: TextStyle): Int {
+fun calcLineHeightPx(style: TextStyle): Int {
     val textMeasurer = rememberTextMeasurer()
     val textLayoutResult = textMeasurer.measure(
-        AnnotatedString(stringResource(id = R.string.emoticon_default)),
+        AnnotatedString(stringResource(id = R.string.single_chinese_char)),
         style
     )
     return textLayoutResult.size.height

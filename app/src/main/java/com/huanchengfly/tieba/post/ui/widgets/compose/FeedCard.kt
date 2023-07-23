@@ -46,6 +46,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
+import androidx.compose.ui.text.ExperimentalTextApi
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
@@ -201,6 +202,7 @@ private fun Badge(
     }
 }
 
+@OptIn(ExperimentalTextApi::class)
 @Composable
 fun ThreadContent(
     title: String = "",
@@ -228,7 +230,9 @@ fun ThreadContent(
                 append(title)
             }
         }
-        if (showTitle && showAbstract) append('\n')
+        if (showTitle && showAbstract) {
+            append('\n')
+        }
         if (showAbstract) {
             append(abstractText.emoticonString)
         }
@@ -238,7 +242,7 @@ fun ThreadContent(
         text = content,
         modifier = Modifier.fillMaxWidth(),
         fontSize = 15.sp,
-        lineHeight = 22.sp,
+        lineSpacing = 0.8.sp,
         overflow = TextOverflow.Ellipsis,
         maxLines = 5,
         style = MaterialTheme.typography.body1

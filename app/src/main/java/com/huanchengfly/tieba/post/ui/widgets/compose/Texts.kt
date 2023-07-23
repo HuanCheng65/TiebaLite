@@ -57,7 +57,7 @@ import com.huanchengfly.tieba.post.spToPxFloat
 import com.huanchengfly.tieba.post.ui.common.theme.compose.ExtendedTheme
 import com.huanchengfly.tieba.post.utils.EmoticonManager
 import com.huanchengfly.tieba.post.utils.EmoticonUtil.emoticonString
-import com.huanchengfly.tieba.post.utils.getEmoticonHeightPx
+import com.huanchengfly.tieba.post.utils.calcLineHeightPx
 
 @Composable
 fun EmoticonText(
@@ -72,6 +72,7 @@ fun EmoticonText(
     textDecoration: TextDecoration? = null,
     textAlign: TextAlign? = null,
     lineHeight: TextUnit = TextUnit.Unspecified,
+    lineSpacing: TextUnit = 0.sp,
     overflow: TextOverflow = TextOverflow.Clip,
     softWrap: Boolean = true,
     maxLines: Int = Int.MAX_VALUE,
@@ -93,6 +94,7 @@ fun EmoticonText(
         textDecoration,
         textAlign,
         lineHeight,
+        lineSpacing,
         overflow,
         softWrap,
         maxLines,
@@ -116,6 +118,7 @@ fun EmoticonText(
     textDecoration: TextDecoration? = null,
     textAlign: TextAlign? = null,
     lineHeight: TextUnit = TextUnit.Unspecified,
+    lineSpacing: TextUnit = 0.sp,
     overflow: TextOverflow = TextOverflow.Clip,
     softWrap: Boolean = true,
     maxLines: Int = Int.MAX_VALUE,
@@ -143,9 +146,11 @@ fun EmoticonText(
             letterSpacing = letterSpacing
         )
     )
-    val sizePx = getEmoticonHeightPx(mergedStyle) * emoticonSize
+    val sizePx = calcLineHeightPx(mergedStyle)
+    val spacingLineHeight =
+        remember(sizePx) { (sizePx + lineSpacing.value.spToPxFloat()).pxToSpFloat().sp }
     val emoticonInlineContent =
-        remember(sizePx) { EmoticonManager.getEmoticonInlineContent(sizePx) }
+        remember(sizePx) { EmoticonManager.getEmoticonInlineContent(sizePx * emoticonSize) }
     IconText(
         text,
         modifier,
@@ -157,7 +162,7 @@ fun EmoticonText(
         letterSpacing,
         textDecoration,
         textAlign,
-        lineHeight,
+        spacingLineHeight,
         overflow,
         softWrap,
         maxLines,
@@ -207,7 +212,7 @@ fun IconText(
             letterSpacing = letterSpacing
         )
     )
-    val sizePx = getEmoticonHeightPx(mergedStyle) * 9 / 10
+    val sizePx = calcLineHeightPx(mergedStyle) * 9 / 10
     val sizeSp = sizePx.pxToSp(LocalContext.current).sp
     val sizeDp = sizePx.pxToDp().dp
     val iconInlineContent =
