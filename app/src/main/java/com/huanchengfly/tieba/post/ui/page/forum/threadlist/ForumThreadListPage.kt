@@ -191,7 +191,7 @@ private fun ThreadList(
                             .fillMaxWidth()
                             .padding(vertical = 8.dp, horizontal = 16.dp)
                             .clip(RoundedCornerShape(6.dp))
-                            .background(ExtendedTheme.colors.floorCard)
+                            .background(ExtendedTheme.colors.card)
                             .padding(vertical = 8.dp, horizontal = 16.dp)
                     ) {
                         Text(

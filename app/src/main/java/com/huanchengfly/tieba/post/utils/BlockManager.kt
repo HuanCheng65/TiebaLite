@@ -56,7 +56,7 @@ object BlockManager {
     }
 
     fun ThreadInfo.shouldBlock(): Boolean =
-        shouldBlock(abstractText) || shouldBlock(authorId, author?.name)
+        shouldBlock(title) || shouldBlock(abstractText) || shouldBlock(authorId, author?.name)
 
     fun Post.shouldBlock(): Boolean =
         shouldBlock(content.plainText) || shouldBlock(author_id, author?.name)
