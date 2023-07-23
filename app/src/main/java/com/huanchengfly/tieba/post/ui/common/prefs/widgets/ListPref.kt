@@ -17,6 +17,8 @@ import com.huanchengfly.tieba.post.ui.widgets.compose.Dialog
 import com.huanchengfly.tieba.post.ui.widgets.compose.DialogNegativeButton
 import com.huanchengfly.tieba.post.ui.widgets.compose.picker.ListSinglePicker
 import com.huanchengfly.tieba.post.ui.widgets.compose.rememberDialogState
+import kotlinx.collections.immutable.toImmutableList
+import kotlinx.collections.immutable.toImmutableMap
 import kotlinx.coroutines.launch
 
 /**
@@ -92,6 +94,9 @@ fun ListPref(
         onClick = { if (enabled) dialogState.show() },
     )
 
+    val itemTitle = remember(entries) { entries.map { it.value }.toImmutableList() }
+    val itemValues = remember(entries) { entries.map { it.key }.toImmutableList() }
+
     Dialog(
         dialogState = dialogState,
         title = { Text(text = title) },
@@ -100,15 +105,15 @@ fun ListPref(
         }
     ) {
         ListSinglePicker(
-            itemTitles = entries.map { it.value },
-            itemValues = entries.map { it.key },
+            itemTitles = itemTitle,
+            itemValues = itemValues,
             selectedPosition = entries.keys.indexOf(selected),
             onItemSelected = { _, title, value, _ ->
                 edit(current = value to title)
                 dismiss()
             },
-            itemIcons = icons,
-            modifier = Modifier.padding(bottom = 16.dp)
+            modifier = Modifier.padding(bottom = 16.dp),
+            itemIcons = icons.toImmutableMap()
         )
     }
 //    if (showDialog) {

@@ -54,6 +54,7 @@ fun <T : UiState, A> Flow<T>.collectPartialAsState(
         this@collectPartialAsState
             .map { prop1.get(it) }
             .distinctUntilChanged()
+            .flowOn(Dispatchers.IO)
             .collect {
                 value = it
             }
@@ -71,6 +72,7 @@ inline fun <reified Event : UiEvent> Flow<UiEvent>.onEvent(
                 this@onEvent
                     .filterIsInstance<Event>()
                     .cancellable()
+                    .flowOn(Dispatchers.IO)
                     .collect {
                         launch {
                             listener(it)
@@ -95,6 +97,7 @@ inline fun <reified Event : UiEvent> BaseViewModel<*, *, *, *>.onEvent(
             uiEventFlow
                 .filterIsInstance<Event>()
                 .cancellable()
+                .flowOn(Dispatchers.IO)
                 .collect {
                     coroutineScope.launch {
                         listener(it)
@@ -119,6 +122,7 @@ inline fun <reified VM : BaseViewModel<*, *, *, *>> pageViewModel(): VM {
                         uiEventFlow
                             .filterIsInstance<CommonUiEvent>()
                             .cancellable()
+                            .flowOn(Dispatchers.IO)
                             .collectIn(context) {
                                 context.handleCommonEvent(it)
                             }

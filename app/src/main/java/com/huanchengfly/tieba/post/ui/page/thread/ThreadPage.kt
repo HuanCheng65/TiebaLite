@@ -84,6 +84,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.util.fastForEach
+import androidx.compose.ui.util.fastForEachIndexed
 import com.huanchengfly.tieba.post.App
 import com.huanchengfly.tieba.post.R
 import com.huanchengfly.tieba.post.activities.UserActivity
@@ -1683,7 +1685,7 @@ fun PostCard(
                         )
                     }
 
-                    contentRenders.forEach { it.Render() }
+                    contentRenders.fastForEach { it.Render() }
                 }
 
                 if (showSubPosts && post.sub_post_number > 0 && subPostContents.isNotEmpty() && !immersiveMode) {
@@ -1696,7 +1698,7 @@ fun PostCard(
                             .padding(vertical = 12.dp),
                         verticalArrangement = Arrangement.spacedBy(2.dp)
                     ) {
-                        subPostContents.forEachIndexed { index, text ->
+                        subPostContents.fastForEachIndexed { index, text ->
                             SubPostItem(
                                 subPostList = subPosts[index],
                                 subPostContent = text,

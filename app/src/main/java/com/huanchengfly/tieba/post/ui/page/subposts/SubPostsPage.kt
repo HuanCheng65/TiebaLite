@@ -35,6 +35,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.util.fastForEach
 import com.huanchengfly.tieba.post.App
 import com.huanchengfly.tieba.post.R
 import com.huanchengfly.tieba.post.activities.UserActivity
@@ -595,7 +596,7 @@ private fun SubPostItem(
                         .padding(start = Sizes.Small + 8.dp)
                         .fillMaxWidth()
                 ) {
-                    contentRenders.forEach { it.Render() }
+                    contentRenders.fastForEach { it.Render() }
                 }
             }
         )

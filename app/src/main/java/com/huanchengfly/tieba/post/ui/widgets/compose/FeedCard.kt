@@ -54,10 +54,12 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.util.fastForEachIndexed
 import com.google.accompanist.placeholder.PlaceholderHighlight
 import com.google.accompanist.placeholder.material.fade
 import com.google.accompanist.placeholder.material.placeholder
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
+import com.huanchengfly.tieba.post.App
 import com.huanchengfly.tieba.post.R
 import com.huanchengfly.tieba.post.activities.UserActivity
 import com.huanchengfly.tieba.post.api.models.protos.Media
@@ -85,14 +87,14 @@ import kotlin.math.max
 import kotlin.math.min
 
 private val ImmutableHolder<Media>.url: String
-    @Composable get() =
-        ImageUtil.getUrl(
-            LocalContext.current,
-            true,
-            get { originPic },
-            get { dynamicPic },
-            get { bigPic },
-            get { srcPic })
+    get() = ImageUtil.getUrl(
+        App.INSTANCE,
+        true,
+        get { originPic },
+        get { dynamicPic },
+        get { bigPic },
+        get { srcPic }
+    )
 
 @Composable
 private fun DefaultUserHeader(
@@ -329,53 +331,65 @@ private fun ThreadMedia(
     val medias = remember(item) {
         item.getImmutableList { media }
     }
-    val singleMediaFraction =
-        if (LocalWindowSizeClass.current.widthSizeClass == WindowWidthSizeClass.Compact)
+    val hasMedia = remember(medias) { medias.isNotEmpty() }
+    val isSingleMedia = remember(medias) { medias.size == 1 }
+    val windowWidthSizeClass = LocalWindowSizeClass.current.widthSizeClass
+    val singleMediaFraction = remember(windowWidthSizeClass) {
+        if (windowWidthSizeClass == WindowWidthSizeClass.Compact)
             1f
         else 0.6f
-
+    }
 
     if (isVideo) {
-        val videoInfo = item.getImmutable { videoInfo!! }
+        val videoInfo = remember(item) { item.getImmutable { videoInfo!! } }
+        val aspectRatio = remember(videoInfo) {
+            max(
+                videoInfo
+                    .get { thumbnailWidth }
+                    .toFloat() / videoInfo.get { thumbnailHeight },
+                16f / 9
+            )
+        }
         VideoPlayer(
             videoUrl = videoInfo.get { videoUrl },
             thumbnailUrl = videoInfo.get { thumbnailUrl },
             modifier = Modifier
                 .fillMaxWidth(singleMediaFraction)
-                .aspectRatio(
-                    max(
-                        videoInfo
-                            .get { thumbnailWidth }
-                            .toFloat() / videoInfo.get { thumbnailHeight },
-                        16f / 9
-                    )
-                )
+                .aspectRatio(aspectRatio)
                 .clip(RoundedCornerShape(8.dp))
         )
-    } else if (medias.isNotEmpty()) {
+    } else if (hasMedia) {
+        val mediaWidthFraction = remember(isSingleMedia, singleMediaFraction) {
+            if (isSingleMedia) singleMediaFraction else 1f
+        }
+        val mediaAspectRatio = remember(isSingleMedia) {
+            if (isSingleMedia) 2f else 3f
+        }
+        val showMediaCount = remember(medias) { min(medias.size, 3) }
+        val hasMoreMedia = remember(medias) { medias.size > 3 }
+        val showMedias = remember(medias) { medias.subList(0, showMediaCount) }
         Box {
             Row(
                 modifier = Modifier
-                    .fillMaxWidth(if (medias.size == 1) singleMediaFraction else 1f)
-                    .aspectRatio(if (medias.size == 1) 2f else 3f)
+                    .fillMaxWidth(mediaWidthFraction)
+                    .aspectRatio(mediaAspectRatio)
                     .clip(RoundedCornerShape(8.dp)),
                 horizontalArrangement = Arrangement.spacedBy(4.dp)
             ) {
-                medias.subList(0, min(medias.size, 3))
-                    .forEachIndexed { index, media ->
-                        val photoViewData = remember(item, index) {
-                            getImmutablePhotoViewData(item.get(), index)
-                        }
-                        NetworkImage(
-                            imageUri = media.url,
-                            contentDescription = null,
-                            modifier = Modifier.weight(1f),
-                            photoViewData = photoViewData,
-                            contentScale = ContentScale.Crop
-                        )
+                showMedias.fastForEachIndexed { index, media ->
+                    val photoViewData = remember(item, index) {
+                        getImmutablePhotoViewData(item.get(), index)
                     }
+                    NetworkImage(
+                        imageUri = remember(media) { media.url },
+                        contentDescription = null,
+                        modifier = Modifier.weight(1f),
+                        photoViewData = photoViewData,
+                        contentScale = ContentScale.Crop
+                    )
+                }
             }
-            if (medias.size > 3) {
+            if (hasMoreMedia) {
                 Badge(
                     icon = Icons.Rounded.PhotoSizeSelectActual,
                     text = "${medias.size}",
@@ -396,7 +410,8 @@ private fun ThreadForumInfo(
     val hasForumInfo = remember(item) { item.isNotNull { forumInfo } }
     if (hasForumInfo) {
         val forumInfo = remember(item) { item.getImmutable { forumInfo!! } }
-        if (forumInfo.get { name }.isNotBlank()) {
+        val hasForum = remember(forumInfo) { forumInfo.get { name }.isNotBlank() }
+        if (hasForum) {
             ForumInfoChip(
                 imageUriProvider = { StringUtil.getAvatarUrl(forumInfo.get { avatar }) },
                 nameProvider = { forumInfo.get { name } },

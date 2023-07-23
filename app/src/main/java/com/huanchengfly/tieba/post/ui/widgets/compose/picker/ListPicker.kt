@@ -22,14 +22,18 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.huanchengfly.tieba.post.R
 import com.huanchengfly.tieba.post.ui.widgets.compose.ProvideContentColor
+import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.ImmutableMap
+import kotlinx.collections.immutable.persistentMapOf
 
 @Composable
 fun <ItemValue> ListSinglePicker(
-    itemTitles: List<String>,
-    itemValues: List<ItemValue>,
+    itemTitles: ImmutableList<String>,
+    itemValues: ImmutableList<ItemValue>,
     selectedPosition: Int,
     onItemSelected: (position: Int, title: String, value: ItemValue, changed: Boolean) -> Unit,
-    itemIcons: Map<ItemValue, @Composable () -> Unit> = emptyMap(),
+    modifier: Modifier = Modifier,
+    itemIcons: ImmutableMap<ItemValue, @Composable () -> Unit> = persistentMapOf(),
     selectedIndicator: @Composable () -> Unit = {
         Icon(
             imageVector = Icons.Rounded.Check,
@@ -38,7 +42,6 @@ fun <ItemValue> ListSinglePicker(
     },
     colors: PickerColors = PickerDefaults.pickerColors(),
     enabled: Boolean = true,
-    modifier: Modifier = Modifier,
 ) {
     if (itemTitles.size != itemValues.size) error("titles and values do not match!")
     Column(modifier = modifier) {
@@ -63,7 +66,7 @@ fun <ItemValue> ListSinglePicker(
                 horizontalArrangement = Arrangement.spacedBy(16.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                (itemIcons.getOrDefault(itemValues[it]) {}).invoke()
+                itemIcons[itemValues[it]]?.invoke()
                 ProvideContentColor(
                     color = if (selected) colors.selectedItemColor(enabled).value else colors.itemColor(
                         enabled

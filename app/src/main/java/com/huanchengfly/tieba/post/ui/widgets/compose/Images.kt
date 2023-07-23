@@ -4,7 +4,9 @@ import android.os.Parcelable
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
@@ -38,11 +40,14 @@ fun NetworkImage(
             }
         }
     } else Modifier
-    AsyncImage(
-        request = DisplayRequest(context, imageUri) {
+    val request = remember(imageUri) {
+        DisplayRequest(context, imageUri) {
             placeholder(ImageUtil.getPlaceHolder(context, 0))
             crossfade()
-        },
+        }
+    }
+    AsyncImage(
+        request = request,
         contentDescription = contentDescription,
         modifier = modifier.then(clickableModifier),
         contentScale = contentScale,
@@ -57,29 +62,14 @@ fun NetworkImage(
     photoViewDataProvider: (() -> ImmutableHolder<PhotoViewData>)? = null,
     contentScale: ContentScale = ContentScale.Fit,
 ) {
-    val imageUri = imageUriProvider()
-    val photoViewData = photoViewDataProvider?.invoke()
+    val imageUri by rememberUpdatedState(newValue = imageUriProvider())
+    val photoViewData by rememberUpdatedState(newValue = photoViewDataProvider?.invoke())
 
-    val context = LocalContext.current
-    val clickableModifier = if (photoViewData != null) {
-        Modifier.clickable(
-            indication = null,
-            interactionSource = remember {
-                MutableInteractionSource()
-            }
-        ) {
-            context.goToActivity<PhotoViewActivity> {
-                putExtra(EXTRA_PHOTO_VIEW_DATA, photoViewData.get() as Parcelable)
-            }
-        }
-    } else Modifier
-    AsyncImage(
-        request = DisplayRequest(context, imageUri) {
-            placeholder(ImageUtil.getPlaceHolder(context, 0))
-            crossfade()
-        },
+    NetworkImage(
+        imageUri = imageUri,
         contentDescription = contentDescription,
-        modifier = modifier.then(clickableModifier),
+        modifier = modifier,
+        photoViewData = photoViewData,
         contentScale = contentScale,
     )
 }
