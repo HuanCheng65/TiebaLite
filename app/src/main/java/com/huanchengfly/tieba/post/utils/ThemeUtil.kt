@@ -25,6 +25,7 @@ import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.request.target.CustomViewTarget
 import com.bumptech.glide.request.transition.Transition
 import com.google.android.material.appbar.AppBarLayout
+import com.huanchengfly.tieba.post.App
 import com.huanchengfly.tieba.post.App.Companion.INSTANCE
 import com.huanchengfly.tieba.post.App.Companion.translucentBackground
 import com.huanchengfly.tieba.post.R
@@ -44,7 +45,10 @@ import java.util.Locale
 
 object ThemeUtil {
     val themeState: MutableState<String> by lazy(mode = LazyThreadSafetyMode.SYNCHRONIZED) {
-        mutableStateOf(dataStore.getString(KEY_THEME, THEME_DEFAULT))
+        mutableStateOf(
+            if (App.isInitialized) dataStore.getString(KEY_THEME, THEME_DEFAULT)
+            else THEME_DEFAULT
+        )
     }
 
     const val TAG = "ThemeUtil"

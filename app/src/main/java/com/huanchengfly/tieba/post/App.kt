@@ -284,6 +284,9 @@ class App : Application(), IApp, SketchFactory {
         lateinit var INSTANCE: App
             private set
 
+        val isInitialized: Boolean
+            get() = this::INSTANCE.isInitialized
+
         val isSystemNight: Boolean
             get() = nightMode == Configuration.UI_MODE_NIGHT_YES
 
@@ -669,6 +672,9 @@ class App : Application(), IApp, SketchFactory {
         }
 
         override fun getColorById(context: Context, colorId: Int): Int {
+//            if (!isInitialized) {
+//                return context.getColorCompat(colorId)
+//            }
             when (colorId) {
                 R.color.default_color_primary -> return getColorByAttr(context, R.attr.colorPrimary)
                 R.color.default_color_accent -> return getColorByAttr(context, R.attr.colorAccent)

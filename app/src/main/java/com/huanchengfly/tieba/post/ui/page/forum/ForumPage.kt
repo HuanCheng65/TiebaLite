@@ -739,11 +739,11 @@ fun ForumPage(
                             menuState = menuState,
                             menuContent = {
                                 ListSinglePicker(
-                                    itemTitles = listOf(
+                                    itemTitles = persistentListOf(
                                         stringResource(id = R.string.title_sort_by_reply),
                                         stringResource(id = R.string.title_sort_by_send)
                                     ),
-                                    itemValues = listOf(0, 1),
+                                    itemValues = persistentListOf(0, 1),
                                     selectedPosition = currentSortType,
                                     onItemSelected = { _, _, value, changed ->
                                         if (changed) {

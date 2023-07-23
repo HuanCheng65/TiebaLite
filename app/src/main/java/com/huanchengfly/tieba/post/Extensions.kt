@@ -26,6 +26,8 @@ import kotlinx.collections.immutable.toImmutableList
 import java.io.File
 import kotlin.math.roundToInt
 
+private val Context.scaledDensity: Float
+    get() = resources.displayMetrics.scaledDensity
 
 fun Float.dpToPx(): Int =
     dpToPxFloat().roundToInt()
@@ -33,11 +35,11 @@ fun Float.dpToPx(): Int =
 fun Float.dpToPxFloat(): Float =
     this * App.ScreenInfo.DENSITY + 0.5f
 
-fun Float.spToPx(): Int =
-    (this * App.INSTANCE.resources.displayMetrics.scaledDensity + 0.5f).roundToInt()
+fun Float.spToPx(context: Context = App.INSTANCE): Int =
+    (this * context.scaledDensity + 0.5f).roundToInt()
 
-fun Float.spToPxFloat(): Float =
-    this * App.INSTANCE.resources.displayMetrics.scaledDensity + 0.5f
+fun Float.spToPxFloat(context: Context = App.INSTANCE): Float =
+    this * context.scaledDensity + 0.5f
 
 fun Float.pxToDp(): Int =
     (this / App.ScreenInfo.DENSITY + 0.5f).roundToInt()
@@ -45,8 +47,8 @@ fun Float.pxToDp(): Int =
 fun Float.pxToDpFloat(): Float =
     this / App.ScreenInfo.DENSITY + 0.5f
 
-fun Float.pxToSp(): Int =
-    (this / App.INSTANCE.resources.displayMetrics.scaledDensity + 0.5f).roundToInt()
+fun Float.pxToSp(context: Context = App.INSTANCE): Int =
+    (this / context.scaledDensity + 0.5f).roundToInt()
 
 fun Int.dpToPx(): Int = this.toFloat().dpToPx()
 
@@ -54,7 +56,7 @@ fun Int.spToPx(): Int = this.toFloat().spToPx()
 
 fun Int.pxToDp(): Int = this.toFloat().pxToDp()
 
-fun Int.pxToSp(): Int = this.toFloat().pxToSp()
+fun Int.pxToSp(context: Context = App.INSTANCE): Int = this.toFloat().pxToSp(context)
 
 fun Float.pxToSpFloat(): Float = this / App.INSTANCE.resources.displayMetrics.scaledDensity + 0.5f
 

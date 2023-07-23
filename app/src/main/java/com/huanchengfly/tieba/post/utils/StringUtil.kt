@@ -14,6 +14,7 @@ import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.withStyle
+import com.huanchengfly.tieba.post.App
 import com.huanchengfly.tieba.post.R
 import com.huanchengfly.tieba.post.components.spans.EmoticonSpanV2
 import com.huanchengfly.tieba.post.ui.common.theme.utils.ThemeUtils
@@ -98,7 +99,7 @@ object StringUtil {
         nickname: String?,
         color: Color = Color.Unspecified
     ): AnnotatedString {
-        val showBoth = context.appPreferences.showBothUsernameAndNickname
+        val showBoth = App.isInitialized && context.appPreferences.showBothUsernameAndNickname
         return buildAnnotatedString {
             if (showBoth && !nickname.isNullOrBlank() && username != nickname && username.isNotBlank()) {
                 append(nickname)

@@ -28,6 +28,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.takeOrElse
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
@@ -207,7 +208,7 @@ fun IconText(
         )
     )
     val sizePx = getEmoticonHeightPx(mergedStyle) * 9 / 10
-    val sizeSp = sizePx.pxToSp().sp
+    val sizeSp = sizePx.pxToSp(LocalContext.current).sp
     val sizeDp = sizePx.pxToDp().dp
     val iconInlineContent =
         remember(sizeSp) {

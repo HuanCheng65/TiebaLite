@@ -12,6 +12,8 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.DpSize
+import androidx.compose.ui.unit.dp
 import androidx.core.view.WindowCompat
 import com.google.accompanist.systemuicontroller.SystemUiController
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
@@ -114,7 +116,9 @@ abstract class BaseComposeActivity : BaseActivity() {
 
     companion object {
         val LocalWindowSizeClass =
-            staticCompositionLocalOf<WindowSizeClass> { error("not initialized") }
+            staticCompositionLocalOf<WindowSizeClass> {
+                WindowSizeClass.calculateFromSize(DpSize(0.dp, 0.dp))
+            }
     }
 }
 

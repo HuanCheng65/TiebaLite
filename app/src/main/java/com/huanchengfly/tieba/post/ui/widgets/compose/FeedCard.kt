@@ -98,11 +98,13 @@ private val ImmutableHolder<Media>.url: String
 
 @Composable
 private fun DefaultUserHeader(
-    user: ImmutableHolder<User>,
-    time: Int,
+    userProvider: () -> ImmutableHolder<User>,
+    timeProvider: () -> Int,
     content: @Composable RowScope.() -> Unit
 ) {
     val context = LocalContext.current
+    val user = remember(userProvider) { userProvider() }
+    val time = remember(timeProvider) { timeProvider() }
     UserHeader(
         avatar = {
             Avatar(
@@ -144,6 +146,7 @@ private fun DefaultUserHeader(
 
 @Composable
 fun Card(
+    modifier: Modifier = Modifier,
     header: @Composable ColumnScope.() -> Unit = {},
     content: @Composable ColumnScope.() -> Unit = {},
     action: @Composable (ColumnScope.() -> Unit)? = null,
@@ -156,6 +159,7 @@ fun Card(
 
     Column(
         modifier = cardModifier
+            .then(modifier)
             .then(paddingModifier)
             .padding(horizontal = 16.dp)
     ) {
@@ -509,6 +513,7 @@ fun FeedCard(
     item: ImmutableHolder<ThreadInfo>,
     onClick: (ThreadInfo) -> Unit,
     onAgree: (ThreadInfo) -> Unit,
+    modifier: Modifier = Modifier,
     onReplyClick: (ThreadInfo) -> Unit = {},
     onClickForum: (SimpleForum) -> Unit = {},
     dislikeAction: @Composable () -> Unit = {},
@@ -517,11 +522,9 @@ fun FeedCard(
         header = {
             val hasAuthor = remember(item) { item.isNotNull { author } }
             if (hasAuthor) {
-                val author = remember(item) { item.getImmutable { author!! } }
-                val time = remember(item) { item.get { lastTimeInt } }
                 DefaultUserHeader(
-                    user = author,
-                    time = time
+                    userProvider = { item.getImmutable { author!! } },
+                    timeProvider = { item.get { lastTimeInt } }
                 ) { dislikeAction() }
             }
         },
@@ -562,6 +565,7 @@ fun FeedCard(
             }
         },
         onClick = { onClick(item.get()) },
+        modifier = modifier
     )
 }
 
@@ -683,6 +687,7 @@ fun FeedCardPreview() {
             )
         ),
         onClick = {},
-        onAgree = {}
+        onAgree = {},
+        modifier = Modifier.background(ExtendedTheme.colors.card)
     )
 }
