@@ -399,7 +399,7 @@ fun ThreadPage(
     seeLz: Boolean = false,
     sortType: Int = 0,
     from: String = "",
-    extra: ThreadPageExtra = ThreadPageNoExtra,
+    extra: ThreadPageExtra? = null,
     threadInfo: ThreadInfo? = null,
     scrollToReply: Boolean = false,
     viewModel: ThreadViewModel = pageViewModel()

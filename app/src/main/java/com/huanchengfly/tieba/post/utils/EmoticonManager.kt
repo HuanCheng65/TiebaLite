@@ -38,6 +38,7 @@ import com.huanchengfly.tieba.post.toJson
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.io.File
 import java.lang.ref.WeakReference
 
@@ -173,7 +174,9 @@ object EmoticonManager {
         }
         updateCache()
         coroutineScope.launch {
-            fetchEmoticons(context)
+            withContext(Dispatchers.IO) {
+                runCatching { fetchEmoticons(context) }
+            }
         }
     }
 

@@ -433,8 +433,8 @@ interface OfficialTiebaApi {
     )
     fun addStoreAsync(
         @Field("data") data: String,
-        @Field("stoken") stoken: String = AccountUtil.getSToken()!!,
-        @retrofit2.http.Header("client_user_token") client_user_token: String? = AccountUtil.getUid(),
+        @Field("stoken") stoken: String? = AccountUtil.getSToken(),
+        @retrofit2.http.Header("client_user_token") clientUserToken: String? = AccountUtil.getUid(),
     ): Deferred<ApiResult<CommonResponse>>
 
     @POST("/c/c/post/addstore")
