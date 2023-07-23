@@ -541,20 +541,18 @@ fun ThreadPage(
         initialValue = ModalBottomSheetValue.Hidden,
         skipHalfExpanded = true
     )
-    val getLastVisibilityPost = {
-        data.firstOrNull { (post) ->
-            lazyListState.layoutInfo.visibleItemsInfo.lastOrNull { info -> info.key is Long }?.key as Long? == post.get { id }
-        }?.post ?: firstPost
-    }
     val lastVisibilityPost by remember {
         derivedStateOf {
             data.firstOrNull { (post) ->
-                lazyListState.layoutInfo.visibleItemsInfo.lastOrNull { info -> info.key is Long }?.key as Long? == post.get { id }
+                val lastPostKey = lazyListState.layoutInfo.visibleItemsInfo.lastOrNull { info ->
+                    info.key is String && (info.key as String).startsWith("Post")
+                }?.key as String?
+                lastPostKey?.endsWith(post.get { id }.toString()) == true
             }?.post ?: firstPost
         }
     }
-    val lastVisibilityPostId = remember(lastVisibilityPost) {
-        lastVisibilityPost?.get { id } ?: 0L
+    val lastVisibilityPostId by remember {
+        derivedStateOf { lastVisibilityPost?.get { id } ?: 0L }
     }
     val coroutineScope = rememberCoroutineScope()
     val context = LocalContext.current
@@ -630,11 +628,10 @@ fun ThreadPage(
         dialogState = updateCollectMarkDialogState,
         onConfirm = {
             coroutineScope.launch {
-                val readPostId = getLastVisibilityPost()?.get { id } ?: 0L
                 navigator.navigateUp()
-                if (readPostId != 0L) {
+                if (lastVisibilityPostId != 0L) {
                     TiebaApi.getInstance()
-                        .addStoreFlow(threadId, postId)
+                        .addStoreFlow(threadId, lastVisibilityPostId)
                         .catch {
                             context.toastShort(
                                 R.string.message_update_collect_mark_failed,
@@ -657,7 +654,7 @@ fun ThreadPage(
         enabled = isCollected && !bottomSheetState.isVisible,
         currentScreen = ThreadPageDestination
     ) {
-        readFloorBeforeBack = getLastVisibilityPost()?.get { floor } ?: 0
+        readFloorBeforeBack = lastVisibilityPost?.get { floor } ?: 0
         if (readFloorBeforeBack != 0) {
             updateCollectMarkDialogState.show()
         } else {
