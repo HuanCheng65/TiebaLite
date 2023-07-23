@@ -25,7 +25,7 @@ import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListScope
-import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.appendInlineContent
@@ -433,14 +433,6 @@ fun ThreadPage(
         prop1 = ThreadUiState::data,
         initial = persistentListOf()
     )
-    val contentRenders by viewModel.uiState.collectPartialAsState(
-        prop1 = ThreadUiState::contentRenders,
-        initial = persistentListOf()
-    )
-    val subPostContents by viewModel.uiState.collectPartialAsState(
-        prop1 = ThreadUiState::subPostContents,
-        initial = persistentListOf()
-    )
     val author by viewModel.uiState.collectPartialAsState(
         prop1 = ThreadUiState::author,
         initial = null
@@ -519,14 +511,6 @@ fun ThreadPage(
     )
     val latestPosts by viewModel.uiState.collectPartialAsState(
         prop1 = ThreadUiState::latestPosts,
-        initial = persistentListOf()
-    )
-    val latestPostContentRenders by viewModel.uiState.collectPartialAsState(
-        prop1 = ThreadUiState::latestPostContentRenders,
-        initial = persistentListOf()
-    )
-    val latestPostSubPostContents by viewModel.uiState.collectPartialAsState(
-        prop1 = ThreadUiState::latestPostSubPostContents,
         initial = persistentListOf()
     )
 
@@ -621,18 +605,19 @@ fun ThreadPage(
 
     onGlobalEvent<GlobalEvent.ReplySuccess>(
         filter = { it.threadId == threadId }
-    ) {
+    ) { event ->
         viewModel.send(
             ThreadUiIntent.LoadLatestReply(
                 threadId = threadId,
-                postId = it.newPostId,
+                postId = event.newPostId,
                 forumId = curForumId,
                 isDesc = curSortType == ThreadSortType.SORT_TYPE_DESC,
                 curLatestPostFloor = if (curSortType == ThreadSortType.SORT_TYPE_DESC) {
                     data.firstOrNull()?.post?.get { floor } ?: 1
                 } else {
                     data.lastOrNull()?.post?.get { floor } ?: 1
-                }
+                },
+                curPostIds = data.map { it.post.get { id } },
             )
         )
     }
@@ -935,14 +920,14 @@ fun ThreadPage(
                     }
                 }
             }
-            itemsIndexed(
+            items(
                 items = latestPosts,
-                key = { _, (item) -> "LatestPost_${item.get { id }}" }
-            ) { index, (item, blocked) ->
+                key = { (item) -> "LatestPost_${item.get { id }}" }
+            ) { (item, blocked, renders, subPostContents) ->
                 PostCard(
                     item,
-                    latestPostContentRenders[index],
-                    latestPostSubPostContents[index],
+                    renders,
+                    subPostContents,
                     blocked
                 )
             }
@@ -1029,7 +1014,7 @@ fun ThreadPage(
                                         )
                                     }
                                 } else {
-                                    val readItem = getLastVisibilityPost()
+                                    val readItem = lastVisibilityPost
                                     if (readItem != null) {
                                         viewModel.send(
                                             ThreadUiIntent.AddFavorite(
@@ -1308,14 +1293,14 @@ fun ThreadPage(
                                             }
                                         }
                                     }
-                                    itemsIndexed(
+                                    items(
                                         items = data,
-                                        key = { _, (item) -> "Post_${item.get { id }}" }
-                                    ) { index, (item, blocked) ->
+                                        key = { (item) -> "Post_${item.get { id }}" }
+                                    ) { (item, blocked, renders, subPostContents) ->
                                         PostCard(
                                             item,
-                                            contentRenders[index],
-                                            subPostContents[index],
+                                            renders,
+                                            subPostContents,
                                             blocked
                                         )
                                     }
