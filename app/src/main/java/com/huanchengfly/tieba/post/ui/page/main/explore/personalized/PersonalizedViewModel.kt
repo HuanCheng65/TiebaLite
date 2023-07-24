@@ -22,6 +22,9 @@ import com.huanchengfly.tieba.post.arch.wrapImmutable
 import com.huanchengfly.tieba.post.models.DislikeBean
 import com.huanchengfly.tieba.post.utils.appPreferences
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.persistentListOf
+import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
@@ -30,7 +33,6 @@ import kotlinx.coroutines.flow.flatMapConcat
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.merge
 import kotlinx.coroutines.flow.onStart
-import okhttp3.internal.toImmutableList
 import javax.inject.Inject
 
 @Stable
@@ -156,8 +158,8 @@ sealed interface PersonalizedPartialChange : PartialChange<PersonalizedUiState> 
     sealed class Agree private constructor() : PersonalizedPartialChange {
         private fun List<ImmutableHolder<ThreadInfo>>.updateAgreeStatus(
             threadId: Long,
-            hasAgree: Int
-        ): List<ImmutableHolder<ThreadInfo>> {
+            hasAgree: Int,
+        ): ImmutableList<ImmutableHolder<ThreadInfo>> {
             return map {
                 val threadInfo = it.get()
                 if (threadInfo.threadId == threadId) {
@@ -193,7 +195,7 @@ sealed interface PersonalizedPartialChange : PartialChange<PersonalizedUiState> 
                 } else {
                     threadInfo
                 }
-            }.map { wrapImmutable(it) }
+            }.wrapImmutable()
         }
 
         override fun reduce(oldState: PersonalizedUiState): PersonalizedUiState =
@@ -231,14 +233,14 @@ sealed interface PersonalizedPartialChange : PartialChange<PersonalizedUiState> 
             when (this) {
                 is Start -> {
                     if (!oldState.hiddenThreadIds.contains(threadId)) {
-                        oldState.copy(hiddenThreadIds = oldState.hiddenThreadIds + threadId)
+                        oldState.copy(hiddenThreadIds = (oldState.hiddenThreadIds + threadId).toImmutableList())
                     } else {
                         oldState
                     }
                 }
                 is Success -> {
                     if (!oldState.hiddenThreadIds.contains(threadId)) {
-                        oldState.copy(hiddenThreadIds = oldState.hiddenThreadIds + threadId)
+                        oldState.copy(hiddenThreadIds = (oldState.hiddenThreadIds + threadId).toImmutableList())
                     } else {
                         oldState
                     }
@@ -267,8 +269,8 @@ sealed interface PersonalizedPartialChange : PartialChange<PersonalizedUiState> 
                 is Success -> oldState.copy(
                     isRefreshing = false,
                     currentPage = 1,
-                    data = data + oldState.data,
-                    threadPersonalizedData = threadPersonalizedData + oldState.threadPersonalizedData,
+                    data = (data + oldState.data).toImmutableList(),
+                    threadPersonalizedData = (threadPersonalizedData + oldState.threadPersonalizedData).toImmutableList(),
                     refreshPosition = if (oldState.data.isEmpty()) 0 else data.size
                 )
                 is Failure -> oldState.copy(isRefreshing = false)
@@ -293,8 +295,8 @@ sealed interface PersonalizedPartialChange : PartialChange<PersonalizedUiState> 
                 is Success -> oldState.copy(
                     isLoadingMore = false,
                     currentPage = currentPage,
-                    data = oldState.data + data,
-                    threadPersonalizedData = oldState.threadPersonalizedData + threadPersonalizedData,
+                    data = (oldState.data + data).toImmutableList(),
+                    threadPersonalizedData = (oldState.threadPersonalizedData + threadPersonalizedData).toImmutableList(),
                 )
                 is Failure -> oldState.copy(isLoadingMore = false)
             }
@@ -318,9 +320,9 @@ data class PersonalizedUiState(
     val isRefreshing: Boolean = true,
     val isLoadingMore: Boolean = false,
     val currentPage: Int = 1,
-    val data: List<ImmutableHolder<ThreadInfo>> = emptyList(),
-    val threadPersonalizedData: List<ImmutableHolder<ThreadPersonalized>?> = emptyList(),
-    val hiddenThreadIds: List<Long> = emptyList(),
+    val data: ImmutableList<ImmutableHolder<ThreadInfo>> = persistentListOf(),
+    val threadPersonalizedData: ImmutableList<ImmutableHolder<ThreadPersonalized>?> = persistentListOf(),
+    val hiddenThreadIds: ImmutableList<Long> = persistentListOf(),
     val refreshPosition: Int = 0,
 ): UiState
 

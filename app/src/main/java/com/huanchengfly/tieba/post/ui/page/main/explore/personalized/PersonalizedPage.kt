@@ -67,6 +67,8 @@ import com.huanchengfly.tieba.post.ui.widgets.compose.FeedCard
 import com.huanchengfly.tieba.post.ui.widgets.compose.LazyLoad
 import com.huanchengfly.tieba.post.ui.widgets.compose.LoadMoreLayout
 import com.huanchengfly.tieba.post.ui.widgets.compose.VerticalDivider
+import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.persistentListOf
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -94,11 +96,11 @@ fun PersonalizedPage(
     )
     val data by viewModel.uiState.collectPartialAsState(
         prop1 = PersonalizedUiState::data,
-        initial = emptyList()
+        initial = persistentListOf()
     )
     val threadPersonalizedData by viewModel.uiState.collectPartialAsState(
         prop1 = PersonalizedUiState::threadPersonalizedData,
-        initial = emptyList()
+        initial = persistentListOf()
     )
     val refreshPosition by viewModel.uiState.collectPartialAsState(
         prop1 = PersonalizedUiState::refreshPosition,
@@ -106,7 +108,7 @@ fun PersonalizedPage(
     )
     val hiddenThreadIds by viewModel.uiState.collectPartialAsState(
         prop1 = PersonalizedUiState::hiddenThreadIds,
-        initial = emptyList()
+        initial = persistentListOf()
     )
     val pullRefreshState = rememberPullRefreshState(
         refreshing = isRefreshing,
@@ -246,14 +248,14 @@ private fun BoxScope.RefreshTip(refreshCount: Int) {
 @Composable
 private fun FeedList(
     state: LazyListState,
-    dataProvider: () -> List<ImmutableHolder<ThreadInfo>>,
-    personalizedDataProvider: () -> List<ImmutableHolder<ThreadPersonalized>?>,
+    dataProvider: () -> ImmutableList<ImmutableHolder<ThreadInfo>>,
+    personalizedDataProvider: () -> ImmutableList<ImmutableHolder<ThreadPersonalized>?>,
     refreshPositionProvider: () -> Int,
-    hiddenThreadIdsProvider: () -> List<Long>,
+    hiddenThreadIdsProvider: () -> ImmutableList<Long>,
     onItemClick: (ThreadInfo) -> Unit,
     onItemReplyClick: (ThreadInfo) -> Unit,
     onAgree: (ThreadInfo) -> Unit,
-    onDislike: (ThreadInfo, Long, List<ImmutableHolder<DislikeReason>>) -> Unit,
+    onDislike: (ThreadInfo, Long, ImmutableList<ImmutableHolder<DislikeReason>>) -> Unit,
     onRefresh: () -> Unit,
     onOpenForum: (forumName: String) -> Unit = {},
 ) {
@@ -312,8 +314,10 @@ private fun FeedList(
                         onClick = onItemClick,
                         onReplyClick = onItemReplyClick,
                         onAgree = onAgree,
-                        onClickForum = {
-                            onOpenForum(it.name)
+                        onClickForum = remember {
+                            {
+                                onOpenForum(it.name)
+                            }
                         }
                     ) {
                         if (personalized != null) {
