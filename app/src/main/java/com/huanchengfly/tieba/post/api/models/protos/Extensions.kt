@@ -326,36 +326,39 @@ val User.bawuType: String?
     } else null
 
 val Post.subPostContents: ImmutableList<AnnotatedString>
-    get() = sub_post_list?.sub_post_list?.map { it.contentText }?.toImmutableList()
+    get() = sub_post_list?.sub_post_list?.map { it.getContentText(origin_thread_info?.author?.id) }
+        ?.toImmutableList()
         ?: persistentListOf()
 
 @OptIn(ExperimentalTextApi::class)
-val SubPostList.contentText: AnnotatedString
-    get() {
-        val context = App.INSTANCE
-        val accentColor = Color(ThemeUtils.getColorByAttr(context, R.attr.colorNewPrimary))
+fun SubPostList.getContentText(threadAuthorId: Long? = null): AnnotatedString {
+    val context = App.INSTANCE
+    val accentColor = Color(ThemeUtils.getColorByAttr(context, R.attr.colorNewPrimary))
 
-        val userNameString = buildAnnotatedString {
-            withStyle(
-                style = SpanStyle(
-                    color = accentColor,
-                    fontWeight = FontWeight.Bold
-                )
-            ) {
-                withAnnotation("user", "${author?.id}") {
-                    append(
-                        StringUtil.getUsernameAnnotatedString(
-                            context,
-                            author?.name ?: "",
-                            author?.nameShow
-                        )
-                    )
-                    append(": ")
-                }
-            }
+    val userNameString = buildAnnotatedString {
+        val annotation = pushStringAnnotation("user", "${author?.id}")
+        val style = pushStyle(
+            SpanStyle(
+                color = accentColor,
+                fontWeight = FontWeight.Bold
+            )
+        )
+        append(
+            StringUtil.getUsernameAnnotatedString(
+                context,
+                author?.name ?: "",
+                author?.nameShow
+            )
+        )
+        pop(style)
+        if (author?.id == threadAuthorId) {
+            appendInlineContent("Lz")
         }
-
-        val contentStrings = content.renders.map { it.toAnnotationString() }
-
-        return userNameString + contentStrings.reduce { acc, annotatedString -> acc + annotatedString }
+        append(": ")
+        pop(annotation)
     }
+
+    val contentStrings = content.renders.map { it.toAnnotationString() }
+
+    return userNameString + contentStrings.reduce { acc, annotatedString -> acc + annotatedString }
+}

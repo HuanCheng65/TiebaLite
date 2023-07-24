@@ -1762,16 +1762,24 @@ private fun SubPostItem(
             onOpenSubPosts(subPostList.get { id })
         }
     ) {
-        PbContentText(
-            text = subPostContent,
-            modifier = modifier,
-            color = ExtendedTheme.colors.text,
-            fontSize = 13.sp,
-            style = MaterialTheme.typography.body2,
-            emoticonSize = 0.9f,
-            overflow = TextOverflow.Ellipsis,
-            maxLines = 4,
-        )
+        ProvideTextStyle(value = MaterialTheme.typography.body2.copy(color = ExtendedTheme.colors.text)) {
+            PbContentText(
+                text = subPostContent,
+                modifier = modifier,
+                fontSize = 13.sp,
+                emoticonSize = 0.9f,
+                overflow = TextOverflow.Ellipsis,
+                maxLines = 4,
+                lineSpacing = 0.4.sp,
+                inlineContent = mapOf(
+                    "Lz" to buildChipInlineContent(
+                        stringResource(id = R.string.tip_lz),
+                        backgroundColor = ExtendedTheme.colors.textSecondary.copy(alpha = 0.1f),
+                        color = ExtendedTheme.colors.textSecondary
+                    ),
+                )
+            )
+        }
     }
 }
 

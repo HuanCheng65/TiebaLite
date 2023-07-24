@@ -171,6 +171,10 @@ internal fun SubPostsContent(
         prop1 = SubPostsUiState::forum,
         initial = null
     )
+    val thread by viewModel.uiState.collectPartialAsState(
+        prop1 = SubPostsUiState::thread,
+        initial = null
+    )
     val post by viewModel.uiState.collectPartialAsState(
         prop1 = SubPostsUiState::post,
         initial = null
@@ -432,6 +436,7 @@ internal fun SubPostsContent(
                             subPost = item,
                             contentRenders = subPostsContentRenders[index],
                             canDelete = { it.author_id == account?.uid?.toLongOrNull() },
+                            threadAuthorId = thread?.get { author?.id },
                             onAgree = {
                                 val hasAgreed = it.agree?.hasAgree != 0
                                 viewModel.send(
@@ -490,7 +495,7 @@ private fun getDescText(
 private fun SubPostItem(
     subPost: ImmutableHolder<SubPostList>,
     contentRenders: ImmutableList<PbContentRender>,
-    threadAuthorId: Long = 0L,
+    threadAuthorId: Long? = null,
     canDelete: (SubPostList) -> Boolean = { false },
     onAgree: (SubPostList) -> Unit = {},
     onReplyClick: (SubPostList) -> Unit = {},

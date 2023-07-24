@@ -8,6 +8,7 @@ import com.huanchengfly.tieba.post.api.models.protos.Anti
 import com.huanchengfly.tieba.post.api.models.protos.Post
 import com.huanchengfly.tieba.post.api.models.protos.SimpleForum
 import com.huanchengfly.tieba.post.api.models.protos.SubPostList
+import com.huanchengfly.tieba.post.api.models.protos.ThreadInfo
 import com.huanchengfly.tieba.post.api.models.protos.contentRenders
 import com.huanchengfly.tieba.post.api.models.protos.pbFloor.PbFloorResponse
 import com.huanchengfly.tieba.post.api.models.protos.renders
@@ -74,11 +75,13 @@ class SubPostsViewModel @Inject constructor() :
                     val post = checkNotNull(response.data_?.post)
                     val page = checkNotNull(response.data_?.page)
                     val forum = checkNotNull(response.data_?.forum)
+                    val thread = checkNotNull(response.data_?.thread)
                     val anti = checkNotNull(response.data_?.anti)
                     val subPosts = response.data_?.subpost_list.orEmpty()
                     SubPostsPartialChange.Load.Success(
                         anti.wrapImmutable(),
                         forum.wrapImmutable(),
+                        thread.wrapImmutable(),
                         post.wrapImmutable(),
                         post.contentRenders,
                         subPosts.wrapImmutable(),
@@ -202,6 +205,7 @@ sealed interface SubPostsPartialChange : PartialChange<SubPostsUiState> {
                     totalPage = totalPage,
                     totalCount = totalCount,
                     forum = forum,
+                    thread = thread,
                     post = post,
                     postContentRenders = postContentRenders,
                     subPosts = subPosts,
@@ -217,6 +221,7 @@ sealed interface SubPostsPartialChange : PartialChange<SubPostsUiState> {
         data class Success(
             val anti: ImmutableHolder<Anti>,
             val forum: ImmutableHolder<SimpleForum>,
+            val thread: ImmutableHolder<ThreadInfo>,
             val post: ImmutableHolder<Post>,
             val postContentRenders: ImmutableList<PbContentRender>,
             val subPosts: ImmutableList<ImmutableHolder<SubPostList>>,
@@ -374,6 +379,7 @@ data class SubPostsUiState(
 
     val anti: ImmutableHolder<Anti>? = null,
     val forum: ImmutableHolder<SimpleForum>? = null,
+    val thread: ImmutableHolder<ThreadInfo>? = null,
     val post: ImmutableHolder<Post>? = null,
     val postContentRenders: ImmutableList<PbContentRender> = persistentListOf(),
     val subPosts: ImmutableList<ImmutableHolder<SubPostList>> = persistentListOf(),

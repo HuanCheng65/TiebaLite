@@ -1,6 +1,7 @@
 package com.huanchengfly.tieba.post.repository
 
 import com.huanchengfly.tieba.post.api.TiebaApi
+import com.huanchengfly.tieba.post.api.models.protos.OriginThreadInfo
 import com.huanchengfly.tieba.post.api.models.protos.pbPage.PbPageResponse
 import com.huanchengfly.tieba.post.api.retrofit.exception.TiebaUnknownException
 import com.huanchengfly.tieba.post.ui.page.thread.ThreadPageFrom
@@ -58,6 +59,9 @@ object PbPageRepository {
                                         ?: userList.first { user -> user.id == subPost.author_id }
                                 )
                             }
+                        ),
+                        origin_thread_info = OriginThreadInfo(
+                            author = response.data_.thread.author
                         )
                     )
                 }
@@ -79,7 +83,7 @@ object PbPageRepository {
                 response.copy(
                     data_ = response.data_.copy(
                         post_list = postList,
-                        first_floor_post = firstPost
+                        first_floor_post = firstPost,
                     )
                 )
             }
