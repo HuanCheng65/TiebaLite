@@ -92,8 +92,8 @@ private val ImmutableHolder<Media>.url: String
         App.INSTANCE,
         true,
         get { originPic },
-        get { dynamicPic },
         get { bigPic },
+        get { dynamicPic },
         get { srcPic }
     )
 
