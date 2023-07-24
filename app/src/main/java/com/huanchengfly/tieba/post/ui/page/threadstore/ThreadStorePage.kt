@@ -32,7 +32,6 @@ import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.ExperimentalTextApi
 import androidx.compose.ui.text.Placeholder
 import androidx.compose.ui.text.PlaceholderVerticalAlign
-import androidx.compose.ui.text.TextMeasurer
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
@@ -138,8 +137,6 @@ fun ThreadStorePage(
             )
         }
     ) { contentPaddings ->
-        val textMeasurer = rememberTextMeasurer()
-
         StateScreen(
             isEmpty = data.isEmpty(),
             isError = isError,
@@ -171,16 +168,15 @@ fun ThreadStorePage(
                             items = data,
                             key = { it.threadId }
                         ) { info ->
-                            LongClickMenu(
-                                menuContent = {
-                                    DropdownMenuItem(onClick = {
-                                        viewModel.send(
-                                            ThreadStoreUiIntent.Delete(
-                                                info.threadId
-                                            )
+                            StoreItem(
+                                info = info,
+                                onUserClick = {
+                                    info.author.lzUid?.let {
+                                        UserActivity.launch(
+                                            context,
+                                            it,
+                                            StringUtil.getAvatarUrl(info.author.userPortrait)
                                         )
-                                    }) {
-                                        Text(text = stringResource(id = R.string.title_collect_on))
                                     }
                                 },
                                 onClick = {
@@ -196,22 +192,15 @@ fun ThreadStorePage(
                                             )
                                         )
                                     )
+                                },
+                                onDelete = {
+                                    viewModel.send(
+                                        ThreadStoreUiIntent.Delete(
+                                            info.threadId
+                                        )
+                                    )
                                 }
-                            ) {
-                                StoreItem(
-                                    info = info,
-                                    onUserClick = {
-                                        info.author.lzUid?.let {
-                                            UserActivity.launch(
-                                                context,
-                                                it,
-                                                StringUtil.getAvatarUrl(info.author.userPortrait)
-                                            )
-                                        }
-                                    },
-                                    textMeasurer = textMeasurer
-                                )
-                            }
+                            )
                         }
                     }
                 }
@@ -233,90 +222,106 @@ fun ThreadStorePage(
 private fun StoreItem(
     info: ThreadStoreBean.ThreadStoreInfo,
     onUserClick: () -> Unit,
+    onDelete: () -> Unit,
+    onClick: () -> Unit,
     modifier: Modifier = Modifier,
-    textMeasurer: TextMeasurer = rememberTextMeasurer()
 ) {
-    val hasUpdate = info.count != "0" && info.postNo != "0"
-    var width = 0
-    var height = 0
-    Column(
-        modifier = modifier
-            .padding(16.dp),
-        verticalArrangement = Arrangement.spacedBy(8.dp),
+    val hasUpdate = remember(info) { info.count != "0" && info.postNo != "0" }
+    val isDeleted = remember(info) { info.isDeleted == "1" }
+    val textMeasurer = rememberTextMeasurer()
+    LongClickMenu(
+        menuContent = {
+            DropdownMenuItem(onClick = onDelete) {
+                Text(text = stringResource(id = R.string.title_collect_on))
+            }
+        },
+        onClick = onClick
     ) {
-        UserHeader(
-            avatar = {
-                Avatar(
-                    data = StringUtil.getAvatarUrl(info.author.userPortrait),
-                    size = Sizes.Small,
-                    contentDescription = null
-                )
-            },
-            name = {
-                Text(
-                    text = getUsernameAnnotatedString(
-                        LocalContext.current,
-                        info.author.name ?: "",
-                        info.author.nameShow,
-                        LocalContentColor.current
+        Column(
+            modifier = modifier
+                .padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp),
+        ) {
+            UserHeader(
+                avatar = {
+                    Avatar(
+                        data = StringUtil.getAvatarUrl(info.author.userPortrait),
+                        size = Sizes.Small,
+                        contentDescription = null
                     )
-                )
-            },
-            onClick = onUserClick,
-        )
-        val title = remember(info, hasUpdate) {
-            buildAnnotatedString {
-                append(info.title)
-                if (hasUpdate) {
-                    append(" ")
-                    appendInlineContent("Update", info.postNo)
+                },
+                name = {
+                    Text(
+                        text = getUsernameAnnotatedString(
+                            LocalContext.current,
+                            info.author.name ?: "",
+                            info.author.nameShow,
+                            LocalContentColor.current
+                        )
+                    )
+                },
+                onClick = onUserClick,
+            )
+            val title = remember(info, hasUpdate) {
+                buildAnnotatedString {
+                    append(info.title)
+                    if (hasUpdate) {
+                        append(" ")
+                        appendInlineContent("Update", info.postNo)
+                    }
                 }
             }
-        }
-        val updateTip = stringResource(
-            id = R.string.tip_thread_store_update,
-            info.postNo
-        )
-        if (hasUpdate) {
-            val result = textMeasurer.measure(
-                AnnotatedString(updateTip),
-                style = UpdateTipTextStyle
+            val updateTip = stringResource(
+                id = R.string.tip_thread_store_update,
+                info.postNo
             )
-            width =
-                result.size.width.pxToSp() + 12F.dpToPxFloat().pxToSp() * 2 + 1
-            height = result.size.height.pxToSp() + 4F.dpToPxFloat().pxToSp() * 2
-        }
-        Text(
-            text = title,
-            fontSize = 15.sp,
-            color = ExtendedTheme.colors.text,
-            inlineContent = mapOf(
-                "Update" to InlineTextContent(
-                    placeholder = Placeholder(
-                        width = width.sp,
-                        height = height.sp,
-                        placeholderVerticalAlign = PlaceholderVerticalAlign.TextCenter
-                    ),
-                    children = {
-                        Box(
-                            modifier = Modifier
-                                .fillMaxSize()
-                                .background(
-                                    color = ExtendedTheme.colors.chip,
-                                    shape = RoundedCornerShape(3.dp)
+            val result = remember {
+                textMeasurer.measure(
+                    AnnotatedString(updateTip),
+                    style = UpdateTipTextStyle
+                ).size
+            }
+            val width = result.width.pxToSp() + 12F.dpToPxFloat().pxToSp() * 2 + 1
+            val height = result.height.pxToSp() + 4F.dpToPxFloat().pxToSp() * 2
+            Text(
+                text = title,
+                fontSize = 15.sp,
+                color = if (isDeleted) ExtendedTheme.colors.textDisabled else ExtendedTheme.colors.text,
+                inlineContent = mapOf(
+                    "Update" to InlineTextContent(
+                        placeholder = Placeholder(
+                            width = width.sp,
+                            height = height.sp,
+                            placeholderVerticalAlign = PlaceholderVerticalAlign.TextCenter
+                        ),
+                        children = {
+                            Box(
+                                modifier = Modifier
+                                    .fillMaxSize()
+                                    .background(
+                                        color = ExtendedTheme.colors.chip,
+                                        shape = RoundedCornerShape(3.dp)
+                                    )
+                                    .padding(vertical = 4.dp, horizontal = 12.dp)
+                            ) {
+                                Text(
+                                    text = updateTip,
+                                    style = UpdateTipTextStyle,
+                                    color = ExtendedTheme.colors.onChip,
+                                    modifier = Modifier.align(Alignment.Center)
                                 )
-                                .padding(vertical = 4.dp, horizontal = 12.dp)
-                        ) {
-                            Text(
-                                text = updateTip,
-                                style = UpdateTipTextStyle,
-                                color = ExtendedTheme.colors.onChip,
-                                modifier = Modifier.align(Alignment.Center)
-                            )
+                            }
                         }
-                    }
+                    )
                 )
             )
-        )
+            if (isDeleted) {
+                Text(
+                    text = stringResource(id = R.string.tip_thread_store_deleted),
+                    fontSize = 12.sp,
+                    color = ExtendedTheme.colors.textDisabled
+                )
+            }
+        }
     }
 }

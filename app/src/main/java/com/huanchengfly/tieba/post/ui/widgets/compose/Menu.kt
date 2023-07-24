@@ -110,12 +110,13 @@ fun ClickMenu(
 fun LongClickMenu(
     menuContent: @Composable (ColumnScope.() -> Unit),
     modifier: Modifier = Modifier,
+    enabled: Boolean = true,
     menuState: MenuState = rememberMenuState(),
     onClick: (() -> Unit)? = null,
     shape: Shape = RoundedCornerShape(14.dp),
     interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
     indication: Indication? = LocalIndication.current,
-    content: @Composable () -> Unit
+    content: @Composable () -> Unit,
 ) {
     LaunchedEffect(key1 = null) {
         launch {
@@ -138,6 +139,7 @@ fun LongClickMenu(
             .combinedClickable(
                 interactionSource = interactionSource,
                 indication = indication,
+                enabled = enabled,
                 onLongClick = {
                     menuState.expanded = true
                 }
