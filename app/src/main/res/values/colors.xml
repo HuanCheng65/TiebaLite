@@ -243,6 +243,13 @@
     <color name="theme_color_shadow_day">@color/color_shadow</color>
     <color name="theme_color_shadow_night">#FE191919</color>
 
+    <color name="theme_color_placeholder_light">#FFF0F0F0</color>
+    <color name="theme_color_placeholder_blue_dark">#99000000</color>
+    <color name="theme_color_placeholder_grey_dark">#99000000</color>
+    <color name="theme_color_placeholder_amoled_dark">#99000000</color>
+    <color name="theme_color_placeholder_translucent_light">#15FFFFFF</color>
+    <color name="theme_color_placeholder_translucent_dark">#30000000</color>
+
     <color name="red_accent">#FFC51100</color>
 
     <color name="color_divider">#FFF7FBFE</color>

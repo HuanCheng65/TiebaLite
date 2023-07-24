@@ -311,13 +311,13 @@ private fun ForumInfoChip(
             .padding(4.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        NetworkImage(
-            imageUri = imageUri,
+        Avatar(
+            data = imageUri,
             contentDescription = null,
             modifier = Modifier
                 .fillMaxHeight()
-                .aspectRatio(1f)
-                .clip(RoundedCornerShape(4.dp))
+                .aspectRatio(1f),
+            shape = RoundedCornerShape(4.dp)
         )
         Spacer(modifier = Modifier.width(8.dp))
         Text(
@@ -391,7 +391,9 @@ private fun ThreadMedia(
                     NetworkImage(
                         imageUri = remember(media) { media.url },
                         contentDescription = null,
-                        modifier = Modifier.weight(1f),
+                        modifier = Modifier
+                            .fillMaxHeight()
+                            .weight(1f),
                         photoViewData = photoViewData,
                         contentScale = ContentScale.Crop
                     )

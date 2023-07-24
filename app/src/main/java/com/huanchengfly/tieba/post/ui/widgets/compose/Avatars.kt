@@ -81,8 +81,14 @@ fun Avatar(
     size: Dp,
     contentDescription: String?,
     modifier: Modifier = Modifier,
+    shape: Shape = CircleShape,
 ) {
-    Avatar(data = data, contentDescription = contentDescription, modifier = modifier.size(size))
+    Avatar(
+        data = data,
+        contentDescription = contentDescription,
+        modifier = modifier.size(size),
+        shape = shape,
+    )
 }
 
 @Composable
@@ -90,6 +96,7 @@ fun Avatar(
     data: String?,
     contentDescription: String?,
     modifier: Modifier = Modifier,
+    shape: Shape = CircleShape,
 ) {
     val context = LocalContext.current
 
@@ -100,8 +107,7 @@ fun Avatar(
         },
         contentDescription = contentDescription,
         contentScale = ContentScale.Crop,
-        modifier = modifier
-            .clip(CircleShape),
+        modifier = modifier.clip(shape),
     )
 }
 

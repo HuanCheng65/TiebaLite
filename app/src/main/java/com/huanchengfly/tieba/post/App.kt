@@ -656,11 +656,26 @@ class App : Application(), IApp, SketchFactory {
                         context.getColorCompat(R.color.theme_color_nav_bar_surface_light)
                     }
                 }
+
                 R.attr.colorOnNavBarSurface -> {
                     return if (ThemeUtil.isNightMode(theme)) {
                         context.getColorCompat(R.color.theme_color_on_nav_bar_surface_dark)
                     } else {
                         context.getColorCompat(R.color.theme_color_on_nav_bar_surface_light)
+                    }
+                }
+
+                R.attr.colorPlaceholder -> {
+                    return if (ThemeUtil.isTranslucentTheme(theme) || ThemeUtil.isNightMode(theme)) {
+                        context.getColorCompat(
+                            resources.getIdentifier(
+                                "theme_color_placeholder_$theme",
+                                "color",
+                                packageName
+                            )
+                        )
+                    } else {
+                        context.getColorCompat(R.color.theme_color_placeholder_light)
                     }
                 }
             }
