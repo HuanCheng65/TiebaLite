@@ -37,7 +37,7 @@ object FrsPageRepository {
                         threadInfo.copy(author = userList.find { it.id == threadInfo.authorId })
                     }
                     .filter { !App.INSTANCE.appPreferences.blockVideo || it.videoInfo == null }
-                    .filter { it.threadTypes != 3072 } // 去他妈的直播
+                    .filter { it.ala_info == null } // 去他妈的直播
                 response.copy(data_ = response.data_.copy(thread_list = threadList))
             }
             .onEach { lastResponse = it }

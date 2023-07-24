@@ -20,6 +20,7 @@ import com.huanchengfly.tieba.post.arch.UiIntent
 import com.huanchengfly.tieba.post.arch.UiState
 import com.huanchengfly.tieba.post.arch.wrapImmutable
 import com.huanchengfly.tieba.post.models.DislikeBean
+import com.huanchengfly.tieba.post.repository.PersonalizedRepository
 import com.huanchengfly.tieba.post.utils.appPreferences
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.collections.immutable.ImmutableList
@@ -66,7 +67,8 @@ class PersonalizedViewModel @Inject constructor() :
             )
 
         private fun produceRefreshPartialChange(): Flow<PersonalizedPartialChange.Refresh> =
-            TiebaApi.getInstance().personalizedProtoFlow(1, 1)
+            PersonalizedRepository
+                .personalizedFlow(1, 1)
                 .map<PersonalizedResponse, PersonalizedPartialChange.Refresh> { response ->
                     val data = response.toData().filter {
                         !App.INSTANCE.appPreferences.blockVideo || it.get { videoInfo } == null
@@ -84,7 +86,8 @@ class PersonalizedViewModel @Inject constructor() :
                 .catch { emit(PersonalizedPartialChange.Refresh.Failure(it)) }
 
         private fun PersonalizedUiIntent.LoadMore.producePartialChange(): Flow<PersonalizedPartialChange.LoadMore> =
-            TiebaApi.getInstance().personalizedProtoFlow(2, page)
+            PersonalizedRepository
+                .personalizedFlow(2, page)
                 .map<PersonalizedResponse, PersonalizedPartialChange.LoadMore> { response ->
                     val data = response.toData().filter {
                         !App.INSTANCE.appPreferences.blockVideo || it.get { videoInfo } == null

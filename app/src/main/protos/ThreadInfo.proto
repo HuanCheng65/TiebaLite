@@ -51,7 +51,7 @@ message ThreadInfo {
   optional VideoInfo videoInfo = 79;
   repeated PbContent richTitle = 111;
   repeated PbContent richAbstract = 112;
-  AlaLiveInfo ala_info = 113;
+  optional AlaLiveInfo ala_info = 113;
   repeated DislikeInfo dislikeInfo = 120;
   int32 agreeNum = 124;
   Agree agree = 126;
