@@ -983,7 +983,7 @@ object MixedTiebaApiImpl : ITiebaApi {
                         is_default_navtab = 0,
                         is_good = if (goodClassifyId != null) 1 else 0,
                         is_selection = 0,
-                        kw = forumName,
+                        kw = forumName.urlEncode(),
                         last_click_tid = 0,
                         load_type = loadType,
                         net_error = 0,
