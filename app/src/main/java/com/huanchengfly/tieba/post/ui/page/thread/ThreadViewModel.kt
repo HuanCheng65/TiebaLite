@@ -309,8 +309,6 @@ class ThreadViewModel @Inject constructor() :
                     ThreadPartialChange.LoadLatestReply.Success(
                         anti = response.data_.anti,
                         posts = response.data_.post_list.map { PostItemData(it.wrapImmutable()) },
-                        contentRenders = response.data_.post_list.map { it.contentRenders },
-                        subPostContents = response.data_.post_list.map { it.subPostContents },
                         page = response.data_.page.current_page,
                         isContinuous = firstLatestPost.floor == curLatestPostFloor + 1,
                         isDesc = isDesc,
@@ -805,6 +803,9 @@ sealed interface ThreadPartialChange : PartialChange<ThreadUiState> {
                         val replaceIndex = replacePostIndexes.firstOrNull { it.first == index }
                         if (replaceIndex != null) posts[replaceIndex.second] else oldItem
                     }
+                    val addPosts = posts.filter {
+                        !newPost.any { item -> item.post.get { id } == it.post.get { id } }
+                    }
                     when {
                         hasNewPost && continuous && isDesc -> {
                             oldState.copy(
@@ -812,7 +813,7 @@ sealed interface ThreadPartialChange : PartialChange<ThreadUiState> {
                                 isError = false,
                                 error = null,
                                 anti = anti.wrapImmutable(),
-                                data = (posts + newPost).toImmutableList(),
+                                data = (addPosts.reversed() + newPost).toImmutableList(),
                                 latestPosts = persistentListOf(),
                             )
                         }
@@ -823,7 +824,7 @@ sealed interface ThreadPartialChange : PartialChange<ThreadUiState> {
                                 isError = false,
                                 error = null,
                                 anti = anti.wrapImmutable(),
-                                data = (newPost + posts).toImmutableList(),
+                                data = (newPost + addPosts).toImmutableList(),
                                 latestPosts = persistentListOf(),
                             )
                         }
@@ -872,8 +873,6 @@ sealed interface ThreadPartialChange : PartialChange<ThreadUiState> {
         data class Success(
             val anti: Anti,
             val posts: List<PostItemData>,
-            val contentRenders: List<ImmutableList<PbContentRender>>,
-            val subPostContents: List<ImmutableList<AnnotatedString>>,
             val page: Int,
             val isContinuous: Boolean,
             val isDesc: Boolean,
