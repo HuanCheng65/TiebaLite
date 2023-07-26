@@ -14,6 +14,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import com.huanchengfly.tieba.post.App
 import com.huanchengfly.tieba.post.R
 import com.huanchengfly.tieba.post.utils.ThemeUtil
@@ -53,7 +54,10 @@ data class ExtendedColors(
 )
 
 val LocalExtendedColors = staticCompositionLocalOf {
-    ExtendedColors("", false)
+    ExtendedColors(
+        ThemeUtil.THEME_DEFAULT,
+        false,
+    )
 }
 
 @SuppressLint("ConflictingOnColor")
@@ -90,71 +94,72 @@ fun getColorPalette(
 
 @Composable
 private fun getThemeColorForTheme(theme: String): ExtendedColors {
+    val context = LocalContext.current
     val nowTheme = ThemeUtil.getThemeTranslucent(theme)
     val textColor =
-        Color(App.ThemeDelegate.getColorByAttr(App.INSTANCE, R.attr.colorText, nowTheme))
+        Color(App.ThemeDelegate.getColorByAttr(context, R.attr.colorText, nowTheme))
     val bottomBarColor =
-        Color(App.ThemeDelegate.getColorByAttr(App.INSTANCE, R.attr.colorNavBar, nowTheme))
+        Color(App.ThemeDelegate.getColorByAttr(context, R.attr.colorNavBar, nowTheme))
     return ExtendedColors(
         nowTheme,
         ThemeUtil.isNightMode(nowTheme),
-        Color(App.ThemeDelegate.getColorByAttr(App.INSTANCE, R.attr.colorNewPrimary, nowTheme)),
-        Color(App.ThemeDelegate.getColorByAttr(App.INSTANCE, R.attr.colorPrimary, nowTheme)),
-        Color(App.ThemeDelegate.getColorByAttr(App.INSTANCE, R.attr.colorOnAccent, nowTheme)),
-        Color(App.ThemeDelegate.getColorByAttr(App.INSTANCE, R.attr.colorToolbar, nowTheme)),
-        Color(App.ThemeDelegate.getColorByAttr(App.INSTANCE, R.attr.colorToolbarItem, nowTheme)),
+        Color(App.ThemeDelegate.getColorByAttr(context, R.attr.colorNewPrimary, nowTheme)),
+        Color(App.ThemeDelegate.getColorByAttr(context, R.attr.colorPrimary, nowTheme)),
+        Color(App.ThemeDelegate.getColorByAttr(context, R.attr.colorOnAccent, nowTheme)),
+        Color(App.ThemeDelegate.getColorByAttr(context, R.attr.colorToolbar, nowTheme)),
+        Color(App.ThemeDelegate.getColorByAttr(context, R.attr.colorToolbarItem, nowTheme)),
         Color(
             App.ThemeDelegate.getColorByAttr(
-                App.INSTANCE,
+                context,
                 R.attr.colorToolbarItemSecondary,
                 nowTheme
             )
         ),
         Color(
             App.ThemeDelegate.getColorByAttr(
-                App.INSTANCE,
+                context,
                 R.attr.colorToolbarItemActive,
                 nowTheme
             )
         ),
-        Color(App.ThemeDelegate.getColorByAttr(App.INSTANCE, R.attr.colorToolbarSurface, nowTheme)),
+        Color(App.ThemeDelegate.getColorByAttr(context, R.attr.colorToolbarSurface, nowTheme)),
         Color(
             App.ThemeDelegate.getColorByAttr(
-                App.INSTANCE,
+                context,
                 R.attr.colorOnToolbarSurface,
                 nowTheme
             )
         ),
         bottomBarColor,
-        Color(App.ThemeDelegate.getColorByAttr(App.INSTANCE, R.attr.colorNavBarSurface, nowTheme)),
+        Color(App.ThemeDelegate.getColorByAttr(context, R.attr.colorNavBarSurface, nowTheme)),
         Color(
             App.ThemeDelegate.getColorByAttr(
-                App.INSTANCE,
+                context,
                 R.attr.colorOnNavBarSurface,
                 nowTheme
             )
         ),
         textColor.copy(alpha = ContentAlpha.high),
         textColor.copy(alpha = ContentAlpha.medium),
-        Color(App.ThemeDelegate.getColorByAttr(App.INSTANCE, R.attr.colorOnAccent, nowTheme)),
-        Color(App.ThemeDelegate.getColorByAttr(App.INSTANCE, R.attr.color_text_disabled, nowTheme)),
-        Color(App.ThemeDelegate.getColorByAttr(App.INSTANCE, R.attr.colorBackground, nowTheme)),
-        Color(App.ThemeDelegate.getColorByAttr(App.INSTANCE, R.attr.colorChip, nowTheme)),
-        Color(App.ThemeDelegate.getColorByAttr(App.INSTANCE, R.attr.colorOnChip, nowTheme)),
-        Color(App.ThemeDelegate.getColorByAttr(App.INSTANCE, R.attr.colorUnselected, nowTheme)),
-        Color(App.ThemeDelegate.getColorByAttr(App.INSTANCE, R.attr.colorCard, nowTheme)),
-        Color(App.ThemeDelegate.getColorByAttr(App.INSTANCE, R.attr.colorFloorCard, nowTheme)),
-        Color(App.ThemeDelegate.getColorByAttr(App.INSTANCE, R.attr.colorDivider, nowTheme)),
-        Color(App.ThemeDelegate.getColorByAttr(App.INSTANCE, R.attr.shadow_color, nowTheme)),
-        Color(App.ThemeDelegate.getColorByAttr(App.INSTANCE, R.attr.colorIndicator, nowTheme)),
+        Color(App.ThemeDelegate.getColorByAttr(context, R.attr.colorOnAccent, nowTheme)),
+        Color(App.ThemeDelegate.getColorByAttr(context, R.attr.color_text_disabled, nowTheme)),
+        Color(App.ThemeDelegate.getColorByAttr(context, R.attr.colorBackground, nowTheme)),
+        Color(App.ThemeDelegate.getColorByAttr(context, R.attr.colorChip, nowTheme)),
+        Color(App.ThemeDelegate.getColorByAttr(context, R.attr.colorOnChip, nowTheme)),
+        Color(App.ThemeDelegate.getColorByAttr(context, R.attr.colorUnselected, nowTheme)),
+        Color(App.ThemeDelegate.getColorByAttr(context, R.attr.colorCard, nowTheme)),
+        Color(App.ThemeDelegate.getColorByAttr(context, R.attr.colorFloorCard, nowTheme)),
+        Color(App.ThemeDelegate.getColorByAttr(context, R.attr.colorDivider, nowTheme)),
+        Color(App.ThemeDelegate.getColorByAttr(context, R.attr.shadow_color, nowTheme)),
+        Color(App.ThemeDelegate.getColorByAttr(context, R.attr.colorIndicator, nowTheme)),
         Color(
             App.ThemeDelegate.getColorByAttr(
-                App.INSTANCE,
+                context,
                 R.attr.colorWindowBackground,
                 nowTheme
             )
         ),
-        Color(App.ThemeDelegate.getColorByAttr(App.INSTANCE, R.attr.colorPlaceholder, nowTheme)),
+        Color(App.ThemeDelegate.getColorByAttr(context, R.attr.colorPlaceholder, nowTheme)),
     )
 }
 

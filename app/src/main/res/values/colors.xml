@@ -70,6 +70,8 @@
     <color name="default_color_shadow">#FEE9E9E9</color>
     <color name="default_color_swipe_refresh_view_background">#FFFFFFFF</color>
     <color name="default_color_chip">#FFF8F8F8</color>
+    <color name="default_color_on_chip">#FF808080</color>
+    <color name="default_color_placeholder">#FFF0F0F0</color>
 
     <color name="theme_color_primary_white">@color/tieba</color>
     <color name="theme_color_primary_tieba">@color/tieba</color>
