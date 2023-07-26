@@ -48,7 +48,6 @@ import androidx.compose.ui.unit.dp
 import com.huanchengfly.tieba.post.R
 import com.huanchengfly.tieba.post.api.models.protos.ThreadInfo
 import com.huanchengfly.tieba.post.api.models.protos.personalized.DislikeReason
-import com.huanchengfly.tieba.post.api.models.protos.personalized.ThreadPersonalized
 import com.huanchengfly.tieba.post.arch.BaseComposeActivity.Companion.LocalWindowSizeClass
 import com.huanchengfly.tieba.post.arch.CommonUiEvent.ScrollToTop.bindScrollToTopEvent
 import com.huanchengfly.tieba.post.arch.GlobalEvent
@@ -60,6 +59,7 @@ import com.huanchengfly.tieba.post.arch.pageViewModel
 import com.huanchengfly.tieba.post.ui.common.theme.compose.ExtendedTheme
 import com.huanchengfly.tieba.post.ui.common.theme.compose.pullRefreshIndicator
 import com.huanchengfly.tieba.post.ui.common.windowsizeclass.WindowWidthSizeClass
+import com.huanchengfly.tieba.post.ui.models.ThreadItemData
 import com.huanchengfly.tieba.post.ui.page.LocalNavigator
 import com.huanchengfly.tieba.post.ui.page.destinations.ForumPageDestination
 import com.huanchengfly.tieba.post.ui.page.destinations.ThreadPageDestination
@@ -96,10 +96,6 @@ fun PersonalizedPage(
     )
     val data by viewModel.uiState.collectPartialAsState(
         prop1 = PersonalizedUiState::data,
-        initial = persistentListOf()
-    )
-    val threadPersonalizedData by viewModel.uiState.collectPartialAsState(
-        prop1 = PersonalizedUiState::threadPersonalizedData,
         initial = persistentListOf()
     )
     val refreshPosition by viewModel.uiState.collectPartialAsState(
@@ -160,7 +156,6 @@ fun PersonalizedPage(
             FeedList(
                 state = lazyListState,
                 dataProvider = { data },
-                personalizedDataProvider = { threadPersonalizedData },
                 refreshPositionProvider = { refreshPosition },
                 hiddenThreadIdsProvider = { hiddenThreadIds },
                 onItemClick = {
@@ -248,8 +243,7 @@ private fun BoxScope.RefreshTip(refreshCount: Int) {
 @Composable
 private fun FeedList(
     state: LazyListState,
-    dataProvider: () -> ImmutableList<ImmutableHolder<ThreadInfo>>,
-    personalizedDataProvider: () -> ImmutableList<ImmutableHolder<ThreadPersonalized>?>,
+    dataProvider: () -> ImmutableList<ThreadItemData>,
     refreshPositionProvider: () -> Int,
     hiddenThreadIdsProvider: () -> ImmutableList<Long>,
     onItemClick: (ThreadInfo) -> Unit,
@@ -260,7 +254,6 @@ private fun FeedList(
     onOpenForum: (forumName: String) -> Unit = {},
 ) {
     val data = dataProvider()
-    val threadPersonalizedData = personalizedDataProvider()
     val refreshPosition = refreshPositionProvider()
     val hiddenThreadIds = hiddenThreadIdsProvider()
     val windowWidthSizeClass by rememberUpdatedState(newValue = LocalWindowSizeClass.current.widthSizeClass)
@@ -279,8 +272,8 @@ private fun FeedList(
     ) {
         itemsIndexed(
             items = data,
-            key = { _, item -> "${item.get { id }}" },
-            contentType = { _, item ->
+            key = { _, (item) -> "${item.get { id }}" },
+            contentType = { _, (item) ->
                 when {
                     item.get { videoInfo } != null -> "Video"
                     item.get { media }.size == 1 -> "SingleMedia"
@@ -288,11 +281,13 @@ private fun FeedList(
                     else -> "PlainText"
                 }
             }
-        ) { index, item ->
+        ) { index, (item, blocked, personalized, hidden) ->
             val isHidden =
-                remember(hiddenThreadIds, item) { hiddenThreadIds.contains(item.get { threadId }) }
-            val personalized =
-                remember(threadPersonalizedData, index) { threadPersonalizedData.getOrNull(index) }
+                remember(
+                    hiddenThreadIds,
+                    item,
+                    hidden
+                ) { hiddenThreadIds.contains(item.get { threadId }) || hidden }
             val isRefreshPosition =
                 remember(index, refreshPosition) { index + 1 == refreshPosition }
             val isNotLast = remember(index, data.size) { index < data.size - 1 }
@@ -309,23 +304,40 @@ private fun FeedList(
                     enter = EnterTransition.None,
                     exit = shrinkVertically() + fadeOut()
                 ) {
-                    FeedCard(
-                        item = item,
-                        onClick = onItemClick,
-                        onReplyClick = onItemReplyClick,
-                        onAgree = onAgree,
-                        onClickForum = remember {
-                            {
-                                onOpenForum(it.name)
+                    if (!blocked) {
+                        FeedCard(
+                            item = item,
+                            onClick = onItemClick,
+                            onReplyClick = onItemReplyClick,
+                            onAgree = onAgree,
+                            onClickForum = remember {
+                                {
+                                    onOpenForum(it.name)
+                                }
+                            }
+                        ) {
+                            if (personalized != null) {
+                                Dislike(
+                                    personalized = personalized,
+                                    onDislike = { clickTime, reasons ->
+                                        onDislike(item.get(), clickTime, reasons)
+                                    }
+                                )
                             }
                         }
-                    ) {
-                        if (personalized != null) {
-                            Dislike(
-                                personalized = personalized,
-                                onDislike = { clickTime, reasons ->
-                                    onDislike(item.get(), clickTime, reasons)
-                                }
+                    } else {
+                        Column(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(vertical = 8.dp, horizontal = 16.dp)
+                                .clip(RoundedCornerShape(6.dp))
+                                .background(ExtendedTheme.colors.card)
+                                .padding(vertical = 8.dp, horizontal = 16.dp)
+                        ) {
+                            Text(
+                                text = stringResource(id = R.string.tip_blocked_thread),
+                                style = MaterialTheme.typography.caption,
+                                color = ExtendedTheme.colors.textSecondary
                             )
                         }
                     }

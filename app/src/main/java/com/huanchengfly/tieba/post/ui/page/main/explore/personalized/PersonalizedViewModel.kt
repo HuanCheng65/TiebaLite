@@ -8,7 +8,6 @@ import com.huanchengfly.tieba.post.api.models.CommonResponse
 import com.huanchengfly.tieba.post.api.models.protos.ThreadInfo
 import com.huanchengfly.tieba.post.api.models.protos.personalized.DislikeReason
 import com.huanchengfly.tieba.post.api.models.protos.personalized.PersonalizedResponse
-import com.huanchengfly.tieba.post.api.models.protos.personalized.ThreadPersonalized
 import com.huanchengfly.tieba.post.api.retrofit.exception.getErrorMessage
 import com.huanchengfly.tieba.post.arch.BaseViewModel
 import com.huanchengfly.tieba.post.arch.CommonUiEvent
@@ -21,6 +20,7 @@ import com.huanchengfly.tieba.post.arch.UiState
 import com.huanchengfly.tieba.post.arch.wrapImmutable
 import com.huanchengfly.tieba.post.models.DislikeBean
 import com.huanchengfly.tieba.post.repository.PersonalizedRepository
+import com.huanchengfly.tieba.post.ui.models.ThreadItemData
 import com.huanchengfly.tieba.post.utils.appPreferences
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.collections.immutable.ImmutableList
@@ -73,13 +73,14 @@ class PersonalizedViewModel @Inject constructor() :
                     val data = response.toData().filter {
                         !App.INSTANCE.appPreferences.blockVideo || it.get { videoInfo } == null
                     }
-                    val threadPersonalizedData = data.map { thread ->
-                        response.data_?.thread_personalized?.firstOrNull { thread.get { id } == it.tid }
-                            ?.wrapImmutable()
-                    }
+                    val threadPersonalizedData = response.data_?.thread_personalized ?: emptyList()
                     PersonalizedPartialChange.Refresh.Success(
-                        data = data,
-                        threadPersonalizedData = threadPersonalizedData.toImmutableList(),
+                        data = data.map { thread ->
+                            val threadPersonalized =
+                                threadPersonalizedData.firstOrNull { it.tid == thread.get { id } }
+                                    ?.wrapImmutable()
+                            ThreadItemData(thread = thread, personalized = threadPersonalized)
+                        }.toImmutableList(),
                     )
                 }
                 .onStart { emit(PersonalizedPartialChange.Refresh.Start) }
@@ -92,14 +93,15 @@ class PersonalizedViewModel @Inject constructor() :
                     val data = response.toData().filter {
                         !App.INSTANCE.appPreferences.blockVideo || it.get { videoInfo } == null
                     }
-                    val threadPersonalizedData = data.map { thread ->
-                        response.data_?.thread_personalized?.firstOrNull { thread.get { id } == it.tid }
-                            ?.wrapImmutable()
-                    }
+                    val threadPersonalizedData = response.data_?.thread_personalized ?: emptyList()
                     PersonalizedPartialChange.LoadMore.Success(
                         currentPage = page,
-                        data = data,
-                        threadPersonalizedData = threadPersonalizedData.toImmutableList(),
+                        data = data.map { thread ->
+                            val threadPersonalized =
+                                threadPersonalizedData.firstOrNull { it.tid == thread.get { id } }
+                                    ?.wrapImmutable()
+                            ThreadItemData(thread = thread, personalized = threadPersonalized)
+                        }.toImmutableList(),
                     )
                 }
                 .onStart { emit(PersonalizedPartialChange.LoadMore.Start) }
@@ -132,7 +134,7 @@ class PersonalizedViewModel @Inject constructor() :
                 .catch { emit(PersonalizedPartialChange.Agree.Failure(threadId, hasAgree, it)) }
                 .onStart { emit(PersonalizedPartialChange.Agree.Start(threadId, hasAgree xor 1)) }
 
-        private fun PersonalizedResponse.toData(): List<ImmutableHolder<ThreadInfo>> {
+        private fun PersonalizedResponse.toData(): ImmutableList<ImmutableHolder<ThreadInfo>> {
             return (data_?.thread_list ?: emptyList()).wrapImmutable()
         }
     }
@@ -159,13 +161,13 @@ sealed interface PersonalizedUiIntent : UiIntent {
 
 sealed interface PersonalizedPartialChange : PartialChange<PersonalizedUiState> {
     sealed class Agree private constructor() : PersonalizedPartialChange {
-        private fun List<ImmutableHolder<ThreadInfo>>.updateAgreeStatus(
+        private fun List<ThreadItemData>.updateAgreeStatus(
             threadId: Long,
             hasAgree: Int,
-        ): ImmutableList<ImmutableHolder<ThreadInfo>> {
+        ): ImmutableList<ThreadItemData> {
             return map {
-                val threadInfo = it.get()
-                if (threadInfo.threadId == threadId) {
+                val (threadInfo) = it.thread
+                val newThreadInfo = if (threadInfo.threadId == threadId) {
                     if (threadInfo.agree != null) {
                         if (hasAgree != threadInfo.agree.hasAgree) {
                             if (hasAgree == 1) {
@@ -198,7 +200,8 @@ sealed interface PersonalizedPartialChange : PartialChange<PersonalizedUiState> 
                 } else {
                     threadInfo
                 }
-            }.wrapImmutable()
+                it.copy(thread = newThreadInfo.wrapImmutable())
+            }.toImmutableList()
         }
 
         override fun reduce(oldState: PersonalizedUiState): PersonalizedUiState =
@@ -273,7 +276,6 @@ sealed interface PersonalizedPartialChange : PartialChange<PersonalizedUiState> 
                     isRefreshing = false,
                     currentPage = 1,
                     data = (data + oldState.data).toImmutableList(),
-                    threadPersonalizedData = (threadPersonalizedData + oldState.threadPersonalizedData).toImmutableList(),
                     refreshPosition = if (oldState.data.isEmpty()) 0 else data.size
                 )
                 is Failure -> oldState.copy(isRefreshing = false)
@@ -282,8 +284,7 @@ sealed interface PersonalizedPartialChange : PartialChange<PersonalizedUiState> 
         object Start: Refresh()
 
         data class Success(
-            val data: List<ImmutableHolder<ThreadInfo>>,
-            val threadPersonalizedData: List<ImmutableHolder<ThreadPersonalized>?>,
+            val data: List<ThreadItemData>,
         ) : Refresh()
 
         data class Failure(
@@ -299,7 +300,6 @@ sealed interface PersonalizedPartialChange : PartialChange<PersonalizedUiState> 
                     isLoadingMore = false,
                     currentPage = currentPage,
                     data = (oldState.data + data).toImmutableList(),
-                    threadPersonalizedData = (oldState.threadPersonalizedData + threadPersonalizedData).toImmutableList(),
                 )
                 is Failure -> oldState.copy(isLoadingMore = false)
             }
@@ -308,8 +308,7 @@ sealed interface PersonalizedPartialChange : PartialChange<PersonalizedUiState> 
 
         data class Success(
             val currentPage: Int,
-            val data: List<ImmutableHolder<ThreadInfo>>,
-            val threadPersonalizedData: List<ImmutableHolder<ThreadPersonalized>?>,
+            val data: List<ThreadItemData>,
         ) : LoadMore()
 
         data class Failure(
@@ -323,8 +322,7 @@ data class PersonalizedUiState(
     val isRefreshing: Boolean = true,
     val isLoadingMore: Boolean = false,
     val currentPage: Int = 1,
-    val data: ImmutableList<ImmutableHolder<ThreadInfo>> = persistentListOf(),
-    val threadPersonalizedData: ImmutableList<ImmutableHolder<ThreadPersonalized>?> = persistentListOf(),
+    val data: ImmutableList<ThreadItemData> = persistentListOf(),
     val hiddenThreadIds: ImmutableList<Long> = persistentListOf(),
     val refreshPosition: Int = 0,
 ): UiState
