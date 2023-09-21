@@ -157,7 +157,6 @@ dependencies {
     implementation "io.github.panpf.sketch3:sketch-compose:$sketch_version"
     implementation "io.github.panpf.sketch3:sketch-extensions:$sketch_version"
     implementation "io.github.panpf.sketch3:sketch-gif-movie:$sketch_version"
-    implementation "io.github.panpf.sketch3:sketch-zoom:$sketch_version"
     implementation "io.github.panpf.sketch3:sketch-okhttp:$sketch_version"
 
     def zoomimage_version = "1.0.0-alpha03"
