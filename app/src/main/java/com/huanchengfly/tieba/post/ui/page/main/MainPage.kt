@@ -122,17 +122,22 @@ fun MainPage(
         }
     }
 
-    val pagerState = rememberPagerState()
     val hideExplore by rememberPreferenceAsState(
         key = booleanPreferencesKey("hideExplore"),
         defaultValue = LocalContext.current.appPreferences.hideExplore
     )
-
+    val pageCount by remember {
+        derivedStateOf {
+            if (hideExplore) 3 else 4
+        }
+    }
+    val pagerState = rememberPagerState { pageCount }
     LaunchedEffect(hideExplore) {
         if (pagerState.currentPage == 3 && hideExplore) {
             pagerState.scrollToPage(2)
         }
     }
+
     val coroutineScope = rememberCoroutineScope()
     val themeColors = ExtendedTheme.colors
     val navigationItems by remember {
@@ -188,8 +193,6 @@ fun MainPage(
             ).toImmutableList()
         }
     }
-    val pageCount by remember { derivedStateOf { navigationItems.size } }
-
     val navigationType by remember {
         derivedStateOf {
             when (windowWidthSizeClass) {
@@ -270,7 +273,6 @@ fun MainPage(
         ) { paddingValues ->
             LazyLoadHorizontalPager(
                 contentPadding = paddingValues,
-                pageCount = pageCount,
                 state = pagerState,
                 key = { navigationItems[it].id },
                 modifier = Modifier.fillMaxSize(),

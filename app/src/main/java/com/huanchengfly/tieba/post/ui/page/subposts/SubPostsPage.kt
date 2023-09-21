@@ -76,7 +76,7 @@ import com.huanchengfly.tieba.post.utils.StringUtil
 import com.huanchengfly.tieba.post.utils.TiebaUtil
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
-import com.ramcosta.composedestinations.spec.DestinationStyle
+import com.ramcosta.composedestinations.spec.DestinationStyleBottomSheet
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.coroutines.delay
@@ -105,7 +105,7 @@ fun SubPostsPage(
 }
 
 @Destination(
-    style = DestinationStyle.BottomSheet::class
+    style = DestinationStyleBottomSheet::class
 )
 @Composable
 fun SubPostsSheetPage(

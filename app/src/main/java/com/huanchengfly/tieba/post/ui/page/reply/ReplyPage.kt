@@ -73,7 +73,6 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
-import androidx.compose.ui.text.ExperimentalTextApi
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.unit.dp
@@ -111,7 +110,7 @@ import com.huanchengfly.tieba.post.utils.StringUtil
 import com.huanchengfly.tieba.post.utils.appPreferences
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
-import com.ramcosta.composedestinations.spec.DestinationStyle
+import com.ramcosta.composedestinations.spec.DestinationStyleBottomSheet
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.coroutines.FlowPreview
@@ -128,10 +127,10 @@ import kotlin.concurrent.thread
 
 // TODO: 将软键盘状态相关逻辑抽离出来
 @OptIn(
-    ExperimentalTextApi::class, ExperimentalLayoutApi::class, ExperimentalComposeUiApi::class,
+    ExperimentalLayoutApi::class, ExperimentalComposeUiApi::class,
     FlowPreview::class
 )
-@Destination(style = DestinationStyle.BottomSheet::class)
+@Destination(style = DestinationStyleBottomSheet::class)
 @Composable
 fun ReplyPage(
     navigator: DestinationsNavigator,

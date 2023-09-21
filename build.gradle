@@ -12,7 +12,7 @@ buildscript {
         compose_bom_version = '2023.09.01'
         wire_version = '4.7.2'
         hilt_version = '2.46.1'
-        booster_version = '4.15.0'
+        booster_version = '4.16.2'
         lottie_version = '6.1.0'
         debug = gradle.startParameter.taskNames.any {
             it.contains('debug') || it.contains('Debug')
@@ -24,22 +24,22 @@ buildscript {
         maven { url "https://maven.aliyun.com/repository/public" }
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:7.4.2'
+        classpath 'com.android.tools.build:gradle:8.1.1'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
         classpath "org.jetbrains.kotlin:kotlin-serialization:$kotlin_version"
         classpath "com.google.dagger:hilt-android-gradle-plugin:$hilt_version"
         classpath "com.squareup.wire:wire-gradle-plugin:$wire_version"
-        classpath "com.didiglobal.booster:booster-gradle-plugin:$booster_version"
-        classpath "com.didiglobal.booster:booster-transform-webview:$booster_version"
-        classpath "com.didiglobal.booster:booster-transform-shared-preferences:$booster_version"
-        if (!debug) {
-            classpath "com.didiglobal.booster:booster-transform-activity-thread:$booster_version"
-//            classpath "com.didiglobal.booster:booster-transform-finalizer-watchdog-daemon:$booster_version"
-//            classpath "com.didiglobal.booster:booster-transform-res-check:$booster_version"
-//            classpath "com.didiglobal.booster:booster-transform-toast:$booster_version"
-            classpath "com.didiglobal.booster:booster-task-compression-processed-res:$booster_version"
-            classpath "com.didiglobal.booster:booster-transform-r-inline:$booster_version"
-        }
+//        classpath "com.didiglobal.booster:booster-gradle-plugin:$booster_version"
+//        classpath "com.didiglobal.booster:booster-transform-webview:$booster_version"
+//        classpath "com.didiglobal.booster:booster-transform-shared-preferences:$booster_version"
+//        if (!debug) {
+//            classpath "com.didiglobal.booster:booster-transform-activity-thread:$booster_version"
+////            classpath "com.didiglobal.booster:booster-transform-finalizer-watchdog-daemon:$booster_version"
+////            classpath "com.didiglobal.booster:booster-transform-res-check:$booster_version"
+////            classpath "com.didiglobal.booster:booster-transform-toast:$booster_version"
+//            classpath "com.didiglobal.booster:booster-task-compression-processed-res:$booster_version"
+//            classpath "com.didiglobal.booster:booster-transform-r-inline:$booster_version"
+//        }
     }
 }
 

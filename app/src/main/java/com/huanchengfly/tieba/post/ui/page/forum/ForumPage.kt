@@ -435,7 +435,7 @@ fun ForumPage(
     val tbs by viewModel.uiState.collectPartialAsState(prop1 = ForumUiState::tbs, initial = null)
 
     val account = LocalAccount.current
-    val pagerState = rememberPagerState()
+    val pagerState = rememberPagerState { 2 }
     val coroutineScope = rememberCoroutineScope()
     val lazyListStates = persistentListOf(rememberLazyListState(), rememberLazyListState())
 
@@ -830,7 +830,6 @@ fun ForumPage(
 
                     if (forumInfo != null) {
                         HorizontalPager(
-                            pageCount = 2,
                             state = pagerState,
                             modifier = Modifier.fillMaxSize(),
                             verticalAlignment = Alignment.Top,

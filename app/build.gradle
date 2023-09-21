@@ -1,6 +1,5 @@
 plugins {
     id 'com.android.application'
-    id 'com.didiglobal.booster'
     id 'kotlin-android'
     id 'kotlin-kapt'
     id 'kotlinx-serialization'
@@ -8,6 +7,7 @@ plugins {
     id 'com.squareup.wire'
     id 'com.google.devtools.ksp' version "$kotlin_version-1.0.13"
     id "org.jetbrains.kotlin.plugin.parcelize"
+//    id 'com.didiglobal.booster'
 }
 
 def keystoreProperties = new Properties()
@@ -28,8 +28,8 @@ if (!isSelfBuild) {
 }
 
 android {
+    buildToolsVersion = '34.0.0'
     compileSdk 34
-    buildToolsVersion '33.0.0'
     defaultConfig {
         applicationId "com.huanchengfly.tieba.post"
         minSdkVersion 21
@@ -48,9 +48,6 @@ android {
     }
     buildFeatures {
         compose true
-    }
-    composeOptions {
-        kotlinCompilerExtensionVersion compose_compiler_version
     }
     signingConfigs {
         release {
@@ -79,12 +76,15 @@ android {
             multiDexEnabled true
         }
     }
+    composeOptions {
+        kotlinCompilerExtensionVersion compose_compiler_version
+    }
     compileOptions {
-        targetCompatibility JavaVersion.VERSION_1_8
-        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_11
+        sourceCompatibility JavaVersion.VERSION_11
     }
     kotlinOptions {
-        jvmTarget = '1.8'
+        jvmTarget = '11'
 //        freeCompilerArgs += ["-P", "plugin:androidx.compose.compiler.plugins.kotlin:suppressKotlinVersionCompatibilityCheck=true"]
         freeCompilerArgs += ["-P", "plugin:androidx.compose.compiler.plugins.kotlin:reportsDestination=" + project.buildDir.absolutePath + "/compose_metrics"]
         freeCompilerArgs += ["-P", "plugin:androidx.compose.compiler.plugins.kotlin:metricsDestination=" + project.buildDir.absolutePath + "/compose_metrics"]
@@ -167,7 +167,7 @@ dependencies {
     implementation composeBom
     androidTestImplementation composeBom
 
-    implementation 'androidx.compose.runtime:runtime-tracing:1.0.0-alpha04'
+    implementation 'androidx.compose.runtime:runtime-tracing:1.0.0-alpha03'
     implementation 'androidx.compose.material:material'
     implementation 'androidx.compose.material:material-icons-core'
     // Optional - Add full set of material icons

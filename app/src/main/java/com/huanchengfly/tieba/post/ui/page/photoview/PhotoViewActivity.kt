@@ -176,7 +176,7 @@ class PhotoViewActivity : BaseComposeActivityWithParcelable<PhotoViewData>() {
         Surface(color = Color.Black) {
             if (items.isNotEmpty()) {
                 val coroutineScope = rememberCoroutineScope()
-                val pagerState = rememberPagerState(initialPage = initialIndex)
+                val pagerState = rememberPagerState(initialPage = initialIndex) { pageCount }
                 LaunchedEffect(initialIndex) {
                     if (pagerState.currentPage != initialIndex) pagerState.scrollToPage(initialIndex)
                 }
@@ -204,7 +204,6 @@ class PhotoViewActivity : BaseComposeActivityWithParcelable<PhotoViewData>() {
                 }
                 Box(modifier = Modifier.fillMaxSize()) {
                     HorizontalPager(
-                        pageCount = pageCount,
                         state = pagerState,
                         key = {
                             "${items[it].overallIndex}"

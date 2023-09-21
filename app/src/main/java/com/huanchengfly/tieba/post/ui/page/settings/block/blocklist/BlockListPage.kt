@@ -98,7 +98,7 @@ fun BlockListPage(
     }
 
     val context = LocalContext.current
-    val pagerState = rememberPagerState()
+    val pagerState = rememberPagerState { 2 }
     val coroutineScope = rememberCoroutineScope()
     val blackList by viewModel.uiState.collectPartialAsState(
         prop1 = BlockListUiState::blackList,
@@ -217,7 +217,6 @@ fun BlockListPage(
             )
         }
         HorizontalPager(
-            pageCount = 2,
             state = pagerState,
             modifier = Modifier.fillMaxSize(),
             contentPadding = paddingValues,

@@ -48,7 +48,7 @@ import kotlinx.coroutines.launch
 fun HistoryPage(
     navigator: DestinationsNavigator
 ) {
-    val pagerState = rememberPagerState()
+    val pagerState = rememberPagerState { 2 }
     val coroutineScope = rememberCoroutineScope()
     val scaffoldState = rememberScaffoldState()
 
@@ -138,7 +138,6 @@ fun HistoryPage(
     ) {
         ProvideNavigator(navigator = navigator) {
             HorizontalPager(
-                pageCount = 2,
                 state = pagerState,
                 modifier = Modifier.fillMaxSize(),
                 verticalAlignment = Alignment.Top,

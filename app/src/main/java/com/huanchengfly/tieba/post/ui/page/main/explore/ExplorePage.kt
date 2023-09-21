@@ -136,7 +136,7 @@ fun ExplorePage() {
             ),
         ).toImmutableList()
     }
-    val pagerState = rememberPagerState(initialPage = if (account != null) 1 else 0)
+    val pagerState = rememberPagerState(initialPage = if (account != null) 1 else 0) { pages.size }
     val coroutineScope = rememberCoroutineScope()
 
     onGlobalEvent<GlobalEvent.Refresh>(
@@ -167,7 +167,6 @@ fun ExplorePage() {
     ) { paddingValues ->
         LazyLoadHorizontalPager(
             contentPadding = paddingValues,
-            pageCount = pages.size,
             state = pagerState,
             key = { pages[it].id },
             modifier = Modifier.fillMaxSize(),

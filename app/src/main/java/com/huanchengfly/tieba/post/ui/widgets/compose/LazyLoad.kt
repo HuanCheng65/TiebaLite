@@ -8,7 +8,6 @@ import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.PageSize
 import androidx.compose.foundation.pager.PagerDefaults
 import androidx.compose.foundation.pager.PagerState
-import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
@@ -54,9 +53,8 @@ fun ProvideShouldLoad(
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun LazyLoadHorizontalPager(
-    pageCount: Int,
+    state: PagerState,
     modifier: Modifier = Modifier,
-    state: PagerState = rememberPagerState(),
     contentPadding: PaddingValues = PaddingValues(0.dp),
     pageSize: PageSize = PageSize.Fill,
     beyondBoundsPageCount: Int = 0,
@@ -69,10 +67,9 @@ fun LazyLoadHorizontalPager(
     pageNestedScrollConnection: NestedScrollConnection = PagerDefaults.pageNestedScrollConnection(
         Orientation.Horizontal
     ),
-    pageContent: @Composable (page: Int) -> Unit
+    pageContent: @Composable (page: Int) -> Unit,
 ) {
     HorizontalPager(
-        pageCount = pageCount,
         state = state,
         modifier = modifier,
         contentPadding = contentPadding,
