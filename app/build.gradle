@@ -34,7 +34,7 @@ android {
         applicationId "com.huanchengfly.tieba.post"
         minSdkVersion 21
         //noinspection OldTargetApi
-        targetSdkVersion 33
+        targetSdkVersion 34
         versionCode applicationVersionCode
         versionName applicationVersionName
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
