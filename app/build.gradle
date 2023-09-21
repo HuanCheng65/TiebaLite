@@ -6,7 +6,7 @@ plugins {
     id 'kotlinx-serialization'
     id 'dagger.hilt.android.plugin'
     id 'com.squareup.wire'
-    id 'com.google.devtools.ksp' version "$kotlin_version-1.0.11"
+    id 'com.google.devtools.ksp' version "$kotlin_version-1.0.13"
     id "org.jetbrains.kotlin.plugin.parcelize"
 }
 
@@ -127,15 +127,15 @@ dependencies {
     implementation 'org.jetbrains.kotlinx:kotlinx-collections-immutable:0.3.5'
 //    implementation 'androidx.compose.material3:material3:1.0.0'
 
-    def media3_version = "1.1.0"
+    def media3_version = "1.1.1"
     implementation "androidx.media3:media3-exoplayer:$media3_version"
     implementation "androidx.media3:media3-ui:$media3_version"
 
-    def compose_destinations_version = '1.8.42-beta'
+    def compose_destinations_version = '1.9.53'
     implementation "io.github.raamcosta.compose-destinations:animations-core:$compose_destinations_version"
     ksp "io.github.raamcosta.compose-destinations:ksp:$compose_destinations_version"
 
-    implementation "androidx.navigation:navigation-compose:2.6.0"
+    implementation "androidx.navigation:navigation-compose:2.7.3"
 
     api "com.squareup.wire:wire-runtime:$wire_version"
 
@@ -145,14 +145,14 @@ dependencies {
     implementation "androidx.hilt:hilt-navigation-compose:$hilt_androidx_version"
     kapt "androidx.hilt:hilt-compiler:$hilt_androidx_version"
 
-    def accompanist_version = '0.30.1'
+    def accompanist_version = '0.32.0'
     implementation "com.google.accompanist:accompanist-drawablepainter:$accompanist_version"
     implementation "com.google.accompanist:accompanist-insets-ui:$accompanist_version"
     implementation "com.google.accompanist:accompanist-systemuicontroller:$accompanist_version"
     implementation "com.google.accompanist:accompanist-placeholder-material:$accompanist_version"
     implementation "com.google.accompanist:accompanist-webview:$accompanist_version"
 
-    def sketch_version = "3.2.4"
+    def sketch_version = "3.2.5"
     implementation "io.github.panpf.sketch3:sketch:$sketch_version"
     implementation "io.github.panpf.sketch3:sketch-compose:$sketch_version"
     implementation "io.github.panpf.sketch3:sketch-extensions:$sketch_version"
@@ -160,11 +160,14 @@ dependencies {
     implementation "io.github.panpf.sketch3:sketch-zoom:$sketch_version"
     implementation "io.github.panpf.sketch3:sketch-okhttp:$sketch_version"
 
+    def zoomimage_version = "1.0.0-alpha03"
+    implementation "io.github.panpf.zoomimage:zoomimage-compose-sketch:$zoomimage_version"
+
     def composeBom = platform("androidx.compose:compose-bom:$compose_bom_version")
     implementation composeBom
     androidTestImplementation composeBom
 
-    implementation 'androidx.compose.runtime:runtime-tracing'
+    implementation 'androidx.compose.runtime:runtime-tracing:1.0.0-alpha04'
     implementation 'androidx.compose.material:material'
     implementation 'androidx.compose.material:material-icons-core'
     // Optional - Add full set of material icons
@@ -195,7 +198,7 @@ dependencies {
     api "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutines_version"
     api "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutines_version"
 
-    def lifecycle_version = "2.6.1"
+    def lifecycle_version = "2.6.2"
 
     implementation "androidx.lifecycle:lifecycle-runtime-ktx:$lifecycle_version"
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version"
@@ -206,13 +209,13 @@ dependencies {
 
     //AndroidX
     implementation "androidx.appcompat:appcompat:1.6.1"
-    implementation "androidx.annotation:annotation:1.6.0"
+    implementation "androidx.annotation:annotation:1.7.0"
     implementation "androidx.constraintlayout:constraintlayout:2.1.4"
-    implementation "androidx.core:core-ktx:1.10.1"
+    implementation "androidx.core:core-ktx:1.12.0"
     implementation 'androidx.core:core-splashscreen:1.0.1'
-    implementation "androidx.preference:preference-ktx:1.2.0"
+    implementation "androidx.preference:preference-ktx:1.2.1"
     implementation "androidx.gridlayout:gridlayout:1.0.0"
-    implementation "androidx.browser:browser:1.5.0"
+    implementation "androidx.browser:browser:1.6.0"
     implementation "androidx.viewpager2:viewpager2:1.0.0"
     implementation "androidx.palette:palette-ktx:1.0.0"
     implementation "androidx.window:window:1.1.0"
