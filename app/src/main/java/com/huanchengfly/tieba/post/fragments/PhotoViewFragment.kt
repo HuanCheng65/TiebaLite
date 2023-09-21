@@ -4,10 +4,11 @@ import android.annotation.SuppressLint
 import android.content.DialogInterface
 import android.os.Bundle
 import android.view.View
+import androidx.core.os.BundleCompat
 import butterknife.BindView
 import com.github.panpf.sketch.displayImage
 import com.github.panpf.sketch.viewability.showRingProgressIndicator
-import com.github.panpf.sketch.zoom.SketchZoomImageView
+import com.github.panpf.zoomimage.SketchZoomImageView
 import com.huanchengfly.tieba.post.R
 import com.huanchengfly.tieba.post.dpToPx
 import com.huanchengfly.tieba.post.dpToPxFloat
@@ -27,7 +28,8 @@ class PhotoViewFragment : BaseFragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         if (arguments != null) {
-            photoViewBean = arguments!!.getParcelable(ARG_INFO)!!
+            photoViewBean =
+                BundleCompat.getParcelable(requireArguments(), ARG_INFO, PhotoViewBean::class.java)
         }
     }
 
@@ -77,13 +79,13 @@ class PhotoViewFragment : BaseFragment() {
         }
         bigImageView!!.setOnClickListener {
             if (activity != null) {
-                activity!!.finish()
+                requireActivity().finish()
             }
         }
     }
 
     private fun canLoad(): Boolean {
-        return activity != null && !activity!!.isDestroyed && !activity!!.isFinishing
+        return activity != null && !requireActivity().isDestroyed && !requireActivity().isFinishing
     }
 
     private fun openDialog(photoViewBean: PhotoViewBean?) {

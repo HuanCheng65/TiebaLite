@@ -161,6 +161,7 @@ dependencies {
 
     def zoomimage_version = "1.0.0-alpha03"
     implementation "io.github.panpf.zoomimage:zoomimage-compose-sketch:$zoomimage_version"
+    implementation("io.github.panpf.zoomimage:zoomimage-view-sketch:$zoomimage_version")
 
     def composeBom = platform("androidx.compose:compose-bom:$compose_bom_version")
     implementation composeBom
