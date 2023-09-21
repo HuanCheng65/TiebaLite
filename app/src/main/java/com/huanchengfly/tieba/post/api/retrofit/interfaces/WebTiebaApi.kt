@@ -140,7 +140,6 @@ interface WebTiebaApi {
         @retrofit2.http.Header("cookie") cookie: String
     ): Flow<MyInfoBean>
 
-
     @GET("/mo/q/search/forum")
     fun searchForum(
         @Query("word") keyword: String

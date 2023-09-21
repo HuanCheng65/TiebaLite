@@ -891,7 +891,7 @@ interface ITiebaApi {
      * @param keyword 关键词
      */
     fun searchForum(
-        keyword: String
+        keyword: String,
     ): Call<SearchForumBean>
 
     /**
@@ -906,7 +906,7 @@ interface ITiebaApi {
         keyword: String,
         page: Int,
         order: SearchThreadOrder,
-        filter: SearchThreadFilter
+        filter: SearchThreadFilter,
     ): Call<SearchThreadBean>
 
     /**

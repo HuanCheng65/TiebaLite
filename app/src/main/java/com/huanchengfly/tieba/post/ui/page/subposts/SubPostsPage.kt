@@ -334,7 +334,7 @@ internal fun SubPostsContent(
                                                     forumId = fid,
                                                     forumName = forumName,
                                                     threadId = threadId,
-                                                    postId = postId
+                                                    postId = postId,
                                                 )
                                             )
                                         }
