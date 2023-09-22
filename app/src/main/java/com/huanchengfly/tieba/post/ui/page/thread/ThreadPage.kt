@@ -1130,7 +1130,7 @@ fun ThreadPage(
                                 },
                                 loadEnd = !hasMore,
                                 lazyListState = lazyListState,
-                                isEmpty = firstPost == null && data.isEmpty()
+                                isEmpty = data.isEmpty()
                             ) {
                                 LazyColumn(
                                     state = lazyListState,
