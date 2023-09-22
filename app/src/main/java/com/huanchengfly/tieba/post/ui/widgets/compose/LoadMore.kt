@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.ExperimentalMaterialApi
@@ -23,11 +24,13 @@ import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
@@ -45,6 +48,7 @@ import com.huanchengfly.tieba.post.ui.common.theme.compose.loadMoreIndicator
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.sample
 import kotlinx.coroutines.launch
 import kotlin.math.abs
@@ -66,12 +70,15 @@ fun LoadMoreLayout(
             willLoad = willLoad
         )
     },
-    content: @Composable () -> Unit
+    lazyListState: LazyListState? = null,
+    isEmpty: Boolean = lazyListState?.layoutInfo?.totalItemsCount == 0,
+    preloadCount: Int = 1,
+    content: @Composable () -> Unit,
 ) {
     val loadDistance = with(LocalDensity.current) { LoadDistance.toPx() }
 
     val curOnLoadMore by rememberUpdatedState(newValue = onLoadMore)
-    var lastTriggerTime by remember { mutableStateOf(0L) }
+    var lastTriggerTime by remember { mutableLongStateOf(0L) }
     var waitingStateReset by remember { mutableStateOf(false) }
     val loadMoreFlow = remember {
         MutableSharedFlow<Long>(
@@ -95,9 +102,32 @@ fun LoadMoreLayout(
     }
 
     val canLoadMore = remember(enableLoadMore, loadEnd) { enableLoadMore && !loadEnd }
+    val curIsEmpty by rememberUpdatedState(newValue = isEmpty)
     val curIsLoading by rememberUpdatedState(newValue = isLoading)
     val curCanLoadMore by rememberUpdatedState(newValue = canLoadMore)
 
+    // 处理列表滚动到底部时自动加载更多
+    val curLazyListState by rememberUpdatedState(newValue = lazyListState)
+    LaunchedEffect(curLazyListState) {
+        curLazyListState?.let { state ->
+            snapshotFlow {
+                val shouldPreload = !curIsEmpty && curCanLoadMore && !curIsLoading
+                val isInPreloadRange =
+                    state.firstVisibleItemIndex + state.layoutInfo.visibleItemsInfo.size - 1 >= state.layoutInfo.totalItemsCount - preloadCount
+                shouldPreload && isInPreloadRange
+            }
+                .distinctUntilChanged()
+                .collect {
+                    if (it) {
+                        val curTime = System.currentTimeMillis()
+                        coroutineScope.launch {
+                            loadMoreFlow.emit(curTime)
+                        }
+                        curTime - lastTriggerTime >= 500
+                    }
+                }
+        }
+    }
 
     val swipeableState = rememberSwipeableState(false) { newValue ->
         if (newValue && !curIsLoading && curCanLoadMore) {
@@ -116,7 +146,7 @@ fun LoadMoreLayout(
         }
     }
 
-    LaunchedEffect(isLoading) { swipeableState.animateTo(isLoading) }
+    LaunchedEffect(isLoading) { if (!isLoading) swipeableState.animateTo(isLoading) }
 
     Box(
         modifier = Modifier

@@ -36,6 +36,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
@@ -113,7 +114,7 @@ fun PersonalizedPage(
     val lazyListState = rememberLazyListState()
     viewModel.bindScrollToTopEvent(lazyListState = lazyListState)
     var refreshCount by remember {
-        mutableStateOf(0)
+        mutableIntStateOf(0)
     }
     var showRefreshTip by remember {
         mutableStateOf(false)
@@ -150,8 +151,10 @@ fun PersonalizedPage(
     Box(modifier = Modifier.pullRefresh(pullRefreshState)) {
         LoadMoreLayout(
             isLoading = isLoadingMore,
-            loadEnd = false,
             onLoadMore = { viewModel.send(PersonalizedUiIntent.LoadMore(currentPage + 1)) },
+            loadEnd = false,
+            lazyListState = lazyListState,
+            isEmpty = data.isEmpty()
         ) {
             FeedList(
                 state = lazyListState,

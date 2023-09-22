@@ -347,7 +347,9 @@ fun ForumThreadListPage(
                     )
                 )
             },
-            loadEnd = !hasMore
+            loadEnd = !hasMore,
+            lazyListState = lazyListState,
+            isEmpty = threadList.isEmpty(),
         ) {
             ThreadList(
                 state = lazyListState,

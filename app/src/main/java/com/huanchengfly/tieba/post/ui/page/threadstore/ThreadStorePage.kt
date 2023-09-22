@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.InlineTextContent
 import androidx.compose.foundation.text.appendInlineContent
@@ -157,13 +158,16 @@ fun ThreadStorePage(
                 onRefresh = { viewModel.send(ThreadStoreUiIntent.Refresh) }
             )
 
+            val lazyListState = rememberLazyListState()
+
             Box(modifier = Modifier.pullRefresh(pullRefreshState)) {
                 LoadMoreLayout(
                     isLoading = isLoadingMore,
                     onLoadMore = { viewModel.send(ThreadStoreUiIntent.LoadMore(currentPage + 1)) },
-                    loadEnd = !hasMore
+                    loadEnd = !hasMore,
+                    lazyListState = lazyListState
                 ) {
-                    LazyColumn {
+                    LazyColumn(state = lazyListState) {
                         items(
                             items = data,
                             key = { it.threadId }

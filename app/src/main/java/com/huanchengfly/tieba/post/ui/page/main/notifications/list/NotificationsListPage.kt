@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Text
@@ -80,17 +81,21 @@ fun NotificationsListPage(
     )
     val pullRefreshState = rememberPullRefreshState(
         refreshing = isRefreshing,
-        onRefresh = { viewModel.send(NotificationsListUiIntent.Refresh) })
+        onRefresh = { viewModel.send(NotificationsListUiIntent.Refresh) }
+    )
+    val lazyListState = rememberLazyListState()
     Box(
         modifier = Modifier.pullRefresh(pullRefreshState)
     ) {
         LoadMoreLayout(
             isLoading = isLoadingMore,
-            loadEnd = !hasMore,
             onLoadMore = { viewModel.send(NotificationsListUiIntent.LoadMore(currentPage + 1)) },
+            loadEnd = !hasMore,
+            lazyListState = lazyListState,
         ) {
             LazyColumn(
-                contentPadding = PaddingValues(vertical = 4.dp)
+                contentPadding = PaddingValues(vertical = 4.dp),
+                state = lazyListState,
             ) {
                 items(
                     items = data,

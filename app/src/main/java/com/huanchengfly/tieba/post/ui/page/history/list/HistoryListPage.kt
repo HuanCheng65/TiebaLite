@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.DropdownMenuItem
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -94,6 +95,7 @@ fun HistoryListPage(
     viewModel.onEvent<HistoryListUiEvent.Delete.Success> {
         snackbarHostState.showSnackbar(context.getString(R.string.delete_history_success))
     }
+    val lazyListState = rememberLazyListState()
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -101,9 +103,15 @@ fun HistoryListPage(
         LoadMoreLayout(
             isLoading = isLoadingMore,
             onLoadMore = { viewModel.send(HistoryListUiIntent.LoadMore(currentPage + 1)) },
-            loadEnd = !hasMore
+            loadEnd = !hasMore,
+            lazyListState = lazyListState,
+            isEmpty = todayHistoryData.isEmpty() && beforeHistoryData.isEmpty()
         ) {
-            LazyColumn {
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxSize(),
+                state = lazyListState
+            ) {
                 if (todayHistoryData.isNotEmpty()) {
                     stickyHeader(key = "TodayHistoryHeader") {
                         Column(

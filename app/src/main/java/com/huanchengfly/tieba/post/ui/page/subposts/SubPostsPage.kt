@@ -354,7 +354,6 @@ internal fun SubPostsContent(
         ) { paddingValues ->
             LoadMoreLayout(
                 isLoading = isLoading,
-                loadEnd = !hasMore,
                 onLoadMore = {
                     viewModel.send(
                         SubPostsUiIntent.LoadMore(
@@ -365,7 +364,10 @@ internal fun SubPostsContent(
                             currentPage + 1,
                         )
                     )
-                }
+                },
+                loadEnd = !hasMore,
+                lazyListState = lazyListState,
+                isEmpty = post == null && subPosts.isEmpty(),
             ) {
                 LazyColumn(
                     modifier = Modifier.padding(paddingValues),

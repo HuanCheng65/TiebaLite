@@ -1114,7 +1114,6 @@ fun ThreadPage(
                         ) {
                             LoadMoreLayout(
                                 isLoading = isLoadingMore,
-                                loadEnd = !hasMore,
                                 onLoadMore = {
                                     viewModel.send(
                                         ThreadUiIntent.LoadMore(
@@ -1128,7 +1127,10 @@ fun ThreadPage(
                                             postIds = data.map { it.post.get { id } }
                                         )
                                     )
-                                }
+                                },
+                                loadEnd = !hasMore,
+                                lazyListState = lazyListState,
+                                isEmpty = firstPost == null && data.isEmpty()
                             ) {
                                 LazyColumn(
                                     state = lazyListState,

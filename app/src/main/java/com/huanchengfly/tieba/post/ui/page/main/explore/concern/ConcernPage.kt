@@ -78,7 +78,8 @@ fun ConcernPage(
     ) {
         LoadMoreLayout(
             isLoading = isLoadingMore,
-            onLoadMore = { viewModel.send(ConcernUiIntent.LoadMore(nextPageTag)) }
+            onLoadMore = { viewModel.send(ConcernUiIntent.LoadMore(nextPageTag)) },
+            lazyListState = lazyListState,
         ) {
             val windowSizeClass = BaseComposeActivity.LocalWindowSizeClass.current
             val itemFraction = when (windowSizeClass.widthSizeClass) {
