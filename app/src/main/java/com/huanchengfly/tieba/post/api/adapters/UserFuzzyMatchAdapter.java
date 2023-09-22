@@ -44,13 +44,15 @@ public class UserFuzzyMatchAdapter implements JsonDeserializer<List<SearchUserBe
     }
 
     private SearchUserBean.UserBean getUserBean(JsonObject jsonObject) {
-        return new SearchUserBean.UserBean()
-                .setId(getNonNullString(jsonObject.get("id")))
-                .setIntro(getNonNullString(jsonObject.get("intro")))
-                .setUserNickname(getNonNullString(jsonObject.get("user_nickname")))
-                .setName(getNonNullString(jsonObject.get("name")))
-                .setPortrait(getNonNullString(jsonObject.get("portrait")))
-                .setFansNum(getNonNullString(jsonObject.get("fans_num")))
-                .setHasConcerned(jsonObject.get("has_concerned").getAsInt());
+        return new SearchUserBean.UserBean(
+                getNonNullString(jsonObject.get("id")),
+                getNonNullString(jsonObject.get("intro")),
+                getNonNullString(jsonObject.get("user_nickname")),
+                getNonNullString(jsonObject.get("show_nickname")),
+                getNonNullString(jsonObject.get("name")),
+                getNonNullString(jsonObject.get("portrait")),
+                getNonNullString(jsonObject.get("fans_num")),
+                jsonObject.get("has_concerned").getAsInt()
+        );
     }
 }

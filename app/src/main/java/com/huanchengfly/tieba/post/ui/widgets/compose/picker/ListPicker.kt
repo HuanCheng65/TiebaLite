@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Icon
 import androidx.compose.material.LocalContentAlpha
-import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Check
 import androidx.compose.runtime.Composable
@@ -22,6 +21,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.huanchengfly.tieba.post.R
 import com.huanchengfly.tieba.post.ui.widgets.compose.ProvideContentColor
+import com.huanchengfly.tieba.post.ui.widgets.compose.TextWithMinWidth
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.ImmutableMap
 import kotlinx.collections.immutable.persistentMapOf
@@ -44,6 +44,7 @@ fun <ItemValue> ListSinglePicker(
     enabled: Boolean = true,
 ) {
     if (itemTitles.size != itemValues.size) error("titles and values do not match!")
+    val itemTitleMaxWidth = itemTitles.maxOf { it.length }
     Column(modifier = modifier) {
         repeat(itemTitles.size) {
             val selected = it == selectedPosition
@@ -73,11 +74,12 @@ fun <ItemValue> ListSinglePicker(
                     ).value
                 ) {
                     CompositionLocalProvider(LocalContentAlpha provides 1f) {
-                        Text(
+                        TextWithMinWidth(
                             text = itemTitles[it],
                             modifier = Modifier.weight(1f),
                             fontSize = 16.sp,
-                            fontWeight = FontWeight.Bold
+                            fontWeight = FontWeight.Bold,
+                            minLength = itemTitleMaxWidth
                         )
                         if (selectedPosition == it) {
                             Box(modifier = Modifier.align(Alignment.CenterVertically)) {

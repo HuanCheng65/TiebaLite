@@ -1,10 +1,8 @@
 package com.huanchengfly.tieba.post.ui.page.forum.threadlist
 
-import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.Stable
 import com.huanchengfly.tieba.post.api.TiebaApi
 import com.huanchengfly.tieba.post.api.models.AgreeBean
-import com.huanchengfly.tieba.post.api.models.protos.ThreadInfo
 import com.huanchengfly.tieba.post.api.models.protos.frsPage.Classify
 import com.huanchengfly.tieba.post.api.models.protos.frsPage.FrsPageResponse
 import com.huanchengfly.tieba.post.api.models.protos.updateAgreeStatus
@@ -21,7 +19,7 @@ import com.huanchengfly.tieba.post.arch.UiIntent
 import com.huanchengfly.tieba.post.arch.UiState
 import com.huanchengfly.tieba.post.arch.wrapImmutable
 import com.huanchengfly.tieba.post.repository.FrsPageRepository
-import com.huanchengfly.tieba.post.utils.BlockManager.shouldBlock
+import com.huanchengfly.tieba.post.ui.models.ThreadItemData
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
@@ -63,12 +61,6 @@ abstract class ForumThreadListViewModel :
 enum class ForumThreadListType {
     Latest, Good
 }
-
-@Immutable
-data class ThreadItemData(
-    val thread: ImmutableHolder<ThreadInfo>,
-    val blocked: Boolean = thread.get { shouldBlock() }
-)
 
 @Stable
 @HiltViewModel

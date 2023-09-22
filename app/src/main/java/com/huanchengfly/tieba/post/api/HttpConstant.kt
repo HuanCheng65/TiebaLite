@@ -34,6 +34,7 @@ object Header {
     const val ADD_WEB_COOKIE_FALSE = "false"
 
     const val ACCEPT_LANGUAGE = "Accept-Language"
+    const val ACCEPT = "Accept"
     const val ACCEPT_LANGUAGE_VALUE = "zh-CN,zh;q=0.9"
     const val COOKIE = "cookie"
     const val HOST = "Host"
@@ -41,6 +42,7 @@ object Header {
     const val REFERER = "Referer"
     const val USER_AGENT = "User-Agent"
     const val PRAGMA = "Pragma"
+    const val CACHE_CONTROL = "Cache-Control"
     const val CUID = "cuid"
     const val CHARSET = "Charset"
     const val CUID_GALAXY2 = "cuid_galaxy2"

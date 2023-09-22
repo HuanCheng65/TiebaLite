@@ -75,7 +75,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
-import androidx.compose.ui.text.ExperimentalTextApi
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.rememberTextMeasurer
@@ -351,7 +350,7 @@ private suspend fun sendToDesktop(
     )
 }
 
-@OptIn(ExperimentalTextApi::class, ExperimentalFoundationApi::class)
+@OptIn(ExperimentalFoundationApi::class)
 @Destination(
     deepLinks = [
         DeepLink(uriPattern = "tblite://forum/{forumName}")
@@ -760,7 +759,7 @@ fun ForumPage(
                                             }
                                             currentSortType = value
                                         }
-                                        menuState.expanded = false
+                                        menuState.dismiss()
                                     }
                                 )
                             }
@@ -776,7 +775,7 @@ fun ForumPage(
                                             pagerState.animateScrollToPage(0)
                                         }
                                     } else {
-                                        menuState.expanded = true
+                                        menuState.toggle()
                                     }
                                 },
                                 selectedContentColor = ExtendedTheme.colors.primary,

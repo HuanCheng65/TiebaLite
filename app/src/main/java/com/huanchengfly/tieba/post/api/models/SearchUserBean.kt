@@ -1,89 +1,43 @@
 package com.huanchengfly.tieba.post.api.models
 
+import androidx.compose.runtime.Immutable
 import com.google.gson.annotations.JsonAdapter
 import com.google.gson.annotations.SerializedName
 import com.huanchengfly.tieba.post.api.adapters.UserExactMatchAdapter
 import com.huanchengfly.tieba.post.api.adapters.UserFuzzyMatchAdapter
 import com.huanchengfly.tieba.post.models.BaseBean
 
-class SearchUserBean : BaseBean() {
+data class SearchUserBean(
     @SerializedName("no")
-    val errorCode: Int? = null
-
+    val errorCode: Int? = null,
     @SerializedName("error")
-    val errorMsg: String? = null
-    val data: SearchUserDataBean? = null
-
-    class SearchUserDataBean {
+    val errorMsg: String? = null,
+    val data: SearchUserDataBean? = null,
+) : BaseBean() {
+    data class SearchUserDataBean(
         @SerializedName("pn")
-        val pageNum: Int? = null
-
+        val pageNum: Int? = null,
         @SerializedName("has_more")
-        val hasMore: Int? = null
-
+        val hasMore: Int = 0,
         @JsonAdapter(UserExactMatchAdapter::class)
-        val exactMatch: UserBean? = null
-
+        val exactMatch: UserBean? = null,
         @JsonAdapter(UserFuzzyMatchAdapter::class)
-        val fuzzyMatch: List<UserBean>? = null
+        val fuzzyMatch: List<UserBean>? = null,
+    )
 
-    }
-
-    class UserBean {
-        var id: String? = null
-            private set
-        var intro: String? = null
-            private set
-
+    @Immutable
+    data class UserBean(
+        val id: String? = null,
+        val intro: String? = null,
         @SerializedName("user_nickname")
-        var userNickname: String? = null
-            private set
-        var name: String? = null
-            private set
-        var portrait: String? = null
-            private set
-
+        val userNickname: String? = null,
+        @SerializedName("show_nickname")
+        val showNickname: String? = null,
+        val name: String? = null,
+        val portrait: String? = null,
         @SerializedName("fans_num")
-        var fansNum: String? = null
-            private set
-
+        val fansNum: String? = null,
         @SerializedName("has_concerned")
-        var hasConcerned = 0
-            private set
-
-        fun setId(id: String?): UserBean {
-            this.id = id
-            return this
-        }
-
-        fun setIntro(intro: String?): UserBean {
-            this.intro = intro
-            return this
-        }
-
-        fun setUserNickname(userNickname: String?): UserBean {
-            this.userNickname = userNickname
-            return this
-        }
-
-        fun setName(name: String?): UserBean {
-            this.name = name
-            return this
-        }
-
-        fun setPortrait(portrait: String?): UserBean {
-            this.portrait = portrait
-            return this
-        }
-
-        fun setFansNum(fansNum: String?): UserBean {
-            this.fansNum = fansNum
-            return this
-        }
-
-        fun setHasConcerned(hasConcerned: Int): UserBean {
-            this.hasConcerned = hasConcerned
-            return this
-        }
-    }
+        val hasConcerned: Int = 0,
+    )
 }

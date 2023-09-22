@@ -46,7 +46,6 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
-import androidx.compose.ui.text.ExperimentalTextApi
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
@@ -202,7 +201,6 @@ private fun Badge(
     }
 }
 
-@OptIn(ExperimentalTextApi::class)
 @Composable
 fun ThreadContent(
     title: String = "",
@@ -295,10 +293,10 @@ fun FeedCardPlaceholder() {
 }
 
 @Composable
-private fun ForumInfoChip(
+fun ForumInfoChip(
     imageUriProvider: () -> String,
     nameProvider: () -> String,
-    onClick: () -> Unit
+    onClick: () -> Unit,
 ) {
     val imageUri = imageUriProvider()
     val name = nameProvider()
@@ -432,10 +430,10 @@ private fun ThreadForumInfo(
 }
 
 @Composable
-private fun ThreadReplyBtn(
+fun ThreadReplyBtn(
     replyNum: Int,
     onClick: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     ActionBtn(
         icon = {
@@ -458,11 +456,11 @@ private fun ThreadReplyBtn(
 }
 
 @Composable
-private fun ThreadAgreeBtn(
+fun ThreadAgreeBtn(
     hasAgree: Boolean,
     agreeNum: Int,
     onClick: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     val contentColor =
         if (hasAgree) ExtendedTheme.colors.primary else ExtendedTheme.colors.textSecondary
@@ -489,10 +487,10 @@ private fun ThreadAgreeBtn(
 }
 
 @Composable
-private fun ThreadShareBtn(
+fun ThreadShareBtn(
     shareNum: Long,
     onClick: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     ActionBtn(
         icon = {

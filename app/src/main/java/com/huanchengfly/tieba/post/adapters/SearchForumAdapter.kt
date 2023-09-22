@@ -5,7 +5,6 @@ import com.alibaba.android.vlayout.layout.LinearLayoutHelper
 import com.huanchengfly.tieba.post.R
 import com.huanchengfly.tieba.post.adapters.base.BaseMultiTypeDelegateAdapter
 import com.huanchengfly.tieba.post.api.models.SearchForumBean
-import com.huanchengfly.tieba.post.api.models.SearchForumBean.ExactForumInfoBean
 import com.huanchengfly.tieba.post.components.MyViewHolder
 import com.huanchengfly.tieba.post.utils.ImageUtil
 import com.huanchengfly.tieba.post.utils.getIntermixedColorBackground
@@ -28,8 +27,7 @@ class SearchForumAdapter(context: Context?) :
             item.avatar
         )
         if (viewType == TYPE_EXACT) {
-            val exactForumInfoBean = item as ExactForumInfoBean
-            viewHolder.setText(R.id.item_search_forum_subtitle, exactForumInfoBean.slogan)
+            viewHolder.setText(R.id.item_search_forum_subtitle, item.slogan)
         }
         viewHolder.itemView.background = getIntermixedColorBackground(
             context,
@@ -48,7 +46,7 @@ class SearchForumAdapter(context: Context?) :
     }
 
     override fun getViewType(position: Int, item: SearchForumBean.ForumInfoBean): Int {
-        return if (item is ExactForumInfoBean) {
+        return if (item.intro != null) {
             TYPE_EXACT
         } else TYPE_FUZZY
     }

@@ -517,9 +517,17 @@ interface ITiebaApi {
      * @param keyword 搜索关键词
      */
     fun searchUser(
-        keyword: String
+        keyword: String,
     ): Call<SearchUserBean>
 
+    /**
+     * 搜索用户
+     *
+     * @param keyword 搜索关键词
+     */
+    fun searchUserFlow(
+        keyword: String,
+    ): Flow<SearchUserBean>
 
     /**
      * 消息提醒数
@@ -895,12 +903,21 @@ interface ITiebaApi {
     ): Call<SearchForumBean>
 
     /**
+     * 搜索吧
+     *
+     * @param keyword 关键词
+     */
+    fun searchForumFlow(
+        keyword: String,
+    ): Flow<SearchForumBean>
+
+    /**
      * 搜索贴
      *
      * @param keyword 关键词
      * @param page 分页页码
-     * @param order 排序设置 [com.huanchengfly.tieba.api.SearchThreadOrder]
-     * @param filter 过滤设置 [com.huanchengfly.tieba.api.SearchThreadFilter]
+     * @param order 排序设置 [com.huanchengfly.tieba.post.api.SearchThreadOrder]
+     * @param filter 过滤设置 [com.huanchengfly.tieba.post.api.SearchThreadFilter]
      */
     fun searchThread(
         keyword: String,
@@ -910,12 +927,25 @@ interface ITiebaApi {
     ): Call<SearchThreadBean>
 
     /**
+     * 搜索主题贴
+     *
+     * @param keyword 关键词
+     * @param page 分页页码
+     * @param sort 结果排序（0 = 旧贴在前，2 = 相关程度，5 = 新贴在前）
+     */
+    fun searchThreadFlow(
+        keyword: String,
+        page: Int,
+        sort: Int,
+    ): Flow<SearchThreadBean>
+
+    /**
      * 上传图片（web 接口）
      *
      * **需登录**
      */
     fun webUploadPic(
-        photoInfoBean: PhotoInfoBean
+        photoInfoBean: PhotoInfoBean,
     ): Call<WebUploadPicBean>
 
 

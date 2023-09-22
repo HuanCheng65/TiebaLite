@@ -290,7 +290,6 @@ fun IconText(
 /**
  * A [Text] composable that supports setting its minimum width to width of the specified number of Chinese characters
  */
-@OptIn(ExperimentalTextApi::class)
 @Composable
 fun TextWithMinWidth(
     text: String,

@@ -182,6 +182,18 @@ fun rememberMenuState(): MenuState {
 class MenuState {
     private var _expanded by mutableStateOf(false)
 
+    fun toggle() {
+        expanded = !expanded
+    }
+
+    fun show() {
+        expanded = true
+    }
+
+    fun dismiss() {
+        expanded = false
+    }
+
     var expanded: Boolean
         get() = _expanded
         set(value) {
