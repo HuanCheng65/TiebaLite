@@ -104,7 +104,7 @@ object ImageCacheUtil {
     private fun getFolderSize(file: File): Long {
         var size: Long = 0
         try {
-            val fileList = file.listFiles()
+            val fileList = file.listFiles() ?: return 0
             for (aFileList in fileList) {
                 size = if (aFileList.isDirectory) {
                     size + getFolderSize(aFileList)

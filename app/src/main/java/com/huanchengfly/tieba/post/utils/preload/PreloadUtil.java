@@ -10,7 +10,7 @@ import com.billy.android.preloader.interfaces.DataLoader;
 public final class PreloadUtil {
     public static final String EXTRA_PRELOAD_ID = "preload_id";
 
-    public static void startActivityWithPreload(Context context, Intent intent, DataLoader dataLoader) {
+    public static void startActivityWithPreload(Context context, Intent intent, DataLoader<?> dataLoader) {
         context.startActivity(intent.putExtra(EXTRA_PRELOAD_ID, PreLoader.preLoad(dataLoader)));
     }
 
