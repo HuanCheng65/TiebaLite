@@ -75,6 +75,7 @@
 
     <color name="theme_color_primary_white">@color/tieba</color>
     <color name="theme_color_primary_tieba">@color/tieba</color>
+    <color name="theme_color_primary_blue">@color/tieba</color>
     <color name="theme_color_primary_pink">#FFFF9A9E</color>
     <color name="theme_color_primary_red">@color/red</color>
     <color name="theme_color_primary_black">@color/black</color>
@@ -86,6 +87,7 @@
 
     <color name="theme_color_accent_white">@color/tieba</color>
     <color name="theme_color_accent_tieba">@color/tieba</color>
+    <color name="theme_color_accent_blue">@color/tieba</color>
     <color name="theme_color_accent_pink">#FFFF9A9E</color>
     <color name="theme_color_accent_red">@color/red_accent</color>
     <color name="theme_color_accent_black">@color/black</color>

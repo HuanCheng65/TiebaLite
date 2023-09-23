@@ -365,15 +365,12 @@ class App : Application(), IApp, SketchFactory {
                 R.attr.colorNewPrimary -> {
                     return if (ThemeUtil.isNightMode(theme)) {
                         context.getColorCompat(R.color.theme_color_new_primary_night)
-                    } else if (
-                        theme == ThemeUtil.THEME_CUSTOM
-                        || ThemeUtil.isTranslucentTheme(theme)
-                    ) {
-                        getColorByAttr(context, R.attr.colorPrimary, theme)
-                    } else {
+                    } else if (theme == ThemeUtil.THEME_DEFAULT) {
                         context.getColorCompat(
                             R.color.theme_color_new_primary_light
                         )
+                    } else {
+                        getColorByAttr(context, R.attr.colorPrimary, theme)
                     }
                 }
 

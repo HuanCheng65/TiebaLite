@@ -20,6 +20,13 @@ public final class ColorUtils {
         return Color.HSVToColor(hsv);
     }
 
+    public static int setLuminance(@ColorInt int color, @FloatRange(from = 0f, to = 1f) float luminance) {
+        float[] hsv = new float[3];
+        Color.colorToHSV(color, hsv);
+        hsv[2] = luminance;
+        return Color.HSVToColor(hsv);
+    }
+
     @ColorInt
     public static int alpha(@ColorInt int color, @IntRange(from = 0, to = 255) int alpha) {
         return Color.argb(alpha, Color.red(color), Color.green(color), Color.blue(color));

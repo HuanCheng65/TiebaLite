@@ -239,7 +239,7 @@ class MainActivityV2 : BaseComposeActivity() {
         initAutoSign()
     }
 
-    @OptIn(ExperimentalAnimationApi::class, ExperimentalMaterialNavigationApi::class)
+    @OptIn(ExperimentalMaterialNavigationApi::class)
     @Composable
     override fun Content() {
         val okSignAlertDialogState = rememberDialogState()

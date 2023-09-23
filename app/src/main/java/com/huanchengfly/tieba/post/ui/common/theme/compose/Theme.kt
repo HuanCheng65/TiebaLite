@@ -1,6 +1,7 @@
 package com.huanchengfly.tieba.post.ui.common.theme.compose
 
 import android.annotation.SuppressLint
+import android.os.Build
 import androidx.compose.material.Colors
 import androidx.compose.material.ContentAlpha
 import androidx.compose.material.MaterialTheme
@@ -15,8 +16,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.datastore.preferences.core.booleanPreferencesKey
 import com.huanchengfly.tieba.post.App
 import com.huanchengfly.tieba.post.R
+import com.huanchengfly.tieba.post.rememberPreferenceAsState
 import com.huanchengfly.tieba.post.utils.ThemeUtil
 import com.huanchengfly.tieba.post.utils.compose.darken
 
@@ -60,6 +63,7 @@ val LocalExtendedColors = staticCompositionLocalOf {
     )
 }
 
+
 @SuppressLint("ConflictingOnColor")
 fun getColorPalette(
     darkTheme: Boolean,
@@ -93,6 +97,88 @@ fun getColorPalette(
 }
 
 @Composable
+private fun getDynamicColor(
+    isDarkColorPalette: Boolean,
+    tonalPalette: TonalPalette,
+): ExtendedColors {
+    return if (isDarkColorPalette) {
+        getDarkDynamicColor(tonalPalette)
+    } else {
+        getLightDynamicColor(tonalPalette)
+    }
+}
+
+@Composable
+private fun getLightDynamicColor(tonalPalette: TonalPalette): ExtendedColors {
+    return ExtendedColors(
+        theme = "dynamic",
+        isNightMode = false,
+        primary = tonalPalette.primary40,
+        textOnPrimary = tonalPalette.primary100,
+        accent = tonalPalette.secondary40,
+        onAccent = tonalPalette.secondary100,
+        topBar = tonalPalette.neutralVariant99,
+        onTopBar = tonalPalette.neutralVariant10,
+        onTopBarSecondary = tonalPalette.neutralVariant40,
+        onTopBarActive = tonalPalette.neutralVariant0,
+        topBarSurface = tonalPalette.neutralVariant95,
+        onTopBarSurface = tonalPalette.neutralVariant30,
+        bottomBar = tonalPalette.neutralVariant99,
+        bottomBarSurface = tonalPalette.neutralVariant95,
+        onBottomBarSurface = tonalPalette.neutralVariant30,
+        text = tonalPalette.neutralVariant10,
+        textSecondary = tonalPalette.neutralVariant40,
+        textDisabled = tonalPalette.neutralVariant100,
+        background = tonalPalette.neutralVariant99,
+        chip = tonalPalette.neutralVariant95,
+        onChip = tonalPalette.neutralVariant40,
+        unselected = tonalPalette.neutralVariant60,
+        card = tonalPalette.neutralVariant95,
+        floorCard = tonalPalette.neutralVariant90,
+        divider = tonalPalette.neutralVariant95,
+        shadow = tonalPalette.neutralVariant90,
+        indicator = tonalPalette.neutralVariant90,
+        windowBackground = tonalPalette.neutralVariant99,
+        placeholder = tonalPalette.neutralVariant100,
+    )
+}
+
+@Composable
+private fun getDarkDynamicColor(tonalPalette: TonalPalette): ExtendedColors {
+    return ExtendedColors(
+        theme = "dynamic",
+        isNightMode = true,
+        primary = tonalPalette.primary80,
+        textOnPrimary = tonalPalette.primary20,
+        accent = tonalPalette.secondary80,
+        onAccent = tonalPalette.secondary20,
+        topBar = tonalPalette.neutralVariant10,
+        onTopBar = tonalPalette.neutralVariant90,
+        onTopBarSecondary = tonalPalette.neutralVariant70,
+        onTopBarActive = tonalPalette.neutralVariant100,
+        topBarSurface = tonalPalette.neutralVariant20,
+        onTopBarSurface = tonalPalette.neutralVariant70,
+        bottomBar = tonalPalette.neutralVariant10,
+        bottomBarSurface = tonalPalette.neutralVariant20,
+        onBottomBarSurface = tonalPalette.neutralVariant70,
+        text = tonalPalette.neutralVariant90,
+        textSecondary = tonalPalette.neutralVariant70,
+        textDisabled = tonalPalette.neutralVariant50,
+        background = tonalPalette.neutralVariant10,
+        chip = tonalPalette.neutralVariant20,
+        onChip = tonalPalette.neutralVariant60,
+        unselected = tonalPalette.neutralVariant40,
+        card = tonalPalette.neutralVariant20,
+        floorCard = tonalPalette.neutralVariant20,
+        divider = tonalPalette.neutralVariant20,
+        shadow = tonalPalette.neutralVariant20,
+        indicator = tonalPalette.neutralVariant10,
+        windowBackground = tonalPalette.neutralVariant10,
+        placeholder = tonalPalette.neutralVariant50,
+    )
+}
+
+@Composable
 private fun getThemeColorForTheme(theme: String): ExtendedColors {
     val context = LocalContext.current
     val nowTheme = ThemeUtil.getThemeTranslucent(theme)
@@ -104,7 +190,7 @@ private fun getThemeColorForTheme(theme: String): ExtendedColors {
         nowTheme,
         ThemeUtil.isNightMode(nowTheme),
         Color(App.ThemeDelegate.getColorByAttr(context, R.attr.colorNewPrimary, nowTheme)),
-        Color(App.ThemeDelegate.getColorByAttr(context, R.attr.colorPrimary, nowTheme)),
+        Color(App.ThemeDelegate.getColorByAttr(context, R.attr.colorAccent, nowTheme)),
         Color(App.ThemeDelegate.getColorByAttr(context, R.attr.colorOnAccent, nowTheme)),
         Color(App.ThemeDelegate.getColorByAttr(context, R.attr.colorToolbar, nowTheme)),
         Color(App.ThemeDelegate.getColorByAttr(context, R.attr.colorToolbarItem, nowTheme)),
@@ -167,7 +253,12 @@ private fun getThemeColorForTheme(theme: String): ExtendedColors {
 fun TiebaLiteTheme(
     content: @Composable () -> Unit
 ) {
+    val context = LocalContext.current
     val theme by remember { ThemeUtil.themeState }
+    val isDynamicTheme by rememberPreferenceAsState(
+        key = booleanPreferencesKey("useDynamicColorTheme"),
+        defaultValue = false
+    )
     val isDarkColorPalette by remember {
         derivedStateOf {
             ThemeUtil.isNightMode(theme)
@@ -175,7 +266,11 @@ fun TiebaLiteTheme(
         }
     }
 
-    val extendedColors = getThemeColorForTheme(theme)
+    val extendedColors = if (isDynamicTheme && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+        getDynamicColor(isDarkColorPalette, dynamicTonalPalette(context))
+    } else {
+        getThemeColorForTheme(theme)
+    }
 
     val colors = getColorPalette(isDarkColorPalette, extendedColors)
 

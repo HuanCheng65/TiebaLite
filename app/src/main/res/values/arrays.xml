@@ -31,6 +31,7 @@
 
     <string-array name="theme_values">
         <item>tieba</item>
+        <item>blue</item>
         <item>black</item>
         <item>pink</item>
         <item>red</item>
@@ -42,6 +43,7 @@
 
     <string-array name="themeNames">
         <item>深海蓝</item>
+        <item>清新蓝</item>
         <item>高级黑</item>
         <item>少女粉</item>
         <item>新年红</item>

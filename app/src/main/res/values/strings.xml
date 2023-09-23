@@ -722,4 +722,6 @@
     <string name="button_expand_more_history">展开历史</string>
     <string name="button_expand_less_history">收起历史</string>
     <string name="button_clear_all">清除全部</string>
+    <string name="title_dynamic_theme">动态取色</string>
+    <string name="desc_night_theme">夜间主题</string>
 </resources>

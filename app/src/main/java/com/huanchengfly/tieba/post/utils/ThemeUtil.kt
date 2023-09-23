@@ -35,6 +35,7 @@ import com.huanchengfly.tieba.post.getBoolean
 import com.huanchengfly.tieba.post.getInt
 import com.huanchengfly.tieba.post.getString
 import com.huanchengfly.tieba.post.interfaces.BackgroundTintable
+import com.huanchengfly.tieba.post.putBoolean
 import com.huanchengfly.tieba.post.putString
 import com.huanchengfly.tieba.post.ui.common.theme.utils.ThemeUtils
 import com.huanchengfly.tieba.post.ui.widgets.theme.TintSwipeRefreshLayout
@@ -56,6 +57,7 @@ object ThemeUtil {
     const val KEY_THEME = "theme"
     const val KEY_DARK_THEME = "dark_theme"
     const val KEY_OLD_THEME = "old_theme"
+    const val KEY_USE_DYNAMIC_THEME = "useDynamicColorTheme"
     const val KEY_SWITCH_REASON = "switch_reason"
     const val KEY_TRANSLUCENT_PRIMARY_COLOR = "translucent_primary_color"
     const val KEY_CUSTOM_STATUS_BAR_FONT_DARK = "custom_status_bar_font_dark"
@@ -109,7 +111,17 @@ object ThemeUtil {
             dataStore.putString(KEY_OLD_THEME, oldTheme)
         }
         dataStore.putString(KEY_THEME, newTheme)
+//        dataStore.putBoolean(KEY_USE_DYNAMIC_THEME, false)
         themeState.value = newTheme
+    }
+
+    fun switchDynamicTheme() {
+        val currentUseDynamicTheme = dataStore.getBoolean(KEY_USE_DYNAMIC_THEME, false)
+        dataStore.putBoolean(KEY_USE_DYNAMIC_THEME, !currentUseDynamicTheme)
+    }
+
+    fun setUseDynamicTheme(useDynamicTheme: Boolean) {
+        dataStore.putBoolean(KEY_USE_DYNAMIC_THEME, useDynamicTheme)
     }
 
     fun switchNightMode() {
