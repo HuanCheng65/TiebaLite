@@ -36,6 +36,8 @@ import com.huanchengfly.tieba.post.ui.page.LocalNavigator
 import com.huanchengfly.tieba.post.ui.page.destinations.SubPostsPageDestination
 import com.huanchengfly.tieba.post.ui.page.destinations.ThreadPageDestination
 import com.huanchengfly.tieba.post.ui.widgets.compose.Avatar
+import com.huanchengfly.tieba.post.ui.widgets.compose.BlockTip
+import com.huanchengfly.tieba.post.ui.widgets.compose.BlockableContent
 import com.huanchengfly.tieba.post.ui.widgets.compose.EmoticonText
 import com.huanchengfly.tieba.post.ui.widgets.compose.LazyLoad
 import com.huanchengfly.tieba.post.ui.widgets.compose.LoadMoreLayout
@@ -43,6 +45,7 @@ import com.huanchengfly.tieba.post.ui.widgets.compose.Sizes
 import com.huanchengfly.tieba.post.ui.widgets.compose.UserHeader
 import com.huanchengfly.tieba.post.utils.DateTimeUtils
 import com.huanchengfly.tieba.post.utils.StringUtil
+import kotlinx.collections.immutable.persistentListOf
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
@@ -73,7 +76,7 @@ fun NotificationsListPage(
     )
     val data by viewModel.uiState.collectPartialAsState(
         prop1 = NotificationsListUiState::data,
-        initial = emptyList()
+        initial = persistentListOf()
     )
     val currentPage by viewModel.uiState.collectPartialAsState(
         prop1 = NotificationsListUiState::currentPage,
@@ -99,100 +102,120 @@ fun NotificationsListPage(
             ) {
                 items(
                     items = data,
-                    key = { "${it.postId}_${it.replyer?.id}_${it.time}" },
+                    key = { "${it.info.postId}_${it.info.replyer?.id}_${it.info.time}" },
                 ) {
-                    Column(
+                    val (info, blocked) = it
+                    BlockableContent(
+                        blocked = blocked,
+                        blockedTip = {
+                            BlockTip {
+                                Text(
+                                    text = stringResource(id = R.string.tip_blocked_message)
+                                )
+                            }
+                        },
                         modifier = Modifier
-                            .clickable {
-                                if (it.isFloor == "1") {
-                                    navigator.navigate(
-                                        SubPostsPageDestination(
-                                            threadId = it.threadId!!.toLong(),
-                                            subPostId = it.postId!!.toLong(),
-                                            loadFromSubPost = true
+                            .padding(horizontal = 16.dp, vertical = 12.dp)
+                    ) {
+                        Column(
+                            modifier = Modifier
+                                .clickable {
+                                    if (info.isFloor == "1") {
+                                        navigator.navigate(
+                                            SubPostsPageDestination(
+                                                threadId = info.threadId!!.toLong(),
+                                                subPostId = info.postId!!.toLong(),
+                                                loadFromSubPost = true
+                                            )
                                         )
-                                    )
+                                    } else {
+                                        navigator.navigate(
+                                            ThreadPageDestination(
+                                                threadId = info.threadId!!.toLong(),
+                                                postId = info.postId!!.toLong()
+                                            )
+                                        )
+                                    }
+                                }
+                                .padding(horizontal = 16.dp, vertical = 12.dp),
+                            verticalArrangement = Arrangement.spacedBy(8.dp)
+                        ) {
+                            if (info.replyer != null) {
+                                UserHeader(
+                                    avatar = {
+                                        Avatar(
+                                            data = StringUtil.getAvatarUrl(info.replyer.portrait),
+                                            size = Sizes.Small,
+                                            contentDescription = null
+                                        )
+                                    },
+                                    name = {
+                                        Text(
+                                            text = info.replyer.nameShow ?: info.replyer.name ?: ""
+                                        )
+                                    },
+                                    onClick = {
+                                        UserActivity.launch(
+                                            context,
+                                            info.replyer.id!!,
+                                            StringUtil.getAvatarUrl(info.replyer.portrait)
+                                        )
+                                    },
+                                    desc = {
+                                        Text(
+                                            text = DateTimeUtils.getRelativeTimeString(
+                                                LocalContext.current,
+                                                info.time!!
+                                            )
+                                        )
+                                    },
+                                ) {}
+                            }
+                            EmoticonText(text = info.content ?: "")
+                            val quoteText = if (type == NotificationsType.ReplyMe) {
+                                if ("1" == info.isFloor) {
+                                    info.quoteContent
                                 } else {
-                                    navigator.navigate(
-                                        ThreadPageDestination(
-                                            threadId = it.threadId!!.toLong(),
-                                            postId = it.postId!!.toLong()
-                                        )
+                                    stringResource(
+                                        id = R.string.text_message_list_item_reply_my_thread,
+                                        info.title ?: ""
                                     )
                                 }
-                            }
-                            .padding(horizontal = 16.dp, vertical = 12.dp),
-                        verticalArrangement = Arrangement.spacedBy(8.dp)
-                    ) {
-                        if (it.replyer != null) {
-                            UserHeader(
-                                avatar = {
-                                    Avatar(
-                                        data = StringUtil.getAvatarUrl(it.replyer.portrait),
-                                        size = Sizes.Small,
-                                        contentDescription = null
-                                    )
-                                },
-                                name = {
-                                    Text(
-                                        text = it.replyer.nameShow ?: it.replyer.name ?: ""
-                                    )
-                                },
-                                onClick = {
-                                    UserActivity.launch(
-                                        context,
-                                        it.replyer.id!!,
-                                        StringUtil.getAvatarUrl(it.replyer.portrait)
-                                    )
-                                },
-                                desc = {
-                                    Text(
-                                        text = DateTimeUtils.getRelativeTimeString(
-                                            LocalContext.current,
-                                            it.time!!
-                                        )
-                                    )
-                                },
-                            ) {}
-                        }
-                        EmoticonText(text = it.content ?: "")
-                        val quoteText = if (type == NotificationsType.ReplyMe) {
-                            if ("1" == it.isFloor) {
-                                it.quoteContent
                             } else {
-                                stringResource(id = R.string.text_message_list_item_reply_my_thread, it.title ?: "")
+                                info.title
                             }
-                        } else {
-                            it.title
-                        }
-                        if (quoteText != null) {
-                            EmoticonText(
-                                text = quoteText,
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .clip(RoundedCornerShape(6.dp))
-                                    .clickable {
-                                        if ("1" == it.isFloor && it.quotePid != null) {
-                                            navigator.navigate(
-                                                SubPostsPageDestination(
-                                                    threadId = it.threadId!!.toLong(),
-                                                    postId = it.quotePid.toLong(),
-                                                    loadFromSubPost = true,
+                            if (quoteText != null) {
+                                EmoticonText(
+                                    text = quoteText,
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .clip(RoundedCornerShape(6.dp))
+                                        .clickable {
+                                            if ("1" == info.isFloor && info.quotePid != null) {
+                                                navigator.navigate(
+                                                    SubPostsPageDestination(
+                                                        threadId = info.threadId!!.toLong(),
+                                                        postId = info.quotePid.toLong(),
+                                                        loadFromSubPost = true,
+                                                    )
                                                 )
-                                            )
-                                        } else {
-                                            navigator.navigate(
-                                                ThreadPageDestination(
-                                                    threadId = it.threadId!!.toLong(),
+                                            } else {
+                                                navigator.navigate(
+                                                    ThreadPageDestination(
+                                                        threadId = info.threadId!!.toLong(),
+                                                    )
                                                 )
-                                            )
+                                            }
                                         }
-                                    }
-                                    .background(ExtendedTheme.colors.chip, RoundedCornerShape(6.dp))
-                                    .padding(8.dp),
-                                color = ExtendedTheme.colors.onChip,
-                                fontSize = 12.sp,
-                            )
+                                        .background(
+                                            ExtendedTheme.colors.chip,
+                                            RoundedCornerShape(6.dp)
+                                        )
+                                        .padding(8.dp),
+                                    color = ExtendedTheme.colors.onChip,
+                                    fontSize = 12.sp,
+                                )
+                            }
                         }
                     }
                 }

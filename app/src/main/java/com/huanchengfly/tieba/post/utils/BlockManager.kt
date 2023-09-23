@@ -1,5 +1,6 @@
 package com.huanchengfly.tieba.post.utils
 
+import com.huanchengfly.tieba.post.api.models.MessageListBean
 import com.huanchengfly.tieba.post.api.models.protos.Post
 import com.huanchengfly.tieba.post.api.models.protos.SubPostList
 import com.huanchengfly.tieba.post.api.models.protos.ThreadInfo
@@ -64,4 +65,10 @@ object BlockManager {
 
     fun SubPostList.shouldBlock(): Boolean =
         shouldBlock(content.plainText) || shouldBlock(author_id, author?.name)
+
+    fun MessageListBean.MessageInfoBean.shouldBlock(): Boolean =
+        shouldBlock(content.orEmpty()) || shouldBlock(
+            this.replyer?.id?.toLongOrNull() ?: -1,
+            this.replyer?.name.orEmpty()
+        )
 }

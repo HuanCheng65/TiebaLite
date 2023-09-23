@@ -341,7 +341,6 @@ val Post.subPosts: ImmutableList<SubPostItemData>
         ?.toImmutableList()
         ?: persistentListOf()
 
-@OptIn(ExperimentalTextApi::class)
 fun SubPostList.getContentText(threadAuthorId: Long? = null): AnnotatedString {
     val context = App.INSTANCE
     val accentColor = Color(ThemeUtils.getColorByAttr(context, R.attr.colorNewPrimary))
