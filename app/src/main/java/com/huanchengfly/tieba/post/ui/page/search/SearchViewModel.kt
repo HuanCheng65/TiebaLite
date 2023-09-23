@@ -27,6 +27,7 @@ import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.merge
 import kotlinx.coroutines.flow.onEach
 import org.litepal.LitePal
+import org.litepal.extension.delete
 import org.litepal.extension.deleteAll
 import org.litepal.extension.find
 
@@ -47,6 +48,10 @@ class SearchViewModel :
                 App.INSTANCE.getString(R.string.toast_clear_failure, partialChange.errorMessage)
             )
 
+            is SearchPartialChange.DeleteSearchHistory.Failure -> CommonUiEvent.Toast(
+                App.INSTANCE.getString(R.string.toast_delete_failure, partialChange.errorMessage)
+            )
+
             is SearchPartialChange.SubmitKeyword -> SearchUiEvent.KeywordChanged(partialChange.keyword)
 
             else -> null
@@ -61,6 +66,8 @@ class SearchViewModel :
                     .flatMapConcat { produceInitPartialChange() },
                 intentFlow.filterIsInstance<SearchUiIntent.ClearSearchHistory>()
                     .flatMapConcat { produceClearHistoryPartialChange() },
+                intentFlow.filterIsInstance<SearchUiIntent.DeleteSearchHistory>()
+                    .flatMapConcat { it.producePartialChange() },
                 intentFlow.filterIsInstance<SearchUiIntent.SubmitKeyword>()
                     .flatMapConcat { it.producePartialChange() },
             )
@@ -83,6 +90,14 @@ class SearchViewModel :
                 emit(SearchPartialChange.ClearSearchHistory.Failure(it.getErrorMessage()))
             }.flowOn(Dispatchers.IO)
 
+        private fun SearchUiIntent.DeleteSearchHistory.producePartialChange() =
+            flow<SearchPartialChange.DeleteSearchHistory> {
+                LitePal.delete<SearchHistory>(id)
+                emit(SearchPartialChange.DeleteSearchHistory.Success(id))
+            }.catch {
+                emit(SearchPartialChange.DeleteSearchHistory.Failure(it.getErrorMessage()))
+            }.flowOn(Dispatchers.IO)
+
         private fun SearchUiIntent.SubmitKeyword.producePartialChange() =
             flowOf(SearchPartialChange.SubmitKeyword(keyword.trim()))
                 .onEach {
@@ -101,6 +116,8 @@ sealed interface SearchUiIntent : UiIntent {
     data object Init : SearchUiIntent
 
     data object ClearSearchHistory : SearchUiIntent
+
+    data class DeleteSearchHistory(val id: Long) : SearchUiIntent
 
     data class SubmitKeyword(val keyword: String) : SearchUiIntent
 }
@@ -128,6 +145,23 @@ sealed interface SearchPartialChange : PartialChange<SearchUiState> {
         data class Failure(
             val errorMessage: String,
         ) : ClearSearchHistory()
+    }
+
+    sealed class DeleteSearchHistory : SearchPartialChange {
+        override fun reduce(oldState: SearchUiState): SearchUiState = when (this) {
+            is Success -> oldState.copy(
+                searchHistories = oldState.searchHistories.filterNot { it.id == id }
+                    .toImmutableList()
+            )
+
+            is Failure -> oldState
+        }
+
+        data class Success(val id: Long) : DeleteSearchHistory()
+
+        data class Failure(
+            val errorMessage: String,
+        ) : DeleteSearchHistory()
     }
 
     data class SubmitKeyword(val keyword: String) : SearchPartialChange {

@@ -6,6 +6,7 @@ import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.PressInteraction
 import androidx.compose.foundation.layout.Arrangement
@@ -271,6 +272,7 @@ fun SearchPage(
                         },
                         expanded = expanded,
                         onToggleExpand = { expanded = !expanded },
+                        onDelete = { viewModel.send(SearchUiIntent.DeleteSearchHistory(it.id)) },
                         onClear = { viewModel.send(SearchUiIntent.ClearSearchHistory) }
                     )
                 }
@@ -389,13 +391,14 @@ private fun ColumnScope.SearchTabRow(
     }
 }
 
-@OptIn(ExperimentalLayoutApi::class)
+@OptIn(ExperimentalLayoutApi::class, ExperimentalFoundationApi::class)
 @Composable
 private fun SearchHistoryList(
     searchHistories: ImmutableList<SearchHistory>,
     onSearchHistoryClick: (SearchHistory) -> Unit,
     expanded: Boolean = false,
     onToggleExpand: () -> Unit = {},
+    onDelete: (SearchHistory) -> Unit = {},
     onClear: () -> Unit = {},
 ) {
     val hasMore = remember(searchHistories) {
@@ -438,7 +441,10 @@ private fun SearchHistoryList(
                     modifier = Modifier
                         .padding(bottom = 8.dp)
                         .clip(RoundedCornerShape(100))
-                        .clickable { onSearchHistoryClick(searchHistory) }
+                        .combinedClickable(
+                            onClick = { onSearchHistoryClick(searchHistory) },
+                            onLongClick = { onDelete(searchHistory) }
+                        )
                         .background(ExtendedTheme.colors.chip)
                         .padding(horizontal = 16.dp, vertical = 8.dp)
                 ) {
