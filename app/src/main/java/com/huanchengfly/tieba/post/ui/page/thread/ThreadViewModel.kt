@@ -11,12 +11,14 @@ import com.huanchengfly.tieba.post.api.models.CommonResponse
 import com.huanchengfly.tieba.post.api.models.protos.Anti
 import com.huanchengfly.tieba.post.api.models.protos.Post
 import com.huanchengfly.tieba.post.api.models.protos.SimpleForum
+import com.huanchengfly.tieba.post.api.models.protos.SubPostList
 import com.huanchengfly.tieba.post.api.models.protos.ThreadInfo
 import com.huanchengfly.tieba.post.api.models.protos.User
 import com.huanchengfly.tieba.post.api.models.protos.contentRenders
 import com.huanchengfly.tieba.post.api.models.protos.pbPage.PbPageResponse
 import com.huanchengfly.tieba.post.api.models.protos.renders
 import com.huanchengfly.tieba.post.api.models.protos.subPostContents
+import com.huanchengfly.tieba.post.api.models.protos.subPosts
 import com.huanchengfly.tieba.post.api.models.protos.updateAgreeStatus
 import com.huanchengfly.tieba.post.api.models.protos.updateCollectStatus
 import com.huanchengfly.tieba.post.api.retrofit.exception.TiebaUnknownException
@@ -1137,5 +1139,18 @@ data class PostItemData(
     val post: ImmutableHolder<Post>,
     val blocked: Boolean = post.get { shouldBlock() },
     val contentRenders: ImmutableList<PbContentRender> = post.get { this.contentRenders },
-    val subPostContents: ImmutableList<AnnotatedString> = post.get { this.subPostContents },
+    val subPosts: ImmutableList<SubPostItemData> = post.get { this.subPosts },
 )
+
+@Immutable
+data class SubPostItemData(
+    val subPost: ImmutableHolder<SubPostList>,
+    val subPostContent: AnnotatedString,
+    val blocked: Boolean = subPost.get { shouldBlock() },
+) {
+    val id: Long
+        get() = subPost.get { id }
+
+    val author: ImmutableHolder<User>?
+        get() = subPost.get { author }?.wrapImmutable()
+}

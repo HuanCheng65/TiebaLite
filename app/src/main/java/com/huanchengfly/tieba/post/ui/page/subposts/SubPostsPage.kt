@@ -40,14 +40,12 @@ import com.huanchengfly.tieba.post.App
 import com.huanchengfly.tieba.post.R
 import com.huanchengfly.tieba.post.activities.UserActivity
 import com.huanchengfly.tieba.post.api.models.protos.SubPostList
-import com.huanchengfly.tieba.post.api.models.protos.User
 import com.huanchengfly.tieba.post.api.models.protos.bawuType
 import com.huanchengfly.tieba.post.arch.ImmutableHolder
 import com.huanchengfly.tieba.post.arch.collectPartialAsState
 import com.huanchengfly.tieba.post.arch.onEvent
 import com.huanchengfly.tieba.post.arch.pageViewModel
 import com.huanchengfly.tieba.post.arch.wrapImmutable
-import com.huanchengfly.tieba.post.ui.common.PbContentRender
 import com.huanchengfly.tieba.post.ui.common.theme.compose.ExtendedTheme
 import com.huanchengfly.tieba.post.ui.page.LocalNavigator
 import com.huanchengfly.tieba.post.ui.page.ProvideNavigator
@@ -57,6 +55,8 @@ import com.huanchengfly.tieba.post.ui.page.thread.PostAgreeBtn
 import com.huanchengfly.tieba.post.ui.page.thread.PostCard
 import com.huanchengfly.tieba.post.ui.page.thread.UserNameText
 import com.huanchengfly.tieba.post.ui.widgets.compose.Avatar
+import com.huanchengfly.tieba.post.ui.widgets.compose.BlockTip
+import com.huanchengfly.tieba.post.ui.widgets.compose.BlockableContent
 import com.huanchengfly.tieba.post.ui.widgets.compose.Card
 import com.huanchengfly.tieba.post.ui.widgets.compose.ConfirmDialog
 import com.huanchengfly.tieba.post.ui.widgets.compose.LazyLoad
@@ -77,7 +77,6 @@ import com.huanchengfly.tieba.post.utils.TiebaUtil
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import com.ramcosta.composedestinations.spec.DestinationStyleBottomSheet
-import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.coroutines.delay
 
@@ -187,10 +186,6 @@ internal fun SubPostsContent(
         prop1 = SubPostsUiState::subPosts,
         initial = persistentListOf()
     )
-    val subPostsContentRenders by viewModel.uiState.collectPartialAsState(
-        prop1 = SubPostsUiState::subPostsContentRenders,
-        initial = persistentListOf()
-    )
     val currentPage by viewModel.uiState.collectPartialAsState(
         prop1 = SubPostsUiState::currentPage,
         initial = 1
@@ -208,7 +203,7 @@ internal fun SubPostsContent(
 
     viewModel.onEvent<SubPostsUiEvent.ScrollToSubPosts> {
         delay(20)
-        lazyListState.scrollToItem(2 + subPosts.indexOfFirst { it.get { id } == subPostId })
+        lazyListState.scrollToItem(2 + subPosts.indexOfFirst { it.id == subPostId })
     }
 
     val confirmDeleteDialogState = rememberDialogState()
@@ -432,11 +427,10 @@ internal fun SubPostsContent(
                     }
                     itemsIndexed(
                         items = subPosts,
-                        key = { _, subPost -> subPost.get { id } }
+                        key = { _, subPost -> subPost.id }
                     ) { index, item ->
                         SubPostItem(
-                            subPost = item,
-                            contentRenders = subPostsContentRenders[index],
+                            item = item,
                             canDelete = { it.author_id == account?.uid?.toLongOrNull() },
                             threadAuthorId = thread?.get { author?.id },
                             onAgree = {
@@ -495,16 +489,16 @@ private fun getDescText(
 
 @Composable
 private fun SubPostItem(
-    subPost: ImmutableHolder<SubPostList>,
-    contentRenders: ImmutableList<PbContentRender>,
+    item: SubPostItemData,
     threadAuthorId: Long? = null,
     canDelete: (SubPostList) -> Boolean = { false },
     onAgree: (SubPostList) -> Unit = {},
     onReplyClick: (SubPostList) -> Unit = {},
     onMenuDeleteClick: ((SubPostList) -> Unit)? = null,
 ) {
+    val (subPost, contentRenders, blocked) = item
     val context = LocalContext.current
-    val author = remember(subPost) { subPost.getImmutable { author } }
+    val author = remember(subPost) { subPost.get { author }?.wrapImmutable() }
     val hasAgreed = remember(subPost) {
         subPost.get { agree?.hasAgree == 1 }
     }
@@ -512,100 +506,109 @@ private fun SubPostItem(
         subPost.get { agree?.diffAgreeNum ?: 0L }
     }
     val menuState = rememberMenuState()
-    LongClickMenu(
-        menuState = menuState,
-        indication = null,
-        menuContent = {
-            DropdownMenuItem(
-                onClick = {
-                    onReplyClick(subPost.get())
-                    menuState.expanded = false
-                }
-            ) {
-                Text(text = stringResource(id = R.string.btn_reply))
-            }
-            DropdownMenuItem(
-                onClick = {
-                    TiebaUtil.copyText(context, contentRenders.joinToString("\n") { it.toString() })
-                    menuState.expanded = false
-                }
-            ) {
-                Text(text = stringResource(id = R.string.menu_copy))
-            }
-            DropdownMenuItem(
-                onClick = {
-                    TiebaUtil.reportPost(context, subPost.get { id }.toString())
-                    menuState.expanded = false
-                }
-            ) {
-                Text(text = stringResource(id = R.string.title_report))
-            }
-            if (canDelete(subPost.get()) && onMenuDeleteClick != null) {
+    BlockableContent(
+        blocked = blocked,
+        blockedTip = { BlockTip(text = { Text(text = stringResource(id = R.string.tip_blocked_sub_post)) }) },
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 16.dp, vertical = 8.dp),
+    ) {
+        LongClickMenu(
+            menuState = menuState,
+            indication = null,
+            menuContent = {
                 DropdownMenuItem(
                     onClick = {
-                        onMenuDeleteClick(subPost.get())
+                        onReplyClick(subPost.get())
                         menuState.expanded = false
                     }
                 ) {
-                    Text(text = stringResource(id = R.string.title_delete))
+                    Text(text = stringResource(id = R.string.btn_reply))
                 }
-            }
-        },
-        onClick = { onReplyClick(subPost.get()) }
-    ) {
-        Card(
-            header = {
-                if (author.isNotNull()) {
-                    author as ImmutableHolder<User>
-                    UserHeader(
-                        avatar = {
-                            Avatar(
-                                data = StringUtil.getAvatarUrl(author.get { portrait }),
-                                size = Sizes.Small,
-                                contentDescription = null
-                            )
-                        },
-                        name = {
-                            UserNameText(
-                                userName = StringUtil.getUsernameAnnotatedString(
-                                    LocalContext.current,
-                                    author.get { name },
-                                    author.get { nameShow }
-                                ),
-                                userLevel = author.get { level_id },
-                                isLz = author.get { id } == threadAuthorId,
-                                bawuType = author.get { bawuType },
-                            )
-                        },
-                        desc = {
-                            Text(
-                                text = getDescText(
-                                    subPost.get { time }.toLong(),
-                                    author.get { ip_address })
-                            )
-                        },
+                DropdownMenuItem(
+                    onClick = {
+                        TiebaUtil.copyText(
+                            context,
+                            contentRenders.joinToString("\n") { it.toString() })
+                        menuState.expanded = false
+                    }
+                ) {
+                    Text(text = stringResource(id = R.string.menu_copy))
+                }
+                DropdownMenuItem(
+                    onClick = {
+                        TiebaUtil.reportPost(context, subPost.get { id }.toString())
+                        menuState.expanded = false
+                    }
+                ) {
+                    Text(text = stringResource(id = R.string.title_report))
+                }
+                if (canDelete(subPost.get()) && onMenuDeleteClick != null) {
+                    DropdownMenuItem(
                         onClick = {
-                            UserActivity.launch(context, author.get { id }.toString())
+                            onMenuDeleteClick(subPost.get())
+                            menuState.expanded = false
                         }
                     ) {
-                        PostAgreeBtn(
-                            hasAgreed = hasAgreed,
-                            agreeNum = agreeNum,
-                            onClick = { onAgree(subPost.get()) }
-                        )
+                        Text(text = stringResource(id = R.string.title_delete))
                     }
                 }
             },
-            content = {
-                Column(
-                    verticalArrangement = Arrangement.spacedBy(8.dp),
-                    modifier = Modifier
-                        .padding(start = Sizes.Small + 8.dp)
-                        .fillMaxWidth()
-                ) {
-                    contentRenders.fastForEach { it.Render() }
+            onClick = { onReplyClick(subPost.get()) }
+        ) {
+            Card(
+                header = {
+                    if (author != null) {
+                        UserHeader(
+                            avatar = {
+                                Avatar(
+                                    data = StringUtil.getAvatarUrl(author.get { portrait }),
+                                    size = Sizes.Small,
+                                    contentDescription = null
+                                )
+                            },
+                            name = {
+                                UserNameText(
+                                    userName = StringUtil.getUsernameAnnotatedString(
+                                        LocalContext.current,
+                                        author.get { name },
+                                        author.get { nameShow }
+                                    ),
+                                    userLevel = author.get { level_id },
+                                    isLz = author.get { id } == threadAuthorId,
+                                    bawuType = author.get { bawuType },
+                                )
+                            },
+                            desc = {
+                                Text(
+                                    text = getDescText(
+                                        subPost.get { time }.toLong(),
+                                        author.get { ip_address })
+                                )
+                            },
+                            onClick = {
+                                UserActivity.launch(context, author.get { id }.toString())
+                            }
+                        ) {
+                            PostAgreeBtn(
+                                hasAgreed = hasAgreed,
+                                agreeNum = agreeNum,
+                                onClick = { onAgree(subPost.get()) }
+                            )
+                        }
+                    }
+                },
+                content = {
+                    Column(
+                        verticalArrangement = Arrangement.spacedBy(8.dp),
+                        modifier = Modifier
+                            .padding(start = Sizes.Small + 8.dp)
+                            .fillMaxWidth()
+                    ) {
+                        contentRenders.fastForEach { it.Render() }
+                    }
                 }
-            }
-        )
+            )
+        }
     }
 }

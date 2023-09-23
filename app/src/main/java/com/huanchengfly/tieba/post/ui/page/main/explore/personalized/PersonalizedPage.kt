@@ -64,6 +64,8 @@ import com.huanchengfly.tieba.post.ui.models.ThreadItemData
 import com.huanchengfly.tieba.post.ui.page.LocalNavigator
 import com.huanchengfly.tieba.post.ui.page.destinations.ForumPageDestination
 import com.huanchengfly.tieba.post.ui.page.destinations.ThreadPageDestination
+import com.huanchengfly.tieba.post.ui.widgets.compose.BlockTip
+import com.huanchengfly.tieba.post.ui.widgets.compose.BlockableContent
 import com.huanchengfly.tieba.post.ui.widgets.compose.FeedCard
 import com.huanchengfly.tieba.post.ui.widgets.compose.LazyLoad
 import com.huanchengfly.tieba.post.ui.widgets.compose.LoadMoreLayout
@@ -307,7 +309,13 @@ private fun FeedList(
                     enter = EnterTransition.None,
                     exit = shrinkVertically() + fadeOut()
                 ) {
-                    if (!blocked) {
+                    BlockableContent(
+                        blocked = blocked,
+                        blockedTip = { BlockTip(text = { Text(text = stringResource(id = R.string.tip_blocked_thread)) }) },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = 8.dp, horizontal = 16.dp)
+                    ) {
                         FeedCard(
                             item = item,
                             onClick = onItemClick,
@@ -327,21 +335,6 @@ private fun FeedList(
                                     }
                                 )
                             }
-                        }
-                    } else {
-                        Column(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(vertical = 8.dp, horizontal = 16.dp)
-                                .clip(RoundedCornerShape(6.dp))
-                                .background(ExtendedTheme.colors.card)
-                                .padding(vertical = 8.dp, horizontal = 16.dp)
-                        ) {
-                            Text(
-                                text = stringResource(id = R.string.tip_blocked_thread),
-                                style = MaterialTheme.typography.caption,
-                                color = ExtendedTheme.colors.textSecondary
-                            )
                         }
                     }
                 }

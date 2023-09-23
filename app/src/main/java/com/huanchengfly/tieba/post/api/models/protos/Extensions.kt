@@ -18,6 +18,7 @@ import com.huanchengfly.tieba.post.ui.common.TextContentRender.Companion.appendT
 import com.huanchengfly.tieba.post.ui.common.VideoContentRender
 import com.huanchengfly.tieba.post.ui.common.VoiceContentRender
 import com.huanchengfly.tieba.post.ui.common.theme.utils.ThemeUtils
+import com.huanchengfly.tieba.post.ui.page.thread.SubPostItemData
 import com.huanchengfly.tieba.post.ui.utils.getPhotoViewData
 import com.huanchengfly.tieba.post.utils.EmoticonManager
 import com.huanchengfly.tieba.post.utils.EmoticonUtil.emoticonString
@@ -327,6 +328,16 @@ val User.bawuType: String?
 
 val Post.subPostContents: ImmutableList<AnnotatedString>
     get() = sub_post_list?.sub_post_list?.map { it.getContentText(origin_thread_info?.author?.id) }
+        ?.toImmutableList()
+        ?: persistentListOf()
+
+val Post.subPosts: ImmutableList<SubPostItemData>
+    get() = sub_post_list?.sub_post_list?.map {
+        SubPostItemData(
+            it.wrapImmutable(),
+            it.getContentText(origin_thread_info?.author?.id)
+        )
+    }
         ?.toImmutableList()
         ?: persistentListOf()
 

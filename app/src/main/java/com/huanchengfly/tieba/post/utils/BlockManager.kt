@@ -1,6 +1,7 @@
 package com.huanchengfly.tieba.post.utils
 
 import com.huanchengfly.tieba.post.api.models.protos.Post
+import com.huanchengfly.tieba.post.api.models.protos.SubPostList
 import com.huanchengfly.tieba.post.api.models.protos.ThreadInfo
 import com.huanchengfly.tieba.post.api.models.protos.abstractText
 import com.huanchengfly.tieba.post.api.models.protos.plainText
@@ -59,5 +60,8 @@ object BlockManager {
         shouldBlock(title) || shouldBlock(abstractText) || shouldBlock(authorId, author?.name)
 
     fun Post.shouldBlock(): Boolean =
+        shouldBlock(content.plainText) || shouldBlock(author_id, author?.name)
+
+    fun SubPostList.shouldBlock(): Boolean =
         shouldBlock(content.plainText) || shouldBlock(author_id, author?.name)
 }

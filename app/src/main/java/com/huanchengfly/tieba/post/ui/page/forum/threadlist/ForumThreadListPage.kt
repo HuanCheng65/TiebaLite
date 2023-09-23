@@ -1,7 +1,6 @@
 package com.huanchengfly.tieba.post.ui.page.forum.threadlist
 
 import android.content.Context
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
@@ -56,12 +55,13 @@ import com.huanchengfly.tieba.post.ui.page.LocalNavigator
 import com.huanchengfly.tieba.post.ui.page.destinations.ThreadPageDestination
 import com.huanchengfly.tieba.post.ui.page.forum.getSortType
 import com.huanchengfly.tieba.post.ui.widgets.Chip
+import com.huanchengfly.tieba.post.ui.widgets.compose.BlockTip
+import com.huanchengfly.tieba.post.ui.widgets.compose.BlockableContent
 import com.huanchengfly.tieba.post.ui.widgets.compose.FeedCard
 import com.huanchengfly.tieba.post.ui.widgets.compose.LazyLoad
 import com.huanchengfly.tieba.post.ui.widgets.compose.LoadMoreLayout
 import com.huanchengfly.tieba.post.ui.widgets.compose.LocalSnackbarHostState
 import com.huanchengfly.tieba.post.ui.widgets.compose.VerticalDivider
-import com.huanchengfly.tieba.post.utils.appPreferences
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 
@@ -185,70 +185,59 @@ private fun ThreadList(
                 }
             }
         ) { index, (holder, blocked) ->
-            if (blocked) {
-                if (!LocalContext.current.appPreferences.hideBlockedContent) {
-                    Column(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(vertical = 8.dp, horizontal = 16.dp)
-                            .clip(RoundedCornerShape(6.dp))
-                            .background(ExtendedTheme.colors.card)
-                            .padding(vertical = 8.dp, horizontal = 16.dp)
-                    ) {
-                        Text(
-                            text = stringResource(id = R.string.tip_blocked_thread),
-                            style = MaterialTheme.typography.caption,
-                            color = ExtendedTheme.colors.textSecondary
-                        )
-                    }
-                }
-                return@itemsIndexed
-            }
-            val (item) = holder
-            Column(
-                modifier = Modifier.fillMaxWidth(itemFraction)
+            BlockableContent(
+                blocked = blocked,
+                blockedTip = { BlockTip(text = { Text(text = stringResource(id = R.string.tip_blocked_thread)) }) },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 8.dp, horizontal = 16.dp),
             ) {
-                if (item.isTop == 1) {
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .clickable {
-                                onItemClicked(item)
+                val (item) = holder
+                Column(
+                    modifier = Modifier.fillMaxWidth(itemFraction)
+                ) {
+                    if (item.isTop == 1) {
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .clickable {
+                                    onItemClicked(item)
+                                }
+                                .padding(horizontal = 16.dp, vertical = 8.dp),
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.spacedBy(16.dp)
+                        ) {
+                            Chip(
+                                text = stringResource(id = R.string.content_top),
+                                shape = RoundedCornerShape(3.dp)
+                            )
+                            var title = item.title
+                            if (title.isBlank()) {
+                                title = item.abstractText
                             }
-                            .padding(horizontal = 16.dp, vertical = 8.dp),
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.spacedBy(16.dp)
-                    ) {
-                        Chip(
-                            text = stringResource(id = R.string.content_top),
-                            shape = RoundedCornerShape(3.dp)
-                        )
-                        var title = item.title
-                        if (title.isBlank()) {
-                            title = item.abstractText
+                            Text(
+                                text = title,
+                                style = MaterialTheme.typography.subtitle2,
+                                maxLines = 1,
+                                overflow = TextOverflow.Ellipsis,
+                                modifier = Modifier.weight(1f),
+                                fontSize = 15.sp
+                            )
                         }
-                        Text(
-                            text = title,
-                            style = MaterialTheme.typography.subtitle2,
-                            maxLines = 1,
-                            overflow = TextOverflow.Ellipsis,
-                            modifier = Modifier.weight(1f),
-                            fontSize = 15.sp
+                    } else {
+                        if (index > 0) {
+                            if (items[index - 1].thread.get { isTop } == 1) {
+                                Spacer(modifier = Modifier.height(8.dp))
+                            }
+                            VerticalDivider(modifier = Modifier.padding(horizontal = 16.dp))
+                        }
+                        FeedCard(
+                            item = holder,
+                            onClick = onItemClicked,
+                            onReplyClick = onItemReplyClicked,
+                            onAgree = onAgree,
                         )
                     }
-                } else {
-                    if (index > 0) {
-                        if (items[index - 1].thread.get { isTop } == 1) {
-                            Spacer(modifier = Modifier.height(8.dp))
-                        }
-                        VerticalDivider(modifier = Modifier.padding(horizontal = 16.dp))
-                    }
-                    FeedCard(
-                        item = holder,
-                        onClick = onItemClicked,
-                        onReplyClick = onItemReplyClicked,
-                        onAgree = onAgree,
-                    )
                 }
             }
         }
