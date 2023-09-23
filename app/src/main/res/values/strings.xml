@@ -716,4 +716,7 @@
     <string name="toast_clear_failure">清除失败 %s</string>
     <string name="title_recommend">推荐</string>
     <string name="title_fuzzy_match_user">相关用户</string>
+    <string name="button_expand_more_history">展开历史</string>
+    <string name="button_expand_less_history">收起历史</string>
+    <string name="button_clear_all">清除全部</string>
 </resources>

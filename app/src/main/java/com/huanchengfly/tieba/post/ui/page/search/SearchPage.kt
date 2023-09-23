@@ -38,8 +38,9 @@ import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.ArrowBack
 import androidx.compose.material.icons.rounded.ArrowDropDown
-import androidx.compose.material.icons.rounded.CleaningServices
 import androidx.compose.material.icons.rounded.Clear
+import androidx.compose.material.icons.rounded.ExpandLess
+import androidx.compose.material.icons.rounded.ExpandMore
 import androidx.compose.material.icons.rounded.Search
 import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.runtime.Composable
@@ -79,6 +80,7 @@ import com.huanchengfly.tieba.post.models.database.SearchHistory
 import com.huanchengfly.tieba.post.ui.common.theme.compose.ExtendedTheme
 import com.huanchengfly.tieba.post.ui.common.theme.compose.TiebaLiteTheme
 import com.huanchengfly.tieba.post.ui.page.ProvideNavigator
+import com.huanchengfly.tieba.post.ui.page.destinations.SearchPageDestination
 import com.huanchengfly.tieba.post.ui.page.search.forum.SearchForumPage
 import com.huanchengfly.tieba.post.ui.page.search.thread.SearchThreadPage
 import com.huanchengfly.tieba.post.ui.page.search.thread.SearchThreadSortType
@@ -88,6 +90,7 @@ import com.huanchengfly.tieba.post.ui.widgets.compose.BaseTextField
 import com.huanchengfly.tieba.post.ui.widgets.compose.Button
 import com.huanchengfly.tieba.post.ui.widgets.compose.ClickMenu
 import com.huanchengfly.tieba.post.ui.widgets.compose.LazyLoadHorizontalPager
+import com.huanchengfly.tieba.post.ui.widgets.compose.MyBackHandler
 import com.huanchengfly.tieba.post.ui.widgets.compose.MyScaffold
 import com.huanchengfly.tieba.post.ui.widgets.compose.PagerTabIndicator
 import com.huanchengfly.tieba.post.ui.widgets.compose.TopAppBarContainer
@@ -132,10 +135,25 @@ fun SearchPage(
         prop1 = SearchUiState::keyword,
         initial = ""
     )
-    val isKeywordEmpty by remember {
-        derivedStateOf { keyword.isEmpty() }
-    }
+
+    val isKeywordEmpty by viewModel.uiState.collectPartialAsState(
+        prop1 = SearchUiState::isKeywordEmpty,
+        initial = true
+    )
     var inputKeyword by remember { mutableStateOf("") }
+    LaunchedEffect(keyword) {
+        if (keyword.isNotEmpty() && keyword != inputKeyword) {
+            inputKeyword = keyword
+        }
+    }
+
+    MyBackHandler(
+        enabled = !isKeywordEmpty,
+        currentScreen = SearchPageDestination
+    ) {
+        viewModel.send(SearchUiIntent.SubmitKeyword(""))
+    }
+
     var expanded by remember { mutableStateOf(false) }
 
     val initialSortType = remember { SearchThreadSortType.SORT_TYPE_NEWEST }
@@ -145,7 +163,7 @@ fun SearchPage(
     }
     viewModel.onEvent<SearchUiEvent.KeywordChanged> {
         inputKeyword = it.keyword
-        emitGlobalEventSuspend(it)
+        if (it.keyword.isNotBlank()) emitGlobalEventSuspend(it)
     }
 
     val pages by remember {
@@ -213,7 +231,13 @@ fun SearchPage(
                             onKeywordSubmit = {
                                 viewModel.send(SearchUiIntent.SubmitKeyword(it))
                             },
-                            onBack = { navigator.navigateUp() }
+                            onBack = {
+                                if (isKeywordEmpty) {
+                                    navigator.navigateUp()
+                                } else {
+                                    viewModel.send(SearchUiIntent.SubmitKeyword(""))
+                                }
+                            }
                         )
                     }
                 },
@@ -224,27 +248,32 @@ fun SearchPage(
             }
         }
     ) {
-        if (!isKeywordEmpty) {
-            ProvideNavigator(navigator = navigator) {
-                LazyLoadHorizontalPager(
-                    state = pagerState,
-                    key = { pages[it].id }
-                ) {
-                    pages[it].content()
+        Box(modifier = Modifier.fillMaxSize()) {
+            if (!isKeywordEmpty) {
+                ProvideNavigator(navigator = navigator) {
+                    LazyLoadHorizontalPager(
+                        state = pagerState,
+                        key = { pages[it].id },
+                        modifier = Modifier.fillMaxSize(),
+                    ) {
+                        pages[it].content()
+                    }
                 }
-            }
-        } else {
-            Column {
-                SearchHistoryList(
-                    searchHistories = searchHistories,
-                    onSearchHistoryClick = {
-                        inputKeyword = it.content
-                        viewModel.send(SearchUiIntent.SubmitKeyword(it.content))
-                    },
-                    expanded = expanded,
-                    onToggleExpand = { expanded = !expanded },
-                    onClear = { viewModel.send(SearchUiIntent.ClearSearchHistory) }
-                )
+            } else {
+                Column(
+                    modifier = Modifier.fillMaxSize()
+                ) {
+                    SearchHistoryList(
+                        searchHistories = searchHistories,
+                        onSearchHistoryClick = {
+                            inputKeyword = it.content
+                            viewModel.send(SearchUiIntent.SubmitKeyword(it.content))
+                        },
+                        expanded = expanded,
+                        onToggleExpand = { expanded = !expanded },
+                        onClear = { viewModel.send(SearchUiIntent.ClearSearchHistory) }
+                    )
+                }
             }
         }
     }
@@ -390,12 +419,10 @@ private fun SearchHistoryList(
                     .weight(1f),
                 style = MaterialTheme.typography.subtitle1
             )
-            if (hasMore) {
+            if (hasItem) {
                 Text(
-                    text = if (!expanded) stringResource(id = R.string.button_expand) else stringResource(
-                        id = R.string.button_collapse
-                    ),
-                    modifier = Modifier.clickable(onClick = onToggleExpand),
+                    text = stringResource(id = R.string.button_clear_all),
+                    modifier = Modifier.clickable(onClick = onClear),
                     style = MaterialTheme.typography.button
                 )
             }
@@ -421,9 +448,9 @@ private fun SearchHistoryList(
                 }
             }
         }
-        if (hasItem) {
+        if (hasMore) {
             Button(
-                onClick = onClear,
+                onClick = onToggleExpand,
                 modifier = Modifier.fillMaxWidth(),
                 colors = ButtonDefaults.textButtonColors(
                     backgroundColor = Color.Transparent,
@@ -435,18 +462,21 @@ private fun SearchHistoryList(
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
                     Icon(
-                        imageVector = Icons.Rounded.CleaningServices,
+                        imageVector = if (expanded) Icons.Rounded.ExpandLess else Icons.Rounded.ExpandMore,
                         contentDescription = null,
                         modifier = Modifier.size(16.dp)
                     )
                     Text(
-                        text = stringResource(id = R.string.title_clear_search_history),
+                        text = stringResource(
+                            id = if (expanded) R.string.button_expand_less_history else R.string.button_expand_more_history
+                        ),
                         style = MaterialTheme.typography.button,
                         fontWeight = FontWeight.Bold
                     )
                 }
             }
-        } else {
+        }
+        if (!hasItem) {
             Box(
                 modifier = Modifier
                     .fillMaxWidth()

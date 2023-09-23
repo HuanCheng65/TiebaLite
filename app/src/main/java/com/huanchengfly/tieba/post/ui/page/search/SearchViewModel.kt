@@ -84,10 +84,14 @@ class SearchViewModel :
             }.flowOn(Dispatchers.IO)
 
         private fun SearchUiIntent.SubmitKeyword.producePartialChange() =
-            flowOf(SearchPartialChange.SubmitKeyword(keyword))
+            flowOf(SearchPartialChange.SubmitKeyword(keyword.trim()))
                 .onEach {
                     runCatching {
-                        SearchHistory(keyword).saveOrUpdate("content = ?", keyword)
+                        val trimKeyword = keyword.trim()
+                        if (trimKeyword.isNotBlank()) SearchHistory(trimKeyword).saveOrUpdate(
+                            "content = ?",
+                            trimKeyword
+                        )
                     }
                 }
     }
@@ -119,7 +123,7 @@ sealed interface SearchPartialChange : PartialChange<SearchUiState> {
             is Failure -> oldState
         }
 
-        object Success : ClearSearchHistory()
+        data object Success : ClearSearchHistory()
 
         data class Failure(
             val errorMessage: String,
@@ -129,13 +133,14 @@ sealed interface SearchPartialChange : PartialChange<SearchUiState> {
     data class SubmitKeyword(val keyword: String) : SearchPartialChange {
         override fun reduce(oldState: SearchUiState): SearchUiState {
             if (keyword.isEmpty()) {
-                return oldState.copy(keyword = keyword)
+                return oldState.copy(isKeywordEmpty = true)
             }
             val newSearchHistories = (oldState.searchHistories
                 .filterNot { it.content == keyword } + SearchHistory(content = keyword))
                 .sortedByDescending { it.timestamp }
             return oldState.copy(
                 keyword = keyword,
+                isKeywordEmpty = false,
                 searchHistories = newSearchHistories.toImmutableList()
             )
         }
@@ -144,6 +149,7 @@ sealed interface SearchPartialChange : PartialChange<SearchUiState> {
 
 data class SearchUiState(
     val keyword: String = "",
+    val isKeywordEmpty: Boolean = true,
     val searchHistories: ImmutableList<SearchHistory> = persistentListOf(),
 ) : UiState
 
