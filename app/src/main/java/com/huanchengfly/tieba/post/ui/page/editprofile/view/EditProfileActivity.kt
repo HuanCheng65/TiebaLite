@@ -14,12 +14,32 @@ import androidx.activity.viewModels
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.imePadding
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.*
-import androidx.compose.runtime.*
+import androidx.compose.material.Card
+import androidx.compose.material.Icon
+import androidx.compose.material.IconButton
+import androidx.compose.material.Scaffold
+import androidx.compose.material.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.SideEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
@@ -53,12 +73,31 @@ import com.huanchengfly.tieba.post.ui.page.editprofile.EditProfileEvent
 import com.huanchengfly.tieba.post.ui.page.editprofile.EditProfileIntent
 import com.huanchengfly.tieba.post.ui.page.editprofile.EditProfileState
 import com.huanchengfly.tieba.post.ui.page.editprofile.viewmodel.EditProfileViewModel
-import com.huanchengfly.tieba.post.ui.widgets.compose.*
+import com.huanchengfly.tieba.post.ui.widgets.compose.ActionItem
+import com.huanchengfly.tieba.post.ui.widgets.compose.BackNavigationIcon
+import com.huanchengfly.tieba.post.ui.widgets.compose.CounterTextField
+import com.huanchengfly.tieba.post.ui.widgets.compose.Dialog
+import com.huanchengfly.tieba.post.ui.widgets.compose.DialogNegativeButton
+import com.huanchengfly.tieba.post.ui.widgets.compose.Toolbar
 import com.huanchengfly.tieba.post.ui.widgets.compose.picker.ListSinglePicker
-import com.huanchengfly.tieba.post.utils.*
+import com.huanchengfly.tieba.post.ui.widgets.compose.rememberDialogState
+import com.huanchengfly.tieba.post.utils.AccountUtil
+import com.huanchengfly.tieba.post.utils.ColorUtils
+import com.huanchengfly.tieba.post.utils.PermissionUtils
+import com.huanchengfly.tieba.post.utils.PickMediasRequest
+import com.huanchengfly.tieba.post.utils.StringUtil
+import com.huanchengfly.tieba.post.utils.ThemeUtil
+import com.huanchengfly.tieba.post.utils.isPhotoPickerAvailable
+import com.huanchengfly.tieba.post.utils.registerPickMediasLauncher
+import com.huanchengfly.tieba.post.utils.requestPermission
 import com.yalantis.ucrop.UCrop
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.*
+import kotlinx.collections.immutable.persistentListOf
+import kotlinx.coroutines.flow.filterIsInstance
+import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.merge
+import kotlinx.coroutines.flow.onEach
 import java.io.File
 
 @AndroidEntryPoint
@@ -458,11 +497,11 @@ fun PageEditProfile(
                     }
                 ) {
                     ListSinglePicker(
-                        itemTitles = listOf(
+                        itemTitles = persistentListOf(
                             stringResource(id = R.string.profile_sex_male),
                             stringResource(id = R.string.profile_sex_female)
                         ),
-                        itemValues = listOf(1, 2),
+                        itemValues = persistentListOf(1, 2),
                         selectedPosition = if (sex == 1) 0 else if (sex == 2) 1 else -1,
                         onItemSelected = { _, _, value, _ ->
                             sex = value

@@ -41,7 +41,7 @@ fun NotificationsPage() {
             NotificationsListPage(type = NotificationsType.AtMe)
         }
     )
-    val pagerState = rememberPagerState()
+    val pagerState = rememberPagerState { pages.size }
     val coroutineScope = rememberCoroutineScope()
     Scaffold(
         backgroundColor = Color.Transparent,
@@ -87,9 +87,8 @@ fun NotificationsPage() {
         modifier = Modifier.fillMaxSize(),
     ) { paddingValues ->
         LazyLoadHorizontalPager(
-            contentPadding = paddingValues,
-            pageCount = pages.size,
             state = pagerState,
+            contentPadding = paddingValues,
             key = { pages[it].first },
             modifier = Modifier.fillMaxSize(),
             verticalAlignment = Alignment.Top,

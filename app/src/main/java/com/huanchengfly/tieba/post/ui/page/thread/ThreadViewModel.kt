@@ -11,12 +11,14 @@ import com.huanchengfly.tieba.post.api.models.CommonResponse
 import com.huanchengfly.tieba.post.api.models.protos.Anti
 import com.huanchengfly.tieba.post.api.models.protos.Post
 import com.huanchengfly.tieba.post.api.models.protos.SimpleForum
+import com.huanchengfly.tieba.post.api.models.protos.SubPostList
 import com.huanchengfly.tieba.post.api.models.protos.ThreadInfo
 import com.huanchengfly.tieba.post.api.models.protos.User
 import com.huanchengfly.tieba.post.api.models.protos.contentRenders
 import com.huanchengfly.tieba.post.api.models.protos.pbPage.PbPageResponse
 import com.huanchengfly.tieba.post.api.models.protos.renders
 import com.huanchengfly.tieba.post.api.models.protos.subPostContents
+import com.huanchengfly.tieba.post.api.models.protos.subPosts
 import com.huanchengfly.tieba.post.api.models.protos.updateAgreeStatus
 import com.huanchengfly.tieba.post.api.models.protos.updateCollectStatus
 import com.huanchengfly.tieba.post.api.retrofit.exception.TiebaUnknownException
@@ -184,8 +186,6 @@ class ThreadViewModel @Inject constructor() :
                         ),
                         response.data_.page.has_prev != 0,
                         firstPost?.contentRenders,
-                        notFirstPosts.map { it.contentRenders },
-                        notFirstPosts.map { it.subPostContents }.toImmutableList(),
                         postId,
                         seeLz,
                         sortType,
@@ -311,8 +311,6 @@ class ThreadViewModel @Inject constructor() :
                     ThreadPartialChange.LoadLatestReply.Success(
                         anti = response.data_.anti,
                         posts = response.data_.post_list.map { PostItemData(it.wrapImmutable()) },
-                        contentRenders = response.data_.post_list.map { it.contentRenders },
-                        subPostContents = response.data_.post_list.map { it.subPostContents },
                         page = response.data_.page.current_page,
                         isContinuous = firstLatestPost.floor == curLatestPostFloor + 1,
                         isDesc = isDesc,
@@ -623,11 +621,7 @@ sealed interface ThreadPartialChange : PartialChange<ThreadUiState> {
                 hasPrevious = hasPrevious,
                 firstPostContentRenders = firstPostContentRenders?.toImmutableList()
                     ?: oldState.firstPostContentRenders,
-                contentRenders = contentRenders.toImmutableList(),
-                subPostContents = subPostContents.toImmutableList(),
                 latestPosts = persistentListOf(),
-                latestPostContentRenders = persistentListOf(),
-                latestPostSubPostContents = persistentListOf(),
                 postId = postId,
                 seeLz = seeLz,
                 sortType = sortType,
@@ -657,8 +651,6 @@ sealed interface ThreadPartialChange : PartialChange<ThreadUiState> {
             val nextPagePostId: Long,
             val hasPrevious: Boolean,
             val firstPostContentRenders: List<PbContentRender>?,
-            val contentRenders: List<ImmutableList<PbContentRender>>,
-            val subPostContents: List<ImmutableList<AnnotatedString>>,
             val postId: Long = 0,
             val seeLz: Boolean = false,
             val sortType: Int = 0,
@@ -687,11 +679,7 @@ sealed interface ThreadPartialChange : PartialChange<ThreadUiState> {
                 nextPagePostId = nextPagePostId,
                 hasPrevious = hasPrevious,
                 firstPostContentRenders = firstPostContentRenders.toImmutableList(),
-                contentRenders = contentRenders.toImmutableList(),
-                subPostContents = subPostContents.toImmutableList(),
                 latestPosts = persistentListOf(),
-                latestPostContentRenders = persistentListOf(),
-                latestPostSubPostContents = persistentListOf(),
                 postId = postId,
                 seeLz = seeLz,
                 sortType = sortType,
@@ -732,21 +720,22 @@ sealed interface ThreadPartialChange : PartialChange<ThreadUiState> {
     sealed class LoadMore : ThreadPartialChange {
         override fun reduce(oldState: ThreadUiState): ThreadUiState = when (this) {
             is Start -> oldState.copy(isLoadingMore = true)
-            is Success -> oldState.copy(
-                isLoadingMore = false,
-                author = wrapImmutable(author),
-                data = (oldState.data + data).toImmutableList(),
-                threadInfo = threadInfo.wrapImmutable(),
-                currentPageMax = currentPage,
-                totalPage = totalPage,
-                hasMore = hasMore,
-                nextPagePostId = nextPagePostId,
-                contentRenders = (oldState.contentRenders + contentRenders).toImmutableList(),
-                subPostContents = (oldState.subPostContents + subPostContents).toImmutableList(),
-                latestPosts = persistentListOf(),
-                latestPostContentRenders = persistentListOf(),
-                latestPostSubPostContents = persistentListOf(),
-            )
+            is Success -> {
+                val uniqueData = data.filterNot { item ->
+                    oldState.data.any { it.post.get { id } == item.post.get { id } }
+                }
+                oldState.copy(
+                    isLoadingMore = false,
+                    author = wrapImmutable(author),
+                    data = (oldState.data + uniqueData).toImmutableList(),
+                    threadInfo = threadInfo.wrapImmutable(),
+                    currentPageMax = currentPage,
+                    totalPage = totalPage,
+                    hasMore = hasMore,
+                    nextPagePostId = nextPagePostId,
+                    latestPosts = persistentListOf(),
+                )
+            }
 
             is Failure -> oldState.copy(isLoadingMore = false)
         }
@@ -782,8 +771,6 @@ sealed interface ThreadPartialChange : PartialChange<ThreadUiState> {
                 currentPageMin = currentPage,
                 totalPage = totalPage,
                 hasPrevious = hasPrevious,
-                contentRenders = (contentRenders + oldState.contentRenders).toImmutableList(),
-                subPostContents = (subPostContents + oldState.subPostContents).toImmutableList()
             )
 
             is Failure -> oldState.copy(isRefreshing = false)
@@ -823,13 +810,8 @@ sealed interface ThreadPartialChange : PartialChange<ThreadUiState> {
                         val replaceIndex = replacePostIndexes.firstOrNull { it.first == index }
                         if (replaceIndex != null) posts[replaceIndex.second] else oldItem
                     }
-                    val newContentRenders = oldState.contentRenders.mapIndexed { index, oldItem ->
-                        val replaceIndex = replacePostIndexes.firstOrNull { it.first == index }
-                        if (replaceIndex != null) contentRenders[replaceIndex.second] else oldItem
-                    }
-                    val newSubPostContents = oldState.subPostContents.mapIndexed { index, oldItem ->
-                        val replaceIndex = replacePostIndexes.firstOrNull { it.first == index }
-                        if (replaceIndex != null) subPostContents[replaceIndex.second] else oldItem
+                    val addPosts = posts.filter {
+                        !newPost.any { item -> item.post.get { id } == it.post.get { id } }
                     }
                     when {
                         hasNewPost && continuous && isDesc -> {
@@ -838,12 +820,8 @@ sealed interface ThreadPartialChange : PartialChange<ThreadUiState> {
                                 isError = false,
                                 error = null,
                                 anti = anti.wrapImmutable(),
-                                data = (posts + newPost).toImmutableList(),
-                                contentRenders = (contentRenders + newContentRenders).toImmutableList(),
-                                subPostContents = (subPostContents + newSubPostContents).toImmutableList(),
+                                data = (addPosts.reversed() + newPost).toImmutableList(),
                                 latestPosts = persistentListOf(),
-                                latestPostContentRenders = persistentListOf(),
-                                latestPostSubPostContents = persistentListOf(),
                             )
                         }
 
@@ -853,12 +831,8 @@ sealed interface ThreadPartialChange : PartialChange<ThreadUiState> {
                                 isError = false,
                                 error = null,
                                 anti = anti.wrapImmutable(),
-                                data = (newPost + posts).toImmutableList(),
-                                contentRenders = (newContentRenders + contentRenders).toImmutableList(),
-                                subPostContents = (newSubPostContents + subPostContents).toImmutableList(),
+                                data = (newPost + addPosts).toImmutableList(),
                                 latestPosts = persistentListOf(),
-                                latestPostContentRenders = persistentListOf(),
-                                latestPostSubPostContents = persistentListOf(),
                             )
                         }
 
@@ -869,11 +843,7 @@ sealed interface ThreadPartialChange : PartialChange<ThreadUiState> {
                                 error = null,
                                 anti = anti.wrapImmutable(),
                                 data = newPost.toImmutableList(),
-                                contentRenders = newContentRenders.toImmutableList(),
-                                subPostContents = newSubPostContents.toImmutableList(),
                                 latestPosts = posts.toImmutableList(),
-                                latestPostContentRenders = contentRenders.toImmutableList(),
-                                latestPostSubPostContents = subPostContents.toImmutableList(),
                             )
                         }
 
@@ -884,11 +854,7 @@ sealed interface ThreadPartialChange : PartialChange<ThreadUiState> {
                                 error = null,
                                 anti = anti.wrapImmutable(),
                                 data = newPost.toImmutableList(),
-                                contentRenders = newContentRenders.toImmutableList(),
-                                subPostContents = newSubPostContents.toImmutableList(),
                                 latestPosts = persistentListOf(),
-                                latestPostContentRenders = persistentListOf(),
-                                latestPostSubPostContents = persistentListOf(),
                             )
                         }
 
@@ -914,8 +880,6 @@ sealed interface ThreadPartialChange : PartialChange<ThreadUiState> {
         data class Success(
             val anti: Anti,
             val posts: List<PostItemData>,
-            val contentRenders: List<ImmutableList<PbContentRender>>,
-            val subPostContents: List<ImmutableList<AnnotatedString>>,
             val page: Int,
             val isContinuous: Boolean,
             val isDesc: Boolean,
@@ -1088,8 +1052,6 @@ sealed interface ThreadPartialChange : PartialChange<ThreadUiState> {
                 val deletedPostIndex = oldState.data.indexOfFirst { it.post.get { id } == postId }
                 oldState.copy(
                     data = oldState.data.removeAt(deletedPostIndex),
-                    contentRenders = oldState.contentRenders.removeAt(deletedPostIndex),
-                    subPostContents = oldState.subPostContents.removeAt(deletedPostIndex)
                 )
             }
 
@@ -1146,11 +1108,7 @@ data class ThreadUiState(
 
     val firstPostContentRenders: ImmutableList<PbContentRender> = persistentListOf(),
     val data: ImmutableList<PostItemData> = persistentListOf(),
-    val contentRenders: ImmutableList<ImmutableList<PbContentRender>> = persistentListOf(),
-    val subPostContents: ImmutableList<ImmutableList<AnnotatedString>> = persistentListOf(),
     val latestPosts: ImmutableList<PostItemData> = persistentListOf(),
-    val latestPostContentRenders: ImmutableList<ImmutableList<PbContentRender>> = persistentListOf(),
-    val latestPostSubPostContents: ImmutableList<ImmutableList<AnnotatedString>> = persistentListOf(),
 
     val isImmersiveMode: Boolean = false,
 ) : UiState
@@ -1179,5 +1137,20 @@ object ThreadSortType {
 @Immutable
 data class PostItemData(
     val post: ImmutableHolder<Post>,
-    val blocked: Boolean = post.get { shouldBlock() }
+    val blocked: Boolean = post.get { shouldBlock() },
+    val contentRenders: ImmutableList<PbContentRender> = post.get { this.contentRenders },
+    val subPosts: ImmutableList<SubPostItemData> = post.get { this.subPosts },
 )
+
+@Immutable
+data class SubPostItemData(
+    val subPost: ImmutableHolder<SubPostList>,
+    val subPostContent: AnnotatedString,
+    val blocked: Boolean = subPost.get { shouldBlock() },
+) {
+    val id: Long
+        get() = subPost.get { id }
+
+    val author: ImmutableHolder<User>?
+        get() = subPost.get { author }?.wrapImmutable()
+}

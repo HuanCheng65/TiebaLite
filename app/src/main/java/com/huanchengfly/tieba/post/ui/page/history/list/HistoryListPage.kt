@@ -10,10 +10,10 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.DropdownMenuItem
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -25,6 +25,7 @@ import com.huanchengfly.tieba.post.activities.ForumActivity
 import com.huanchengfly.tieba.post.activities.ThreadActivity
 import com.huanchengfly.tieba.post.arch.collectPartialAsState
 import com.huanchengfly.tieba.post.arch.onEvent
+import com.huanchengfly.tieba.post.arch.onGlobalEvent
 import com.huanchengfly.tieba.post.arch.pageViewModel
 import com.huanchengfly.tieba.post.fromJson
 import com.huanchengfly.tieba.post.models.ThreadHistoryInfoBean
@@ -45,29 +46,19 @@ import com.huanchengfly.tieba.post.ui.widgets.compose.UserHeader
 import com.huanchengfly.tieba.post.ui.widgets.compose.rememberMenuState
 import com.huanchengfly.tieba.post.utils.DateTimeUtils
 import com.huanchengfly.tieba.post.utils.HistoryUtil
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.filterIsInstance
-import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun HistoryListPage(
     type: Int,
-    eventFlow: Flow<HistoryListUiEvent>,
     viewModel: HistoryListViewModel = if (type == HistoryUtil.TYPE_THREAD) pageViewModel<ThreadHistoryListViewModel>() else pageViewModel<ForumHistoryListViewModel>()
 ) {
     LazyLoad(loaded = viewModel.initialized) {
         viewModel.send(HistoryListUiIntent.Refresh)
         viewModel.initialized = true
     }
-    LaunchedEffect(null) {
-        launch {
-            eventFlow
-                .filterIsInstance<HistoryListUiEvent.DeleteAll>()
-                .collect {
-                    viewModel.send(HistoryListUiIntent.DeleteAll)
-                }
-        }
+    onGlobalEvent<HistoryListUiEvent.DeleteAll> {
+        viewModel.send(HistoryListUiIntent.DeleteAll)
     }
     val isLoadingMore by viewModel.uiState.collectPartialAsState(
         prop1 = HistoryListUiState::isLoadingMore,
@@ -104,6 +95,7 @@ fun HistoryListPage(
     viewModel.onEvent<HistoryListUiEvent.Delete.Success> {
         snackbarHostState.showSnackbar(context.getString(R.string.delete_history_success))
     }
+    val lazyListState = rememberLazyListState()
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -111,9 +103,15 @@ fun HistoryListPage(
         LoadMoreLayout(
             isLoading = isLoadingMore,
             onLoadMore = { viewModel.send(HistoryListUiIntent.LoadMore(currentPage + 1)) },
-            loadEnd = !hasMore
+            loadEnd = !hasMore,
+            lazyListState = lazyListState,
+            isEmpty = todayHistoryData.isEmpty() && beforeHistoryData.isEmpty()
         ) {
-            LazyColumn {
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxSize(),
+                state = lazyListState
+            ) {
                 if (todayHistoryData.isNotEmpty()) {
                     stickyHeader(key = "TodayHistoryHeader") {
                         Column(

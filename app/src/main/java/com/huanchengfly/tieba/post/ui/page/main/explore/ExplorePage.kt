@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Tab
 import androidx.compose.material.TabRow
@@ -21,7 +22,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.compose.ui.util.fastForEachIndexed
 import com.huanchengfly.tieba.post.R
 import com.huanchengfly.tieba.post.activities.NewSearchActivity
 import com.huanchengfly.tieba.post.arch.GlobalEvent
@@ -46,7 +51,7 @@ import kotlinx.coroutines.launch
 @Immutable
 data class ExplorePageItem(
     val id: String,
-    val name: @Composable () -> Unit,
+    val name: @Composable (selected: Boolean) -> Unit,
     val content: @Composable () -> Unit,
 )
 
@@ -73,14 +78,14 @@ private fun ColumnScope.ExplorePageTab(
             .align(Alignment.CenterHorizontally)
             .width(76.dp * pages.size),
     ) {
-        pages.forEachIndexed { index, item ->
+        pages.fastForEachIndexed { index, item ->
             Tab(
-                text = item.name,
+                text = { item.name(pagerState.currentPage == index) },
                 selected = pagerState.currentPage == index,
                 onClick = {
                     coroutineScope.launch {
                         if (pagerState.currentPage == index) {
-                            coroutineScope.emitGlobalEvent(GlobalEvent.Refresh(item.id))
+                            emitGlobalEvent(GlobalEvent.Refresh(item.id))
                         } else {
                             pagerState.animateScrollToPage(index)
                         }
@@ -89,6 +94,19 @@ private fun ColumnScope.ExplorePageTab(
             )
         }
     }
+}
+
+@Composable
+private fun TabText(
+    text: String,
+    selected: Boolean
+) {
+    val style = MaterialTheme.typography.button.copy(
+        letterSpacing = 0.75.sp,
+        fontWeight = if (selected) FontWeight.Bold else FontWeight.Normal,
+        textAlign = TextAlign.Center
+    )
+    Text(text = text, style = style)
 }
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -103,22 +121,22 @@ fun ExplorePage() {
         listOfNotNull(
             if (loggedIn) ExplorePageItem(
                 "concern",
-                { Text(text = stringResource(id = R.string.title_concern)) },
+                { TabText(text = stringResource(id = R.string.title_concern), selected = it) },
                 { ConcernPage() }
             ) else null,
             ExplorePageItem(
                 "personalized",
-                { Text(text = stringResource(id = R.string.title_personalized)) },
+                { TabText(text = stringResource(id = R.string.title_personalized), selected = it) },
                 { PersonalizedPage() }
             ),
             ExplorePageItem(
                 "hot",
-                { Text(text = stringResource(id = R.string.title_hot)) },
+                { TabText(text = stringResource(id = R.string.title_hot), selected = it) },
                 { HotPage() }
             ),
         ).toImmutableList()
     }
-    val pagerState = rememberPagerState(initialPage = if (account != null) 1 else 0)
+    val pagerState = rememberPagerState(initialPage = if (account != null) 1 else 0) { pages.size }
     val coroutineScope = rememberCoroutineScope()
 
     onGlobalEvent<GlobalEvent.Refresh>(
@@ -149,7 +167,6 @@ fun ExplorePage() {
     ) { paddingValues ->
         LazyLoadHorizontalPager(
             contentPadding = paddingValues,
-            pageCount = pages.size,
             state = pagerState,
             key = { pages[it].id },
             modifier = Modifier.fillMaxSize(),

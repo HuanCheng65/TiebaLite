@@ -1,10 +1,8 @@
 package com.huanchengfly.tieba.post.ui.page.forum.threadlist
 
-import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.Stable
 import com.huanchengfly.tieba.post.api.TiebaApi
 import com.huanchengfly.tieba.post.api.models.AgreeBean
-import com.huanchengfly.tieba.post.api.models.protos.ThreadInfo
 import com.huanchengfly.tieba.post.api.models.protos.frsPage.Classify
 import com.huanchengfly.tieba.post.api.models.protos.frsPage.FrsPageResponse
 import com.huanchengfly.tieba.post.api.models.protos.updateAgreeStatus
@@ -21,7 +19,7 @@ import com.huanchengfly.tieba.post.arch.UiIntent
 import com.huanchengfly.tieba.post.arch.UiState
 import com.huanchengfly.tieba.post.arch.wrapImmutable
 import com.huanchengfly.tieba.post.repository.FrsPageRepository
-import com.huanchengfly.tieba.post.utils.BlockManager.shouldBlock
+import com.huanchengfly.tieba.post.ui.models.ThreadItemData
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
@@ -63,12 +61,6 @@ abstract class ForumThreadListViewModel :
 enum class ForumThreadListType {
     Latest, Good
 }
-
-@Immutable
-data class ThreadItemData(
-    val thread: ImmutableHolder<ThreadInfo>,
-    val blocked: Boolean = thread.get { shouldBlock() }
-)
 
 @Stable
 @HiltViewModel
@@ -263,7 +255,7 @@ sealed interface ForumThreadListPartialChange : PartialChange<ForumThreadListUiS
                 is Failure -> oldState.copy(isRefreshing = false)
             }
 
-        object Start : FirstLoad()
+        data object Start : FirstLoad()
 
         data class Success(
             val threadList: List<ThreadItemData>,
@@ -295,7 +287,7 @@ sealed interface ForumThreadListPartialChange : PartialChange<ForumThreadListUiS
                 is Failure -> oldState.copy(isRefreshing = false)
             }
 
-        object Start : Refresh()
+        data object Start : Refresh()
 
         data class Success(
             val threadList: List<ThreadItemData>,
@@ -325,7 +317,7 @@ sealed interface ForumThreadListPartialChange : PartialChange<ForumThreadListUiS
                 is Failure -> oldState.copy(isLoadingMore = false)
             }
 
-        object Start : LoadMore()
+        data object Start : LoadMore()
 
         data class Success(
             val threadList: List<ThreadItemData>,
@@ -341,12 +333,12 @@ sealed interface ForumThreadListPartialChange : PartialChange<ForumThreadListUiS
 
     sealed class Agree private constructor() : ForumThreadListPartialChange {
         private fun List<ThreadItemData>.updateAgreeStatus(
-            id: Long,
-            hasAgree: Int
+            threadId: Long,
+            hasAgree: Int,
         ): ImmutableList<ThreadItemData> {
             return map { data ->
                 val (thread) = data
-                if (thread.get { id } == id) {
+                if (thread.get { id } == threadId) {
                     ThreadItemData(thread.getImmutable { updateAgreeStatus(hasAgree) })
                 } else data
             }.toImmutableList()

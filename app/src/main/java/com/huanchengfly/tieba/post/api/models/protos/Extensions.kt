@@ -18,6 +18,7 @@ import com.huanchengfly.tieba.post.ui.common.TextContentRender.Companion.appendT
 import com.huanchengfly.tieba.post.ui.common.VideoContentRender
 import com.huanchengfly.tieba.post.ui.common.VoiceContentRender
 import com.huanchengfly.tieba.post.ui.common.theme.utils.ThemeUtils
+import com.huanchengfly.tieba.post.ui.page.thread.SubPostItemData
 import com.huanchengfly.tieba.post.ui.utils.getPhotoViewData
 import com.huanchengfly.tieba.post.utils.EmoticonManager
 import com.huanchengfly.tieba.post.utils.EmoticonUtil.emoticonString
@@ -326,36 +327,48 @@ val User.bawuType: String?
     } else null
 
 val Post.subPostContents: ImmutableList<AnnotatedString>
-    get() = sub_post_list?.sub_post_list?.map { it.contentText }?.toImmutableList()
+    get() = sub_post_list?.sub_post_list?.map { it.getContentText(origin_thread_info?.author?.id) }
+        ?.toImmutableList()
         ?: persistentListOf()
 
-@OptIn(ExperimentalTextApi::class)
-val SubPostList.contentText: AnnotatedString
-    get() {
-        val context = App.INSTANCE
-        val accentColor = Color(ThemeUtils.getColorByAttr(context, R.attr.colorNewPrimary))
-
-        val userNameString = buildAnnotatedString {
-            withStyle(
-                style = SpanStyle(
-                    color = accentColor,
-                    fontWeight = FontWeight.Bold
-                )
-            ) {
-                withAnnotation("user", "${author?.id}") {
-                    append(
-                        StringUtil.getUsernameAnnotatedString(
-                            context,
-                            author?.name ?: "",
-                            author?.nameShow
-                        )
-                    )
-                    append(": ")
-                }
-            }
-        }
-
-        val contentStrings = content.renders.map { it.toAnnotationString() }
-
-        return userNameString + contentStrings.reduce { acc, annotatedString -> acc + annotatedString }
+val Post.subPosts: ImmutableList<SubPostItemData>
+    get() = sub_post_list?.sub_post_list?.map {
+        SubPostItemData(
+            it.wrapImmutable(),
+            it.getContentText(origin_thread_info?.author?.id)
+        )
     }
+        ?.toImmutableList()
+        ?: persistentListOf()
+
+fun SubPostList.getContentText(threadAuthorId: Long? = null): AnnotatedString {
+    val context = App.INSTANCE
+    val accentColor = Color(ThemeUtils.getColorByAttr(context, R.attr.colorNewPrimary))
+
+    val userNameString = buildAnnotatedString {
+        val annotation = pushStringAnnotation("user", "${author?.id}")
+        val style = pushStyle(
+            SpanStyle(
+                color = accentColor,
+                fontWeight = FontWeight.Bold
+            )
+        )
+        append(
+            StringUtil.getUsernameAnnotatedString(
+                context,
+                author?.name ?: "",
+                author?.nameShow
+            )
+        )
+        pop(style)
+        if (author?.id == threadAuthorId) {
+            appendInlineContent("Lz")
+        }
+        append(": ")
+        pop(annotation)
+    }
+
+    val contentStrings = content.renders.map { it.toAnnotationString() }
+
+    return userNameString + contentStrings.reduce { acc, annotatedString -> acc + annotatedString }
+}

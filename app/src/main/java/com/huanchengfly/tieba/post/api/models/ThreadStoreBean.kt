@@ -2,6 +2,7 @@ package com.huanchengfly.tieba.post.api.models
 
 import com.google.gson.annotations.SerializedName
 import com.huanchengfly.tieba.post.models.BaseBean
+import javax.annotation.concurrent.Immutable
 
 data class ThreadStoreBean(
     @SerializedName("error_code")
@@ -10,6 +11,7 @@ data class ThreadStoreBean(
     @SerializedName("store_thread")
     val storeThread: List<ThreadStoreInfo>? = null
 ) : BaseBean() {
+    @Immutable
     data class ThreadStoreInfo(
         @SerializedName("thread_id")
         val threadId: String,

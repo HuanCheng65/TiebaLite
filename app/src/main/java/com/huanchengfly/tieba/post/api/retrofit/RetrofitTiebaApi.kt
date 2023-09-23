@@ -5,6 +5,7 @@ import com.huanchengfly.tieba.post.App
 import com.huanchengfly.tieba.post.api.ClientVersion
 import com.huanchengfly.tieba.post.api.Header
 import com.huanchengfly.tieba.post.api.Param
+import com.huanchengfly.tieba.post.api.getCookie
 import com.huanchengfly.tieba.post.api.getUserAgent
 import com.huanchengfly.tieba.post.api.models.OAID
 import com.huanchengfly.tieba.post.api.retrofit.adapter.DeferredCallAdapterFactory
@@ -21,6 +22,7 @@ import com.huanchengfly.tieba.post.api.retrofit.interceptors.ForceLoginIntercept
 import com.huanchengfly.tieba.post.api.retrofit.interceptors.ProtoFailureResponseInterceptor
 import com.huanchengfly.tieba.post.api.retrofit.interceptors.SortAndSignInterceptor
 import com.huanchengfly.tieba.post.api.retrofit.interceptors.StParamInterceptor
+import com.huanchengfly.tieba.post.api.retrofit.interfaces.AppHybridTiebaApi
 import com.huanchengfly.tieba.post.api.retrofit.interfaces.MiniTiebaApi
 import com.huanchengfly.tieba.post.api.retrofit.interfaces.NewTiebaApi
 import com.huanchengfly.tieba.post.api.retrofit.interfaces.OfficialProtobufTiebaApi
@@ -104,6 +106,42 @@ object RetrofitTiebaApi {
                 Header.CLIENT_USER_TOKEN to { AccountUtil.getUid() },
                 Header.CHARSET to { "UTF-8" },
                 Header.HOST to { "tieba.baidu.com" },
+            ),
+            AddWebCookieInterceptor
+        )
+    }
+
+    val HYBRID_TIEBA_API: AppHybridTiebaApi by lazy {
+        createJsonApi<AppHybridTiebaApi>("https://tieba.baidu.com/",
+            CommonHeaderInterceptor(
+                Header.USER_AGENT to { getUserAgent("tieba/12.35.1.0 skin/default") },
+                Header.HOST to { "tieba.baidu.com" },
+                Header.PRAGMA to { "no-cache" },
+                Header.CACHE_CONTROL to { "no-cache" },
+                Header.ACCEPT to { "application/json, text/plain, */*" },
+                Header.ACCEPT_LANGUAGE to { Header.ACCEPT_LANGUAGE_VALUE },
+                "X-Requested-With" to { "com.baidu.tieba" },
+                "Sec-Fetch-Site" to { "same-origin" },
+                "Sec-Fetch-Mode" to { "cors" },
+                "Sec-Fetch-Dest" to { "empty" },
+                Header.COOKIE to {
+                    getCookie(
+                        "CUID" to { CuidUtils.getNewCuid() },
+                        "TBBRAND" to { Build.MODEL },
+                        "cuid_galaxy2" to { CuidUtils.getNewCuid() },
+                        "SP_FW_VER" to { "3.340.42" },
+                        "SG_FW_VER" to { "1.38.0" },
+                        "BDUSS" to { AccountUtil.getBduss() },
+                        "STOKEN" to { AccountUtil.getSToken() },
+                        "BAIDU_WISE_UID" to { ClientUtils.clientId },
+                        "USER_JUMP" to { "-1" },
+                        "BDUSS_BFESS" to { AccountUtil.getBduss() },
+                        "BAIDUID" to { ClientUtils.baiduId },
+                        "BAIDUID_BFESS" to { ClientUtils.baiduId },
+                        "mo_originid" to { "2" },
+                        "BAIDUZID" to { AccountUtil.getAccountInfo { zid } },
+                    )
+                }
             ),
             AddWebCookieInterceptor
         )
@@ -214,7 +252,13 @@ object RetrofitTiebaApi {
                 Header.CHARSET to { "UTF-8" },
                 Header.CLIENT_TYPE to { "2" },
                 Header.CLIENT_USER_TOKEN to { AccountUtil.getUid() },
-                Header.COOKIE to { "CUID=${CuidUtils.getNewCuid()};ka=open;TBBRAND=${Build.MODEL};" },
+                Header.COOKIE to {
+                    getCookie(
+                        "ka" to { "open" },
+                        "CUID" to { CuidUtils.getNewCuid() },
+                        "TBBRAND" to { Build.MODEL }
+                    )
+                },
                 Header.CUID to { CuidUtils.getNewCuid() },
                 Header.CUID_GALAXY2 to { CuidUtils.getNewCuid() },
                 Header.CUID_GID to { "" },
@@ -234,9 +278,12 @@ object RetrofitTiebaApi {
 //                Header.CLIENT_TYPE to { "2" },
                 Header.CLIENT_USER_TOKEN to { AccountUtil.getUid() },
                 Header.COOKIE to {
-                    "BAIDUZID=${
-                        AccountUtil.getAccountInfo { zid }.orEmpty()
-                    };CUID=${CuidUtils.getNewCuid()};ka=open;TBBRAND=${Build.MODEL};"
+                    getCookie(
+                        "BAIDUZID" to { AccountUtil.getAccountInfo { zid } },
+                        "ka" to { "open" },
+                        "CUID" to { CuidUtils.getNewCuid() },
+                        "TBBRAND" to { Build.MODEL }
+                    )
                 },
                 Header.CUID to { CuidUtils.getNewCuid() },
                 Header.CUID_GALAXY2 to { CuidUtils.getNewCuid() },

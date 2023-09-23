@@ -284,6 +284,9 @@ class App : Application(), IApp, SketchFactory {
         lateinit var INSTANCE: App
             private set
 
+        val isInitialized: Boolean
+            get() = this::INSTANCE.isInitialized
+
         val isSystemNight: Boolean
             get() = nightMode == Configuration.UI_MODE_NIGHT_YES
 
@@ -299,8 +302,43 @@ class App : Application(), IApp, SketchFactory {
     }
 
     object ThemeDelegate : ThemeSwitcher {
+        private fun getDefaultColorResId(attrId: Int): Int {
+            return when (attrId) {
+                R.attr.colorPrimary -> R.color.default_color_primary
+                R.attr.colorNewPrimary -> R.color.default_color_primary
+                R.attr.colorAccent -> R.color.default_color_accent
+                R.attr.colorOnAccent -> R.color.default_color_on_accent
+                R.attr.colorToolbar -> R.color.default_color_toolbar
+                R.attr.colorToolbarItem -> R.color.default_color_toolbar_item
+                R.attr.colorToolbarItemSecondary -> R.color.default_color_toolbar_item_secondary
+                R.attr.colorToolbarItemActive -> R.color.default_color_toolbar_item_active
+                R.attr.colorToolbarSurface -> R.color.default_color_toolbar_bar
+                R.attr.colorOnToolbarSurface -> R.color.default_color_on_toolbar_bar
+                R.attr.colorText -> R.color.default_color_text
+                R.attr.colorTextSecondary -> R.color.default_color_text_secondary
+                R.attr.colorTextOnPrimary -> R.color.default_color_text_on_primary
+                R.attr.color_text_disabled -> R.color.default_color_text_disabled
+                R.attr.colorBackground -> R.color.default_color_background
+                R.attr.colorWindowBackground -> R.color.default_color_window_background
+                R.attr.colorChip -> R.color.default_color_chip
+                R.attr.colorOnChip -> R.color.default_color_on_chip
+                R.attr.colorUnselected -> R.color.default_color_unselected
+                R.attr.colorNavBar -> R.color.default_color_nav
+                R.attr.colorNavBarSurface -> R.color.default_color_nav_bar_surface
+                R.attr.colorOnNavBarSurface -> R.color.default_color_on_nav_bar_surface
+                R.attr.colorCard -> R.color.default_color_card
+                R.attr.colorFloorCard -> R.color.default_color_floor_card
+                R.attr.colorDivider -> R.color.default_color_divider
+                R.attr.shadow_color -> R.color.default_color_shadow
+                R.attr.colorIndicator -> R.color.default_color_swipe_refresh_view_background
+                R.attr.colorPlaceholder -> R.color.default_color_placeholder
+                else -> R.color.transparent
+            }
+        }
+
         @SuppressLint("DiscouragedApi")
         fun getColorByAttr(context: Context, attrId: Int, theme: String): Int {
+            if (!isInitialized) return context.getColorCompat(getDefaultColorResId(attrId))
             val resources = context.resources
             when (attrId) {
                 R.attr.colorPrimary -> {
@@ -653,11 +691,26 @@ class App : Application(), IApp, SketchFactory {
                         context.getColorCompat(R.color.theme_color_nav_bar_surface_light)
                     }
                 }
+
                 R.attr.colorOnNavBarSurface -> {
                     return if (ThemeUtil.isNightMode(theme)) {
                         context.getColorCompat(R.color.theme_color_on_nav_bar_surface_dark)
                     } else {
                         context.getColorCompat(R.color.theme_color_on_nav_bar_surface_light)
+                    }
+                }
+
+                R.attr.colorPlaceholder -> {
+                    return if (ThemeUtil.isTranslucentTheme(theme) || ThemeUtil.isNightMode(theme)) {
+                        context.getColorCompat(
+                            resources.getIdentifier(
+                                "theme_color_placeholder_$theme",
+                                "color",
+                                packageName
+                            )
+                        )
+                    } else {
+                        context.getColorCompat(R.color.theme_color_placeholder_light)
                     }
                 }
             }
@@ -669,6 +722,9 @@ class App : Application(), IApp, SketchFactory {
         }
 
         override fun getColorById(context: Context, colorId: Int): Int {
+//            if (!isInitialized) {
+//                return context.getColorCompat(colorId)
+//            }
             when (colorId) {
                 R.color.default_color_primary -> return getColorByAttr(context, R.attr.colorPrimary)
                 R.color.default_color_accent -> return getColorByAttr(context, R.attr.colorAccent)

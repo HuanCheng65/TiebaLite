@@ -8,9 +8,9 @@ import com.huanchengfly.tieba.post.api.models.SearchForumBean;
 
 import java.lang.reflect.Type;
 
-public class ExactMatchAdapter implements JsonDeserializer<SearchForumBean.ExactForumInfoBean> {
+public class ExactMatchAdapter implements JsonDeserializer<SearchForumBean.ForumInfoBean> {
     @Override
-    public SearchForumBean.ExactForumInfoBean deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
+    public SearchForumBean.ForumInfoBean deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
         if (json.isJsonArray()) {
             return null;
         }

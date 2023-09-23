@@ -339,9 +339,10 @@ fun Toolbar(
 @Composable
 fun TopAppBarContainer(
     topBar: @Composable ColumnScope.() -> Unit,
-    content: @Composable (ColumnScope.() -> Unit)? = null
+    modifier: Modifier = Modifier,
+    content: @Composable (ColumnScope.() -> Unit)? = null,
 ) {
-    Column {
+    Column(modifier) {
         Spacer(
             modifier = Modifier
                 .windowInsetsTopHeight(WindowInsets.statusBars)

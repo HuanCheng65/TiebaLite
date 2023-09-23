@@ -24,6 +24,8 @@ data class SearchThreadBean(
         val title: String,
         val content: String,
         val time: String,
+        @SerializedName("modified_time")
+        val modifiedTime: Long,
         @SerializedName("post_num")
         val postNum: String,
         @SerializedName("like_num")
@@ -37,7 +39,7 @@ data class SearchThreadBean(
         val user: UserInfoBean,
         val type: Int,
         @SerializedName("forum_info")
-        val forumInfo: ForumInfo
+        val forumInfo: ForumInfo,
     )
 
     data class ForumInfo(
@@ -48,11 +50,11 @@ data class SearchThreadBean(
 
     data class UserInfoBean(
         @SerializedName("user_name")
-        val userName: String,
+        val userName: String?,
         @SerializedName("show_nickname")
-        val showNickname: String,
+        val showNickname: String?,
         @SerializedName("user_id")
         val userId: String,
-        val portrait: String,
+        val portrait: String?,
     )
 }

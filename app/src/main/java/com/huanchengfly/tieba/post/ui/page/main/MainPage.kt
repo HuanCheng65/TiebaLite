@@ -124,64 +124,75 @@ fun MainPage(
 
     val hideExplore by rememberPreferenceAsState(
         key = booleanPreferencesKey("hideExplore"),
-        defaultValue = false
+        defaultValue = LocalContext.current.appPreferences.hideExplore
     )
-
-    val pagerState = rememberPagerState()
-    val coroutineScope = rememberCoroutineScope()
-    val themeColors = ExtendedTheme.colors
-    val navigationItems = remember(messageCount) {
-        listOfNotNull(
-            NavigationItem(
-                id = "home",
-                icon = { if (it) Icons.Rounded.Inventory2 else Icons.Outlined.Inventory2 },
-                title = { stringResource(id = R.string.title_main) },
-                content = {
-                    HomePage(
-                        canOpenExplore = !LocalContext.current.appPreferences.hideExplore
-                    ) {
-                        coroutineScope.launch {
-                            pagerState.scrollToPage(1)
-                        }
-                    }
-                }
-            ),
-            if (hideExplore) null
-            else NavigationItem(
-                id = "explore",
-                icon = {
-                    if (it) ImageVector.vectorResource(id = R.drawable.ic_round_toys)
-                    else ImageVector.vectorResource(id = R.drawable.ic_outline_toys)
-                },
-                title = { stringResource(id = R.string.title_explore) },
-                content = {
-                    ExplorePage()
-                }
-            ),
-            NavigationItem(
-                id = "notification",
-                icon = { if (it) Icons.Rounded.Notifications else Icons.Outlined.Notifications },
-                title = { stringResource(id = R.string.title_notifications) },
-                badge = messageCount > 0,
-                badgeText = "$messageCount",
-                onClick = {
-                    viewModel.send(MainUiIntent.NewMessage.Clear)
-                },
-                content = {
-                    NotificationsPage()
-                }
-            ),
-            NavigationItem(
-                id = "user",
-                icon = { if (it) Icons.Rounded.AccountCircle else Icons.Outlined.AccountCircle },
-                title = { stringResource(id = R.string.title_user) },
-                content = {
-                    UserPage()
-                }
-            ),
-        ).toImmutableList()
+    val pageCount by remember {
+        derivedStateOf {
+            if (hideExplore) 3 else 4
+        }
+    }
+    val pagerState = rememberPagerState { pageCount }
+    LaunchedEffect(hideExplore) {
+        if (pagerState.currentPage == 3 && hideExplore) {
+            pagerState.scrollToPage(2)
+        }
     }
 
+    val coroutineScope = rememberCoroutineScope()
+    val themeColors = ExtendedTheme.colors
+    val navigationItems by remember {
+        derivedStateOf {
+            listOfNotNull(
+                NavigationItem(
+                    id = "home",
+                    icon = { if (it) Icons.Rounded.Inventory2 else Icons.Outlined.Inventory2 },
+                    title = { stringResource(id = R.string.title_main) },
+                    content = {
+                        HomePage(
+                            canOpenExplore = !LocalContext.current.appPreferences.hideExplore
+                        ) {
+                            coroutineScope.launch {
+                                pagerState.scrollToPage(1)
+                            }
+                        }
+                    }
+                ),
+                if (hideExplore) null
+                else NavigationItem(
+                    id = "explore",
+                    icon = {
+                        if (it) ImageVector.vectorResource(id = R.drawable.ic_round_toys)
+                        else ImageVector.vectorResource(id = R.drawable.ic_outline_toys)
+                    },
+                    title = { stringResource(id = R.string.title_explore) },
+                    content = {
+                        ExplorePage()
+                    }
+                ),
+                NavigationItem(
+                    id = "notification",
+                    icon = { if (it) Icons.Rounded.Notifications else Icons.Outlined.Notifications },
+                    title = { stringResource(id = R.string.title_notifications) },
+                    badge = messageCount > 0,
+                    badgeText = "$messageCount",
+                    onClick = {
+                        viewModel.send(MainUiIntent.NewMessage.Clear)
+                    },
+                    content = {
+                        NotificationsPage()
+                    }
+                ),
+                NavigationItem(
+                    id = "user",
+                    icon = { if (it) Icons.Rounded.AccountCircle else Icons.Outlined.AccountCircle },
+                    title = { stringResource(id = R.string.title_user) },
+                    content = {
+                        UserPage()
+                    }
+                ),
+            ).toImmutableList()
+        }
+    }
     val navigationType by remember {
         derivedStateOf {
             when (windowWidthSizeClass) {
@@ -262,7 +273,6 @@ fun MainPage(
         ) { paddingValues ->
             LazyLoadHorizontalPager(
                 contentPadding = paddingValues,
-                pageCount = navigationItems.size,
                 state = pagerState,
                 key = { navigationItems[it].id },
                 modifier = Modifier.fillMaxSize(),

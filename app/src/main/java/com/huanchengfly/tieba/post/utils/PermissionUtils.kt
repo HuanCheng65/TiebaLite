@@ -413,7 +413,7 @@ class ShowPermissionTipInterceptor(val permissions: List<String>, val descriptio
         callback: OnPermissionCallback?
     ) {
         mRequestFlag = false
-        tipDialog?.dismiss()
+        runCatching { tipDialog?.dismiss() }
     }
 }
 

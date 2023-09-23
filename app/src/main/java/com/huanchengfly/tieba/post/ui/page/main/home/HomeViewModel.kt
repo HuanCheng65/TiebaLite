@@ -6,12 +6,29 @@ import com.huanchengfly.tieba.post.api.TiebaApi
 import com.huanchengfly.tieba.post.api.models.CommonResponse
 import com.huanchengfly.tieba.post.api.models.protos.forumRecommend.ForumRecommendResponse
 import com.huanchengfly.tieba.post.api.retrofit.exception.getErrorMessage
-import com.huanchengfly.tieba.post.arch.*
+import com.huanchengfly.tieba.post.arch.BaseViewModel
+import com.huanchengfly.tieba.post.arch.CommonUiEvent
+import com.huanchengfly.tieba.post.arch.PartialChange
+import com.huanchengfly.tieba.post.arch.PartialChangeProducer
+import com.huanchengfly.tieba.post.arch.UiEvent
+import com.huanchengfly.tieba.post.arch.UiIntent
+import com.huanchengfly.tieba.post.arch.UiState
 import com.huanchengfly.tieba.post.models.database.TopForum
 import com.huanchengfly.tieba.post.utils.AccountUtil
+import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.persistentListOf
+import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.filterIsInstance
+import kotlinx.coroutines.flow.flatMapConcat
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.merge
+import kotlinx.coroutines.flow.onStart
 import org.litepal.LitePal
 
 @Stable
@@ -114,8 +131,10 @@ sealed interface HomePartialChange : PartialChange<HomeUiState> {
             when (this) {
                 is Success -> {
                     oldState.copy(
-                        forums = oldState.forums.filterNot { it.forumId == forumId },
-                        topForums = oldState.topForums.filterNot { it.forumId == forumId },
+                        forums = oldState.forums.filterNot { it.forumId == forumId }
+                            .toImmutableList(),
+                        topForums = oldState.topForums.filterNot { it.forumId == forumId }
+                            .toImmutableList(),
                     )
                 }
 
@@ -132,8 +151,8 @@ sealed interface HomePartialChange : PartialChange<HomeUiState> {
             when (this) {
                 is Success -> oldState.copy(
                     isLoading = false,
-                    forums = forums,
-                    topForums = topForums,
+                    forums = forums.toImmutableList(),
+                    topForums = topForums.toImmutableList(),
                     error = null
                 )
 
@@ -157,7 +176,9 @@ sealed interface HomePartialChange : PartialChange<HomeUiState> {
         sealed interface Delete : HomePartialChange {
             override fun reduce(oldState: HomeUiState): HomeUiState =
                 when (this) {
-                    is Success -> oldState.copy(topForums = oldState.topForums.filterNot { it.forumId == forumId })
+                    is Success -> oldState.copy(topForums = oldState.topForums.filterNot { it.forumId == forumId }
+                        .toImmutableList())
+
                     is Failure -> oldState
                 }
 
@@ -174,6 +195,7 @@ sealed interface HomePartialChange : PartialChange<HomeUiState> {
                         topForumsId.add(forum.forumId)
                         oldState.copy(
                             topForums = oldState.forums.filter { topForumsId.contains(it.forumId) }
+                                .toImmutableList()
                         )
                     }
 
@@ -190,8 +212,8 @@ sealed interface HomePartialChange : PartialChange<HomeUiState> {
 @Immutable
 data class HomeUiState(
     val isLoading: Boolean = true,
-    val forums: List<Forum> = emptyList(),
-    val topForums: List<Forum> = emptyList(),
+    val forums: ImmutableList<Forum> = persistentListOf(),
+    val topForums: ImmutableList<Forum> = persistentListOf(),
     val error: Throwable? = null,
 ) : UiState {
     @Immutable

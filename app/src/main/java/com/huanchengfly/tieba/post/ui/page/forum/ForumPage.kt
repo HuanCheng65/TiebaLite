@@ -75,7 +75,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
-import androidx.compose.ui.text.ExperimentalTextApi
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.rememberTextMeasurer
@@ -93,6 +92,7 @@ import com.huanchengfly.tieba.post.api.models.protos.frsPage.ForumInfo
 import com.huanchengfly.tieba.post.arch.ImmutableHolder
 import com.huanchengfly.tieba.post.arch.collectPartialAsState
 import com.huanchengfly.tieba.post.arch.emitGlobalEvent
+import com.huanchengfly.tieba.post.arch.emitGlobalEventSuspend
 import com.huanchengfly.tieba.post.arch.onEvent
 import com.huanchengfly.tieba.post.arch.pageViewModel
 import com.huanchengfly.tieba.post.dataStore
@@ -351,7 +351,7 @@ private suspend fun sendToDesktop(
     )
 }
 
-@OptIn(ExperimentalTextApi::class, ExperimentalFoundationApi::class)
+@OptIn(ExperimentalFoundationApi::class)
 @Destination(
     deepLinks = [
         DeepLink(uriPattern = "tblite://forum/{forumName}")
@@ -435,7 +435,7 @@ fun ForumPage(
     val tbs by viewModel.uiState.collectPartialAsState(prop1 = ForumUiState::tbs, initial = null)
 
     val account = LocalAccount.current
-    val pagerState = rememberPagerState()
+    val pagerState = rememberPagerState { 2 }
     val coroutineScope = rememberCoroutineScope()
     val lazyListStates = persistentListOf(rememberLazyListState(), rememberLazyListState())
 
@@ -594,12 +594,12 @@ fun ForumPage(
                             when (context.appPreferences.forumFabFunction) {
                                 "refresh" -> {
                                     coroutineScope.launch {
-                                        emitGlobalEvent(
+                                        emitGlobalEventSuspend(
                                             ForumThreadListUiEvent.BackToTop(
                                                 pagerState.currentPage == 1
                                             )
                                         )
-                                        emitGlobalEvent(
+                                        emitGlobalEventSuspend(
                                             ForumThreadListUiEvent.Refresh(
                                                 pagerState.currentPage == 1,
                                                 getSortType(
@@ -739,11 +739,11 @@ fun ForumPage(
                             menuState = menuState,
                             menuContent = {
                                 ListSinglePicker(
-                                    itemTitles = listOf(
+                                    itemTitles = persistentListOf(
                                         stringResource(id = R.string.title_sort_by_reply),
                                         stringResource(id = R.string.title_sort_by_send)
                                     ),
-                                    itemValues = listOf(0, 1),
+                                    itemValues = persistentListOf(0, 1),
                                     selectedPosition = currentSortType,
                                     onItemSelected = { _, _, value, changed ->
                                         if (changed) {
@@ -760,7 +760,7 @@ fun ForumPage(
                                             }
                                             currentSortType = value
                                         }
-                                        menuState.expanded = false
+                                        menuState.dismiss()
                                     }
                                 )
                             }
@@ -776,7 +776,7 @@ fun ForumPage(
                                             pagerState.animateScrollToPage(0)
                                         }
                                     } else {
-                                        menuState.expanded = true
+                                        menuState.toggle()
                                     }
                                 },
                                 selectedContentColor = ExtendedTheme.colors.primary,
@@ -830,7 +830,6 @@ fun ForumPage(
 
                     if (forumInfo != null) {
                         HorizontalPager(
-                            pageCount = 2,
                             state = pagerState,
                             modifier = Modifier.fillMaxSize(),
                             verticalAlignment = Alignment.Top,
@@ -840,7 +839,7 @@ fun ForumPage(
                                 forumId = forumInfo!!.get { id },
                                 forumName = forumInfo!!.get { name },
                                 isGood = it == 1,
-                                lazyListState = lazyListStates[it]
+                                lazyListState = remember { lazyListStates[it] }
                             )
                         }
                     }

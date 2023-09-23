@@ -428,6 +428,9 @@ object MixedTiebaApiImpl : ITiebaApi {
     override fun searchUser(keyword: String): Call<SearchUserBean> =
         RetrofitTiebaApi.MINI_TIEBA_API.searchUser(keyword)
 
+    override fun searchUserFlow(keyword: String): Flow<SearchUserBean> =
+        RetrofitTiebaApi.HYBRID_TIEBA_API.searchUserFlow(keyword)
+
     override fun msg(): Call<MsgBean> = RetrofitTiebaApi.NEW_TIEBA_API.msg()
 
     override fun msgFlow(): Flow<MsgBean> = RetrofitTiebaApi.NEW_TIEBA_API.msgFlow()
@@ -622,14 +625,26 @@ object MixedTiebaApiImpl : ITiebaApi {
     override fun searchForum(keyword: String): Call<SearchForumBean> =
         RetrofitTiebaApi.WEB_TIEBA_API.searchForum(keyword)
 
+    override fun searchForumFlow(keyword: String): Flow<SearchForumBean> =
+        RetrofitTiebaApi.HYBRID_TIEBA_API.searchForumFlow(keyword)
+
     override fun searchThread(
-        keyword: String, page: Int, order: SearchThreadOrder, filter: SearchThreadFilter
+        keyword: String, page: Int, order: SearchThreadOrder, filter: SearchThreadFilter,
     ): Call<SearchThreadBean> =
         RetrofitTiebaApi.WEB_TIEBA_API.searchThread(
             keyword,
             page,
             order.toString(),
             filter.toString()
+        )
+
+    override fun searchThreadFlow(
+        keyword: String, page: Int, sort: Int,
+    ): Flow<SearchThreadBean> =
+        RetrofitTiebaApi.HYBRID_TIEBA_API.searchThreadFlow(
+            keyword,
+            page,
+            sort
         )
 
     override fun webUploadPic(photoInfoBean: PhotoInfoBean): Call<WebUploadPicBean> {
@@ -983,7 +998,7 @@ object MixedTiebaApiImpl : ITiebaApi {
                         is_default_navtab = 0,
                         is_good = if (goodClassifyId != null) 1 else 0,
                         is_selection = 0,
-                        kw = forumName,
+                        kw = forumName.urlEncode(),
                         last_click_tid = 0,
                         load_type = loadType,
                         net_error = 0,
@@ -1015,13 +1030,13 @@ object MixedTiebaApiImpl : ITiebaApi {
         sortType: Int,
         threadIds: String
     ): Flow<ThreadListResponse> {
-        return RetrofitTiebaApi.OFFICIAL_PROTOBUF_TIEBA_API.threadListFlow(
+        return RetrofitTiebaApi.OFFICIAL_PROTOBUF_TIEBA_V12_API.threadListFlow(
             buildProtobufRequestBody(
                 ThreadListRequest(
                     ThreadListRequestData(
                         ad_param = AdParam(3, 0, null),
                         app_pos = buildAppPosInfo(),
-                        common = buildCommonRequest(),
+                        common = buildCommonRequest(clientVersion = ClientVersion.TIEBA_V12),
                         scr_dip = App.ScreenInfo.DENSITY.toDouble(),
                         scr_h = getScreenHeight(),
                         scr_w = getScreenWidth(),
@@ -1036,7 +1051,8 @@ object MixedTiebaApiImpl : ITiebaApi {
                         st_type = 0,
                         last_click_tid = 0
                     )
-                )
+                ),
+                clientVersion = ClientVersion.TIEBA_V12
             )
         )
     }
@@ -1070,15 +1086,15 @@ object MixedTiebaApiImpl : ITiebaApi {
                             content = content,
                             entrance_type = "0",
                             fid = forumId,
-                            floor_num = "0".takeIf { postId.isNullOrEmpty() },
+                            floor_num = "0",
                             is_ad = "0",
-                            is_addition = "0".takeIf { postId.isNullOrEmpty() },
-                            is_barrage = "0".takeIf { postId.isNullOrEmpty() },
+                            is_addition = "0",
+                            is_barrage = "0",
                             is_feedback = "0",
-                            is_giftpost = "0".takeIf { postId.isNullOrEmpty() },
+                            is_giftpost = "0",
                             is_pictxt = "0",
                             is_show_bless = 0,
-                            is_twzhibo_thread = "0".takeIf { postId.isNullOrEmpty() },
+                            is_twzhibo_thread = "0",
                             name_show = nameShow ?: AccountUtil.getAccountInfo { this.nameShow }
                                 .orEmpty(),
                             new_vcode = "1",

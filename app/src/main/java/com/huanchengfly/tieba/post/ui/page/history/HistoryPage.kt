@@ -14,7 +14,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -24,6 +23,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.huanchengfly.tieba.post.R
+import com.huanchengfly.tieba.post.arch.emitGlobalEvent
 import com.huanchengfly.tieba.post.ui.common.theme.compose.ExtendedTheme
 import com.huanchengfly.tieba.post.ui.page.ProvideNavigator
 import com.huanchengfly.tieba.post.ui.page.history.list.HistoryListPage
@@ -36,7 +36,6 @@ import com.huanchengfly.tieba.post.utils.HistoryUtil
 import com.ramcosta.composedestinations.annotation.DeepLink
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
-import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -49,13 +48,11 @@ import kotlinx.coroutines.launch
 fun HistoryPage(
     navigator: DestinationsNavigator
 ) {
-    val pagerState = rememberPagerState()
+    val pagerState = rememberPagerState { 2 }
     val coroutineScope = rememberCoroutineScope()
     val scaffoldState = rememberScaffoldState()
 
     val context = LocalContext.current
-
-    val eventFlow = remember { MutableSharedFlow<HistoryListUiEvent>() }
 
     MyScaffold(
         backgroundColor = Color.Transparent,
@@ -70,7 +67,7 @@ fun HistoryPage(
                     IconButton(onClick = {
                         coroutineScope.launch {
                             HistoryUtil.deleteAll()
-                            eventFlow.emit(HistoryListUiEvent.DeleteAll)
+                            emitGlobalEvent(HistoryListUiEvent.DeleteAll)
                             launch {
                                 scaffoldState.snackbarHostState.showSnackbar(
                                     context.getString(
@@ -141,16 +138,15 @@ fun HistoryPage(
     ) {
         ProvideNavigator(navigator = navigator) {
             HorizontalPager(
-                pageCount = 2,
                 state = pagerState,
                 modifier = Modifier.fillMaxSize(),
                 verticalAlignment = Alignment.Top,
                 userScrollEnabled = true,
             ) {
                 if (it == 0) {
-                    HistoryListPage(type = HistoryUtil.TYPE_THREAD, eventFlow = eventFlow)
+                    HistoryListPage(type = HistoryUtil.TYPE_THREAD)
                 } else {
-                    HistoryListPage(type = HistoryUtil.TYPE_FORUM, eventFlow = eventFlow)
+                    HistoryListPage(type = HistoryUtil.TYPE_FORUM)
                 }
             }
         }

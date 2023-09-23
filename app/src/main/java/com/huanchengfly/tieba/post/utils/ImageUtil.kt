@@ -641,11 +641,7 @@ object ImageUtil {
             if (needReverse(context)) {
                 urls.reverse()
             }
-            for (url in urls) {
-                if (!url.isNullOrEmpty()) {
-                    return url
-                }
-            }
+            return urls.firstOrNull { !it.isNullOrEmpty() } ?: originUrl
         }
         return originUrl
     }

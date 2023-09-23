@@ -20,7 +20,6 @@ import androidx.compose.runtime.Stable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.Saver
 import androidx.compose.runtime.saveable.listSaver
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -111,23 +110,23 @@ fun ClickMenu(
 fun LongClickMenu(
     menuContent: @Composable (ColumnScope.() -> Unit),
     modifier: Modifier = Modifier,
+    enabled: Boolean = true,
     menuState: MenuState = rememberMenuState(),
     onClick: (() -> Unit)? = null,
     shape: Shape = RoundedCornerShape(14.dp),
     interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
     indication: Indication? = LocalIndication.current,
-    content: @Composable () -> Unit
+    content: @Composable () -> Unit,
 ) {
-    val coroutineScope = rememberCoroutineScope()
     LaunchedEffect(key1 = null) {
-        coroutineScope.launch {
+        launch {
             interactionSource.interactions
                 .filterIsInstance<PressInteraction.Press>()
                 .collect {
                     menuState.offset = it.pressPosition
                 }
         }
-        coroutineScope.launch {
+        launch {
             interactionSource.interactions
                 .collect {
                     Log.i("Indication", "$it")
@@ -140,6 +139,7 @@ fun LongClickMenu(
             .combinedClickable(
                 interactionSource = interactionSource,
                 indication = indication,
+                enabled = enabled,
                 onLongClick = {
                     menuState.expanded = true
                 }
@@ -172,18 +172,27 @@ fun LongClickMenu(
 
 @Composable
 fun rememberMenuState(): MenuState {
-    return rememberSaveable(saver = MenuState.Saver) {
-        MenuState()
-    }
+    return rememberSaveable(
+        saver = MenuState.Saver,
+        init = { MenuState() }
+    )
 }
 
 @Stable
-class MenuState(
-    expanded: Boolean = false,
-    offsetX: Float = 0f,
-    offsetY: Float = 0f,
-) {
-    private var _expanded by mutableStateOf(expanded)
+class MenuState {
+    private var _expanded by mutableStateOf(false)
+
+    fun toggle() {
+        expanded = !expanded
+    }
+
+    fun show() {
+        expanded = true
+    }
+
+    fun dismiss() {
+        expanded = false
+    }
 
     var expanded: Boolean
         get() = _expanded
@@ -193,7 +202,7 @@ class MenuState(
             }
         }
 
-    private var _offset by mutableStateOf(Offset(offsetX, offsetY))
+    private var _offset by mutableStateOf(Offset(0f, 0f))
 
     var offset: Offset
         get() = _offset
@@ -213,11 +222,10 @@ class MenuState(
                 )
             },
             restore = {
-                MenuState(
-                    expanded = it[0] as Boolean,
-                    offsetX = it[1] as Float,
-                    offsetY = it[2] as Float,
-                )
+                MenuState().apply {
+                    expanded = it[0] as Boolean
+                    offset = Offset(it[1] as Float, it[2] as Float)
+                }
             }
         )
     }

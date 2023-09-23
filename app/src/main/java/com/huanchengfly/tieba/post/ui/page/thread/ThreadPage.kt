@@ -25,7 +25,7 @@ import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListScope
-import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.appendInlineContent
@@ -84,6 +84,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.util.fastForEach
 import com.huanchengfly.tieba.post.App
 import com.huanchengfly.tieba.post.R
 import com.huanchengfly.tieba.post.activities.UserActivity
@@ -123,6 +124,8 @@ import com.huanchengfly.tieba.post.ui.page.destinations.ThreadPageDestination
 import com.huanchengfly.tieba.post.ui.widgets.Chip
 import com.huanchengfly.tieba.post.ui.widgets.compose.Avatar
 import com.huanchengfly.tieba.post.ui.widgets.compose.BackNavigationIcon
+import com.huanchengfly.tieba.post.ui.widgets.compose.BlockTip
+import com.huanchengfly.tieba.post.ui.widgets.compose.BlockableContent
 import com.huanchengfly.tieba.post.ui.widgets.compose.Button
 import com.huanchengfly.tieba.post.ui.widgets.compose.Card
 import com.huanchengfly.tieba.post.ui.widgets.compose.ConfirmDialog
@@ -397,7 +400,7 @@ fun ThreadPage(
     seeLz: Boolean = false,
     sortType: Int = 0,
     from: String = "",
-    extra: ThreadPageExtra = ThreadPageNoExtra,
+    extra: ThreadPageExtra? = null,
     threadInfo: ThreadInfo? = null,
     scrollToReply: Boolean = false,
     viewModel: ThreadViewModel = pageViewModel()
@@ -429,14 +432,6 @@ fun ThreadPage(
     val scaffoldState = rememberScaffoldState()
     val data by viewModel.uiState.collectPartialAsState(
         prop1 = ThreadUiState::data,
-        initial = persistentListOf()
-    )
-    val contentRenders by viewModel.uiState.collectPartialAsState(
-        prop1 = ThreadUiState::contentRenders,
-        initial = persistentListOf()
-    )
-    val subPostContents by viewModel.uiState.collectPartialAsState(
-        prop1 = ThreadUiState::subPostContents,
         initial = persistentListOf()
     )
     val author by viewModel.uiState.collectPartialAsState(
@@ -519,14 +514,6 @@ fun ThreadPage(
         prop1 = ThreadUiState::latestPosts,
         initial = persistentListOf()
     )
-    val latestPostContentRenders by viewModel.uiState.collectPartialAsState(
-        prop1 = ThreadUiState::latestPostContentRenders,
-        initial = persistentListOf()
-    )
-    val latestPostSubPostContents by viewModel.uiState.collectPartialAsState(
-        prop1 = ThreadUiState::latestPostSubPostContents,
-        initial = persistentListOf()
-    )
 
     val isEmpty by remember {
         derivedStateOf { data.isEmpty() && firstPost == null }
@@ -555,20 +542,18 @@ fun ThreadPage(
         initialValue = ModalBottomSheetValue.Hidden,
         skipHalfExpanded = true
     )
-    val getLastVisibilityPost = {
-        data.firstOrNull { (post) ->
-            lazyListState.layoutInfo.visibleItemsInfo.lastOrNull { info -> info.key is Long }?.key as Long? == post.get { id }
-        }?.post ?: firstPost
-    }
     val lastVisibilityPost by remember {
         derivedStateOf {
             data.firstOrNull { (post) ->
-                lazyListState.layoutInfo.visibleItemsInfo.lastOrNull { info -> info.key is Long }?.key as Long? == post.get { id }
+                val lastPostKey = lazyListState.layoutInfo.visibleItemsInfo.lastOrNull { info ->
+                    info.key is String && (info.key as String).startsWith("Post")
+                }?.key as String?
+                lastPostKey?.endsWith(post.get { id }.toString()) == true
             }?.post ?: firstPost
         }
     }
-    val lastVisibilityPostId = remember(lastVisibilityPost) {
-        lastVisibilityPost?.get { id } ?: 0L
+    val lastVisibilityPostId by remember {
+        derivedStateOf { lastVisibilityPost?.get { id } ?: 0L }
     }
     val coroutineScope = rememberCoroutineScope()
     val context = LocalContext.current
@@ -619,18 +604,19 @@ fun ThreadPage(
 
     onGlobalEvent<GlobalEvent.ReplySuccess>(
         filter = { it.threadId == threadId }
-    ) {
+    ) { event ->
         viewModel.send(
             ThreadUiIntent.LoadLatestReply(
                 threadId = threadId,
-                postId = it.newPostId,
+                postId = event.newPostId,
                 forumId = curForumId,
                 isDesc = curSortType == ThreadSortType.SORT_TYPE_DESC,
                 curLatestPostFloor = if (curSortType == ThreadSortType.SORT_TYPE_DESC) {
                     data.firstOrNull()?.post?.get { floor } ?: 1
                 } else {
                     data.lastOrNull()?.post?.get { floor } ?: 1
-                }
+                },
+                curPostIds = data.map { it.post.get { id } },
             )
         )
     }
@@ -643,11 +629,10 @@ fun ThreadPage(
         dialogState = updateCollectMarkDialogState,
         onConfirm = {
             coroutineScope.launch {
-                val readPostId = getLastVisibilityPost()?.get { id } ?: 0L
                 navigator.navigateUp()
-                if (readPostId != 0L) {
+                if (lastVisibilityPostId != 0L) {
                     TiebaApi.getInstance()
-                        .addStoreFlow(threadId, postId)
+                        .addStoreFlow(threadId, lastVisibilityPostId)
                         .catch {
                             context.toastShort(
                                 R.string.message_update_collect_mark_failed,
@@ -670,7 +655,7 @@ fun ThreadPage(
         enabled = isCollected && !bottomSheetState.isVisible,
         currentScreen = ThreadPageDestination
     ) {
-        readFloorBeforeBack = getLastVisibilityPost()?.get { floor } ?: 0
+        readFloorBeforeBack = lastVisibilityPost?.get { floor } ?: 0
         if (readFloorBeforeBack != 0) {
             updateCollectMarkDialogState.show()
         } else {
@@ -815,13 +800,13 @@ fun ThreadPage(
     fun PostCard(
         item: ImmutableHolder<Post>,
         contentRenders: ImmutableList<PbContentRender>,
-        subPostContents: ImmutableList<AnnotatedString>,
-        blocked: Boolean
+        subPosts: ImmutableList<SubPostItemData>,
+        blocked: Boolean,
     ) {
         PostCard(
             postHolder = item,
             contentRenders = contentRenders,
-            subPostContents = subPostContents,
+            subPosts = subPosts,
             threadAuthorId = author?.get { id } ?: 0L,
             blocked = blocked,
             canDelete = { it.author_id == user.get { id } },
@@ -933,14 +918,14 @@ fun ThreadPage(
                     }
                 }
             }
-            itemsIndexed(
+            items(
                 items = latestPosts,
-                key = { _, (item) -> "LatestPost_${item.get { id }}" }
-            ) { index, (item, blocked) ->
+                key = { (item) -> "LatestPost_${item.get { id }}" }
+            ) { (item, blocked, renders, subPosts) ->
                 PostCard(
                     item,
-                    latestPostContentRenders[index],
-                    latestPostSubPostContents[index],
+                    renders,
+                    subPosts,
                     blocked
                 )
             }
@@ -1027,7 +1012,7 @@ fun ThreadPage(
                                         )
                                     }
                                 } else {
-                                    val readItem = getLastVisibilityPost()
+                                    val readItem = lastVisibilityPost
                                     if (readItem != null) {
                                         viewModel.send(
                                             ThreadUiIntent.AddFavorite(
@@ -1130,7 +1115,6 @@ fun ThreadPage(
                         ) {
                             LoadMoreLayout(
                                 isLoading = isLoadingMore,
-                                loadEnd = !hasMore,
                                 onLoadMore = {
                                     viewModel.send(
                                         ThreadUiIntent.LoadMore(
@@ -1144,7 +1128,10 @@ fun ThreadPage(
                                             postIds = data.map { it.post.get { id } }
                                         )
                                     )
-                                }
+                                },
+                                loadEnd = !hasMore,
+                                lazyListState = lazyListState,
+                                isEmpty = data.isEmpty()
                             ) {
                                 LazyColumn(
                                     state = lazyListState,
@@ -1306,14 +1293,14 @@ fun ThreadPage(
                                             }
                                         }
                                     }
-                                    itemsIndexed(
+                                    items(
                                         items = data,
-                                        key = { _, (item) -> "Post_${item.get { id }}" }
-                                    ) { index, (item, blocked) ->
+                                        key = { (item) -> "Post_${item.get { id }}" }
+                                    ) { (item, blocked, renders, subPosts) ->
                                         PostCard(
                                             item,
-                                            contentRenders[index],
-                                            subPostContents[index],
+                                            renders,
+                                            subPosts,
                                             blocked
                                         )
                                     }
@@ -1498,7 +1485,7 @@ private fun BottomBar(
 fun PostCard(
     postHolder: ImmutableHolder<Post>,
     contentRenders: ImmutableList<PbContentRender>,
-    subPostContents: ImmutableList<AnnotatedString> = persistentListOf(),
+    subPosts: ImmutableList<SubPostItemData> = persistentListOf(),
     threadAuthorId: Long = 0L,
     blocked: Boolean = false,
     canDelete: (Post) -> Boolean = { false },
@@ -1513,26 +1500,6 @@ fun PostCard(
     onMenuDeleteClick: ((Post) -> Unit)? = null,
 ) {
     val context = LocalContext.current
-    if (blocked && !immersiveMode) {
-        val hideBlockedContent = context.appPreferences.hideBlockedContent
-        if (!hideBlockedContent) {
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(vertical = 8.dp, horizontal = 16.dp)
-                    .clip(RoundedCornerShape(6.dp))
-                    .background(ExtendedTheme.colors.floorCard)
-                    .padding(vertical = 8.dp, horizontal = 16.dp)
-            ) {
-                Text(
-                    text = stringResource(id = R.string.tip_blocked_post, postHolder.get { floor }),
-                    style = MaterialTheme.typography.caption,
-                    color = ExtendedTheme.colors.textSecondary
-                )
-            }
-        }
-        return
-    }
     val post = remember(postHolder) { postHolder.get() }
     val hasPadding = remember(key1 = postHolder, key2 = immersiveMode) {
         postHolder.get { floor > 1 } && !immersiveMode
@@ -1548,188 +1515,214 @@ fun PostCard(
     val agreeNum = remember(postHolder) {
         post.agree?.diffAgreeNum ?: 0L
     }
-    val subPosts = remember(postHolder) {
-        postHolder.get { sub_post_list?.sub_post_list }?.wrapImmutable() ?: persistentListOf()
-    }
     val menuState = rememberMenuState()
-    LongClickMenu(
-        menuState = menuState,
-        indication = null,
-        onClick = {
-            onReplyClick(post)
+    BlockableContent(
+        blocked = blocked,
+        blockedTip = {
+            BlockTip {
+                Text(
+                    text = stringResource(id = R.string.tip_blocked_post, postHolder.get { floor }),
+                )
+            }
         },
-        menuContent = {
-            DropdownMenuItem(
-                onClick = {
-                    onReplyClick(post)
-                    menuState.expanded = false
-                }
-            ) {
-                Text(text = stringResource(id = R.string.btn_reply))
-            }
-            DropdownMenuItem(
-                onClick = {
-                    TiebaUtil.copyText(context, post.content.plainText)
-                    menuState.expanded = false
-                }
-            ) {
-                Text(text = stringResource(id = R.string.menu_copy))
-            }
-            DropdownMenuItem(
-                onClick = {
-                    TiebaUtil.reportPost(context, post.id.toString())
-                    menuState.expanded = false
-                }
-            ) {
-                Text(text = stringResource(id = R.string.title_report))
-            }
-            if (onMenuFavoriteClick != null) {
-                DropdownMenuItem(
-                    onClick = {
-                        onMenuFavoriteClick(post)
-                        menuState.expanded = false
-                    }
-                ) {
-                    if (isCollected(post)) {
-                        Text(text = stringResource(id = R.string.title_collect_on))
-                    } else {
-                        Text(text = stringResource(id = R.string.title_collect_floor))
-                    }
-                }
-            }
-            if (canDelete(post) && onMenuDeleteClick != null) {
-                DropdownMenuItem(
-                    onClick = {
-                        onMenuDeleteClick(post)
-                        menuState.expanded = false
-                    }
-                ) {
-                    Text(text = stringResource(id = R.string.title_delete))
-                }
-            }
-        }
+        hideBlockedContent = context.appPreferences.hideBlockedContent || immersiveMode,
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 8.dp, horizontal = 16.dp)
     ) {
-        Card(
-            header = {
-                if (!immersiveMode) {
-                    UserHeader(
-                        avatar = {
-                            Avatar(
-                                data = StringUtil.getAvatarUrl(author.portrait),
-                                size = Sizes.Small,
-                                contentDescription = null
-                            )
-                        },
-                        name = {
-                            UserNameText(
-                                userName = StringUtil.getUsernameAnnotatedString(
-                                    LocalContext.current,
-                                    author.name,
-                                    author.nameShow
-                                ),
-                                userLevel = author.level_id,
-                                isLz = author.id == threadAuthorId,
-                                bawuType = author.bawuType,
-                            )
-                        },
-                        desc = {
-                            Text(
-                                text = getDescText(
-                                    post.time.toLong(),
-                                    post.floor,
-                                    author.ip_address
-                                )
-                            )
-                        },
+        LongClickMenu(
+            menuState = menuState,
+            indication = null,
+            onClick = {
+                onReplyClick(post)
+            },
+            menuContent = {
+                DropdownMenuItem(
+                    onClick = {
+                        onReplyClick(post)
+                        menuState.expanded = false
+                    }
+                ) {
+                    Text(text = stringResource(id = R.string.btn_reply))
+                }
+                DropdownMenuItem(
+                    onClick = {
+                        TiebaUtil.copyText(context, post.content.plainText)
+                        menuState.expanded = false
+                    }
+                ) {
+                    Text(text = stringResource(id = R.string.menu_copy))
+                }
+                DropdownMenuItem(
+                    onClick = {
+                        TiebaUtil.reportPost(context, post.id.toString())
+                        menuState.expanded = false
+                    }
+                ) {
+                    Text(text = stringResource(id = R.string.title_report))
+                }
+                if (onMenuFavoriteClick != null) {
+                    DropdownMenuItem(
                         onClick = {
-                            UserActivity.launch(context, author.id.toString())
+                            onMenuFavoriteClick(post)
+                            menuState.expanded = false
                         }
                     ) {
-                        if (post.floor > 1) {
-                            PostAgreeBtn(
-                                hasAgreed = hasAgreed,
-                                agreeNum = agreeNum,
-                                onClick = onAgree
-                            )
+                        if (isCollected(post)) {
+                            Text(text = stringResource(id = R.string.title_collect_on))
+                        } else {
+                            Text(text = stringResource(id = R.string.title_collect_floor))
                         }
                     }
                 }
-            },
-            content = {
-                Column(
-                    verticalArrangement = Arrangement.spacedBy(8.dp),
-                    modifier = paddingModifier
-                        .fillMaxWidth()
-                ) {
-                    if (showTitle) {
-                        Text(
-                            text = post.title,
-                            style = MaterialTheme.typography.subtitle1,
-                            fontSize = 15.sp
-                        )
+                if (canDelete(post) && onMenuDeleteClick != null) {
+                    DropdownMenuItem(
+                        onClick = {
+                            onMenuDeleteClick(post)
+                            menuState.expanded = false
+                        }
+                    ) {
+                        Text(text = stringResource(id = R.string.title_delete))
                     }
-
-                    if (isCollected(post)) {
-                        Chip(
-                            text = stringResource(id = R.string.title_collected_floor),
-                            invertColor = true,
-                            icon = {
-                                Icon(
-                                    imageVector = Icons.Rounded.Star,
-                                    contentDescription = null,
-                                    modifier = Modifier.size(16.dp)
+                }
+            }
+        ) {
+            Card(
+                header = {
+                    if (!immersiveMode) {
+                        UserHeader(
+                            avatar = {
+                                Avatar(
+                                    data = StringUtil.getAvatarUrl(author.portrait),
+                                    size = Sizes.Small,
+                                    contentDescription = null
+                                )
+                            },
+                            name = {
+                                UserNameText(
+                                    userName = StringUtil.getUsernameAnnotatedString(
+                                        LocalContext.current,
+                                        author.name,
+                                        author.nameShow
+                                    ),
+                                    userLevel = author.level_id,
+                                    isLz = author.id == threadAuthorId,
+                                    bawuType = author.bawuType,
+                                )
+                            },
+                            desc = {
+                                Text(
+                                    text = getDescText(
+                                        post.time.toLong(),
+                                        post.floor,
+                                        author.ip_address
+                                    )
+                                )
+                            },
+                            onClick = {
+                                UserActivity.launch(context, author.id.toString())
+                            }
+                        ) {
+                            if (post.floor > 1) {
+                                PostAgreeBtn(
+                                    hasAgreed = hasAgreed,
+                                    agreeNum = agreeNum,
+                                    onClick = onAgree
                                 )
                             }
-                        )
+                        }
                     }
-
-                    contentRenders.forEach { it.Render() }
-                }
-
-                if (showSubPosts && post.sub_post_number > 0 && subPostContents.isNotEmpty() && !immersiveMode) {
+                },
+                content = {
                     Column(
-                        modifier = Modifier
+                        verticalArrangement = Arrangement.spacedBy(8.dp),
+                        modifier = paddingModifier
                             .fillMaxWidth()
-                            .then(paddingModifier)
-                            .clip(RoundedCornerShape(6.dp))
-                            .background(ExtendedTheme.colors.floorCard)
-                            .padding(vertical = 12.dp),
-                        verticalArrangement = Arrangement.spacedBy(2.dp)
                     ) {
-                        subPostContents.forEachIndexed { index, text ->
-                            SubPostItem(
-                                subPostList = subPosts[index],
-                                subPostContent = text,
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(horizontal = 12.dp),
-                                onReplyClick = { onSubPostReplyClick?.invoke(post, it) },
-                                onOpenSubPosts = onOpenSubPosts,
+                        if (showTitle) {
+                            Text(
+                                text = post.title,
+                                style = MaterialTheme.typography.subtitle1,
+                                fontSize = 15.sp
                             )
                         }
 
-                        if (post.sub_post_number > subPostContents.size) {
-                            Text(
-                                text = stringResource(
-                                    id = R.string.open_all_sub_posts,
-                                    post.sub_post_number
-                                ),
-                                style = MaterialTheme.typography.caption,
-                                fontSize = 13.sp,
-                                color = ExtendedTheme.colors.accent,
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(top = 2.dp)
-                                    .clickable {
-                                        onOpenSubPosts(0)
-                                    }
-                                    .padding(horizontal = 12.dp)
+                        if (isCollected(post)) {
+                            Chip(
+                                text = stringResource(id = R.string.title_collected_floor),
+                                invertColor = true,
+                                icon = {
+                                    Icon(
+                                        imageVector = Icons.Rounded.Star,
+                                        contentDescription = null,
+                                        modifier = Modifier.size(16.dp)
+                                    )
+                                }
                             )
+                        }
+
+                        contentRenders.fastForEach { it.Render() }
+                    }
+
+                    if (showSubPosts && post.sub_post_number > 0 && subPosts.isNotEmpty() && !immersiveMode) {
+                        Column(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .then(paddingModifier)
+                                .clip(RoundedCornerShape(6.dp))
+                                .background(ExtendedTheme.colors.floorCard)
+                                .padding(vertical = 12.dp),
+                            verticalArrangement = Arrangement.spacedBy(2.dp)
+                        ) {
+                            subPosts.fastForEach { item ->
+                                BlockableContent(
+                                    blocked = item.blocked,
+                                    blockedTip = {
+                                        Text(
+                                            text = stringResource(id = R.string.tip_blocked_sub_post),
+                                            style = MaterialTheme.typography.body2.copy(
+                                                color = ExtendedTheme.colors.textDisabled,
+                                                fontSize = 13.sp
+                                            ),
+                                            modifier = Modifier.padding(horizontal = 12.dp)
+                                        )
+                                    },
+                                ) {
+                                    SubPostItem(
+                                        subPostList = item.subPost,
+                                        subPostContent = item.subPostContent,
+                                        modifier = Modifier
+                                            .fillMaxWidth()
+                                            .padding(horizontal = 12.dp),
+                                        onReplyClick = { onSubPostReplyClick?.invoke(post, it) },
+                                        onOpenSubPosts = onOpenSubPosts,
+                                    )
+                                }
+                            }
+
+                            if (post.sub_post_number > subPosts.size) {
+                                Text(
+                                    text = stringResource(
+                                        id = R.string.open_all_sub_posts,
+                                        post.sub_post_number
+                                    ),
+                                    style = MaterialTheme.typography.caption,
+                                    fontSize = 13.sp,
+                                    color = ExtendedTheme.colors.accent,
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(top = 2.dp)
+                                        .clickable {
+                                            onOpenSubPosts(0)
+                                        }
+                                        .padding(horizontal = 12.dp)
+                                )
+                            }
                         }
                     }
                 }
-            }
-        )
+            )
+        }
     }
 }
 
@@ -1778,16 +1771,24 @@ private fun SubPostItem(
             onOpenSubPosts(subPostList.get { id })
         }
     ) {
-        PbContentText(
-            text = subPostContent,
-            modifier = modifier,
-            color = ExtendedTheme.colors.text,
-            fontSize = 13.sp,
-            style = MaterialTheme.typography.body2,
-            emoticonSize = 0.9f,
-            overflow = TextOverflow.Ellipsis,
-            maxLines = 4,
-        )
+        ProvideTextStyle(value = MaterialTheme.typography.body2.copy(color = ExtendedTheme.colors.text)) {
+            PbContentText(
+                text = subPostContent,
+                modifier = modifier,
+                fontSize = 13.sp,
+                emoticonSize = 0.9f,
+                overflow = TextOverflow.Ellipsis,
+                maxLines = 4,
+                lineSpacing = 0.4.sp,
+                inlineContent = mapOf(
+                    "Lz" to buildChipInlineContent(
+                        stringResource(id = R.string.tip_lz),
+                        backgroundColor = ExtendedTheme.colors.textSecondary.copy(alpha = 0.1f),
+                        color = ExtendedTheme.colors.textSecondary
+                    ),
+                )
+            )
+        }
     }
 }
 

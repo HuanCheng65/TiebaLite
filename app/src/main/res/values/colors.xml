@@ -70,6 +70,8 @@
     <color name="default_color_shadow">#FEE9E9E9</color>
     <color name="default_color_swipe_refresh_view_background">#FFFFFFFF</color>
     <color name="default_color_chip">#FFF8F8F8</color>
+    <color name="default_color_on_chip">#FF808080</color>
+    <color name="default_color_placeholder">#FFF0F0F0</color>
 
     <color name="theme_color_primary_white">@color/tieba</color>
     <color name="theme_color_primary_tieba">@color/tieba</color>
@@ -242,6 +244,13 @@
 
     <color name="theme_color_shadow_day">@color/color_shadow</color>
     <color name="theme_color_shadow_night">#FE191919</color>
+
+    <color name="theme_color_placeholder_light">#FFF0F0F0</color>
+    <color name="theme_color_placeholder_blue_dark">#99000000</color>
+    <color name="theme_color_placeholder_grey_dark">#99000000</color>
+    <color name="theme_color_placeholder_amoled_dark">#99000000</color>
+    <color name="theme_color_placeholder_translucent_light">#15FFFFFF</color>
+    <color name="theme_color_placeholder_translucent_dark">#30000000</color>
 
     <color name="red_accent">#FFC51100</color>
 

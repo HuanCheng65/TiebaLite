@@ -18,6 +18,7 @@ import androidx.compose.runtime.Stable
 import androidx.compose.runtime.State
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
@@ -48,13 +49,17 @@ fun BaseTextField(
     colors: TextFieldColors = TextFieldDefaults.textFieldColors(),
     decorationBox: @Composable (innerTextField: @Composable () -> Unit) -> Unit =
         { innerTextField ->
-            PlaceholderDecoration(
-                show = value.isEmpty(),
-                placeholderColor = colors.placeholderColor(enabled = enabled).value,
-                placeholder = placeholder
-            )
-            innerTextField()
-        }
+            Box(
+                contentAlignment = Alignment.CenterStart
+            ) {
+                PlaceholderDecoration(
+                    show = value.isEmpty(),
+                    placeholderColor = colors.placeholderColor(enabled = enabled).value,
+                    placeholder = placeholder
+                )
+                innerTextField()
+            }
+        },
 ) {
     val textColor = textStyle.color.takeOrElse {
         colors.textColor(enabled).value
@@ -267,7 +272,7 @@ object TextFieldDefaults {
         disabledTextColor: Color = textColor.copy(alpha = ContentAlpha.disabled),
         backgroundColor: Color = Color.Transparent,
         cursorColor: Color = ExtendedTheme.colors.accent,
-        placeholderColor: Color = ExtendedTheme.colors.text.copy(alpha = ContentAlpha.medium),
+        placeholderColor: Color = ExtendedTheme.colors.textSecondary.copy(alpha = ContentAlpha.medium),
         disabledPlaceholderColor: Color = placeholderColor.copy(alpha = ContentAlpha.disabled),
     ): TextFieldColors =
         DefaultTextFieldColors(

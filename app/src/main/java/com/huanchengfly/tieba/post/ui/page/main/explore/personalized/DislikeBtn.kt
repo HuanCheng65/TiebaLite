@@ -42,11 +42,13 @@ import com.huanchengfly.tieba.post.ui.widgets.compose.ClickMenu
 import com.huanchengfly.tieba.post.ui.widgets.compose.VerticalGrid
 import com.huanchengfly.tieba.post.ui.widgets.compose.items
 import com.huanchengfly.tieba.post.ui.widgets.compose.rememberMenuState
+import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.toImmutableList
 
 @Composable
 fun Dislike(
     personalized: ImmutableHolder<ThreadPersonalized>,
-    onDislike: (clickTime: Long, reasons: List<ImmutableHolder<DislikeReason>>) -> Unit,
+    onDislike: (clickTime: Long, reasons: ImmutableList<ImmutableHolder<DislikeReason>>) -> Unit,
 ) {
     var clickTime by remember { mutableStateOf(0L) }
     val selectedReasons = remember { mutableStateListOf<ImmutableHolder<DislikeReason>>() }
@@ -88,7 +90,7 @@ fun Dislike(
                             .background(color = ExtendedTheme.colors.primary)
                             .clickable {
                                 dismiss()
-                                onDislike(clickTime, selectedReasons)
+                                onDislike(clickTime, selectedReasons.toImmutableList())
                             }
                             .padding(vertical = 4.dp, horizontal = 8.dp),
                         color = ExtendedTheme.colors.onAccent,

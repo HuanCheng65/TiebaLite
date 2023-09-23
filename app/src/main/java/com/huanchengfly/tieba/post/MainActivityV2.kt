@@ -13,7 +13,7 @@ import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import androidx.compose.animation.AnimatedContentScope
+import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.core.AnimationSpec
 import androidx.compose.animation.core.Spring
@@ -50,12 +50,12 @@ import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import androidx.navigation.plusAssign
 import androidx.window.layout.FoldingFeature
 import androidx.window.layout.WindowInfoTracker
 import com.github.panpf.sketch.compose.AsyncImage
 import com.github.panpf.sketch.fetch.newFileUri
-import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import com.google.accompanist.navigation.material.BottomSheetNavigator
 import com.google.accompanist.navigation.material.ExperimentalMaterialNavigationApi
 import com.google.accompanist.navigation.material.ModalBottomSheetLayout
@@ -88,6 +88,7 @@ import com.huanchengfly.tieba.post.utils.newIntentFilter
 import com.huanchengfly.tieba.post.utils.registerPickMediasLauncher
 import com.huanchengfly.tieba.post.utils.requestIgnoreBatteryOptimizations
 import com.huanchengfly.tieba.post.utils.requestPermission
+import com.microsoft.appcenter.analytics.Analytics
 import com.ramcosta.composedestinations.DestinationsNavHost
 import com.ramcosta.composedestinations.animations.defaults.RootNavGraphDefaultAnimations
 import com.ramcosta.composedestinations.animations.rememberAnimatedNavHostEngine
@@ -296,35 +297,35 @@ class MainActivityV2 : BaseComposeActivity() {
                         rootDefaultAnimations = RootNavGraphDefaultAnimations(
                             enterTransition = {
                                 slideIntoContainer(
-                                    AnimatedContentScope.SlideDirection.Start,
+                                    AnimatedContentTransitionScope.SlideDirection.Start,
                                     animationSpec = animationSpec,
                                     initialOffset = { it }
                                 )
                             },
                             exitTransition = {
                                 slideOutOfContainer(
-                                    AnimatedContentScope.SlideDirection.End,
+                                    AnimatedContentTransitionScope.SlideDirection.End,
                                     animationSpec = animationSpec,
                                     targetOffset = { -it }
                                 )
                             },
                             popEnterTransition = {
                                 slideIntoContainer(
-                                    AnimatedContentScope.SlideDirection.Start,
+                                    AnimatedContentTransitionScope.SlideDirection.Start,
                                     animationSpec = animationSpec,
                                     initialOffset = { -it }
                                 )
                             },
                             popExitTransition = {
                                 slideOutOfContainer(
-                                    AnimatedContentScope.SlideDirection.End,
+                                    AnimatedContentTransitionScope.SlideDirection.End,
                                     animationSpec = animationSpec,
                                     targetOffset = { it }
                                 )
                             },
                         ),
                     )
-                    val navController = rememberAnimatedNavController()
+                    val navController = rememberNavController()
                     val bottomSheetNavigator =
                         rememberBottomSheetNavigator(
                             animationSpec = spring(stiffness = Spring.StiffnessMediumLow),
@@ -333,6 +334,17 @@ class MainActivityV2 : BaseComposeActivity() {
                     navController.navigatorProvider += bottomSheetNavigator
 
                     val currentDestination by navController.currentDestinationAsState()
+                    LaunchedEffect(currentDestination) {
+                        val curDest = currentDestination
+                        if (curDest != null) {
+                            Analytics.trackEvent(
+                                "PageChanged",
+                                mapOf(
+                                    "page" to curDest.route,
+                                )
+                            )
+                        }
+                    }
 
                     CompositionLocalProvider(
                         LocalNavController provides navController,

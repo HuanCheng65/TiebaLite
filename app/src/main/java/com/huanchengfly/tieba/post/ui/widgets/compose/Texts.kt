@@ -28,6 +28,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.takeOrElse
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
@@ -56,7 +57,7 @@ import com.huanchengfly.tieba.post.spToPxFloat
 import com.huanchengfly.tieba.post.ui.common.theme.compose.ExtendedTheme
 import com.huanchengfly.tieba.post.utils.EmoticonManager
 import com.huanchengfly.tieba.post.utils.EmoticonUtil.emoticonString
-import com.huanchengfly.tieba.post.utils.getEmoticonHeightPx
+import com.huanchengfly.tieba.post.utils.calcLineHeightPx
 
 @Composable
 fun EmoticonText(
@@ -71,6 +72,7 @@ fun EmoticonText(
     textDecoration: TextDecoration? = null,
     textAlign: TextAlign? = null,
     lineHeight: TextUnit = TextUnit.Unspecified,
+    lineSpacing: TextUnit = 0.sp,
     overflow: TextOverflow = TextOverflow.Clip,
     softWrap: Boolean = true,
     maxLines: Int = Int.MAX_VALUE,
@@ -92,6 +94,7 @@ fun EmoticonText(
         textDecoration,
         textAlign,
         lineHeight,
+        lineSpacing,
         overflow,
         softWrap,
         maxLines,
@@ -115,6 +118,7 @@ fun EmoticonText(
     textDecoration: TextDecoration? = null,
     textAlign: TextAlign? = null,
     lineHeight: TextUnit = TextUnit.Unspecified,
+    lineSpacing: TextUnit = 0.sp,
     overflow: TextOverflow = TextOverflow.Clip,
     softWrap: Boolean = true,
     maxLines: Int = Int.MAX_VALUE,
@@ -142,9 +146,11 @@ fun EmoticonText(
             letterSpacing = letterSpacing
         )
     )
-    val sizePx = getEmoticonHeightPx(mergedStyle) * emoticonSize
+    val sizePx = calcLineHeightPx(mergedStyle)
+    val spacingLineHeight =
+        remember(sizePx) { (sizePx + lineSpacing.value.spToPxFloat()).pxToSpFloat().sp }
     val emoticonInlineContent =
-        remember(sizePx) { EmoticonManager.getEmoticonInlineContent(sizePx) }
+        remember(sizePx) { EmoticonManager.getEmoticonInlineContent(sizePx * emoticonSize) }
     IconText(
         text,
         modifier,
@@ -156,7 +162,7 @@ fun EmoticonText(
         letterSpacing,
         textDecoration,
         textAlign,
-        lineHeight,
+        spacingLineHeight,
         overflow,
         softWrap,
         maxLines,
@@ -206,8 +212,8 @@ fun IconText(
             letterSpacing = letterSpacing
         )
     )
-    val sizePx = getEmoticonHeightPx(mergedStyle) * 9 / 10
-    val sizeSp = sizePx.pxToSp().sp
+    val sizePx = calcLineHeightPx(mergedStyle) * 9 / 10
+    val sizeSp = sizePx.pxToSp(LocalContext.current).sp
     val sizeDp = sizePx.pxToDp().dp
     val iconInlineContent =
         remember(sizeSp) {
@@ -284,7 +290,6 @@ fun IconText(
 /**
  * A [Text] composable that supports setting its minimum width to width of the specified number of Chinese characters
  */
-@OptIn(ExperimentalTextApi::class)
 @Composable
 fun TextWithMinWidth(
     text: String,

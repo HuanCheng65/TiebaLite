@@ -7,6 +7,7 @@ import android.widget.Toast
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.Stable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.staticCompositionLocalOf
@@ -29,6 +30,7 @@ import org.litepal.extension.findAllAsync
 import org.litepal.extension.findFirst
 import java.util.UUID
 
+@Stable
 object AccountUtil {
     const val TAG = "AccountUtil"
     const val ACTION_SWITCH_ACCOUNT = "com.huanchengfly.tieba.post.action.SWITCH_ACCOUNT"

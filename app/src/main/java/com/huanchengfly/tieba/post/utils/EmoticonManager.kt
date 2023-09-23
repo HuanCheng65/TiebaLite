@@ -38,15 +38,16 @@ import com.huanchengfly.tieba.post.toJson
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.io.File
 import java.lang.ref.WeakReference
 
 @OptIn(ExperimentalTextApi::class)
 @Composable
-fun getEmoticonHeightPx(style: TextStyle): Int {
+fun calcLineHeightPx(style: TextStyle): Int {
     val textMeasurer = rememberTextMeasurer()
     val textLayoutResult = textMeasurer.measure(
-        AnnotatedString(stringResource(id = R.string.emoticon_default)),
+        AnnotatedString(stringResource(id = R.string.single_chinese_char)),
         style
     )
     return textLayoutResult.size.height
@@ -173,7 +174,9 @@ object EmoticonManager {
         }
         updateCache()
         coroutineScope.launch {
-            fetchEmoticons(context)
+            withContext(Dispatchers.IO) {
+                runCatching { fetchEmoticons(context) }
+            }
         }
     }
 

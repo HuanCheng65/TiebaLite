@@ -1,5 +1,6 @@
 package com.huanchengfly.tieba.post.ui.page.subposts
 
+import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.Stable
 import com.huanchengfly.tieba.post.api.TiebaApi
 import com.huanchengfly.tieba.post.api.models.AgreeBean
@@ -8,6 +9,8 @@ import com.huanchengfly.tieba.post.api.models.protos.Anti
 import com.huanchengfly.tieba.post.api.models.protos.Post
 import com.huanchengfly.tieba.post.api.models.protos.SimpleForum
 import com.huanchengfly.tieba.post.api.models.protos.SubPostList
+import com.huanchengfly.tieba.post.api.models.protos.ThreadInfo
+import com.huanchengfly.tieba.post.api.models.protos.User
 import com.huanchengfly.tieba.post.api.models.protos.contentRenders
 import com.huanchengfly.tieba.post.api.models.protos.pbFloor.PbFloorResponse
 import com.huanchengfly.tieba.post.api.models.protos.renders
@@ -22,8 +25,8 @@ import com.huanchengfly.tieba.post.arch.UiEvent
 import com.huanchengfly.tieba.post.arch.UiIntent
 import com.huanchengfly.tieba.post.arch.UiState
 import com.huanchengfly.tieba.post.arch.wrapImmutable
-import com.huanchengfly.tieba.post.removeAt
 import com.huanchengfly.tieba.post.ui.common.PbContentRender
+import com.huanchengfly.tieba.post.utils.BlockManager.shouldBlock
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
@@ -74,15 +77,21 @@ class SubPostsViewModel @Inject constructor() :
                     val post = checkNotNull(response.data_?.post)
                     val page = checkNotNull(response.data_?.page)
                     val forum = checkNotNull(response.data_?.forum)
+                    val thread = checkNotNull(response.data_?.thread)
                     val anti = checkNotNull(response.data_?.anti)
-                    val subPosts = response.data_?.subpost_list.orEmpty()
+                    val subPosts = response.data_?.subpost_list.orEmpty().map {
+                        SubPostItemData(
+                            it.wrapImmutable(),
+                            it.content.renders.toImmutableList(),
+                        )
+                    }.toImmutableList()
                     SubPostsPartialChange.Load.Success(
                         anti.wrapImmutable(),
                         forum.wrapImmutable(),
+                        thread.wrapImmutable(),
                         post.wrapImmutable(),
                         post.contentRenders,
-                        subPosts.wrapImmutable(),
-                        subPosts.map { it.content.renders }.toImmutableList(),
+                        subPosts,
                         page.current_page < page.total_page,
                         page.current_page,
                         page.total_page,
@@ -96,12 +105,15 @@ class SubPostsViewModel @Inject constructor() :
             TiebaApi.getInstance()
                 .pbFloorFlow(threadId, postId, forumId, page, subPostId)
                 .map<PbFloorResponse, SubPostsPartialChange.LoadMore> { response ->
-                    val post = checkNotNull(response.data_?.post)
                     val page = checkNotNull(response.data_?.page)
-                    val subPosts = response.data_?.subpost_list.orEmpty()
+                    val subPosts = response.data_?.subpost_list.orEmpty().map {
+                        SubPostItemData(
+                            it.wrapImmutable(),
+                            it.content.renders.toImmutableList(),
+                        )
+                    }.toImmutableList()
                     SubPostsPartialChange.LoadMore.Success(
-                        subPosts.wrapImmutable(),
-                        subPosts.map { it.content.renders }.toImmutableList(),
+                        subPosts,
                         page.current_page < page.total_page,
                         page.current_page,
                         page.total_page,
@@ -202,10 +214,10 @@ sealed interface SubPostsPartialChange : PartialChange<SubPostsUiState> {
                     totalPage = totalPage,
                     totalCount = totalCount,
                     forum = forum,
+                    thread = thread,
                     post = post,
                     postContentRenders = postContentRenders,
                     subPosts = subPosts,
-                    subPostsContentRenders = subPostsContentRenders,
                 )
 
                 is Failure -> oldState.copy(
@@ -213,14 +225,15 @@ sealed interface SubPostsPartialChange : PartialChange<SubPostsUiState> {
                 )
             }
 
-        object Start : Load()
+        data object Start : Load()
+
         data class Success(
             val anti: ImmutableHolder<Anti>,
             val forum: ImmutableHolder<SimpleForum>,
+            val thread: ImmutableHolder<ThreadInfo>,
             val post: ImmutableHolder<Post>,
             val postContentRenders: ImmutableList<PbContentRender>,
-            val subPosts: ImmutableList<ImmutableHolder<SubPostList>>,
-            val subPostsContentRenders: ImmutableList<ImmutableList<PbContentRender>>,
+            val subPosts: ImmutableList<SubPostItemData>,
             val hasMore: Boolean,
             val currentPage: Int,
             val totalPage: Int,
@@ -244,7 +257,6 @@ sealed interface SubPostsPartialChange : PartialChange<SubPostsUiState> {
                     totalPage = totalPage,
                     totalCount = totalCount,
                     subPosts = (oldState.subPosts + subPosts).toImmutableList(),
-                    subPostsContentRenders = (oldState.subPostsContentRenders + subPostsContentRenders).toImmutableList(),
                 )
 
                 is Failure -> oldState.copy(
@@ -252,10 +264,10 @@ sealed interface SubPostsPartialChange : PartialChange<SubPostsUiState> {
                 )
             }
 
-        object Start : LoadMore()
+        data object Start : LoadMore()
+
         data class Success(
-            val subPosts: ImmutableList<ImmutableHolder<SubPostList>>,
-            val subPostsContentRenders: ImmutableList<ImmutableList<PbContentRender>>,
+            val subPosts: ImmutableList<SubPostItemData>,
             val hasMore: Boolean,
             val currentPage: Int,
             val totalPage: Int,
@@ -266,13 +278,13 @@ sealed interface SubPostsPartialChange : PartialChange<SubPostsUiState> {
     }
 
     sealed class Agree : SubPostsPartialChange {
-        private fun List<ImmutableHolder<SubPostList>>.updateAgreeStatus(
+        private fun List<SubPostItemData>.updateAgreeStatus(
             subPostId: Long,
-            hasAgreed: Boolean
-        ): ImmutableList<ImmutableHolder<SubPostList>> =
+            hasAgreed: Boolean,
+        ): ImmutableList<SubPostItemData> =
             map {
-                if (it.get { id } == subPostId) {
-                    it.getImmutable { updateAgreeStatus(if (hasAgreed) 1 else 0) }
+                if (it.id == subPostId) {
+                    it.updateAgreeStatus(if (hasAgreed) 1 else 0)
                 } else {
                     it
                 }
@@ -337,13 +349,9 @@ sealed interface SubPostsPartialChange : PartialChange<SubPostsUiState> {
                 if (subPostId == null) {
                     oldState
                 } else {
-                    val deletedSubPostIndex =
-                        oldState.subPosts.indexOfFirst { it.get { id } == postId }
                     oldState.copy(
-                        subPosts = oldState.subPosts.removeAt(deletedSubPostIndex),
-                        subPostsContentRenders = oldState.subPostsContentRenders.removeAt(
-                            deletedSubPostIndex
-                        ),
+                        subPosts = oldState.subPosts.filter { it.id != subPostId }
+                            .toImmutableList(),
                     )
                 }
             }
@@ -358,10 +366,34 @@ sealed interface SubPostsPartialChange : PartialChange<SubPostsUiState> {
 
         data class Failure(
             val errorCode: Int,
-            val errorMessage: String
+            val errorMessage: String,
         ) : DeletePost()
     }
 }
+
+@Immutable
+data class SubPostItemData(
+    val subPost: ImmutableHolder<SubPostList>,
+    val subPostContentRenders: ImmutableList<PbContentRender>,
+    val blocked: Boolean = subPost.get { shouldBlock() },
+) {
+    constructor(
+        subPost: SubPostList,
+    ) : this(
+        subPost.wrapImmutable(),
+        subPost.content.renders.toImmutableList(),
+        subPost.shouldBlock()
+    )
+
+    val id: Long
+        get() = subPost.get { id }
+
+    val author: ImmutableHolder<User>?
+        get() = subPost.get { author }?.wrapImmutable()
+}
+
+private fun SubPostItemData.updateAgreeStatus(hasAgreed: Int): SubPostItemData =
+    copy(subPost = subPost.getImmutable { updateAgreeStatus(hasAgreed) })
 
 data class SubPostsUiState(
     val isLoading: Boolean = false,
@@ -374,12 +406,12 @@ data class SubPostsUiState(
 
     val anti: ImmutableHolder<Anti>? = null,
     val forum: ImmutableHolder<SimpleForum>? = null,
+    val thread: ImmutableHolder<ThreadInfo>? = null,
     val post: ImmutableHolder<Post>? = null,
     val postContentRenders: ImmutableList<PbContentRender> = persistentListOf(),
-    val subPosts: ImmutableList<ImmutableHolder<SubPostList>> = persistentListOf(),
-    val subPostsContentRenders: ImmutableList<ImmutableList<PbContentRender>> = persistentListOf(),
+    val subPosts: ImmutableList<SubPostItemData> = persistentListOf(),
 ) : UiState
 
 sealed interface SubPostsUiEvent : UiEvent {
-    object ScrollToSubPosts : SubPostsUiEvent
+    data object ScrollToSubPosts : SubPostsUiEvent
 }

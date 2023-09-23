@@ -126,8 +126,8 @@ class SearchForumFragment : BaseFragment(), ISearchFragment,
                 })
                 delegateAdapter.addAdapter(exactMatchAdapter)
             }
-            if (!mData!!.fuzzyMatch.isNullOrEmpty()) {
-                fuzzyMatchAdapter.setData(mData!!.fuzzyMatch!!)
+            if (mData!!.fuzzyMatch.isNotEmpty()) {
+                fuzzyMatchAdapter.setData(mData!!.fuzzyMatch)
                 delegateAdapter.addAdapter(HeaderDelegateAdapter(
                     attachContext,
                     R.string.title_fuzzy_match,

@@ -43,7 +43,7 @@ sealed interface GlobalEvent : UiEvent {
 }
 
 private val globalEventSharedFlow: MutableSharedFlow<UiEvent> by lazy(mode = LazyThreadSafetyMode.SYNCHRONIZED) {
-    MutableSharedFlow(0, 1, BufferOverflow.DROP_OLDEST)
+    MutableSharedFlow(0, 2, BufferOverflow.DROP_OLDEST)
 }
 
 val GlobalEventFlow = globalEventSharedFlow.asSharedFlow()
@@ -54,7 +54,7 @@ fun CoroutineScope.emitGlobalEvent(event: UiEvent) {
     }
 }
 
-suspend fun emitGlobalEvent(event: UiEvent) {
+suspend fun emitGlobalEventSuspend(event: UiEvent) {
     globalEventSharedFlow.emit(event)
 }
 
@@ -69,7 +69,6 @@ inline fun <reified Event : UiEvent> onGlobalEvent(
             GlobalEventFlow
                 .filterIsInstance<Event>()
                 .filter {
-                    Log.i("GlobalEvent", "onGlobalEvent: $it")
                     filter(it)
                 }
                 .cancellable()

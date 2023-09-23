@@ -381,8 +381,8 @@
     <string name="title_search_user">搜人</string>
     <string name="title_search_history">搜索历史</string>
     <string name="text_no_data">这里什么都没有</string>
-    <string name="title_exact_match">推荐结果</string>
-    <string name="title_fuzzy_match">查询结果</string>
+    <string name="title_exact_match">推荐</string>
+    <string name="title_fuzzy_match">相关吧</string>
     <string name="title_search_filter_only_thread">只看主题贴</string>
     <string name="title_search_order_new">新贴在前</string>
     <string name="title_search_order_old">旧贴在前</string>
@@ -675,6 +675,7 @@
     <string name="open_all_sub_posts">查看全部 %d 条回复</string>
     <string name="message_store_thread_update">贴子更新到了第 %d 楼</string>
     <string name="tip_blocked_post">由于你的屏蔽设置，第 %d 楼已被屏蔽</string>
+    <string name="tip_blocked_sub_post">由于你的屏蔽设置，该回复已被屏蔽</string>
     <string name="settings_block_video">不看视频贴</string>
     <string name="btn_full_screen">全屏</string>
     <string name="btn_play">播放</string>
@@ -707,4 +708,18 @@
     <string name="below_is_latest_post">以下为最新回复</string>
     <string name="btn_open_origin_thread">查看原贴</string>
     <string name="tip_blocked_thread">由于你的屏蔽设置，该贴已被屏蔽</string>
+    <string name="tip_blocked_content">由于你的屏蔽设置，该内容已被屏蔽</string>
+    <string name="tip_blocked_message">由于你的屏蔽设置，该消息已被屏蔽</string>
+    <string name="desc_picture">图片</string>
+    <string name="tip_thread_store_deleted">该贴已被删除</string>
+    <string name="button_expand">展开</string>
+    <string name="button_collapse">收起</string>
+    <string name="button_clear">清除</string>
+    <string name="button_search">搜索</string>
+    <string name="toast_clear_failure">清除失败 %s</string>
+    <string name="title_recommend">推荐</string>
+    <string name="title_fuzzy_match_user">相关用户</string>
+    <string name="button_expand_more_history">展开历史</string>
+    <string name="button_expand_less_history">收起历史</string>
+    <string name="button_clear_all">清除全部</string>
 </resources>

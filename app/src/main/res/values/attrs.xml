@@ -28,6 +28,7 @@
         <attr name="colorDivider" format="color" />
         <attr name="shadow_color" format="color" />
         <attr name="colorIndicator" format="color" />
+        <attr name="colorPlaceholder" format="color" />
     </declare-styleable>
 
     <declare-styleable name="ShadowLayout">

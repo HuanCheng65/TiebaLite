@@ -29,22 +29,22 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.viewinterop.AndroidView
-import com.github.panpf.sketch.displayImage
-import com.github.panpf.sketch.zoom.Edge
-import com.github.panpf.sketch.zoom.ReadModeDecider
-import com.github.panpf.sketch.zoom.SketchZoomImageView
+import com.github.panpf.sketch.request.DisplayRequest
+import com.github.panpf.zoomimage.SketchZoomAsyncImage
+import com.google.accompanist.systemuicontroller.SystemUiController
 import com.huanchengfly.tieba.post.R
 import com.huanchengfly.tieba.post.arch.BaseComposeActivityWithParcelable
 import com.huanchengfly.tieba.post.arch.collectPartialAsState
@@ -56,65 +56,40 @@ import com.huanchengfly.tieba.post.ui.widgets.compose.LazyLoad
 import com.huanchengfly.tieba.post.ui.widgets.compose.ProvideContentColor
 import com.huanchengfly.tieba.post.utils.ImageUtil
 import com.huanchengfly.tieba.post.utils.download
-import kotlinx.coroutines.launch
-import kotlin.math.abs
+import kotlinx.collections.immutable.persistentListOf
 import kotlin.math.roundToInt
-
-object MyReadModeDecider : ReadModeDecider {
-    override fun should(
-        imageWidth: Int,
-        imageHeight: Int,
-        viewWidth: Int,
-        viewHeight: Int
-    ): Boolean {
-        val imageAspectRatio = imageHeight.toFloat() / imageWidth
-        val viewAspectRatio = viewHeight.toFloat() / viewWidth
-        return if (viewAspectRatio > 1f) {
-            imageAspectRatio >= viewAspectRatio * 1.25f
-        } else {
-            imageAspectRatio >= (1f / viewAspectRatio) * 3f
-        }
-    }
-}
 
 @Composable
 private fun ViewPhoto(
     imageUri: String,
     modifier: Modifier = Modifier,
-    onDrag: ((dx: Float, dy: Float, isAtEdge: Boolean) -> Unit)? = null
+    onTap: (offset: Offset) -> Unit = {},
 ) {
     Box(
         modifier = modifier,
         contentAlignment = Alignment.Center
     ) {
-        var progress by remember { mutableStateOf(0f) }
+        val context = LocalContext.current
+        var progress by remember { mutableFloatStateOf(0f) }
         var showProgress by remember { mutableStateOf(true) }
-        AndroidView(
-            factory = {
-                SketchZoomImageView(it).apply {
-                    readModeEnabled = true
-                    readModeDecider = MyReadModeDecider
-                    allowParentInterceptOnEdge = true
-                    addOnViewDragListener { dx, dy ->
-                        val isAtEdge = horScrollEdge != Edge.NONE
-                        onDrag?.invoke(dx, dy, isAtEdge)
-                    }
+        val request = remember(imageUri) {
+            DisplayRequest.Builder(context, imageUri)
+                .listener(
+                    onStart = { showProgress = true },
+                    onSuccess = { _, _ -> showProgress = false },
+                    onError = { _, _ -> showProgress = false },
+                    onCancel = { showProgress = false }
+                )
+                .progressListener { _, totalLength, completedLength ->
+                    progress = completedLength.toFloat() / totalLength
                 }
-            },
+                .build()
+        }
+        SketchZoomAsyncImage(
+            request = request,
+            contentDescription = null,
             modifier = Modifier.fillMaxSize(),
-            update = {
-                it.displayImage(imageUri) {
-                    listener(
-                        onStart = { showProgress = true },
-                        onSuccess = { _, _ -> showProgress = false },
-                        onError = { _, _ -> showProgress = false },
-                        onCancel = { showProgress = false }
-                    )
-                    progressListener { _, totalLength: Long, completedLength: Long ->
-                        progress = (completedLength.toDouble() / totalLength).toFloat()
-                    }
-                }
-            }
+            onTap = onTap,
         )
         if (showProgress) {
             Box(
@@ -150,7 +125,7 @@ class PhotoViewActivity : BaseComposeActivityWithParcelable<PhotoViewData>() {
         }
         val items by viewModel.uiState.collectPartialAsState(
             prop1 = PhotoViewUiState::data,
-            initial = emptyList()
+            initial = persistentListOf()
         )
         val initialIndex by viewModel.uiState.collectPartialAsState(
             prop1 = PhotoViewUiState::initialIndex,
@@ -172,14 +147,17 @@ class PhotoViewActivity : BaseComposeActivityWithParcelable<PhotoViewData>() {
             prop1 = PhotoViewUiState::loadPicPageData,
             initial = LoadPicPageData()
         )
+
         val pageCount by remember { derivedStateOf { items.size } }
+
+        val pagerState = rememberPagerState(initialPage = initialIndex) { pageCount }
+
+        LaunchedEffect(initialIndex) {
+            if (pagerState.currentPage != initialIndex) pagerState.scrollToPage(initialIndex)
+        }
+
         Surface(color = Color.Black) {
             if (items.isNotEmpty()) {
-                val coroutineScope = rememberCoroutineScope()
-                val pagerState = rememberPagerState(initialPage = initialIndex)
-                LaunchedEffect(initialIndex) {
-                    if (pagerState.currentPage != initialIndex) pagerState.scrollToPage(initialIndex)
-                }
                 LaunchedEffect(pagerState.currentPage, pageCount, loadPicPageData) {
                     loadPicPageData?.let {
                         val item = items[pagerState.currentPage]
@@ -204,32 +182,16 @@ class PhotoViewActivity : BaseComposeActivityWithParcelable<PhotoViewData>() {
                 }
                 Box(modifier = Modifier.fillMaxSize()) {
                     HorizontalPager(
-                        pageCount = pageCount,
                         state = pagerState,
-                        key = {
-                            "${items[it].overallIndex}"
-                        }
+                        key = { items[it].picId }
                     ) {
                         val item = items[it]
                         ViewPhoto(
                             imageUri = item.originUrl,
                             modifier = Modifier.fillMaxSize(),
-                            onDrag = { dx, dy, isAtEdge ->
-                                val currentPage = pagerState.currentPage
-                                if (abs(dy) < 15 && abs(dx) > 30 && isAtEdge) {
-                                    val prevPage = currentPage - 1
-                                    val nextPage = currentPage + 1
-                                    if (dx > 0 && prevPage >= 0) {
-                                        coroutineScope.launch {
-                                            pagerState.animateScrollToPage(prevPage)
-                                        }
-                                    } else if (dx < 0 && nextPage < items.size) {
-                                        coroutineScope.launch {
-                                            pagerState.animateScrollToPage(nextPage)
-                                        }
-                                    }
-                                }
-                            }
+                            onTap = {
+                                finish()
+                            },
                         )
                     }
                     Box(
@@ -312,6 +274,10 @@ class PhotoViewActivity : BaseComposeActivityWithParcelable<PhotoViewData>() {
                 }
             }
         }
+    }
+
+    override fun onCreateContent(systemUiController: SystemUiController) {
+        systemUiController.isSystemBarsVisible = false
     }
 
     override fun dispatchTouchEvent(ev: MotionEvent): Boolean {

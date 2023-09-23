@@ -10,6 +10,9 @@ import com.huanchengfly.tieba.post.arch.UiIntent
 import com.huanchengfly.tieba.post.arch.UiState
 import com.huanchengfly.tieba.post.models.protos.LoadPicPageData
 import com.huanchengfly.tieba.post.models.protos.PhotoViewData
+import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.persistentListOf
+import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
@@ -62,6 +65,7 @@ class PhotoViewViewModel :
                     val hasPrev = items.first().overallIndex > 1
                     PhotoViewPartialChange.LoadPrev.Success(
                         hasPrev = hasPrev,
+                        currentPicId = picId,
                         items = items
                     )
                 }
@@ -159,12 +163,15 @@ class PhotoViewViewModel :
                         val items = localItems + fetchedItems
                         val hasNext = items.last().overallIndex < picAmount
                         val hasPrev = items.first().overallIndex > 1
+                        val initialIndex =
+                            items.indexOfFirst { it.picId == data.data_.picId }.takeIf { it != -1 }
+                                ?: (data.data_.picIndex - 1)
                         PhotoViewPartialChange.Init.Success(
                             hasPrev = hasPrev,
                             hasNext = hasNext,
                             totalAmount = picAmount,
                             items = items,
-                            initialIndex = data.data_.picIndex - 1,
+                            initialIndex = initialIndex,
                             loadPicPageData = data.data_
                         )
                     }
@@ -198,7 +205,7 @@ sealed interface PhotoViewPartialChange : PartialChange<PhotoViewUiState> {
         override fun reduce(oldState: PhotoViewUiState): PhotoViewUiState =
             when (this) {
                 is Success -> oldState.copy(
-                    data = items,
+                    data = items.toImmutableList(),
                     hasNext = hasNext,
                     hasPrev = hasPrev,
                     totalAmount = totalAmount,
@@ -216,7 +223,7 @@ sealed interface PhotoViewPartialChange : PartialChange<PhotoViewUiState> {
                                 url = if (item.showOriginBtn) item.url else null,
                                 overallIndex = index + 1
                             )
-                        },
+                        }.toImmutableList(),
                         hasNext = false,
                         hasPrev = false,
                         totalAmount = data.picItems.size,
@@ -246,19 +253,26 @@ sealed interface PhotoViewPartialChange : PartialChange<PhotoViewUiState> {
             when (this) {
                 Start -> oldState.copy(isLoading = true)
 
-                is Success -> oldState.copy(
-                    data = items.filterNot { item -> oldState.data.any { item.picId == it.picId } } + oldState.data,
-                    hasPrev = hasPrev,
-                    isLoading = false
-                )
+                is Success -> {
+                    val items =
+                        (items.filterNot { item -> oldState.data.any { item.picId == it.picId } } + oldState.data).toImmutableList()
+                    val newIndex = items.indexOfFirst { it.picId == currentPicId }
+                    oldState.copy(
+                        data = items,
+                        hasPrev = hasPrev,
+                        isLoading = false,
+                        initialIndex = newIndex
+                    )
+                }
 
                 is Failure -> oldState.copy(isLoading = false)
             }
 
-        object Start : LoadPrev()
+        data object Start : LoadPrev()
 
         data class Success(
             val items: List<PhotoViewItem>,
+            val currentPicId: String,
             val hasPrev: Boolean,
         ) : LoadPrev()
 
@@ -273,7 +287,7 @@ sealed interface PhotoViewPartialChange : PartialChange<PhotoViewUiState> {
                 Start -> oldState.copy(isLoading = true)
 
                 is Success -> oldState.copy(
-                    data = oldState.data + items.filterNot { item -> oldState.data.any { item.picId == it.picId } },
+                    data = (oldState.data + items.filterNot { item -> oldState.data.any { item.picId == it.picId } }).toImmutableList(),
                     hasNext = hasNext,
                     isLoading = false
                 )
@@ -281,7 +295,7 @@ sealed interface PhotoViewPartialChange : PartialChange<PhotoViewUiState> {
                 is Failure -> oldState.copy(isLoading = false)
             }
 
-        object Start : LoadMore()
+        data object Start : LoadMore()
 
         data class Success(
             val items: List<PhotoViewItem>,
@@ -296,7 +310,7 @@ sealed interface PhotoViewPartialChange : PartialChange<PhotoViewUiState> {
 
 data class PhotoViewUiState(
     val isLoading: Boolean = false,
-    val data: List<PhotoViewItem> = emptyList(),
+    val data: ImmutableList<PhotoViewItem> = persistentListOf(),
     val totalAmount: Int = 0,
     val hasNext: Boolean = false,
     val hasPrev: Boolean = false,

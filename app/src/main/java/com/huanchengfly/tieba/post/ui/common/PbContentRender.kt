@@ -70,7 +70,12 @@ data class TextContentRender(
 
     @Composable
     override fun Render() {
-        PbContentText(text = text, fontSize = 15.sp, style = MaterialTheme.typography.body1)
+        PbContentText(
+            text = text,
+            fontSize = 15.sp,
+            style = MaterialTheme.typography.body1,
+            lineSpacing = 0.8.sp
+        )
     }
 
     override fun toAnnotationString(): AnnotatedString {
@@ -220,6 +225,7 @@ fun PbContentText(
     textDecoration: TextDecoration? = null,
     textAlign: TextAlign? = null,
     lineHeight: TextUnit = TextUnit.Unspecified,
+    lineSpacing: TextUnit = 0.sp,
     overflow: TextOverflow = TextOverflow.Clip,
     softWrap: Boolean = true,
     maxLines: Int = Int.MAX_VALUE,
@@ -227,7 +233,7 @@ fun PbContentText(
     emoticonSize: Float = 0.9f,
     inlineContent: Map<String, InlineTextContent> = emptyMap(),
     onTextLayout: (TextLayoutResult) -> Unit = {},
-    style: TextStyle = LocalTextStyle.current
+    style: TextStyle = LocalTextStyle.current,
 ) {
     val context = LocalContext.current
 
@@ -271,6 +277,7 @@ fun PbContentText(
         textDecoration = textDecoration,
         textAlign = textAlign,
         lineHeight = lineHeight,
+        lineSpacing = lineSpacing,
         overflow = overflow,
         softWrap = softWrap,
         maxLines = maxLines,

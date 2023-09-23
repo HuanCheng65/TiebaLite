@@ -36,7 +36,7 @@ class BootCompleteSignReceiver : BroadcastReceiver() {
                         pendingIntentFlagMutable()
                     )
                     alarmManager.setRepeating(
-                        AlarmManager.RTC,
+                        AlarmManager.RTC_WAKEUP,
                         time,
                         AlarmManager.INTERVAL_DAY,
                         pendingIntent
