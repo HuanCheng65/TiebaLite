@@ -19,7 +19,6 @@ import androidx.compose.animation.core.AnimationSpec
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.VisibilityThreshold
 import androidx.compose.animation.core.spring
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.ExperimentalMaterialApi
@@ -49,7 +48,7 @@ import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.NavController
+import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.plusAssign
 import androidx.window.layout.FoldingFeature
@@ -114,7 +113,7 @@ val LocalNotificationCountFlow =
 val LocalDevicePosture =
     staticCompositionLocalOf<State<DevicePosture>> { throw IllegalStateException("not allowed here!") }
 val LocalNavController =
-    staticCompositionLocalOf<NavController> { throw IllegalStateException("not allowed here!") }
+    staticCompositionLocalOf<NavHostController> { throw IllegalStateException("not allowed here!") }
 val LocalDestination = compositionLocalOf<DestinationSpec<*>?> { null }
 
 @OptIn(ExperimentalMaterialApi::class, ExperimentalMaterialNavigationApi::class)
@@ -276,94 +275,44 @@ class MainActivityV2 : BaseComposeActivity() {
                 PickMediasRequest(it.id, it.maxCount, it.mediaType)
             )
         }
-        CompositionLocalProvider(
-            LocalNotificationCountFlow provides notificationCountFlow,
-            LocalDevicePosture provides devicePostureFlow.collectAsState(),
-        ) {
-            Box {
-                TranslucentThemeBackground()
+        TiebaLiteLocalProvider {
+            TranslucentThemeBackground {
+                val navController = rememberNavController()
+                val engine = TiebaNavHostDefaults.rememberNavHostEngine()
+                val navigator = TiebaNavHostDefaults.rememberBottomSheetNavigator()
+                val currentDestination by navController.currentDestinationAsState()
 
-                Surface(
-                    color = ExtendedTheme.colors.background
+                navController.navigatorProvider += navigator
+
+                LaunchedEffect(currentDestination) {
+                    val curDest = currentDestination
+                    if (curDest != null) {
+                        Analytics.trackEvent(
+                            "PageChanged",
+                            mapOf(
+                                "page" to curDest.route,
+                            )
+                        )
+                    }
+                }
+
+                CompositionLocalProvider(
+                    LocalNavController provides navController,
+                    LocalDestination provides currentDestination,
                 ) {
-                    val animationSpec = remember {
-                        spring(
-                            stiffness = Spring.StiffnessMediumLow,
-                            visibilityThreshold = IntOffset.VisibilityThreshold
-                        )
-                    }
-                    val engine = rememberAnimatedNavHostEngine(
-                        navHostContentAlignment = Alignment.TopStart,
-                        rootDefaultAnimations = RootNavGraphDefaultAnimations(
-                            enterTransition = {
-                                slideIntoContainer(
-                                    AnimatedContentTransitionScope.SlideDirection.Start,
-                                    animationSpec = animationSpec,
-                                    initialOffset = { it }
-                                )
-                            },
-                            exitTransition = {
-                                slideOutOfContainer(
-                                    AnimatedContentTransitionScope.SlideDirection.End,
-                                    animationSpec = animationSpec,
-                                    targetOffset = { -it }
-                                )
-                            },
-                            popEnterTransition = {
-                                slideIntoContainer(
-                                    AnimatedContentTransitionScope.SlideDirection.Start,
-                                    animationSpec = animationSpec,
-                                    initialOffset = { -it }
-                                )
-                            },
-                            popExitTransition = {
-                                slideOutOfContainer(
-                                    AnimatedContentTransitionScope.SlideDirection.End,
-                                    animationSpec = animationSpec,
-                                    targetOffset = { it }
-                                )
-                            },
-                        ),
-                    )
-                    val navController = rememberNavController()
-                    val bottomSheetNavigator =
-                        rememberBottomSheetNavigator(
-                            animationSpec = spring(stiffness = Spring.StiffnessMediumLow),
-                            skipHalfExpanded = true
-                        )
-                    navController.navigatorProvider += bottomSheetNavigator
-
-                    val currentDestination by navController.currentDestinationAsState()
-                    LaunchedEffect(currentDestination) {
-                        val curDest = currentDestination
-                        if (curDest != null) {
-                            Analytics.trackEvent(
-                                "PageChanged",
-                                mapOf(
-                                    "page" to curDest.route,
-                                )
-                            )
-                        }
-                    }
-
-                    CompositionLocalProvider(
-                        LocalNavController provides navController,
-                        LocalDestination provides currentDestination
+                    ModalBottomSheetLayout(
+                        bottomSheetNavigator = navigator,
+                        sheetShape = RoundedCornerShape(topStart = 12.dp, topEnd = 12.dp),
+                        sheetBackgroundColor = ExtendedTheme.colors.windowBackground
                     ) {
-                        ModalBottomSheetLayout(
-                            bottomSheetNavigator = bottomSheetNavigator,
-                            sheetShape = RoundedCornerShape(topStart = 12.dp, topEnd = 12.dp),
-                            sheetBackgroundColor = ExtendedTheme.colors.windowBackground,
-                        ) {
-                            DestinationsNavHost(
-                                navController = navController,
-                                navGraph = NavGraphs.root,
-                                engine = engine,
-                                dependenciesContainerBuilder = {
-                                    dependency(MainPageDestination) { this@MainActivityV2 }
-                                }
-                            )
-                        }
+                        DestinationsNavHost(
+                            navController = navController,
+                            navGraph = NavGraphs.root,
+                            engine = engine,
+                            dependenciesContainerBuilder = {
+                                dependency(MainPageDestination) { this@MainActivityV2 }
+                            }
+                        )
                     }
                 }
             }
@@ -371,19 +320,38 @@ class MainActivityV2 : BaseComposeActivity() {
     }
 
     @Composable
-    private fun TranslucentThemeBackground() {
-        if (ThemeUtil.isTranslucentTheme(ExtendedTheme.colors.theme)) {
-            val backgroundPath by rememberPreferenceAsMutableState(
-                key = stringPreferencesKey("translucent_theme_background_path"),
-                defaultValue = ""
-            )
-            val backgroundUri by remember { derivedStateOf { newFileUri(backgroundPath) } }
-            AsyncImage(
-                imageUri = backgroundUri,
-                contentDescription = null,
-                modifier = Modifier.fillMaxSize(),
-                contentScale = ContentScale.Crop
-            )
+    private fun TranslucentThemeBackground(
+        modifier: Modifier = Modifier,
+        content: @Composable () -> Unit,
+    ) {
+        Surface(
+            color = ExtendedTheme.colors.background,
+            modifier = modifier
+        ) {
+            if (ThemeUtil.isTranslucentTheme(ExtendedTheme.colors.theme)) {
+                val backgroundPath by rememberPreferenceAsMutableState(
+                    key = stringPreferencesKey("translucent_theme_background_path"),
+                    defaultValue = ""
+                )
+                val backgroundUri by remember { derivedStateOf { newFileUri(backgroundPath) } }
+                AsyncImage(
+                    imageUri = backgroundUri,
+                    contentDescription = null,
+                    modifier = Modifier.fillMaxSize(),
+                    contentScale = ContentScale.Crop
+                )
+            }
+            content()
+        }
+    }
+
+    @Composable
+    fun TiebaLiteLocalProvider(content: @Composable () -> Unit) {
+        CompositionLocalProvider(
+            LocalNotificationCountFlow provides notificationCountFlow,
+            LocalDevicePosture provides devicePostureFlow.collectAsState(),
+        ) {
+            content()
         }
     }
 
@@ -401,4 +369,54 @@ class MainActivityV2 : BaseComposeActivity() {
             }
         }
     }
+}
+
+private object TiebaNavHostDefaults {
+    private val AnimationSpec = spring(
+        stiffness = Spring.StiffnessMediumLow,
+        visibilityThreshold = IntOffset.VisibilityThreshold
+    )
+
+    @Composable
+    @OptIn(ExperimentalMaterialNavigationApi::class, ExperimentalAnimationApi::class)
+    fun rememberNavHostEngine() = rememberAnimatedNavHostEngine(
+        navHostContentAlignment = Alignment.TopStart,
+        rootDefaultAnimations = RootNavGraphDefaultAnimations(
+            enterTransition = {
+                slideIntoContainer(
+                    AnimatedContentTransitionScope.SlideDirection.Start,
+                    animationSpec = AnimationSpec,
+                    initialOffset = { it }
+                )
+            },
+            exitTransition = {
+                slideOutOfContainer(
+                    AnimatedContentTransitionScope.SlideDirection.End,
+                    animationSpec = AnimationSpec,
+                    targetOffset = { -it }
+                )
+            },
+            popEnterTransition = {
+                slideIntoContainer(
+                    AnimatedContentTransitionScope.SlideDirection.Start,
+                    animationSpec = AnimationSpec,
+                    initialOffset = { -it }
+                )
+            },
+            popExitTransition = {
+                slideOutOfContainer(
+                    AnimatedContentTransitionScope.SlideDirection.End,
+                    animationSpec = AnimationSpec,
+                    targetOffset = { it }
+                )
+            },
+        ),
+    )
+
+    @OptIn(ExperimentalMaterialNavigationApi::class)
+    @Composable
+    fun rememberBottomSheetNavigator(): BottomSheetNavigator = rememberBottomSheetNavigator(
+        animationSpec = spring(stiffness = Spring.StiffnessMediumLow),
+        skipHalfExpanded = true
+    )
 }
