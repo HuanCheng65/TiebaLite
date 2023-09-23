@@ -31,15 +31,19 @@ import androidx.compose.ui.unit.dp
 import com.huanchengfly.tieba.post.R
 import com.huanchengfly.tieba.post.api.models.SearchUserBean
 import com.huanchengfly.tieba.post.arch.collectPartialAsState
+import com.huanchengfly.tieba.post.arch.onGlobalEvent
 import com.huanchengfly.tieba.post.arch.pageViewModel
 import com.huanchengfly.tieba.post.ui.common.theme.compose.ExtendedTheme
 import com.huanchengfly.tieba.post.ui.common.theme.compose.pullRefreshIndicator
 import com.huanchengfly.tieba.post.ui.page.LocalNavigator
+import com.huanchengfly.tieba.post.ui.page.search.SearchUiEvent
 import com.huanchengfly.tieba.post.ui.widgets.Chip
 import com.huanchengfly.tieba.post.ui.widgets.compose.Avatar
+import com.huanchengfly.tieba.post.ui.widgets.compose.ErrorScreen
 import com.huanchengfly.tieba.post.ui.widgets.compose.LazyLoad
 import com.huanchengfly.tieba.post.ui.widgets.compose.LocalShouldLoad
 import com.huanchengfly.tieba.post.ui.widgets.compose.Sizes
+import com.huanchengfly.tieba.post.ui.widgets.compose.states.StateScreen
 import com.huanchengfly.tieba.post.utils.StringUtil
 import kotlinx.collections.immutable.persistentListOf
 
@@ -55,19 +59,17 @@ fun SearchUserPage(
         viewModel.send(SearchUserUiIntent.Refresh(keyword))
         viewModel.initialized = true
     }
-    val shouldLoad = LocalShouldLoad.current
-    LaunchedEffect(keyword) {
-        if (viewModel.initialized) {
-            if (shouldLoad) {
-                viewModel.send(SearchUserUiIntent.Refresh(keyword))
-            } else {
-                viewModel.initialized = false
-            }
-        }
-    }
+    val currentKeyword by viewModel.uiState.collectPartialAsState(
+        prop1 = SearchUserUiState::keyword,
+        initial = ""
+    )
     val isRefreshing by viewModel.uiState.collectPartialAsState(
         prop1 = SearchUserUiState::isRefreshing,
-        initial = false
+        initial = true
+    )
+    val error by viewModel.uiState.collectPartialAsState(
+        prop1 = SearchUserUiState::error,
+        initial = null
     )
     val pullRefreshState = rememberPullRefreshState(
         refreshing = isRefreshing,
@@ -89,65 +91,96 @@ fun SearchUserPage(
         derivedStateOf { fuzzyMatch.isNotEmpty() }
     }
 
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .pullRefresh(pullRefreshState)
-    ) {
-        LazyColumn(modifier = Modifier.fillMaxSize()) {
-            if (showExactMatchResult) {
-                stickyHeader(key = "ExactMatchHeader") {
-                    Column(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .background(ExtendedTheme.colors.background)
-                            .padding(horizontal = 16.dp, vertical = 8.dp)
-                    ) {
-                        Chip(
-                            text = stringResource(id = R.string.title_exact_match),
-                            invertColor = true
-                        )
-                    }
-                }
-                item(key = "ExactMatch") {
-                    SearchUserItem(
-                        item = exactMatch!!,
-                        onClick = {
-                        }
-                    )
-                }
-            }
-            if (showFuzzyMatchResult) {
-                stickyHeader(key = "FuzzyMatchHeader") {
-                    Column(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .background(ExtendedTheme.colors.background)
-                            .padding(horizontal = 16.dp, vertical = 8.dp)
-                    ) {
-                        Chip(
-                            text = stringResource(id = R.string.title_fuzzy_match_user),
-                            invertColor = false
-                        )
-                    }
-                }
-                items(fuzzyMatch) {
-                    SearchUserItem(
-                        item = it,
-                        onClick = {
-                        }
-                    )
-                }
+    onGlobalEvent<SearchUiEvent.KeywordChanged> {
+        viewModel.send(SearchUserUiIntent.Refresh(it.keyword))
+    }
+    val shouldLoad = LocalShouldLoad.current
+    LaunchedEffect(currentKeyword) {
+        if (currentKeyword.isNotEmpty() && keyword != currentKeyword) {
+            if (shouldLoad) {
+                viewModel.send(SearchUserUiIntent.Refresh(keyword))
+            } else {
+                viewModel.initialized = false
             }
         }
+    }
 
-        PullRefreshIndicator(
-            refreshing = isRefreshing,
-            state = pullRefreshState,
-            modifier = Modifier.align(Alignment.TopCenter),
-            backgroundColor = ExtendedTheme.colors.pullRefreshIndicator,
-            contentColor = ExtendedTheme.colors.primary,
-        )
+    val isEmpty by remember {
+        derivedStateOf { !showExactMatchResult && !showFuzzyMatchResult }
+    }
+
+    StateScreen(
+        isEmpty = isEmpty,
+        isError = error != null,
+        isLoading = isRefreshing,
+        onReload = { viewModel.send(SearchUserUiIntent.Refresh(keyword)) },
+        errorScreen = {
+            error?.let {
+                val (e) = it
+                ErrorScreen(error = e)
+            }
+        }
+    ) {
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .pullRefresh(pullRefreshState)
+        ) {
+            LazyColumn(modifier = Modifier.fillMaxSize()) {
+                if (showExactMatchResult) {
+                    stickyHeader(key = "ExactMatchHeader") {
+                        Column(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .background(ExtendedTheme.colors.background)
+                                .padding(horizontal = 16.dp, vertical = 8.dp)
+                        ) {
+                            Chip(
+                                text = stringResource(id = R.string.title_exact_match),
+                                invertColor = true
+                            )
+                        }
+                    }
+                    item(key = "ExactMatch") {
+                        SearchUserItem(
+                            item = exactMatch!!,
+                            onClick = {
+                            }
+                        )
+                    }
+                }
+                if (showFuzzyMatchResult) {
+                    stickyHeader(key = "FuzzyMatchHeader") {
+                        Column(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .background(ExtendedTheme.colors.background)
+                                .padding(horizontal = 16.dp, vertical = 8.dp)
+                        ) {
+                            Chip(
+                                text = stringResource(id = R.string.title_fuzzy_match_user),
+                                invertColor = false
+                            )
+                        }
+                    }
+                    items(fuzzyMatch) {
+                        SearchUserItem(
+                            item = it,
+                            onClick = {
+                            }
+                        )
+                    }
+                }
+            }
+
+            PullRefreshIndicator(
+                refreshing = isRefreshing,
+                state = pullRefreshState,
+                modifier = Modifier.align(Alignment.TopCenter),
+                backgroundColor = ExtendedTheme.colors.pullRefreshIndicator,
+                contentColor = ExtendedTheme.colors.primary,
+            )
+        }
     }
 }
 

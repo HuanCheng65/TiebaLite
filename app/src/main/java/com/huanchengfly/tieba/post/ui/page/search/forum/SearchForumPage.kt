@@ -30,16 +30,20 @@ import androidx.compose.ui.unit.dp
 import com.huanchengfly.tieba.post.R
 import com.huanchengfly.tieba.post.api.models.SearchForumBean
 import com.huanchengfly.tieba.post.arch.collectPartialAsState
+import com.huanchengfly.tieba.post.arch.onGlobalEvent
 import com.huanchengfly.tieba.post.arch.pageViewModel
 import com.huanchengfly.tieba.post.ui.common.theme.compose.ExtendedTheme
 import com.huanchengfly.tieba.post.ui.common.theme.compose.pullRefreshIndicator
 import com.huanchengfly.tieba.post.ui.page.LocalNavigator
 import com.huanchengfly.tieba.post.ui.page.destinations.ForumPageDestination
+import com.huanchengfly.tieba.post.ui.page.search.SearchUiEvent
 import com.huanchengfly.tieba.post.ui.widgets.Chip
 import com.huanchengfly.tieba.post.ui.widgets.compose.Avatar
+import com.huanchengfly.tieba.post.ui.widgets.compose.ErrorScreen
 import com.huanchengfly.tieba.post.ui.widgets.compose.LazyLoad
 import com.huanchengfly.tieba.post.ui.widgets.compose.LocalShouldLoad
 import com.huanchengfly.tieba.post.ui.widgets.compose.Sizes
+import com.huanchengfly.tieba.post.ui.widgets.compose.states.StateScreen
 import kotlinx.collections.immutable.persistentListOf
 
 @OptIn(ExperimentalMaterialApi::class, ExperimentalFoundationApi::class)
@@ -53,20 +57,17 @@ fun SearchForumPage(
         viewModel.send(SearchForumUiIntent.Refresh(keyword))
         viewModel.initialized = true
     }
-
-    val shouldLoad = LocalShouldLoad.current
-    LaunchedEffect(keyword) {
-        if (viewModel.initialized) {
-            if (shouldLoad) {
-                viewModel.send(SearchForumUiIntent.Refresh(keyword))
-            } else {
-                viewModel.initialized = false
-            }
-        }
-    }
+    val currentKeyword by viewModel.uiState.collectPartialAsState(
+        prop1 = SearchForumUiState::keyword,
+        initial = ""
+    )
     val isRefreshing by viewModel.uiState.collectPartialAsState(
         prop1 = SearchForumUiState::isRefreshing,
-        initial = false
+        initial = true
+    )
+    val error by viewModel.uiState.collectPartialAsState(
+        prop1 = SearchForumUiState::error,
+        initial = null
     )
     val exactMatchForum by viewModel.uiState.collectPartialAsState(
         prop1 = SearchForumUiState::exactMatchForum,
@@ -89,68 +90,100 @@ fun SearchForumPage(
         onRefresh = { viewModel.send(SearchForumUiIntent.Refresh(keyword)) }
     )
 
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .pullRefresh(pullRefreshState)
-    ) {
-        LazyColumn(modifier = Modifier.fillMaxSize()) {
-            if (showExactMatchResult) {
-                stickyHeader(key = "ExactMatchHeader") {
-                    Column(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .background(ExtendedTheme.colors.background)
-                            .padding(horizontal = 16.dp, vertical = 8.dp)
-                    ) {
-                        Chip(
-                            text = stringResource(id = R.string.title_exact_match),
-                            invertColor = true
-                        )
-                    }
-                }
-                item(key = "ExactMatch") {
-                    SearchForumItem(
-                        item = exactMatchForum!!,
-                        onClick = {
-                            navigator.navigate(ForumPageDestination(exactMatchForum!!.forumName.orEmpty()))
-                        }
-                    )
-                }
-            }
-            if (showFuzzyMatchResult) {
-                stickyHeader(key = "FuzzyMatchHeader") {
-                    Column(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .background(ExtendedTheme.colors.background)
-                            .padding(horizontal = 16.dp, vertical = 8.dp)
-                    ) {
-                        Chip(
-                            text = stringResource(id = R.string.title_fuzzy_match),
-                            invertColor = false
-                        )
-                    }
-                }
-                items(fuzzyMatchForumList) {
-                    SearchForumItem(
-                        item = it,
-                        onClick = {
-                            navigator.navigate(ForumPageDestination(it.forumName.orEmpty()))
-                        }
-                    )
-                }
+    val isEmpty by remember {
+        derivedStateOf { !showExactMatchResult && !showFuzzyMatchResult }
+    }
+
+    onGlobalEvent<SearchUiEvent.KeywordChanged> {
+        viewModel.send(SearchForumUiIntent.Refresh(it.keyword))
+    }
+    val shouldLoad = LocalShouldLoad.current
+    LaunchedEffect(currentKeyword) {
+        if (currentKeyword.isNotEmpty() && keyword != currentKeyword) {
+            if (shouldLoad) {
+                viewModel.send(SearchForumUiIntent.Refresh(keyword))
+            } else {
+                viewModel.initialized = false
             }
         }
-
-        PullRefreshIndicator(
-            refreshing = isRefreshing,
-            state = pullRefreshState,
-            modifier = Modifier.align(Alignment.TopCenter),
-            backgroundColor = ExtendedTheme.colors.pullRefreshIndicator,
-            contentColor = ExtendedTheme.colors.primary,
-        )
     }
+
+    StateScreen(
+        isEmpty = isEmpty,
+        isError = error != null,
+        isLoading = isRefreshing,
+        onReload = { viewModel.send(SearchForumUiIntent.Refresh(keyword)) },
+        errorScreen = {
+            error?.let {
+                val (e) = it
+                ErrorScreen(error = e)
+            }
+        }
+    ) {
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .pullRefresh(pullRefreshState)
+        ) {
+            LazyColumn(modifier = Modifier.fillMaxSize()) {
+                if (showExactMatchResult) {
+                    stickyHeader(key = "ExactMatchHeader") {
+                        Column(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .background(ExtendedTheme.colors.background)
+                                .padding(horizontal = 16.dp, vertical = 8.dp)
+                        ) {
+                            Chip(
+                                text = stringResource(id = R.string.title_exact_match),
+                                invertColor = true
+                            )
+                        }
+                    }
+                    item(key = "ExactMatch") {
+                        SearchForumItem(
+                            item = exactMatchForum!!,
+                            onClick = {
+                                navigator.navigate(ForumPageDestination(exactMatchForum!!.forumName.orEmpty()))
+                            }
+                        )
+                    }
+                }
+                if (showFuzzyMatchResult) {
+                    stickyHeader(key = "FuzzyMatchHeader") {
+                        Column(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .background(ExtendedTheme.colors.background)
+                                .padding(horizontal = 16.dp, vertical = 8.dp)
+                        ) {
+                            Chip(
+                                text = stringResource(id = R.string.title_fuzzy_match),
+                                invertColor = false
+                            )
+                        }
+                    }
+                    items(fuzzyMatchForumList) {
+                        SearchForumItem(
+                            item = it,
+                            onClick = {
+                                navigator.navigate(ForumPageDestination(it.forumName.orEmpty()))
+                            }
+                        )
+                    }
+                }
+            }
+
+            PullRefreshIndicator(
+                refreshing = isRefreshing,
+                state = pullRefreshState,
+                modifier = Modifier.align(Alignment.TopCenter),
+                backgroundColor = ExtendedTheme.colors.pullRefreshIndicator,
+                contentColor = ExtendedTheme.colors.primary,
+            )
+        }
+    }
+
 }
 
 @Composable

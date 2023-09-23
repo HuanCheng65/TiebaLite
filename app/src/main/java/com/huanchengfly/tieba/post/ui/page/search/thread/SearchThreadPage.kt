@@ -16,7 +16,9 @@ import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -30,8 +32,10 @@ import com.huanchengfly.tieba.post.ui.common.theme.compose.pullRefreshIndicator
 import com.huanchengfly.tieba.post.ui.page.LocalNavigator
 import com.huanchengfly.tieba.post.ui.page.destinations.ForumPageDestination
 import com.huanchengfly.tieba.post.ui.page.destinations.ThreadPageDestination
+import com.huanchengfly.tieba.post.ui.page.search.SearchUiEvent
 import com.huanchengfly.tieba.post.ui.widgets.compose.Avatar
 import com.huanchengfly.tieba.post.ui.widgets.compose.Card
+import com.huanchengfly.tieba.post.ui.widgets.compose.ErrorScreen
 import com.huanchengfly.tieba.post.ui.widgets.compose.ForumInfoChip
 import com.huanchengfly.tieba.post.ui.widgets.compose.LazyLoad
 import com.huanchengfly.tieba.post.ui.widgets.compose.LoadMoreLayout
@@ -42,6 +46,7 @@ import com.huanchengfly.tieba.post.ui.widgets.compose.ThreadContent
 import com.huanchengfly.tieba.post.ui.widgets.compose.ThreadReplyBtn
 import com.huanchengfly.tieba.post.ui.widgets.compose.ThreadShareBtn
 import com.huanchengfly.tieba.post.ui.widgets.compose.UserHeader
+import com.huanchengfly.tieba.post.ui.widgets.compose.states.StateScreen
 import com.huanchengfly.tieba.post.utils.DateTimeUtils
 import com.huanchengfly.tieba.post.utils.StringUtil
 import kotlinx.collections.immutable.ImmutableList
@@ -60,9 +65,13 @@ fun SearchThreadPage(
         viewModel.send(SearchThreadUiIntent.Refresh(keyword, initialSortType))
         viewModel.initialized = true
     }
+    val currentKeyword by viewModel.uiState.collectPartialAsState(
+        prop1 = SearchThreadUiState::keyword,
+        initial = ""
+    )
     val isRefreshing by viewModel.uiState.collectPartialAsState(
         prop1 = SearchThreadUiState::isRefreshing,
-        initial = false
+        initial = true
     )
     val isLoadingMore by viewModel.uiState.collectPartialAsState(
         prop1 = SearchThreadUiState::isLoadingMore,
@@ -88,9 +97,13 @@ fun SearchThreadPage(
         prop1 = SearchThreadUiState::sortType,
         initial = initialSortType
     )
+
+    onGlobalEvent<SearchThreadUiEvent.SwitchSortType> {
+        viewModel.send(SearchThreadUiIntent.Refresh(keyword, it.sortType))
+    }
     val shouldLoad = LocalShouldLoad.current
-    LaunchedEffect(keyword) {
-        if (viewModel.initialized) {
+    LaunchedEffect(currentKeyword) {
+        if (currentKeyword.isNotEmpty() && keyword != currentKeyword) {
             if (shouldLoad) {
                 viewModel.send(SearchThreadUiIntent.Refresh(keyword, sortType))
             } else {
@@ -99,60 +112,77 @@ fun SearchThreadPage(
         }
     }
 
-    onGlobalEvent<SearchThreadUiEvent.SwitchSortType> {
-        viewModel.send(SearchThreadUiIntent.Refresh(keyword, it.sortType))
-    }
-
     val pullRefreshState = rememberPullRefreshState(
         refreshing = isRefreshing,
         onRefresh = { viewModel.send(SearchThreadUiIntent.Refresh(keyword, sortType)) }
     )
     val lazyListState = rememberLazyListState()
 
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .pullRefresh(pullRefreshState)
-    ) {
-        LoadMoreLayout(
-            isLoading = isLoadingMore,
-            onLoadMore = {
-                viewModel.send(
-                    SearchThreadUiIntent.LoadMore(keyword, currentPage, sortType)
-                )
-            },
-            loadEnd = !hasMore,
-            lazyListState = lazyListState,
-        ) {
-            SearchThreadList(
-                data = data,
-                lazyListState = lazyListState,
-                onItemClick = {
-                    navigator.navigate(
-                        ThreadPageDestination(
-                            threadId = it.tid.toLong()
-                        )
-                    )
-                },
-                onItemUserClick = {
-                    UserActivity.launch(context, it.userId)
-                },
-                onItemForumClick = {
-                    navigator.navigate(
-                        ForumPageDestination(
-                            it.forumName
-                        )
-                    )
-                },
-            )
+    val isEmpty by remember {
+        derivedStateOf { data.isEmpty() }
+    }
 
-            PullRefreshIndicator(
-                refreshing = isRefreshing,
-                state = pullRefreshState,
-                modifier = Modifier.align(Alignment.TopCenter),
-                backgroundColor = ExtendedTheme.colors.pullRefreshIndicator,
-                contentColor = ExtendedTheme.colors.primary,
-            )
+    onGlobalEvent<SearchUiEvent.KeywordChanged> {
+        viewModel.send(SearchThreadUiIntent.Refresh(it.keyword, sortType))
+    }
+
+    StateScreen(
+        isEmpty = isEmpty,
+        isError = error != null,
+        isLoading = isRefreshing,
+        onReload = { viewModel.send(SearchThreadUiIntent.Refresh(keyword, sortType)) },
+        errorScreen = {
+            error?.let {
+                val (e) = it
+                ErrorScreen(error = e)
+            }
+        }
+    ) {
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .pullRefresh(pullRefreshState)
+        ) {
+            LoadMoreLayout(
+                isLoading = isLoadingMore,
+                onLoadMore = {
+                    viewModel.send(
+                        SearchThreadUiIntent.LoadMore(keyword, currentPage, sortType)
+                    )
+                },
+                loadEnd = !hasMore,
+                lazyListState = lazyListState,
+            ) {
+                SearchThreadList(
+                    data = data,
+                    lazyListState = lazyListState,
+                    onItemClick = {
+                        navigator.navigate(
+                            ThreadPageDestination(
+                                threadId = it.tid.toLong()
+                            )
+                        )
+                    },
+                    onItemUserClick = {
+                        UserActivity.launch(context, it.userId)
+                    },
+                    onItemForumClick = {
+                        navigator.navigate(
+                            ForumPageDestination(
+                                it.forumName
+                            )
+                        )
+                    },
+                )
+
+                PullRefreshIndicator(
+                    refreshing = isRefreshing,
+                    state = pullRefreshState,
+                    modifier = Modifier.align(Alignment.TopCenter),
+                    backgroundColor = ExtendedTheme.colors.pullRefreshIndicator,
+                    contentColor = ExtendedTheme.colors.primary,
+                )
+            }
         }
     }
 }

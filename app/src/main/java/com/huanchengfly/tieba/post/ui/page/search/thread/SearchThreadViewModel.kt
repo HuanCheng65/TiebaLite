@@ -136,7 +136,7 @@ sealed interface SearchThreadPartialChange : PartialChange<SearchThreadUiState> 
 }
 
 data class SearchThreadUiState(
-    val isRefreshing: Boolean = false,
+    val isRefreshing: Boolean = true,
     val isLoadingMore: Boolean = false,
     val error: ImmutableHolder<Throwable>? = null,
     val currentPage: Int = 1,

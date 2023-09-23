@@ -91,7 +91,7 @@ sealed interface SearchUserPartialChange : PartialChange<SearchUserUiState> {
 }
 
 data class SearchUserUiState(
-    val isRefreshing: Boolean = false,
+    val isRefreshing: Boolean = true,
     val error: ImmutableHolder<Throwable>? = null,
     val keyword: String = "",
     val exactMatch: SearchUserBean.UserBean? = null,

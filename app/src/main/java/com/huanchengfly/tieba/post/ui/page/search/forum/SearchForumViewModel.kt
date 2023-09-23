@@ -93,7 +93,7 @@ data class SearchForumUiState(
     val keyword: String = "",
     val exactMatchForum: SearchForumBean.ForumInfoBean? = null,
     val fuzzyMatchForumList: List<SearchForumBean.ForumInfoBean> = persistentListOf(),
-    val isRefreshing: Boolean = false,
+    val isRefreshing: Boolean = true,
     val error: ImmutableHolder<Throwable>? = null,
 ) : UiState
 

@@ -47,6 +47,8 @@ class SearchViewModel :
                 App.INSTANCE.getString(R.string.toast_clear_failure, partialChange.errorMessage)
             )
 
+            is SearchPartialChange.SubmitKeyword -> SearchUiEvent.KeywordChanged(partialChange.keyword)
+
             else -> null
         }
 
@@ -145,4 +147,6 @@ data class SearchUiState(
     val searchHistories: ImmutableList<SearchHistory> = persistentListOf(),
 ) : UiState
 
-sealed interface SearchUiEvent : UiEvent
+sealed interface SearchUiEvent : UiEvent {
+    data class KeywordChanged(val keyword: String) : SearchUiEvent
+}

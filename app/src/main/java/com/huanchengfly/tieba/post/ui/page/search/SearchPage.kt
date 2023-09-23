@@ -72,6 +72,8 @@ import androidx.compose.ui.util.fastForEachIndexed
 import com.huanchengfly.tieba.post.R
 import com.huanchengfly.tieba.post.arch.collectPartialAsState
 import com.huanchengfly.tieba.post.arch.emitGlobalEvent
+import com.huanchengfly.tieba.post.arch.emitGlobalEventSuspend
+import com.huanchengfly.tieba.post.arch.onEvent
 import com.huanchengfly.tieba.post.arch.pageViewModel
 import com.huanchengfly.tieba.post.models.database.SearchHistory
 import com.huanchengfly.tieba.post.ui.common.theme.compose.ExtendedTheme
@@ -134,11 +136,16 @@ fun SearchPage(
         derivedStateOf { keyword.isEmpty() }
     }
     var inputKeyword by remember { mutableStateOf("") }
+    var expanded by remember { mutableStateOf(false) }
 
     val initialSortType = remember { SearchThreadSortType.SORT_TYPE_NEWEST }
     var searchThreadSortType by remember { mutableIntStateOf(initialSortType) }
     LaunchedEffect(searchThreadSortType) {
         emitGlobalEvent(SearchThreadUiEvent.SwitchSortType(searchThreadSortType))
+    }
+    viewModel.onEvent<SearchUiEvent.KeywordChanged> {
+        inputKeyword = it.keyword
+        emitGlobalEventSuspend(it)
     }
 
     val pages by remember {
@@ -234,6 +241,8 @@ fun SearchPage(
                         inputKeyword = it.content
                         viewModel.send(SearchUiIntent.SubmitKeyword(it.content))
                     },
+                    expanded = expanded,
+                    onToggleExpand = { expanded = !expanded },
                     onClear = { viewModel.send(SearchUiIntent.ClearSearchHistory) }
                 )
             }
