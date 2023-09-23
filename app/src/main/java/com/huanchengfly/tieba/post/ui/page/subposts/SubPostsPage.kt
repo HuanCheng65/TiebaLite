@@ -360,8 +360,8 @@ internal fun SubPostsContent(
                             forumId,
                             threadId,
                             postId,
-                            subPostId,
-                            currentPage + 1,
+//                            subPostId,
+                            page = currentPage + 1,
                         )
                     )
                 },

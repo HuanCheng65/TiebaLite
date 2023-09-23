@@ -99,7 +99,6 @@ class SubPostsViewModel @Inject constructor() :
             TiebaApi.getInstance()
                 .pbFloorFlow(threadId, postId, forumId, page, subPostId)
                 .map<PbFloorResponse, SubPostsPartialChange.LoadMore> { response ->
-                    val post = checkNotNull(response.data_?.post)
                     val page = checkNotNull(response.data_?.page)
                     val subPosts = response.data_?.subpost_list.orEmpty()
                     SubPostsPartialChange.LoadMore.Success(
