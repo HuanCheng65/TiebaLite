@@ -19,6 +19,7 @@ import androidx.compose.material.pullrefresh.PullRefreshIndicator
 import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -37,6 +38,7 @@ import com.huanchengfly.tieba.post.ui.page.destinations.ForumPageDestination
 import com.huanchengfly.tieba.post.ui.widgets.Chip
 import com.huanchengfly.tieba.post.ui.widgets.compose.Avatar
 import com.huanchengfly.tieba.post.ui.widgets.compose.LazyLoad
+import com.huanchengfly.tieba.post.ui.widgets.compose.LocalShouldLoad
 import com.huanchengfly.tieba.post.ui.widgets.compose.Sizes
 import kotlinx.collections.immutable.persistentListOf
 
@@ -50,6 +52,17 @@ fun SearchForumPage(
     LazyLoad(loaded = viewModel.initialized) {
         viewModel.send(SearchForumUiIntent.Refresh(keyword))
         viewModel.initialized = true
+    }
+
+    val shouldLoad = LocalShouldLoad.current
+    LaunchedEffect(keyword) {
+        if (viewModel.initialized) {
+            if (shouldLoad) {
+                viewModel.send(SearchForumUiIntent.Refresh(keyword))
+            } else {
+                viewModel.initialized = false
+            }
+        }
     }
     val isRefreshing by viewModel.uiState.collectPartialAsState(
         prop1 = SearchForumUiState::isRefreshing,

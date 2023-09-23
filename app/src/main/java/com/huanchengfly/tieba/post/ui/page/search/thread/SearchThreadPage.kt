@@ -15,6 +15,7 @@ import androidx.compose.material.pullrefresh.PullRefreshIndicator
 import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -34,6 +35,7 @@ import com.huanchengfly.tieba.post.ui.widgets.compose.Card
 import com.huanchengfly.tieba.post.ui.widgets.compose.ForumInfoChip
 import com.huanchengfly.tieba.post.ui.widgets.compose.LazyLoad
 import com.huanchengfly.tieba.post.ui.widgets.compose.LoadMoreLayout
+import com.huanchengfly.tieba.post.ui.widgets.compose.LocalShouldLoad
 import com.huanchengfly.tieba.post.ui.widgets.compose.Sizes
 import com.huanchengfly.tieba.post.ui.widgets.compose.ThreadAgreeBtn
 import com.huanchengfly.tieba.post.ui.widgets.compose.ThreadContent
@@ -86,6 +88,16 @@ fun SearchThreadPage(
         prop1 = SearchThreadUiState::sortType,
         initial = initialSortType
     )
+    val shouldLoad = LocalShouldLoad.current
+    LaunchedEffect(keyword) {
+        if (viewModel.initialized) {
+            if (shouldLoad) {
+                viewModel.send(SearchThreadUiIntent.Refresh(keyword, sortType))
+            } else {
+                viewModel.initialized = false
+            }
+        }
+    }
 
     onGlobalEvent<SearchThreadUiEvent.SwitchSortType> {
         viewModel.send(SearchThreadUiIntent.Refresh(keyword, it.sortType))

@@ -92,9 +92,9 @@ class SearchViewModel :
 }
 
 sealed interface SearchUiIntent : UiIntent {
-    object Init : SearchUiIntent
+    data object Init : SearchUiIntent
 
-    object ClearSearchHistory : SearchUiIntent
+    data object ClearSearchHistory : SearchUiIntent
 
     data class SubmitKeyword(val keyword: String) : SearchUiIntent
 }
