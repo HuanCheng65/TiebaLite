@@ -271,10 +271,14 @@ fun ForumThreadListPage(
         viewModel.send(getFirstLoadIntent(context, forumName, isGood))
         viewModel.initialized = true
     }
-    onGlobalEvent<ForumThreadListUiEvent.Refresh> {
+    onGlobalEvent<ForumThreadListUiEvent.Refresh>(
+        filter = { it.isGood == isGood },
+    ) {
         viewModel.send(getRefreshIntent(context, forumName, isGood, it.sortType))
     }
-    onGlobalEvent<ForumThreadListUiEvent.BackToTop> {
+    onGlobalEvent<ForumThreadListUiEvent.BackToTop>(
+        filter = { it.isGood == isGood },
+    ) {
         lazyListState.animateScrollToItem(0)
     }
     viewModel.onEvent<ForumThreadListUiEvent.AgreeFail> {

@@ -718,17 +718,22 @@ sealed interface ThreadPartialChange : PartialChange<ThreadUiState> {
     sealed class LoadMore : ThreadPartialChange {
         override fun reduce(oldState: ThreadUiState): ThreadUiState = when (this) {
             is Start -> oldState.copy(isLoadingMore = true)
-            is Success -> oldState.copy(
-                isLoadingMore = false,
-                author = wrapImmutable(author),
-                data = (oldState.data + data).toImmutableList(),
-                threadInfo = threadInfo.wrapImmutable(),
-                currentPageMax = currentPage,
-                totalPage = totalPage,
-                hasMore = hasMore,
-                nextPagePostId = nextPagePostId,
-                latestPosts = persistentListOf(),
-            )
+            is Success -> {
+                val uniqueData = data.filterNot { item ->
+                    oldState.data.any { it.post.get { id } == item.post.get { id } }
+                }
+                oldState.copy(
+                    isLoadingMore = false,
+                    author = wrapImmutable(author),
+                    data = (oldState.data + uniqueData).toImmutableList(),
+                    threadInfo = threadInfo.wrapImmutable(),
+                    currentPageMax = currentPage,
+                    totalPage = totalPage,
+                    hasMore = hasMore,
+                    nextPagePostId = nextPagePostId,
+                    latestPosts = persistentListOf(),
+                )
+            }
 
             is Failure -> oldState.copy(isLoadingMore = false)
         }

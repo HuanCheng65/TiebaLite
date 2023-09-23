@@ -92,6 +92,7 @@ import com.huanchengfly.tieba.post.api.models.protos.frsPage.ForumInfo
 import com.huanchengfly.tieba.post.arch.ImmutableHolder
 import com.huanchengfly.tieba.post.arch.collectPartialAsState
 import com.huanchengfly.tieba.post.arch.emitGlobalEvent
+import com.huanchengfly.tieba.post.arch.emitGlobalEventSuspend
 import com.huanchengfly.tieba.post.arch.onEvent
 import com.huanchengfly.tieba.post.arch.pageViewModel
 import com.huanchengfly.tieba.post.dataStore
@@ -593,12 +594,12 @@ fun ForumPage(
                             when (context.appPreferences.forumFabFunction) {
                                 "refresh" -> {
                                     coroutineScope.launch {
-                                        emitGlobalEvent(
+                                        emitGlobalEventSuspend(
                                             ForumThreadListUiEvent.BackToTop(
                                                 pagerState.currentPage == 1
                                             )
                                         )
-                                        emitGlobalEvent(
+                                        emitGlobalEventSuspend(
                                             ForumThreadListUiEvent.Refresh(
                                                 pagerState.currentPage == 1,
                                                 getSortType(
@@ -838,7 +839,7 @@ fun ForumPage(
                                 forumId = forumInfo!!.get { id },
                                 forumName = forumInfo!!.get { name },
                                 isGood = it == 1,
-                                lazyListState = lazyListStates[it]
+                                lazyListState = remember { lazyListStates[it] }
                             )
                         }
                     }
