@@ -255,7 +255,7 @@ sealed interface ForumThreadListPartialChange : PartialChange<ForumThreadListUiS
                 is Failure -> oldState.copy(isRefreshing = false)
             }
 
-        object Start : FirstLoad()
+        data object Start : FirstLoad()
 
         data class Success(
             val threadList: List<ThreadItemData>,
@@ -287,7 +287,7 @@ sealed interface ForumThreadListPartialChange : PartialChange<ForumThreadListUiS
                 is Failure -> oldState.copy(isRefreshing = false)
             }
 
-        object Start : Refresh()
+        data object Start : Refresh()
 
         data class Success(
             val threadList: List<ThreadItemData>,
@@ -317,7 +317,7 @@ sealed interface ForumThreadListPartialChange : PartialChange<ForumThreadListUiS
                 is Failure -> oldState.copy(isLoadingMore = false)
             }
 
-        object Start : LoadMore()
+        data object Start : LoadMore()
 
         data class Success(
             val threadList: List<ThreadItemData>,
@@ -333,12 +333,12 @@ sealed interface ForumThreadListPartialChange : PartialChange<ForumThreadListUiS
 
     sealed class Agree private constructor() : ForumThreadListPartialChange {
         private fun List<ThreadItemData>.updateAgreeStatus(
-            id: Long,
-            hasAgree: Int
+            threadId: Long,
+            hasAgree: Int,
         ): ImmutableList<ThreadItemData> {
             return map { data ->
                 val (thread) = data
-                if (thread.get { id } == id) {
+                if (thread.get { id } == threadId) {
                     ThreadItemData(thread.getImmutable { updateAgreeStatus(hasAgree) })
                 } else data
             }.toImmutableList()
