@@ -548,6 +548,12 @@ fun FeedCard(
         },
         action = {
             Row(modifier = Modifier.fillMaxWidth()) {
+                ThreadShareBtn(
+                    shareNum = item.get { shareNum },
+                    onClick = {},
+                    modifier = Modifier.weight(1f)
+                )
+
                 ThreadReplyBtn(
                     replyNum = item.get { replyNum },
                     onClick = { onReplyClick(item.get()) },
@@ -558,12 +564,6 @@ fun FeedCard(
                     hasAgree = item.get { agree?.hasAgree == 1 },
                     agreeNum = item.get { agreeNum },
                     onClick = { onAgree(item.get()) },
-                    modifier = Modifier.weight(1f)
-                )
-
-                ThreadShareBtn(
-                    shareNum = item.get { shareNum },
-                    onClick = {},
                     modifier = Modifier.weight(1f)
                 )
             }
