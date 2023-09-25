@@ -11,6 +11,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.graphics.ColorMatrix
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import com.github.panpf.sketch.compose.AsyncImage
@@ -23,6 +25,7 @@ import com.huanchengfly.tieba.post.ui.page.photoview.PhotoViewActivity
 import com.huanchengfly.tieba.post.ui.page.photoview.PhotoViewActivity.Companion.EXTRA_PHOTO_VIEW_DATA
 import com.huanchengfly.tieba.post.utils.ImageUtil
 import com.huanchengfly.tieba.post.utils.NetworkUtil
+import com.huanchengfly.tieba.post.utils.ThemeUtil
 import com.huanchengfly.tieba.post.utils.appPreferences
 
 fun shouldLoadImage(context: Context, skipNetworkCheck: Boolean): Boolean {
@@ -71,11 +74,27 @@ fun NetworkImage(
         }
     }
 
+    val currentTheme by remember { ThemeUtil.themeState }
+    val isNightMode = remember(currentTheme) { ThemeUtil.isNightMode(currentTheme) }
+    val colorFilter = if (isNightMode && context.appPreferences.imageDarkenWhenNightMode) {
+        ColorFilter.colorMatrix(
+            ColorMatrix(
+                floatArrayOf(
+                    1f, 0f, 0f, 0f, -35f,
+                    0f, 1f, 0f, 0f, -35f,
+                    0f, 0f, 1f, 0f, -35f,
+                    0f, 0f, 0f, 1f, 0f
+                )
+            )
+        )
+    } else null
+
     AsyncImage(
         request = request,
         contentDescription = contentDescription,
         modifier = modifier.then(clickableModifier),
         contentScale = contentScale,
+        colorFilter = colorFilter,
     )
 }
 

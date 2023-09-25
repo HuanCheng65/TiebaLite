@@ -7,6 +7,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.BrandingWatermark
 import androidx.compose.material.icons.outlined.CalendarViewDay
 import androidx.compose.material.icons.outlined.ExitToApp
+import androidx.compose.material.icons.outlined.NightsStay
 import androidx.compose.material.icons.outlined.PhotoSizeSelectActual
 import androidx.compose.material.icons.outlined.SecurityUpdateWarning
 import androidx.compose.material.icons.outlined.StarOutline
@@ -97,6 +98,22 @@ fun HabitSettingsPage(
                         LeadingIcon {
                             AvatarIcon(
                                 icon = Icons.Outlined.BrandingWatermark,
+                                size = Sizes.Small,
+                                contentDescription = null,
+                            )
+                        }
+                    },
+                )
+            }
+            prefsItem {
+                SwitchPref(
+                    key = "imageDarkenWhenNightMode",
+                    title = stringResource(id = R.string.settings_image_darken_when_night_mode),
+                    defaultChecked = true,
+                    leadingIcon = {
+                        LeadingIcon {
+                            AvatarIcon(
+                                icon = Icons.Outlined.NightsStay,
                                 size = Sizes.Small,
                                 contentDescription = null,
                             )

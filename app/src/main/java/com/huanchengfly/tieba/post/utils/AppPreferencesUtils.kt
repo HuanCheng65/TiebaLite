@@ -115,6 +115,8 @@ open class AppPreferencesUtils private constructor(ctx: Context) {
 
     var homePageScroll by DataStoreDelegates.boolean(defaultValue = false)
 
+    var imageDarkenWhenNightMode by DataStoreDelegates.boolean(defaultValue = true)
+
     var imageLoadType by DataStoreDelegates.string(
         key = "image_load_type",
         defaultValue = "0"
@@ -132,15 +134,13 @@ open class AppPreferencesUtils private constructor(ctx: Context) {
 
     var oldTheme by DataStoreDelegates.string(key = "old_theme")
 
-    var oksignWorkId by DataStoreDelegates.string()
-
     var oksignSlowMode by DataStoreDelegates.boolean(
         defaultValue = true,
         key = "oksign_slow_mode"
     )
 
     var oksignUseOfficialOksign by DataStoreDelegates.boolean(
-        defaultValue = false,
+        defaultValue = true,
         key = "oksign_use_official_oksign"
     )
 
