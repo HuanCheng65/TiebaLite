@@ -67,6 +67,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -85,6 +86,10 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.util.fastForEach
+import com.airbnb.lottie.compose.LottieAnimation
+import com.airbnb.lottie.compose.LottieCompositionSpec
+import com.airbnb.lottie.compose.LottieConstants
+import com.airbnb.lottie.compose.rememberLottieComposition
 import com.huanchengfly.tieba.post.App
 import com.huanchengfly.tieba.post.R
 import com.huanchengfly.tieba.post.activities.UserActivity
@@ -140,6 +145,7 @@ import com.huanchengfly.tieba.post.ui.widgets.compose.MyScaffold
 import com.huanchengfly.tieba.post.ui.widgets.compose.PromptDialog
 import com.huanchengfly.tieba.post.ui.widgets.compose.Sizes
 import com.huanchengfly.tieba.post.ui.widgets.compose.TextWithMinWidth
+import com.huanchengfly.tieba.post.ui.widgets.compose.TipScreen
 import com.huanchengfly.tieba.post.ui.widgets.compose.TitleCentredToolbar
 import com.huanchengfly.tieba.post.ui.widgets.compose.UserHeader
 import com.huanchengfly.tieba.post.ui.widgets.compose.VerticalDivider
@@ -623,7 +629,7 @@ fun ThreadPage(
 
     val updateCollectMarkDialogState = rememberDialogState()
     var readFloorBeforeBack by remember {
-        mutableStateOf(1)
+        mutableIntStateOf(1)
     }
     ConfirmDialog(
         dialogState = updateCollectMarkDialogState,
@@ -1193,7 +1199,7 @@ fun ThreadPage(
                                             Text(
                                                 text = stringResource(
                                                     R.string.title_thread_header,
-                                                    "${thread?.get { replyNum } ?: 0}"),
+                                                    "${thread?.get { replyNum - 1 } ?: 0}"),
                                                 fontSize = 13.sp,
                                                 fontWeight = FontWeight.Bold,
                                                 color = ExtendedTheme.colors.text,
@@ -1293,16 +1299,45 @@ fun ThreadPage(
                                             }
                                         }
                                     }
-                                    items(
-                                        items = data,
-                                        key = { (item) -> "Post_${item.get { id }}" }
-                                    ) { (item, blocked, renders, subPosts) ->
-                                        PostCard(
-                                            item,
-                                            renders,
-                                            subPosts,
-                                            blocked
-                                        )
+                                    if (!isRefreshing && data.isEmpty()) {
+                                        item(key = "EmptyTip") {
+                                            TipScreen(
+                                                title = { Text(text = stringResource(id = R.string.title_empty)) },
+                                                image = {
+                                                    val composition by rememberLottieComposition(
+                                                        LottieCompositionSpec.RawRes(R.raw.lottie_empty_box)
+                                                    )
+                                                    LottieAnimation(
+                                                        composition = composition,
+                                                        iterations = LottieConstants.IterateForever,
+                                                        modifier = Modifier
+                                                            .fillMaxWidth()
+                                                            .aspectRatio(2f)
+                                                    )
+                                                },
+                                                actions = {
+                                                    if (canReload) {
+                                                        Button(onClick = { reload() }) {
+                                                            Text(text = stringResource(id = R.string.btn_refresh))
+                                                        }
+                                                    }
+                                                },
+                                                modifier = Modifier.fillMaxSize(),
+                                                scrollable = false
+                                            )
+                                        }
+                                    } else {
+                                        items(
+                                            items = data,
+                                            key = { (item) -> "Post_${item.get { id }}" }
+                                        ) { (item, blocked, renders, subPosts) ->
+                                            PostCard(
+                                                item,
+                                                renders,
+                                                subPosts,
+                                                blocked
+                                            )
+                                        }
                                     }
                                     if (curSortType != ThreadSortType.SORT_TYPE_DESC) {
                                         latestPosts(false)

@@ -40,18 +40,22 @@ fun TipScreen(
     modifier: Modifier = Modifier,
     image: @Composable (ColumnScope.() -> Unit) = {},
     message: @Composable (ColumnScope.() -> Unit) = {},
-    actions: @Composable (ColumnScope.() -> Unit) = {}
+    actions: @Composable (ColumnScope.() -> Unit) = {},
+    scrollable: Boolean = true,
 ) {
+    val scrollableModifier =
+        if (scrollable) Modifier.verticalScroll(rememberScrollState()) else Modifier
     val widthFraction =
         if (LocalWindowSizeClass.current.widthSizeClass == WindowWidthSizeClass.Compact) 0.9f else 0.5f
-    Column(modifier = modifier) {
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = modifier
+    ) {
         Column(
             modifier = Modifier
                 .fillMaxWidth(fraction = widthFraction)
                 .padding(16.dp)
-                .verticalScroll(
-                    rememberScrollState()
-                ),
+                .then(scrollableModifier),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(8.dp, alignment = Alignment.CenterVertically)
         ) {
