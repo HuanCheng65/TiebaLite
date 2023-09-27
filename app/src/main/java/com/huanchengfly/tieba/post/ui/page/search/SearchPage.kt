@@ -555,7 +555,7 @@ private fun SearchTopBar(
                 placeholder = {
                     Text(
                         text = stringResource(id = R.string.hint_search),
-                        color = ExtendedTheme.colors.onTopBarSurface.copy(alpha = ContentAlpha.disabled)
+                        color = ExtendedTheme.colors.onTopBarSurface.copy(alpha = ContentAlpha.medium)
                     )
                 },
                 modifier = Modifier

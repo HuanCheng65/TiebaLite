@@ -14,12 +14,11 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import com.huanchengfly.tieba.post.R
-import com.huanchengfly.tieba.post.activities.NewSearchActivity
-import com.huanchengfly.tieba.post.goToActivity
 import com.huanchengfly.tieba.post.ui.common.theme.compose.ExtendedTheme
+import com.huanchengfly.tieba.post.ui.page.LocalNavigator
+import com.huanchengfly.tieba.post.ui.page.destinations.SearchPageDestination
 import com.huanchengfly.tieba.post.ui.page.main.notifications.list.NotificationsListPage
 import com.huanchengfly.tieba.post.ui.page.main.notifications.list.NotificationsType
 import com.huanchengfly.tieba.post.ui.widgets.compose.ActionItem
@@ -32,7 +31,7 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun NotificationsPage() {
-    val context = LocalContext.current
+    val navigator = LocalNavigator.current
     val pages = listOf<Pair<String, (@Composable () -> Unit)>>(
         stringResource(id = R.string.title_reply_me) to @Composable {
             NotificationsListPage(type = NotificationsType.ReplyMe)
@@ -54,7 +53,7 @@ fun NotificationsPage() {
                         icon = Icons.Rounded.Search,
                         contentDescription = stringResource(id = R.string.title_search)
                     ) {
-                        context.goToActivity<NewSearchActivity>()
+                        navigator.navigate(SearchPageDestination)
                     }
                 },
             ) {
