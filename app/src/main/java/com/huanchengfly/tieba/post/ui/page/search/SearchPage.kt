@@ -29,6 +29,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.ButtonDefaults
+import androidx.compose.material.ContentAlpha
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.ProvideTextStyle
@@ -224,6 +225,7 @@ fun SearchPage(
                     Box(
                         modifier = Modifier
                             .height(64.dp)
+                            .background(ExtendedTheme.colors.topBar)
                             .padding(horizontal = 16.dp, vertical = 8.dp)
                     ) {
                         SearchTopBar(
@@ -553,7 +555,7 @@ private fun SearchTopBar(
                 placeholder = {
                     Text(
                         text = stringResource(id = R.string.hint_search),
-                        color = ExtendedTheme.colors.textDisabled
+                        color = ExtendedTheme.colors.onTopBarSurface.copy(alpha = ContentAlpha.disabled)
                     )
                 },
                 modifier = Modifier

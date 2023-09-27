@@ -120,7 +120,7 @@ fun HistoryPage(
                                     pagerState.animateScrollToPage(0)
                                 }
                             },
-                            selectedContentColor = ExtendedTheme.colors.primary,
+                            selectedContentColor = ExtendedTheme.colors.onTopBar,
                             unselectedContentColor = ExtendedTheme.colors.onTopBarSecondary
                         )
                         Tab(
@@ -136,7 +136,7 @@ fun HistoryPage(
                                     pagerState.animateScrollToPage(1)
                                 }
                             },
-                            selectedContentColor = ExtendedTheme.colors.primary,
+                            selectedContentColor = ExtendedTheme.colors.onTopBar,
                             unselectedContentColor = ExtendedTheme.colors.onTopBarSecondary
                         )
                     }

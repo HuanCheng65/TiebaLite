@@ -122,12 +122,16 @@ fun SearchBox(
     contentColor: Color = ExtendedTheme.colors.onTopBarSurface,
     onClick: () -> Unit,
 ) {
-    Box(modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)) {
+    Box(
+        modifier = modifier
+            .background(ExtendedTheme.colors.topBar)
+            .padding(horizontal = 16.dp, vertical = 8.dp)
+    ) {
         Surface(
             color = backgroundColor,
             contentColor = contentColor,
             shape = RoundedCornerShape(6.dp),
-            modifier = modifier
+            modifier = Modifier
                 .fillMaxWidth()
                 .clickable(onClick = onClick)
         ) {

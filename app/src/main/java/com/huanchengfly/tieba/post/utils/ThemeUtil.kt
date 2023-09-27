@@ -63,6 +63,7 @@ object ThemeUtil {
     const val KEY_CUSTOM_STATUS_BAR_FONT_DARK = "custom_status_bar_font_dark"
     const val KEY_CUSTOM_TOOLBAR_PRIMARY_COLOR = "custom_toolbar_primary_color"
     const val KEY_TRANSLUCENT_THEME_BACKGROUND_PATH = "translucent_theme_background_path"
+    const val KEY_USE_DYNAMIC_COLOR_THEME = "useDynamicColorTheme"
 
     const val THEME_TRANSLUCENT = "translucent"
     const val THEME_TRANSLUCENT_LIGHT = "translucent_light"

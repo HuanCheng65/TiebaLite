@@ -57,7 +57,7 @@ import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
@@ -676,7 +676,7 @@ fun ForumPage(
                                 },
                                 modifier = Modifier
                                     .fillMaxWidth()
-                                    .padding(horizontal = 16.dp)
+                                    .padding(16.dp)
                                     // enable event when scroll image.
                                     .scrollable(
                                         orientation = Orientation.Vertical,
@@ -719,7 +719,7 @@ fun ForumPage(
                         val menuState = rememberMenuState()
                         val interactionSource = remember { MutableInteractionSource() }
                         var currentSortType by remember {
-                            mutableStateOf(
+                            mutableIntStateOf(
                                 getSortType(
                                     context,
                                     forumName
@@ -780,7 +780,7 @@ fun ForumPage(
                                     }
                                 },
                                 selectedContentColor = ExtendedTheme.colors.primary,
-                                unselectedContentColor = ExtendedTheme.colors.onTopBarSecondary,
+                                unselectedContentColor = ExtendedTheme.colors.textSecondary,
                                 interactionSource = interactionSource,
                             ) {
                                 Row(
@@ -812,7 +812,7 @@ fun ForumPage(
                                 }
                             },
                             selectedContentColor = ExtendedTheme.colors.primary,
-                            unselectedContentColor = ExtendedTheme.colors.onTopBarSecondary
+                            unselectedContentColor = ExtendedTheme.colors.textSecondary
                         ) {
                             Row(
                                 verticalAlignment = Alignment.CenterVertically,
@@ -881,7 +881,7 @@ fun LoadingPlaceholder(
                 forumName = forumName,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 16.dp)
+                    .padding(16.dp)
             )
             Row(modifier = Modifier.height(48.dp)) {
                 repeat(2) {

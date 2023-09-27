@@ -21,6 +21,7 @@ import com.huanchengfly.tieba.post.App
 import com.huanchengfly.tieba.post.R
 import com.huanchengfly.tieba.post.rememberPreferenceAsState
 import com.huanchengfly.tieba.post.utils.ThemeUtil
+import com.huanchengfly.tieba.post.utils.appPreferences
 import com.huanchengfly.tieba.post.utils.compose.darken
 
 @Stable
@@ -109,20 +110,164 @@ private fun getDynamicColor(
 }
 
 @Composable
+private fun getDynamicTopBarColor(
+    tonalPalette: TonalPalette,
+    isNightMode: Boolean,
+): Color {
+    val topBarUsePrimaryColor =
+        LocalContext.current.appPreferences.toolbarPrimaryColor && !isNightMode
+    val primaryColor = if (isNightMode) {
+        tonalPalette.primary80
+    } else {
+        tonalPalette.primary40
+    }
+    val backgroundColor = if (isNightMode) {
+        tonalPalette.neutralVariant10
+    } else {
+        tonalPalette.neutralVariant99
+    }
+    return if (topBarUsePrimaryColor) {
+        primaryColor
+    } else {
+        backgroundColor
+    }
+}
+
+@Composable
+private fun getDynamicOnTopBarColor(
+    tonalPalette: TonalPalette,
+    isNightMode: Boolean,
+): Color {
+    val topBarUsePrimaryColor =
+        LocalContext.current.appPreferences.toolbarPrimaryColor && !isNightMode
+    val onPrimaryColor = if (isNightMode) {
+        tonalPalette.primary20
+    } else {
+        tonalPalette.primary100
+    }
+    val onBackgroundColor = if (isNightMode) {
+        tonalPalette.neutralVariant90
+    } else {
+        tonalPalette.neutralVariant10
+    }
+    return if (topBarUsePrimaryColor) {
+        onPrimaryColor
+    } else {
+        onBackgroundColor
+    }
+}
+
+@Composable
+private fun getDynamicOnTopBarSecondaryColor(
+    tonalPalette: TonalPalette,
+    isNightMode: Boolean,
+): Color {
+    val topBarUsePrimaryColor =
+        LocalContext.current.appPreferences.toolbarPrimaryColor && !isNightMode
+    val primaryColor = if (isNightMode) {
+        tonalPalette.primary20
+    } else {
+        tonalPalette.primary80
+    }
+    val backgroundColor = if (isNightMode) {
+        tonalPalette.neutralVariant70
+    } else {
+        tonalPalette.neutralVariant40
+    }
+    return if (topBarUsePrimaryColor) {
+        primaryColor
+    } else {
+        backgroundColor
+    }
+}
+
+@Composable
+private fun getDynamicOnTopBarActiveColor(
+    tonalPalette: TonalPalette,
+    isNightMode: Boolean,
+): Color {
+    val topBarUsePrimaryColor =
+        LocalContext.current.appPreferences.toolbarPrimaryColor && !isNightMode
+    val primaryColor = if (isNightMode) {
+        tonalPalette.primary0
+    } else {
+        tonalPalette.primary100
+    }
+    val backgroundColor = if (isNightMode) {
+        tonalPalette.neutralVariant100
+    } else {
+        tonalPalette.neutralVariant0
+    }
+    return if (topBarUsePrimaryColor) {
+        primaryColor
+    } else {
+        backgroundColor
+    }
+}
+
+@Composable
+private fun getDynamicTopBarSurfaceColor(
+    tonalPalette: TonalPalette,
+    isNightMode: Boolean,
+): Color {
+    val topBarUsePrimaryColor =
+        LocalContext.current.appPreferences.toolbarPrimaryColor && !isNightMode
+    val primaryColor = if (isNightMode) {
+        tonalPalette.primary30
+    } else {
+        tonalPalette.primary90
+    }
+    val backgroundColor = if (isNightMode) {
+        tonalPalette.neutralVariant20
+    } else {
+        tonalPalette.neutralVariant95
+    }
+    return if (topBarUsePrimaryColor) {
+        primaryColor
+    } else {
+        backgroundColor
+    }
+}
+
+@Composable
+private fun getDynamicOnTopBarSurfaceColor(
+    tonalPalette: TonalPalette,
+    isNightMode: Boolean,
+): Color {
+    val topBarUsePrimaryColor =
+        LocalContext.current.appPreferences.toolbarPrimaryColor && !isNightMode
+    val primaryColor = if (isNightMode) {
+        tonalPalette.primary90
+    } else {
+        tonalPalette.primary10
+    }
+    val backgroundColor = if (isNightMode) {
+        tonalPalette.neutralVariant70
+    } else {
+        tonalPalette.neutralVariant30
+    }
+    return if (topBarUsePrimaryColor) {
+        primaryColor
+    } else {
+        backgroundColor
+    }
+}
+
+@Composable
 private fun getLightDynamicColor(tonalPalette: TonalPalette): ExtendedColors {
     return ExtendedColors(
         theme = "dynamic",
         isNightMode = false,
         primary = tonalPalette.primary40,
-        textOnPrimary = tonalPalette.primary100,
+        textOnPrimary = tonalPalette.primary90,
         accent = tonalPalette.secondary40,
         onAccent = tonalPalette.secondary100,
-        topBar = tonalPalette.neutralVariant99,
-        onTopBar = tonalPalette.neutralVariant10,
-        onTopBarSecondary = tonalPalette.neutralVariant40,
-        onTopBarActive = tonalPalette.neutralVariant0,
-        topBarSurface = tonalPalette.neutralVariant95,
-        onTopBarSurface = tonalPalette.neutralVariant30,
+        topBar = getDynamicTopBarColor(tonalPalette, false),
+        onTopBar = getDynamicOnTopBarColor(tonalPalette, false),
+        onTopBarSecondary = getDynamicOnTopBarSecondaryColor(tonalPalette, false),
+        onTopBarActive = getDynamicOnTopBarActiveColor(tonalPalette, false),
+        topBarSurface = getDynamicTopBarSurfaceColor(tonalPalette, false),
+        onTopBarSurface = getDynamicOnTopBarSurfaceColor(tonalPalette, false),
         bottomBar = tonalPalette.neutralVariant99,
         bottomBarSurface = tonalPalette.neutralVariant95,
         onBottomBarSurface = tonalPalette.neutralVariant30,
@@ -149,16 +294,15 @@ private fun getDarkDynamicColor(tonalPalette: TonalPalette): ExtendedColors {
         theme = "dynamic",
         isNightMode = true,
         primary = tonalPalette.primary80,
-        textOnPrimary = tonalPalette.primary20,
+        textOnPrimary = tonalPalette.primary10,
         accent = tonalPalette.secondary80,
         onAccent = tonalPalette.secondary20,
-        topBar = tonalPalette.neutralVariant10,
-        onTopBar = tonalPalette.neutralVariant90,
-        onTopBarSecondary = tonalPalette.neutralVariant70,
-        onTopBarActive = tonalPalette.neutralVariant100,
-        topBarSurface = tonalPalette.neutralVariant20,
-        onTopBarSurface = tonalPalette.neutralVariant70,
-        bottomBar = tonalPalette.neutralVariant10,
+        topBar = getDynamicTopBarColor(tonalPalette, true),
+        onTopBar = getDynamicOnTopBarColor(tonalPalette, true),
+        onTopBarSecondary = getDynamicOnTopBarSecondaryColor(tonalPalette, true),
+        onTopBarActive = getDynamicOnTopBarActiveColor(tonalPalette, true),
+        topBarSurface = getDynamicTopBarSurfaceColor(tonalPalette, true),
+        onTopBarSurface = getDynamicOnTopBarSurfaceColor(tonalPalette, true),
         bottomBarSurface = tonalPalette.neutralVariant20,
         onBottomBarSurface = tonalPalette.neutralVariant70,
         text = tonalPalette.neutralVariant90,
