@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -34,6 +33,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.util.fastForEach
 import com.huanchengfly.tieba.post.App
@@ -62,6 +62,7 @@ import com.huanchengfly.tieba.post.ui.widgets.compose.ConfirmDialog
 import com.huanchengfly.tieba.post.ui.widgets.compose.LazyLoad
 import com.huanchengfly.tieba.post.ui.widgets.compose.LoadMoreLayout
 import com.huanchengfly.tieba.post.ui.widgets.compose.LongClickMenu
+import com.huanchengfly.tieba.post.ui.widgets.compose.MyLazyColumn
 import com.huanchengfly.tieba.post.ui.widgets.compose.MyScaffold
 import com.huanchengfly.tieba.post.ui.widgets.compose.Sizes
 import com.huanchengfly.tieba.post.ui.widgets.compose.TitleCentredToolbar
@@ -260,11 +261,14 @@ internal fun SubPostsContent(
             modifier = Modifier.fillMaxSize(),
             topBar = {
                 TitleCentredToolbar(
-                    title = post?.let {
-                        stringResource(
-                            id = R.string.title_sub_posts,
-                            it.get { floor })
-                    } ?: stringResource(id = R.string.title_sub_posts_default),
+                    title = {
+                        Text(text = post?.let {
+                            stringResource(
+                                id = R.string.title_sub_posts,
+                                it.get { floor })
+                        } ?: stringResource(id = R.string.title_sub_posts_default),
+                            fontWeight = FontWeight.Bold, style = MaterialTheme.typography.h6)
+                    },
                     navigationIcon = {
                         IconButton(onClick = { navigator.navigateUp() }) {
                             Icon(
@@ -364,7 +368,7 @@ internal fun SubPostsContent(
                 lazyListState = lazyListState,
                 isEmpty = post == null && subPosts.isEmpty(),
             ) {
-                LazyColumn(
+                MyLazyColumn(
                     modifier = Modifier.padding(paddingValues),
                     state = lazyListState
                 ) {

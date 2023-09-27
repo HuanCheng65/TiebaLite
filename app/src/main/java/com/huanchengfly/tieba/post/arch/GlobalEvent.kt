@@ -16,9 +16,9 @@ import kotlinx.coroutines.flow.filterIsInstance
 import kotlinx.coroutines.launch
 
 sealed interface GlobalEvent : UiEvent {
-    object AccountSwitched : GlobalEvent
+    data object AccountSwitched : GlobalEvent
 
-    object NavigateUp : GlobalEvent
+    data object ScrollToTop : GlobalEvent
 
     data class Refresh(val key: String) : GlobalEvent
 

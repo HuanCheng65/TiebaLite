@@ -1,7 +1,11 @@
 package com.huanchengfly.tieba.post.ui.widgets.compose
 
+import android.util.Log
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.combinedClickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -23,13 +27,14 @@ import androidx.compose.material.DropdownMenuItem
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.MaterialTheme
-import androidx.compose.material.ProvideTextStyle
 import androidx.compose.material.Text
 import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Add
 import androidx.compose.material.icons.rounded.CheckCircle
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -41,10 +46,13 @@ import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.core.content.ContextCompat
 import com.google.accompanist.drawablepainter.rememberDrawablePainter
 import com.huanchengfly.tieba.post.R
 import com.huanchengfly.tieba.post.activities.LoginActivity
 import com.huanchengfly.tieba.post.arch.BaseComposeActivity.Companion.LocalWindowSizeClass
+import com.huanchengfly.tieba.post.arch.GlobalEvent
+import com.huanchengfly.tieba.post.arch.emitGlobalEvent
 import com.huanchengfly.tieba.post.goToActivity
 import com.huanchengfly.tieba.post.ui.common.theme.compose.ExtendedTheme
 import com.huanchengfly.tieba.post.ui.common.windowsizeclass.WindowWidthSizeClass.Companion.Compact
@@ -68,7 +76,12 @@ fun AccountNavIcon(
     if (spacer) Spacer(modifier = Modifier.width(12.dp))
     if (currentAccount == null) {
         Image(
-            painter = rememberDrawablePainter(drawable = LocalContext.current.getDrawable(R.drawable.ic_launcher_new_round)),
+            painter = rememberDrawablePainter(
+                drawable = ContextCompat.getDrawable(
+                    LocalContext.current,
+                    R.drawable.ic_launcher_new_round
+                )
+            ),
             contentDescription = null,
             modifier = Modifier
                 .clip(CircleShape)
@@ -169,128 +182,97 @@ fun BackNavigationIcon(onBackPressed: () -> Unit) {
     }
 }
 
+@Deprecated(
+    "Use the non deprecated overload",
+    ReplaceWith(
+        """TitleCentredToolbar(
+                title = { Text(text = title, fontWeight = FontWeight.Bold, style = MaterialTheme.typography.h6) },
+                modifier = modifier,
+                insets = insets,
+                navigationIcon = navigationIcon,
+                actions = actions,
+                content = content
+            )""",
+        "androidx.compose.ui.text.font.FontWeight",
+        "androidx.compose.material.MaterialTheme",
+    )
+)
 @Composable
 fun TitleCentredToolbar(
     title: String,
+    modifier: Modifier = Modifier,
     insets: Boolean = true,
-    navigationIcon: @Composable (() -> Unit)? = null,
+    navigationIcon: (@Composable () -> Unit)? = null,
     actions: @Composable RowScope.() -> Unit = {},
-    content: @Composable ColumnScope.() -> Unit = {}
+    content: (@Composable ColumnScope.() -> Unit)? = null,
 ) {
-    val statusBarModifier = if (insets) {
-        Modifier.windowInsetsTopHeight(WindowInsets.statusBars)
-    } else {
-        Modifier
-    }
-    Column {
-        Spacer(
-            modifier = statusBarModifier
-                .fillMaxWidth()
-                .background(color = ExtendedTheme.colors.topBar.calcStatusBarColor())
-        )
-        TopAppBar(
-            backgroundColor = ExtendedTheme.colors.topBar,
-            contentColor = ExtendedTheme.colors.onTopBar,
-            elevation = 0.dp
-        ) {
-            Box(modifier = Modifier.fillMaxSize()) {
-                Row(
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier.fillMaxHeight()
-                ) {
-                    ProvideContentColor(color = ExtendedTheme.colors.onTopBar) {
-                        navigationIcon?.invoke()
-
-                        Spacer(modifier = Modifier.weight(1f))
-
-                        actions()
-                    }
-                }
-
-                Row(
-                    Modifier
-                        .fillMaxHeight()
-                        .align(Alignment.Center),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.Center
-                ) {
-                    ProvideTextStyle(value = MaterialTheme.typography.h6) {
-                        ProvideContentColor(color = ExtendedTheme.colors.onTopBar) {
-                            Text(text = title, fontWeight = FontWeight.Bold)
-                        }
-                    }
-                }
-            }
-        }
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .background(color = ExtendedTheme.colors.topBar)
-        ) {
-            content()
-        }
-    }
+    TitleCentredToolbar(
+        title = {
+            Text(text = title, fontWeight = FontWeight.Bold, style = MaterialTheme.typography.h6)
+        },
+        modifier = modifier,
+        insets = insets,
+        navigationIcon = navigationIcon,
+        actions = actions,
+        content = content
+    )
 }
 
 @Composable
 fun TitleCentredToolbar(
     title: @Composable () -> Unit,
     modifier: Modifier = Modifier,
-    navigationIcon: @Composable (() -> Unit)? = null,
-    actions: @Composable (RowScope.() -> Unit) = {},
-    content: @Composable (ColumnScope.() -> Unit) = {},
+    insets: Boolean = true,
+    navigationIcon: (@Composable () -> Unit)? = null,
+    actions: @Composable RowScope.() -> Unit = {},
+    content: (@Composable ColumnScope.() -> Unit)? = null,
 ) {
-    Column(
-        modifier = Modifier
-            .background(ExtendedTheme.colors.topBar)
-            .then(modifier)
-    ) {
-        TopAppBar(
-            backgroundColor = ExtendedTheme.colors.topBar,
-            contentColor = ExtendedTheme.colors.onTopBar,
-            elevation = 0.dp
-        ) {
-            Box(modifier = Modifier.fillMaxSize()) {
-                Row(
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier.fillMaxHeight()
-                ) {
-                    navigationIcon?.invoke()
+    TopAppBarContainer(
+        topBar = {
+            TopAppBar(
+                backgroundColor = ExtendedTheme.colors.topBar,
+                contentColor = ExtendedTheme.colors.onTopBar,
+                elevation = 0.dp
+            ) {
+                Box(modifier = Modifier.fillMaxSize()) {
+                    Row(
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier.fillMaxHeight()
+                    ) {
+                        navigationIcon?.invoke()
 
-                    Spacer(modifier = Modifier.weight(1f))
+                        Spacer(modifier = Modifier.weight(1f))
 
-                    actions()
-                }
+                        actions()
+                    }
 
-                Row(
-                    Modifier
-                        .fillMaxHeight()
-                        .align(Alignment.Center),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.Center
-                ) {
-                    title()
+                    Row(
+                        Modifier
+                            .fillMaxHeight()
+                            .align(Alignment.Center),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.Center
+                    ) {
+                        ProvideContentColor(color = ExtendedTheme.colors.onTopBar) {
+                            title()
+                        }
+                    }
                 }
             }
-        }
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .background(color = ExtendedTheme.colors.topBar)
-        ) {
-            content()
-        }
-    }
+        },
+        modifier = modifier,
+        insets = insets,
+        content = content
+    )
 }
 
 @Composable
 fun Toolbar(
     title: String,
-    navigationIcon: @Composable (() -> Unit)? = null,
+    navigationIcon: (@Composable () -> Unit)? = null,
     actions: @Composable RowScope.() -> Unit = {},
-    content: @Composable (ColumnScope.() -> Unit)? = null
+    content: (@Composable ColumnScope.() -> Unit)? = null,
 ) {
     TopAppBarContainer(
         topBar = {
@@ -314,9 +296,9 @@ fun Toolbar(
 @Composable
 fun Toolbar(
     title: @Composable (() -> Unit),
-    navigationIcon: @Composable (() -> Unit)? = null,
+    navigationIcon: (@Composable () -> Unit)? = null,
     actions: @Composable RowScope.() -> Unit = {},
-    content: @Composable (ColumnScope.() -> Unit)? = null
+    content: (@Composable ColumnScope.() -> Unit)? = null,
 ) {
     TopAppBarContainer(
         topBar = {
@@ -336,21 +318,41 @@ fun Toolbar(
 }
 
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun TopAppBarContainer(
     topBar: @Composable ColumnScope.() -> Unit,
     modifier: Modifier = Modifier,
-    content: @Composable (ColumnScope.() -> Unit)? = null,
+    insets: Boolean = true,
+    content: (@Composable ColumnScope.() -> Unit)? = null,
 ) {
+    val statusBarModifier = if (insets) {
+        Modifier.windowInsetsTopHeight(WindowInsets.statusBars)
+    } else {
+        Modifier
+    }
+    val coroutineScope = rememberCoroutineScope()
     Column(modifier) {
         Spacer(
-            modifier = Modifier
-                .windowInsetsTopHeight(WindowInsets.statusBars)
+            modifier = statusBarModifier
                 .fillMaxWidth()
                 .background(color = ExtendedTheme.colors.topBar.calcStatusBarColor())
         )
-        topBar()
-        if (content != null) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .combinedClickable(
+                    interactionSource = remember { MutableInteractionSource() },
+                    indication = null,
+                    onDoubleClick = {
+                        Log.i("TopAppBarContainer", "TopAppBarContainer: onDoubleClick")
+                        coroutineScope.emitGlobalEvent(GlobalEvent.ScrollToTop)
+                    },
+                    onClick = {},
+                ),
+            content = topBar
+        )
+        content?.let {
             Column(
                 modifier = Modifier
                     .fillMaxWidth()

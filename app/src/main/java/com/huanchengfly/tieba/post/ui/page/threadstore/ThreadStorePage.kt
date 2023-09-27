@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -15,6 +14,7 @@ import androidx.compose.foundation.text.appendInlineContent
 import androidx.compose.material.DropdownMenuItem
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.LocalContentColor
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.material.pullrefresh.PullRefreshIndicator
 import androidx.compose.material.pullrefresh.pullRefresh
@@ -58,6 +58,7 @@ import com.huanchengfly.tieba.post.ui.widgets.compose.ErrorScreen
 import com.huanchengfly.tieba.post.ui.widgets.compose.LazyLoad
 import com.huanchengfly.tieba.post.ui.widgets.compose.LoadMoreLayout
 import com.huanchengfly.tieba.post.ui.widgets.compose.LongClickMenu
+import com.huanchengfly.tieba.post.ui.widgets.compose.MyLazyColumn
 import com.huanchengfly.tieba.post.ui.widgets.compose.MyScaffold
 import com.huanchengfly.tieba.post.ui.widgets.compose.Sizes
 import com.huanchengfly.tieba.post.ui.widgets.compose.TitleCentredToolbar
@@ -131,7 +132,12 @@ fun ThreadStorePage(
         scaffoldState = scaffoldState,
         topBar = {
             TitleCentredToolbar(
-                title = stringResource(id = R.string.title_my_collect),
+                title = {
+                    Text(
+                        text = stringResource(id = R.string.title_my_collect),
+                        fontWeight = FontWeight.Bold, style = MaterialTheme.typography.h6
+                    )
+                },
                 navigationIcon = {
                     BackNavigationIcon(onBackPressed = { navigator.navigateUp() })
                 }
@@ -167,7 +173,7 @@ fun ThreadStorePage(
                     loadEnd = !hasMore,
                     lazyListState = lazyListState
                 ) {
-                    LazyColumn(state = lazyListState) {
+                    MyLazyColumn(state = lazyListState) {
                         items(
                             items = data,
                             key = { it.threadId }

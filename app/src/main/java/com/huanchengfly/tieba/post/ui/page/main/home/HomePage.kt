@@ -19,7 +19,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.GridItemSpan
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -84,6 +83,7 @@ import com.huanchengfly.tieba.post.ui.widgets.compose.ConfirmDialog
 import com.huanchengfly.tieba.post.ui.widgets.compose.ErrorScreen
 import com.huanchengfly.tieba.post.ui.widgets.compose.LongClickMenu
 import com.huanchengfly.tieba.post.ui.widgets.compose.MenuState
+import com.huanchengfly.tieba.post.ui.widgets.compose.MyLazyVerticalGrid
 import com.huanchengfly.tieba.post.ui.widgets.compose.TextButton
 import com.huanchengfly.tieba.post.ui.widgets.compose.TipScreen
 import com.huanchengfly.tieba.post.ui.widgets.compose.Toolbar
@@ -486,7 +486,7 @@ fun HomePage(
                         error?.let { ErrorScreen(error = it) }
                     }
                 ) {
-                    LazyVerticalGrid(
+                    MyLazyVerticalGrid(
                         columns = gridCells,
                         contentPadding = PaddingValues(bottom = 12.dp),
                         modifier = Modifier.fillMaxSize(),
@@ -576,8 +576,7 @@ private fun HomePageSkeletonScreen(
     listSingle: Boolean,
     gridCells: GridCells
 ) {
-    val context = LocalContext.current
-    LazyVerticalGrid(
+    MyLazyVerticalGrid(
         columns = gridCells,
         contentPadding = PaddingValues(bottom = 12.dp),
         modifier = Modifier

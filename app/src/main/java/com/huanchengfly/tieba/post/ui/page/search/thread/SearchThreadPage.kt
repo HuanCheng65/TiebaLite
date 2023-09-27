@@ -4,7 +4,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -40,6 +39,7 @@ import com.huanchengfly.tieba.post.ui.widgets.compose.ForumInfoChip
 import com.huanchengfly.tieba.post.ui.widgets.compose.LazyLoad
 import com.huanchengfly.tieba.post.ui.widgets.compose.LoadMoreLayout
 import com.huanchengfly.tieba.post.ui.widgets.compose.LocalShouldLoad
+import com.huanchengfly.tieba.post.ui.widgets.compose.MyLazyColumn
 import com.huanchengfly.tieba.post.ui.widgets.compose.Sizes
 import com.huanchengfly.tieba.post.ui.widgets.compose.ThreadAgreeBtn
 import com.huanchengfly.tieba.post.ui.widgets.compose.ThreadContent
@@ -196,7 +196,7 @@ private fun SearchThreadList(
     onItemForumClick: (SearchThreadBean.ForumInfo) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    LazyColumn(
+    MyLazyColumn(
         state = lazyListState,
         modifier = modifier
     ) {

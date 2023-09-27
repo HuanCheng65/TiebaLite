@@ -12,7 +12,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentSize
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.ContentAlpha
@@ -56,6 +55,7 @@ import com.huanchengfly.tieba.post.ui.page.destinations.HotTopicListPageDestinat
 import com.huanchengfly.tieba.post.ui.page.destinations.ThreadPageDestination
 import com.huanchengfly.tieba.post.ui.widgets.compose.FeedCard
 import com.huanchengfly.tieba.post.ui.widgets.compose.LazyLoad
+import com.huanchengfly.tieba.post.ui.widgets.compose.MyLazyColumn
 import com.huanchengfly.tieba.post.ui.widgets.compose.ProvideContentColor
 import com.huanchengfly.tieba.post.ui.widgets.compose.VerticalDivider
 import com.huanchengfly.tieba.post.ui.widgets.compose.VerticalGrid
@@ -108,7 +108,7 @@ fun HotPage(
         refreshing = isLoading,
         onRefresh = { viewModel.send(HotUiIntent.Load) })
     Box(modifier = Modifier.pullRefresh(pullRefreshState)) {
-        LazyColumn(
+        MyLazyColumn(
             modifier = Modifier
                 .fillMaxWidth(),
         ) {

@@ -12,7 +12,6 @@ import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
@@ -55,6 +54,7 @@ import com.huanchengfly.tieba.post.ui.page.main.BottomNavigationDivider
 import com.huanchengfly.tieba.post.ui.widgets.compose.BackNavigationIcon
 import com.huanchengfly.tieba.post.ui.widgets.compose.LocalSnackbarHostState
 import com.huanchengfly.tieba.post.ui.widgets.compose.LongClickMenu
+import com.huanchengfly.tieba.post.ui.widgets.compose.MyLazyColumn
 import com.huanchengfly.tieba.post.ui.widgets.compose.MyScaffold
 import com.huanchengfly.tieba.post.ui.widgets.compose.PagerTabIndicator
 import com.huanchengfly.tieba.post.ui.widgets.compose.PromptDialog
@@ -116,38 +116,44 @@ fun BlockListPage(
         backgroundColor = Color.Transparent,
         topBar = {
             TitleCentredToolbar(
-                title = stringResource(id = R.string.title_block_list),
+                title = {
+                    Text(
+                        text = stringResource(id = R.string.title_block_list),
+                        fontWeight = FontWeight.Bold, style = MaterialTheme.typography.h6
+                    )
+                },
                 navigationIcon = {
                     BackNavigationIcon(onBackPressed = { navigator.navigateUp() })
-                }
-            ) {
-                TabRow(
-                    selectedTabIndex = pagerState.currentPage,
-                    indicator = { tabPositions ->
-                        PagerTabIndicator(
-                            pagerState = pagerState,
-                            tabPositions = tabPositions
+                },
+                content = {
+                    TabRow(
+                        selectedTabIndex = pagerState.currentPage,
+                        indicator = { tabPositions ->
+                            PagerTabIndicator(
+                                pagerState = pagerState,
+                                tabPositions = tabPositions
+                            )
+                        },
+                        divider = {},
+                        backgroundColor = Color.Transparent,
+                        contentColor = ExtendedTheme.colors.onTopBar,
+                        modifier = Modifier
+                            .align(Alignment.CenterHorizontally)
+                            .width(84.dp * 2),
+                    ) {
+                        Tab(
+                            selected = pagerState.currentPage == 0,
+                            onClick = { coroutineScope.launch { pagerState.animateScrollToPage(0) } },
+                            text = { Text(text = stringResource(id = R.string.title_black_list)) },
                         )
-                    },
-                    divider = {},
-                    backgroundColor = Color.Transparent,
-                    contentColor = ExtendedTheme.colors.onTopBar,
-                    modifier = Modifier
-                        .align(Alignment.CenterHorizontally)
-                        .width(84.dp * 2),
-                ) {
-                    Tab(
-                        selected = pagerState.currentPage == 0,
-                        onClick = { coroutineScope.launch { pagerState.animateScrollToPage(0) } },
-                        text = { Text(text = stringResource(id = R.string.title_black_list)) },
-                    )
-                    Tab(
-                        selected = pagerState.currentPage == 1,
-                        onClick = { coroutineScope.launch { pagerState.animateScrollToPage(1) } },
-                        text = { Text(text = stringResource(id = R.string.title_white_list)) },
-                    )
+                        Tab(
+                            selected = pagerState.currentPage == 1,
+                            onClick = { coroutineScope.launch { pagerState.animateScrollToPage(1) } },
+                            text = { Text(text = stringResource(id = R.string.title_white_list)) },
+                        )
+                    }
                 }
-            }
+            )
         },
         bottomBar = {
             Column {
@@ -232,7 +238,7 @@ fun BlockListPage(
                 isError = false,
                 isLoading = isLoading,
                 loadingScreen = {
-                    LazyColumn(modifier = Modifier.fillMaxSize()) {
+                    MyLazyColumn(modifier = Modifier.fillMaxSize()) {
                         items(4) {
                             BlockItemPlaceholder()
                         }
@@ -240,7 +246,7 @@ fun BlockListPage(
                 },
                 modifier = Modifier.fillMaxSize()
             ) {
-                LazyColumn(Modifier.fillMaxSize()) {
+                MyLazyColumn(Modifier.fillMaxSize()) {
                     items(items, key = { it.id }) {
                         LongClickMenu(menuContent = {
                             DropdownMenuItem(onClick = {
