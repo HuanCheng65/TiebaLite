@@ -5,12 +5,14 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Apps
 import androidx.compose.material.icons.outlined.Brightness2
 import androidx.compose.material.icons.outlined.BrightnessAuto
 import androidx.compose.material.icons.outlined.Explore
 import androidx.compose.material.icons.outlined.FontDownload
+import androidx.compose.material.icons.outlined.FormatColorFill
 import androidx.compose.material.icons.outlined.ViewAgenda
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.ExperimentalComposeUiApi
@@ -19,6 +21,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.google.accompanist.drawablepainter.rememberDrawablePainter
 import com.huanchengfly.tieba.post.R
@@ -51,7 +54,12 @@ fun CustomSettingsPage(
         backgroundColor = Color.Transparent,
         topBar = {
             TitleCentredToolbar(
-                title = stringResource(id = R.string.title_settings_custom),
+                title = {
+                    Text(
+                        text = stringResource(id = R.string.title_settings_custom),
+                        fontWeight = FontWeight.Bold, style = MaterialTheme.typography.h6
+                    )
+                },
                 navigationIcon = {
                     BackNavigationIcon(onBackPressed = { navigator.navigateUp() })
                 }
@@ -178,6 +186,23 @@ fun CustomSettingsPage(
                             )
                         }
                     },
+                )
+            }
+            prefsItem {
+                SwitchPref(
+                    key = "custom_toolbar_primary_color",
+                    title = stringResource(id = R.string.tip_toolbar_primary_color),
+                    defaultChecked = false,
+                    leadingIcon = {
+                        LeadingIcon {
+                            AvatarIcon(
+                                icon = Icons.Outlined.FormatColorFill,
+                                size = Sizes.Small,
+                                contentDescription = null,
+                            )
+                        }
+                    },
+                    summary = stringResource(id = R.string.tip_toolbar_primary_color_summary),
                 )
             }
             prefsItem {
