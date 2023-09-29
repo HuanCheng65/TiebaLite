@@ -10,7 +10,7 @@ buildscript {
         compose_compiler_version = '1.5.3'
         //https://developer.android.com/jetpack/compose/setup#bom-version-mapping
         compose_bom_version = '2023.09.01'
-        wire_version = '4.9.0'
+        wire_version = '4.9.1'
         hilt_version = '2.46.1'
         booster_version = '4.16.2'
         lottie_version = '6.1.0'

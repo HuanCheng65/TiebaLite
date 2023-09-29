@@ -159,12 +159,12 @@ dependencies {
     implementation "io.github.panpf.sketch3:sketch-gif-movie:$sketch_version"
     implementation "io.github.panpf.sketch3:sketch-okhttp:$sketch_version"
 
-    def zoomimage_version = '1.0.0-beta01'
+    def zoomimage_version = '1.0.0-beta03'
     implementation "io.github.panpf.zoomimage:zoomimage-compose-sketch:$zoomimage_version"
     implementation("io.github.panpf.zoomimage:zoomimage-view-sketch:$zoomimage_version")
 
     def composeBom = platform("androidx.compose:compose-bom:$compose_bom_version")
-    implementation composeBom
+    implementation 'androidx.compose:compose-bom:2023.09.02'
     androidTestImplementation composeBom
 
     implementation 'androidx.compose.runtime:runtime-tracing:1.0.0-alpha03'
