@@ -106,13 +106,21 @@ object ThemeUtil {
         ThemeUtils.refreshUI(activity)
     }
 
+    private fun getOldTheme(): String {
+        val oldTheme =
+            dataStore.getString(KEY_OLD_THEME, THEME_DEFAULT).takeUnless { isNightMode(it) }
+
+        return oldTheme ?: THEME_DEFAULT
+    }
+
     fun switchTheme(newTheme: String, recordOldTheme: Boolean = true) {
         if (recordOldTheme) {
             val oldTheme = getTheme()
-            dataStore.putString(KEY_OLD_THEME, oldTheme)
+            if (!isNightMode(oldTheme)) {
+                dataStore.putString(KEY_OLD_THEME, oldTheme)
+            }
         }
         dataStore.putString(KEY_THEME, newTheme)
-//        dataStore.putBoolean(KEY_USE_DYNAMIC_THEME, false)
         themeState.value = newTheme
     }
 
@@ -127,7 +135,7 @@ object ThemeUtil {
 
     fun switchNightMode() {
         if (isNightMode()) {
-            switchTheme(dataStore.getString(KEY_OLD_THEME, THEME_DEFAULT), recordOldTheme = false)
+            switchTheme(getOldTheme(), recordOldTheme = false)
         } else {
             switchTheme(dataStore.getString(KEY_DARK_THEME, THEME_AMOLED_DARK))
         }
@@ -142,7 +150,7 @@ object ThemeUtil {
 
     @JvmOverloads
     fun switchFromNightMode(context: Activity, recreate: Boolean = true) {
-        switchTheme(dataStore.getString(KEY_OLD_THEME, THEME_DEFAULT), recordOldTheme = false)
+        switchTheme(getOldTheme(), recordOldTheme = false)
         if (recreate) {
             refreshUI(context)
         }
