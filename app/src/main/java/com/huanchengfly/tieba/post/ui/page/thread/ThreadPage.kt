@@ -1463,7 +1463,7 @@ private fun BottomBar(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(8.dp)
     ) {
-        if (user.get { is_login } == 1) {
+        if (user.get { is_login } == 1 && !LocalContext.current.appPreferences.hideReply) {
             Avatar(
                 data = StringUtil.getAvatarUrl(user.get { portrait }),
                 size = Sizes.Tiny,
@@ -1568,15 +1568,17 @@ fun PostCard(
             indication = null,
             onClick = {
                 onReplyClick(post)
-            },
+            }.takeIf { !context.appPreferences.hideReply },
             menuContent = {
-                DropdownMenuItem(
-                    onClick = {
-                        onReplyClick(post)
-                        menuState.expanded = false
+                if (!context.appPreferences.hideReply) {
+                    DropdownMenuItem(
+                        onClick = {
+                            onReplyClick(post)
+                            menuState.expanded = false
+                        }
+                    ) {
+                        Text(text = stringResource(id = R.string.btn_reply))
                     }
-                ) {
-                    Text(text = stringResource(id = R.string.btn_reply))
                 }
                 DropdownMenuItem(
                     onClick = {
@@ -1727,7 +1729,9 @@ fun PostCard(
                                         modifier = Modifier
                                             .fillMaxWidth()
                                             .padding(horizontal = 12.dp),
-                                        onReplyClick = { onSubPostReplyClick?.invoke(post, it) },
+                                        onReplyClick = {
+                                            onSubPostReplyClick?.invoke(post, it)
+                                        },
                                         onOpenSubPosts = onOpenSubPosts,
                                     )
                                 }
@@ -1764,7 +1768,7 @@ private fun SubPostItem(
     subPostList: ImmutableHolder<SubPostList>,
     subPostContent: AnnotatedString,
     modifier: Modifier = Modifier,
-    onReplyClick: (SubPostList) -> Unit,
+    onReplyClick: ((SubPostList) -> Unit)?,
     onOpenSubPosts: (Long) -> Unit,
 ) {
     val context = LocalContext.current
@@ -1772,13 +1776,15 @@ private fun SubPostItem(
     LongClickMenu(
         menuState = menuState,
         menuContent = {
-            DropdownMenuItem(
-                onClick = {
-                    onReplyClick(subPostList.get())
-                    menuState.expanded = false
+            if (!context.appPreferences.hideReply) {
+                DropdownMenuItem(
+                    onClick = {
+                        onReplyClick?.invoke(subPostList.get())
+                        menuState.expanded = false
+                    }
+                ) {
+                    Text(text = stringResource(id = R.string.title_reply))
                 }
-            ) {
-                Text(text = stringResource(id = R.string.title_reply))
             }
             DropdownMenuItem(
                 onClick = {

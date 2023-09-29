@@ -75,6 +75,7 @@ import com.huanchengfly.tieba.post.utils.AccountUtil.LocalAccount
 import com.huanchengfly.tieba.post.utils.DateTimeUtils
 import com.huanchengfly.tieba.post.utils.StringUtil
 import com.huanchengfly.tieba.post.utils.TiebaUtil
+import com.huanchengfly.tieba.post.utils.appPreferences
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import com.ramcosta.composedestinations.spec.DestinationStyleBottomSheet
@@ -298,7 +299,7 @@ internal fun SubPostsContent(
                 )
             },
             bottomBar = {
-                if (account != null) {
+                if (account != null && !LocalContext.current.appPreferences.hideReply) {
                     Surface(
                         elevation = 16.dp,
                         color = ExtendedTheme.colors.bottomBar,
@@ -521,13 +522,15 @@ private fun SubPostItem(
             menuState = menuState,
             indication = null,
             menuContent = {
-                DropdownMenuItem(
-                    onClick = {
-                        onReplyClick(subPost.get())
-                        menuState.expanded = false
+                if (!context.appPreferences.hideReply) {
+                    DropdownMenuItem(
+                        onClick = {
+                            onReplyClick(subPost.get())
+                            menuState.expanded = false
+                        }
+                    ) {
+                        Text(text = stringResource(id = R.string.btn_reply))
                     }
-                ) {
-                    Text(text = stringResource(id = R.string.btn_reply))
                 }
                 DropdownMenuItem(
                     onClick = {
@@ -558,7 +561,7 @@ private fun SubPostItem(
                     }
                 }
             },
-            onClick = { onReplyClick(subPost.get()) }
+            onClick = { onReplyClick(subPost.get()) }.takeUnless { context.appPreferences.hideReply }
         ) {
             Card(
                 header = {

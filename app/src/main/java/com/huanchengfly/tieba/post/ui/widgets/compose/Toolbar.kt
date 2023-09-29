@@ -195,6 +195,7 @@ fun BackNavigationIcon(onBackPressed: () -> Unit) {
             )""",
         "androidx.compose.ui.text.font.FontWeight",
         "androidx.compose.material.MaterialTheme",
+        "androidx.compose.material.Text"
     )
 )
 @Composable

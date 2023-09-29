@@ -3,6 +3,8 @@ package com.huanchengfly.tieba.post.ui.page.settings.habit
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.BrandingWatermark
 import androidx.compose.material.icons.outlined.CalendarViewDay
@@ -10,6 +12,7 @@ import androidx.compose.material.icons.outlined.ExitToApp
 import androidx.compose.material.icons.outlined.NightsStay
 import androidx.compose.material.icons.outlined.PhotoSizeSelectActual
 import androidx.compose.material.icons.outlined.SecurityUpdateWarning
+import androidx.compose.material.icons.outlined.SpeakerNotesOff
 import androidx.compose.material.icons.outlined.StarOutline
 import androidx.compose.material.icons.outlined.Verified
 import androidx.compose.runtime.Composable
@@ -20,6 +23,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.huanchengfly.tieba.post.R
 import com.huanchengfly.tieba.post.dataStore
@@ -41,12 +45,16 @@ import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 fun HabitSettingsPage(
     navigator: DestinationsNavigator
 ) {
-    val context = LocalContext.current
     MyScaffold(
         backgroundColor = Color.Transparent,
         topBar = {
             TitleCentredToolbar(
-                title = stringResource(id = R.string.title_settings_read_habit),
+                title = {
+                    Text(
+                        text = stringResource(id = R.string.title_settings_read_habit),
+                        fontWeight = FontWeight.Bold, style = MaterialTheme.typography.h6
+                    )
+                },
                 navigationIcon = {
                     BackNavigationIcon(onBackPressed = { navigator.navigateUp() })
                 }
@@ -225,6 +233,22 @@ fun HabitSettingsPage(
                         LeadingIcon {
                             AvatarIcon(
                                 icon = Icons.Outlined.SecurityUpdateWarning,
+                                size = Sizes.Small,
+                                contentDescription = null,
+                            )
+                        }
+                    },
+                )
+            }
+            prefsItem {
+                SwitchPref(
+                    key = "hideReply",
+                    title = stringResource(id = R.string.title_hide_reply),
+                    defaultChecked = false,
+                    leadingIcon = {
+                        LeadingIcon {
+                            AvatarIcon(
+                                icon = Icons.Outlined.SpeakerNotesOff,
                                 size = Sizes.Small,
                                 contentDescription = null,
                             )

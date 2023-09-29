@@ -726,4 +726,5 @@
     <string name="desc_night_theme">夜间主题</string>
     <string name="settings_image_darken_when_night_mode">夜间模式压暗缩略图</string>
     <string name="tip_toolbar_primary_color_summary">修改重启后生效</string>
+    <string name="title_hide_reply">隐藏回贴入口</string>
 </resources>
