@@ -31,6 +31,7 @@ import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import com.huanchengfly.tieba.post.ui.common.theme.compose.ExtendedTheme
+import com.huanchengfly.tieba.post.ui.common.theme.compose.menuBackground
 import kotlinx.coroutines.flow.filterIsInstance
 import kotlinx.coroutines.launch
 import kotlin.math.roundToInt
@@ -160,7 +161,7 @@ fun LongClickMenu(
             DropdownMenu(
                 expanded = menuState.expanded,
                 onDismissRequest = { menuState.expanded = false },
-                modifier = modifier.background(color = MaterialTheme.colors.surface)
+                modifier = modifier.background(color = ExtendedTheme.colors.menuBackground)
             ) {
                 ProvideContentColor(color = ExtendedTheme.colors.text) {
                     menuContent()

@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.pager.rememberPagerState
-import androidx.compose.material.Scaffold
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.AccountCircle
 import androidx.compose.material.icons.outlined.Inventory2
@@ -52,6 +51,7 @@ import com.huanchengfly.tieba.post.ui.utils.DevicePosture
 import com.huanchengfly.tieba.post.ui.utils.MainNavigationContentPosition
 import com.huanchengfly.tieba.post.ui.utils.MainNavigationType
 import com.huanchengfly.tieba.post.ui.widgets.compose.LazyLoadHorizontalPager
+import com.huanchengfly.tieba.post.ui.widgets.compose.MyScaffold
 import com.huanchengfly.tieba.post.utils.appPreferences
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.annotation.RootNavGraph
@@ -254,7 +254,7 @@ fun MainPage(
         navigationType = navigationType,
         navigationContentPosition = navigationContentPosition
     ) {
-        Scaffold(
+        MyScaffold(
             backgroundColor = Color.Transparent,
             modifier = Modifier.fillMaxSize(),
             bottomBar = {
