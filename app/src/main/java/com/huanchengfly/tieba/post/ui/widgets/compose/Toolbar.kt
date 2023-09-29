@@ -27,6 +27,7 @@ import androidx.compose.material.DropdownMenuItem
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material.ProvideTextStyle
 import androidx.compose.material.Text
 import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
@@ -209,7 +210,7 @@ fun TitleCentredToolbar(
 ) {
     TitleCentredToolbar(
         title = {
-            Text(text = title, fontWeight = FontWeight.Bold, style = MaterialTheme.typography.h6)
+            Text(text = title)
         },
         modifier = modifier,
         insets = insets,
@@ -241,11 +242,13 @@ fun TitleCentredToolbar(
                         verticalAlignment = Alignment.CenterVertically,
                         modifier = Modifier.fillMaxHeight()
                     ) {
-                        navigationIcon?.invoke()
+                        ProvideContentColor(color = ExtendedTheme.colors.onTopBar) {
+                            navigationIcon?.invoke()
 
-                        Spacer(modifier = Modifier.weight(1f))
+                            Spacer(modifier = Modifier.weight(1f))
 
-                        actions()
+                            actions()
+                        }
                     }
 
                     Row(
@@ -255,8 +258,10 @@ fun TitleCentredToolbar(
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.Center
                     ) {
-                        ProvideContentColor(color = ExtendedTheme.colors.onTopBar) {
-                            title()
+                        ProvideTextStyle(value = MaterialTheme.typography.h6.copy(fontWeight = FontWeight.Bold)) {
+                            ProvideContentColor(color = ExtendedTheme.colors.onTopBar) {
+                                title()
+                            }
                         }
                     }
                 }
@@ -275,21 +280,12 @@ fun Toolbar(
     actions: @Composable RowScope.() -> Unit = {},
     content: (@Composable ColumnScope.() -> Unit)? = null,
 ) {
-    TopAppBarContainer(
-        topBar = {
-            TopAppBar(
-                title = {
-                    ProvideContentColor(color = ExtendedTheme.colors.onTopBar) {
-                        Text(text = title, fontWeight = FontWeight.Bold)
-                    }
-                },
-                actions = actions,
-                navigationIcon = navigationIcon,
-                backgroundColor = ExtendedTheme.colors.topBar,
-                contentColor = ExtendedTheme.colors.onTopBar,
-                elevation = 0.dp
-            )
+    Toolbar(
+        title = {
+            Text(text = title)
         },
+        navigationIcon = navigationIcon,
+        actions = actions,
         content = content
     )
 }
@@ -305,10 +301,20 @@ fun Toolbar(
         topBar = {
             TopAppBar(
                 title = {
-                    ProvideContentColor(color = ExtendedTheme.colors.onTopBar, content = title)
+                    ProvideTextStyle(value = MaterialTheme.typography.h6.copy(fontWeight = FontWeight.Bold)) {
+                        ProvideContentColor(color = ExtendedTheme.colors.onTopBar, content = title)
+                    }
                 },
-                actions = actions,
-                navigationIcon = navigationIcon,
+                actions = {
+                    ProvideContentColor(color = ExtendedTheme.colors.onTopBar) {
+                        actions()
+                    }
+                },
+                navigationIcon = {
+                    ProvideContentColor(color = ExtendedTheme.colors.onTopBar) {
+                        navigationIcon?.invoke()
+                    }
+                },
                 backgroundColor = ExtendedTheme.colors.topBar,
                 contentColor = ExtendedTheme.colors.onTopBar,
                 elevation = 0.dp

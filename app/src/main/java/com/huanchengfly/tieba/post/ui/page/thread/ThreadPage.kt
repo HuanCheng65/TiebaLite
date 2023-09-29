@@ -102,7 +102,6 @@ import com.huanchengfly.tieba.post.api.models.protos.ThreadInfo
 import com.huanchengfly.tieba.post.api.models.protos.User
 import com.huanchengfly.tieba.post.api.models.protos.bawuType
 import com.huanchengfly.tieba.post.api.models.protos.plainText
-import com.huanchengfly.tieba.post.api.models.protos.renders
 import com.huanchengfly.tieba.post.api.retrofit.exception.getErrorMessage
 import com.huanchengfly.tieba.post.arch.GlobalEvent
 import com.huanchengfly.tieba.post.arch.ImmutableHolder
@@ -123,6 +122,7 @@ import com.huanchengfly.tieba.post.ui.common.theme.compose.invertChipContent
 import com.huanchengfly.tieba.post.ui.common.theme.compose.pullRefreshIndicator
 import com.huanchengfly.tieba.post.ui.common.theme.compose.threadBottomBar
 import com.huanchengfly.tieba.post.ui.page.ProvideNavigator
+import com.huanchengfly.tieba.post.ui.page.destinations.CopyTextPageDestination
 import com.huanchengfly.tieba.post.ui.page.destinations.ForumPageDestination
 import com.huanchengfly.tieba.post.ui.page.destinations.ReplyPageDestination
 import com.huanchengfly.tieba.post.ui.page.destinations.SubPostsSheetPageDestination
@@ -873,6 +873,11 @@ fun ThreadPage(
                     )
                 }
             },
+            onMenuCopyClick = {
+                navigator.navigate(
+                    CopyTextPageDestination(it)
+                )
+            },
             onMenuFavoriteClick = {
                 val isPostCollected =
                     it.id == thread?.get { collectMarkPid.toLongOrNull() }
@@ -1209,6 +1214,11 @@ fun ThreadPage(
                                                         )
                                                     )
                                                 },
+                                                onMenuCopyClick = {
+                                                    navigator.navigate(
+                                                        CopyTextPageDestination(it)
+                                                    )
+                                                },
                                                 onMenuFavoriteClick = {
                                                     viewModel.send(
                                                         ThreadUiIntent.AddFavorite(
@@ -1540,6 +1550,7 @@ fun PostCard(
     onReplyClick: (Post) -> Unit = {},
     onSubPostReplyClick: ((Post, SubPostList) -> Unit)? = null,
     onOpenSubPosts: (subPostId: Long) -> Unit = {},
+    onMenuCopyClick: ((String) -> Unit)? = null,
     onMenuFavoriteClick: ((Post) -> Unit)? = null,
     onMenuDeleteClick: ((Post) -> Unit)? = null,
 ) {
@@ -1591,13 +1602,15 @@ fun PostCard(
                         Text(text = stringResource(id = R.string.btn_reply))
                     }
                 }
-                DropdownMenuItem(
-                    onClick = {
-                        TiebaUtil.copyText(context, post.content.plainText)
-                        menuState.expanded = false
+                if (onMenuCopyClick != null) {
+                    DropdownMenuItem(
+                        onClick = {
+                            onMenuCopyClick(post.content.plainText)
+                            menuState.expanded = false
+                        }
+                    ) {
+                        Text(text = stringResource(id = R.string.menu_copy))
                     }
-                ) {
-                    Text(text = stringResource(id = R.string.menu_copy))
                 }
                 DropdownMenuItem(
                     onClick = {
@@ -1744,6 +1757,9 @@ fun PostCard(
                                             onSubPostReplyClick?.invoke(post, it)
                                         },
                                         onOpenSubPosts = onOpenSubPosts,
+                                        onMenuCopyClick = {
+                                            onMenuCopyClick?.invoke(it.content.plainText)
+                                        }
                                     )
                                 }
                             }
@@ -1781,6 +1797,7 @@ private fun SubPostItem(
     modifier: Modifier = Modifier,
     onReplyClick: ((SubPostList) -> Unit)?,
     onOpenSubPosts: (Long) -> Unit,
+    onMenuCopyClick: ((SubPostList) -> Unit)?,
 ) {
     val context = LocalContext.current
     val menuState = rememberMenuState()
@@ -1797,15 +1814,15 @@ private fun SubPostItem(
                     Text(text = stringResource(id = R.string.title_reply))
                 }
             }
-            DropdownMenuItem(
-                onClick = {
-                    TiebaUtil.copyText(
-                        context,
-                        subPostList.get { content.renders.joinToString(" ") { it.toString() } })
-                    menuState.expanded = false
+            if (onMenuCopyClick != null) {
+                DropdownMenuItem(
+                    onClick = {
+                        onMenuCopyClick(subPostList.get())
+                        menuState.expanded = false
+                    }
+                ) {
+                    Text(text = stringResource(id = R.string.menu_copy))
                 }
-            ) {
-                Text(text = stringResource(id = R.string.menu_copy))
             }
             DropdownMenuItem(
                 onClick = {

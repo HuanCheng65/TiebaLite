@@ -1,6 +1,8 @@
 package com.huanchengfly.tieba.post.ui.widgets.compose
 
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.LocalIndication
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
@@ -47,23 +49,26 @@ fun Button(
 ) {
     val contentColor by colors.contentColor(enabled)
     Surface(
-        onClick = onClick,
-        modifier = modifier,
-        enabled = enabled,
+        modifier = Modifier
+            .clickable(
+                onClick = onClick,
+                enabled = enabled,
+                interactionSource = interactionSource,
+                indication = LocalIndication.current
+            )
+            .then(modifier),
         shape = shape,
         color = colors.backgroundColor(enabled).value,
         contentColor = contentColor.copy(alpha = 1f),
         border = border,
         elevation = elevation?.elevation(enabled, interactionSource)?.value ?: 0.dp,
-        interactionSource = interactionSource,
     ) {
         CompositionLocalProvider(LocalContentAlpha provides contentColor.alpha) {
             ProvideTextStyle(
                 value = MaterialTheme.typography.button
             ) {
                 Row(
-                    Modifier
-                        .padding(contentPadding),
+                    Modifier.padding(contentPadding),
                     horizontalArrangement = Arrangement.Center,
                     verticalAlignment = Alignment.CenterVertically,
                     content = content

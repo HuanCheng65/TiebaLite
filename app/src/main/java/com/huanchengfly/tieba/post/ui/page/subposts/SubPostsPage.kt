@@ -49,6 +49,7 @@ import com.huanchengfly.tieba.post.arch.wrapImmutable
 import com.huanchengfly.tieba.post.ui.common.theme.compose.ExtendedTheme
 import com.huanchengfly.tieba.post.ui.page.LocalNavigator
 import com.huanchengfly.tieba.post.ui.page.ProvideNavigator
+import com.huanchengfly.tieba.post.ui.page.destinations.CopyTextDialogPageDestination
 import com.huanchengfly.tieba.post.ui.page.destinations.ReplyPageDestination
 import com.huanchengfly.tieba.post.ui.page.destinations.ThreadPageDestination
 import com.huanchengfly.tieba.post.ui.page.thread.PostAgreeBtn
@@ -142,6 +143,7 @@ internal fun SubPostsContent(
     loadFromSubPost: Boolean = false,
     isSheet: Boolean = false
 ) {
+    val context = LocalContext.current
     val navigator = LocalNavigator.current
     val account = LocalAccount.current
 
@@ -406,6 +408,11 @@ internal fun SubPostsContent(
                                             )
                                         )
                                     },
+                                    onMenuCopyClick = {
+                                        navigator.navigate(
+                                            CopyTextDialogPageDestination(it)
+                                        )
+                                    },
                                 ) {
                                     deleteSubPost = null
                                     confirmDeleteDialogState.show()
@@ -465,6 +472,12 @@ internal fun SubPostsContent(
                                     )
                                 )
                             },
+                            onMenuCopyClick = {
+                                navigator.navigate(
+                                    CopyTextDialogPageDestination(it)
+                                )
+//                                TiebaUtil.copyText(context, it)
+                            },
                             onMenuDeleteClick = {
                                 deleteSubPost = it.wrapImmutable()
                                 confirmDeleteDialogState.show()
@@ -499,6 +512,7 @@ private fun SubPostItem(
     canDelete: (SubPostList) -> Boolean = { false },
     onAgree: (SubPostList) -> Unit = {},
     onReplyClick: (SubPostList) -> Unit = {},
+    onMenuCopyClick: ((String) -> Unit)? = null,
     onMenuDeleteClick: ((SubPostList) -> Unit)? = null,
 ) {
     val (subPost, contentRenders, blocked) = item
@@ -532,15 +546,15 @@ private fun SubPostItem(
                         Text(text = stringResource(id = R.string.btn_reply))
                     }
                 }
-                DropdownMenuItem(
-                    onClick = {
-                        TiebaUtil.copyText(
-                            context,
-                            contentRenders.joinToString("\n") { it.toString() })
-                        menuState.expanded = false
+                if (onMenuCopyClick != null) {
+                    DropdownMenuItem(
+                        onClick = {
+                            onMenuCopyClick(contentRenders.joinToString("\n") { it.toString() })
+                            menuState.expanded = false
+                        }
+                    ) {
+                        Text(text = stringResource(id = R.string.menu_copy))
                     }
-                ) {
-                    Text(text = stringResource(id = R.string.menu_copy))
                 }
                 DropdownMenuItem(
                     onClick = {
