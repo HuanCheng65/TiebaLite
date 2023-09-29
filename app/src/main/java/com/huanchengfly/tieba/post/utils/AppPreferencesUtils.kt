@@ -53,9 +53,11 @@ open class AppPreferencesUtils private constructor(ctx: Context) {
     var ignoreBatteryOptimizationsDialog by DataStoreDelegates.boolean(defaultValue = false)
 
     var appIcon by DataStoreDelegates.string(
-        defaultValue = Icons.DEFAULT_ICON,
+        defaultValue = LauncherIcons.DEFAULT_ICON,
         key = AppIconUtil.PREF_KEY_APP_ICON
     )
+
+    var useThemedIcon by DataStoreDelegates.boolean(defaultValue = false)
 
     var autoSign by DataStoreDelegates.boolean(defaultValue = false, key = "auto_sign")
 

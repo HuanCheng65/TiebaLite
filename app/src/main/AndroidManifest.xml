@@ -166,14 +166,31 @@
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
-                <data
-                    android:scheme="tblite" />
+                <data android:scheme="tblite" />
             </intent-filter>
 
             <meta-data
                 android:name="android.app.shortcuts"
                 android:resource="@xml/shortcut_new" />
         </activity>
+
+        <activity-alias
+            android:name=".MainActivityIconThemed"
+            android:enabled="false"
+            android:exported="true"
+            android:icon="@mipmap/ic_launcher_new_themed"
+            android:roundIcon="@mipmap/ic_launcher_new_themed_round"
+            android:targetActivity=".MainActivityV2">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.app.shortcuts"
+                android:resource="@xml/shortcut_new" />
+        </activity-alias>
 
         <activity-alias
             android:name=".MainActivityIconInvert"

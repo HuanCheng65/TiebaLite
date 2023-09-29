@@ -4,6 +4,10 @@
     <color name="ic_launcher_new_invert_background">#FFFFFFFF</color>
     <color name="ic_launcher_background">#FF2E60B0</color>
 
+    <color name="ic_launcher_new_themed_background">#FF5588D7</color>
+    <color name="ic_launcher_new_themed_foreground_1">#FFA7C5F0</color>
+    <color name="ic_launcher_new_themed_foreground_2">#FF538ACE</color>
+
     <color name="colorPrimary">#FFFFFFFF</color>
     <color name="colorAccent">#FF4477E0</color>
     <color name="colorUnselected">#FFCCCCCC</color>
@@ -12,8 +16,6 @@
     <color name="color_place_holder">#FFF0F0F0</color>
     <color name="color_place_holder_night">#99000000</color>
     <color name="color_shadow">#FEE9E9E9</color>
-
-    <color name="t">#00BFA5</color>
 
     <color name="color_switch_track_bg">#C4C4C4</color>
 

@@ -43,7 +43,7 @@ import com.huanchengfly.tieba.post.utils.AppIconUtil.enableComponent
 import com.huanchengfly.tieba.post.utils.BlockManager
 import com.huanchengfly.tieba.post.utils.ClientUtils
 import com.huanchengfly.tieba.post.utils.EmoticonManager
-import com.huanchengfly.tieba.post.utils.Icons
+import com.huanchengfly.tieba.post.utils.LauncherIcons
 import com.huanchengfly.tieba.post.utils.SharedPreferencesUtil
 import com.huanchengfly.tieba.post.utils.ThemeUtil
 import com.huanchengfly.tieba.post.utils.TiebaUtil
@@ -113,7 +113,7 @@ class App : Application(), IApp, SketchFactory {
     ) {
         setOldMainActivityEnabled(!enableNewUi || keepOld)
         if (enableNewUi) AppIconUtil.setIcon()
-        else AppIconUtil.setIcon(Icons.DISABLE)
+        else AppIconUtil.setIcon(LauncherIcons.DISABLE)
     }
 
     override fun onCreate() {

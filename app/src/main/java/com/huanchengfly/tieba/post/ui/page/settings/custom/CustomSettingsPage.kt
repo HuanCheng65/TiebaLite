@@ -1,5 +1,6 @@
 package com.huanchengfly.tieba.post.ui.page.settings.custom
 
+import android.os.Build
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -11,11 +12,15 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Apps
 import androidx.compose.material.icons.outlined.Brightness2
 import androidx.compose.material.icons.outlined.BrightnessAuto
+import androidx.compose.material.icons.outlined.ColorLens
 import androidx.compose.material.icons.outlined.Explore
 import androidx.compose.material.icons.outlined.FontDownload
 import androidx.compose.material.icons.outlined.FormatColorFill
 import androidx.compose.material.icons.outlined.ViewAgenda
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -24,11 +29,13 @@ import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.datastore.preferences.core.stringPreferencesKey
 import com.google.accompanist.drawablepainter.rememberDrawablePainter
 import com.huanchengfly.tieba.post.R
 import com.huanchengfly.tieba.post.activities.AppFontSizeActivity
 import com.huanchengfly.tieba.post.dataStore
 import com.huanchengfly.tieba.post.goToActivity
+import com.huanchengfly.tieba.post.rememberPreferenceAsState
 import com.huanchengfly.tieba.post.ui.common.prefs.PrefsScreen
 import com.huanchengfly.tieba.post.ui.common.prefs.widgets.ListPref
 import com.huanchengfly.tieba.post.ui.common.prefs.widgets.SwitchPref
@@ -40,9 +47,11 @@ import com.huanchengfly.tieba.post.ui.widgets.compose.MyScaffold
 import com.huanchengfly.tieba.post.ui.widgets.compose.Sizes
 import com.huanchengfly.tieba.post.ui.widgets.compose.TitleCentredToolbar
 import com.huanchengfly.tieba.post.utils.AppIconUtil
+import com.huanchengfly.tieba.post.utils.LauncherIcons
 import com.huanchengfly.tieba.post.utils.ThemeUtil
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
+import kotlinx.collections.immutable.persistentListOf
 
 @OptIn(ExperimentalMaterialApi::class, ExperimentalComposeUiApi::class)
 @Destination
@@ -119,7 +128,7 @@ fun CustomSettingsPage(
                 ListPref(
                     key = "app_icon",
                     title = stringResource(id = R.string.settings_app_icon),
-                    defaultValue = com.huanchengfly.tieba.post.utils.Icons.DEFAULT_ICON,
+                    defaultValue = LauncherIcons.DEFAULT_ICON,
                     leadingIcon = {
                         LeadingIcon {
                             AvatarIcon(
@@ -130,12 +139,12 @@ fun CustomSettingsPage(
                         }
                     },
                     entries = mapOf(
-                        com.huanchengfly.tieba.post.utils.Icons.NEW_ICON to "新图标",
-                        com.huanchengfly.tieba.post.utils.Icons.NEW_ICON_INVERT to "新图标（反色）",
-                        com.huanchengfly.tieba.post.utils.Icons.OLD_ICON to "旧图标",
+                        LauncherIcons.NEW_ICON to "新图标",
+                        LauncherIcons.NEW_ICON_INVERT to "新图标（反色）",
+                        LauncherIcons.OLD_ICON to "旧图标",
                     ),
                     icons = mapOf(
-                        com.huanchengfly.tieba.post.utils.Icons.NEW_ICON to {
+                        LauncherIcons.NEW_ICON to {
                             Image(
                                 painter = rememberDrawablePainter(
                                     drawable = LocalContext.current.getDrawable(
@@ -146,7 +155,7 @@ fun CustomSettingsPage(
                                 modifier = Modifier.size(Sizes.Medium)
                             )
                         },
-                        com.huanchengfly.tieba.post.utils.Icons.NEW_ICON_INVERT to {
+                        LauncherIcons.NEW_ICON_INVERT to {
                             Image(
                                 painter = rememberDrawablePainter(
                                     drawable = LocalContext.current.getDrawable(
@@ -157,7 +166,7 @@ fun CustomSettingsPage(
                                 modifier = Modifier.size(Sizes.Medium)
                             )
                         },
-                        com.huanchengfly.tieba.post.utils.Icons.OLD_ICON to {
+                        LauncherIcons.OLD_ICON to {
                             Image(
                                 painter = rememberDrawablePainter(
                                     drawable = LocalContext.current.getDrawable(
@@ -169,9 +178,47 @@ fun CustomSettingsPage(
                             )
                         },
                     ),
-                    onValueChange = { AppIconUtil.setIcon(it) },
+                    onValueChange = { AppIconUtil.setIcon(icon = it) },
                     useSelectedAsSummary = true,
                 )
+            }
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                prefsItem {
+                    val supportThemedIcons = remember {
+                        persistentListOf(
+                            LauncherIcons.NEW_ICON,
+//                            LauncherIcons.NEW_ICON_INVERT,
+                        )
+                    }
+                    val currentLauncherIcon by rememberPreferenceAsState(
+                        key = stringPreferencesKey("app_icon"),
+                        defaultValue = LauncherIcons.NEW_ICON
+                    )
+                    val isCurrentSupportThemedIcon by remember {
+                        derivedStateOf {
+                            supportThemedIcons.contains(currentLauncherIcon)
+                        }
+                    }
+                    SwitchPref(
+                        key = "useThemedIcon",
+                        title = stringResource(id = R.string.title_settings_use_themed_icon),
+                        defaultChecked = false,
+                        enabled = isCurrentSupportThemedIcon,
+                        leadingIcon = {
+                            LeadingIcon {
+                                AvatarIcon(
+                                    icon = Icons.Outlined.ColorLens,
+                                    size = Sizes.Small,
+                                    contentDescription = null,
+                                )
+                            }
+                        },
+                        onCheckedChange = {
+                            AppIconUtil.setIcon(isThemed = it)
+                        },
+                        summary = stringResource(id = R.string.tip_settings_use_themed_icon_summary_not_supported).takeUnless { isCurrentSupportThemedIcon },
+                    )
+                }
             }
             prefsItem {
                 SwitchPref(

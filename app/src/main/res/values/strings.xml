@@ -727,4 +727,6 @@
     <string name="settings_image_darken_when_night_mode">夜间模式压暗缩略图</string>
     <string name="tip_toolbar_primary_color_summary">修改重启后生效</string>
     <string name="title_hide_reply">隐藏回贴入口</string>
+    <string name="title_settings_use_themed_icon">应用图标使用动态取色</string>
+    <string name="tip_settings_use_themed_icon_summary_not_supported">当前正在使用的应用图标暂不支持动态取色</string>
 </resources>
