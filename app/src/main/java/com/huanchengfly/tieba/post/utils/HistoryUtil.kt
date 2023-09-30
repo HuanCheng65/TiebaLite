@@ -84,15 +84,15 @@ object HistoryUtil {
     }
 
     private fun updateAsync(
-        data: String,
-        callback: ((Boolean) -> Unit)? = null
+        history: History,
+        callback: ((Boolean) -> Unit)? = null,
     ) {
-        where("data = ?", data).findFirstAsync<History?>()
+        where("data = ?", history.data).findFirstAsync<History?>()
             .listen {
                 if (it == null) {
                     callback?.invoke(false)
                 } else {
-                    it.copy(
+                    history.copy(
                         timestamp = System.currentTimeMillis(),
                         count = it.count + 1
                     ).updateAsync(it.id).listen {
@@ -118,7 +118,7 @@ object HistoryUtil {
         history: History,
         callback: ((Boolean) -> Unit)? = null
     ) {
-        updateAsync(history.data) { success ->
+        updateAsync(history) { success ->
             if (!success) {
                 history.copy(count = 1, timestamp = System.currentTimeMillis())
                     .saveAsync()

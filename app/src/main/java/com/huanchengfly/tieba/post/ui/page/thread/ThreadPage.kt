@@ -1,5 +1,6 @@
 package com.huanchengfly.tieba.post.ui.page.thread
 
+import android.util.Log
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
@@ -555,7 +556,7 @@ fun ThreadPage(
         derivedStateOf {
             data.firstOrNull { (post) ->
                 val lastPostKey = lazyListState.layoutInfo.visibleItemsInfo.lastOrNull { info ->
-                    info.key is String && (info.key as String).startsWith("Post")
+                    info.key is String && (info.key as String).startsWith("Post_")
                 }?.key as String?
                 lastPostKey?.endsWith(post.get { id }.toString()) == true
             }?.post ?: firstPost
@@ -773,8 +774,10 @@ fun ThreadPage(
                             data = threadId.toString(),
                             type = HistoryUtil.TYPE_THREAD,
                             extras = ThreadHistoryInfoBean(
+                                isSeeLz = isSeeLz,
                                 pid = lastVisibilityPostId.toString(),
-                                isSeeLz = seeLz
+                                forumName = forum?.get { name },
+                                floor = lastVisibilityPost?.get { floor }?.toString()
                             ).toJson(),
                             avatar = StringUtil.getAvatarUrl(author?.get { portrait }),
                             username = author?.get { nameShow }
@@ -782,6 +785,7 @@ fun ThreadPage(
                         async = true
                     )
                     savedHistory = true
+                    Log.i("ThreadPage", "saveHistory $lastVisibilityPostId")
                 }
             }
         }
