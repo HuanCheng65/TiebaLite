@@ -5,6 +5,7 @@ import android.util.Log
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -356,14 +357,22 @@ private fun ThreadMedia(
                 16f / 9
             )
         }
-        VideoPlayer(
-            videoUrl = videoInfo.get { videoUrl },
-            thumbnailUrl = videoInfo.get { thumbnailUrl },
-            modifier = Modifier
-                .fillMaxWidth(singleMediaFraction)
-                .aspectRatio(aspectRatio)
-                .clip(RoundedCornerShape(8.dp))
-        )
+        Box(
+            modifier = Modifier.clickable(
+                interactionSource = remember { MutableInteractionSource() },
+                indication = null,
+                onClick = {}
+            )
+        ) {
+            VideoPlayer(
+                videoUrl = videoInfo.get { videoUrl },
+                thumbnailUrl = videoInfo.get { thumbnailUrl },
+                modifier = Modifier
+                    .fillMaxWidth(singleMediaFraction)
+                    .aspectRatio(aspectRatio)
+                    .clip(RoundedCornerShape(8.dp))
+            )
+        }
     } else if (hasMedia) {
         val mediaWidthFraction = remember(isSingleMedia, singleMediaFraction) {
             if (isSingleMedia) singleMediaFraction else 1f
@@ -646,11 +655,12 @@ fun VideoPlayer(
                         ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
                 } else {
                     context.findActivity()?.requestedOrientation =
-                        ActivityInfo.SCREEN_ORIENTATION_USER_PORTRAIT
+                        ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
                 }
             }
         }
     )
+
     val fullScreen by (videoPlayerController as DefaultVideoPlayerController).collect { isFullScreen }
     val videoPlayerContent =
         movableContentOf { isFullScreen: Boolean, playerModifier: Modifier ->

@@ -70,7 +70,7 @@ fun rememberVideoPlayerController(
             override fun restore(value: VideoPlayerState): DefaultVideoPlayerController {
                 return DefaultVideoPlayerController(
                     context = context,
-                    initialState = value,
+                    initialState = value.copy(isPlaying = playWhenReady),
                     coroutineScope = coroutineScope,
                     fullScreenModeChangedListener = fullScreenModeChangedListener
                 ).apply {

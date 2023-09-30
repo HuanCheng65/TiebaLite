@@ -4,6 +4,8 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.awaitEachGesture
 import androidx.compose.foundation.gestures.awaitFirstDown
 import androidx.compose.foundation.gestures.waitForUpOrCancellation
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -188,11 +190,19 @@ data class VideoContentRender(
                 .aspectRatio(width * 1f / height)
 
             if (videoUrl.isNotBlank()) {
-                com.huanchengfly.tieba.post.ui.widgets.compose.VideoPlayer(
-                    videoUrl = videoUrl,
-                    thumbnailUrl = picUrl,
-                    modifier = picModifier
-                )
+                Box(
+                    modifier = Modifier.clickable(
+                        interactionSource = remember { MutableInteractionSource() },
+                        indication = null,
+                        onClick = {}
+                    )
+                ) {
+                    com.huanchengfly.tieba.post.ui.widgets.compose.VideoPlayer(
+                        videoUrl = videoUrl,
+                        thumbnailUrl = picUrl,
+                        modifier = picModifier
+                    )
+                }
             } else {
                 AsyncImage(
                     imageUri = picUrl,
