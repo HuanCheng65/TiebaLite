@@ -16,6 +16,7 @@ import androidx.compose.material.icons.outlined.ColorLens
 import androidx.compose.material.icons.outlined.Explore
 import androidx.compose.material.icons.outlined.FontDownload
 import androidx.compose.material.icons.outlined.FormatColorFill
+import androidx.compose.material.icons.outlined.Upcoming
 import androidx.compose.material.icons.outlined.ViewAgenda
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
@@ -283,6 +284,23 @@ fun CustomSettingsPage(
                             )
                         }
                     },
+                )
+            }
+            prefsItem {
+                SwitchPref(
+                    key = "liftUpBottomBar",
+                    title = stringResource(id = R.string.title_lift_up_bottom_bar),
+                    defaultChecked = true,
+                    leadingIcon = {
+                        LeadingIcon {
+                            AvatarIcon(
+                                icon = Icons.Outlined.Upcoming,
+                                size = Sizes.Small,
+                                contentDescription = null,
+                            )
+                        }
+                    },
+                    summary = stringResource(id = R.string.summary_lift_up_bottom_bar),
                 )
             }
         }

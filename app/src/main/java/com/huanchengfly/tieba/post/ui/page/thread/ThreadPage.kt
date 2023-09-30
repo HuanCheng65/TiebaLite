@@ -21,6 +21,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.requiredHeightIn
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.windowInsetsBottomHeight
@@ -1503,7 +1504,9 @@ private fun BottomBar(
                     )
                 }
             } else {
-                Spacer(modifier = Modifier.weight(1f))
+                Spacer(modifier = Modifier
+                    .weight(1f)
+                    .height(40.dp))
             }
 
             BottomBarAgreeBtn(
@@ -1528,10 +1531,15 @@ private fun BottomBar(
             }
         }
 
-        Spacer(
+        Box(
             modifier = Modifier
-                .windowInsetsBottomHeight(WindowInsets.navigationBars)
-        )
+                .requiredHeightIn(min = if (LocalContext.current.appPreferences.liftUpBottomBar) 16.dp else 0.dp)
+        ) {
+            Spacer(
+                modifier = Modifier
+                    .windowInsetsBottomHeight(WindowInsets.navigationBars)
+            )
+        }
     }
 }
 

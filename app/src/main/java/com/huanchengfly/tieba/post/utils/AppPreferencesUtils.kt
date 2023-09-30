@@ -130,6 +130,8 @@ open class AppPreferencesUtils private constructor(ctx: Context) {
 
     var imeHeight by DataStoreDelegates.int(defaultValue = 800)
 
+    var liftUpBottomBar by DataStoreDelegates.boolean(defaultValue = true)
+
     var listItemsBackgroundIntermixed by DataStoreDelegates.boolean(defaultValue = true)
 
     var listSingle by DataStoreDelegates.boolean(defaultValue = false)

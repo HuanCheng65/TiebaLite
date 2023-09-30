@@ -734,4 +734,6 @@
     <string name="desc_photo">图片</string>
     <string name="btn_open_photos">查看图片 (%d)</string>
     <string name="title_hide_media">收起贴子列表的图片和视频</string>
+    <string name="title_lift_up_bottom_bar">全面屏优化</string>
+    <string name="summary_lift_up_bottom_bar">略微抬起贴子页面底栏以方便点按</string>
 </resources>
