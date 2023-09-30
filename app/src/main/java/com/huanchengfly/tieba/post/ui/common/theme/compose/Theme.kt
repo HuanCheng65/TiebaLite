@@ -226,7 +226,7 @@ private fun getLightDynamicColor(tonalPalette: TonalPalette): ExtendedColors {
         onBottomBarSurface = tonalPalette.neutralVariant30,
         text = tonalPalette.neutralVariant10,
         textSecondary = tonalPalette.neutralVariant40,
-        textDisabled = tonalPalette.neutralVariant100,
+        textDisabled = tonalPalette.neutralVariant70,
         background = tonalPalette.neutralVariant99,
         chip = tonalPalette.neutralVariant95,
         onChip = tonalPalette.neutralVariant40,

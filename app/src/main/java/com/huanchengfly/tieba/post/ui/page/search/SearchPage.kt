@@ -25,9 +25,11 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.ContentAlpha
 import androidx.compose.material.Icon
@@ -264,7 +266,9 @@ fun SearchPage(
                 }
             } else {
                 Column(
-                    modifier = Modifier.fillMaxSize()
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .verticalScroll(rememberScrollState())
                 ) {
                     SearchHistoryList(
                         searchHistories = searchHistories,
@@ -403,16 +407,19 @@ private fun SearchHistoryList(
     onDelete: (SearchHistory) -> Unit = {},
     onClear: () -> Unit = {},
 ) {
+    val hasItem = remember(searchHistories) {
+        searchHistories.isNotEmpty()
+    }
     val hasMore = remember(searchHistories) {
         searchHistories.size > 6
     }
     val showItem = remember(expanded, hasMore, searchHistories) {
         if (!expanded && hasMore) searchHistories.take(6) else searchHistories
     }
-    val hasItem = remember(showItem) {
-        showItem.isNotEmpty()
-    }
-    Column(modifier = Modifier.fillMaxWidth()) {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+    ) {
         Row(
             modifier = Modifier
                 .padding(horizontal = 16.dp, vertical = 16.dp),
