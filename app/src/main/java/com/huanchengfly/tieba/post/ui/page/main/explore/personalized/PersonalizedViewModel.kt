@@ -70,9 +70,11 @@ class PersonalizedViewModel @Inject constructor() :
             PersonalizedRepository
                 .personalizedFlow(1, 1)
                 .map<PersonalizedResponse, PersonalizedPartialChange.Refresh> { response ->
-                    val data = response.toData().filter {
-                        !App.INSTANCE.appPreferences.blockVideo || it.get { videoInfo } == null
-                    }
+                    val data = response.toData()
+                        .filter {
+                            !App.INSTANCE.appPreferences.blockVideo || it.get { videoInfo } == null
+                        }
+                        .filter { it.get { ala_info } == null }
                     val threadPersonalizedData = response.data_?.thread_personalized ?: emptyList()
                     PersonalizedPartialChange.Refresh.Success(
                         data = data.map { thread ->
@@ -90,9 +92,11 @@ class PersonalizedViewModel @Inject constructor() :
             PersonalizedRepository
                 .personalizedFlow(2, page)
                 .map<PersonalizedResponse, PersonalizedPartialChange.LoadMore> { response ->
-                    val data = response.toData().filter {
-                        !App.INSTANCE.appPreferences.blockVideo || it.get { videoInfo } == null
-                    }
+                    val data = response.toData()
+                        .filter {
+                            !App.INSTANCE.appPreferences.blockVideo || it.get { videoInfo } == null
+                        }
+                        .filter { it.get { ala_info } == null }
                     val threadPersonalizedData = response.data_?.thread_personalized ?: emptyList()
                     PersonalizedPartialChange.LoadMore.Success(
                         currentPage = page,
