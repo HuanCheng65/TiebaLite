@@ -22,7 +22,6 @@ import androidx.compose.material.DropdownMenuItem
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.ArrowBack
@@ -52,6 +51,7 @@ import com.huanchengfly.tieba.post.arch.onEvent
 import com.huanchengfly.tieba.post.arch.pageViewModel
 import com.huanchengfly.tieba.post.arch.wrapImmutable
 import com.huanchengfly.tieba.post.ui.common.theme.compose.ExtendedTheme
+import com.huanchengfly.tieba.post.ui.common.theme.compose.threadBottomBar
 import com.huanchengfly.tieba.post.ui.page.LocalNavigator
 import com.huanchengfly.tieba.post.ui.page.ProvideNavigator
 import com.huanchengfly.tieba.post.ui.page.destinations.CopyTextDialogPageDestination
@@ -307,64 +307,59 @@ internal fun SubPostsContent(
             },
             bottomBar = {
                 if (account != null && !LocalContext.current.appPreferences.hideReply) {
-                    Surface(
-                        elevation = 16.dp,
-                        color = ExtendedTheme.colors.bottomBar,
-                        contentColor = ExtendedTheme.colors.text,
-                        modifier = Modifier.fillMaxWidth()
+                    Column(
+                        modifier = Modifier.background(ExtendedTheme.colors.threadBottomBar)
                     ) {
-                        Column {
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(horizontal = 16.dp),
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.spacedBy(8.dp)
+                        ) {
+                            Avatar(
+                                data = StringUtil.getAvatarUrl(account.portrait),
+                                size = Sizes.Tiny,
+                                contentDescription = account.name,
+                            )
                             Row(
                                 modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(horizontal = 16.dp),
-                                verticalAlignment = Alignment.CenterVertically,
-                                horizontalArrangement = Arrangement.spacedBy(8.dp)
-                            ) {
-                                Avatar(
-                                    data = StringUtil.getAvatarUrl(account.portrait),
-                                    size = Sizes.Tiny,
-                                    contentDescription = account.name,
-                                )
-                                Row(
-                                    modifier = Modifier
-                                        .padding(vertical = 8.dp)
-                                        .weight(1f)
-                                        .clip(RoundedCornerShape(6.dp))
-                                        .background(ExtendedTheme.colors.bottomBarSurface)
-                                        .clickable {
-                                            val fid = forum?.get { id } ?: forumId
-                                            val forumName = forum?.get { name }
-                                            if (!forumName.isNullOrEmpty()) {
-                                                navigator.navigate(
-                                                    ReplyPageDestination(
-                                                        forumId = fid,
-                                                        forumName = forumName,
-                                                        threadId = threadId,
-                                                        postId = postId,
-                                                    )
+                                    .padding(vertical = 8.dp)
+                                    .weight(1f)
+                                    .clip(RoundedCornerShape(6.dp))
+                                    .background(ExtendedTheme.colors.bottomBarSurface)
+                                    .clickable {
+                                        val fid = forum?.get { id } ?: forumId
+                                        val forumName = forum?.get { name }
+                                        if (!forumName.isNullOrEmpty()) {
+                                            navigator.navigate(
+                                                ReplyPageDestination(
+                                                    forumId = fid,
+                                                    forumName = forumName,
+                                                    threadId = threadId,
+                                                    postId = postId,
                                                 )
-                                            }
+                                            )
                                         }
-                                        .padding(8.dp),
-                                ) {
-                                    Text(
-                                        text = stringResource(id = R.string.tip_reply_thread),
-                                        style = MaterialTheme.typography.caption,
-                                        color = ExtendedTheme.colors.onBottomBarSurface,
-                                    )
-                                }
-                            }
-
-                            Box(
-                                modifier = Modifier
-                                    .requiredHeightIn(min = if (LocalContext.current.appPreferences.liftUpBottomBar) 16.dp else 0.dp)
+                                    }
+                                    .padding(8.dp),
                             ) {
-                                Spacer(
-                                    modifier = Modifier
-                                        .windowInsetsBottomHeight(WindowInsets.navigationBars)
+                                Text(
+                                    text = stringResource(id = R.string.tip_reply_thread),
+                                    style = MaterialTheme.typography.caption,
+                                    color = ExtendedTheme.colors.onBottomBarSurface,
                                 )
                             }
+                        }
+
+                        Box(
+                            modifier = Modifier
+                                .requiredHeightIn(min = if (LocalContext.current.appPreferences.liftUpBottomBar) 16.dp else 0.dp)
+                        ) {
+                            Spacer(
+                                modifier = Modifier
+                                    .windowInsetsBottomHeight(WindowInsets.navigationBars)
+                            )
                         }
                     }
                 }

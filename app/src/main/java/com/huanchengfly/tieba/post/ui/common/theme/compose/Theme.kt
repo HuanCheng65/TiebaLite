@@ -291,7 +291,7 @@ private fun getBlackDarkDynamicColor(tonalPalette: TonalPalette): ExtendedColors
         onTopBarActive = tonalPalette.neutralVariant100,
         topBarSurface = tonalPalette.neutralVariant10,
         onTopBarSurface = tonalPalette.neutralVariant70,
-        bottomBar = tonalPalette.neutralVariant10,
+        bottomBar = tonalPalette.neutralVariant0,
         bottomBarSurface = tonalPalette.neutralVariant10,
         onBottomBarSurface = tonalPalette.neutralVariant70,
         text = tonalPalette.neutralVariant90,
