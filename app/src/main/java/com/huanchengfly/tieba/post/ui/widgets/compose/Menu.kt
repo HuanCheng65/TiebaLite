@@ -1,6 +1,5 @@
 package com.huanchengfly.tieba.post.ui.widgets.compose
 
-import android.util.Log
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Indication
 import androidx.compose.foundation.LocalIndication
@@ -119,7 +118,7 @@ fun LongClickMenu(
     indication: Indication? = LocalIndication.current,
     content: @Composable () -> Unit,
 ) {
-    LaunchedEffect(key1 = null) {
+    LaunchedEffect(Unit) {
         launch {
             interactionSource.interactions
                 .filterIsInstance<PressInteraction.Press>()
@@ -127,16 +126,9 @@ fun LongClickMenu(
                     menuState.offset = it.pressPosition
                 }
         }
-        launch {
-            interactionSource.interactions
-                .collect {
-                    Log.i("Indication", "$it")
-                }
-        }
     }
     Box(
-        modifier = Modifier
-            .clip(shape)
+        modifier = modifier
             .combinedClickable(
                 interactionSource = interactionSource,
                 indication = indication,
@@ -161,7 +153,9 @@ fun LongClickMenu(
             DropdownMenu(
                 expanded = menuState.expanded,
                 onDismissRequest = { menuState.expanded = false },
-                modifier = modifier.background(color = ExtendedTheme.colors.menuBackground)
+                modifier = Modifier
+                    .clip(shape)
+                    .background(color = ExtendedTheme.colors.menuBackground)
             ) {
                 ProvideContentColor(color = ExtendedTheme.colors.text) {
                     menuContent()

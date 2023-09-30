@@ -17,6 +17,7 @@ message LoadPicPageData {
   uint32 picIndex = 6;
   int64 postId = 7;
   int64 threadId = 8;
+  optional string originUrl = 9;
 }
 
 message PicItem {
