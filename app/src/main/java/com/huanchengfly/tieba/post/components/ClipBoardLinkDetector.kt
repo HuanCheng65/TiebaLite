@@ -58,7 +58,11 @@ object ClipBoardLinkDetector : Application.ActivityLifecycleCallbacks {
     }
 
     override fun onActivityCreated(activity: Activity, savedInstanceState: Bundle?) {}
-    override fun onActivityStarted(activity: Activity) {}
+
+    override fun onActivityStarted(activity: Activity) {
+        activity.window.decorView.post { checkClipBoard(activity) }
+    }
+
     private fun updatePreviewView(
         context: Context,
         previewView: View,
@@ -104,9 +108,7 @@ object ClipBoardLinkDetector : Application.ActivityLifecycleCallbacks {
         }
     }
 
-    override fun onActivityResumed(activity: Activity) {
-        activity.window.decorView.post { checkClipBoard(activity) }
-    }
+    override fun onActivityResumed(activity: Activity) {}
 
     private fun checkClipBoard(activity: Activity) {
         if (clipBoardHash == getClipBoardHash()) {
