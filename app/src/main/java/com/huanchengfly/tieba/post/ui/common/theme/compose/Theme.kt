@@ -29,6 +29,7 @@ data class ExtendedColors(
     val theme: String,
     val isNightMode: Boolean,
     val primary: Color = Color.Unspecified,
+    val onPrimary: Color = Color.Unspecified,
     val accent: Color = Color.Unspecified,
     val onAccent: Color = Color.Unspecified,
     val topBar: Color = Color.Unspecified,
@@ -42,7 +43,6 @@ data class ExtendedColors(
     val onBottomBarSurface: Color = Color.Unspecified,
     val text: Color = Color.Unspecified,
     val textSecondary: Color = Color.Unspecified,
-    val textOnPrimary: Color = Color.Unspecified,
     val textDisabled: Color = Color.Unspecified,
     val background: Color = Color.Unspecified,
     val chip: Color = Color.Unspecified,
@@ -212,7 +212,7 @@ private fun getLightDynamicColor(tonalPalette: TonalPalette): ExtendedColors {
         theme = "dynamic",
         isNightMode = false,
         primary = tonalPalette.primary40,
-        textOnPrimary = tonalPalette.primary90,
+        onPrimary = tonalPalette.primary100,
         accent = tonalPalette.secondary40,
         onAccent = tonalPalette.secondary100,
         topBar = getDynamicTopBarColor(tonalPalette),
@@ -247,7 +247,7 @@ private fun getDarkDynamicColor(tonalPalette: TonalPalette): ExtendedColors {
         theme = "dynamic",
         isNightMode = true,
         primary = tonalPalette.primary80,
-        textOnPrimary = tonalPalette.primary10,
+        onPrimary = tonalPalette.primary10,
         accent = tonalPalette.secondary80,
         onAccent = tonalPalette.secondary20,
         topBar = tonalPalette.neutralVariant10,
@@ -282,7 +282,7 @@ private fun getBlackDarkDynamicColor(tonalPalette: TonalPalette): ExtendedColors
         theme = "dynamic",
         isNightMode = true,
         primary = tonalPalette.primary80,
-        textOnPrimary = tonalPalette.primary10,
+        onPrimary = tonalPalette.primary10,
         accent = tonalPalette.secondary80,
         onAccent = tonalPalette.secondary20,
         topBar = tonalPalette.neutralVariant0,
@@ -320,65 +320,131 @@ private fun getThemeColorForTheme(theme: String): ExtendedColors {
     val bottomBarColor =
         Color(App.ThemeDelegate.getColorByAttr(context, R.attr.colorNavBar, nowTheme))
     return ExtendedColors(
-        nowTheme,
-        ThemeUtil.isNightMode(nowTheme),
-        Color(App.ThemeDelegate.getColorByAttr(context, R.attr.colorNewPrimary, nowTheme)),
-        Color(App.ThemeDelegate.getColorByAttr(context, R.attr.colorAccent, nowTheme)),
-        Color(App.ThemeDelegate.getColorByAttr(context, R.attr.colorOnAccent, nowTheme)),
-        Color(App.ThemeDelegate.getColorByAttr(context, R.attr.colorToolbar, nowTheme)),
-        Color(App.ThemeDelegate.getColorByAttr(context, R.attr.colorToolbarItem, nowTheme)),
-        Color(
+        theme = nowTheme,
+        isNightMode = ThemeUtil.isNightMode(nowTheme),
+        primary = Color(
+            App.ThemeDelegate.getColorByAttr(
+                context,
+                R.attr.colorNewPrimary,
+                nowTheme
+            )
+        ),
+        onPrimary = Color(
+            App.ThemeDelegate.getColorByAttr(
+                context,
+                R.attr.colorOnAccent,
+                nowTheme
+            )
+        ),
+        accent = Color(App.ThemeDelegate.getColorByAttr(context, R.attr.colorAccent, nowTheme)),
+        onAccent = Color(App.ThemeDelegate.getColorByAttr(context, R.attr.colorOnAccent, nowTheme)),
+        topBar = Color(App.ThemeDelegate.getColorByAttr(context, R.attr.colorToolbar, nowTheme)),
+        onTopBar = Color(
+            App.ThemeDelegate.getColorByAttr(
+                context,
+                R.attr.colorToolbarItem,
+                nowTheme
+            )
+        ),
+        onTopBarSecondary = Color(
             App.ThemeDelegate.getColorByAttr(
                 context,
                 R.attr.colorToolbarItemSecondary,
                 nowTheme
             )
         ),
-        Color(
+        onTopBarActive = Color(
             App.ThemeDelegate.getColorByAttr(
                 context,
                 R.attr.colorToolbarItemActive,
                 nowTheme
             )
         ),
-        Color(App.ThemeDelegate.getColorByAttr(context, R.attr.colorToolbarSurface, nowTheme)),
-        Color(
+        topBarSurface = Color(
+            App.ThemeDelegate.getColorByAttr(
+                context,
+                R.attr.colorToolbarSurface,
+                nowTheme
+            )
+        ),
+        onTopBarSurface = Color(
             App.ThemeDelegate.getColorByAttr(
                 context,
                 R.attr.colorOnToolbarSurface,
                 nowTheme
             )
         ),
-        bottomBarColor,
-        Color(App.ThemeDelegate.getColorByAttr(context, R.attr.colorNavBarSurface, nowTheme)),
-        Color(
+        bottomBar = bottomBarColor,
+        bottomBarSurface = Color(
+            App.ThemeDelegate.getColorByAttr(
+                context,
+                R.attr.colorNavBarSurface,
+                nowTheme
+            )
+        ),
+        onBottomBarSurface = Color(
             App.ThemeDelegate.getColorByAttr(
                 context,
                 R.attr.colorOnNavBarSurface,
                 nowTheme
             )
         ),
-        textColor.copy(alpha = ContentAlpha.high),
-        textColor.copy(alpha = ContentAlpha.medium),
-        Color(App.ThemeDelegate.getColorByAttr(context, R.attr.colorOnAccent, nowTheme)),
-        Color(App.ThemeDelegate.getColorByAttr(context, R.attr.color_text_disabled, nowTheme)),
-        Color(App.ThemeDelegate.getColorByAttr(context, R.attr.colorBackground, nowTheme)),
-        Color(App.ThemeDelegate.getColorByAttr(context, R.attr.colorChip, nowTheme)),
-        Color(App.ThemeDelegate.getColorByAttr(context, R.attr.colorOnChip, nowTheme)),
-        Color(App.ThemeDelegate.getColorByAttr(context, R.attr.colorUnselected, nowTheme)),
-        Color(App.ThemeDelegate.getColorByAttr(context, R.attr.colorCard, nowTheme)),
-        Color(App.ThemeDelegate.getColorByAttr(context, R.attr.colorFloorCard, nowTheme)),
-        Color(App.ThemeDelegate.getColorByAttr(context, R.attr.colorDivider, nowTheme)),
-        Color(App.ThemeDelegate.getColorByAttr(context, R.attr.shadow_color, nowTheme)),
-        Color(App.ThemeDelegate.getColorByAttr(context, R.attr.colorIndicator, nowTheme)),
-        Color(
+        text = textColor.copy(alpha = ContentAlpha.high),
+        textSecondary = textColor.copy(alpha = ContentAlpha.medium),
+        textDisabled = Color(
+            App.ThemeDelegate.getColorByAttr(
+                context,
+                R.attr.color_text_disabled,
+                nowTheme
+            )
+        ),
+        background = Color(
+            App.ThemeDelegate.getColorByAttr(
+                context,
+                R.attr.colorBackground,
+                nowTheme
+            )
+        ),
+        chip = Color(App.ThemeDelegate.getColorByAttr(context, R.attr.colorChip, nowTheme)),
+        onChip = Color(App.ThemeDelegate.getColorByAttr(context, R.attr.colorOnChip, nowTheme)),
+        unselected = Color(
+            App.ThemeDelegate.getColorByAttr(
+                context,
+                R.attr.colorUnselected,
+                nowTheme
+            )
+        ),
+        card = Color(App.ThemeDelegate.getColorByAttr(context, R.attr.colorCard, nowTheme)),
+        floorCard = Color(
+            App.ThemeDelegate.getColorByAttr(
+                context,
+                R.attr.colorFloorCard,
+                nowTheme
+            )
+        ),
+        divider = Color(App.ThemeDelegate.getColorByAttr(context, R.attr.colorDivider, nowTheme)),
+        shadow = Color(App.ThemeDelegate.getColorByAttr(context, R.attr.shadow_color, nowTheme)),
+        indicator = Color(
+            App.ThemeDelegate.getColorByAttr(
+                context,
+                R.attr.colorIndicator,
+                nowTheme
+            )
+        ),
+        windowBackground = Color(
             App.ThemeDelegate.getColorByAttr(
                 context,
                 R.attr.colorWindowBackground,
                 nowTheme
             )
         ),
-        Color(App.ThemeDelegate.getColorByAttr(context, R.attr.colorPlaceholder, nowTheme)),
+        placeholder = Color(
+            App.ThemeDelegate.getColorByAttr(
+                context,
+                R.attr.colorPlaceholder,
+                nowTheme
+            )
+        ),
     )
 }
 

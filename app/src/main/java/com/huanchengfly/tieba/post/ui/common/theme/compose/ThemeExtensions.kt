@@ -35,4 +35,4 @@ val ExtendedColors.invertChipBackground: Color
     get() = if (ThemeUtil.isNightMode(theme)) primary.copy(alpha = 0.3f) else primary
 
 val ExtendedColors.invertChipContent: Color
-    get() = if (ThemeUtil.isNightMode(theme)) primary else textOnPrimary
+    get() = if (ThemeUtil.isNightMode(theme)) primary else onPrimary
