@@ -61,6 +61,7 @@ import com.microsoft.appcenter.distribute.ReleaseDetails
 import com.microsoft.appcenter.distribute.UpdateAction
 import com.microsoft.appcenter.distribute.UpdateTrack
 import dagger.hilt.android.HiltAndroidApp
+import net.swiftzer.semver.SemVer
 import org.litepal.LitePal
 import kotlin.concurrent.thread
 
@@ -248,6 +249,11 @@ class App : Application(), IApp, SketchFactory {
             releaseDetails: ReleaseDetails
         ): Boolean {
             val versionName = releaseDetails.shortVersion
+            val newSemVer = SemVer.parse(versionName)
+            val currentSemVer = SemVer.parse(BuildConfig.VERSION_NAME)
+            if (newSemVer <= currentSemVer) {
+                return true
+            }
             val releaseNotes = releaseDetails.releaseNotes
             if (activity is BaseActivity) {
                 activity.showDialog {
