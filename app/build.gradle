@@ -121,6 +121,7 @@ wire {
 
 dependencies {
     implementation 'net.swiftzer.semver:semver:1.1.2'
+    implementation 'com.godaddy.android.colorpicker:compose-color-picker:0.7.0'
 
     implementation "com.airbnb.android:lottie:$lottie_version"
     implementation "com.airbnb.android:lottie-compose:$lottie_version"

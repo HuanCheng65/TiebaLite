@@ -242,10 +242,9 @@ object ThemeUtil {
 
     fun isStatusBarFontDark(): Boolean {
         val theme = getTheme()
-        val isToolbarPrimaryColor: Boolean =
-            dataStore.getBoolean(KEY_CUSTOM_TOOLBAR_PRIMARY_COLOR, false)
+        val isToolbarPrimaryColor: Boolean = INSTANCE.appPreferences.toolbarPrimaryColor
         return if (theme == THEME_CUSTOM) {
-            dataStore.getBoolean(KEY_CUSTOM_STATUS_BAR_FONT_DARK, false)
+            INSTANCE.appPreferences.customStatusBarFontDark
         } else if (isTranslucentTheme(theme)) {
             theme.contains("dark", ignoreCase = true)
         } else if (!isToolbarPrimaryColor) {
