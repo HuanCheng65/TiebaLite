@@ -113,7 +113,7 @@ fun LongClickMenu(
     enabled: Boolean = true,
     menuState: MenuState = rememberMenuState(),
     onClick: (() -> Unit)? = null,
-    shape: Shape = RoundedCornerShape(14.dp),
+    shape: Shape = RoundedCornerShape(0.dp),
     interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
     indication: Indication? = LocalIndication.current,
     content: @Composable () -> Unit,
@@ -129,6 +129,7 @@ fun LongClickMenu(
     }
     Box(
         modifier = modifier
+            .clip(shape)
             .combinedClickable(
                 interactionSource = interactionSource,
                 indication = indication,
@@ -153,9 +154,7 @@ fun LongClickMenu(
             DropdownMenu(
                 expanded = menuState.expanded,
                 onDismissRequest = { menuState.expanded = false },
-                modifier = Modifier
-                    .clip(shape)
-                    .background(color = ExtendedTheme.colors.menuBackground)
+                modifier = Modifier.background(color = ExtendedTheme.colors.menuBackground)
             ) {
                 ProvideContentColor(color = ExtendedTheme.colors.text) {
                     menuContent()
