@@ -320,10 +320,21 @@ fun Dialog(
     buttons: @Composable (DialogScope.() -> Unit) = {},
     content: @Composable (DialogScope.() -> Unit),
 ) {
-    if (dialogState.show) {
-        var isActiveClose by remember {
-            mutableStateOf(false)
+    var showDialog by remember {
+        mutableStateOf(false)
+    }
+    var isActiveClose by remember {
+        mutableStateOf(false)
+    }
+    LaunchedEffect(dialogState.show) {
+        if (dialogState.show) {
+            showDialog = true
+            isActiveClose = false
+        } else {
+            isActiveClose = true
         }
+    }
+    if (showDialog) {
         val dialogScope = DialogScope(
             onDismiss = {
                 isActiveClose = true
@@ -334,6 +345,7 @@ fun Dialog(
             onDismiss = {
                 onDismiss?.invoke()
                 dialogState.show = false
+                showDialog = false
             },
             properties = AnyPopDialogProperties(
                 dismissOnBackPress = cancelable,
@@ -392,15 +404,7 @@ class DialogState private constructor(
 ) {
     constructor() : this(show = false)
 
-    private var _show by mutableStateOf(show)
-
-    var show: Boolean
-        get() = _show
-        set(value) {
-            if (value != _show) {
-                _show = value
-            }
-        }
+    var show by mutableStateOf(show)
 
     fun show() {
         show = true
