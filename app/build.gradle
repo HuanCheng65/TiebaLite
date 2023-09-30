@@ -164,10 +164,12 @@ dependencies {
     implementation("io.github.panpf.zoomimage:zoomimage-view-sketch:$zoomimage_version")
 
     def composeBom = platform("androidx.compose:compose-bom:$compose_bom_version")
-    implementation 'androidx.compose:compose-bom:2023.09.02'
+    implementation platform('androidx.compose:compose-bom:2023.09.02')
     androidTestImplementation composeBom
 
     implementation 'androidx.compose.runtime:runtime-tracing:1.0.0-alpha03'
+    implementation 'androidx.compose.animation:animation'
+    implementation 'androidx.compose.animation:animation-graphics'
     implementation 'androidx.compose.material:material'
     implementation 'androidx.compose.material:material-icons-core'
     // Optional - Add full set of material icons

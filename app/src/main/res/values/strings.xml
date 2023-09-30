@@ -731,4 +731,7 @@
     <string name="tip_settings_use_themed_icon_summary_not_supported">当前正在使用的应用图标暂不支持动态取色</string>
     <string name="btn_copy_all">复制全部</string>
     <string name="title_copy">复制</string>
+    <string name="desc_photo">图片</string>
+    <string name="btn_open_photos">查看图片 (%d)</string>
+    <string name="title_hide_media">收起贴子列表的图片和视频</string>
 </resources>

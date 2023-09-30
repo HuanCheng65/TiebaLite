@@ -174,6 +174,22 @@ fun HabitSettingsPage(
             }
             prefsItem {
                 SwitchPref(
+                    key = "hideMedia",
+                    title = stringResource(id = R.string.title_hide_media),
+                    defaultChecked = false,
+                    leadingIcon = {
+                        LeadingIcon {
+                            AvatarIcon(
+                                icon = ImageVector.vectorResource(R.drawable.ic_outline_collapse_all),
+                                size = Sizes.Small,
+                                contentDescription = null,
+                            )
+                        }
+                    }
+                )
+            }
+            prefsItem {
+                SwitchPref(
                     key = "showShortcutInThread",
                     title = stringResource(id = R.string.settings_show_shortcut),
                     defaultChecked = true,

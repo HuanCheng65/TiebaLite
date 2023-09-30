@@ -1,5 +1,8 @@
 package com.huanchengfly.tieba.post.ui.page.main
 
+import androidx.compose.animation.graphics.ExperimentalAnimationGraphicsApi
+import androidx.compose.animation.graphics.res.rememberAnimatedVectorPainter
+import androidx.compose.animation.graphics.vector.AnimatedImageVector
 import androidx.compose.foundation.background
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
@@ -38,7 +41,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.layout.Measurable
 import androidx.compose.ui.layout.layoutId
@@ -47,6 +49,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.offset
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.util.fastForEachIndexed
 import com.huanchengfly.tieba.post.R
 import com.huanchengfly.tieba.post.ui.common.theme.compose.ExtendedColors
 import com.huanchengfly.tieba.post.ui.common.theme.compose.ExtendedTheme
@@ -127,6 +130,7 @@ fun NavigationDrawerItem(
     }
 }
 
+@OptIn(ExperimentalAnimationGraphicsApi::class)
 @Composable
 fun NavigationDrawerContent(
     currentPosition: Int,
@@ -205,8 +209,12 @@ fun NavigationDrawerContent(
                         icon = {
                             Box {
                                 Icon(
-                                    imageVector = navigationItem.icon(index == currentPosition),
-                                    contentDescription = navigationItem.title(index == currentPosition)
+                                    painter = rememberAnimatedVectorPainter(
+                                        animatedImageVector = navigationItem.icon(),
+                                        atEnd = index == currentPosition
+                                    ),
+                                    contentDescription = navigationItem.title(index == currentPosition),
+                                    modifier = Modifier.size(16.dp),
                                 )
                                 if (navigationItem.badge) {
                                     Text(
@@ -280,6 +288,7 @@ private fun PositionLayout(
     )
 }
 
+@OptIn(ExperimentalAnimationGraphicsApi::class)
 @Composable
 fun NavigationRail(
     currentPosition: Int,
@@ -316,8 +325,12 @@ fun NavigationRail(
                     icon = {
                         Box {
                             Icon(
-                                imageVector = navigationItem.icon(index == currentPosition),
-                                contentDescription = navigationItem.title(index == currentPosition)
+                                painter = rememberAnimatedVectorPainter(
+                                    animatedImageVector = navigationItem.icon(),
+                                    atEnd = index == currentPosition
+                                ),
+                                contentDescription = navigationItem.title(index == currentPosition),
+                                modifier = Modifier.size(16.dp),
                             )
                             if (navigationItem.badge) {
                                 Text(
@@ -357,6 +370,7 @@ fun BottomNavigationDivider(
     }
 }
 
+@OptIn(ExperimentalAnimationGraphicsApi::class)
 @Composable
 fun BottomNavigation(
     currentPosition: Int,
@@ -371,7 +385,7 @@ fun BottomNavigation(
             backgroundColor = themeColors.bottomBar,
             elevation = 0.dp,
         ) {
-            navigationItems.forEachIndexed { index, navigationItem ->
+            navigationItems.fastForEachIndexed { index, navigationItem ->
                 BottomNavigationItem(
                     selected = index == currentPosition,
                     onClick = {
@@ -385,8 +399,12 @@ fun BottomNavigation(
                     icon = {
                         Box {
                             Icon(
-                                imageVector = navigationItem.icon(index == currentPosition),
-                                contentDescription = navigationItem.title(index == currentPosition)
+                                painter = rememberAnimatedVectorPainter(
+                                    animatedImageVector = navigationItem.icon(),
+                                    atEnd = index == currentPosition
+                                ),
+                                contentDescription = navigationItem.title(index == currentPosition),
+                                modifier = Modifier.size(24.dp),
                             )
                             if (navigationItem.badge) {
                                 Text(
@@ -416,12 +434,12 @@ fun BottomNavigation(
 }
 
 @Immutable
-data class NavigationItem(
+data class NavigationItem @OptIn(ExperimentalAnimationGraphicsApi::class) constructor(
     val id: String,
-    val icon: @Composable (selected: Boolean) -> ImageVector,
+    val icon: @Composable () -> AnimatedImageVector,
     val title: @Composable (selected: Boolean) -> String,
     val badge: Boolean = false,
     val badgeText: String? = null,
     val onClick: (() -> Unit)? = null,
-    val content: @Composable () -> Unit = {}
+    val content: @Composable () -> Unit = {},
 )
