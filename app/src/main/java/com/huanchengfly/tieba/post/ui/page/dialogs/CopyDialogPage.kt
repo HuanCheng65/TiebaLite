@@ -35,30 +35,12 @@ import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import com.ramcosta.composedestinations.spec.DestinationStyle
 
-@Destination
-@Composable
-fun CopyTextPage(
-    text: String,
-    navigator: DestinationsNavigator,
-) {
-    val context = LocalContext.current
-    CopyTextPageContent(
-        text = text,
-        onCopy = {
-            TiebaUtil.copyText(context, it)
-        },
-        onCancel = {
-            navigator.navigateUp()
-        }
-    )
-}
-
 object CopyTextDialogStyle : DestinationStyle.Dialog {
     override val properties: DialogProperties
         get() = DialogProperties(
             usePlatformDefaultWidth = false,
+            decorFitsSystemWindows = false
         )
-
 }
 
 @Destination(
@@ -70,6 +52,7 @@ fun CopyTextDialogPage(
     navigator: DestinationsNavigator,
 ) {
     val context = LocalContext.current
+
     Box(
         contentAlignment = Alignment.Center,
         modifier = Modifier

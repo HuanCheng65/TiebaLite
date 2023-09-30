@@ -122,7 +122,7 @@ import com.huanchengfly.tieba.post.ui.common.theme.compose.invertChipContent
 import com.huanchengfly.tieba.post.ui.common.theme.compose.pullRefreshIndicator
 import com.huanchengfly.tieba.post.ui.common.theme.compose.threadBottomBar
 import com.huanchengfly.tieba.post.ui.page.ProvideNavigator
-import com.huanchengfly.tieba.post.ui.page.destinations.CopyTextPageDestination
+import com.huanchengfly.tieba.post.ui.page.destinations.CopyTextDialogPageDestination
 import com.huanchengfly.tieba.post.ui.page.destinations.ForumPageDestination
 import com.huanchengfly.tieba.post.ui.page.destinations.ReplyPageDestination
 import com.huanchengfly.tieba.post.ui.page.destinations.SubPostsSheetPageDestination
@@ -875,7 +875,7 @@ fun ThreadPage(
             },
             onMenuCopyClick = {
                 navigator.navigate(
-                    CopyTextPageDestination(it)
+                    CopyTextDialogPageDestination(it)
                 )
             },
             onMenuFavoriteClick = {
@@ -1216,7 +1216,7 @@ fun ThreadPage(
                                                 },
                                                 onMenuCopyClick = {
                                                     navigator.navigate(
-                                                        CopyTextPageDestination(it)
+                                                        CopyTextDialogPageDestination(it)
                                                     )
                                                 },
                                                 onMenuFavoriteClick = {
