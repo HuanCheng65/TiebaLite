@@ -1,0 +1,33 @@
+name: 功能请求
+description: 提出你的想法以帮助我们改进
+title: "[Feature Request] "
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        请尽可能详细地描述你的想法，以便更好地理解你的需求。
+
+  - type: textarea
+    id: description
+    attributes:
+      label: 描述
+      description: 描述你遇到的问题或缺失的功能
+
+  - type: textarea
+    id: solution
+    attributes:
+      label: 解决方案
+      description: 简要地描述您希望发生什么
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: 其他方案
+      description: 简要地描述您考虑过的任何替代解决方案或功能
+
+  - type: textarea
+    id: context
+    attributes:
+      label: 补充信息
+      description: 在此处添加有关您的功能请求的任何其他内容
