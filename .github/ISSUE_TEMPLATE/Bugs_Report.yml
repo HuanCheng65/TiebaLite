@@ -7,6 +7,7 @@ body:
     attributes:
       value: |
         请尽可能详细地描述你遇到的问题，以便更好地理解问题所在。
+        反馈前请先阅读[已知问题](https://github.com/HuanCheng65/TiebaLite/discussions/214)，避免重复反馈。
         反馈前请先搜索是否已有人反馈过相同的问题，如果有请在该问题下留言，不要重复提交。重复提交的问题将会被关闭。
         反馈前请先检查是否已经使用最新版本，如果没有请先更新到最新版本再反馈。旧版本的问题将会被关闭。
 
@@ -16,6 +17,8 @@ body:
       label: 问题检查清单
       description: 请确认你已经完成了以下检查项。
       options:
+        - label: 我已经阅读了[已知问题](https://github.com/HuanCheng65/TiebaLite/discussions/214)，并且确认该问题没有被列出。
+          required: true
         - label: 我确认该问题没有被其他人报告过。
           required: true
         - label: 我确认正在使用最新版本。

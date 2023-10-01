@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: 讨论区
+    url: https://github.com/HuanCheng65/TiebaLite/discussions
+    about: 其他任何问题请在讨论区提出
+  - name: 反馈前必读的已知问题
+    url: https://github.com/HuanCheng65/TiebaLite/discussions/214
+    about: 避免重复反馈
