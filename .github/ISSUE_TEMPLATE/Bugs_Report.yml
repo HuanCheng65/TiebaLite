@@ -1,0 +1,114 @@
+name: 问题反馈
+description: 反馈遇到的问题以帮助我们改进
+title: "[BUG] "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        请尽可能详细地描述你遇到的问题，以便更好地理解问题所在。
+        反馈前请先搜索是否已有人反馈过相同的问题，如果有请在该问题下留言，不要重复提交。重复提交的问题将会被关闭。
+        反馈前请先检查是否已经使用最新版本，如果没有请先更新到最新版本再反馈。旧版本的问题将会被关闭。
+
+  - type: checkboxes
+    id: checklist
+    attributes:
+      label: 问题检查清单
+      description: 请确认你已经完成了以下检查项。
+      options:
+        - label: 我确认该问题没有被其他人报告过。
+          required: true
+        - label: 我确认正在使用最新版本。
+          required: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: 问题描述
+      description: 在此处简要地描述遇到的问题。
+      placeholder: 发生了什么？
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps
+    attributes:
+      label: 复现步骤
+      description: 在此处描述复现问题的步骤。
+      placeholder: 如何复现？
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: 预期行为
+      description: 在此处描述你预期的结果或行为。
+      placeholder: 预期的结果是什么？
+    validations:
+      required: true
+
+  - type: textarea
+    id: actual
+    attributes:
+      label: 实际行为
+      description: 在此处描述实际的结果或行为。
+      placeholder: 实际上发生了什么？
+    validations:
+      required: true
+
+  - type: textarea
+    id: medias
+    attributes:
+      label: 截图或录屏
+      description: 如果可以的话，请添加屏幕截图或录屏以帮助解释您的问题。
+      placeholder: 添加截图或视频
+
+  - type: input
+    id: version
+    attributes:
+      label: 应用版本
+      description: 在此处填写你使用的版本号。
+      placeholder: 1.0.0
+    validations:
+      required: true
+
+  - type: input
+    id: os
+    attributes:
+      label: Android 版本
+      description: 在此处填写你使用的 Android 版本。
+      placeholder: Android 13
+      value: Android 
+    validations:
+      required: true
+
+  - type: input
+    id: device
+    attributes:
+      label: 设备型号
+      description: 在此处填写你使用的设备型号。
+      placeholder: Xiaomi 13
+    validations:
+      required: true
+
+  - type: input
+    id: ui-version
+    attributes:
+      label: 定制 UI 版本
+      description: 如果你使用的手机系统是厂商深度定制的，请在此处填写定制 UI 的版本号。
+      placeholder: MIUI / EMUI / Funtouch OS / ColorOS / Flyme / One UI / ...
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: 日志
+      description: 如果你在使用过程中遇到了闪退或者其他异常，请在此处添加日志。
+      placeholder: 添加日志
+
+  - type: textarea
+    id: others
+    attributes:
+      label: 其他信息
+      description: 如果你有其他信息需要补充，请在此处添加。
+      placeholder: 其他信息
