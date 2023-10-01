@@ -1,6 +1,7 @@
 package com.huanchengfly.tieba.post.ui.widgets.compose
 
 import android.content.Context
+import android.graphics.Color
 import android.os.Parcelable
 import android.util.Log
 import androidx.compose.animation.core.Animatable
@@ -232,7 +233,7 @@ fun NetworkImage(
 
     val colorMask =
         if (ExtendedTheme.colors.isNightMode && context.appPreferences.imageDarkenWhenNightMode) {
-            MaskTransformation(0x35000000)
+            MaskTransformation(Color.parseColor("#99000000"))
         } else null
 
     var imageAspectRatio by remember(imageUri) { mutableFloatStateOf(0f) }
