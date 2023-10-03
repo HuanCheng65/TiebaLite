@@ -110,9 +110,8 @@ class App : Application(), IApp, SketchFactory {
 
     fun setIcon(
         enableNewUi: Boolean = applicationMetaData.getBoolean("enable_new_ui") || appPreferences.enableNewUi,
-        keepOld: Boolean = BuildConfig.DEBUG
     ) {
-        setOldMainActivityEnabled(!enableNewUi || keepOld)
+        setOldMainActivityEnabled(!enableNewUi)
         if (enableNewUi) AppIconUtil.setIcon()
         else AppIconUtil.setIcon(LauncherIcons.DISABLE)
     }
@@ -136,7 +135,7 @@ class App : Application(), IApp, SketchFactory {
                 Analytics::class.java, Crashes::class.java, Distribute::class.java
             )
         }
-        setIcon(keepOld = BuildConfig.DEBUG || isSelfBuild)
+        setIcon()
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
         ThemeUtils.init(ThemeDelegate)
         registerActivityLifecycleCallbacks(ClipBoardLinkDetector)
