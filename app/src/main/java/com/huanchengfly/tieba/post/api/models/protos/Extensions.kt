@@ -316,7 +316,7 @@ val Post.contentRenders: ImmutableList<PbContentRender>
                     it.showOriginBtn,
                     it.originSize
                 )
-                if (data != null) it.copy(photoViewData = wrapImmutable(data)) else it
+                if (data != null) it.copy(photoViewData = data) else it
             } else it
         }.toImmutableList()
     }

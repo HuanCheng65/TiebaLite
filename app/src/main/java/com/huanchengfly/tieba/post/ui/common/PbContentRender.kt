@@ -41,8 +41,7 @@ import com.huanchengfly.tieba.post.R
 import com.huanchengfly.tieba.post.activities.UserActivity
 import com.huanchengfly.tieba.post.activities.WebViewActivity
 import com.huanchengfly.tieba.post.arch.BaseComposeActivity.Companion.LocalWindowSizeClass
-import com.huanchengfly.tieba.post.arch.ImmutableHolder
-import com.huanchengfly.tieba.post.models.protos.PhotoViewData
+import com.huanchengfly.tieba.post.models.PhotoViewData
 import com.huanchengfly.tieba.post.ui.common.windowsizeclass.WindowWidthSizeClass
 import com.huanchengfly.tieba.post.ui.widgets.compose.EmoticonText
 import com.huanchengfly.tieba.post.ui.widgets.compose.NetworkImage
@@ -126,7 +125,7 @@ data class PicContentRender(
     val width: Int,
     val height: Int,
     val picId: String,
-    val photoViewData: ImmutableHolder<PhotoViewData>? = null
+    val photoViewData: PhotoViewData? = null,
 ) : PbContentRender {
     @Composable
     override fun Render() {

@@ -48,8 +48,7 @@ import com.google.accompanist.systemuicontroller.SystemUiController
 import com.huanchengfly.tieba.post.R
 import com.huanchengfly.tieba.post.arch.BaseComposeActivityWithParcelable
 import com.huanchengfly.tieba.post.arch.collectPartialAsState
-import com.huanchengfly.tieba.post.models.protos.LoadPicPageData
-import com.huanchengfly.tieba.post.models.protos.PhotoViewData
+import com.huanchengfly.tieba.post.models.PhotoViewData
 import com.huanchengfly.tieba.post.toastShort
 import com.huanchengfly.tieba.post.ui.common.theme.compose.ExtendedTheme
 import com.huanchengfly.tieba.post.ui.widgets.compose.LazyLoad
@@ -145,7 +144,7 @@ class PhotoViewActivity : BaseComposeActivityWithParcelable<PhotoViewData>() {
         )
         val loadPicPageData by viewModel.uiState.collectPartialAsState(
             prop1 = PhotoViewUiState::loadPicPageData,
-            initial = LoadPicPageData()
+            initial = null
         )
 
         val pageCount by remember { derivedStateOf { items.size } }

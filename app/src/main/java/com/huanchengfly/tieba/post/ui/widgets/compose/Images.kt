@@ -2,7 +2,6 @@ package com.huanchengfly.tieba.post.ui.widgets.compose
 
 import android.content.Context
 import android.graphics.Color
-import android.os.Parcelable
 import android.util.Log
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.spring
@@ -47,9 +46,8 @@ import com.github.panpf.sketch.stateimage.ThumbnailMemoryCacheStateImage
 import com.github.panpf.sketch.transform.MaskTransformation
 import com.huanchengfly.tieba.post.App
 import com.huanchengfly.tieba.post.arch.BaseComposeActivity.Companion.LocalWindowSizeClass
-import com.huanchengfly.tieba.post.arch.ImmutableHolder
 import com.huanchengfly.tieba.post.goToActivity
-import com.huanchengfly.tieba.post.models.protos.PhotoViewData
+import com.huanchengfly.tieba.post.models.PhotoViewData
 import com.huanchengfly.tieba.post.ui.common.theme.compose.ExtendedTheme
 import com.huanchengfly.tieba.post.ui.common.windowsizeclass.WindowWidthSizeClass
 import com.huanchengfly.tieba.post.ui.page.photoview.PhotoViewActivity
@@ -222,7 +220,7 @@ fun NetworkImage(
     imageUri: String,
     contentDescription: String?,
     modifier: Modifier = Modifier,
-    photoViewData: ImmutableHolder<PhotoViewData>? = null,
+    photoViewData: PhotoViewData? = null,
     contentScale: ContentScale = ContentScale.Fit,
     skipNetworkCheck: Boolean = false,
 ) {
@@ -267,7 +265,7 @@ fun NetworkImage(
         layoutSizeProvider = { layoutSize },
         layoutOffsetProvider = { layoutOffset },
         imageAspectRatioProvider = { imageAspectRatio },
-        originImageUri = photoViewData?.get { data_?.originUrl }
+        originImageUri = photoViewData?.data?.originUrl
     )
 
     Box(
@@ -292,7 +290,7 @@ fun NetworkImage(
                                 context.goToActivity<PhotoViewActivity> {
                                     putExtra(
                                         EXTRA_PHOTO_VIEW_DATA,
-                                        photoViewData.get() as Parcelable
+                                        photoViewData
                                     )
                                 }
                             }
@@ -328,7 +326,7 @@ fun NetworkImage(
     imageUriProvider: () -> String,
     contentDescription: String?,
     modifier: Modifier = Modifier,
-    photoViewDataProvider: (() -> ImmutableHolder<PhotoViewData>)? = null,
+    photoViewDataProvider: (() -> PhotoViewData)? = null,
     contentScale: ContentScale = ContentScale.Fit,
     skipNetworkCheck: Boolean = false,
 ) {

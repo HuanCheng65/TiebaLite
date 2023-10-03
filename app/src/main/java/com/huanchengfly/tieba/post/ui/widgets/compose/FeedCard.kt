@@ -1,7 +1,6 @@
 package com.huanchengfly.tieba.post.ui.widgets.compose
 
 import android.content.pm.ActivityInfo
-import android.os.Parcelable
 import android.util.Log
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.background
@@ -80,7 +79,7 @@ import com.huanchengfly.tieba.post.goToActivity
 import com.huanchengfly.tieba.post.ui.common.theme.compose.ExtendedTheme
 import com.huanchengfly.tieba.post.ui.common.windowsizeclass.WindowWidthSizeClass
 import com.huanchengfly.tieba.post.ui.page.photoview.PhotoViewActivity
-import com.huanchengfly.tieba.post.ui.utils.getImmutablePhotoViewData
+import com.huanchengfly.tieba.post.ui.utils.getPhotoViewData
 import com.huanchengfly.tieba.post.ui.widgets.compose.video.DefaultVideoPlayerController
 import com.huanchengfly.tieba.post.ui.widgets.compose.video.OnFullScreenModeChangedListener
 import com.huanchengfly.tieba.post.ui.widgets.compose.video.VideoPlayerSource
@@ -444,7 +443,7 @@ private fun ThreadMedia(
         }
         if (hideMedia) {
             val photoViewData = remember(item) {
-                getImmutablePhotoViewData(item.get(), 0)
+                getPhotoViewData(item.get(), 0)
             }
             MediaPlaceholder(
                 icon = {
@@ -461,7 +460,7 @@ private fun ThreadMedia(
                     context.goToActivity<PhotoViewActivity> {
                         putExtra(
                             PhotoViewActivity.EXTRA_PHOTO_VIEW_DATA,
-                            photoViewData.get() as Parcelable
+                            photoViewData
                         )
                     }
                 }
@@ -480,7 +479,7 @@ private fun ThreadMedia(
                 ) {
                     showMedias.fastForEachIndexed { index, media ->
                         val photoViewData = remember(item, index) {
-                            getImmutablePhotoViewData(item.get(), index)
+                            getPhotoViewData(item.get(), index)
                         }
                         NetworkImage(
                             imageUri = remember(media) { media.url },

@@ -61,6 +61,7 @@ private val LoadDistance = 70.dp
 fun LoadMoreLayout(
     isLoading: Boolean,
     onLoadMore: () -> Unit,
+    modifier: Modifier = Modifier,
     enableLoadMore: Boolean = true,
     loadEnd: Boolean = false,
     indicator: @Composable (Boolean, Boolean, Boolean) -> Unit = { loading, end, willLoad ->
@@ -162,6 +163,7 @@ fun LoadMoreLayout(
                 enabled = enableLoadMore && !waitingStateReset,
             )
             .fillMaxSize()
+            .then(modifier)
     ) {
         content()
 

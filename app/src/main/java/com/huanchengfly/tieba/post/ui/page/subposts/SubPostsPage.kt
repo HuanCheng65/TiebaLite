@@ -366,6 +366,7 @@ internal fun SubPostsContent(
             }
         ) { paddingValues ->
             LoadMoreLayout(
+                modifier = Modifier.padding(paddingValues),
                 isLoading = isLoading,
                 onLoadMore = {
                     viewModel.send(
@@ -382,10 +383,7 @@ internal fun SubPostsContent(
                 lazyListState = lazyListState,
                 isEmpty = post == null && subPosts.isEmpty(),
             ) {
-                MyLazyColumn(
-                    modifier = Modifier.padding(paddingValues),
-                    state = lazyListState
-                ) {
+                MyLazyColumn(state = lazyListState) {
                     item(key = "Post$postId") {
                         post?.let {
                             Column {

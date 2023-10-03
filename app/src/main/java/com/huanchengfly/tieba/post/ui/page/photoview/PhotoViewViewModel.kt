@@ -8,8 +8,8 @@ import com.huanchengfly.tieba.post.arch.PartialChangeProducer
 import com.huanchengfly.tieba.post.arch.UiEvent
 import com.huanchengfly.tieba.post.arch.UiIntent
 import com.huanchengfly.tieba.post.arch.UiState
-import com.huanchengfly.tieba.post.models.protos.LoadPicPageData
-import com.huanchengfly.tieba.post.models.protos.PhotoViewData
+import com.huanchengfly.tieba.post.models.LoadPicPageData
+import com.huanchengfly.tieba.post.models.PhotoViewData
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
@@ -107,7 +107,7 @@ class PhotoViewViewModel :
                 }
 
         private fun PhotoViewUiIntent.Init.producePartialChange(): Flow<PhotoViewPartialChange.Init> {
-            val flow = if (data.data_ == null) {
+            val flow = if (data.data == null) {
                 flowOf(
                     PhotoViewPartialChange.Init.Success(
                         items = data.picItems.mapIndexed { index, item ->
@@ -128,13 +128,13 @@ class PhotoViewViewModel :
             } else {
                 TiebaApi.getInstance()
                     .picPageFlow(
-                        forumId = data.data_.forumId.toString(),
-                        forumName = data.data_.forumName,
-                        threadId = data.data_.threadId.toString(),
-                        seeLz = data.data_.seeLz,
-                        picId = data.data_.picId,
-                        picIndex = data.data_.picIndex.toString(),
-                        objType = data.data_.objType,
+                        forumId = data.data.forumId.toString(),
+                        forumName = data.data.forumName,
+                        threadId = data.data.threadId.toString(),
+                        seeLz = data.data.seeLz,
+                        picId = data.data.picId,
+                        picIndex = data.data.picIndex.toString(),
+                        objType = data.data.objType,
                         prev = false
                     )
                     .map<PicPageBean, PhotoViewPartialChange.Init> { picPageBean ->
@@ -149,30 +149,30 @@ class PhotoViewViewModel :
                         }
                         val firstItemIndex = fetchedItems.first().overallIndex
                         val localItems =
-                            if (data.data_.picIndex == 1) emptyList() else data.picItems.subList(
+                            if (data.data.picIndex == 1) emptyList() else data.picItems.subList(
                                 0,
-                                data.data_.picIndex - 1
+                                data.data.picIndex - 1
                             ).mapIndexed { index, item ->
                                 PhotoViewItem(
                                     picId = item.picId,
                                     originUrl = item.originUrl,
                                     url = if (item.showOriginBtn) item.url else null,
-                                    overallIndex = firstItemIndex - (data.data_.picIndex - 1 - index)
+                                    overallIndex = firstItemIndex - (data.data.picIndex - 1 - index)
                                 )
                             }
                         val items = localItems + fetchedItems
                         val hasNext = items.last().overallIndex < picAmount
                         val hasPrev = items.first().overallIndex > 1
                         val initialIndex =
-                            items.indexOfFirst { it.picId == data.data_.picId }.takeIf { it != -1 }
-                                ?: (data.data_.picIndex - 1)
+                            items.indexOfFirst { it.picId == data.data.picId }.takeIf { it != -1 }
+                                ?: (data.data.picIndex - 1)
                         PhotoViewPartialChange.Init.Success(
                             hasPrev = hasPrev,
                             hasNext = hasNext,
                             totalAmount = picAmount,
                             items = items,
                             initialIndex = initialIndex,
-                            loadPicPageData = data.data_
+                            loadPicPageData = data.data
                         )
                     }
                     .catch {
