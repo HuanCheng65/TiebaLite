@@ -223,6 +223,7 @@ fun NetworkImage(
     photoViewData: PhotoViewData? = null,
     contentScale: ContentScale = ContentScale.Fit,
     skipNetworkCheck: Boolean = false,
+    enablePreview: Boolean = false,
 ) {
     val context = LocalContext.current
 
@@ -259,14 +260,16 @@ fun NetworkImage(
 
     var isLongPressing by remember { mutableStateOf(false) }
 
-    PreviewImage(
-        imageUri = imageUri,
-        show = isLongPressing,
-        layoutSizeProvider = { layoutSize },
-        layoutOffsetProvider = { layoutOffset },
-        imageAspectRatioProvider = { imageAspectRatio },
-        originImageUri = photoViewData?.data?.originUrl
-    )
+    if (enablePreview) {
+        PreviewImage(
+            imageUri = imageUri,
+            show = isLongPressing,
+            layoutSizeProvider = { layoutSize },
+            layoutOffsetProvider = { layoutOffset },
+            imageAspectRatioProvider = { imageAspectRatio },
+            originImageUri = photoViewData?.data?.originUrl
+        )
+    }
 
     Box(
         modifier = Modifier
@@ -329,6 +332,7 @@ fun NetworkImage(
     photoViewDataProvider: (() -> PhotoViewData)? = null,
     contentScale: ContentScale = ContentScale.Fit,
     skipNetworkCheck: Boolean = false,
+    enablePreview: Boolean = false,
 ) {
     val imageUri by rememberUpdatedState(newValue = imageUriProvider())
     val photoViewData by rememberUpdatedState(newValue = photoViewDataProvider?.invoke())
@@ -340,5 +344,6 @@ fun NetworkImage(
         photoViewData = photoViewData,
         contentScale = contentScale,
         skipNetworkCheck = skipNetworkCheck,
+        enablePreview = enablePreview
     )
 }

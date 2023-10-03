@@ -1,6 +1,7 @@
 package com.huanchengfly.tieba.post.ui.widgets.compose
 
 import android.graphics.drawable.Drawable
+import androidx.annotation.DrawableRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.padding
@@ -17,6 +18,7 @@ import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.github.panpf.sketch.compose.AsyncImage
@@ -40,14 +42,38 @@ fun AvatarIcon(
     icon: ImageVector,
     size: Dp,
     contentDescription: String?,
+    modifier: Modifier = Modifier,
     iconSize: Dp = 24.dp,
     color: Color = LocalContentColor.current.copy(alpha = LocalContentAlpha.current),
     backgroundColor: Color = Color.Transparent,
     shape: Shape = CircleShape,
-    modifier: Modifier = Modifier,
 ) {
     Icon(
         imageVector = icon,
+        contentDescription = contentDescription,
+        tint = color,
+        modifier = modifier
+            .size(size)
+            .clip(shape)
+            .background(color = backgroundColor)
+            .padding((size - iconSize) / 2),
+    )
+}
+
+@Composable
+fun AvatarIcon(
+    @DrawableRes
+    resId: Int,
+    size: Dp,
+    contentDescription: String?,
+    modifier: Modifier = Modifier,
+    iconSize: Dp = 24.dp,
+    color: Color = LocalContentColor.current.copy(alpha = LocalContentAlpha.current),
+    backgroundColor: Color = Color.Transparent,
+    shape: Shape = CircleShape,
+) {
+    Icon(
+        imageVector = ImageVector.vectorResource(id = resId),
         contentDescription = contentDescription,
         tint = color,
         modifier = modifier

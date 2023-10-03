@@ -488,7 +488,8 @@ private fun ThreadMedia(
                                 .fillMaxHeight()
                                 .weight(1f),
                             photoViewData = photoViewData,
-                            contentScale = ContentScale.Crop
+                            contentScale = ContentScale.Crop,
+                            enablePreview = true
                         )
                     }
                 }

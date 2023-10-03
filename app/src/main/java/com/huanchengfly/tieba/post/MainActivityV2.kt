@@ -9,6 +9,7 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
@@ -19,9 +20,16 @@ import androidx.compose.animation.core.AnimationSpec
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.VisibilityThreshold
 import androidx.compose.animation.core.spring
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.ModalBottomSheetValue
 import androidx.compose.material.Surface
 import androidx.compose.material.SwipeableDefaults
@@ -30,6 +38,7 @@ import androidx.compose.material.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.compositionLocalOf
@@ -64,6 +73,10 @@ import com.huanchengfly.tieba.post.arch.BaseComposeActivity
 import com.huanchengfly.tieba.post.arch.GlobalEvent
 import com.huanchengfly.tieba.post.arch.emitGlobalEvent
 import com.huanchengfly.tieba.post.arch.onGlobalEvent
+import com.huanchengfly.tieba.post.components.ClipBoardForumLink
+import com.huanchengfly.tieba.post.components.ClipBoardLink
+import com.huanchengfly.tieba.post.components.ClipBoardLinkDetector
+import com.huanchengfly.tieba.post.components.ClipBoardThreadLink
 import com.huanchengfly.tieba.post.services.NotifyJobService
 import com.huanchengfly.tieba.post.ui.common.theme.compose.ExtendedTheme
 import com.huanchengfly.tieba.post.ui.page.NavGraphs
@@ -72,17 +85,23 @@ import com.huanchengfly.tieba.post.ui.utils.DevicePosture
 import com.huanchengfly.tieba.post.ui.utils.isBookPosture
 import com.huanchengfly.tieba.post.ui.utils.isSeparating
 import com.huanchengfly.tieba.post.ui.widgets.compose.AlertDialog
+import com.huanchengfly.tieba.post.ui.widgets.compose.Avatar
+import com.huanchengfly.tieba.post.ui.widgets.compose.AvatarIcon
+import com.huanchengfly.tieba.post.ui.widgets.compose.Dialog
 import com.huanchengfly.tieba.post.ui.widgets.compose.DialogNegativeButton
 import com.huanchengfly.tieba.post.ui.widgets.compose.DialogPositiveButton
+import com.huanchengfly.tieba.post.ui.widgets.compose.Sizes
 import com.huanchengfly.tieba.post.ui.widgets.compose.rememberDialogState
 import com.huanchengfly.tieba.post.utils.AccountUtil
 import com.huanchengfly.tieba.post.utils.ClientUtils
 import com.huanchengfly.tieba.post.utils.JobServiceUtil
 import com.huanchengfly.tieba.post.utils.PermissionUtils
 import com.huanchengfly.tieba.post.utils.PickMediasRequest
+import com.huanchengfly.tieba.post.utils.QuickPreviewUtil
 import com.huanchengfly.tieba.post.utils.ThemeUtil
 import com.huanchengfly.tieba.post.utils.TiebaUtil
 import com.huanchengfly.tieba.post.utils.isIgnoringBatteryOptimizations
+import com.huanchengfly.tieba.post.utils.launchUrl
 import com.huanchengfly.tieba.post.utils.newIntentFilter
 import com.huanchengfly.tieba.post.utils.registerPickMediasLauncher
 import com.huanchengfly.tieba.post.utils.requestIgnoreBatteryOptimizations
@@ -169,6 +188,15 @@ class MainActivityV2 : BaseComposeActivity() {
             )
     }
 
+    private var myNavCollector: NavHostController? = null
+
+    override fun onNewIntent(intent: Intent?) {
+        super.onNewIntent(intent)
+        intent?.let {
+            myNavCollector?.handleDeepLink(it)
+        }
+    }
+
     private fun fetchAccount() {
         lifecycleScope.launch(Dispatchers.Main) {
             if (AccountUtil.isLoggedIn()) {
@@ -239,10 +267,99 @@ class MainActivityV2 : BaseComposeActivity() {
         initAutoSign()
     }
 
+    private fun openClipBoardLink(link: ClipBoardLink) {
+        when (link) {
+            is ClipBoardThreadLink -> {
+                myNavCollector?.navigate(Uri.parse("tblite://thread/${link.threadId}"))
+            }
+
+            is ClipBoardForumLink -> {
+                myNavCollector?.navigate(Uri.parse("tblite://forum/${link.forumName}"))
+            }
+
+            else -> {
+                launchUrl(this, link.url)
+            }
+        }
+    }
+
+    @Composable
+    private fun ClipBoardDetectDialog() {
+        val previewInfo by ClipBoardLinkDetector.previewInfoStateFlow.collectAsState()
+
+        val dialogState = rememberDialogState()
+
+        LaunchedEffect(previewInfo) {
+            if (previewInfo != null) {
+                dialogState.show()
+            }
+        }
+
+        Dialog(
+            dialogState = dialogState,
+            title = {
+                Text(text = stringResource(id = R.string.title_dialog_clip_board_tieba_url))
+            },
+            buttons = {
+                DialogPositiveButton(text = stringResource(id = R.string.button_open)) {
+                    previewInfo?.let {
+                        openClipBoardLink(it.clipBoardLink)
+                    }
+                }
+                DialogNegativeButton(text = stringResource(id = R.string.btn_close))
+            },
+            content = {
+                previewInfo?.let {
+                    Surface(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 24.dp),
+                        border = BorderStroke(1.dp, ExtendedTheme.colors.divider),
+                        shape = RoundedCornerShape(6.dp)
+                    ) {
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.spacedBy(16.dp),
+                            modifier = Modifier.padding(16.dp)
+                        ) {
+                            it.icon?.let { icon ->
+                                if (icon.type == QuickPreviewUtil.Icon.TYPE_DRAWABLE_RES) {
+                                    AvatarIcon(
+                                        resId = icon.res,
+                                        size = Sizes.Medium,
+                                        contentDescription = null
+                                    )
+                                } else {
+                                    Avatar(
+                                        data = icon.url,
+                                        size = Sizes.Medium,
+                                        contentDescription = null
+                                    )
+                                }
+                            }
+                            Column(
+                                modifier = Modifier.weight(1f),
+                                verticalArrangement = Arrangement.spacedBy(4.dp)
+                            ) {
+                                it.title?.let { title ->
+                                    Text(text = title, style = MaterialTheme.typography.subtitle1)
+                                }
+                                it.subtitle?.let { subtitle ->
+                                    Text(text = subtitle, style = MaterialTheme.typography.body2)
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+        )
+    }
+
     @OptIn(ExperimentalMaterialNavigationApi::class)
     @Composable
     override fun Content() {
         val okSignAlertDialogState = rememberDialogState()
+        ClipBoardDetectDialog()
         AlertDialog(
             dialogState = okSignAlertDialogState,
             title = { Text(text = stringResource(id = R.string.title_dialog_oksign_battery_optimization)) },
@@ -278,6 +395,9 @@ class MainActivityV2 : BaseComposeActivity() {
         TiebaLiteLocalProvider {
             TranslucentThemeBackground {
                 val navController = rememberNavController()
+                SideEffect {
+                    myNavCollector = navController
+                }
                 val engine = TiebaNavHostDefaults.rememberNavHostEngine()
                 val navigator = TiebaNavHostDefaults.rememberBottomSheetNavigator()
                 val currentDestination by navController.currentDestinationAsState()

@@ -165,6 +165,7 @@ import com.huanchengfly.tieba.post.utils.StringUtil.getShortNumString
 import com.huanchengfly.tieba.post.utils.TiebaUtil
 import com.huanchengfly.tieba.post.utils.Util.getIconColorByLevel
 import com.huanchengfly.tieba.post.utils.appPreferences
+import com.ramcosta.composedestinations.annotation.DeepLink
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import kotlinx.collections.immutable.ImmutableList
@@ -400,7 +401,11 @@ data class ThreadPageFromStoreExtra(
 ) : ThreadPageExtra
 
 @OptIn(ExperimentalFoundationApi::class, ExperimentalMaterialApi::class)
-@Destination
+@Destination(
+    deepLinks = [
+        DeepLink(uriPattern = "tblite://thread/{threadId}"),
+    ]
+)
 @Composable
 fun ThreadPage(
     threadId: Long,

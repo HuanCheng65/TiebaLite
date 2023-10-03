@@ -736,4 +736,5 @@
     <string name="title_hide_media">收起贴子列表的图片和视频</string>
     <string name="title_lift_up_bottom_bar">全面屏优化</string>
     <string name="summary_lift_up_bottom_bar">略微抬起贴子页面底栏以方便点按</string>
+    <string name="button_open">打开</string>
 </resources>
