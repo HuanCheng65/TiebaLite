@@ -225,6 +225,7 @@ fun BlockListPage(
         HorizontalPager(
             state = pagerState,
             modifier = Modifier.fillMaxSize(),
+            key = { it },
             contentPadding = paddingValues,
             verticalAlignment = Alignment.Top
         ) { position ->

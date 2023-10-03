@@ -834,6 +834,7 @@ fun ForumPage(
                         HorizontalPager(
                             state = pagerState,
                             modifier = Modifier.fillMaxSize(),
+                            key = { it },
                             verticalAlignment = Alignment.Top,
                             userScrollEnabled = true,
                         ) {
