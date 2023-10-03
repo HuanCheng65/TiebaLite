@@ -80,7 +80,6 @@ import com.huanchengfly.tieba.post.components.ClipBoardThreadLink
 import com.huanchengfly.tieba.post.services.NotifyJobService
 import com.huanchengfly.tieba.post.ui.common.theme.compose.ExtendedTheme
 import com.huanchengfly.tieba.post.ui.page.NavGraphs
-import com.huanchengfly.tieba.post.ui.page.destinations.MainPageDestination
 import com.huanchengfly.tieba.post.ui.utils.DevicePosture
 import com.huanchengfly.tieba.post.ui.utils.isBookPosture
 import com.huanchengfly.tieba.post.ui.utils.isSeparating
@@ -110,7 +109,6 @@ import com.microsoft.appcenter.analytics.Analytics
 import com.ramcosta.composedestinations.DestinationsNavHost
 import com.ramcosta.composedestinations.animations.defaults.RootNavGraphDefaultAnimations
 import com.ramcosta.composedestinations.animations.rememberAnimatedNavHostEngine
-import com.ramcosta.composedestinations.navigation.dependency
 import com.ramcosta.composedestinations.spec.DestinationSpec
 import com.ramcosta.composedestinations.utils.currentDestinationAsState
 import dagger.hilt.android.AndroidEntryPoint
@@ -146,7 +144,7 @@ fun rememberBottomSheetNavigator(
         animationSpec = animationSpec,
         skipHalfExpanded = skipHalfExpanded
     )
-    return remember { BottomSheetNavigator(sheetState) }
+    return remember(sheetState) { BottomSheetNavigator(sheetState) }
 }
 
 @AndroidEntryPoint
@@ -429,9 +427,6 @@ class MainActivityV2 : BaseComposeActivity() {
                             navController = navController,
                             navGraph = NavGraphs.root,
                             engine = engine,
-                            dependenciesContainerBuilder = {
-                                dependency(MainPageDestination) { this@MainActivityV2 }
-                            }
                         )
                     }
                 }
