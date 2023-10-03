@@ -222,7 +222,10 @@ object ThemeUtil {
 
     @JvmStatic
     fun isNightMode(theme: String): Boolean {
-        return theme.lowercase(Locale.getDefault()).contains("dark")
+        return theme.lowercase(Locale.getDefault()).contains("dark") && !theme.contains(
+            THEME_TRANSLUCENT,
+            ignoreCase = true
+        )
     }
 
     fun isTranslucentTheme(): Boolean {
