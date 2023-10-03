@@ -589,55 +589,57 @@ fun ForumPage(
                     )
                 },
                 floatingActionButton = {
-                    FloatingActionButton(
-                        onClick = {
-                            when (context.appPreferences.forumFabFunction) {
-                                "refresh" -> {
-                                    coroutineScope.launch {
-                                        emitGlobalEventSuspend(
-                                            ForumThreadListUiEvent.BackToTop(
-                                                pagerState.currentPage == 1
-                                            )
-                                        )
-                                        emitGlobalEventSuspend(
-                                            ForumThreadListUiEvent.Refresh(
-                                                pagerState.currentPage == 1,
-                                                getSortType(
-                                                    context,
-                                                    forumName
+                    if (context.appPreferences.forumFabFunction != "hide") {
+                        FloatingActionButton(
+                            onClick = {
+                                when (context.appPreferences.forumFabFunction) {
+                                    "refresh" -> {
+                                        coroutineScope.launch {
+                                            emitGlobalEventSuspend(
+                                                ForumThreadListUiEvent.BackToTop(
+                                                    pagerState.currentPage == 1
                                                 )
                                             )
-                                        )
-                                    }
-                                }
-
-                                "back_to_top" -> {
-                                    coroutineScope.launch {
-                                        emitGlobalEvent(
-                                            ForumThreadListUiEvent.BackToTop(
-                                                pagerState.currentPage == 1
+                                            emitGlobalEventSuspend(
+                                                ForumThreadListUiEvent.Refresh(
+                                                    pagerState.currentPage == 1,
+                                                    getSortType(
+                                                        context,
+                                                        forumName
+                                                    )
+                                                )
                                             )
-                                        )
+                                        }
+                                    }
+
+                                    "back_to_top" -> {
+                                        coroutineScope.launch {
+                                            emitGlobalEvent(
+                                                ForumThreadListUiEvent.BackToTop(
+                                                    pagerState.currentPage == 1
+                                                )
+                                            )
+                                        }
+                                    }
+
+                                    else -> {
+                                        context.toastShort(R.string.toast_feature_unavailable)
                                     }
                                 }
-
-                                else -> {
-                                    context.toastShort(R.string.toast_feature_unavailable)
-                                }
-                            }
-                        },
-                        backgroundColor = ExtendedTheme.colors.windowBackground,
-                        contentColor = ExtendedTheme.colors.primary,
-                        modifier = Modifier.navigationBarsPadding()
-                    ) {
-                        Icon(
-                            imageVector = when (context.appPreferences.forumFabFunction) {
-                                "refresh" -> Icons.Rounded.Refresh
-                                "back_to_top" -> Icons.Rounded.VerticalAlignTop
-                                else -> Icons.Rounded.Add
                             },
-                            contentDescription = null
-                        )
+                            backgroundColor = ExtendedTheme.colors.windowBackground,
+                            contentColor = ExtendedTheme.colors.primary,
+                            modifier = Modifier.navigationBarsPadding()
+                        ) {
+                            Icon(
+                                imageVector = when (context.appPreferences.forumFabFunction) {
+                                    "refresh" -> Icons.Rounded.Refresh
+                                    "back_to_top" -> Icons.Rounded.VerticalAlignTop
+                                    else -> Icons.Rounded.Add
+                                },
+                                contentDescription = null
+                            )
+                        }
                     }
                 }
             ) { contentPadding ->

@@ -168,7 +168,8 @@ fun HabitSettingsPage(
                     entries = mapOf(
                         "post" to stringResource(id = R.string.btn_post),
                         "refresh" to stringResource(id = R.string.btn_refresh),
-                        "back_to_top" to stringResource(id = R.string.btn_back_to_top)
+                        "back_to_top" to stringResource(id = R.string.btn_back_to_top),
+                        "hide" to stringResource(id = R.string.btn_hide)
                     )
                 )
             }

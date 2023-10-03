@@ -365,6 +365,11 @@ class ForumActivity : BaseActivity(), View.OnClickListener, OnRefreshedListener,
                 addMaskAnimation(maskRadius = 50f.dpToPxFloat())
             }
         }.init()
+        if (appPreferences.forumFabFunction == "hide") {
+            fab.visibility = View.GONE
+        } else {
+            fab.visibility = View.VISIBLE
+        }
     }
 
     override fun setTitle(newTitle: String?) {
