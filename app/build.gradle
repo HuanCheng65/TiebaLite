@@ -259,7 +259,7 @@ dependencies {
     implementation "com.scwang.smart:refresh-header-material:2.0.1"
 
     implementation 'com.github.lwj1994:Matisse:0.5.3-20220115'
-    implementation 'com.github.getActivity:XXPermissions:16.5'
+    implementation 'com.github.getActivity:XXPermissions:18.3'
     implementation "com.gyf.immersionbar:immersionbar:3.0.0"
 
     implementation "com.github.yalantis:ucrop:2.2.8"
