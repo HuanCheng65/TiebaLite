@@ -1,0 +1,32 @@
+syntax = "proto3";
+
+package tieba;
+
+option java_package = "com.huanchengfly.tieba.post.api.models.protos";
+
+import "PbContent.proto";
+
+message RecommendForumInfo {
+  string avatar = 1;
+  uint64 forum_id = 2;
+  string forum_name = 3;
+  uint32 is_like = 4;
+  uint32 member_count = 5;
+  uint32 thread_count = 6;
+  string slogan = 7;
+  repeated PbContent content = 8;
+  uint32 forum_type = 9;
+  string authen = 10;
+  string recom_reason = 11;
+  uint32 is_brand_forum = 12;
+  string hot_text = 13;
+  string abtest_tag = 14;
+  string source = 15;
+  string extra = 16;
+  uint32 is_private_forum = 17;
+  string lv1_name = 18;
+  string lv2_name = 19;
+  string avatar_origin = 20;
+  uint64 hot_thread_id = 22;
+  int32 is_recommend_forum = 23;
+}

@@ -1,0 +1,14 @@
+syntax = "proto3";
+
+package tieba;
+
+option java_package = "com.huanchengfly.tieba.post.api.models.protos";
+
+message RankingParam {
+  int32 rank_type = 1;
+  int32 rank_code = 2;
+  string sort_type = 3;
+  int32 tab_id = 4;
+  int32 pn = 5;
+  int32 rn = 6;
+}

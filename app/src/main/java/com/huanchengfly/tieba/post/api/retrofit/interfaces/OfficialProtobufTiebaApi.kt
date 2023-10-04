@@ -8,6 +8,7 @@ import com.huanchengfly.tieba.post.api.models.protos.pbFloor.PbFloorResponse
 import com.huanchengfly.tieba.post.api.models.protos.pbPage.PbPageResponse
 import com.huanchengfly.tieba.post.api.models.protos.personalized.PersonalizedResponse
 import com.huanchengfly.tieba.post.api.models.protos.profile.ProfileResponse
+import com.huanchengfly.tieba.post.api.models.protos.searchSug.SearchSugResponse
 import com.huanchengfly.tieba.post.api.models.protos.threadList.ThreadListResponse
 import com.huanchengfly.tieba.post.api.models.protos.topicList.TopicListResponse
 import com.huanchengfly.tieba.post.api.models.protos.userLike.UserLikeResponse
@@ -73,4 +74,9 @@ interface OfficialProtobufTiebaApi {
     fun addPostFlow(
         @Body body: MyMultipartBody,
     ): Flow<AddPostResponse>
+
+    @POST("/c/s/searchSug?cmd=309438&format=protobuf")
+    fun searchSugFlow(
+        @Body body: MyMultipartBody,
+    ): Flow<SearchSugResponse>
 }

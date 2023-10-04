@@ -12,6 +12,7 @@ import com.huanchengfly.tieba.post.api.models.protos.pbFloor.PbFloorResponse
 import com.huanchengfly.tieba.post.api.models.protos.pbPage.PbPageResponse
 import com.huanchengfly.tieba.post.api.models.protos.personalized.PersonalizedResponse
 import com.huanchengfly.tieba.post.api.models.protos.profile.ProfileResponse
+import com.huanchengfly.tieba.post.api.models.protos.searchSug.SearchSugResponse
 import com.huanchengfly.tieba.post.api.models.protos.threadList.ThreadListResponse
 import com.huanchengfly.tieba.post.api.models.protos.topicList.TopicListResponse
 import com.huanchengfly.tieba.post.api.models.protos.userLike.UserLikeResponse
@@ -1378,6 +1379,17 @@ interface ITiebaApi {
         postId: Long,
         forumId: Long = 0L,
         page: Int = 1,
-        subPostId: Long = 0L
+        subPostId: Long = 0L,
     ): Flow<PbFloorResponse>
+
+    /**
+     * 搜索联想
+     *
+     * @param keyword 关键词
+     * @param isForum 是否为吧
+     */
+    fun searchSuggestionsFlow(
+        keyword: String,
+        isForum: Boolean = false,
+    ): Flow<SearchSugResponse>
 }

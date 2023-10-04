@@ -741,4 +741,5 @@
     <string name="summary_lift_up_bottom_bar">略微抬起贴子页面底栏以方便点按</string>
     <string name="button_open">打开</string>
     <string name="btn_hide">隐藏</string>
+    <string name="desc_search_sug">搜索联想：%s</string>
 </resources>

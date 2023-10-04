@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+package tieba;
+
+option java_package = "com.huanchengfly.tieba.post.api.models.protos";
+
+import "AlaLiveInfo.proto";
+
+message SugLiveInfo {
+  string word = 1;
+  AlaLiveInfo ala_info = 2;
+}

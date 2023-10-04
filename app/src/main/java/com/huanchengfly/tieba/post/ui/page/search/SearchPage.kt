@@ -23,6 +23,8 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.rememberScrollState
@@ -57,6 +59,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -93,6 +96,7 @@ import com.huanchengfly.tieba.post.ui.page.search.user.SearchUserPage
 import com.huanchengfly.tieba.post.ui.widgets.compose.BaseTextField
 import com.huanchengfly.tieba.post.ui.widgets.compose.Button
 import com.huanchengfly.tieba.post.ui.widgets.compose.ClickMenu
+import com.huanchengfly.tieba.post.ui.widgets.compose.Container
 import com.huanchengfly.tieba.post.ui.widgets.compose.LazyLoadHorizontalPager
 import com.huanchengfly.tieba.post.ui.widgets.compose.MyBackHandler
 import com.huanchengfly.tieba.post.ui.widgets.compose.MyScaffold
@@ -107,6 +111,8 @@ import kotlinx.collections.immutable.ImmutableMap
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.persistentMapOf
 import kotlinx.collections.immutable.toImmutableList
+import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.filterIsInstance
 import kotlinx.coroutines.launch
 
@@ -121,7 +127,7 @@ data class SearchPageItem(
     val onSelectedSortTypeChange: (Int) -> Unit = {},
 )
 
-@OptIn(ExperimentalFoundationApi::class)
+@OptIn(ExperimentalFoundationApi::class, FlowPreview::class)
 @Destination
 @Composable
 fun SearchPage(
@@ -144,7 +150,25 @@ fun SearchPage(
         prop1 = SearchUiState::isKeywordEmpty,
         initial = true
     )
+    val suggestions by viewModel.uiState.collectPartialAsState(
+        prop1 = SearchUiState::suggestions,
+        initial = persistentListOf()
+    )
+
+    val showSuggestions by remember {
+        derivedStateOf { suggestions.isNotEmpty() }
+    }
+
     var inputKeyword by remember { mutableStateOf("") }
+
+    LaunchedEffect(Unit) {
+        snapshotFlow { inputKeyword }
+            .debounce(500)
+            .collect {
+                viewModel.send(SearchUiIntent.KeywordInputChanged(it))
+            }
+    }
+
     LaunchedEffect(keyword) {
         if (keyword.isNotEmpty() && keyword != inputKeyword) {
             inputKeyword = keyword
@@ -265,24 +289,94 @@ fun SearchPage(
                     }
                 }
             } else {
-                Column(
+                if (showSuggestions) {
+                    SearchSuggestionList(
+                        suggestions = suggestions,
+                        onItemClick = {
+                            inputKeyword = it
+                            viewModel.send(SearchUiIntent.SubmitKeyword(it))
+                        }
+                    )
+                } else {
+                    Column(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .verticalScroll(rememberScrollState())
+                    ) {
+                        Container {
+                            SearchHistoryList(
+                                searchHistories = searchHistories,
+                                onSearchHistoryClick = {
+                                    inputKeyword = it.content
+                                    viewModel.send(SearchUiIntent.SubmitKeyword(it.content))
+                                },
+                                expanded = expanded,
+                                onToggleExpand = { expanded = !expanded },
+                                onDelete = { viewModel.send(SearchUiIntent.DeleteSearchHistory(it.id)) },
+                                onClear = { viewModel.send(SearchUiIntent.ClearSearchHistory) }
+                            )
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+@OptIn(ExperimentalFoundationApi::class)
+@Composable
+private fun SearchSuggestionList(
+    suggestions: ImmutableList<String>,
+    onItemClick: (String) -> Unit,
+) {
+    LazyColumn(
+        modifier = Modifier.fillMaxWidth()
+    ) {
+        items(
+            items = suggestions,
+            key = { it }
+        ) {
+            Container(
+                modifier = Modifier.animateItemPlacement()
+            ) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(16.dp),
                     modifier = Modifier
-                        .fillMaxSize()
-                        .verticalScroll(rememberScrollState())
+                        .clickable {
+                            onItemClick(it)
+                        }
+                        .padding(horizontal = 16.dp, vertical = 8.dp)
                 ) {
-                    SearchHistoryList(
-                        searchHistories = searchHistories,
-                        onSearchHistoryClick = {
-                            inputKeyword = it.content
-                            viewModel.send(SearchUiIntent.SubmitKeyword(it.content))
-                        },
-                        expanded = expanded,
-                        onToggleExpand = { expanded = !expanded },
-                        onDelete = { viewModel.send(SearchUiIntent.DeleteSearchHistory(it.id)) },
-                        onClear = { viewModel.send(SearchUiIntent.ClearSearchHistory) }
+                    Icon(
+                        imageVector = Icons.Rounded.Search,
+                        contentDescription = stringResource(id = R.string.desc_search_sug, it),
+                        tint = ExtendedTheme.colors.text
+                    )
+
+                    Text(
+                        text = it,
+                        style = MaterialTheme.typography.subtitle2,
+                        modifier = Modifier.weight(1f),
+                        color = ExtendedTheme.colors.text
                     )
                 }
             }
+        }
+    }
+}
+
+@Preview("SearchSuggestionList", backgroundColor = 0xFFFFFFFF)
+@Composable
+private fun SearchSuggestionListPreview() {
+    TiebaLiteTheme {
+        Box(
+            modifier = Modifier.background(ExtendedTheme.colors.topBar)
+        ) {
+            SearchSuggestionList(
+                suggestions = persistentListOf("1", "2", "3"),
+                onItemClick = {}
+            )
         }
     }
 }

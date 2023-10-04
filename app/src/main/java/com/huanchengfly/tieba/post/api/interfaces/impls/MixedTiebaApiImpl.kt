@@ -72,6 +72,9 @@ import com.huanchengfly.tieba.post.api.models.protos.personalized.PersonalizedRe
 import com.huanchengfly.tieba.post.api.models.protos.profile.ProfileRequest
 import com.huanchengfly.tieba.post.api.models.protos.profile.ProfileRequestData
 import com.huanchengfly.tieba.post.api.models.protos.profile.ProfileResponse
+import com.huanchengfly.tieba.post.api.models.protos.searchSug.SearchSugRequest
+import com.huanchengfly.tieba.post.api.models.protos.searchSug.SearchSugRequestData
+import com.huanchengfly.tieba.post.api.models.protos.searchSug.SearchSugResponse
 import com.huanchengfly.tieba.post.api.models.protos.threadList.AdParam
 import com.huanchengfly.tieba.post.api.models.protos.threadList.ThreadListRequest
 import com.huanchengfly.tieba.post.api.models.protos.threadList.ThreadListRequestData
@@ -1237,6 +1240,22 @@ object MixedTiebaApiImpl : ITiebaApi {
                 ),
                 clientVersion = ClientVersion.TIEBA_V12,
                 needSToken = false
+            )
+        )
+    }
+
+    override fun searchSuggestionsFlow(keyword: String, isForum: Boolean): Flow<SearchSugResponse> {
+        return RetrofitTiebaApi.OFFICIAL_PROTOBUF_TIEBA_V12_API.searchSugFlow(
+            buildProtobufRequestBody(
+                SearchSugRequest(
+                    SearchSugRequestData(
+                        common = buildCommonRequest(clientVersion = ClientVersion.TIEBA_V12),
+                        word = keyword,
+                        isforum = isForum.booleanToString()
+                    )
+                ),
+                clientVersion = ClientVersion.TIEBA_V12,
+                needSToken = true
             )
         )
     }
