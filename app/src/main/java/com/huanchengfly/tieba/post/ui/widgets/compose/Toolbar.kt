@@ -310,11 +310,11 @@ fun Toolbar(
                         actions()
                     }
                 },
-                navigationIcon = {
+                navigationIcon = (@Composable {
                     ProvideContentColor(color = ExtendedTheme.colors.onTopBar) {
                         navigationIcon?.invoke()
                     }
-                },
+                }).takeIf { navigationIcon != null },
                 backgroundColor = ExtendedTheme.colors.topBar,
                 contentColor = ExtendedTheme.colors.onTopBar,
                 elevation = 0.dp
