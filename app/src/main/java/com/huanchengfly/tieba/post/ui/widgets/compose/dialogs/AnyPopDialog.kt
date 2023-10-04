@@ -9,8 +9,13 @@ import android.view.WindowManager
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.Animatable
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.spring
 import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
+import androidx.compose.animation.scaleIn
+import androidx.compose.animation.scaleOut
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutHorizontally
@@ -136,6 +141,7 @@ private fun DialogFullScreen(
                     DirectionState.TOP -> Alignment.TopCenter
                     DirectionState.LEFT -> Alignment.CenterStart
                     DirectionState.RIGHT -> Alignment.CenterEnd
+                    DirectionState.CENTER -> Alignment.Center
                     else -> Alignment.BottomCenter
                 }
             ) {
@@ -155,12 +161,26 @@ private fun DialogFullScreen(
                         DirectionState.TOP -> slideInVertically(initialOffsetY = { -it })
                         DirectionState.LEFT -> slideInHorizontally(initialOffsetX = { -it })
                         DirectionState.RIGHT -> slideInHorizontally(initialOffsetX = { it })
+                        DirectionState.CENTER -> fadeIn(
+                            animationSpec = spring(stiffness = Spring.StiffnessMediumLow)
+                        ) + scaleIn(
+                            animationSpec = spring(stiffness = Spring.StiffnessMediumLow),
+                            initialScale = 0.8F
+                        )
+
                         else -> slideInVertically(initialOffsetY = { it })
                     },
                     exit = when (properties.direction) {
                         DirectionState.TOP -> fadeOut() + slideOutVertically(targetOffsetY = { -it })
                         DirectionState.LEFT -> fadeOut() + slideOutHorizontally(targetOffsetX = { -it })
                         DirectionState.RIGHT -> fadeOut() + slideOutHorizontally(targetOffsetX = { it })
+                        DirectionState.CENTER -> fadeOut(
+                            animationSpec = spring(stiffness = Spring.StiffnessMediumLow)
+                        ) + scaleOut(
+                            animationSpec = spring(stiffness = Spring.StiffnessMediumLow),
+                            targetScale = 0.8F
+                        )
+
                         else -> fadeOut() + slideOutVertically(targetOffsetY = { it })
                     }
                 ) {
@@ -251,7 +271,8 @@ enum class DirectionState {
     TOP,
     LEFT,
     RIGHT,
-    BOTTOM
+    BOTTOM,
+    CENTER
 }
 
 private fun Modifier.clickOutSideModifier(

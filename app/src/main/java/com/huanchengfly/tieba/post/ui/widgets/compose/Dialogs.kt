@@ -40,9 +40,12 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.huanchengfly.tieba.post.R
+import com.huanchengfly.tieba.post.arch.BaseComposeActivity.Companion.LocalWindowSizeClass
 import com.huanchengfly.tieba.post.ui.common.theme.compose.ExtendedTheme
+import com.huanchengfly.tieba.post.ui.common.windowsizeclass.WindowWidthSizeClass
 import com.huanchengfly.tieba.post.ui.widgets.compose.dialogs.AnyPopDialog
 import com.huanchengfly.tieba.post.ui.widgets.compose.dialogs.AnyPopDialogProperties
+import com.huanchengfly.tieba.post.ui.widgets.compose.dialogs.DirectionState
 import com.huanchengfly.tieba.post.ui.widgets.compose.picker.TimePicker
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -340,6 +343,7 @@ fun Dialog(
                 isActiveClose = true
             },
         )
+        val windowWidthSizeClass = LocalWindowSizeClass.current.widthSizeClass
         AnyPopDialog(
             isActiveClose = isActiveClose,
             onDismiss = {
@@ -348,13 +352,24 @@ fun Dialog(
                 showDialog = false
             },
             properties = AnyPopDialogProperties(
+                direction = if (windowWidthSizeClass == WindowWidthSizeClass.Compact) {
+                    DirectionState.BOTTOM
+                } else {
+                    DirectionState.CENTER
+                },
                 dismissOnBackPress = cancelable,
                 dismissOnClickOutside = cancelableOnTouchOutside
             )
         ) {
             Column(
                 modifier = modifier
-                    .fillMaxWidth()
+                    .fillMaxWidth(
+                        fraction = if (windowWidthSizeClass == WindowWidthSizeClass.Compact) {
+                            1f
+                        } else {
+                            0.6f
+                        }
+                    )
                     .padding(16.dp)
                     .background(
                         color = ExtendedTheme.colors.windowBackground,
