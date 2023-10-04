@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.requiredWidthIn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.MaterialTheme
@@ -59,7 +60,9 @@ fun TipScreen(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(8.dp, alignment = Alignment.CenterVertically)
         ) {
-            image()
+            Column(modifier = Modifier.requiredWidthIn(max = 400.dp)) {
+                image()
+            }
             ProvideTextStyle(
                 value = MaterialTheme.typography.h6.copy(
                     color = ExtendedTheme.colors.text,
