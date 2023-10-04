@@ -195,7 +195,7 @@ fun NavigationDrawerContent(
                     .verticalScroll(rememberScrollState()),
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
-                navigationItems.forEachIndexed { index, navigationItem ->
+                navigationItems.fastForEachIndexed { index, navigationItem ->
                     NavigationDrawerItem(
                         selected = index == currentPosition,
                         onClick = {
@@ -214,7 +214,7 @@ fun NavigationDrawerContent(
                                         atEnd = index == currentPosition
                                     ),
                                     contentDescription = navigationItem.title(index == currentPosition),
-                                    modifier = Modifier.size(16.dp),
+                                    modifier = Modifier.size(24.dp),
                                 )
                                 if (navigationItem.badge) {
                                     Text(
