@@ -14,6 +14,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
+import com.huanchengfly.tieba.post.ui.widgets.compose.Container
 
 lateinit var LocalPrefsDataStore: ProvidableCompositionLocal<DataStore<Preferences>>
 
@@ -37,23 +38,25 @@ fun PrefsScreen(
 
     // Now the dataStore can be accessed by calling LocalPrefsDataStore.current from any child Pref
     CompositionLocalProvider(LocalPrefsDataStore provides dataStore) {
-        Column {
-            Spacer(modifier = Modifier.height(12.dp))
-            LazyColumn(modifier = modifier.fillMaxSize()) {
+        Container {
+            Column {
+                Spacer(modifier = Modifier.height(12.dp))
+                LazyColumn(modifier = modifier.fillMaxSize()) {
 
-                items(prefsScope.prefsItems.size) { index ->
-                    prefsScope.getPrefsItem(index)()
+                    items(prefsScope.prefsItems.size) { index ->
+                        prefsScope.getPrefsItem(index)()
 
-                    if (dividerThickness != 0.dp
-                        && index != prefsScope.prefsItems.size - 1
-                        && !prefsScope.headerIndexes.contains(index)
-                        && !prefsScope.headerIndexes.contains(index + 1)
-                        && !prefsScope.footerIndexes.contains(index)
-                    ) {
-                        Divider(
-                            thickness = dividerThickness,
-                            indent = dividerIndent
-                        )
+                        if (dividerThickness != 0.dp
+                            && index != prefsScope.prefsItems.size - 1
+                            && !prefsScope.headerIndexes.contains(index)
+                            && !prefsScope.headerIndexes.contains(index + 1)
+                            && !prefsScope.footerIndexes.contains(index)
+                        ) {
+                            Divider(
+                                thickness = dividerThickness,
+                                indent = dividerIndent
+                            )
+                        }
                     }
                 }
             }

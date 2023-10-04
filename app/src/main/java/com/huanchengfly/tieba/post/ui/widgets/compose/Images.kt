@@ -4,6 +4,7 @@ import android.content.Context
 import android.graphics.Color
 import android.util.Log
 import androidx.compose.animation.core.Animatable
+import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.spring
 import androidx.compose.foundation.gestures.detectDragGesturesAfterLongPress
 import androidx.compose.foundation.gestures.detectTapGestures
@@ -125,7 +126,9 @@ private fun PreviewImage(
         LaunchedEffect(showPreview) {
             animProgress.animateTo(
                 if (showPreview) 1f else 0f,
-                animationSpec = spring()
+                animationSpec = spring(
+                    stiffness = Spring.StiffnessMedium,
+                )
             )
             if (!showPreview) {
                 showFullScreenLayout = false

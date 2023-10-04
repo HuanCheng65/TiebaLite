@@ -390,7 +390,7 @@ private fun ThreadMedia(
     val singleMediaFraction = remember(windowWidthSizeClass) {
         if (windowWidthSizeClass == WindowWidthSizeClass.Compact)
             1f
-        else 0.6f
+        else 0.5f
     }
 
     if (isVideo) {

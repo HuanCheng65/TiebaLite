@@ -33,12 +33,10 @@ import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -48,7 +46,6 @@ import androidx.compose.ui.unit.dp
 import com.huanchengfly.tieba.post.R
 import com.huanchengfly.tieba.post.api.models.protos.ThreadInfo
 import com.huanchengfly.tieba.post.api.models.protos.personalized.DislikeReason
-import com.huanchengfly.tieba.post.arch.BaseComposeActivity.Companion.LocalWindowSizeClass
 import com.huanchengfly.tieba.post.arch.CommonUiEvent.ScrollToTop.bindScrollToTopEvent
 import com.huanchengfly.tieba.post.arch.GlobalEvent
 import com.huanchengfly.tieba.post.arch.ImmutableHolder
@@ -58,13 +55,13 @@ import com.huanchengfly.tieba.post.arch.onGlobalEvent
 import com.huanchengfly.tieba.post.arch.pageViewModel
 import com.huanchengfly.tieba.post.ui.common.theme.compose.ExtendedTheme
 import com.huanchengfly.tieba.post.ui.common.theme.compose.pullRefreshIndicator
-import com.huanchengfly.tieba.post.ui.common.windowsizeclass.WindowWidthSizeClass
 import com.huanchengfly.tieba.post.ui.models.ThreadItemData
 import com.huanchengfly.tieba.post.ui.page.LocalNavigator
 import com.huanchengfly.tieba.post.ui.page.destinations.ForumPageDestination
 import com.huanchengfly.tieba.post.ui.page.destinations.ThreadPageDestination
 import com.huanchengfly.tieba.post.ui.widgets.compose.BlockTip
 import com.huanchengfly.tieba.post.ui.widgets.compose.BlockableContent
+import com.huanchengfly.tieba.post.ui.widgets.compose.Container
 import com.huanchengfly.tieba.post.ui.widgets.compose.FeedCard
 import com.huanchengfly.tieba.post.ui.widgets.compose.LazyLoad
 import com.huanchengfly.tieba.post.ui.widgets.compose.LoadMoreLayout
@@ -261,15 +258,7 @@ private fun FeedList(
     val data = dataProvider()
     val refreshPosition = refreshPositionProvider()
     val hiddenThreadIds = hiddenThreadIdsProvider()
-    val windowWidthSizeClass by rememberUpdatedState(newValue = LocalWindowSizeClass.current.widthSizeClass)
-    val itemFraction by remember {
-        derivedStateOf {
-            when (windowWidthSizeClass) {
-                WindowWidthSizeClass.Expanded -> 0.5f
-                else -> 1f
-            }
-        }
-    }
+
     MyLazyColumn(
         state = state,
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -301,9 +290,7 @@ private fun FeedList(
                 isRefreshPosition,
                 isNotLast
             ) { !isHidden && !isRefreshPosition && isNotLast }
-            Column(
-                modifier = Modifier.fillMaxWidth(itemFraction)
-            ) {
+            Container {
                 AnimatedVisibility(
                     visible = !isHidden,
                     enter = EnterTransition.None,
@@ -316,33 +303,35 @@ private fun FeedList(
                             .fillMaxWidth()
                             .padding(vertical = 8.dp, horizontal = 16.dp)
                     ) {
-                        FeedCard(
-                            item = item,
-                            onClick = onItemClick,
-                            onReplyClick = onItemReplyClick,
-                            onAgree = onAgree,
-                            onClickForum = remember {
-                                {
-                                    onOpenForum(it.name)
+                        Column {
+                            FeedCard(
+                                item = item,
+                                onClick = onItemClick,
+                                onReplyClick = onItemReplyClick,
+                                onAgree = onAgree,
+                                onClickForum = remember {
+                                    {
+                                        onOpenForum(it.name)
+                                    }
+                                }
+                            ) {
+                                if (personalized != null) {
+                                    Dislike(
+                                        personalized = personalized,
+                                        onDislike = { clickTime, reasons ->
+                                            onDislike(item.get(), clickTime, reasons)
+                                        }
+                                    )
                                 }
                             }
-                        ) {
-                            if (personalized != null) {
-                                Dislike(
-                                    personalized = personalized,
-                                    onDislike = { clickTime, reasons ->
-                                        onDislike(item.get(), clickTime, reasons)
-                                    }
+                            if (showDivider) {
+                                VerticalDivider(
+                                    modifier = Modifier.padding(horizontal = 16.dp),
+                                    thickness = 2.dp
                                 )
                             }
                         }
                     }
-                }
-                if (showDivider) {
-                    VerticalDivider(
-                        modifier = Modifier.padding(horizontal = 16.dp),
-                        thickness = 2.dp
-                    )
                 }
                 if (isRefreshPosition) {
                     RefreshTip(onRefresh)
