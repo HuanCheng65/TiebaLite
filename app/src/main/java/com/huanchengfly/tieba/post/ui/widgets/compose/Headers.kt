@@ -86,30 +86,26 @@ fun UserHeader(
             modifier = Modifier.weight(1f),
             verticalArrangement = Arrangement.spacedBy(2.dp)
         ) {
-            Box(modifier = clickableModifier) {
+            ProvideTextStyle(
+                value = MaterialTheme.typography.subtitle1.merge(
+                    TextStyle(
+                        color = ExtendedTheme.colors.text,
+                        fontSize = 13.sp
+                    )
+                )
+            ) {
+                name()
+            }
+            if (desc != null) {
                 ProvideTextStyle(
-                    value = MaterialTheme.typography.subtitle1.merge(
+                    value = MaterialTheme.typography.caption.merge(
                         TextStyle(
-                            color = ExtendedTheme.colors.text,
-                            fontSize = 13.sp
+                            color = ExtendedTheme.colors.textSecondary,
+                            fontSize = 11.sp
                         )
                     )
                 ) {
-                    name()
-                }
-            }
-            if (desc != null) {
-                Box(modifier = clickableModifier) {
-                    ProvideTextStyle(
-                        value = MaterialTheme.typography.caption.merge(
-                            TextStyle(
-                                color = ExtendedTheme.colors.textSecondary,
-                                fontSize = 11.sp
-                            )
-                        )
-                    ) {
-                        desc()
-                    }
+                    desc()
                 }
             }
         }
