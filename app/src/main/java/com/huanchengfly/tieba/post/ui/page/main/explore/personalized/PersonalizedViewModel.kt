@@ -145,7 +145,7 @@ class PersonalizedViewModel @Inject constructor() :
 }
 
 sealed interface PersonalizedUiIntent : UiIntent {
-    object Refresh : PersonalizedUiIntent
+    data object Refresh : PersonalizedUiIntent
 
     data class LoadMore(val page: Int) : PersonalizedUiIntent
 
@@ -282,10 +282,14 @@ sealed interface PersonalizedPartialChange : PartialChange<PersonalizedUiState> 
                     data = (data + oldState.data).toImmutableList(),
                     refreshPosition = if (oldState.data.isEmpty()) 0 else data.size
                 )
-                is Failure -> oldState.copy(isRefreshing = false)
+
+                is Failure -> oldState.copy(
+                    isRefreshing = false,
+                    error = error.wrapImmutable()
+                )
             }
 
-        object Start: Refresh()
+        data object Start : Refresh()
 
         data class Success(
             val data: List<ThreadItemData>,
@@ -305,10 +309,14 @@ sealed interface PersonalizedPartialChange : PartialChange<PersonalizedUiState> 
                     currentPage = currentPage,
                     data = (oldState.data + data).toImmutableList(),
                 )
-                is Failure -> oldState.copy(isLoadingMore = false)
+
+                is Failure -> oldState.copy(
+                    isLoadingMore = false,
+                    error = error.wrapImmutable()
+                )
             }
 
-        object Start: LoadMore()
+        data object Start : LoadMore()
 
         data class Success(
             val currentPage: Int,
@@ -325,6 +333,7 @@ sealed interface PersonalizedPartialChange : PartialChange<PersonalizedUiState> 
 data class PersonalizedUiState(
     val isRefreshing: Boolean = true,
     val isLoadingMore: Boolean = false,
+    val error: ImmutableHolder<Throwable>? = null,
     val currentPage: Int = 1,
     val data: ImmutableList<ThreadItemData> = persistentListOf(),
     val hiddenThreadIds: ImmutableList<Long> = persistentListOf(),
