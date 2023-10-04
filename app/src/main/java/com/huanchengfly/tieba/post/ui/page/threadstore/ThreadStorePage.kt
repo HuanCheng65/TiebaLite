@@ -52,6 +52,7 @@ import com.huanchengfly.tieba.post.ui.common.theme.compose.pullRefreshIndicator
 import com.huanchengfly.tieba.post.ui.page.destinations.ThreadPageDestination
 import com.huanchengfly.tieba.post.ui.page.thread.ThreadPageFrom
 import com.huanchengfly.tieba.post.ui.page.thread.ThreadPageFromStoreExtra
+import com.huanchengfly.tieba.post.ui.page.thread.ThreadSortType
 import com.huanchengfly.tieba.post.ui.widgets.compose.Avatar
 import com.huanchengfly.tieba.post.ui.widgets.compose.BackNavigationIcon
 import com.huanchengfly.tieba.post.ui.widgets.compose.ErrorScreen
@@ -195,6 +196,7 @@ fun ThreadStorePage(
                                             threadId = info.threadId.toLong(),
                                             postId = info.markPid.toLong(),
                                             seeLz = context.appPreferences.collectThreadSeeLz,
+                                            sortType = if(context.appPreferences.collectThreadDescSort) ThreadSortType.SORT_TYPE_DESC else ThreadSortType.SORT_TYPE_DEFAULT,
                                             from = ThreadPageFrom.FROM_STORE,
                                             extra = ThreadPageFromStoreExtra(
                                                 maxPid = info.maxPid.toLong(),
