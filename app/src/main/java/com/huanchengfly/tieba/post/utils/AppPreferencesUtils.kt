@@ -77,6 +77,11 @@ open class AppPreferencesUtils private constructor(ctx: Context) {
         key = "collect_thread_see_lz"
     )
 
+    var collectThreadDescSort by DataStoreDelegates.boolean(
+        defaultValue = false,
+        key = "collect_thread_desc_sort"
+    )
+
     var customPrimaryColor by DataStoreDelegates.string(key = "custom_primary_color")
 
     var customStatusBarFontDark by DataStoreDelegates.boolean(

@@ -15,6 +15,7 @@ import androidx.compose.material.icons.outlined.SecurityUpdateWarning
 import androidx.compose.material.icons.outlined.SpeakerNotesOff
 import androidx.compose.material.icons.outlined.StarOutline
 import androidx.compose.material.icons.outlined.Verified
+import androidx.compose.material.icons.rounded.Sort
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
@@ -223,6 +224,24 @@ fun HabitSettingsPage(
                     },
                     summaryOn = stringResource(id = R.string.tip_collect_thread_see_lz_on),
                     summaryOff = stringResource(id = R.string.tip_collect_thread_see_lz)
+                )
+            }
+            prefsItem {
+                SwitchPref(
+                    key = "collect_thread_desc_sort",
+                    title = stringResource(id = R.string.settings_collect_thread_desc_sort),
+                    defaultChecked = false,
+                    leadingIcon = {
+                        LeadingIcon {
+                            AvatarIcon(
+                                icon = Icons.Rounded.Sort,
+                                size = Sizes.Small,
+                                contentDescription = null,
+                            )
+                        }
+                    },
+                    summaryOn = stringResource(id = R.string.tip_collect_thread_desc_sort_on),
+                    summaryOff = stringResource(id = R.string.tip_collect_thread_desc_sort)
                 )
             }
             prefsItem {

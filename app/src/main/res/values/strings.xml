@@ -259,6 +259,9 @@
     <string name="settings_collect_thread_see_lz">收藏贴自动开启只看楼主</string>
     <string name="tip_collect_thread_see_lz">开启后，从收藏进入的贴子将自动切换至只看楼主</string>
     <string name="tip_collect_thread_see_lz_on">从收藏进入的贴子将自动切换至只看楼主</string>
+    <string name="settings_collect_thread_desc_sort">收藏贴自动开启倒序浏览</string>
+    <string name="tip_collect_thread_desc_sort">开启后，从收藏进入的贴子将自动切换至倒序浏览</string>
+    <string name="tip_collect_thread_desc_sort_on">从收藏进入的贴子将自动切换至倒序浏览</string>
     <string name="toast_feed_refresh">更新了 %1$d 条动态</string>
     <string name="button_submit_dislike">不感兴趣</string>
     <string name="title_dislike">不喜欢推荐用户的理由</string>
