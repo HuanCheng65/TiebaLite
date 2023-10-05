@@ -92,6 +92,7 @@ import com.huanchengfly.tieba.post.pxToDpFloat
 import com.huanchengfly.tieba.post.toMD5
 import com.huanchengfly.tieba.post.toastShort
 import com.huanchengfly.tieba.post.ui.common.theme.compose.ExtendedTheme
+import com.huanchengfly.tieba.post.ui.page.destinations.ReplyPageDestination
 import com.huanchengfly.tieba.post.ui.page.reply.ReplyPanelType.EMOJI
 import com.huanchengfly.tieba.post.ui.page.reply.ReplyPanelType.IMAGE
 import com.huanchengfly.tieba.post.ui.page.reply.ReplyPanelType.NONE
@@ -99,6 +100,7 @@ import com.huanchengfly.tieba.post.ui.utils.imeNestedScroll
 import com.huanchengfly.tieba.post.ui.widgets.compose.Dialog
 import com.huanchengfly.tieba.post.ui.widgets.compose.DialogNegativeButton
 import com.huanchengfly.tieba.post.ui.widgets.compose.DialogPositiveButton
+import com.huanchengfly.tieba.post.ui.widgets.compose.MyBackHandler
 import com.huanchengfly.tieba.post.ui.widgets.compose.VerticalDivider
 import com.huanchengfly.tieba.post.ui.widgets.compose.rememberDialogState
 import com.huanchengfly.tieba.post.ui.widgets.edittext.widget.UndoableEditText
@@ -124,6 +126,7 @@ import org.litepal.extension.deleteAllAsync
 import org.litepal.extension.findFirstAsync
 import java.util.UUID
 import kotlin.concurrent.thread
+import kotlin.math.max
 
 // TODO: 将软键盘状态相关逻辑抽离出来
 @OptIn(
@@ -296,6 +299,13 @@ fun ReplyPage(
         }
     }
 
+    MyBackHandler(
+        enabled = curKeyboardType != NONE,
+        currentScreen = ReplyPageDestination
+    ) {
+        switchToPanel(NONE)
+    }
+
     val density = LocalDensity.current
     val imeInset = WindowInsets.ime
     val imeAnimationTargetInset = WindowInsets.imeAnimationTarget
@@ -315,7 +325,7 @@ fun ReplyPage(
             .collect { value = it }
     }
     val imeAnimationEnd by remember { derivedStateOf { imeCurrentHeight == imeAnimationTargetHeight } }
-    val imeVisibleHeight by produceState(
+    val imeVisibleHeightPx by produceState(
         initialValue = remember { context.appPreferences.imeHeight },
         imeAnimationTargetInset,
         density
@@ -327,6 +337,10 @@ fun ReplyPage(
                 context.appPreferences.imeHeight = it
                 value = it
             }
+    }
+
+    val panelHeight by remember {
+        derivedStateOf { max(imeVisibleHeightPx.pxToDpFloat(), 150f).dp }
     }
 
     val textMeasurer = rememberTextMeasurer()
@@ -561,7 +575,7 @@ fun ReplyPage(
                 .windowInsetsBottomHeight(WindowInsets.ime)
         )
         if (curKeyboardType != NONE) {
-            Column(modifier = Modifier.height(imeVisibleHeight.pxToDpFloat().dp)) {
+            Column(modifier = Modifier.height(panelHeight)) {
                 when (curKeyboardType) {
                     EMOJI -> {
                         EmoticonPanel(
@@ -600,7 +614,7 @@ fun ReplyPage(
             Spacer(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(imeVisibleHeight.pxToDpFloat().dp)
+                    .height(panelHeight)
             )
         }
     }
