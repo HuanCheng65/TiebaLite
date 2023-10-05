@@ -253,7 +253,7 @@ dependencies {
     implementation 'com.github.DSAppTeam:PanelSwitchHelper:v1.5.2'
     implementation "org.litepal.android:kotlin:3.0.0"
     implementation 'cn.jzvd:jiaozivideoplayer:7.7.2.3300'
-    implementation "com.jrummyapps:colorpicker:2.1.7"
+    implementation 'com.jaredrummler:colorpicker:1.1.0'
 
     implementation "com.scwang.smart:refresh-layout-kernel:2.0.1"
     implementation "com.scwang.smart:refresh-header-material:2.0.1"

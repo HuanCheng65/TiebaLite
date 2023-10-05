@@ -47,8 +47,8 @@ import com.huanchengfly.tieba.post.ui.widgets.theme.TintMaterialButton
 import com.huanchengfly.tieba.post.utils.*
 import com.huanchengfly.tieba.post.utils.ThemeUtil.TRANSLUCENT_THEME_DARK
 import com.huanchengfly.tieba.post.utils.ThemeUtil.TRANSLUCENT_THEME_LIGHT
-import com.jrummyapps.android.colorpicker.ColorPickerDialog
-import com.jrummyapps.android.colorpicker.ColorPickerDialogListener
+import com.jaredrummler.android.colorpicker.ColorPickerDialog
+import com.jaredrummler.android.colorpicker.ColorPickerDialogListener
 import com.yalantis.ucrop.UCrop
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch
@@ -510,7 +510,10 @@ class TranslucentThemeActivity : BaseActivity(), View.OnClickListener, OnSeekBar
                     .setColor(ThemeUtils.getColorById(this, R.color.default_color_primary))
                     .create()
                 primaryColorPicker.setColorPickerDialogListener(this)
-                primaryColorPicker.show(fragmentManager, "ColorPicker_TranslucentThemePrimaryColor")
+                primaryColorPicker.show(
+                    supportFragmentManager,
+                    "ColorPicker_TranslucentThemePrimaryColor"
+                )
             }
             R.id.dark_color -> {
                 appPreferences.translucentBackgroundTheme = TRANSLUCENT_THEME_DARK
