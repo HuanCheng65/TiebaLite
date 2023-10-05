@@ -1114,9 +1114,9 @@ data class ThreadUiState(
 ) : UiState
 
 sealed interface ThreadUiEvent : UiEvent {
-    object ScrollToFirstReply : ThreadUiEvent
+    data object ScrollToFirstReply : ThreadUiEvent
 
-    object ScrollToLatestReply : ThreadUiEvent
+    data object ScrollToLatestReply : ThreadUiEvent
 
     data class LoadSuccess(
         val page: Int
@@ -1124,7 +1124,7 @@ sealed interface ThreadUiEvent : UiEvent {
 
     data class AddFavoriteSuccess(val floor: Int) : ThreadUiEvent
 
-    object RemoveFavoriteSuccess : ThreadUiEvent
+    data object RemoveFavoriteSuccess : ThreadUiEvent
 }
 
 object ThreadSortType {

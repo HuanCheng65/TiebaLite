@@ -308,15 +308,16 @@ val Post.contentRenders: ImmutableList<PbContentRender>
 
         return renders.map {
             if (it is PicContentRender) {
-                val data = getPhotoViewData(
-                    this,
-                    it.picId,
-                    it.picUrl,
-                    it.originUrl,
-                    it.showOriginBtn,
-                    it.originSize
+                it.copy(
+                    photoViewData = getPhotoViewData(
+                        this,
+                        it.picId,
+                        it.picUrl,
+                        it.originUrl,
+                        it.showOriginBtn,
+                        it.originSize
+                    )
                 )
-                if (data != null) it.copy(photoViewData = data) else it
             } else it
         }.toImmutableList()
     }

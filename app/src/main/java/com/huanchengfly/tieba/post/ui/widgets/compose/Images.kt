@@ -276,20 +276,17 @@ fun NetworkImage(
 
     Box(
         modifier = Modifier
-            .pointerInput(Unit) {
+            .pointerInput(enableClick) {
                 if (enableClick) {
                     detectTapGestures(
                         onLongPress = {
                             isLongPressing = true
                         },
                         onPress = {
-                            awaitRelease()
+                            tryAwaitRelease()
                             isLongPressing = false
                         },
                         onTap = {
-                            if (isLongPressing) {
-                                return@detectTapGestures
-                            }
                             if (!shouldLoad) {
                                 shouldLoad = true
                             } else if (photoViewData != null) {
