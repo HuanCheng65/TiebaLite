@@ -184,7 +184,7 @@ val List<PbContent>.renders: ImmutableList<PbContentRender>
                                     color = Color(
                                         ThemeUtils.getColorByAttr(
                                             App.INSTANCE,
-                                            R.attr.colorPrimary
+                                            R.attr.colorNewPrimary
                                         )
                                     )
                                 )
@@ -229,7 +229,7 @@ val List<PbContent>.renders: ImmutableList<PbContentRender>
                                     color = Color(
                                         ThemeUtils.getColorByAttr(
                                             App.INSTANCE,
-                                            R.attr.colorPrimary
+                                            R.attr.colorNewPrimary
                                         )
                                     )
                                 )
@@ -263,7 +263,7 @@ val List<PbContent>.renders: ImmutableList<PbContentRender>
                                         color = Color(
                                             ThemeUtils.getColorByAttr(
                                                 App.INSTANCE,
-                                                R.attr.colorPrimary
+                                                R.attr.colorNewPrimary
                                             )
                                         )
                                     )
