@@ -9,7 +9,7 @@ import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.expandVertically
 import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.gestures.rememberScrollableState
 import androidx.compose.foundation.gestures.scrollable
@@ -104,6 +104,7 @@ import com.huanchengfly.tieba.post.toastShort
 import com.huanchengfly.tieba.post.ui.common.theme.compose.ExtendedTheme
 import com.huanchengfly.tieba.post.ui.page.LocalNavigator
 import com.huanchengfly.tieba.post.ui.page.ProvideNavigator
+import com.huanchengfly.tieba.post.ui.page.destinations.ForumDetailPageDestination
 import com.huanchengfly.tieba.post.ui.page.forum.threadlist.ForumThreadListPage
 import com.huanchengfly.tieba.post.ui.page.forum.threadlist.ForumThreadListUiEvent
 import com.huanchengfly.tieba.post.ui.widgets.compose.Avatar
@@ -113,7 +114,6 @@ import com.huanchengfly.tieba.post.ui.widgets.compose.Button
 import com.huanchengfly.tieba.post.ui.widgets.compose.ClickMenu
 import com.huanchengfly.tieba.post.ui.widgets.compose.ConfirmDialog
 import com.huanchengfly.tieba.post.ui.widgets.compose.FeedCardPlaceholder
-import com.huanchengfly.tieba.post.ui.widgets.compose.HorizontalDivider
 import com.huanchengfly.tieba.post.ui.widgets.compose.LazyLoad
 import com.huanchengfly.tieba.post.ui.widgets.compose.MenuScope
 import com.huanchengfly.tieba.post.ui.widgets.compose.MyScaffold
@@ -197,29 +197,15 @@ private fun ForumHeaderPlaceholder(
                 }
             }
         }
-        Row(
-            modifier = Modifier
-                .clip(RoundedCornerShape(8.dp))
-                .placeholder(
-                    visible = true,
-                    highlight = PlaceholderHighlight.fade(),
-                )
-                .padding(vertical = 20.dp),
-            verticalAlignment = Alignment.CenterVertically,
-        ) {
-            StatCardItem(
-                statNum = 0,
-                statText = stringResource(id = R.string.text_stat_follow)
-            )
-        }
     }
 }
 
 @Composable
 private fun ForumHeader(
     forumInfoImmutableHolder: ImmutableHolder<ForumInfo>,
+    onOpenForumInfo: () -> Unit,
     onBtnClick: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     val (forum) = forumInfoImmutableHolder
     Column(
@@ -239,12 +225,27 @@ private fun ForumHeader(
                 modifier = Modifier.weight(1f),
                 verticalArrangement = Arrangement.spacedBy(4.dp)
             ) {
-                Text(
-                    text = stringResource(id = R.string.title_forum, forum.name),
-                    style = MaterialTheme.typography.h6,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis,
-                )
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(4.dp),
+                    modifier = Modifier.clickable(
+                        interactionSource = remember { MutableInteractionSource() },
+                        indication = null,
+                        onClick = onOpenForumInfo
+                    )
+                ) {
+                    Text(
+                        text = stringResource(id = R.string.title_forum, forum.name),
+                        style = MaterialTheme.typography.h6,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis,
+                    )
+//                    Icon(
+//                        imageVector = Icons.Rounded.KeyboardArrowRight,
+//                        contentDescription = null,
+//                        modifier = Modifier.size(16.dp)
+//                    )
+                }
                 AnimatedVisibility(visible = forum.is_like == 1) {
                     Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
                         LinearProgressIndicator(
@@ -301,28 +302,28 @@ private fun ForumHeader(
                 }
             }
         }
-        Row(
-            modifier = Modifier
-                .clip(RoundedCornerShape(8.dp))
-                .background(color = ExtendedTheme.colors.chip)
-                .padding(vertical = 20.dp),
-            verticalAlignment = Alignment.CenterVertically,
-        ) {
-            StatCardItem(
-                statNum = forum.member_num,
-                statText = stringResource(id = R.string.text_stat_follow)
-            )
-            HorizontalDivider(color = Color(if (ExtendedTheme.colors.isNightMode) 0xFF808080 else 0xFFDEDEDE))
-            StatCardItem(
-                statNum = forum.thread_num,
-                statText = stringResource(id = R.string.text_stat_threads)
-            )
-            HorizontalDivider(color = Color(if (ExtendedTheme.colors.isNightMode) 0xFF808080 else 0xFFDEDEDE))
-            StatCardItem(
-                statNum = forum.post_num,
-                statText = stringResource(id = R.string.title_stat_posts_num)
-            )
-        }
+//        Row(
+//            modifier = Modifier
+//                .clip(RoundedCornerShape(8.dp))
+//                .background(color = ExtendedTheme.colors.chip)
+//                .padding(vertical = 20.dp),
+//            verticalAlignment = Alignment.CenterVertically,
+//        ) {
+//            StatCardItem(
+//                statNum = forum.member_num,
+//                statText = stringResource(id = R.string.text_stat_follow)
+//            )
+//            HorizontalDivider(color = Color(if (ExtendedTheme.colors.isNightMode) 0xFF808080 else 0xFFDEDEDE))
+//            StatCardItem(
+//                statNum = forum.thread_num,
+//                statText = stringResource(id = R.string.text_stat_threads)
+//            )
+//            HorizontalDivider(color = Color(if (ExtendedTheme.colors.isNightMode) 0xFF808080 else 0xFFDEDEDE))
+//            StatCardItem(
+//                statNum = forum.post_num,
+//                statText = stringResource(id = R.string.title_stat_posts_num)
+//            )
+//        }
     }
 }
 
@@ -651,11 +652,14 @@ fun ForumPage(
                         ),
                         exit = shrinkVertically()
                     ) {
-                        if (forumInfo != null) {
+                        forumInfo?.let {
                             ForumHeader(
-                                forumInfoImmutableHolder = forumInfo!!,
+                                forumInfoImmutableHolder = it,
+                                onOpenForumInfo = {
+                                    navigator.navigate(ForumDetailPageDestination(forumId = it.get { this.id }))
+                                },
                                 onBtnClick = {
-                                    val (forum) = forumInfo!!
+                                    val (forum) = it
                                     when {
                                         forum.is_like != 1 -> viewModel.send(
                                             ForumUiIntent.Like(
