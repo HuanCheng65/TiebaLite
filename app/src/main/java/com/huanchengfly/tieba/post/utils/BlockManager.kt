@@ -26,6 +26,17 @@ object BlockManager {
         blockList.add(block)
     }
 
+    fun addBlockAsync(
+        block: Block,
+        callback: ((Boolean) -> Unit)? = null,
+    ) {
+        block.saveAsync()
+            .listen {
+                callback?.invoke(it)
+                blockList.add(block)
+            }
+    }
+
     fun removeBlock(id: Long) {
         LitePal.delete<Block>(id)
         blockList.removeAll { it.id == id }

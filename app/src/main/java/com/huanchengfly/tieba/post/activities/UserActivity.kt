@@ -12,7 +12,6 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
-import android.widget.Toast
 import androidx.viewpager.widget.ViewPager
 import butterknife.BindView
 import butterknife.OnClick
@@ -231,21 +230,21 @@ class UserActivity : BaseActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.menu_block_black, R.id.menu_block_white -> {
-                profileBean?.user?.let {
+                profileBean?.user?.let { user ->
                     val category =
                         if (item.itemId == R.id.menu_block_black) Block.CATEGORY_BLACK_LIST else Block.CATEGORY_WHITE_LIST
-                    Block(
-                        category = category,
-                        type = Block.TYPE_USER,
-                        username = it.name,
-                        uid = it.id.toString()
-                    ).saveAsync()
-                        .listen { success: Boolean ->
-                            if (success) {
-                                Toast.makeText(this, R.string.toast_add_success, Toast.LENGTH_SHORT)
-                                    .show()
-                            }
+                    BlockManager.addBlockAsync(
+                        Block(
+                            category = category,
+                            type = Block.TYPE_USER,
+                            username = user.name,
+                            uid = user.id.toString()
+                        )
+                    ) {
+                        if (it) {
+                            toastShort(R.string.toast_add_success)
                         }
+                    }
                 }
                 return true
             }
