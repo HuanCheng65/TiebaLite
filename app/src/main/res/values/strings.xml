@@ -641,7 +641,7 @@
     <string name="insert_voice">语音</string>
     <string name="emoticon_default">表情</string>
     <string name="emoticon">表情 %s</string>
-    <string name="summary_enable_new_ui">（实验性特性）启用新版 UI。仅少部分页面完成，BUG 可能较多，仅供尝鲜使用！</string>
+    <string name="summary_enable_new_ui">启用新版 UI。部分页面尚未完成，BUG 可能较多，仅供尝鲜使用！</string>
     <string name="title_enable_new_ui">启用新版 UI</string>
     <string name="title_dialog_oksign_battery_optimization">请忽略“电池优化”</string>
     <string name="message_dialog_oksign_battery_optimization">在 Android 12 及以上版本中，后台启动前台服务被严格限制。为了避免一键签到无法正常启动，请忽略本应用的“电池优化”。</string>
