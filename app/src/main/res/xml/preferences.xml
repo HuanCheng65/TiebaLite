@@ -215,7 +215,7 @@
             android:title="@string/title_oksign_slow_mode" />
 
         <SwitchPreference
-            android:defaultValue="false"
+            android:defaultValue="true"
             android:icon="@drawable/ic_round_speed"
             android:key="oksign_use_official_oksign"
             android:summary="@string/summary_oksign_use_official_oksign"

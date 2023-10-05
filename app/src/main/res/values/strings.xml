@@ -586,7 +586,7 @@
     <string name="button_appeal">申诉</string>
     <string name="btn_hide_tip">隐藏该提示</string>
     <string name="title_check_ci_update">接收自动构建版本更新</string>
-    <string name="tip_check_ci_update">需要 App Center 账号且已加入测试，如果你没有，请不要开启此选项！</string>
+    <string name="tip_check_ci_update">仅供测试</string>
     <string name="permission_name_post_notifications">通知</string>
     <string name="desc_permission_post_notifications">用于发送消息通知、显示一键签到进度</string>
     <string name="title_oksign_finish_time">%s签到完成</string>
