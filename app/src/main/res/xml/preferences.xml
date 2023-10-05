@@ -260,7 +260,7 @@
             android:title="@string/title_check_ci_update" />
 
         <SwitchPreference
-            android:defaultValue="false"
+            android:defaultValue="true"
             android:icon="@drawable/ic_round_fiber_new"
             android:key="enableNewUi"
             android:summary="@string/summary_enable_new_ui"

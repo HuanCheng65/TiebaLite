@@ -18,7 +18,6 @@
     </string-array>
 
     <string-array name="experimental_features">
-        <item>oksign_use_official_oksign</item>
         <item>checkCIUpdate</item>
     </string-array>
 
