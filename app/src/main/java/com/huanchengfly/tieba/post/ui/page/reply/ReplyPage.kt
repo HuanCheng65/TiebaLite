@@ -6,6 +6,7 @@ import android.content.pm.PackageManager
 import android.net.Uri
 import android.util.Log
 import android.view.View
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -80,6 +81,7 @@ import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.widget.addTextChangedListener
 import com.effective.android.panel.utils.PanelUtil
 import com.github.panpf.sketch.compose.AsyncImage
+import com.google.accompanist.drawablepainter.rememberDrawablePainter
 import com.huanchengfly.tieba.post.R
 import com.huanchengfly.tieba.post.arch.GlobalEvent
 import com.huanchengfly.tieba.post.arch.collectPartialAsState
@@ -691,7 +693,10 @@ private fun EmoticonPanel(
     modifier: Modifier = Modifier,
     onEmoticonClick: (Emoticon) -> Unit,
 ) {
-    val emoticons = remember { EmoticonManager.getAllEmoticon() }
+    val emoticons = remember {
+        EmoticonManager.getAllEmoticon()
+            .filter { it.name.isNotEmpty() }
+    }
 
     Column(
         modifier = modifier
@@ -703,13 +708,18 @@ private fun EmoticonPanel(
                 .padding(top = 16.dp)
         ) {
             items(emoticons) { emoticon ->
-                AsyncImage(
-                    imageUri = EmoticonManager.rememberEmoticonUri(id = emoticon.id),
+                Image(
+                    painter = rememberDrawablePainter(
+                        drawable = EmoticonManager.getEmoticonDrawable(
+                            LocalContext.current,
+                            emoticon.id
+                        )
+                    ),
                     contentDescription = stringResource(
                         id = R.string.emoticon,
                         emoticon.name
                     ),
-                    contentScale = ContentScale.Crop,
+                    contentScale = ContentScale.Fit,
                     modifier = Modifier
                         .size(48.dp)
                         .padding(8.dp)
