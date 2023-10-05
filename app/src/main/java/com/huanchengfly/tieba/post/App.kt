@@ -19,6 +19,7 @@ import androidx.annotation.Keep
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.compose.ui.graphics.toArgb
 import com.github.gzuliyujiang.oaid.DeviceID
 import com.github.panpf.sketch.Sketch
 import com.github.panpf.sketch.SketchFactory
@@ -34,6 +35,7 @@ import com.huanchengfly.tieba.post.components.OAIDGetter
 import com.huanchengfly.tieba.post.components.dialogs.LoadingDialog
 import com.huanchengfly.tieba.post.plugins.PluginManager
 import com.huanchengfly.tieba.post.plugins.interfaces.IApp
+import com.huanchengfly.tieba.post.ui.common.theme.compose.dynamicTonalPalette
 import com.huanchengfly.tieba.post.ui.common.theme.interfaces.ThemeSwitcher
 import com.huanchengfly.tieba.post.ui.common.theme.utils.ThemeUtils
 import com.huanchengfly.tieba.post.utils.AccountUtil
@@ -368,7 +370,14 @@ class App : Application(), IApp, SketchFactory {
                 }
 
                 R.attr.colorNewPrimary -> {
-                    return if (ThemeUtil.isNightMode(theme)) {
+                    return if (ThemeUtil.isUsingDynamicTheme() && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                        val dynamicTonalPalette = dynamicTonalPalette(context)
+                        if (ThemeUtil.isNightMode(theme)) {
+                            dynamicTonalPalette.primary80.toArgb()
+                        } else {
+                            dynamicTonalPalette.primary40.toArgb()
+                        }
+                    } else if (ThemeUtil.isNightMode(theme)) {
                         context.getColorCompat(R.color.theme_color_new_primary_night)
                     } else if (theme == ThemeUtil.THEME_DEFAULT) {
                         context.getColorCompat(

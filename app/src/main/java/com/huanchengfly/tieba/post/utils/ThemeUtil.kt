@@ -82,6 +82,9 @@ object ThemeUtil {
     const val TRANSLUCENT_THEME_LIGHT = 0
     const val TRANSLUCENT_THEME_DARK = 1
 
+    private val context: Context
+        get() = INSTANCE
+
     val dataStore: DataStore<Preferences>
         get() = INSTANCE.dataStore
 
@@ -131,6 +134,10 @@ object ThemeUtil {
 
     fun setUseDynamicTheme(useDynamicTheme: Boolean) {
         dataStore.putBoolean(KEY_USE_DYNAMIC_THEME, useDynamicTheme)
+    }
+
+    fun isUsingDynamicTheme(): Boolean {
+        return context.appPreferences.useDynamicColorTheme
     }
 
     fun switchNightMode() {
