@@ -327,45 +327,47 @@ private fun FeedList(
                     enter = EnterTransition.None,
                     exit = shrinkVertically() + fadeOut()
                 ) {
-                    BlockableContent(
-                        blocked = blocked,
-                        blockedTip = { BlockTip(text = { Text(text = stringResource(id = R.string.tip_blocked_thread)) }) },
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(vertical = 8.dp, horizontal = 16.dp)
-                    ) {
-                        Column {
-                            FeedCard(
-                                item = item,
-                                onClick = onItemClick,
-                                onReplyClick = onItemReplyClick,
-                                onAgree = onAgree,
-                                onClickForum = remember {
-                                    {
-                                        onOpenForum(it.name)
+                    Column {
+                        BlockableContent(
+                            blocked = blocked,
+                            blockedTip = { BlockTip(text = { Text(text = stringResource(id = R.string.tip_blocked_thread)) }) },
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(vertical = 8.dp, horizontal = 16.dp)
+                        ) {
+                            Column {
+                                FeedCard(
+                                    item = item,
+                                    onClick = onItemClick,
+                                    onReplyClick = onItemReplyClick,
+                                    onAgree = onAgree,
+                                    onClickForum = remember {
+                                        {
+                                            onOpenForum(it.name)
+                                        }
+                                    }
+                                ) {
+                                    if (personalized != null) {
+                                        Dislike(
+                                            personalized = personalized,
+                                            onDislike = { clickTime, reasons ->
+                                                onDislike(item.get(), clickTime, reasons)
+                                            }
+                                        )
                                     }
                                 }
-                            ) {
-                                if (personalized != null) {
-                                    Dislike(
-                                        personalized = personalized,
-                                        onDislike = { clickTime, reasons ->
-                                            onDislike(item.get(), clickTime, reasons)
-                                        }
+                                if (showDivider) {
+                                    VerticalDivider(
+                                        modifier = Modifier.padding(horizontal = 16.dp),
+                                        thickness = 2.dp
                                     )
                                 }
                             }
-                            if (showDivider) {
-                                VerticalDivider(
-                                    modifier = Modifier.padding(horizontal = 16.dp),
-                                    thickness = 2.dp
-                                )
-                            }
+                        }
+                        if (isRefreshPosition) {
+                            RefreshTip(onRefresh)
                         }
                     }
-                }
-                if (isRefreshPosition) {
-                    RefreshTip(onRefresh)
                 }
             }
         }
