@@ -51,6 +51,7 @@ import com.huanchengfly.tieba.post.ui.common.theme.compose.pullRefreshIndicator
 import com.huanchengfly.tieba.post.ui.common.windowsizeclass.WindowWidthSizeClass
 import com.huanchengfly.tieba.post.ui.models.ThreadItemData
 import com.huanchengfly.tieba.post.ui.page.LocalNavigator
+import com.huanchengfly.tieba.post.ui.page.destinations.ForumRuleDetailPageDestination
 import com.huanchengfly.tieba.post.ui.page.destinations.ThreadPageDestination
 import com.huanchengfly.tieba.post.ui.page.forum.getSortType
 import com.huanchengfly.tieba.post.ui.widgets.Chip
@@ -136,6 +137,35 @@ private fun GoodClassifyTabs(
 }
 
 @Composable
+private fun TopThreadItem(
+    title: String,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+    type: String = stringResource(id = R.string.content_top),
+) {
+    Row(
+        modifier = modifier
+            .clickable(onClick = onClick)
+            .padding(horizontal = 16.dp, vertical = 8.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(16.dp)
+    ) {
+        Chip(
+            text = type,
+            shape = RoundedCornerShape(3.dp)
+        )
+        Text(
+            text = title,
+            style = MaterialTheme.typography.subtitle2,
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis,
+            modifier = Modifier.weight(1f),
+            fontSize = 15.sp
+        )
+    }
+}
+
+@Composable
 private fun ThreadList(
     state: LazyListState,
     items: ImmutableList<ThreadItemData>,
@@ -145,7 +175,9 @@ private fun ThreadList(
     onItemClicked: (ThreadInfo) -> Unit,
     onItemReplyClicked: (ThreadInfo) -> Unit,
     onAgree: (ThreadInfo) -> Unit,
-    onClassifySelected: (Int) -> Unit
+    onClassifySelected: (Int) -> Unit,
+    forumRuleTitle: String? = null,
+    onOpenForumRule: (() -> Unit)? = null,
 ) {
     val windowSizeClass = LocalWindowSizeClass.current
     val itemFraction = when (windowSizeClass.widthSizeClass) {
@@ -164,6 +196,18 @@ private fun ThreadList(
                     goodClassifyHoldersProvider = goodClassifyHoldersProvider,
                     selectedItem = goodClassifyId,
                     onSelected = onClassifySelected
+                )
+            }
+        }
+        if (!forumRuleTitle.isNullOrEmpty()) {
+            item(key = "ForumRule") {
+                TopThreadItem(
+                    title = forumRuleTitle,
+                    onClick = {
+                        onOpenForumRule?.invoke()
+                    },
+                    modifier = Modifier.fillMaxWidth(),
+                    type = stringResource(id = R.string.desc_forum_rule)
                 )
             }
         }
@@ -197,33 +241,12 @@ private fun ThreadList(
                     modifier = Modifier.fillMaxWidth(itemFraction)
                 ) {
                     if (item.isTop == 1) {
-                        Row(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .clickable {
-                                    onItemClicked(item)
-                                }
-                                .padding(horizontal = 16.dp, vertical = 8.dp),
-                            verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.spacedBy(16.dp)
-                        ) {
-                            Chip(
-                                text = stringResource(id = R.string.content_top),
-                                shape = RoundedCornerShape(3.dp)
-                            )
-                            var title = item.title
-                            if (title.isBlank()) {
-                                title = item.abstractText
-                            }
-                            Text(
-                                text = title,
-                                style = MaterialTheme.typography.subtitle2,
-                                maxLines = 1,
-                                overflow = TextOverflow.Ellipsis,
-                                modifier = Modifier.weight(1f),
-                                fontSize = 15.sp
-                            )
-                        }
+                        val title = item.title.takeUnless { it.isBlank() } ?: item.abstractText
+                        TopThreadItem(
+                            title = title,
+                            onClick = { onItemClicked(item) },
+                            modifier = Modifier.fillMaxWidth(),
+                        )
                     } else {
                         if (index > 0) {
                             if (items[index - 1].thread.get { isTop } == 1) {
@@ -306,6 +329,10 @@ fun ForumThreadListPage(
         prop1 = ForumThreadListUiState::currentPage,
         initial = 1
     )
+    val forumRuleTitle by viewModel.uiState.collectPartialAsState(
+        prop1 = ForumThreadListUiState::forumRuleTitle,
+        initial = null
+    )
     val threadList by viewModel.uiState.collectPartialAsState(
         prop1 = ForumThreadListUiState::threadList,
         initial = persistentListOf()
@@ -360,21 +387,21 @@ fun ForumThreadListPage(
                         )
                     )
                 },
-                onItemReplyClicked = {
-                    navigator.navigate(
-                        ThreadPageDestination(
-                            it.threadId,
-                            forumId = it.forumId,
-                            scrollToReply = true
-                        )
-                    )
-                },
                 onAgree = {
                     viewModel.send(
                         ForumThreadListUiIntent.Agree(
                             it.threadId,
                             it.firstPostId,
                             it.agree?.hasAgree ?: 0
+                        )
+                    )
+                },
+                onItemReplyClicked = {
+                    navigator.navigate(
+                        ThreadPageDestination(
+                            it.threadId,
+                            forumId = it.forumId,
+                            scrollToReply = true
                         )
                     )
                 },
@@ -387,6 +414,10 @@ fun ForumThreadListPage(
                             goodClassifyId = it
                         )
                     )
+                },
+                forumRuleTitle = forumRuleTitle,
+                onOpenForumRule = {
+                    navigator.navigate(ForumRuleDetailPageDestination(forumId))
                 }
             )
         }

@@ -37,6 +37,10 @@ class ImmutableHolder<T>(val item: T) {
     fun <R> isNotNull(getter: T.() -> R): Boolean = getter(item) != null
 }
 
+fun <T> ImmutableHolder<T>?.getOrDefault(defaultVal: T): T = this?.get() ?: defaultVal
+
+fun <T> ImmutableHolder<T>?.getOrNull(): T? = this?.get()
+
 fun <T> wrapStable(item: T): StableHolder<T> = StableHolder(item)
 
 fun <T> wrapImmutable(item: T): ImmutableHolder<T> = ImmutableHolder(item)

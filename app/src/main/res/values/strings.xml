@@ -742,4 +742,6 @@
     <string name="button_open">打开</string>
     <string name="btn_hide">隐藏</string>
     <string name="desc_search_sug">搜索联想：%s</string>
+    <string name="title_forum_rule">本吧吧规</string>
+    <string name="desc_forum_rule">吧规</string>
 </resources>

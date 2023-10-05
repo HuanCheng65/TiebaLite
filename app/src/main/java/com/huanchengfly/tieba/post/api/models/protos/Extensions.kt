@@ -338,35 +338,34 @@ val Post.subPosts: ImmutableList<SubPostItemData>
             it.wrapImmutable(),
             it.getContentText(origin_thread_info?.author?.id)
         )
-    }
-        ?.toImmutableList()
-        ?: persistentListOf()
+    }?.toImmutableList() ?: persistentListOf()
 
+@OptIn(ExperimentalTextApi::class)
 fun SubPostList.getContentText(threadAuthorId: Long? = null): AnnotatedString {
     val context = App.INSTANCE
     val accentColor = Color(ThemeUtils.getColorByAttr(context, R.attr.colorNewPrimary))
 
     val userNameString = buildAnnotatedString {
-        val annotation = pushStringAnnotation("user", "${author?.id}")
-        val style = pushStyle(
-            SpanStyle(
-                color = accentColor,
-                fontWeight = FontWeight.Bold
-            )
-        )
-        append(
-            StringUtil.getUsernameAnnotatedString(
-                context,
-                author?.name ?: "",
-                author?.nameShow
-            )
-        )
-        pop(style)
-        if (author?.id == threadAuthorId) {
-            appendInlineContent("Lz")
+        withAnnotation("user", "${author?.id}") {
+            withStyle(
+                SpanStyle(
+                    color = accentColor,
+                    fontWeight = FontWeight.Bold
+                )
+            ) {
+                append(
+                    StringUtil.getUsernameAnnotatedString(
+                        context,
+                        author?.name ?: "",
+                        author?.nameShow
+                    )
+                )
+            }
+            if (author?.id == threadAuthorId) {
+                appendInlineContent("Lz")
+            }
+            append(": ")
         }
-        append(": ")
-        pop(annotation)
     }
 
     val contentStrings = content.renders.map { it.toAnnotationString() }

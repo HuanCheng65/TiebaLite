@@ -94,24 +94,26 @@ enum class ErrorType {
 
 @Composable
 fun StateScreenScope.ErrorScreen(
-    error: Throwable,
+    error: Throwable?,
     modifier: Modifier = Modifier,
     showReload: Boolean = true,
     actions: @Composable (ColumnScope.() -> Unit) = {},
 ) {
-    ErrorTipScreen(
-        error = error,
-        modifier = modifier,
-        actions = {
-            if (showReload && canReload) {
-                Button(onClick = { reload() }) {
-                    Text(text = stringResource(id = R.string.btn_reload))
+    error?.let {
+        ErrorTipScreen(
+            error = it,
+            modifier = modifier,
+            actions = {
+                if (showReload && canReload) {
+                    Button(onClick = { reload() }) {
+                        Text(text = stringResource(id = R.string.btn_reload))
+                    }
                 }
-            }
 
-            actions()
-        }
-    )
+                actions()
+            }
+        )
+    }
 }
 
 @Composable
