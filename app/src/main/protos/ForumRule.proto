@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+package tieba;
+
+option java_package = "com.huanchengfly.tieba.post.api.models.protos";
+
+import "PbContent.proto";
+
+message ForumRule {
+    string title = 1;
+    repeated PbContent content = 2;
+    int32 status = 3;
+}

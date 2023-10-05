@@ -12,6 +12,7 @@ import "User.proto";
 import "Page.proto";
 import "Anti.proto";
 import "Error.proto";
+import "ForumRuleStatus.proto";
 import "FrsPage/NavTabInfo.proto";
 import "FrsPage/Group.proto";
 import "FrsPage/AdParam.proto";
@@ -75,6 +76,8 @@ message FrsPageResponseData {
   repeated User user_list = 17;
   repeated FrsTabInfo frs_tab_info = 22;
   NavTabInfo nav_tab_info = 37;
+  ForumRuleStatus forum_rule = 105;
+
 }
 
 message FrsPageResponse {

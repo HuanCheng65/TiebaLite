@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+package tieba.getForumDetail;
+
+option java_package = "com.huanchengfly.tieba.post.api.models.protos.getForumDetail";
+
+import "GetForumDetail/UniversityInfo.proto";
+
+message UniversityTabInfo {
+  string tab_name = 1;
+  repeated UniversityInfo content = 2;
+}

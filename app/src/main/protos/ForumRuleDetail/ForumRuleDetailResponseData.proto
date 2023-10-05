@@ -1,0 +1,23 @@
+syntax = "proto3";
+
+package tieba.forumRuleDetail;
+
+option java_package = "com.huanchengfly.tieba.post.api.models.protos.forumRuleDetail";
+
+import "BawuRoleInfoPub.proto";
+import "ForumInfo.proto";
+import "ForumRule.proto";
+
+message ForumRuleDetailResponseData {
+  ForumInfo forum = 2;
+  string title = 3;
+  string preface = 4;
+  repeated ForumRule rules = 5;
+  int32 audit_status = 6;
+  string audit_opinion = 7;
+  int32 is_manager = 8;
+  int64 forum_rule_id = 9;
+  string publish_time = 10;
+  BawuRoleInfoPub bazhu = 11;
+  string cur_time = 12;
+}

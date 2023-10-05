@@ -1,0 +1,14 @@
+syntax = "proto3";
+
+package tieba.getBawuInfo;
+
+option java_package = "com.huanchengfly.tieba.post.api.models.protos.getBawuInfo";
+
+import "BawuTeam.proto";
+import "GetBawuInfo/ManagerApplyInfo.proto";
+
+message GetBawuInfoResponseData {
+  BawuTeam bawu_team_info = 1;
+  ManagerApplyInfo manager_apply_info = 2;
+  int32 is_private_forum = 3;
+}

@@ -2,7 +2,12 @@ package com.huanchengfly.tieba.post.api.retrofit.interfaces
 
 import com.huanchengfly.tieba.post.api.models.protos.addPost.AddPostResponse
 import com.huanchengfly.tieba.post.api.models.protos.forumRecommend.ForumRecommendResponse
+import com.huanchengfly.tieba.post.api.models.protos.forumRuleDetail.ForumRuleDetailResponse
 import com.huanchengfly.tieba.post.api.models.protos.frsPage.FrsPageResponse
+import com.huanchengfly.tieba.post.api.models.protos.getBawuInfo.GetBawuInfoResponse
+import com.huanchengfly.tieba.post.api.models.protos.getForumDetail.GetForumDetailResponse
+import com.huanchengfly.tieba.post.api.models.protos.getLevelInfo.GetLevelInfoResponse
+import com.huanchengfly.tieba.post.api.models.protos.getMemberInfo.GetMemberInfoResponse
 import com.huanchengfly.tieba.post.api.models.protos.hotThreadList.HotThreadListResponse
 import com.huanchengfly.tieba.post.api.models.protos.pbFloor.PbFloorResponse
 import com.huanchengfly.tieba.post.api.models.protos.pbPage.PbPageResponse
@@ -79,4 +84,29 @@ interface OfficialProtobufTiebaApi {
     fun searchSugFlow(
         @Body body: MyMultipartBody,
     ): Flow<SearchSugResponse>
+
+    @POST("/c/f/forum/getforumdetail?cmd=303021&format=protobuf")
+    fun getForumDetailFlow(
+        @Body body: MyMultipartBody,
+    ): Flow<GetForumDetailResponse>
+
+    @POST("/c/f/forum/getBawuInfo?cmd=301007&format=protobuf")
+    fun getBawuInfoFlow(
+        @Body body: MyMultipartBody,
+    ): Flow<GetBawuInfoResponse>
+
+    @POST("/c/f/forum/getLevelInfo?cmd=301005&format=protobuf")
+    fun getLevelInfoFlow(
+        @Body body: MyMultipartBody,
+    ): Flow<GetLevelInfoResponse>
+
+    @POST("/c/f/forum/getMemberInfo?cmd=301004&format=protobuf")
+    fun getMemberInfoFlow(
+        @Body body: MyMultipartBody,
+    ): Flow<GetMemberInfoResponse>
+
+    @POST("/c/f/forum/forumRuleDetail?cmd=309690&format=protobuf")
+    fun forumRuleDetailFlow(
+        @Body body: MyMultipartBody,
+    ): Flow<ForumRuleDetailResponse>
 }

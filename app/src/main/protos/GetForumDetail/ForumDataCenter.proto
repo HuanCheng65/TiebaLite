@@ -1,0 +1,20 @@
+syntax = "proto3";
+
+package tieba.getForumDetail;
+
+option java_package = "com.huanchengfly.tieba.post.api.models.protos.getForumDetail";
+
+message ForumDataCenter {
+  int32 new_pv_cnt = 1;
+  int32 new_pv_cnt_diff = 2;
+  int32 new_thread_cnt = 3;
+  int32 new_thread_cnt_diff = 4;
+  int32 new_follow_cnt = 5;
+  int32 new_follow_cnt_diff = 6;
+  int32 user_duration_avg = 7;
+  double user_duration_avg_diff = 8;
+  double user_sign_rate = 9;
+  double user_sign_rate_diff = 10;
+  int32 homepage_thread_cnt = 11;
+  int32 homepage_thread_cnt_diff = 12;
+}

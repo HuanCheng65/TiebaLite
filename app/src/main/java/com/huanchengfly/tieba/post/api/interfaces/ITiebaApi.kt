@@ -6,7 +6,12 @@ import com.huanchengfly.tieba.post.api.SearchThreadOrder
 import com.huanchengfly.tieba.post.api.models.*
 import com.huanchengfly.tieba.post.api.models.protos.addPost.AddPostResponse
 import com.huanchengfly.tieba.post.api.models.protos.forumRecommend.ForumRecommendResponse
+import com.huanchengfly.tieba.post.api.models.protos.forumRuleDetail.ForumRuleDetailResponse
 import com.huanchengfly.tieba.post.api.models.protos.frsPage.FrsPageResponse
+import com.huanchengfly.tieba.post.api.models.protos.getBawuInfo.GetBawuInfoResponse
+import com.huanchengfly.tieba.post.api.models.protos.getForumDetail.GetForumDetailResponse
+import com.huanchengfly.tieba.post.api.models.protos.getLevelInfo.GetLevelInfoResponse
+import com.huanchengfly.tieba.post.api.models.protos.getMemberInfo.GetMemberInfoResponse
 import com.huanchengfly.tieba.post.api.models.protos.hotThreadList.HotThreadListResponse
 import com.huanchengfly.tieba.post.api.models.protos.pbFloor.PbFloorResponse
 import com.huanchengfly.tieba.post.api.models.protos.pbPage.PbPageResponse
@@ -1392,4 +1397,49 @@ interface ITiebaApi {
         keyword: String,
         isForum: Boolean = false,
     ): Flow<SearchSugResponse>
+
+    /**
+     * 获取吧信息
+     *
+     * @param forumId 吧 ID
+     */
+    fun getForumDetailFlow(
+        forumId: Long,
+    ): Flow<GetForumDetailResponse>
+
+    /**
+     * 获取吧务信息
+     *
+     * @param forumId 吧 ID
+     */
+    fun getBawuInfoFlow(
+        forumId: Long,
+    ): Flow<GetBawuInfoResponse>
+
+    /**
+     * 获取吧等级信息
+     *
+     * @param forumId 吧 ID
+     */
+    fun getLevelInfoFlow(
+        forumId: Long,
+    ): Flow<GetLevelInfoResponse>
+
+    /**
+     * 获取吧成员信息
+     *
+     * @param forumId 吧 ID
+     */
+    fun getMemberInfoFlow(
+        forumId: Long,
+    ): Flow<GetMemberInfoResponse>
+
+    /**
+     * 获取吧规
+     *
+     * @param forumId 吧 ID
+     */
+    fun forumRuleDetailFlow(
+        forumId: Long,
+    ): Flow<ForumRuleDetailResponse>
 }

@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+package tieba.getForumDetail;
+
+option java_package = "com.huanchengfly.tieba.post.api.models.protos.getForumDetail";
+
+message UniversityInfo {
+  string title = 1;
+  string pic_url = 2;
+  string to_url = 3;
+  int32 type = 4;
+  int64 agree_num = 5;
+  int64 browse_num = 6;
+  int64 video_time = 7;
+}

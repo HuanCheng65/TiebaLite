@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+package tieba;
+
+option java_package = "com.huanchengfly.tieba.post.api.models.protos";
+
+message SmartApp {
+  string avatar = 1;
+  string name = 2;
+  string _abstract = 3;
+  string pic = 4;
+  string h5_url = 5;
+  string id = 6;
+  string link = 7;
+  uint64 naws_app_id = 8;
+  int32 is_recom = 9;
+  int32 is_game = 10;
+}

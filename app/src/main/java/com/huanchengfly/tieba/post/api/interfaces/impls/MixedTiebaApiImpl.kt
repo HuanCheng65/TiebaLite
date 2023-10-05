@@ -54,9 +54,24 @@ import com.huanchengfly.tieba.post.api.models.protos.addPost.AddPostResponse
 import com.huanchengfly.tieba.post.api.models.protos.forumRecommend.ForumRecommendRequest
 import com.huanchengfly.tieba.post.api.models.protos.forumRecommend.ForumRecommendRequestData
 import com.huanchengfly.tieba.post.api.models.protos.forumRecommend.ForumRecommendResponse
+import com.huanchengfly.tieba.post.api.models.protos.forumRuleDetail.ForumRuleDetailRequest
+import com.huanchengfly.tieba.post.api.models.protos.forumRuleDetail.ForumRuleDetailRequestData
+import com.huanchengfly.tieba.post.api.models.protos.forumRuleDetail.ForumRuleDetailResponse
 import com.huanchengfly.tieba.post.api.models.protos.frsPage.FrsPageRequest
 import com.huanchengfly.tieba.post.api.models.protos.frsPage.FrsPageRequestData
 import com.huanchengfly.tieba.post.api.models.protos.frsPage.FrsPageResponse
+import com.huanchengfly.tieba.post.api.models.protos.getBawuInfo.GetBawuInfoRequest
+import com.huanchengfly.tieba.post.api.models.protos.getBawuInfo.GetBawuInfoRequestData
+import com.huanchengfly.tieba.post.api.models.protos.getBawuInfo.GetBawuInfoResponse
+import com.huanchengfly.tieba.post.api.models.protos.getForumDetail.GetForumDetailRequest
+import com.huanchengfly.tieba.post.api.models.protos.getForumDetail.GetForumDetailRequestData
+import com.huanchengfly.tieba.post.api.models.protos.getForumDetail.GetForumDetailResponse
+import com.huanchengfly.tieba.post.api.models.protos.getLevelInfo.GetLevelInfoRequest
+import com.huanchengfly.tieba.post.api.models.protos.getLevelInfo.GetLevelInfoRequestData
+import com.huanchengfly.tieba.post.api.models.protos.getLevelInfo.GetLevelInfoResponse
+import com.huanchengfly.tieba.post.api.models.protos.getMemberInfo.GetMemberInfoRequest
+import com.huanchengfly.tieba.post.api.models.protos.getMemberInfo.GetMemberInfoRequestData
+import com.huanchengfly.tieba.post.api.models.protos.getMemberInfo.GetMemberInfoResponse
 import com.huanchengfly.tieba.post.api.models.protos.hotThreadList.HotThreadListRequest
 import com.huanchengfly.tieba.post.api.models.protos.hotThreadList.HotThreadListRequestData
 import com.huanchengfly.tieba.post.api.models.protos.hotThreadList.HotThreadListResponse
@@ -1252,6 +1267,81 @@ object MixedTiebaApiImpl : ITiebaApi {
                         common = buildCommonRequest(clientVersion = ClientVersion.TIEBA_V12),
                         word = keyword,
                         isforum = isForum.booleanToString()
+                    )
+                ),
+                clientVersion = ClientVersion.TIEBA_V12,
+                needSToken = true
+            )
+        )
+    }
+
+    override fun getForumDetailFlow(forumId: Long): Flow<GetForumDetailResponse> {
+        return RetrofitTiebaApi.OFFICIAL_PROTOBUF_TIEBA_V12_API.getForumDetailFlow(
+            buildProtobufRequestBody(
+                GetForumDetailRequest(
+                    GetForumDetailRequestData(
+                        common = buildCommonRequest(clientVersion = ClientVersion.TIEBA_V12),
+                        forum_id = forumId,
+                    )
+                ),
+                clientVersion = ClientVersion.TIEBA_V12,
+                needSToken = true
+            )
+        )
+    }
+
+    override fun getBawuInfoFlow(forumId: Long): Flow<GetBawuInfoResponse> {
+        return RetrofitTiebaApi.OFFICIAL_PROTOBUF_TIEBA_V12_API.getBawuInfoFlow(
+            buildProtobufRequestBody(
+                GetBawuInfoRequest(
+                    GetBawuInfoRequestData(
+                        common = buildCommonRequest(clientVersion = ClientVersion.TIEBA_V12),
+                        forum_id = forumId,
+                    )
+                ),
+                clientVersion = ClientVersion.TIEBA_V12,
+                needSToken = true
+            )
+        )
+    }
+
+    override fun getLevelInfoFlow(forumId: Long): Flow<GetLevelInfoResponse> {
+        return RetrofitTiebaApi.OFFICIAL_PROTOBUF_TIEBA_V12_API.getLevelInfoFlow(
+            buildProtobufRequestBody(
+                GetLevelInfoRequest(
+                    GetLevelInfoRequestData(
+                        common = buildCommonRequest(clientVersion = ClientVersion.TIEBA_V12),
+                        forum_id = forumId,
+                    )
+                ),
+                clientVersion = ClientVersion.TIEBA_V12,
+                needSToken = true
+            )
+        )
+    }
+
+    override fun getMemberInfoFlow(forumId: Long): Flow<GetMemberInfoResponse> {
+        return RetrofitTiebaApi.OFFICIAL_PROTOBUF_TIEBA_V12_API.getMemberInfoFlow(
+            buildProtobufRequestBody(
+                GetMemberInfoRequest(
+                    GetMemberInfoRequestData(
+                        common = buildCommonRequest(clientVersion = ClientVersion.TIEBA_V12),
+                        forum_id = forumId,
+                    )
+                ),
+                clientVersion = ClientVersion.TIEBA_V12,
+                needSToken = true
+            )
+        )
+    }
+
+    override fun forumRuleDetailFlow(forumId: Long): Flow<ForumRuleDetailResponse> {
+        return RetrofitTiebaApi.OFFICIAL_PROTOBUF_TIEBA_V12_API.forumRuleDetailFlow(
+            buildProtobufRequestBody(
+                ForumRuleDetailRequest(
+                    ForumRuleDetailRequestData(
+                        common = buildCommonRequest(clientVersion = ClientVersion.TIEBA_V12),
+                        forum_id = forumId,
                     )
                 ),
                 clientVersion = ClientVersion.TIEBA_V12,

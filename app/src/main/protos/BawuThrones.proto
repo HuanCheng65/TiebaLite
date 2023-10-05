@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+package tieba;
+
+option java_package = "com.huanchengfly.tieba.post.api.models.protos";
+
+message BawuThrones {
+  int32 total_recommend_num = 1;
+  int32 used_recommend_num = 2;
+  string bazhu_level = 3;
+  int32 used_bcast_cnt = 4;
+  int32 total_bcast_cnt = 5;
+  int32 newest_bcast_pv = 6;
+  int32 has_send_bcast = 7;
+  int32 newest_bcast_pushuser_cnt = 8;
+}

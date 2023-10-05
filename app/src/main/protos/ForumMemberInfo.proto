@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+package tieba;
+
+option java_package = "com.huanchengfly.tieba.post.api.models.protos";
+
+import "User.proto";
+
+message ForumMemberInfo {
+  string total = 1;
+  string title = 2;
+  repeated User member_list = 3;
+}

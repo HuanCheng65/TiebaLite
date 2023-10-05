@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+package tieba;
+
+option java_package = "com.huanchengfly.tieba.post.api.models.protos";
+
+import "BawuRoleInfoPub.proto";
+
+message MemberGroupInfo {
+  string member_group_type = 1;
+  int32 member_group_num = 2;
+  repeated BawuRoleInfoPub member_group_list = 3;
+}

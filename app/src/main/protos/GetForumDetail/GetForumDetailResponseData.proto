@@ -1,0 +1,42 @@
+syntax = "proto3";
+
+package tieba.getForumDetail;
+
+option java_package = "com.huanchengfly.tieba.post.api.models.protos.getForumDetail";
+
+import "BawuThrones.proto";
+import "ForumMemberInfo.proto";
+import "GetForumDetail/ApplyStatus.proto";
+import "GetForumDetail/BawuAction.proto";
+import "GetForumDetail/BazhuGrade.proto";
+import "GetForumDetail/BazhuUniversity.proto";
+import "GetForumDetail/ForumDataCenter.proto";
+import "GetForumDetail/ManagerElectionTab.proto";
+import "HotUserRankEntry.proto";
+import "ManagerApplyInfo.proto";
+import "PriManagerApplyInfo.proto";
+import "RecommendForumInfo.proto";
+import "ServiceArea.proto";
+import "SimpleThreadInfo.proto";
+
+message GetForumDetailResponseData {
+  RecommendForumInfo forum_info = 1;
+  repeated SimpleThreadInfo thread_list = 2;
+  int32 is_bawu_show = 4;
+  ManagerApplyInfo bz_apply_info = 5;
+  int32 is_complaint_show = 6;
+  PriManagerApplyInfo pribz_apply_info = 7;
+  ManagerElectionTab election_tab = 8;
+  int32 is_forum_data_show = 9;
+  ForumDataCenter forum_data = 10;
+  repeated BawuAction bawu_actions = 11;
+  ApplyStatus apply_status = 12;
+  BazhuUniversity bazhu_university = 13;
+  BazhuGrade bazhu_grade = 15;
+  int32 is_forum_card_enable = 16;
+  BawuThrones bawu_thrones = 17;
+  string is_bazhu_show = 18;
+  HotUserRankEntry hot_user_entry = 19;
+  ServiceArea small_app = 20;
+  ForumMemberInfo forum_member = 21;
+}
