@@ -1172,22 +1172,18 @@ private val <T> SwipeableState<T>.LoadPreDownPostUpNestedScrollConnection: Neste
 
         override suspend fun onPreFling(available: Velocity): Velocity {
             val toFling = Offset(available.x, available.y).toFloat()
-            return if (toFling > 0) {
+            return if (toFling < 0 && offset.value > minBound) {
                 performFling(velocity = toFling)
                 // since we go to the anchor with tween settling, consume all for the best UX
-                // available
-                Velocity.Zero
+                available
             } else {
                 Velocity.Zero
             }
         }
 
-        override suspend fun onPostFling(
-            consumed: Velocity,
-            available: Velocity,
-        ): Velocity {
+        override suspend fun onPostFling(consumed: Velocity, available: Velocity): Velocity {
             performFling(velocity = Offset(available.x, available.y).toFloat())
-            return Velocity.Zero
+            return available
         }
 
         private fun Float.toOffset(): Offset = Offset(0f, this)
