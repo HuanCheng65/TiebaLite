@@ -182,7 +182,7 @@ class PhotoViewActivity : BaseComposeActivityWithParcelable<PhotoViewData>() {
                 Box(modifier = Modifier.fillMaxSize()) {
                     HorizontalPager(
                         state = pagerState,
-                        key = { items[it].picId }
+                        key = { "${items[it].picId}_${items[it].overallIndex}" }
                     ) {
                         val item = items[it]
                         ViewPhoto(
