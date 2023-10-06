@@ -1621,7 +1621,7 @@ fun PostCard(
     val paddingModifier = Modifier.padding(start = if (hasPadding) Sizes.Small + 8.dp else 0.dp)
     val author = postHolder.get { author!! }
     val showTitle = remember(postHolder) {
-        post.title.isNotBlank() && post.floor <= 1
+        post.title.isNotBlank() && post.floor <= 1 && post.is_ntitle != 1
     }
     val hasAgreed = remember(postHolder) {
         post.agree?.hasAgree == 1
