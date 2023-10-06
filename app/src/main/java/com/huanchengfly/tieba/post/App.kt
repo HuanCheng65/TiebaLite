@@ -743,7 +743,13 @@ class App : Application(), IApp, SketchFactory {
         }
 
         override fun getColorByAttr(context: Context, attrId: Int): Int {
-            return getColorByAttr(context, attrId, ThemeUtil.getCurrentTheme())
+            return when (attrId) {
+                R.attr.colorPrimary, R.attr.colorNewPrimary, R.attr.colorAccent -> {
+                    getColorByAttr(context, attrId, ThemeUtil.getCurrentTheme(checkDynamic = true))
+                }
+
+                else -> getColorByAttr(context, attrId, ThemeUtil.getCurrentTheme())
+            }
         }
 
         override fun getColorById(context: Context, colorId: Int): Int {

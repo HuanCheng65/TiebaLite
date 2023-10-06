@@ -279,7 +279,10 @@ object ThemeUtil {
     }
 
     @JvmOverloads
-    fun getCurrentTheme(theme: String = getRawTheme()): String {
+    fun getCurrentTheme(
+        theme: String = getRawTheme(),
+        checkDynamic: Boolean = false,
+    ): String {
         var nowTheme = theme
         if (isTranslucentTheme(nowTheme)) {
             val colorTheme =
@@ -289,7 +292,7 @@ object ThemeUtil {
             } else {
                 THEME_TRANSLUCENT_LIGHT
             }
-        } else if (isUsingDynamicTheme() && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+        } else if (checkDynamic && isUsingDynamicTheme() && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
             nowTheme = "${nowTheme}_dynamic"
         }
         return nowTheme
