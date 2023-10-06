@@ -1,0 +1,55 @@
+syntax = "proto3";
+
+package tieba;
+
+option java_package = "com.huanchengfly.tieba.post.api.models.protos";
+
+import "BookTag.proto";
+
+message BookInfo {
+  string book_id = 1;
+  string title = 2;
+  string cover = 3;
+  uint32 book_type = 4;
+  uint32 class_id = 5;
+  string class_name = 6;
+  uint32 sub_class_id = 7;
+  string sub_class_name = 8;
+  uint32 book_size = 9;
+  string intro = 10;
+  string author = 11;
+  string author_intro = 12;
+  repeated BookTag tags = 13;
+  uint32 total_chapter = 14;
+  uint32 words = 15;
+  uint32 orignal_price = 16;
+  uint32 price = 17;
+  string discount_ratio = 18;
+  uint32 is_finish = 19;
+  string ad_code = 20;
+  uint32 is_buy = 21;
+  string free_info = 22;
+  string publisher = 23;
+  string isbn = 24;
+  string copyright = 25;
+  string publish_text = 26;
+  string copyright_text = 27;
+  string publish_time = 28;
+  string publish_type = 29;
+  uint32 update_time = 30;
+  string big_cover = 31;
+  uint32 discount_type = 32;
+  string discount_icon = 33;
+  uint32 read_count = 34;
+  uint32 total_page = 35;
+  string book_ver = 36;
+  string chapter_ver = 37;
+  uint64 forum_id = 38;
+  string forum_name = 39;
+  string discuss = 40;
+  string cp_id = 41;
+  string paper_price = 42;
+  uint32 first_chapter = 43;
+  uint32 charge_type = 44;
+  uint32 member_show_type = 45;
+}

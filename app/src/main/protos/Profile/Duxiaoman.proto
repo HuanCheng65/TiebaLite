@@ -1,0 +1,6 @@
+syntax = "proto3";
+
+message Duxiaoman {
+  uint32 total_cash = 1;
+  uint32 is_end = 2;
+}

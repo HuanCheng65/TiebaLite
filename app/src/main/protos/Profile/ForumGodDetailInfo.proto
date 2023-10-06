@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+message ForumGodDetailInfo {
+  int64 god_id = 1;
+  int64 user_id = 2;
+  string intro = 3;
+  string detail_intro = 4;
+  int64 forum_id = 5;
+  string forum_name = 6;
+  string avatar = 7;
+}

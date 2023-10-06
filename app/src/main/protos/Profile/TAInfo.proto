@@ -1,0 +1,23 @@
+syntax = "proto3";
+
+package tieba.profile;
+
+option java_package = "com.huanchengfly.tieba.post.api.models.protos.profile";
+
+import "Profile/CommonDistance.proto";
+import "Profile/CommonLocation.proto";
+import "Profile/ReplyList.proto";
+
+message TAInfo {
+  repeated string foruminfo = 1;
+  repeated string groupinfo = 2;
+  repeated string friendinfo = 3;
+  CommonDistance distanceinfo = 4;
+  uint32 groupnum = 5;
+  uint32 friendnum = 6;
+  uint32 is_friend = 7;
+  repeated ReplyList reply_list = 8;
+  uint32 userClientVersionIsLower = 9;
+  CommonLocation location = 10;
+  string hide_user_feed = 11;
+}

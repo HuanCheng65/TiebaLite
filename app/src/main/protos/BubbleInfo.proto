@@ -4,8 +4,8 @@ package tieba;
 
 option java_package = "com.huanchengfly.tieba.post.api.models.protos";
 
-import "Error.proto";
-
-message ProtoCommonResponse {
-  Error error = 1;
+message BubbleInfo {
+  int32 bubble_id = 1;
+  string bubble_text = 2;
+  string bubble_pic = 3;
 }

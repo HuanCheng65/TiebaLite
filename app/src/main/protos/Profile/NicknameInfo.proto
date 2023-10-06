@@ -1,0 +1,5 @@
+syntax = "proto3";
+
+message NicknameInfo {
+  int32 left_days = 2;
+}

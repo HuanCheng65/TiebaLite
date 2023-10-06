@@ -1137,11 +1137,11 @@ object MixedTiebaApiImpl : ITiebaApi {
     override fun userProfileFlow(uid: Long): Flow<ProfileResponse> {
         val selfUid = AccountUtil.getUid()?.toLongOrNull()
         val isSelf = selfUid == uid
-        return RetrofitTiebaApi.OFFICIAL_PROTOBUF_TIEBA_API.profileFlow(
+        return RetrofitTiebaApi.OFFICIAL_PROTOBUF_TIEBA_V12_API.profileFlow(
             buildProtobufRequestBody(
                 ProfileRequest(
                     ProfileRequestData(
-                        common = buildCommonRequest(),
+                        common = buildCommonRequest(clientVersion = ClientVersion.TIEBA_V12),
                         friend_uid = uid.takeIf { !isSelf },
                         friend_uid_portrait = "",
                         has_plist = 1,
@@ -1157,7 +1157,8 @@ object MixedTiebaApiImpl : ITiebaApi {
                         scr_w = getScreenWidth(),
                         uid = selfUid,
                     )
-                )
+                ),
+                clientVersion = ClientVersion.TIEBA_V12
             )
         )
     }

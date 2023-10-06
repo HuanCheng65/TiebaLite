@@ -1,0 +1,21 @@
+syntax = "proto3";
+
+package tieba;
+
+option java_package = "com.huanchengfly.tieba.post.api.models.protos";
+
+import "Profile/ForumGodDetailInfo.proto";
+import "Profile/GodDetailInfo.proto";
+import "ThreadInfo.proto";
+
+message UserGodInfo {
+  int32 god_type = 1;
+  GodDetailInfo god_info = 2;
+  repeated ForumGodDetailInfo forum_god_list = 3;
+  int32 sex = 4;
+  int32 age = 5;
+  string address = 6;
+  repeated ThreadInfo thread_list = 7;
+  int32 cur_page = 8;
+  string total_thread = 9;
+}

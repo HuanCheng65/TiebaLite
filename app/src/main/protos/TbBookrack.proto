@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+package tieba;
+
+option java_package = "com.huanchengfly.tieba.post.api.models.protos";
+
+import "BookInfo.proto";
+
+message TbBookrack {
+  string booktown = 1;
+  uint32 num = 2;
+  repeated BookInfo book_list = 3;
+  string title = 4;
+  string icon = 5;
+  string tip = 6;
+}

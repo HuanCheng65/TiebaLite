@@ -1,0 +1,8 @@
+syntax = "proto3";
+
+message ReplyList {
+  int64 user_id = 1;
+  int64 friend_id = 2;
+  string message = 3;
+  uint32 time = 4;
+}

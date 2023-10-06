@@ -1,0 +1,10 @@
+syntax = "proto3";
+
+import "Profile/FinanceTabItems.proto";
+
+message FinanceTab {
+  string title = 1;
+  string general_tab_text = 2;
+  string general_tab_url = 3;
+  repeated FinanceTabItems tabs = 4;
+}

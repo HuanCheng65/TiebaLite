@@ -4,8 +4,9 @@ package tieba;
 
 option java_package = "com.huanchengfly.tieba.post.api.models.protos";
 
-import "Error.proto";
+import "High.proto";
 
-message ProtoCommonResponse {
-  Error error = 1;
+message Highlist {
+  repeated High list = 1;
+  bool has_more = 2;
 }

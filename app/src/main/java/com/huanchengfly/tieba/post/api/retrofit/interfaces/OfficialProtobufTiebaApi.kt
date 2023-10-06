@@ -60,7 +60,7 @@ interface OfficialProtobufTiebaApi {
         @Body body: MyMultipartBody,
     ): Flow<ThreadListResponse>
 
-    @POST("/c/u/user/profile?cmd=303012")
+    @POST("/c/u/user/profile?cmd=303012&format=protobuf")
     fun profileFlow(
         @Body body: MyMultipartBody,
     ): Flow<ProfileResponse>

@@ -4,8 +4,8 @@ package tieba;
 
 option java_package = "com.huanchengfly.tieba.post.api.models.protos";
 
-import "Error.proto";
-
-message ProtoCommonResponse {
-  Error error = 1;
+message UserMap {
+  int32 id = 1;
+  string name = 2;
+  string url = 3;
 }
