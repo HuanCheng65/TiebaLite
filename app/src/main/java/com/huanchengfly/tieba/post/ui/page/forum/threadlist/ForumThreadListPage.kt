@@ -24,7 +24,6 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.SnackbarResult
 import androidx.compose.material.Text
 import androidx.compose.material.pullrefresh.PullRefreshIndicator
-import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -276,12 +275,14 @@ fun ForumThreadListPage(
     forumId: Long,
     forumName: String,
     isGood: Boolean = false,
-    lazyListState: LazyListState = rememberLazyListState(),
     viewModel: ForumThreadListViewModel = if (isGood) pageViewModel<GoodThreadListViewModel>() else pageViewModel<LatestThreadListViewModel>()
 ) {
     val context = LocalContext.current
     val navigator = LocalNavigator.current
     val snackbarHostState = LocalSnackbarHostState.current
+
+    val lazyListState = rememberLazyListState()
+
     LazyLoad(loaded = viewModel.initialized) {
         viewModel.send(getFirstLoadIntent(context, forumName, isGood))
         viewModel.initialized = true
@@ -356,7 +357,7 @@ fun ForumThreadListPage(
         refreshing = isRefreshing,
         onRefresh = { viewModel.send(getRefreshIntent(context, forumName, isGood)) }
     )
-    Box(modifier = Modifier.pullRefresh(pullRefreshState)) {
+    Box {
         LoadMoreLayout(
             isLoading = isLoadingMore,
             onLoadMore = {

@@ -312,7 +312,7 @@ class ForumActivity : BaseActivity(), View.OnClickListener, OnRefreshedListener,
                     )
                 else
                     ForumFragment.newInstance(forumName, false, getSortType()),
-                getString(R.string.tab_forum_1)
+                getString(R.string.tab_forum_latest)
             )
             addFragment(
                 ForumFragment.newInstance(forumName, true, getSortType()),
