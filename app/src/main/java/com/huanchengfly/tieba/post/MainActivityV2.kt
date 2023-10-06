@@ -7,7 +7,6 @@ import android.content.BroadcastReceiver
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
-import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.net.Uri
 import android.os.Build
@@ -48,6 +47,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.IntOffset
@@ -252,8 +252,8 @@ class MainActivityV2 : BaseComposeActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         installSplashScreen()
         super.onCreate(savedInstanceState)
-        window.decorView.setBackgroundColor(Color.TRANSPARENT)
-        window.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        window.decorView.setBackgroundColor(0)
+        window.setBackgroundDrawable(ColorDrawable(0))
         launch {
             ClientUtils.setActiveTimestamp()
         }
@@ -421,7 +421,8 @@ class MainActivityV2 : BaseComposeActivity() {
                     ModalBottomSheetLayout(
                         bottomSheetNavigator = navigator,
                         sheetShape = RoundedCornerShape(topStart = 12.dp, topEnd = 12.dp),
-                        sheetBackgroundColor = ExtendedTheme.colors.windowBackground
+                        sheetBackgroundColor = ExtendedTheme.colors.windowBackground,
+                        scrimColor = Color.Black.copy(alpha = 0.32f),
                     ) {
                         DestinationsNavHost(
                             navController = navController,
