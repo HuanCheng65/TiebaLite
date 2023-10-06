@@ -11,6 +11,7 @@ import "AlaLiveInfo.proto";
 import "DislikeInfo.proto";
 import "HotTWThreadInfo.proto";
 import "Media.proto";
+import "OriginThreadInfo.proto";
 import "PbContent.proto";
 import "SimpleForum.proto";
 import "TiebaPlusAd.proto";
@@ -56,7 +57,9 @@ message ThreadInfo {
   int32 agreeNum = 124;
   Agree agree = 126;
   int64 shareNum = 135;
+  OriginThreadInfo origin_thread_info = 141;
   repeated PbContent firstPostContent = 142;
+  int32 is_share_thread = 143;
   int32 isTopic = 148;
   string topicUserName = 149;
   string topicH5Url = 150;

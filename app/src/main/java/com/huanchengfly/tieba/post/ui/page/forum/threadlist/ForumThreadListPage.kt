@@ -37,6 +37,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.huanchengfly.tieba.post.R
+import com.huanchengfly.tieba.post.api.models.protos.OriginThreadInfo
 import com.huanchengfly.tieba.post.api.models.protos.ThreadInfo
 import com.huanchengfly.tieba.post.api.models.protos.abstractText
 import com.huanchengfly.tieba.post.api.models.protos.frsPage.Classify
@@ -178,6 +179,7 @@ private fun ThreadList(
     onClassifySelected: (Int) -> Unit,
     forumRuleTitle: String? = null,
     onOpenForumRule: (() -> Unit)? = null,
+    onOriginThreadClicked: (OriginThreadInfo) -> Unit = {},
 ) {
     val windowSizeClass = LocalWindowSizeClass.current
     val itemFraction = when (windowSizeClass.widthSizeClass) {
@@ -259,6 +261,7 @@ private fun ThreadList(
                             onClick = onItemClicked,
                             onReplyClick = onItemReplyClicked,
                             onAgree = onAgree,
+                            onClickOriginThread = onOriginThreadClicked,
                         )
                     }
                 }
@@ -418,6 +421,14 @@ fun ForumThreadListPage(
                 forumRuleTitle = forumRuleTitle,
                 onOpenForumRule = {
                     navigator.navigate(ForumRuleDetailPageDestination(forumId))
+                },
+                onOriginThreadClicked = {
+                    navigator.navigate(
+                        ThreadPageDestination(
+                            threadId = it.tid.toLong(),
+                            forumId = it.fid,
+                        )
+                    )
                 }
             )
         }

@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.IntrinsicSize
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.Spacer
@@ -58,6 +59,7 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.util.fastForEach
 import androidx.compose.ui.util.fastForEachIndexed
 import com.google.accompanist.placeholder.PlaceholderHighlight
 import com.google.accompanist.placeholder.material.fade
@@ -67,10 +69,13 @@ import com.huanchengfly.tieba.post.App
 import com.huanchengfly.tieba.post.R
 import com.huanchengfly.tieba.post.activities.UserActivity
 import com.huanchengfly.tieba.post.api.models.protos.Media
+import com.huanchengfly.tieba.post.api.models.protos.OriginThreadInfo
 import com.huanchengfly.tieba.post.api.models.protos.SimpleForum
 import com.huanchengfly.tieba.post.api.models.protos.ThreadInfo
 import com.huanchengfly.tieba.post.api.models.protos.User
+import com.huanchengfly.tieba.post.api.models.protos.VideoInfo
 import com.huanchengfly.tieba.post.api.models.protos.abstractText
+import com.huanchengfly.tieba.post.api.models.protos.renders
 import com.huanchengfly.tieba.post.arch.BaseComposeActivity.Companion.LocalWindowSizeClass
 import com.huanchengfly.tieba.post.arch.ImmutableHolder
 import com.huanchengfly.tieba.post.arch.wrapImmutable
@@ -90,6 +95,8 @@ import com.huanchengfly.tieba.post.utils.ImageUtil
 import com.huanchengfly.tieba.post.utils.StringUtil
 import com.huanchengfly.tieba.post.utils.StringUtil.getShortNumString
 import com.huanchengfly.tieba.post.utils.appPreferences
+import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.persistentListOf
 import kotlin.math.max
 import kotlin.math.min
 
@@ -107,7 +114,8 @@ private val ImmutableHolder<Media>.url: String
 private fun DefaultUserHeader(
     userProvider: () -> ImmutableHolder<User>,
     timeProvider: () -> Int,
-    content: @Composable RowScope.() -> Unit
+    modifier: Modifier = Modifier,
+    content: @Composable RowScope.() -> Unit,
 ) {
     val context = LocalContext.current
     val user = remember(userProvider) { userProvider() }
@@ -146,7 +154,8 @@ private fun DefaultUserHeader(
                 )
             )
         },
-        content = content
+        content = content,
+        modifier = modifier
     )
 }
 
@@ -157,7 +166,8 @@ fun Card(
     header: @Composable ColumnScope.() -> Unit = {},
     content: @Composable ColumnScope.() -> Unit = {},
     action: @Composable (ColumnScope.() -> Unit)? = null,
-    onClick: (() -> Unit)? = null
+    onClick: (() -> Unit)? = null,
+    contentPadding: PaddingValues = PaddingValues(horizontal = 16.dp),
 ) {
     val cardModifier = if (onClick != null) Modifier.clickable(onClick = onClick) else Modifier
 
@@ -168,7 +178,7 @@ fun Card(
         modifier = cardModifier
             .then(modifier)
             .then(paddingModifier)
-            .padding(horizontal = 16.dp)
+            .padding(contentPadding)
     ) {
         header()
         Column(
@@ -210,6 +220,7 @@ private fun Badge(
 
 @Composable
 fun ThreadContent(
+    modifier: Modifier = Modifier,
     title: String = "",
     abstractText: String = "",
     tabName: String = "",
@@ -245,12 +256,14 @@ fun ThreadContent(
 
     EmoticonText(
         text = content,
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier
+            .fillMaxWidth()
+            .then(modifier),
         fontSize = 15.sp,
         lineSpacing = 0.8.sp,
         overflow = TextOverflow.Ellipsis,
         maxLines = 5,
-        style = MaterialTheme.typography.body1
+        style = MaterialTheme.typography.body1,
     )
 }
 
@@ -368,16 +381,15 @@ private fun MediaPlaceholder(
 
 @Composable
 private fun ThreadMedia(
-    item: ImmutableHolder<ThreadInfo>,
+    forumId: Long,
+    forumName: String,
+    threadId: Long,
+    modifier: Modifier = Modifier,
+    medias: ImmutableList<ImmutableHolder<Media>> = persistentListOf(),
+    videoInfo: ImmutableHolder<VideoInfo>? = null,
 ) {
     val context = LocalContext.current
 
-    val isVideo = remember(item) {
-        item.isNotNull { videoInfo }
-    }
-    val medias = remember(item) {
-        item.getImmutableList { media }
-    }
     val mediaCount = remember(medias) {
         medias.size
     }
@@ -393,114 +405,131 @@ private fun ThreadMedia(
         else 0.5f
     }
 
-    if (isVideo) {
-        if (hideMedia) {
-            MediaPlaceholder(
-                icon = {
-                    Icon(
-                        imageVector = Icons.Rounded.OndemandVideo,
-                        contentDescription = stringResource(id = R.string.desc_video)
-                    )
-                },
-                text = {
-                    Text(text = stringResource(id = R.string.desc_video))
-                },
-                modifier = Modifier.fillMaxWidth()
-            )
-        } else {
-            val videoInfo = remember(item) { item.getImmutable { videoInfo!! } }
-            val aspectRatio = remember(videoInfo) {
-                max(
-                    videoInfo
-                        .get { thumbnailWidth }
-                        .toFloat() / videoInfo.get { thumbnailHeight },
-                    16f / 9
-                )
-            }
-            Box(
-                modifier = Modifier.clickable(
-                    interactionSource = remember { MutableInteractionSource() },
-                    indication = null,
-                    onClick = {}
-                )
-            ) {
-                VideoPlayer(
-                    videoUrl = videoInfo.get { videoUrl },
-                    thumbnailUrl = videoInfo.get { thumbnailUrl },
-                    modifier = Modifier
-                        .fillMaxWidth(singleMediaFraction)
-                        .aspectRatio(aspectRatio)
-                        .clip(RoundedCornerShape(8.dp))
-                )
-            }
-        }
-    } else if (hasMedia) {
-        val mediaWidthFraction = remember(isSingleMedia, singleMediaFraction) {
-            if (isSingleMedia) singleMediaFraction else 1f
-        }
-        val mediaAspectRatio = remember(isSingleMedia) {
-            if (isSingleMedia) 2f else 3f
-        }
-        if (hideMedia) {
-            val photoViewData = remember(item) {
-                getPhotoViewData(item.get(), 0)
-            }
-            MediaPlaceholder(
-                icon = {
-                    Icon(
-                        imageVector = if (isSingleMedia) Icons.Rounded.Photo else Icons.Rounded.PhotoLibrary,
-                        contentDescription = stringResource(id = R.string.desc_photo)
-                    )
-                },
-                text = {
-                    Text(text = stringResource(id = R.string.btn_open_photos, mediaCount))
-                },
-                modifier = Modifier.fillMaxWidth(),
-                onClick = {
-                    context.goToActivity<PhotoViewActivity> {
-                        putExtra(
-                            PhotoViewActivity.EXTRA_PHOTO_VIEW_DATA,
-                            photoViewData
+    Box(modifier = modifier) {
+        if (videoInfo != null) {
+            if (hideMedia) {
+                MediaPlaceholder(
+                    icon = {
+                        Icon(
+                            imageVector = Icons.Rounded.OndemandVideo,
+                            contentDescription = stringResource(id = R.string.desc_video)
                         )
-                    }
+                    },
+                    text = {
+                        Text(text = stringResource(id = R.string.desc_video))
+                    },
+                    modifier = Modifier.fillMaxWidth()
+                )
+            } else {
+                val aspectRatio = remember(videoInfo) {
+                    max(
+                        videoInfo
+                            .get { thumbnailWidth }
+                            .toFloat() / videoInfo.get { thumbnailHeight },
+                        16f / 9
+                    )
                 }
-            )
-        } else {
-            val showMediaCount = remember(medias) { min(medias.size, 3) }
-            val hasMoreMedia = remember(medias) { medias.size > 3 }
-            val showMedias = remember(medias) { medias.subList(0, showMediaCount) }
-            Box {
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth(mediaWidthFraction)
-                        .aspectRatio(mediaAspectRatio)
-                        .clip(RoundedCornerShape(8.dp)),
-                    horizontalArrangement = Arrangement.spacedBy(4.dp)
+                Box(
+                    modifier = Modifier.clickable(
+                        interactionSource = remember { MutableInteractionSource() },
+                        indication = null,
+                        onClick = {}
+                    )
                 ) {
-                    showMedias.fastForEachIndexed { index, media ->
-                        val photoViewData = remember(item, index) {
-                            getPhotoViewData(item.get(), index)
+                    VideoPlayer(
+                        videoUrl = videoInfo.get { videoUrl },
+                        thumbnailUrl = videoInfo.get { thumbnailUrl },
+                        modifier = Modifier
+                            .fillMaxWidth(singleMediaFraction)
+                            .aspectRatio(aspectRatio)
+                            .clip(RoundedCornerShape(8.dp))
+                    )
+                }
+            }
+        } else if (hasMedia) {
+            val mediaWidthFraction = remember(isSingleMedia, singleMediaFraction) {
+                if (isSingleMedia) singleMediaFraction else 1f
+            }
+            val mediaAspectRatio = remember(isSingleMedia) {
+                if (isSingleMedia) 2f else 3f
+            }
+            if (hideMedia) {
+                val photoViewData = remember(
+                    medias, forumId, forumName, threadId
+                ) {
+                    getPhotoViewData(
+                        medias = medias.map { it.get() },
+                        forumId = forumId,
+                        forumName = forumName,
+                        threadId = threadId,
+                        index = 0
+                    )
+                }
+                MediaPlaceholder(
+                    icon = {
+                        Icon(
+                            imageVector = if (isSingleMedia) Icons.Rounded.Photo else Icons.Rounded.PhotoLibrary,
+                            contentDescription = stringResource(id = R.string.desc_photo)
+                        )
+                    },
+                    text = {
+                        Text(text = stringResource(id = R.string.btn_open_photos, mediaCount))
+                    },
+                    modifier = Modifier.fillMaxWidth(),
+                    onClick = {
+                        context.goToActivity<PhotoViewActivity> {
+                            putExtra(
+                                PhotoViewActivity.EXTRA_PHOTO_VIEW_DATA,
+                                photoViewData
+                            )
                         }
-                        NetworkImage(
-                            imageUri = remember(media) { media.url },
-                            contentDescription = null,
+                    }
+                )
+            } else {
+                val showMediaCount = remember(medias) { min(medias.size, 3) }
+                val hasMoreMedia = remember(medias) { medias.size > 3 }
+                val showMedias = remember(medias) { medias.subList(0, showMediaCount) }
+                Box {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth(mediaWidthFraction)
+                            .aspectRatio(mediaAspectRatio)
+                            .clip(RoundedCornerShape(8.dp)),
+                        horizontalArrangement = Arrangement.spacedBy(4.dp)
+                    ) {
+                        showMedias.fastForEachIndexed { index, media ->
+                            val photoViewData = remember(
+                                index, medias, forumId, forumName, threadId
+                            ) {
+                                getPhotoViewData(
+                                    medias = medias.map { it.get() },
+                                    forumId = forumId,
+                                    forumName = forumName,
+                                    threadId = threadId,
+                                    index = index
+                                )
+                            }
+                            NetworkImage(
+                                imageUri = remember(media) { media.url },
+                                contentDescription = null,
+                                modifier = Modifier
+                                    .fillMaxHeight()
+                                    .weight(1f),
+                                photoViewData = photoViewData,
+                                contentScale = ContentScale.Crop,
+                                enablePreview = true
+                            )
+                        }
+                    }
+                    if (hasMoreMedia) {
+                        Badge(
+                            icon = Icons.Rounded.PhotoSizeSelectActual,
+                            text = "${medias.size}",
                             modifier = Modifier
-                                .fillMaxHeight()
-                                .weight(1f),
-                            photoViewData = photoViewData,
-                            contentScale = ContentScale.Crop,
-                            enablePreview = true
+                                .align(Alignment.BottomEnd)
+                                .padding(8.dp)
                         )
                     }
-                }
-                if (hasMoreMedia) {
-                    Badge(
-                        icon = Icons.Rounded.PhotoSizeSelectActual,
-                        text = "${medias.size}",
-                        modifier = Modifier
-                            .align(Alignment.BottomEnd)
-                            .padding(8.dp)
-                    )
                 }
             }
         }
@@ -508,9 +537,49 @@ private fun ThreadMedia(
 }
 
 @Composable
+private fun ThreadMedia(
+    item: ImmutableHolder<ThreadInfo>,
+    modifier: Modifier = Modifier,
+) {
+    ThreadMedia(
+        forumId = item.get { forumId },
+        forumName = item.get { forumName },
+        threadId = item.get { threadId },
+        medias = item.getImmutableList { media },
+        videoInfo = item.get { videoInfo }?.wrapImmutable(),
+        modifier = modifier,
+    )
+}
+
+@Composable
+fun OriginThreadCard(
+    originThreadInfo: ImmutableHolder<OriginThreadInfo>,
+    modifier: Modifier = Modifier,
+) {
+    val contentRenders = remember(originThreadInfo) { originThreadInfo.get { content.renders } }
+    Column(
+        modifier = modifier,
+        verticalArrangement = Arrangement.spacedBy(8.dp),
+    ) {
+        Column {
+            contentRenders.fastForEach {
+                it.Render()
+            }
+        }
+        ThreadMedia(
+            forumId = originThreadInfo.get { fid },
+            forumName = originThreadInfo.get { fname },
+            threadId = originThreadInfo.get { tid.toLong() },
+            medias = originThreadInfo.getImmutableList { media },
+            videoInfo = originThreadInfo.get { video_info }?.wrapImmutable()
+        )
+    }
+}
+
+@Composable
 private fun ThreadForumInfo(
     item: ImmutableHolder<ThreadInfo>,
-    onClick: (SimpleForum) -> Unit
+    onClick: (SimpleForum) -> Unit,
 ) {
     val hasForumInfo = remember(item) { item.isNotNull { forumInfo } }
     if (hasForumInfo) {
@@ -617,6 +686,7 @@ fun FeedCard(
     modifier: Modifier = Modifier,
     onReplyClick: (ThreadInfo) -> Unit = {},
     onClickForum: (SimpleForum) -> Unit = {},
+    onClickOriginThread: (OriginThreadInfo) -> Unit = {},
     dislikeAction: @Composable () -> Unit = {},
 ) {
     Card(
@@ -625,7 +695,7 @@ fun FeedCard(
             if (hasAuthor) {
                 DefaultUserHeader(
                     userProvider = { item.getImmutable { author!! } },
-                    timeProvider = { item.get { lastTimeInt } }
+                    timeProvider = { item.get { lastTimeInt } },
                 ) { dislikeAction() }
             }
         },
@@ -636,10 +706,26 @@ fun FeedCard(
                 tabName = item.get { tabName },
                 showTitle = item.get { isNoTitle != 1 && title.isNotBlank() },
                 showAbstract = item.get { abstractText.isNotBlank() },
-                isGood = item.get { isGood == 1 }
+                isGood = item.get { isGood == 1 },
             )
 
-            ThreadMedia(item = item)
+            ThreadMedia(
+                item = item,
+            )
+
+            item.getNullableImmutable { origin_thread_info }
+                .takeIf { item.get { is_share_thread } == 1 }?.let {
+                    OriginThreadCard(
+                        originThreadInfo = it,
+                        modifier = Modifier
+                            .clip(RoundedCornerShape(6.dp))
+                            .background(ExtendedTheme.colors.floorCard)
+                            .clickable {
+                                onClickOriginThread(it.get())
+                            }
+                            .padding(16.dp)
+                    )
+                }
 
             ThreadForumInfo(item = item, onClick = onClickForum)
         },
@@ -666,13 +752,13 @@ fun FeedCard(
             }
         },
         onClick = { onClick(item.get()) },
-        modifier = modifier
+        modifier = modifier,
     )
 }
 
 @Composable
 private fun ActionBtnPlaceholder(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Row(
         modifier = Modifier
@@ -726,7 +812,7 @@ fun VideoPlayer(
     videoUrl: String,
     thumbnailUrl: String,
     modifier: Modifier = Modifier,
-    title: String = ""
+    title: String = "",
 ) {
     val context = LocalContext.current
     val systemUiController = rememberSystemUiController()

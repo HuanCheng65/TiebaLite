@@ -147,6 +147,7 @@ import com.huanchengfly.tieba.post.ui.widgets.compose.LongClickMenu
 import com.huanchengfly.tieba.post.ui.widgets.compose.MyBackHandler
 import com.huanchengfly.tieba.post.ui.widgets.compose.MyLazyColumn
 import com.huanchengfly.tieba.post.ui.widgets.compose.MyScaffold
+import com.huanchengfly.tieba.post.ui.widgets.compose.OriginThreadCard
 import com.huanchengfly.tieba.post.ui.widgets.compose.PromptDialog
 import com.huanchengfly.tieba.post.ui.widgets.compose.Sizes
 import com.huanchengfly.tieba.post.ui.widgets.compose.TextWithMinWidth
@@ -1065,7 +1066,7 @@ fun ThreadPage(
                             )
                     )
                 },
-            ) {
+            ) { paddingValues ->
                 ModalBottomSheetLayout(
                     sheetState = bottomSheetState,
                     sheetShape = RoundedCornerShape(topStart = 12.dp, topEnd = 12.dp),
@@ -1180,7 +1181,7 @@ fun ThreadPage(
                     scrimColor = Color.Transparent,
                     modifier = Modifier
                         .fillMaxSize()
-                        .padding(it)
+                        .padding(paddingValues)
                 ) {
                     Box(
                         modifier = Modifier
@@ -1252,6 +1253,28 @@ fun ThreadPage(
                                                     deletePost = null
                                                     confirmDeleteDialogState.show()
                                                 }
+
+                                                thread?.getNullableImmutable { origin_thread_info }
+                                                    .takeIf { thread?.get { is_share_thread } == 1 }
+                                                    ?.let {
+                                                        OriginThreadCard(
+                                                            originThreadInfo = it,
+                                                            modifier = Modifier
+                                                                .padding(horizontal = 16.dp)
+                                                                .padding(bottom = 16.dp)
+                                                                .clip(RoundedCornerShape(6.dp))
+                                                                .background(ExtendedTheme.colors.floorCard)
+                                                                .clickable {
+                                                                    navigator.navigate(
+                                                                        ThreadPageDestination(
+                                                                            threadId = it.get { tid.toLong() },
+                                                                            forumId = it.get { fid },
+                                                                        )
+                                                                    )
+                                                                }
+                                                                .padding(16.dp)
+                                                        )
+                                                    }
 
                                                 VerticalDivider(
                                                     modifier = Modifier

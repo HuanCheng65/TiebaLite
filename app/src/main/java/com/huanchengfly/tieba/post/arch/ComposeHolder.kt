@@ -26,6 +26,10 @@ class ImmutableHolder<T>(val item: T) {
         return wrapImmutable(getter(item))
     }
 
+    fun <R> getNullableImmutable(getter: T.() -> R?): ImmutableHolder<R>? {
+        return getter(item)?.wrapImmutable()
+    }
+
     fun <R> getImmutableList(getter: T.() -> List<R>): ImmutableList<ImmutableHolder<R>> {
         return getter(item).map { wrapImmutable(it) }.toImmutableList()
     }
