@@ -6,6 +6,7 @@ import android.content.res.ColorStateList
 import android.graphics.Color
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
+import android.os.Build
 import android.view.View
 import android.view.ViewGroup
 import android.webkit.WebView
@@ -118,7 +119,7 @@ object ThemeUtil {
 
     fun switchTheme(newTheme: String, recordOldTheme: Boolean = true) {
         if (recordOldTheme) {
-            val oldTheme = getTheme()
+            val oldTheme = getRawTheme()
             if (!isNightMode(oldTheme)) {
                 dataStore.putString(KEY_OLD_THEME, oldTheme)
             }
@@ -224,7 +225,7 @@ object ThemeUtil {
 
     @JvmStatic
     fun isNightMode(): Boolean {
-        return isNightMode(getTheme())
+        return isNightMode(getRawTheme())
     }
 
     @JvmStatic
@@ -236,7 +237,7 @@ object ThemeUtil {
     }
 
     fun isTranslucentTheme(): Boolean {
-        return isTranslucentTheme(getTheme())
+        return isTranslucentTheme(getRawTheme())
     }
 
     @JvmStatic
@@ -250,8 +251,12 @@ object ThemeUtil {
         )
     }
 
+    fun isDynamicTheme(theme: String): Boolean {
+        return theme.endsWith("_dynamic")
+    }
+
     fun isStatusBarFontDark(): Boolean {
-        val theme = getTheme()
+        val theme = getRawTheme()
         val isToolbarPrimaryColor: Boolean = INSTANCE.appPreferences.toolbarPrimaryColor
         return if (theme == THEME_CUSTOM) {
             INSTANCE.appPreferences.customStatusBarFontDark
@@ -269,12 +274,12 @@ object ThemeUtil {
     }
 
     fun setTheme(context: Activity) {
-        val nowTheme = getThemeTranslucent()
+        val nowTheme = getCurrentTheme()
         context.setTheme(getThemeByName(nowTheme))
     }
 
     @JvmOverloads
-    fun getThemeTranslucent(theme: String = getTheme()): String {
+    fun getCurrentTheme(theme: String = getRawTheme()): String {
         var nowTheme = theme
         if (isTranslucentTheme(nowTheme)) {
             val colorTheme =
@@ -284,6 +289,8 @@ object ThemeUtil {
             } else {
                 THEME_TRANSLUCENT_LIGHT
             }
+        } else if (isUsingDynamicTheme() && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            nowTheme = "${nowTheme}_dynamic"
         }
         return nowTheme
     }
@@ -442,7 +449,7 @@ object ThemeUtil {
     }
 
     @JvmStatic
-    fun getTheme(): String {
+    fun getRawTheme(): String {
         val theme = themeState.value
         return when (theme.lowercase(Locale.getDefault())) {
             THEME_TRANSLUCENT,
@@ -456,7 +463,8 @@ object ThemeUtil {
             THEME_RED,
             THEME_BLUE_DARK,
             THEME_GREY_DARK,
-            THEME_AMOLED_DARK -> theme.lowercase(Locale.getDefault())
+            THEME_AMOLED_DARK,
+            -> theme.lowercase(Locale.getDefault())
 
             else -> THEME_DEFAULT
         }

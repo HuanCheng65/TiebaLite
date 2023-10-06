@@ -314,7 +314,7 @@ private fun getBlackDarkDynamicColor(tonalPalette: TonalPalette): ExtendedColors
 @Composable
 private fun getThemeColorForTheme(theme: String): ExtendedColors {
     val context = LocalContext.current
-    val nowTheme = ThemeUtil.getThemeTranslucent(theme)
+    val nowTheme = ThemeUtil.getCurrentTheme(theme)
     val textColor =
         Color(App.ThemeDelegate.getColorByAttr(context, R.attr.colorText, nowTheme))
     val bottomBarColor =

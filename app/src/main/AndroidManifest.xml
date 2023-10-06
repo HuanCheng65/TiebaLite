@@ -126,9 +126,6 @@
         <meta-data
             android:name="is_self_build"
             android:value="${is_self_build}" />
-        <meta-data
-            android:name="enable_new_ui"
-            android:value="true" />
 
         <activity
             android:name=".activities.MainActivity"

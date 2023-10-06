@@ -267,7 +267,7 @@ public class WebViewFragment extends BaseFragment implements DownloadListener, B
     private void injectJavaScript() {
         if (mWebView == null) return;
         mWebView.evaluateJavascript(clipboardGuardJs, null);
-        String nowTheme = ThemeUtil.getTheme();
+        String nowTheme = ThemeUtil.getRawTheme();
         String url = mWebView.getUrl();
         if (url == null || nowTheme == null) {
             return;

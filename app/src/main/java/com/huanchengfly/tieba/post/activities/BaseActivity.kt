@@ -115,7 +115,7 @@ abstract class BaseActivity : AppCompatActivity(), ExtraRefreshable, CoroutineSc
         getDeviceDensity()
         INSTANCE.addActivity(this)
         if (isNeedSetTheme) ThemeUtil.setTheme(this)
-        oldTheme = ThemeUtil.getTheme()
+        oldTheme = ThemeUtil.getRawTheme()
         if (isNeedImmersionBar) {
             refreshStatusBarColor()
         }
@@ -137,8 +137,8 @@ abstract class BaseActivity : AppCompatActivity(), ExtraRefreshable, CoroutineSc
     }
 
     fun refreshUIIfNeed() {
-        if (TextUtils.equals(oldTheme, ThemeUtil.getTheme()) &&
-            ThemeUtil.THEME_CUSTOM != ThemeUtil.getTheme() &&
+        if (TextUtils.equals(oldTheme, ThemeUtil.getRawTheme()) &&
+            ThemeUtil.THEME_CUSTOM != ThemeUtil.getRawTheme() &&
             !ThemeUtil.isTranslucentTheme()
         ) {
             return
@@ -299,7 +299,7 @@ abstract class BaseActivity : AppCompatActivity(), ExtraRefreshable, CoroutineSc
         if (isNeedImmersionBar) {
             refreshStatusBarColor()
         }
-        oldTheme = ThemeUtil.getTheme()
+        oldTheme = ThemeUtil.getRawTheme()
     }
 
     private fun recreateIfNeed(): Boolean {

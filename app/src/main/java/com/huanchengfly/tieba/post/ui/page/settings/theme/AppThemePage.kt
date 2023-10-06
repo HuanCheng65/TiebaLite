@@ -423,7 +423,7 @@ fun AppThemePage(
                         Color(
                             App.ThemeDelegate.getColorByAttr(
                                 context,
-                                R.attr.colorOnBackground,
+                                R.attr.colorText,
                                 item
                             )
                         )

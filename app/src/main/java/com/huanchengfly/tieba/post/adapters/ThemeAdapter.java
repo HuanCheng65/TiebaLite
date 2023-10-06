@@ -44,12 +44,12 @@ public class ThemeAdapter extends RecyclerView.Adapter<MyViewHolder> implements 
         themes = mContext.getResources().getStringArray(R.array.theme_values);
         themeNames = mContext.getResources().getStringArray(R.array.themeNames);
         List<String> themeList = Arrays.asList(themes);
-        selectedPosition = themeList.indexOf(ThemeUtil.getTheme());
+        selectedPosition = themeList.indexOf(ThemeUtil.getRawTheme());
     }
 
     public void refresh() {
         List<String> themeList = Arrays.asList(themes);
-        selectedPosition = themeList.indexOf(ThemeUtil.getTheme());
+        selectedPosition = themeList.indexOf(ThemeUtil.getRawTheme());
         notifyDataSetChanged();
     }
 
@@ -98,7 +98,7 @@ public class ThemeAdapter extends RecyclerView.Adapter<MyViewHolder> implements 
         }
         previewView.setBackgroundTintList(ColorStateList.valueOf(toolbarColor));
         holder.setItemOnClickListener(v -> {
-            int oldPosition = selectedPosition + 0;
+            int oldPosition = selectedPosition;
             selectedPosition = position;
             notifyItemChanged(oldPosition);
             notifyItemChanged(position);

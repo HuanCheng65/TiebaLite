@@ -93,7 +93,7 @@ public class Util {
         Button mButton = mView.findViewById(R.id.snackbar_action);
         TextView mTextView = mView.findViewById(R.id.snackbar_text);
         mButton.setTextAppearance(view.getContext(), R.style.TextAppearance_Bold);
-        if (ThemeUtil.THEME_TRANSLUCENT.equals(ThemeUtil.getTheme())) {
+        if (ThemeUtil.THEME_TRANSLUCENT.equals(ThemeUtil.getRawTheme())) {
             mView.setBackgroundTintList(ColorStateList.valueOf(view.getResources().getColor(R.color.white)));
             mTextView.setTextColor(view.getResources().getColor(R.color.color_text));
         } else {

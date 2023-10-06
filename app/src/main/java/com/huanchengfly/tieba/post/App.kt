@@ -111,7 +111,7 @@ class App : Application(), IApp, SketchFactory {
     }
 
     fun setIcon(
-        enableNewUi: Boolean = applicationMetaData.getBoolean("enable_new_ui") || appPreferences.enableNewUi,
+        enableNewUi: Boolean = appPreferences.enableNewUi,
     ) {
         setOldMainActivityEnabled(!enableNewUi)
         if (enableNewUi) AppIconUtil.setIcon()
@@ -305,7 +305,7 @@ class App : Application(), IApp, SketchFactory {
             get() = INSTANCE.resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
 
         private val isNewUi: Boolean
-            get() = INSTANCE.applicationMetaData.getBoolean("enable_new_ui") || INSTANCE.appPreferences.enableNewUi
+            get() = INSTANCE.appPreferences.enableNewUi
     }
 
     object ThemeDelegate : ThemeSwitcher {
@@ -349,7 +349,14 @@ class App : Application(), IApp, SketchFactory {
             val resources = context.resources
             when (attrId) {
                 R.attr.colorPrimary -> {
-                    if (ThemeUtil.THEME_CUSTOM == theme) {
+                    if (ThemeUtil.isDynamicTheme(theme) && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                        val dynamicTonalPalette = dynamicTonalPalette(context)
+                        return if (ThemeUtil.isNightMode(theme)) {
+                            dynamicTonalPalette.primary80.toArgb()
+                        } else {
+                            dynamicTonalPalette.primary40.toArgb()
+                        }
+                    } else if (ThemeUtil.THEME_CUSTOM == theme) {
                         val customPrimaryColorStr = context.appPreferences.customPrimaryColor
                         return if (customPrimaryColorStr != null) {
                             Color.parseColor(customPrimaryColorStr)
@@ -370,7 +377,7 @@ class App : Application(), IApp, SketchFactory {
                 }
 
                 R.attr.colorNewPrimary -> {
-                    return if (ThemeUtil.isUsingDynamicTheme() && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                    return if (ThemeUtil.isDynamicTheme(theme) && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
                         val dynamicTonalPalette = dynamicTonalPalette(context)
                         if (ThemeUtil.isNightMode(theme)) {
                             dynamicTonalPalette.primary80.toArgb()
@@ -389,7 +396,14 @@ class App : Application(), IApp, SketchFactory {
                 }
 
                 R.attr.colorAccent -> {
-                    return if (ThemeUtil.THEME_CUSTOM == theme || ThemeUtil.isTranslucentTheme(theme)) {
+                    return if (ThemeUtil.isDynamicTheme(theme) && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                        val dynamicTonalPalette = dynamicTonalPalette(context)
+                        if (ThemeUtil.isNightMode(theme)) {
+                            dynamicTonalPalette.secondary80.toArgb()
+                        } else {
+                            dynamicTonalPalette.secondary40.toArgb()
+                        }
+                    } else if (ThemeUtil.THEME_CUSTOM == theme || ThemeUtil.isTranslucentTheme(theme)) {
                         getColorByAttr(context, R.attr.colorPrimary, theme)
                     } else {
                         context.getColorCompat(
@@ -729,7 +743,7 @@ class App : Application(), IApp, SketchFactory {
         }
 
         override fun getColorByAttr(context: Context, attrId: Int): Int {
-            return getColorByAttr(context, attrId, ThemeUtil.getThemeTranslucent())
+            return getColorByAttr(context, attrId, ThemeUtil.getCurrentTheme())
         }
 
         override fun getColorById(context: Context, colorId: Int): Int {

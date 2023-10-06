@@ -26,14 +26,14 @@ public class PopupUtil {
             Field contextField = ListPopupWindow.class.getDeclaredField("mContext");
             contextField.setAccessible(true);
             Context context = (Context) contextField.get(listPopupWindow);
-            if (ThemeUtil.INSTANCE.getThemeTranslucent().equals(ThemeUtil.THEME_TRANSLUCENT_LIGHT)) {
+            if (ThemeUtil.INSTANCE.getCurrentTheme().equals(ThemeUtil.THEME_TRANSLUCENT_LIGHT)) {
                 listPopupWindow.setBackgroundDrawable(
                         ThemeUtils.tintDrawable(
                                 AppCompatResources.getDrawable(context, R.drawable.bg_popup),
                                 context.getResources().getColor(R.color.theme_color_background_light)
                         )
                 );
-            } else if (ThemeUtil.INSTANCE.getThemeTranslucent().equals(ThemeUtil.THEME_TRANSLUCENT_DARK)) {
+            } else if (ThemeUtil.INSTANCE.getCurrentTheme().equals(ThemeUtil.THEME_TRANSLUCENT_DARK)) {
                 listPopupWindow.setBackgroundDrawable(
                         ThemeUtils.tintDrawable(
                                 AppCompatResources.getDrawable(context, R.drawable.bg_popup),
@@ -65,13 +65,13 @@ public class PopupUtil {
             Field popupField = obj.getClass().getDeclaredField("mPopup");
             popupField.setAccessible(true);
             MenuPopupWindow menuPopupWindow = (MenuPopupWindow) popupField.get(obj);
-            Log.i("Theme", ThemeUtil.INSTANCE.getThemeTranslucent());
-            if (ThemeUtil.INSTANCE.getThemeTranslucent().equals(ThemeUtil.THEME_TRANSLUCENT_LIGHT)) {
+            Log.i("Theme", ThemeUtil.INSTANCE.getCurrentTheme());
+            if (ThemeUtil.INSTANCE.getCurrentTheme().equals(ThemeUtil.THEME_TRANSLUCENT_LIGHT)) {
                 menuPopupWindow.setBackgroundDrawable(
                         ThemeUtils.tintDrawable(context.getDrawable(R.drawable.bg_popup),
                                 context.getResources().getColor(R.color.theme_color_background_light))
                 );
-            } else if (ThemeUtil.INSTANCE.getThemeTranslucent().equals(ThemeUtil.THEME_TRANSLUCENT_DARK)) {
+            } else if (ThemeUtil.INSTANCE.getCurrentTheme().equals(ThemeUtil.THEME_TRANSLUCENT_DARK)) {
                 menuPopupWindow.setBackgroundDrawable(
                         ThemeUtils.tintDrawable(context.getDrawable(R.drawable.bg_popup),
                                 context.getResources().getColor(R.color.theme_color_background_dark))
