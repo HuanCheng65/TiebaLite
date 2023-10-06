@@ -37,6 +37,7 @@ import com.huanchengfly.tieba.post.ui.page.destinations.ThreadPageDestination
 import com.huanchengfly.tieba.post.ui.widgets.compose.Avatar
 import com.huanchengfly.tieba.post.ui.widgets.compose.BlockTip
 import com.huanchengfly.tieba.post.ui.widgets.compose.BlockableContent
+import com.huanchengfly.tieba.post.ui.widgets.compose.Container
 import com.huanchengfly.tieba.post.ui.widgets.compose.EmoticonText
 import com.huanchengfly.tieba.post.ui.widgets.compose.LazyLoad
 import com.huanchengfly.tieba.post.ui.widgets.compose.LoadMoreLayout
@@ -103,118 +104,120 @@ fun NotificationsListPage(
                 items(
                     items = data,
                     key = { "${it.info.postId}_${it.info.replyer?.id}_${it.info.time}" },
-                ) {
-                    val (info, blocked) = it
-                    BlockableContent(
-                        blocked = blocked,
-                        blockedTip = {
-                            BlockTip {
-                                Text(
-                                    text = stringResource(id = R.string.tip_blocked_message)
-                                )
-                            }
-                        },
-                        modifier = Modifier
-                            .padding(horizontal = 16.dp, vertical = 12.dp)
-                    ) {
-                        Column(
-                            modifier = Modifier
-                                .clickable {
-                                    if (info.isFloor == "1") {
-                                        navigator.navigate(
-                                            SubPostsPageDestination(
-                                                threadId = info.threadId!!.toLong(),
-                                                subPostId = info.postId!!.toLong(),
-                                                loadFromSubPost = true
-                                            )
-                                        )
-                                    } else {
-                                        navigator.navigate(
-                                            ThreadPageDestination(
-                                                threadId = info.threadId!!.toLong(),
-                                                postId = info.postId!!.toLong()
-                                            )
-                                        )
-                                    }
-                                }
-                                .padding(horizontal = 16.dp, vertical = 12.dp),
-                            verticalArrangement = Arrangement.spacedBy(8.dp)
-                        ) {
-                            if (info.replyer != null) {
-                                UserHeader(
-                                    avatar = {
-                                        Avatar(
-                                            data = StringUtil.getAvatarUrl(info.replyer.portrait),
-                                            size = Sizes.Small,
-                                            contentDescription = null
-                                        )
-                                    },
-                                    name = {
-                                        Text(
-                                            text = info.replyer.nameShow ?: info.replyer.name ?: ""
-                                        )
-                                    },
-                                    onClick = {
-                                        UserActivity.launch(
-                                            context,
-                                            info.replyer.id!!,
-                                            StringUtil.getAvatarUrl(info.replyer.portrait)
-                                        )
-                                    },
-                                    desc = {
-                                        Text(
-                                            text = DateTimeUtils.getRelativeTimeString(
-                                                LocalContext.current,
-                                                info.time!!
-                                            )
-                                        )
-                                    },
-                                ) {}
-                            }
-                            EmoticonText(text = info.content ?: "")
-                            val quoteText = if (type == NotificationsType.ReplyMe) {
-                                if ("1" == info.isFloor) {
-                                    info.quoteContent
-                                } else {
-                                    stringResource(
-                                        id = R.string.text_message_list_item_reply_my_thread,
-                                        info.title ?: ""
+                ) { (info, blocked) ->
+                    Container {
+                        BlockableContent(
+                            blocked = blocked,
+                            blockedTip = {
+                                BlockTip {
+                                    Text(
+                                        text = stringResource(id = R.string.tip_blocked_message)
                                     )
                                 }
-                            } else {
-                                info.title
-                            }
-                            if (quoteText != null) {
-                                EmoticonText(
-                                    text = quoteText,
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                        .clip(RoundedCornerShape(6.dp))
-                                        .clickable {
-                                            if ("1" == info.isFloor && info.quotePid != null) {
-                                                navigator.navigate(
-                                                    SubPostsPageDestination(
-                                                        threadId = info.threadId!!.toLong(),
-                                                        postId = info.quotePid.toLong(),
-                                                        loadFromSubPost = true,
-                                                    )
+                            },
+                            modifier = Modifier
+                                .padding(horizontal = 16.dp, vertical = 12.dp)
+                        ) {
+                            Column(
+                                modifier = Modifier
+                                    .clickable {
+                                        if (info.isFloor == "1") {
+                                            navigator.navigate(
+                                                SubPostsPageDestination(
+                                                    threadId = info.threadId!!.toLong(),
+                                                    subPostId = info.postId!!.toLong(),
+                                                    loadFromSubPost = true
                                                 )
-                                            } else {
-                                                navigator.navigate(
-                                                    ThreadPageDestination(
-                                                        threadId = info.threadId!!.toLong(),
-                                                    )
+                                            )
+                                        } else {
+                                            navigator.navigate(
+                                                ThreadPageDestination(
+                                                    threadId = info.threadId!!.toLong(),
+                                                    postId = info.postId!!.toLong()
                                                 )
-                                            }
+                                            )
                                         }
-                                        .background(
-                                            ExtendedTheme.colors.chip,
-                                            RoundedCornerShape(6.dp)
+                                    }
+                                    .padding(horizontal = 16.dp, vertical = 12.dp),
+                                verticalArrangement = Arrangement.spacedBy(8.dp)
+                            ) {
+                                if (info.replyer != null) {
+                                    UserHeader(
+                                        avatar = {
+                                            Avatar(
+                                                data = StringUtil.getAvatarUrl(info.replyer.portrait),
+                                                size = Sizes.Small,
+                                                contentDescription = null
+                                            )
+                                        },
+                                        name = {
+                                            Text(
+                                                text = info.replyer.nameShow ?: info.replyer.name
+                                                ?: ""
+                                            )
+                                        },
+                                        onClick = {
+                                            UserActivity.launch(
+                                                context,
+                                                info.replyer.id!!,
+                                                StringUtil.getAvatarUrl(info.replyer.portrait)
+                                            )
+                                        },
+                                        desc = {
+                                            Text(
+                                                text = DateTimeUtils.getRelativeTimeString(
+                                                    LocalContext.current,
+                                                    info.time!!
+                                                )
+                                            )
+                                        },
+                                    ) {}
+                                }
+                                EmoticonText(text = info.content ?: "")
+                                val quoteText = if (type == NotificationsType.ReplyMe) {
+                                    if ("1" == info.isFloor) {
+                                        info.quoteContent
+                                    } else {
+                                        stringResource(
+                                            id = R.string.text_message_list_item_reply_my_thread,
+                                            info.title ?: ""
                                         )
-                                        .padding(8.dp),
-                                    color = ExtendedTheme.colors.onChip,
-                                    fontSize = 12.sp,
-                                )
+                                    }
+                                } else {
+                                    info.title
+                                }
+                                if (quoteText != null) {
+                                    EmoticonText(
+                                        text = quoteText,
+                                        modifier = Modifier
+                                            .fillMaxWidth()
+                                            .clip(RoundedCornerShape(6.dp))
+                                            .clickable {
+                                                if ("1" == info.isFloor && info.quotePid != null) {
+                                                    navigator.navigate(
+                                                        SubPostsPageDestination(
+                                                            threadId = info.threadId!!.toLong(),
+                                                            postId = info.quotePid.toLong(),
+                                                            loadFromSubPost = true,
+                                                        )
+                                                    )
+                                                } else {
+                                                    navigator.navigate(
+                                                        ThreadPageDestination(
+                                                            threadId = info.threadId!!.toLong(),
+                                                        )
+                                                    )
+                                                }
+                                            }
+                                            .background(
+                                                ExtendedTheme.colors.chip,
+                                                RoundedCornerShape(6.dp)
+                                            )
+                                            .padding(8.dp),
+                                        color = ExtendedTheme.colors.onChip,
+                                        fontSize = 12.sp,
+                                    )
+                                }
                             }
                         }
                     }
