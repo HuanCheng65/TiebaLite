@@ -605,7 +605,7 @@ fun ThreadPage(
     viewModel.onEvent<ThreadUiEvent.LoadSuccess> {
         if (it.page > 1 || waitLoadSuccessAndScrollToFirstReply) {
             waitLoadSuccessAndScrollToFirstReply = false
-            lazyListState.animateScrollToItem(3)
+            lazyListState.animateScrollToItem(1)
         }
     }
     viewModel.onEvent<ThreadUiEvent.AddFavoriteSuccess> {
