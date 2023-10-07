@@ -32,6 +32,7 @@ import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.ContentCopy
 import androidx.compose.material.icons.rounded.Add
+import androidx.compose.material.icons.rounded.Edit
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.LaunchedEffect
@@ -67,8 +68,10 @@ import com.huanchengfly.tieba.post.arch.collectPartialAsState
 import com.huanchengfly.tieba.post.arch.emitGlobalEvent
 import com.huanchengfly.tieba.post.arch.getOrNull
 import com.huanchengfly.tieba.post.arch.pageViewModel
+import com.huanchengfly.tieba.post.goToActivity
 import com.huanchengfly.tieba.post.ui.common.theme.compose.ExtendedTheme
 import com.huanchengfly.tieba.post.ui.page.ProvideNavigator
+import com.huanchengfly.tieba.post.ui.page.editprofile.view.EditProfileActivity
 import com.huanchengfly.tieba.post.ui.page.user.likeforum.UserLikeForumPage
 import com.huanchengfly.tieba.post.ui.page.user.post.UserPostPage
 import com.huanchengfly.tieba.post.ui.widgets.Chip
@@ -108,9 +111,14 @@ fun UserProfilePage(
     navigator: DestinationsNavigator,
     viewModel: UserProfileViewModel = pageViewModel(),
 ) {
+    val account = LocalAccount.current
+    val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
     val density = LocalDensity.current
-    val account = LocalAccount.current
+
+    val isSelf = remember(account, uid) {
+        account?.uid == uid.toString()
+    }
 
     LazyLoad(loaded = viewModel.initialized) {
         viewModel.send(UserProfileUiIntent.Refresh(uid))
@@ -128,6 +136,10 @@ fun UserProfilePage(
     val user by viewModel.uiState.collectPartialAsState(
         prop1 = UserProfileUiState::user,
         initial = null
+    )
+    val disableButton by viewModel.uiState.collectPartialAsState(
+        prop1 = UserProfileUiState::disableButton,
+        initial = false
     )
 
     val isError by remember {
@@ -260,21 +272,21 @@ fun UserProfilePage(
                                                 )
                                             }
                                         ),
-                                        UserProfilePageData(
-                                            id = "posts",
-                                            title = {
-                                                stringResource(
-                                                    id = R.string.title_profile_posts_tab,
-                                                    it.get { post_num }.getShortNumString()
-                                                )
-                                            },
-                                            content = {
-                                                UserPostPage(
-                                                    uid = uid,
-                                                    isThread = false
-                                                )
-                                            }
-                                        ).takeIf { account?.uid == uid.toString() },
+//                                        UserProfilePageData(
+//                                            id = "posts",
+//                                            title = {
+//                                                stringResource(
+//                                                    id = R.string.title_profile_posts_tab,
+//                                                    it.get { post_num }.getShortNumString()
+//                                                )
+//                                            },
+//                                            content = {
+//                                                UserPostPage(
+//                                                    uid = uid,
+//                                                    isThread = false
+//                                                )
+//                                            }
+//                                        ).takeIf { account?.uid == uid.toString() },
                                         UserProfilePageData(
                                             id = "concern_forums",
                                             title = {
@@ -314,7 +326,31 @@ fun UserProfilePage(
                                             )
                                             .onSizeChanged {
                                                 headerHeight = it.height.toFloat()
+                                            },
+                                        showBtn = account != null,
+                                        isSelf = isSelf,
+                                        onBtnClick = {
+                                            if (disableButton || account == null) {
+                                                return@UserProfileDetail
                                             }
+                                            if (isSelf) {
+                                                context.goToActivity<EditProfileActivity>()
+                                            } else if (holder.get { has_concerned } == 0) {
+                                                viewModel.send(
+                                                    UserProfileUiIntent.Follow(
+                                                        holder.get { portrait },
+                                                        account.tbs,
+                                                    )
+                                                )
+                                            } else {
+                                                viewModel.send(
+                                                    UserProfileUiIntent.Unfollow(
+                                                        holder.get { portrait },
+                                                        account.tbs,
+                                                    )
+                                                )
+                                            }
+                                        }
                                     )
                                 }
 
@@ -434,6 +470,9 @@ private fun ToolbarUserTitle(
 private fun UserProfileDetail(
     user: ImmutableHolder<User>,
     modifier: Modifier = Modifier,
+    showBtn: Boolean = true,
+    isSelf: Boolean = false,
+    onBtnClick: () -> Unit = {},
 ) {
     Column(
         modifier = modifier,
@@ -451,28 +490,33 @@ private fun UserProfileDetail(
                 modifier = Modifier.padding(bottom = 16.dp)
             )
             Spacer(modifier = Modifier.weight(1f))
-            Button(
-                onClick = { /*TODO*/ },
-                colors = if (user.get { has_concerned } == 0) {
-                    ButtonDefaults.buttonColors()
-                } else {
-                    ButtonDefaults.outlinedButtonColors()
-                },
-                border = if (user.get { has_concerned } == 0) {
-                    null
-                } else {
-                    ButtonDefaults.outlinedBorder
-                },
-            ) {
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(4.dp)
-                ) {
-                    if (user.get { has_concerned } == 0) {
-                        Icon(imageVector = Icons.Rounded.Add, contentDescription = null)
-                        Text(text = stringResource(id = R.string.button_follow))
+            if (showBtn) {
+                Button(
+                    onClick = onBtnClick,
+                    colors = if (user.get { has_concerned } == 0 || isSelf) {
+                        ButtonDefaults.buttonColors()
                     } else {
-                        Text(text = stringResource(id = R.string.button_unfollow))
+                        ButtonDefaults.outlinedButtonColors()
+                    },
+                    border = if (user.get { has_concerned } == 0 || isSelf) {
+                        null
+                    } else {
+                        ButtonDefaults.outlinedBorder
+                    },
+                ) {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(4.dp)
+                    ) {
+                        if (isSelf) {
+                            Icon(imageVector = Icons.Rounded.Edit, contentDescription = null)
+                            Text(text = stringResource(id = R.string.menu_edit_info))
+                        } else if (user.get { has_concerned } == 0) {
+                            Icon(imageVector = Icons.Rounded.Add, contentDescription = null)
+                            Text(text = stringResource(id = R.string.button_follow))
+                        } else {
+                            Text(text = stringResource(id = R.string.button_unfollow))
+                        }
                     }
                 }
             }
