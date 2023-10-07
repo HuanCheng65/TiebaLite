@@ -17,12 +17,15 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.ButtonDefaults
+import androidx.compose.material.DropdownMenuItem
 import androidx.compose.material.Icon
 import androidx.compose.material.LocalContentColor
 import androidx.compose.material.MaterialTheme
@@ -33,6 +36,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.ContentCopy
 import androidx.compose.material.icons.rounded.Add
 import androidx.compose.material.icons.rounded.Edit
+import androidx.compose.material.icons.rounded.NoAccounts
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.LaunchedEffect
@@ -69,6 +73,8 @@ import com.huanchengfly.tieba.post.arch.emitGlobalEvent
 import com.huanchengfly.tieba.post.arch.getOrNull
 import com.huanchengfly.tieba.post.arch.pageViewModel
 import com.huanchengfly.tieba.post.goToActivity
+import com.huanchengfly.tieba.post.models.database.Block
+import com.huanchengfly.tieba.post.toastShort
 import com.huanchengfly.tieba.post.ui.common.theme.compose.ExtendedTheme
 import com.huanchengfly.tieba.post.ui.page.ProvideNavigator
 import com.huanchengfly.tieba.post.ui.page.editprofile.view.EditProfileActivity
@@ -78,6 +84,7 @@ import com.huanchengfly.tieba.post.ui.widgets.Chip
 import com.huanchengfly.tieba.post.ui.widgets.compose.Avatar
 import com.huanchengfly.tieba.post.ui.widgets.compose.BackNavigationIcon
 import com.huanchengfly.tieba.post.ui.widgets.compose.Button
+import com.huanchengfly.tieba.post.ui.widgets.compose.ClickMenu
 import com.huanchengfly.tieba.post.ui.widgets.compose.ErrorScreen
 import com.huanchengfly.tieba.post.ui.widgets.compose.LazyLoad
 import com.huanchengfly.tieba.post.ui.widgets.compose.LazyLoadHorizontalPager
@@ -91,6 +98,7 @@ import com.huanchengfly.tieba.post.ui.widgets.compose.Toolbar
 import com.huanchengfly.tieba.post.ui.widgets.compose.UserHeader
 import com.huanchengfly.tieba.post.ui.widgets.compose.states.StateScreen
 import com.huanchengfly.tieba.post.utils.AccountUtil.LocalAccount
+import com.huanchengfly.tieba.post.utils.BlockManager
 import com.huanchengfly.tieba.post.utils.StringUtil
 import com.huanchengfly.tieba.post.utils.StringUtil.getShortNumString
 import com.huanchengfly.tieba.post.utils.TiebaUtil
@@ -191,6 +199,57 @@ fun UserProfilePage(
                         navigationIcon = {
                             BackNavigationIcon {
                                 navigator.navigateUp()
+                            }
+                        },
+                        actions = {
+                            user.takeUnless { isSelf }?.let {
+                                ClickMenu(
+                                    menuContent = {
+                                        DropdownMenuItem(
+                                            onClick = {
+                                                BlockManager.addBlockAsync(
+                                                    Block(
+                                                        category = Block.CATEGORY_BLACK_LIST,
+                                                        type = Block.TYPE_USER,
+                                                        username = it.get { name },
+                                                        uid = it.get { id }.toString()
+                                                    )
+                                                ) {
+                                                    if (it) context.toastShort(R.string.toast_add_success)
+                                                }
+                                            }
+                                        ) {
+                                            Text(text = stringResource(id = R.string.menu_add_user_to_black_list))
+                                        }
+                                        DropdownMenuItem(
+                                            onClick = {
+                                                BlockManager.addBlockAsync(
+                                                    Block(
+                                                        category = Block.CATEGORY_WHITE_LIST,
+                                                        type = Block.TYPE_USER,
+                                                        username = it.get { name },
+                                                        uid = it.get { id }.toString()
+                                                    )
+                                                ) {
+                                                    if (it) context.toastShort(R.string.toast_add_success)
+                                                }
+                                            }
+                                        ) {
+                                            Text(text = stringResource(id = R.string.menu_add_user_to_white_list))
+                                        }
+                                    },
+                                    triggerShape = CircleShape
+                                ) {
+                                    Box(
+                                        modifier = Modifier.size(48.dp),
+                                        contentAlignment = Alignment.Center
+                                    ) {
+                                        Icon(
+                                            imageVector = Icons.Rounded.NoAccounts,
+                                            contentDescription = stringResource(id = R.string.btn_block)
+                                        )
+                                    }
+                                }
                             }
                         }
                     )
@@ -538,7 +597,8 @@ private fun UserProfileDetail(
             ),
             style = MaterialTheme.typography.h6,
             maxLines = 1,
-            overflow = TextOverflow.Ellipsis
+            overflow = TextOverflow.Ellipsis,
+            fontWeight = FontWeight.Bold
         )
         ProvideTextStyle(value = MaterialTheme.typography.body2) {
             Row(
