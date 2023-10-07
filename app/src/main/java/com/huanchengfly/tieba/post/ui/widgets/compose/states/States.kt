@@ -3,7 +3,6 @@ package com.huanchengfly.tieba.post.ui.widgets.compose.states
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.aspectRatio
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.requiredWidthIn
 import androidx.compose.material.MaterialTheme
@@ -88,9 +87,7 @@ fun StateScreen(
         onClick = onReload
     ) else Modifier
     Box(
-        modifier = Modifier
-            .fillMaxSize()
-                then modifier
+        modifier = modifier
                 then clickableModifier,
         contentAlignment = Alignment.Center
     ) {

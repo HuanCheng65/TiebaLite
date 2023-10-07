@@ -40,6 +40,19 @@ val ThreadInfo.abstractText: String
             else -> ""
         }
     }
+
+val PostInfoList.abstractText: String
+    get() = rich_abstract.joinToString(separator = "") {
+        when (it.type) {
+            0 -> it.text.replace(Regex(" {2,}"), " ")
+            2 -> {
+                EmoticonManager.registerEmoticon(it.text, it.c)
+                "#(${it.c})"
+            }
+
+            else -> ""
+        }
+    }
 val ThreadInfo.hasAgree: Int
     get() = agree?.hasAgree ?: 0
 val ThreadInfo.hasAgreed: Boolean

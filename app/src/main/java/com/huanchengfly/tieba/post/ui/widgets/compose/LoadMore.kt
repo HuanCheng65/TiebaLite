@@ -151,7 +151,7 @@ fun LoadMoreLayout(
 
     Box(
         modifier = Modifier
-            .nestedScroll(swipeableState.LoadPreUpPostDownNestedScrollConnection)
+            .nestedScroll(swipeableState.LoadPreDownPostUpNestedScrollConnection)
             .swipeable(
                 state = swipeableState,
                 anchors = mapOf(
@@ -221,8 +221,7 @@ fun DefaultIndicator(
     }
 }
 
-@ExperimentalMaterialApi
-private val <T> SwipeableState<T>.LoadPreUpPostDownNestedScrollConnection: NestedScrollConnection
+private val <T> SwipeableState<T>.LoadPreDownPostUpNestedScrollConnection: NestedScrollConnection
     get() = object : NestedScrollConnection {
         override fun onPreScroll(available: Offset, source: NestedScrollSource): Offset {
             val delta = available.toFloat()

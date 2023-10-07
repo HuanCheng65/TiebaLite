@@ -69,6 +69,7 @@ import com.huanchengfly.tieba.post.App
 import com.huanchengfly.tieba.post.R
 import com.huanchengfly.tieba.post.api.models.protos.Media
 import com.huanchengfly.tieba.post.api.models.protos.OriginThreadInfo
+import com.huanchengfly.tieba.post.api.models.protos.PostInfoList
 import com.huanchengfly.tieba.post.api.models.protos.SimpleForum
 import com.huanchengfly.tieba.post.api.models.protos.ThreadInfo
 import com.huanchengfly.tieba.post.api.models.protos.User
@@ -134,6 +135,54 @@ private fun DefaultUserHeader(
                     context = LocalContext.current,
                     username = user.get { name },
                     nickname = user.get { nameShow },
+                    color = LocalContentColor.current
+                ),
+                color = ExtendedTheme.colors.text
+            )
+        },
+        onClick = onClick,
+        desc = {
+            Text(
+                text = DateTimeUtils.getRelativeTimeString(
+                    context,
+                    time.toString()
+                )
+            )
+        },
+        content = content,
+        modifier = modifier
+    )
+}
+
+@Composable
+private fun DefaultUserHeader(
+    nameProvider: () -> String,
+    nameShowProvider: () -> String,
+    portraitProvider: () -> String,
+    timeProvider: () -> Int,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+    content: @Composable RowScope.() -> Unit = {},
+) {
+    val context = LocalContext.current
+    val name = remember(nameProvider) { nameProvider() }
+    val nameShow = remember(nameShowProvider) { nameShowProvider() }
+    val portrait = remember(portraitProvider) { portraitProvider() }
+    val time = remember(timeProvider) { timeProvider() }
+    UserHeader(
+        avatar = {
+            Avatar(
+                data = StringUtil.getAvatarUrl(portrait),
+                size = Sizes.Small,
+                contentDescription = null
+            )
+        },
+        name = {
+            Text(
+                text = StringUtil.getUsernameAnnotatedString(
+                    context = LocalContext.current,
+                    username = name,
+                    nickname = nameShow,
                     color = LocalContentColor.current
                 ),
                 color = ExtendedTheme.colors.text
@@ -308,7 +357,7 @@ fun FeedCardPlaceholder() {
 
 @Composable
 fun ForumInfoChip(
-    imageUriProvider: () -> String,
+    imageUriProvider: () -> String?,
     nameProvider: () -> String,
     onClick: () -> Unit,
 ) {
@@ -322,16 +371,18 @@ fun ForumInfoChip(
             .clickable(onClick = onClick)
             .padding(4.dp),
         verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(8.dp)
     ) {
-        Avatar(
-            data = imageUri,
-            contentDescription = null,
-            modifier = Modifier
-                .fillMaxHeight()
-                .aspectRatio(1f),
-            shape = RoundedCornerShape(4.dp)
-        )
-        Spacer(modifier = Modifier.width(8.dp))
+        imageUri?.let {
+            Avatar(
+                data = imageUri,
+                contentDescription = null,
+                modifier = Modifier
+                    .fillMaxHeight()
+                    .aspectRatio(1f),
+                shape = RoundedCornerShape(4.dp)
+            )
+        }
         Text(
             text = stringResource(id = R.string.title_forum_name, name),
             style = MaterialTheme.typography.body2,
@@ -578,14 +629,27 @@ private fun ThreadForumInfo(
     val hasForumInfo = remember(item) { item.isNotNull { forumInfo } }
     if (hasForumInfo) {
         val forumInfo = remember(item) { item.getImmutable { forumInfo!! } }
-        val hasForum = remember(forumInfo) { forumInfo.get { name }.isNotBlank() }
-        if (hasForum) {
-            ForumInfoChip(
-                imageUriProvider = { StringUtil.getAvatarUrl(forumInfo.get { avatar }) },
-                nameProvider = { forumInfo.get { name } },
-                onClick = { onClick(forumInfo.get()) }
-            )
-        }
+        ThreadForumInfo(
+            forumName = forumInfo.get { name },
+            forumAvatar = forumInfo.get { avatar },
+            onClick = { onClick(forumInfo.get()) }
+        )
+    }
+}
+
+@Composable
+private fun ThreadForumInfo(
+    forumName: String,
+    forumAvatar: String?,
+    onClick: () -> Unit,
+) {
+    val hasForum = remember(forumName) { forumName.isNotBlank() }
+    if (hasForum) {
+        ForumInfoChip(
+            imageUriProvider = { forumAvatar },
+            nameProvider = { forumName },
+            onClick = onClick
+        )
     }
 }
 
@@ -744,6 +808,92 @@ fun FeedCard(
                 ThreadAgreeBtn(
                     hasAgree = item.get { agree?.hasAgree == 1 },
                     agreeNum = item.get { agreeNum },
+                    onClick = { onAgree(item.get()) },
+                    modifier = Modifier.weight(1f)
+                )
+            }
+        },
+        onClick = { onClick(item.get()) },
+        modifier = modifier,
+    )
+}
+
+@Composable
+fun FeedCard(
+    item: ImmutableHolder<PostInfoList>,
+    onClick: (PostInfoList) -> Unit,
+    onAgree: (PostInfoList) -> Unit,
+    modifier: Modifier = Modifier,
+    onClickReply: (PostInfoList) -> Unit = {},
+    onClickUser: (id: Long) -> Unit = {},
+    onClickForum: (SimpleForum) -> Unit = {},
+    onClickOriginThread: (OriginThreadInfo) -> Unit = {},
+) {
+    Card(
+        header = {
+            DefaultUserHeader(
+                nameProvider = { item.get { user_name } },
+                nameShowProvider = { item.get { name_show } },
+                portraitProvider = { item.get { user_portrait } },
+                timeProvider = { item.get { create_time } },
+                onClick = {
+                    onClickUser(item.get { user_id })
+                },
+            )
+        },
+        content = {
+            ThreadContent(
+                title = item.get { title },
+                abstractText = item.get { abstractText },
+                showTitle = item.get { is_ntitle != 1 && title.isNotBlank() },
+                showAbstract = item.get { abstractText.isNotBlank() },
+            )
+
+            ThreadMedia(
+                forumId = item.get { forum_id },
+                forumName = item.get { forum_name },
+                threadId = item.get { thread_id },
+                medias = item.getImmutableList { media },
+                videoInfo = item.getNullableImmutable { video_info }
+            )
+
+            item.getNullableImmutable { origin_thread_info }
+                .takeIf { item.get { is_share_thread } == 1 }?.let {
+                    OriginThreadCard(
+                        originThreadInfo = it,
+                        modifier = Modifier
+                            .clip(RoundedCornerShape(6.dp))
+                            .background(ExtendedTheme.colors.floorCard)
+                            .clickable {
+                                onClickOriginThread(it.get())
+                            }
+                            .padding(16.dp)
+                    )
+                }
+
+            ThreadForumInfo(
+                forumName = item.get { forum_name },
+                forumAvatar = null,
+                onClick = {}
+            )
+        },
+        action = {
+            Row(modifier = Modifier.fillMaxWidth()) {
+                ThreadShareBtn(
+                    shareNum = item.get { share_num }.toLong(),
+                    onClick = {},
+                    modifier = Modifier.weight(1f)
+                )
+
+                ThreadReplyBtn(
+                    replyNum = item.get { reply_num },
+                    onClick = { onClickReply(item.get()) },
+                    modifier = Modifier.weight(1f)
+                )
+
+                ThreadAgreeBtn(
+                    hasAgree = item.get { agree?.hasAgree == 1 },
+                    agreeNum = item.get { agree_num },
                     onClick = { onAgree(item.get()) },
                     modifier = Modifier.weight(1f)
                 )

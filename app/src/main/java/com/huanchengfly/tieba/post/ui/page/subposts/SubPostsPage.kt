@@ -262,6 +262,7 @@ internal fun SubPostsContent(
     }
 
     StateScreen(
+        modifier = Modifier.fillMaxSize(),
         isEmpty = subPosts.isEmpty(),
         isError = false,
         isLoading = isRefreshing

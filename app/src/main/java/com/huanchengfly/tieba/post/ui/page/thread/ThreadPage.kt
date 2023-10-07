@@ -989,6 +989,7 @@ fun ThreadPage(
 
     ProvideNavigator(navigator = navigator) {
         StateScreen(
+            modifier = Modifier.fillMaxSize(),
             isEmpty = isEmpty,
             isError = isError,
             isLoading = isRefreshing,

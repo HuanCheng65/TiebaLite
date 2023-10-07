@@ -48,13 +48,13 @@ class MenuScope(
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun ClickMenu(
-    menuState: MenuState = rememberMenuState(),
     menuContent: @Composable MenuScope.() -> Unit,
     modifier: Modifier = Modifier,
+    menuState: MenuState = rememberMenuState(),
     menuShape: Shape = RoundedCornerShape(14.dp),
     triggerShape: Shape? = null,
     onDismiss: (() -> Unit)? = null,
-    content: @Composable MenuScope.() -> Unit
+    content: @Composable () -> Unit,
 ) {
     val menuScope = MenuScope(menuState, onDismiss)
     val interactionSource = remember { MutableInteractionSource() }
@@ -80,7 +80,7 @@ fun ClickMenu(
                     }
                 )
         ) {
-            menuScope.content()
+            content()
         }
         Box(
             modifier = Modifier
@@ -173,7 +173,7 @@ fun rememberMenuState(): MenuState {
 }
 
 @Stable
-class MenuState {
+class MenuState internal constructor() {
     private var _expanded by mutableStateOf(false)
 
     fun toggle() {

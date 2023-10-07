@@ -11,12 +11,18 @@ import androidx.compose.runtime.produceState
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.platform.LocalContext
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.hilt.navigation.HiltViewModelFactory
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelStoreOwner
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.viewmodel.compose.LocalViewModelStoreOwner
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavBackStackEntry
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -110,8 +116,36 @@ inline fun <reified Event : UiEvent> BaseViewModel<*, *, *, *>.onEvent(
 }
 
 @Composable
-inline fun <reified VM : BaseViewModel<*, *, *, *>> pageViewModel(): VM {
-    return hiltViewModel<VM>().apply {
+inline fun <reified VM : ViewModel> hiltViewModel(
+    viewModelStoreOwner: ViewModelStoreOwner = checkNotNull(LocalViewModelStoreOwner.current) {
+        "No ViewModelStoreOwner was provided via LocalViewModelStoreOwner"
+    },
+    key: String? = null,
+): VM {
+    val factory = createHiltViewModelFactory(viewModelStoreOwner)
+    return viewModel(viewModelStoreOwner, key = key, factory = factory)
+}
+
+@Composable
+@PublishedApi
+internal fun createHiltViewModelFactory(
+    viewModelStoreOwner: ViewModelStoreOwner,
+): ViewModelProvider.Factory? = if (viewModelStoreOwner is NavBackStackEntry) {
+    HiltViewModelFactory(
+        context = LocalContext.current,
+        navBackStackEntry = viewModelStoreOwner
+    )
+} else {
+    // Use the default factory provided by the ViewModelStoreOwner
+    // and assume it is an @AndroidEntryPoint annotated fragment or activity
+    null
+}
+
+@Composable
+inline fun <reified VM : BaseViewModel<*, *, *, *>> pageViewModel(
+    key: String? = null,
+): VM {
+    return hiltViewModel<VM>(key = key).apply {
         val context = LocalContext.current
         if (context is BaseComposeActivity) {
             val coroutineScope = rememberCoroutineScope()
@@ -140,8 +174,9 @@ inline fun <reified VM : BaseViewModel<*, *, *, *>> pageViewModel(): VM {
 @Composable
 inline fun <INTENT : UiIntent, reified VM : BaseViewModel<INTENT, *, *, *>> pageViewModel(
     initialIntent: List<INTENT> = emptyList(),
+    key: String? = null,
 ): VM {
-    return pageViewModel<VM>().apply {
+    return pageViewModel<VM>(key = key).apply {
         if (initialIntent.isNotEmpty()) {
             LaunchedEffect(key1 = initialized) {
                 if (!initialized) {

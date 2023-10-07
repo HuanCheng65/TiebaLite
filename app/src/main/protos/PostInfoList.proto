@@ -1,4 +1,5 @@
 syntax = "proto3";
+
 import "PrivSets.proto";
 import "PostInfoContent.proto";
 import "PbContent.proto";
@@ -17,6 +18,7 @@ import "BaijiahaoInfo.proto";
 import "Item.proto";
 import "PbLinkInfo.proto";
 import "HeadItem.proto";
+import "MultipleForum.proto";
 
 package tieba;
 
@@ -54,7 +56,7 @@ message PostInfoList {
   VideoInfo video_info = 29;
   bool is_deal = 30;
   DealInfo deal_info = 31;
-  //  repeated MultipleForum multiple_forum_list = 32;
+  repeated MultipleForum multiple_forum_list = 32;
   int32 freq_num = 33;
   uint64 v_forum_id = 34;
   string name_show = 35;

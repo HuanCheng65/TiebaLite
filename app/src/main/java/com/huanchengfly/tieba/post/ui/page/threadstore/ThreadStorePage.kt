@@ -149,7 +149,9 @@ fun ThreadStorePage(
             isEmpty = data.isEmpty(),
             isError = isError,
             isLoading = isRefreshing,
-            modifier = Modifier.padding(contentPaddings),
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(contentPaddings),
             onReload = {
                 viewModel.send(ThreadStoreUiIntent.Refresh)
             },

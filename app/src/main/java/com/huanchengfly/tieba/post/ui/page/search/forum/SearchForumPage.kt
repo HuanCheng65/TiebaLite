@@ -109,6 +109,7 @@ fun SearchForumPage(
     }
 
     StateScreen(
+        modifier = Modifier.fillMaxSize(),
         isEmpty = isEmpty,
         isError = error != null,
         isLoading = isRefreshing,

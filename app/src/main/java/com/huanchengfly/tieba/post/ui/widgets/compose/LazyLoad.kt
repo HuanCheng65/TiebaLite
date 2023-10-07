@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.PageSize
 import androidx.compose.foundation.pager.PagerDefaults
+import androidx.compose.foundation.pager.PagerScope
 import androidx.compose.foundation.pager.PagerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
@@ -72,7 +73,7 @@ fun LazyLoadHorizontalPager(
     pageNestedScrollConnection: NestedScrollConnection = PagerDefaults.pageNestedScrollConnection(
         Orientation.Horizontal
     ),
-    pageContent: @Composable (page: Int) -> Unit,
+    pageContent: @Composable PagerScope.(page: Int) -> Unit,
 ) {
     HorizontalPager(
         state = state,

@@ -756,4 +756,5 @@
     <string name="title_profile_threads_tab">贴子 %s</string>
     <string name="title_profile_posts_tab">回复 %s</string>
     <string name="title_profile_concern_forums_tab">关注吧 %s</string>
+    <string name="title_user_hide_post">该用户已隐藏动态</string>
 </resources>

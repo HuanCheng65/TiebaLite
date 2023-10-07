@@ -14,12 +14,12 @@ import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentWidth
-import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material.ButtonDefaults
@@ -34,9 +34,11 @@ import androidx.compose.material.icons.outlined.ContentCopy
 import androidx.compose.material.icons.rounded.Add
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Immutable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
@@ -59,31 +61,39 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.util.fastForEachIndexed
 import com.huanchengfly.tieba.post.R
 import com.huanchengfly.tieba.post.api.models.protos.User
+import com.huanchengfly.tieba.post.arch.GlobalEvent
 import com.huanchengfly.tieba.post.arch.ImmutableHolder
 import com.huanchengfly.tieba.post.arch.collectPartialAsState
+import com.huanchengfly.tieba.post.arch.emitGlobalEvent
 import com.huanchengfly.tieba.post.arch.getOrNull
 import com.huanchengfly.tieba.post.arch.pageViewModel
 import com.huanchengfly.tieba.post.ui.common.theme.compose.ExtendedTheme
+import com.huanchengfly.tieba.post.ui.page.ProvideNavigator
+import com.huanchengfly.tieba.post.ui.page.user.post.UserPostPage
 import com.huanchengfly.tieba.post.ui.widgets.Chip
 import com.huanchengfly.tieba.post.ui.widgets.compose.Avatar
 import com.huanchengfly.tieba.post.ui.widgets.compose.BackNavigationIcon
 import com.huanchengfly.tieba.post.ui.widgets.compose.Button
 import com.huanchengfly.tieba.post.ui.widgets.compose.ErrorScreen
 import com.huanchengfly.tieba.post.ui.widgets.compose.LazyLoad
+import com.huanchengfly.tieba.post.ui.widgets.compose.LazyLoadHorizontalPager
 import com.huanchengfly.tieba.post.ui.widgets.compose.MyScaffold
 import com.huanchengfly.tieba.post.ui.widgets.compose.PagerTabIndicator
 import com.huanchengfly.tieba.post.ui.widgets.compose.ProvideContentColor
+import com.huanchengfly.tieba.post.ui.widgets.compose.PullToRefreshLayout
+import com.huanchengfly.tieba.post.ui.widgets.compose.ScrollableTabRow
 import com.huanchengfly.tieba.post.ui.widgets.compose.Sizes
-import com.huanchengfly.tieba.post.ui.widgets.compose.TabRow
 import com.huanchengfly.tieba.post.ui.widgets.compose.Toolbar
 import com.huanchengfly.tieba.post.ui.widgets.compose.UserHeader
 import com.huanchengfly.tieba.post.ui.widgets.compose.states.StateScreen
+import com.huanchengfly.tieba.post.utils.AccountUtil.LocalAccount
 import com.huanchengfly.tieba.post.utils.StringUtil
 import com.huanchengfly.tieba.post.utils.StringUtil.getShortNumString
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import kotlinx.collections.immutable.ImmutableList
-import kotlinx.collections.immutable.persistentListOf
+import kotlinx.collections.immutable.toImmutableList
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlin.math.absoluteValue
 import kotlin.math.max
@@ -97,7 +107,9 @@ fun UserProfilePage(
     navigator: DestinationsNavigator,
     viewModel: UserProfileViewModel = pageViewModel(),
 ) {
+    val coroutineScope = rememberCoroutineScope()
     val density = LocalDensity.current
+    val account = LocalAccount.current
 
     LazyLoad(loaded = viewModel.initialized) {
         viewModel.send(UserProfileUiIntent.Refresh(uid))
@@ -139,157 +151,187 @@ fun UserProfilePage(
         }
     }
 
-    StateScreen(
-        isEmpty = isEmpty,
-        isError = isError,
-        isLoading = isRefreshing,
-        onReload = { viewModel.send(UserProfileUiIntent.Refresh(uid)) },
-        errorScreen = { ErrorScreen(error = error.getOrNull()) }
-    ) {
-        MyScaffold(
-            topBar = {
-                Toolbar(
-                    title = {
-                        user?.let {
-                            AnimatedVisibility(
-                                visible = !isShowHeaderArea,
-                                enter = fadeIn(),
-                                exit = fadeOut()
-                            ) {
-                                ToolbarUserTitle(user = it)
-                            }
-                        }
-                    },
-                    navigationIcon = {
-                        BackNavigationIcon {
-                            navigator.navigateUp()
-                        }
-                    }
-                )
-            }
-        ) { paddingValues ->
-            val headerNestedScrollConnection = remember {
-                object : NestedScrollConnection {
-                    override fun onPreScroll(
-                        available: Offset,
-                        source: NestedScrollSource,
-                    ): Offset {
-                        if (available.y < 0) {
-                            val prevHeightOffset = heightOffset
-                            heightOffset = max(heightOffset + available.y, -headerHeight)
-                            if (prevHeightOffset != heightOffset) {
-                                return available.copy(x = 0f)
-                            }
-                        }
-
-                        return Offset.Zero
-                    }
-
-                    override fun onPostScroll(
-                        consumed: Offset,
-                        available: Offset,
-                        source: NestedScrollSource,
-                    ): Offset {
-                        if (available.y > 0f) {
-                            // Adjust the height offset in case the consumed delta Y is less than what was
-                            // recorded as available delta Y in the pre-scroll.
-                            val prevHeightOffset = heightOffset
-                            heightOffset = min(heightOffset + available.y, 0f)
-                            if (prevHeightOffset != heightOffset) {
-                                return available.copy(x = 0f)
-                            }
-                        }
-
-                        return Offset.Zero
-                    }
-                }
-            }
-
-            ProvideContentColor(color = ExtendedTheme.colors.text) {
-                Column(
-                    modifier = Modifier
-                        .padding(paddingValues)
-                        .nestedScroll(headerNestedScrollConnection)
-                ) {
-                    user?.let { holder ->
-                        val pagerState = rememberPagerState { 3 }
-                        val pages = remember {
-                            persistentListOf(
-                                UserProfilePageData(
-                                    id = "threads",
-                                    title = {
-                                        stringResource(
-                                            id = R.string.title_profile_threads_tab,
-                                            it.get { thread_num }.getShortNumString()
-                                        )
-                                    },
-                                    content = { Text(text = "threads") }
-                                ),
-                                UserProfilePageData(
-                                    id = "posts",
-                                    title = {
-                                        stringResource(
-                                            id = R.string.title_profile_posts_tab,
-                                            it.get { post_num }.getShortNumString()
-                                        )
-                                    },
-                                    content = { Text(text = "posts") }
-                                ),
-                                UserProfilePageData(
-                                    id = "concern_forums",
-                                    title = {
-                                        stringResource(
-                                            id = R.string.title_profile_concern_forums_tab,
-                                            it.get { my_like_num }.toString()
-                                        )
-                                    },
-                                    content = { Text(text = "concern_forums") }
-                                ),
-                            )
-                        }
-
-                        val containerHeight by remember {
-                            derivedStateOf {
-                                with(density) {
-                                    (headerHeight + heightOffset).toDp()
+    ProvideNavigator(navigator = navigator) {
+        StateScreen(
+            modifier = Modifier.fillMaxSize(),
+            isEmpty = isEmpty,
+            isError = isError,
+            isLoading = isRefreshing,
+            onReload = { viewModel.send(UserProfileUiIntent.Refresh(uid)) },
+            errorScreen = { ErrorScreen(error = error.getOrNull()) }
+        ) {
+            MyScaffold(
+                topBar = {
+                    Toolbar(
+                        title = {
+                            user?.let {
+                                AnimatedVisibility(
+                                    visible = !isShowHeaderArea,
+                                    enter = fadeIn(),
+                                    exit = fadeOut()
+                                ) {
+                                    ToolbarUserTitle(user = it)
                                 }
                             }
+                        },
+                        navigationIcon = {
+                            BackNavigationIcon {
+                                navigator.navigateUp()
+                            }
                         }
+                    )
+                }
+            ) { paddingValues ->
+                var isFakeRefreshing by remember { mutableStateOf(false) }
 
-                        Box(
-                            modifier = Modifier
-                                .height(containerHeight)
-                                .clipToBounds()
-                        ) {
-                            UserProfileDetail(
-                                user = holder,
-                                modifier = Modifier
-                                    .padding(horizontal = 16.dp)
-                                    .wrapContentHeight(
-                                        align = Alignment.Bottom,
-                                        unbounded = true
-                                    )
-                                    .onSizeChanged {
-                                        headerHeight = it.height.toFloat()
+                LaunchedEffect(isFakeRefreshing) {
+                    if (isFakeRefreshing) {
+                        delay(1000)
+                        isFakeRefreshing = false
+                    }
+                }
+
+                PullToRefreshLayout(
+                    refreshing = isFakeRefreshing,
+                    onRefresh = {
+                        coroutineScope.emitGlobalEvent(GlobalEvent.Refresh(key = "user_profile"))
+                        isFakeRefreshing = true
+                    }
+                ) {
+                    val headerNestedScrollConnection = remember {
+                        object : NestedScrollConnection {
+                            override fun onPreScroll(
+                                available: Offset,
+                                source: NestedScrollSource,
+                            ): Offset {
+                                if (available.y < 0) {
+                                    val prevHeightOffset = heightOffset
+                                    heightOffset = max(heightOffset + available.y, -headerHeight)
+                                    if (prevHeightOffset != heightOffset) {
+                                        return available.copy(x = 0f)
                                     }
-                            )
+                                }
+
+                                return Offset.Zero
+                            }
+
+                            override fun onPostScroll(
+                                consumed: Offset,
+                                available: Offset,
+                                source: NestedScrollSource,
+                            ): Offset {
+                                if (available.y > 0f) {
+                                    // Adjust the height offset in case the consumed delta Y is less than what was
+                                    // recorded as available delta Y in the pre-scroll.
+                                    val prevHeightOffset = heightOffset
+                                    heightOffset = min(heightOffset + available.y, 0f)
+                                    if (prevHeightOffset != heightOffset) {
+                                        return available.copy(x = 0f)
+                                    }
+                                }
+
+                                return Offset.Zero
+                            }
                         }
+                    }
 
-                        UserProfileTabRow(
-                            user = holder,
-                            pages = pages,
-                            pagerState = pagerState,
+                    ProvideContentColor(color = ExtendedTheme.colors.text) {
+                        Column(
                             modifier = Modifier
-                                .padding(horizontal = 16.dp)
-                                .padding(top = 16.dp)
-                        )
-
-                        HorizontalPager(
-                            state = pagerState,
-                            key = { pages[it].id },
-                            modifier = Modifier.weight(1f)
+                                .padding(paddingValues)
+                                .nestedScroll(headerNestedScrollConnection)
                         ) {
-                            pages[it].content(holder)
+                            user?.let { holder ->
+                                val pages = remember {
+                                    listOfNotNull(
+                                        UserProfilePageData(
+                                            id = "threads",
+                                            title = {
+                                                stringResource(
+                                                    id = R.string.title_profile_threads_tab,
+                                                    it.get { thread_num }.getShortNumString()
+                                                )
+                                            },
+                                            content = {
+                                                UserPostPage(
+                                                    uid = it.get { id },
+                                                    isThread = true
+                                                )
+                                            }
+                                        ),
+                                        UserProfilePageData(
+                                            id = "posts",
+                                            title = {
+                                                stringResource(
+                                                    id = R.string.title_profile_posts_tab,
+                                                    it.get { post_num }.getShortNumString()
+                                                )
+                                            },
+                                            content = {
+                                                UserPostPage(
+                                                    uid = uid,
+                                                    isThread = false
+                                                )
+                                            }
+                                        ).takeIf { account?.uid == uid.toString() },
+                                        UserProfilePageData(
+                                            id = "concern_forums",
+                                            title = {
+                                                stringResource(
+                                                    id = R.string.title_profile_concern_forums_tab,
+                                                    it.get { my_like_num }.toString()
+                                                )
+                                            },
+                                            content = {
+                                                Text(text = "concern_forums")
+                                            }
+                                        ),
+                                    ).toImmutableList()
+                                }
+                                val pagerState = rememberPagerState { pages.size }
+
+                                val containerHeight by remember {
+                                    derivedStateOf {
+                                        with(density) {
+                                            (headerHeight + heightOffset).toDp()
+                                        }
+                                    }
+                                }
+
+                                Box(
+                                    modifier = Modifier
+                                        .height(containerHeight)
+                                        .clipToBounds()
+                                ) {
+                                    UserProfileDetail(
+                                        user = holder,
+                                        modifier = Modifier
+                                            .padding(horizontal = 16.dp)
+                                            .wrapContentHeight(
+                                                align = Alignment.Bottom,
+                                                unbounded = true
+                                            )
+                                            .onSizeChanged {
+                                                headerHeight = it.height.toFloat()
+                                            }
+                                    )
+                                }
+
+                                UserProfileTabRow(
+                                    user = holder,
+                                    pages = pages,
+                                    pagerState = pagerState,
+//                                    modifier = Modifier.padding(horizontal = 16.dp)
+                                )
+
+                                LazyLoadHorizontalPager(
+                                    state = pagerState,
+                                    key = { pages[it].id },
+                                    modifier = Modifier.fillMaxSize()
+                                ) {
+                                    pages[it].content(holder)
+                                }
+                            }
                         }
                     }
                 }
@@ -321,9 +363,7 @@ private fun UserProfileTabRow(
         letterSpacing = 0.sp
     )
 
-    val titles = pages.map { it.title(user) }
-
-    TabRow(
+    ScrollableTabRow(
         selectedTabIndex = pagerState.currentPage,
         indicator = { tabPositions ->
             PagerTabIndicator(
@@ -334,6 +374,7 @@ private fun UserProfileTabRow(
         divider = {},
         backgroundColor = Color.Transparent,
         contentColor = ExtendedTheme.colors.primary,
+        edgePadding = 0.dp,
         modifier = modifier.wrapContentWidth(align = Alignment.Start),
     ) {
         pages.fastForEachIndexed { i, pageData ->
@@ -542,6 +583,7 @@ private fun UserProfileDetail(
                 )
             )
         }
+        Spacer(modifier = Modifier.height(8.dp))
     }
 }
 

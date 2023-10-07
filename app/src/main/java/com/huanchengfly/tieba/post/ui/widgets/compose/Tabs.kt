@@ -3,23 +3,33 @@ package com.huanchengfly.tieba.post.ui.widgets.compose
 import androidx.compose.animation.core.AnimationSpec
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.animateDpAsState
+import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.horizontalScroll
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.interaction.PressInteraction
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.ColumnScope
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.selection.selectableGroup
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.ContentAlpha
+import androidx.compose.material.Icon
 import androidx.compose.material.LocalContentColor
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material.ProvideTextStyle
 import androidx.compose.material.ScrollableTabRow
 import androidx.compose.material.Surface
 import androidx.compose.material.Tab
@@ -27,9 +37,12 @@ import androidx.compose.material.TabRow
 import androidx.compose.material.TabRowDefaults
 import androidx.compose.material.TabRowDefaults.tabIndicatorOffset
 import androidx.compose.material.contentColorFor
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.ArrowDropDown
 import androidx.compose.material.primarySurface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Immutable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -37,8 +50,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.UiComposable
 import androidx.compose.ui.composed
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.clipToBounds
+import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.SubcomposeLayout
 import androidx.compose.ui.platform.debugInspectorInfo
@@ -47,7 +62,9 @@ import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.lerp
+import androidx.compose.ui.unit.sp
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.filterIsInstance
 import kotlinx.coroutines.launch
 
 
@@ -432,5 +449,107 @@ fun TabIndicator(
                 .clip(RoundedCornerShape(100))
                 .background(color = LocalContentColor.current)
         )
+    }
+}
+
+@Composable
+fun TabClickMenu(
+    selected: Boolean,
+    onClick: () -> Unit,
+    menuContent: @Composable MenuScope.() -> Unit,
+    modifier: Modifier = Modifier,
+    enabled: Boolean = true,
+    menuState: MenuState = rememberMenuState(),
+    interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
+    selectedContentColor: Color = LocalContentColor.current,
+    unselectedContentColor: Color = selectedContentColor.copy(alpha = ContentAlpha.medium),
+    content: @Composable ColumnScope.() -> Unit,
+) {
+    LaunchedEffect(Unit) {
+        launch {
+            interactionSource.interactions
+                .filterIsInstance<PressInteraction.Press>()
+                .collect {
+                    menuState.offset = it.pressPosition
+                }
+        }
+    }
+    ClickMenu(
+        menuContent = menuContent,
+        menuState = menuState
+    ) {
+        Tab(
+            selected = selected,
+            onClick = {
+                if (!selected) {
+                    onClick()
+                } else {
+                    menuState.toggle()
+                }
+            },
+            modifier = modifier,
+            enabled = enabled,
+            interactionSource = interactionSource,
+            selectedContentColor = selectedContentColor,
+            unselectedContentColor = unselectedContentColor,
+            content = content
+        )
+    }
+}
+
+@Composable
+fun TabClickMenu(
+    selected: Boolean,
+    onClick: () -> Unit,
+    text: @Composable () -> Unit,
+    menuContent: @Composable MenuScope.() -> Unit,
+    modifier: Modifier = Modifier,
+    enabled: Boolean = true,
+    menuState: MenuState = rememberMenuState(),
+    interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
+    selectedContentColor: Color = LocalContentColor.current,
+    unselectedContentColor: Color = selectedContentColor.copy(alpha = ContentAlpha.medium),
+) {
+    TabClickMenu(
+        selected = selected,
+        onClick = onClick,
+        menuContent = menuContent,
+        modifier = modifier,
+        enabled = enabled,
+        menuState = menuState,
+        interactionSource = interactionSource,
+        selectedContentColor = selectedContentColor,
+        unselectedContentColor = unselectedContentColor,
+    ) {
+        val rotate by animateFloatAsState(
+            targetValue = if (menuState.expanded) 180f else 0f,
+            label = "ArrowIndicatorRotate"
+        )
+        val alpha by animateFloatAsState(
+            targetValue = if (selected) 1f else 0f,
+            label = "ArrowIndicatorAlpha"
+        )
+
+        val tabTextStyle =
+            MaterialTheme.typography.button.copy(fontSize = 13.sp, letterSpacing = 0.sp)
+
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier
+                .height(48.dp)
+                .padding(start = 16.dp)
+        ) {
+            ProvideTextStyle(value = tabTextStyle) {
+                text()
+            }
+            Icon(
+                imageVector = Icons.Rounded.ArrowDropDown,
+                contentDescription = null,
+                modifier = Modifier
+                    .size(16.dp)
+                    .rotate(rotate)
+                    .alpha(alpha)
+            )
+        }
     }
 }

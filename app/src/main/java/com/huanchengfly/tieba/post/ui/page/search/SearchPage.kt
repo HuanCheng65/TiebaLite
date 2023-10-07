@@ -2,13 +2,11 @@ package com.huanchengfly.tieba.post.ui.page.search
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateContentSize
-import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.interaction.PressInteraction
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -42,7 +40,6 @@ import androidx.compose.material.Tab
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.ArrowBack
-import androidx.compose.material.icons.rounded.ArrowDropDown
 import androidx.compose.material.icons.rounded.Clear
 import androidx.compose.material.icons.rounded.ExpandLess
 import androidx.compose.material.icons.rounded.ExpandMore
@@ -61,9 +58,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.focus.onFocusEvent
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
@@ -94,16 +89,15 @@ import com.huanchengfly.tieba.post.ui.page.search.thread.SearchThreadUiEvent
 import com.huanchengfly.tieba.post.ui.page.search.user.SearchUserPage
 import com.huanchengfly.tieba.post.ui.widgets.compose.BaseTextField
 import com.huanchengfly.tieba.post.ui.widgets.compose.Button
-import com.huanchengfly.tieba.post.ui.widgets.compose.ClickMenu
 import com.huanchengfly.tieba.post.ui.widgets.compose.Container
 import com.huanchengfly.tieba.post.ui.widgets.compose.LazyLoadHorizontalPager
 import com.huanchengfly.tieba.post.ui.widgets.compose.MyBackHandler
 import com.huanchengfly.tieba.post.ui.widgets.compose.MyScaffold
 import com.huanchengfly.tieba.post.ui.widgets.compose.PagerTabIndicator
+import com.huanchengfly.tieba.post.ui.widgets.compose.TabClickMenu
 import com.huanchengfly.tieba.post.ui.widgets.compose.TabRow
 import com.huanchengfly.tieba.post.ui.widgets.compose.TopAppBarContainer
 import com.huanchengfly.tieba.post.ui.widgets.compose.picker.ListSinglePicker
-import com.huanchengfly.tieba.post.ui.widgets.compose.rememberMenuState
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import kotlinx.collections.immutable.ImmutableList
@@ -113,7 +107,6 @@ import kotlinx.collections.immutable.persistentMapOf
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.debounce
-import kotlinx.coroutines.flow.filterIsInstance
 import kotlinx.coroutines.launch
 
 @Immutable
@@ -404,74 +397,34 @@ private fun ColumnScope.SearchTabRow(
             .width(76.dp * pages.size),
     ) {
         pages.fastForEachIndexed { index, item ->
-            val tabTextStyle = MaterialTheme.typography.button.copy(
-//                fontWeight = FontWeight.Bold,
-                fontSize = 13.sp,
-                letterSpacing = 0.sp
-            )
+            val tabTextStyle =
+                MaterialTheme.typography.button.copy(fontSize = 13.sp, letterSpacing = 0.sp)
 
             if (item.supportSort) {
-                val sortMenuState = rememberMenuState()
-                val interactionSource = remember { MutableInteractionSource() }
-                LaunchedEffect(null) {
-                    launch {
-                        interactionSource.interactions
-                            .filterIsInstance<PressInteraction.Press>()
-                            .collect {
-                                sortMenuState.offset = it.pressPosition
-                            }
-                    }
-                }
-                ClickMenu(
-                    menuState = sortMenuState,
+                TabClickMenu(
+                    selected = pagerState.currentPage == index,
+                    onClick = {
+                        coroutineScope.launch {
+                            pagerState.animateScrollToPage(index)
+                        }
+                    },
+                    text = {
+                        ProvideTextStyle(value = tabTextStyle) {
+                            item.text(pagerState.currentPage == index)
+                        }
+                    },
                     menuContent = {
                         ListSinglePicker(
                             itemTitles = item.sortTypes.keys.toImmutableList(),
                             itemValues = item.sortTypes.values.toImmutableList(),
                             selectedPosition = item.sortTypes.values.indexOf(item.selectedSortType()),
-                            onItemSelected = { _, _, value, _ ->
-                                item.onSelectedSortTypeChange(value)
-                                sortMenuState.dismiss()
+                            onItemSelected = { _, _, value, changed ->
+                                if (changed) item.onSelectedSortTypeChange(value)
+                                dismiss()
                             }
                         )
                     }
-                ) {
-                    val rotate by animateFloatAsState(targetValue = if (sortMenuState.expanded) 180f else 0f)
-                    val alpha by animateFloatAsState(targetValue = if (pagerState.currentPage == index) 1f else 0f)
-
-                    Tab(
-                        selected = pagerState.currentPage == index,
-                        onClick = {
-                            if (pagerState.currentPage != index) {
-                                coroutineScope.launch {
-                                    pagerState.animateScrollToPage(index)
-                                }
-                            } else {
-                                sortMenuState.toggle()
-                            }
-                        },
-                        interactionSource = interactionSource,
-                    ) {
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically,
-                            modifier = Modifier
-                                .height(48.dp)
-                                .padding(start = 16.dp)
-                        ) {
-                            ProvideTextStyle(value = tabTextStyle) {
-                                item.text(pagerState.currentPage == index)
-                            }
-                            Icon(
-                                imageVector = Icons.Rounded.ArrowDropDown,
-                                contentDescription = stringResource(id = R.string.sort_menu),
-                                modifier = Modifier
-                                    .size(16.dp)
-                                    .rotate(rotate)
-                                    .alpha(alpha)
-                            )
-                        }
-                    }
-                }
+                )
             } else {
                 Tab(
                     text = {

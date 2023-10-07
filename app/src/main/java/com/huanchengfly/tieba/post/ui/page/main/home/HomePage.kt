@@ -472,7 +472,9 @@ fun HomePage(
                     isEmpty = isEmpty,
                     isError = isError,
                     isLoading = isLoading,
-                    modifier = Modifier.weight(1f),
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .weight(1f),
                     onReload = {
                         viewModel.send(HomeUiIntent.Refresh)
                     },
