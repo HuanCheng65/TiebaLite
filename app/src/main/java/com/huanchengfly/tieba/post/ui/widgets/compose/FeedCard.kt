@@ -438,8 +438,8 @@ private fun ThreadMedia(
     val mediaCount = remember(medias) {
         medias.size
     }
-    val hasMedia = remember(mediaCount) { mediaCount > 0 }
-    val isSingleMedia = remember(mediaCount) { mediaCount == 1 }
+    val hasPhoto = remember(mediaCount) { mediaCount > 0 }
+    val isSinglePhoto = remember(mediaCount) { mediaCount == 1 }
 
     val hideMedia = context.appPreferences.hideMedia
 
@@ -450,130 +450,136 @@ private fun ThreadMedia(
         else 0.5f
     }
 
-    Box(modifier = modifier) {
-        if (videoInfo != null) {
-            if (hideMedia) {
-                MediaPlaceholder(
-                    icon = {
-                        Icon(
-                            imageVector = Icons.Rounded.OndemandVideo,
-                            contentDescription = stringResource(id = R.string.desc_video)
-                        )
-                    },
-                    text = {
-                        Text(text = stringResource(id = R.string.desc_video))
-                    },
-                    modifier = Modifier.fillMaxWidth()
-                )
-            } else {
-                val aspectRatio = remember(videoInfo) {
-                    max(
-                        videoInfo
-                            .get { thumbnailWidth }
-                            .toFloat() / videoInfo.get { thumbnailHeight },
-                        16f / 9
-                    )
-                }
-                Box(
-                    modifier = Modifier.clickable(
-                        interactionSource = remember { MutableInteractionSource() },
-                        indication = null,
-                        onClick = {}
-                    )
-                ) {
-                    VideoPlayer(
-                        videoUrl = videoInfo.get { videoUrl },
-                        thumbnailUrl = videoInfo.get { thumbnailUrl },
-                        modifier = Modifier
-                            .fillMaxWidth(singleMediaFraction)
-                            .aspectRatio(aspectRatio)
-                            .clip(RoundedCornerShape(8.dp))
-                    )
-                }
-            }
-        } else if (hasMedia) {
-            val mediaWidthFraction = remember(isSingleMedia, singleMediaFraction) {
-                if (isSingleMedia) singleMediaFraction else 1f
-            }
-            val mediaAspectRatio = remember(isSingleMedia) {
-                if (isSingleMedia) 2f else 3f
-            }
-            if (hideMedia) {
-                val photoViewData = remember(
-                    medias, forumId, forumName, threadId
-                ) {
-                    getPhotoViewData(
-                        medias = medias.map { it.get() },
-                        forumId = forumId,
-                        forumName = forumName,
-                        threadId = threadId,
-                        index = 0
-                    )
-                }
-                MediaPlaceholder(
-                    icon = {
-                        Icon(
-                            imageVector = if (isSingleMedia) Icons.Rounded.Photo else Icons.Rounded.PhotoLibrary,
-                            contentDescription = stringResource(id = R.string.desc_photo)
-                        )
-                    },
-                    text = {
-                        Text(text = stringResource(id = R.string.btn_open_photos, mediaCount))
-                    },
-                    modifier = Modifier.fillMaxWidth(),
-                    onClick = {
-                        context.goToActivity<PhotoViewActivity> {
-                            putExtra(
-                                PhotoViewActivity.EXTRA_PHOTO_VIEW_DATA,
-                                photoViewData
+    val hasMedia = remember(hasPhoto, videoInfo) {
+        hasPhoto || videoInfo != null
+    }
+
+    if (hasMedia) {
+        Box(modifier = modifier) {
+            if (videoInfo != null) {
+                if (hideMedia) {
+                    MediaPlaceholder(
+                        icon = {
+                            Icon(
+                                imageVector = Icons.Rounded.OndemandVideo,
+                                contentDescription = stringResource(id = R.string.desc_video)
                             )
-                        }
+                        },
+                        text = {
+                            Text(text = stringResource(id = R.string.desc_video))
+                        },
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                } else {
+                    val aspectRatio = remember(videoInfo) {
+                        max(
+                            videoInfo
+                                .get { thumbnailWidth }
+                                .toFloat() / videoInfo.get { thumbnailHeight },
+                            16f / 9
+                        )
                     }
-                )
-            } else {
-                val showMediaCount = remember(medias) { min(medias.size, 3) }
-                val hasMoreMedia = remember(medias) { medias.size > 3 }
-                val showMedias = remember(medias) { medias.subList(0, showMediaCount) }
-                Box {
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth(mediaWidthFraction)
-                            .aspectRatio(mediaAspectRatio)
-                            .clip(RoundedCornerShape(8.dp)),
-                        horizontalArrangement = Arrangement.spacedBy(4.dp)
+                    Box(
+                        modifier = Modifier.clickable(
+                            interactionSource = remember { MutableInteractionSource() },
+                            indication = null,
+                            onClick = {}
+                        )
                     ) {
-                        showMedias.fastForEachIndexed { index, media ->
-                            val photoViewData = remember(
-                                index, medias, forumId, forumName, threadId
-                            ) {
-                                getPhotoViewData(
-                                    medias = medias.map { it.get() },
-                                    forumId = forumId,
-                                    forumName = forumName,
-                                    threadId = threadId,
-                                    index = index
+                        VideoPlayer(
+                            videoUrl = videoInfo.get { videoUrl },
+                            thumbnailUrl = videoInfo.get { thumbnailUrl },
+                            modifier = Modifier
+                                .fillMaxWidth(singleMediaFraction)
+                                .aspectRatio(aspectRatio)
+                                .clip(RoundedCornerShape(8.dp))
+                        )
+                    }
+                }
+            } else if (hasPhoto) {
+                val mediaWidthFraction = remember(isSinglePhoto, singleMediaFraction) {
+                    if (isSinglePhoto) singleMediaFraction else 1f
+                }
+                val mediaAspectRatio = remember(isSinglePhoto) {
+                    if (isSinglePhoto) 2f else 3f
+                }
+                if (hideMedia) {
+                    val photoViewData = remember(
+                        medias, forumId, forumName, threadId
+                    ) {
+                        getPhotoViewData(
+                            medias = medias.map { it.get() },
+                            forumId = forumId,
+                            forumName = forumName,
+                            threadId = threadId,
+                            index = 0
+                        )
+                    }
+                    MediaPlaceholder(
+                        icon = {
+                            Icon(
+                                imageVector = if (isSinglePhoto) Icons.Rounded.Photo else Icons.Rounded.PhotoLibrary,
+                                contentDescription = stringResource(id = R.string.desc_photo)
+                            )
+                        },
+                        text = {
+                            Text(text = stringResource(id = R.string.btn_open_photos, mediaCount))
+                        },
+                        modifier = Modifier.fillMaxWidth(),
+                        onClick = {
+                            context.goToActivity<PhotoViewActivity> {
+                                putExtra(
+                                    PhotoViewActivity.EXTRA_PHOTO_VIEW_DATA,
+                                    photoViewData
                                 )
                             }
-                            NetworkImage(
-                                imageUri = remember(media) { media.url },
-                                contentDescription = null,
+                        }
+                    )
+                } else {
+                    val showMediaCount = remember(medias) { min(medias.size, 3) }
+                    val hasMoreMedia = remember(medias) { medias.size > 3 }
+                    val showMedias = remember(medias) { medias.subList(0, showMediaCount) }
+                    Box {
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth(mediaWidthFraction)
+                                .aspectRatio(mediaAspectRatio)
+                                .clip(RoundedCornerShape(8.dp)),
+                            horizontalArrangement = Arrangement.spacedBy(4.dp)
+                        ) {
+                            showMedias.fastForEachIndexed { index, media ->
+                                val photoViewData = remember(
+                                    index, medias, forumId, forumName, threadId
+                                ) {
+                                    getPhotoViewData(
+                                        medias = medias.map { it.get() },
+                                        forumId = forumId,
+                                        forumName = forumName,
+                                        threadId = threadId,
+                                        index = index
+                                    )
+                                }
+                                NetworkImage(
+                                    imageUri = remember(media) { media.url },
+                                    contentDescription = null,
+                                    modifier = Modifier
+                                        .fillMaxHeight()
+                                        .weight(1f),
+                                    photoViewData = photoViewData,
+                                    contentScale = ContentScale.Crop,
+                                    enablePreview = true
+                                )
+                            }
+                        }
+                        if (hasMoreMedia) {
+                            Badge(
+                                icon = Icons.Rounded.PhotoSizeSelectActual,
+                                text = "${medias.size}",
                                 modifier = Modifier
-                                    .fillMaxHeight()
-                                    .weight(1f),
-                                photoViewData = photoViewData,
-                                contentScale = ContentScale.Crop,
-                                enablePreview = true
+                                    .align(Alignment.BottomEnd)
+                                    .padding(8.dp)
                             )
                         }
-                    }
-                    if (hasMoreMedia) {
-                        Badge(
-                            icon = Icons.Rounded.PhotoSizeSelectActual,
-                            text = "${medias.size}",
-                            modifier = Modifier
-                                .align(Alignment.BottomEnd)
-                                .padding(8.dp)
-                        )
                     }
                 }
             }
@@ -826,7 +832,7 @@ fun FeedCard(
     modifier: Modifier = Modifier,
     onClickReply: (PostInfoList) -> Unit = {},
     onClickUser: (id: Long) -> Unit = {},
-    onClickForum: (SimpleForum) -> Unit = {},
+    onClickForum: (name: String) -> Unit = {},
     onClickOriginThread: (OriginThreadInfo) -> Unit = {},
 ) {
     Card(
@@ -874,7 +880,7 @@ fun FeedCard(
             ThreadForumInfo(
                 forumName = item.get { forum_name },
                 forumAvatar = null,
-                onClick = {}
+                onClick = { onClickForum(item.get { forum_name }) }
             )
         },
         action = {
