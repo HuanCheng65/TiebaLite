@@ -1,5 +1,6 @@
 package com.huanchengfly.tieba.post.api.models
 
+import androidx.compose.runtime.Immutable
 import com.google.gson.annotations.SerializedName
 import com.huanchengfly.tieba.post.models.BaseBean
 import kotlinx.collections.immutable.persistentListOf
@@ -39,9 +40,10 @@ data class UserLikeForumBean(
         val forumList: List<ForumBean> = persistentListOf(),
     )
 
+    @Immutable
     @Serializable
     data class ForumBean(
-        val id: String? = null,
+        val id: String = "",
 
         @JvmField
         val name: String? = null,

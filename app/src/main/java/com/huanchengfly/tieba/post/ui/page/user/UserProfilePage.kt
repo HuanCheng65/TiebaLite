@@ -69,6 +69,7 @@ import com.huanchengfly.tieba.post.arch.getOrNull
 import com.huanchengfly.tieba.post.arch.pageViewModel
 import com.huanchengfly.tieba.post.ui.common.theme.compose.ExtendedTheme
 import com.huanchengfly.tieba.post.ui.page.ProvideNavigator
+import com.huanchengfly.tieba.post.ui.page.user.likeforum.UserLikeForumPage
 import com.huanchengfly.tieba.post.ui.page.user.post.UserPostPage
 import com.huanchengfly.tieba.post.ui.widgets.Chip
 import com.huanchengfly.tieba.post.ui.widgets.compose.Avatar
@@ -283,7 +284,7 @@ fun UserProfilePage(
                                                 )
                                             },
                                             content = {
-                                                Text(text = "concern_forums")
+                                                UserLikeForumPage(uid = it.get { id })
                                             }
                                         ),
                                     ).toImmutableList()
