@@ -51,8 +51,10 @@ import com.huanchengfly.tieba.post.ui.common.theme.compose.White
 import com.huanchengfly.tieba.post.ui.common.theme.compose.Yellow
 import com.huanchengfly.tieba.post.ui.common.theme.compose.pullRefreshIndicator
 import com.huanchengfly.tieba.post.ui.page.LocalNavigator
+import com.huanchengfly.tieba.post.ui.page.destinations.ForumPageDestination
 import com.huanchengfly.tieba.post.ui.page.destinations.HotTopicListPageDestination
 import com.huanchengfly.tieba.post.ui.page.destinations.ThreadPageDestination
+import com.huanchengfly.tieba.post.ui.page.destinations.UserProfilePageDestination
 import com.huanchengfly.tieba.post.ui.widgets.compose.Container
 import com.huanchengfly.tieba.post.ui.widgets.compose.FeedCard
 import com.huanchengfly.tieba.post.ui.widgets.compose.LazyLoad
@@ -298,7 +300,7 @@ fun HotPage(
                                         )
                                     )
                                 },
-                                onReplyClick = {
+                                onClickReply = {
                                     navigator.navigate(
                                         ThreadPageDestination(
                                             threadId = it.id,
@@ -315,6 +317,8 @@ fun HotPage(
                                         )
                                     )
                                 },
+                                onClickForum = { navigator.navigate(ForumPageDestination(it.name)) },
+                                onClickUser = { navigator.navigate(UserProfilePageDestination(it.id)) },
                             ) {
                                 Column(
                                     horizontalAlignment = Alignment.End,

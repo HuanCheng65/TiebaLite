@@ -747,4 +747,13 @@
     <string name="desc_forum_rule">吧规</string>
     <string name="pull_down_to_refresh">继续下拉以刷新</string>
     <string name="release_to_refresh">松手刷新</string>
+    <string name="text_stat_agrees">获赞</string>
+    <string name="desc_ip_address">IP 属地</string>
+    <string name="text_profile_ip_location">IP 属地：%s</string>
+    <string name="desc_tb_age">吧龄</string>
+    <string name="text_profile_tb_age">吧龄 %s 年</string>
+    <string name="text_profile_user_id">ID: %s</string>
+    <string name="title_profile_threads_tab">贴子 %s</string>
+    <string name="title_profile_posts_tab">回复 %s</string>
+    <string name="title_profile_concern_forums_tab">关注吧 %s</string>
 </resources>

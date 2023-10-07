@@ -94,7 +94,6 @@ import com.airbnb.lottie.compose.LottieConstants
 import com.airbnb.lottie.compose.rememberLottieComposition
 import com.huanchengfly.tieba.post.App
 import com.huanchengfly.tieba.post.R
-import com.huanchengfly.tieba.post.activities.UserActivity
 import com.huanchengfly.tieba.post.api.TiebaApi
 import com.huanchengfly.tieba.post.api.booleanToString
 import com.huanchengfly.tieba.post.api.models.protos.Post
@@ -129,6 +128,7 @@ import com.huanchengfly.tieba.post.ui.page.destinations.ForumPageDestination
 import com.huanchengfly.tieba.post.ui.page.destinations.ReplyPageDestination
 import com.huanchengfly.tieba.post.ui.page.destinations.SubPostsSheetPageDestination
 import com.huanchengfly.tieba.post.ui.page.destinations.ThreadPageDestination
+import com.huanchengfly.tieba.post.ui.page.destinations.UserProfilePageDestination
 import com.huanchengfly.tieba.post.ui.widgets.Chip
 import com.huanchengfly.tieba.post.ui.widgets.compose.Avatar
 import com.huanchengfly.tieba.post.ui.widgets.compose.BackNavigationIcon
@@ -834,6 +834,9 @@ fun ThreadPage(
             canDelete = { it.author_id == user.get { id } },
             immersiveMode = isImmersiveMode,
             isCollected = { it.id == thread?.get { collectMarkPid.toLongOrNull() } },
+            onUserClick = {
+                navigator.navigate(UserProfilePageDestination(it.id))
+            },
             onAgree = {
                 val postHasAgreed =
                     item.get { agree?.hasAgree == 1 }
@@ -1225,6 +1228,13 @@ fun ThreadPage(
                                                             ?.toLongOrNull()
                                                     },
                                                     showSubPosts = false,
+                                                    onUserClick = {
+                                                        navigator.navigate(
+                                                            UserProfilePageDestination(
+                                                                it.id
+                                                            )
+                                                        )
+                                                    },
                                                     onReplyClick = {
                                                         navigator.navigate(
                                                             ReplyPageDestination(
@@ -1605,6 +1615,7 @@ fun PostCard(
     immersiveMode: Boolean = false,
     isCollected: (Post) -> Boolean = { false },
     showSubPosts: Boolean = true,
+    onUserClick: (User) -> Unit = {},
     onAgree: () -> Unit = {},
     onReplyClick: (Post) -> Unit = {},
     onSubPostReplyClick: ((Post, SubPostList) -> Unit)? = null,
@@ -1738,7 +1749,7 @@ fun PostCard(
                                 )
                             },
                             onClick = {
-                                UserActivity.launch(context, author.id.toString())
+                                onUserClick(author)
                             }
                         ) {
                             if (post.floor > 1) {
@@ -1769,7 +1780,7 @@ fun PostCard(
                             Chip(
                                 text = stringResource(id = R.string.title_collected_floor),
                                 invertColor = true,
-                                icon = {
+                                prefixIcon = {
                                     Icon(
                                         imageVector = Icons.Rounded.Star,
                                         contentDescription = null,

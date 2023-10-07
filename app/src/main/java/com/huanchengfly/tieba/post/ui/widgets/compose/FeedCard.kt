@@ -67,7 +67,6 @@ import com.google.accompanist.placeholder.material.placeholder
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.huanchengfly.tieba.post.App
 import com.huanchengfly.tieba.post.R
-import com.huanchengfly.tieba.post.activities.UserActivity
 import com.huanchengfly.tieba.post.api.models.protos.Media
 import com.huanchengfly.tieba.post.api.models.protos.OriginThreadInfo
 import com.huanchengfly.tieba.post.api.models.protos.SimpleForum
@@ -114,6 +113,7 @@ private val ImmutableHolder<Media>.url: String
 private fun DefaultUserHeader(
     userProvider: () -> ImmutableHolder<User>,
     timeProvider: () -> Int,
+    onClick: () -> Unit,
     modifier: Modifier = Modifier,
     content: @Composable RowScope.() -> Unit,
 ) {
@@ -139,13 +139,7 @@ private fun DefaultUserHeader(
                 color = ExtendedTheme.colors.text
             )
         },
-        onClick = {
-            UserActivity.launch(
-                context,
-                user.get { id }.toString(),
-                user.get { StringUtil.getAvatarUrl(portrait) }
-            )
-        },
+        onClick = onClick,
         desc = {
             Text(
                 text = DateTimeUtils.getRelativeTimeString(
@@ -684,18 +678,22 @@ fun FeedCard(
     onClick: (ThreadInfo) -> Unit,
     onAgree: (ThreadInfo) -> Unit,
     modifier: Modifier = Modifier,
-    onReplyClick: (ThreadInfo) -> Unit = {},
+    onClickReply: (ThreadInfo) -> Unit = {},
+    onClickUser: (User) -> Unit = {},
     onClickForum: (SimpleForum) -> Unit = {},
     onClickOriginThread: (OriginThreadInfo) -> Unit = {},
     dislikeAction: @Composable () -> Unit = {},
 ) {
     Card(
         header = {
-            val hasAuthor = remember(item) { item.isNotNull { author } }
-            if (hasAuthor) {
+            val author = remember(item) { item.getNullableImmutable { author } }
+            author?.let {
                 DefaultUserHeader(
-                    userProvider = { item.getImmutable { author!! } },
+                    userProvider = { it },
                     timeProvider = { item.get { lastTimeInt } },
+                    onClick = {
+                        onClickUser(it.get())
+                    },
                 ) { dislikeAction() }
             }
         },
@@ -739,7 +737,7 @@ fun FeedCard(
 
                 ThreadReplyBtn(
                     replyNum = item.get { replyNum },
-                    onClick = { onReplyClick(item.get()) },
+                    onClick = { onClickReply(item.get()) },
                     modifier = Modifier.weight(1f)
                 )
 

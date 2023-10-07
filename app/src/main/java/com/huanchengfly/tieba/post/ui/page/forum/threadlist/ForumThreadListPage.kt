@@ -38,6 +38,7 @@ import androidx.compose.ui.unit.sp
 import com.huanchengfly.tieba.post.R
 import com.huanchengfly.tieba.post.api.models.protos.OriginThreadInfo
 import com.huanchengfly.tieba.post.api.models.protos.ThreadInfo
+import com.huanchengfly.tieba.post.api.models.protos.User
 import com.huanchengfly.tieba.post.api.models.protos.abstractText
 import com.huanchengfly.tieba.post.api.models.protos.frsPage.Classify
 import com.huanchengfly.tieba.post.arch.BaseComposeActivity.Companion.LocalWindowSizeClass
@@ -53,6 +54,7 @@ import com.huanchengfly.tieba.post.ui.models.ThreadItemData
 import com.huanchengfly.tieba.post.ui.page.LocalNavigator
 import com.huanchengfly.tieba.post.ui.page.destinations.ForumRuleDetailPageDestination
 import com.huanchengfly.tieba.post.ui.page.destinations.ThreadPageDestination
+import com.huanchengfly.tieba.post.ui.page.destinations.UserProfilePageDestination
 import com.huanchengfly.tieba.post.ui.page.forum.getSortType
 import com.huanchengfly.tieba.post.ui.widgets.Chip
 import com.huanchengfly.tieba.post.ui.widgets.compose.BlockTip
@@ -179,6 +181,7 @@ private fun ThreadList(
     forumRuleTitle: String? = null,
     onOpenForumRule: (() -> Unit)? = null,
     onOriginThreadClicked: (OriginThreadInfo) -> Unit = {},
+    onUserClicked: (User) -> Unit = {},
 ) {
     val windowSizeClass = LocalWindowSizeClass.current
     val itemFraction = when (windowSizeClass.widthSizeClass) {
@@ -258,9 +261,10 @@ private fun ThreadList(
                         FeedCard(
                             item = holder,
                             onClick = onItemClicked,
-                            onReplyClick = onItemReplyClicked,
+                            onClickReply = onItemReplyClicked,
                             onAgree = onAgree,
                             onClickOriginThread = onOriginThreadClicked,
+                            onClickUser = onUserClicked
                         )
                     }
                 }
@@ -430,7 +434,8 @@ fun ForumThreadListPage(
                             forumId = it.fid,
                         )
                     )
-                }
+                },
+                onUserClicked = { navigator.navigate(UserProfilePageDestination(it.id)) }
             )
         }
 

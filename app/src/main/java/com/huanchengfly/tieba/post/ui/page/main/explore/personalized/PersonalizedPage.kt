@@ -46,6 +46,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.huanchengfly.tieba.post.R
 import com.huanchengfly.tieba.post.api.models.protos.ThreadInfo
+import com.huanchengfly.tieba.post.api.models.protos.User
 import com.huanchengfly.tieba.post.api.models.protos.personalized.DislikeReason
 import com.huanchengfly.tieba.post.arch.CommonUiEvent.ScrollToTop.bindScrollToTopEvent
 import com.huanchengfly.tieba.post.arch.GlobalEvent
@@ -60,6 +61,7 @@ import com.huanchengfly.tieba.post.ui.models.ThreadItemData
 import com.huanchengfly.tieba.post.ui.page.LocalNavigator
 import com.huanchengfly.tieba.post.ui.page.destinations.ForumPageDestination
 import com.huanchengfly.tieba.post.ui.page.destinations.ThreadPageDestination
+import com.huanchengfly.tieba.post.ui.page.destinations.UserProfilePageDestination
 import com.huanchengfly.tieba.post.ui.widgets.compose.BlockTip
 import com.huanchengfly.tieba.post.ui.widgets.compose.BlockableContent
 import com.huanchengfly.tieba.post.ui.widgets.compose.Container
@@ -227,10 +229,10 @@ fun PersonalizedPage(
                             )
                         )
                     },
-                    onRefresh = { viewModel.send(PersonalizedUiIntent.Refresh) }
-                ) {
-                    navigator.navigate(ForumPageDestination(it))
-                }
+                    onRefresh = { viewModel.send(PersonalizedUiIntent.Refresh) },
+                    onOpenForum = { navigator.navigate(ForumPageDestination(it)) },
+                    onClickUser = { navigator.navigate(UserProfilePageDestination(it.id)) }
+                )
             }
 
             PullRefreshIndicator(
@@ -285,6 +287,7 @@ private fun FeedList(
     onDislike: (ThreadInfo, Long, ImmutableList<ImmutableHolder<DislikeReason>>) -> Unit,
     onRefresh: () -> Unit,
     onOpenForum: (forumName: String) -> Unit = {},
+    onClickUser: (User) -> Unit = {},
 ) {
     val data = dataProvider()
     val refreshPosition = refreshPositionProvider()
@@ -339,13 +342,14 @@ private fun FeedList(
                                 FeedCard(
                                     item = item,
                                     onClick = onItemClick,
-                                    onReplyClick = onItemReplyClick,
+                                    onClickReply = onItemReplyClick,
                                     onAgree = onAgree,
                                     onClickForum = remember {
                                         {
                                             onOpenForum(it.name)
                                         }
-                                    }
+                                    },
+                                    onClickUser = onClickUser,
                                 ) {
                                     if (personalized != null) {
                                         Dislike(

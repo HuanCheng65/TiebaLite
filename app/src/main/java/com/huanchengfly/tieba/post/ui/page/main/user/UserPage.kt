@@ -45,7 +45,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.google.accompanist.placeholder.placeholder
 import com.huanchengfly.tieba.post.R
-import com.huanchengfly.tieba.post.activities.UserActivity
 import com.huanchengfly.tieba.post.activities.WebViewActivity
 import com.huanchengfly.tieba.post.arch.collectPartialAsState
 import com.huanchengfly.tieba.post.arch.pageViewModel
@@ -58,6 +57,7 @@ import com.huanchengfly.tieba.post.ui.page.destinations.AppThemePageDestination
 import com.huanchengfly.tieba.post.ui.page.destinations.HistoryPageDestination
 import com.huanchengfly.tieba.post.ui.page.destinations.SettingsPageDestination
 import com.huanchengfly.tieba.post.ui.page.destinations.ThreadStorePageDestination
+import com.huanchengfly.tieba.post.ui.page.destinations.UserProfilePageDestination
 import com.huanchengfly.tieba.post.ui.widgets.compose.Avatar
 import com.huanchengfly.tieba.post.ui.widgets.compose.ConfirmDialog
 import com.huanchengfly.tieba.post.ui.widgets.compose.HorizontalDivider
@@ -238,6 +238,7 @@ fun UserPage(
     )
 ) {
     val context = LocalContext.current
+    val navigator = LocalNavigator.current
     val isLoading by viewModel.uiState.collectPartialAsState(
         prop1 = UserUiState::isLoading,
         initial = false
@@ -286,11 +287,7 @@ fun UserPage(
                         modifier = Modifier
                             .padding(top = 8.dp)
                             .clickable {
-                                UserActivity.launch(
-                                    context = context,
-                                    userId = account!!.uid,
-                                    avatarUrl = StringUtil.getAvatarUrl(account!!.portrait),
-                                )
+                                navigator.navigate(UserProfilePageDestination(account!!.uid.toLong()))
                             }
                             .padding(horizontal = 16.dp, vertical = 16.dp),
                         userName = account!!.nameShow ?: account!!.name,

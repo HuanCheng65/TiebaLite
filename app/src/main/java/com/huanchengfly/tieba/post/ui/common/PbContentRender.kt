@@ -38,11 +38,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.github.panpf.sketch.compose.AsyncImage
 import com.huanchengfly.tieba.post.R
-import com.huanchengfly.tieba.post.activities.UserActivity
 import com.huanchengfly.tieba.post.activities.WebViewActivity
 import com.huanchengfly.tieba.post.arch.BaseComposeActivity.Companion.LocalWindowSizeClass
 import com.huanchengfly.tieba.post.models.PhotoViewData
 import com.huanchengfly.tieba.post.ui.common.windowsizeclass.WindowWidthSizeClass
+import com.huanchengfly.tieba.post.ui.page.LocalNavigator
+import com.huanchengfly.tieba.post.ui.page.destinations.UserProfilePageDestination
 import com.huanchengfly.tieba.post.ui.widgets.compose.EmoticonText
 import com.huanchengfly.tieba.post.ui.widgets.compose.NetworkImage
 import com.huanchengfly.tieba.post.ui.widgets.compose.VoicePlayer
@@ -245,6 +246,7 @@ fun PbContentText(
     style: TextStyle = LocalTextStyle.current,
 ) {
     val context = LocalContext.current
+    val navigator = LocalNavigator.current
 
     val layoutResult = remember { mutableStateOf<TextLayoutResult?>(null) }
     EmoticonText(
@@ -269,8 +271,8 @@ fun PbContentText(
                             }
 
                             "user" -> {
-                                val uid = annotation.item
-                                UserActivity.launch(context, uid)
+                                val uid = annotation.item.toLong()
+                                navigator.navigate(UserProfilePageDestination(uid))
                             }
                         }
                     }

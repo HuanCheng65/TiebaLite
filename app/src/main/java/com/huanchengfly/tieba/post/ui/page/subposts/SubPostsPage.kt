@@ -42,8 +42,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.util.fastForEach
 import com.huanchengfly.tieba.post.App
 import com.huanchengfly.tieba.post.R
-import com.huanchengfly.tieba.post.activities.UserActivity
 import com.huanchengfly.tieba.post.api.models.protos.SubPostList
+import com.huanchengfly.tieba.post.api.models.protos.User
 import com.huanchengfly.tieba.post.api.models.protos.bawuType
 import com.huanchengfly.tieba.post.arch.ImmutableHolder
 import com.huanchengfly.tieba.post.arch.collectPartialAsState
@@ -57,6 +57,7 @@ import com.huanchengfly.tieba.post.ui.page.ProvideNavigator
 import com.huanchengfly.tieba.post.ui.page.destinations.CopyTextDialogPageDestination
 import com.huanchengfly.tieba.post.ui.page.destinations.ReplyPageDestination
 import com.huanchengfly.tieba.post.ui.page.destinations.ThreadPageDestination
+import com.huanchengfly.tieba.post.ui.page.destinations.UserProfilePageDestination
 import com.huanchengfly.tieba.post.ui.page.thread.PostAgreeBtn
 import com.huanchengfly.tieba.post.ui.page.thread.PostCard
 import com.huanchengfly.tieba.post.ui.page.thread.UserNameText
@@ -392,6 +393,9 @@ internal fun SubPostsContent(
                                     contentRenders = postContentRenders,
                                     canDelete = { it.author_id == account?.uid?.toLongOrNull() },
                                     showSubPosts = false,
+                                    onUserClick = {
+                                        navigator.navigate(UserProfilePageDestination(it.id))
+                                    },
                                     onAgree = {
                                         val hasAgreed = it.get { agree?.hasAgree != 0 }
                                         viewModel.send(
@@ -454,6 +458,9 @@ internal fun SubPostsContent(
                             item = item,
                             canDelete = { it.author_id == account?.uid?.toLongOrNull() },
                             threadAuthorId = thread?.get { author?.id },
+                            onUserClick = {
+                                navigator.navigate(UserProfilePageDestination(it.id))
+                            },
                             onAgree = {
                                 val hasAgreed = it.agree?.hasAgree != 0
                                 viewModel.send(
@@ -519,6 +526,7 @@ private fun SubPostItem(
     item: SubPostItemData,
     threadAuthorId: Long? = null,
     canDelete: (SubPostList) -> Boolean = { false },
+    onUserClick: (User) -> Unit = {},
     onAgree: (SubPostList) -> Unit = {},
     onReplyClick: (SubPostList) -> Unit = {},
     onMenuCopyClick: ((String) -> Unit)? = null,
@@ -617,7 +625,7 @@ private fun SubPostItem(
                                 )
                             },
                             onClick = {
-                                UserActivity.launch(context, author.get { id }.toString())
+                                onUserClick(author.get())
                             }
                         ) {
                             PostAgreeBtn(

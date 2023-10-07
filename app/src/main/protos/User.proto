@@ -29,11 +29,15 @@ message User {
   string tb_age = 38;
   int32 gender = 42;
   PrivSets privSets = 45;
+  int64 friend_num = 56;
   string fansNickname = 57;
+  int32 visitor_num = 75;
+  int32 total_visitor_num = 76;
   int32 thread_num = 87;
   int32 agree_num = 88;
   int32 priv_thread = 92;
   int32 isDefaultAvatar = 106;
+  int32 favorite_num = 109;
   uint32 total_agree_num = 118;
   string level_name = 125;
   string ip_address = 127;

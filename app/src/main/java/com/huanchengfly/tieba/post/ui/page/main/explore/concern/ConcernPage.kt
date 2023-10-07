@@ -25,7 +25,9 @@ import com.huanchengfly.tieba.post.arch.wrapImmutable
 import com.huanchengfly.tieba.post.ui.common.theme.compose.ExtendedTheme
 import com.huanchengfly.tieba.post.ui.common.theme.compose.pullRefreshIndicator
 import com.huanchengfly.tieba.post.ui.page.LocalNavigator
+import com.huanchengfly.tieba.post.ui.page.destinations.ForumPageDestination
 import com.huanchengfly.tieba.post.ui.page.destinations.ThreadPageDestination
+import com.huanchengfly.tieba.post.ui.page.destinations.UserProfilePageDestination
 import com.huanchengfly.tieba.post.ui.widgets.compose.Container
 import com.huanchengfly.tieba.post.ui.widgets.compose.FeedCard
 import com.huanchengfly.tieba.post.ui.widgets.compose.LazyLoad
@@ -104,7 +106,7 @@ fun ConcernPage(
                                             )
                                         )
                                     },
-                                    onReplyClick = {
+                                    onClickReply = {
                                         navigator.navigate(
                                             ThreadPageDestination(
                                                 it.threadId,
@@ -122,6 +124,8 @@ fun ConcernPage(
                                             )
                                         )
                                     },
+                                    onClickForum = { navigator.navigate(ForumPageDestination(it.name)) },
+                                    onClickUser = { navigator.navigate(UserProfilePageDestination(it.id)) },
                                 )
                                 if (index < data.size - 1) {
                                     VerticalDivider(
