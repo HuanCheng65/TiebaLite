@@ -204,7 +204,7 @@ fun UserPostPage(
                 lazyListState = lazyListState
             ) {
                 UserPostList(
-                    posts = { posts },
+                    data = posts,
                     lazyListState = lazyListState,
                     onClickItem = {
                         navigator.navigate(
@@ -262,7 +262,7 @@ fun UserPostPage(
 
 @Composable
 private fun UserPostList(
-    posts: () -> ImmutableList<ImmutableHolder<PostInfoList>>,
+    data: ImmutableList<ImmutableHolder<PostInfoList>>,
     lazyListState: LazyListState = rememberLazyListState(),
     onClickItem: (PostInfoList) -> Unit = {},
     onAgreeItem: (PostInfoList) -> Unit = {},
@@ -271,7 +271,6 @@ private fun UserPostList(
     onClickForum: (name: String) -> Unit = {},
     onClickOriginThread: (OriginThreadInfo) -> Unit = {},
 ) {
-    val data = remember(posts) { posts() }
     MyLazyColumn(state = lazyListState) {
         items(
             items = data,

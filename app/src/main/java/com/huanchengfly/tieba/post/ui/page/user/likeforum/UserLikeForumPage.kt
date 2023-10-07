@@ -119,7 +119,7 @@ fun UserLikeForumPage(
                 lazyListState = lazyListState
             ) {
                 UserLikeForumList(
-                    forums = { forums },
+                    data = forums,
                     onClickForum = { forumBean ->
                         forumBean.name?.let {
                             navigator.navigate(ForumPageDestination(it))
@@ -142,11 +142,10 @@ fun UserLikeForumPage(
 
 @Composable
 private fun UserLikeForumList(
-    forums: () -> ImmutableList<UserLikeForumBean.ForumBean>,
+    data: ImmutableList<UserLikeForumBean.ForumBean>,
     onClickForum: (UserLikeForumBean.ForumBean) -> Unit,
     lazyListState: LazyListState = rememberLazyListState(),
 ) {
-    val data = remember(forums) { forums() }
     MyLazyColumn(state = lazyListState) {
         items(
             items = data,
