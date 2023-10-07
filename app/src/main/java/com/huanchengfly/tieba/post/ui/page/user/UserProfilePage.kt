@@ -93,6 +93,7 @@ import com.huanchengfly.tieba.post.ui.widgets.compose.states.StateScreen
 import com.huanchengfly.tieba.post.utils.AccountUtil.LocalAccount
 import com.huanchengfly.tieba.post.utils.StringUtil
 import com.huanchengfly.tieba.post.utils.StringUtil.getShortNumString
+import com.huanchengfly.tieba.post.utils.TiebaUtil
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import kotlinx.collections.immutable.ImmutableList
@@ -350,6 +351,12 @@ fun UserProfilePage(
                                                     )
                                                 )
                                             }
+                                        },
+                                        onCopyIdClick = {
+                                            TiebaUtil.copyText(
+                                                context,
+                                                holder.get { id }.toString()
+                                            )
                                         }
                                     )
                                 }
@@ -473,6 +480,7 @@ private fun UserProfileDetail(
     showBtn: Boolean = true,
     isSelf: Boolean = false,
     onBtnClick: () -> Unit = {},
+    onCopyIdClick: () -> Unit = {},
 ) {
     Column(
         modifier = modifier,
@@ -611,7 +619,8 @@ private fun UserProfileDetail(
                         imageVector = Icons.Outlined.ContentCopy,
                         contentDescription = null
                     )
-                }
+                },
+                onClick = onCopyIdClick
             )
             if (user.get { ip_address }.isNotEmpty()) {
                 Chip(
