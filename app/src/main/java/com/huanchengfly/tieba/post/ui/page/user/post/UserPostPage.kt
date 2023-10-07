@@ -214,7 +214,15 @@ fun UserPostPage(
                             )
                         )
                     },
-                    onAgreeItem = {},
+                    onAgreeItem = {
+                        viewModel.send(
+                            UserPostUiIntent.Agree(
+                                it.thread_id,
+                                it.post_id,
+                                it.agree?.hasAgree ?: 0
+                            )
+                        )
+                    },
                     onClickReply = {
                         navigator.navigate(
                             ThreadPageDestination(

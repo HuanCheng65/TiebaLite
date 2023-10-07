@@ -1,9 +1,15 @@
 package com.huanchengfly.tieba.post.ui.page.user.post
 
+import com.huanchengfly.tieba.post.App
+import com.huanchengfly.tieba.post.R
 import com.huanchengfly.tieba.post.api.TiebaApi
+import com.huanchengfly.tieba.post.api.models.AgreeBean
 import com.huanchengfly.tieba.post.api.models.protos.PostInfoList
+import com.huanchengfly.tieba.post.api.models.protos.updateAgreeStatus
 import com.huanchengfly.tieba.post.api.models.protos.userPost.UserPostResponse
+import com.huanchengfly.tieba.post.api.retrofit.exception.getErrorMessage
 import com.huanchengfly.tieba.post.arch.BaseViewModel
+import com.huanchengfly.tieba.post.arch.CommonUiEvent
 import com.huanchengfly.tieba.post.arch.ImmutableHolder
 import com.huanchengfly.tieba.post.arch.PartialChange
 import com.huanchengfly.tieba.post.arch.PartialChangeProducer
@@ -33,6 +39,18 @@ class UserPostViewModel @Inject constructor() :
     override fun createPartialChangeProducer(): PartialChangeProducer<UserPostUiIntent, UserPostPartialChange, UserPostUiState> =
         UserPostPartialChangeProducer
 
+    override fun dispatchEvent(partialChange: UserPostPartialChange): UiEvent? =
+        when (partialChange) {
+            is UserPostPartialChange.Agree.Failure -> CommonUiEvent.Toast(
+                App.INSTANCE.getString(
+                    R.string.toast_agree_failed,
+                    partialChange.error.getErrorMessage()
+                )
+            )
+
+            else -> null
+        }
+
     private object UserPostPartialChangeProducer :
         PartialChangeProducer<UserPostUiIntent, UserPostPartialChange, UserPostUiState> {
         @OptIn(ExperimentalCoroutinesApi::class)
@@ -42,6 +60,8 @@ class UserPostViewModel @Inject constructor() :
                     .flatMapConcat { it.toPartialChangeFlow() },
                 intentFlow.filterIsInstance<UserPostUiIntent.LoadMore>()
                     .flatMapConcat { it.toPartialChangeFlow() },
+                intentFlow.filterIsInstance<UserPostUiIntent.Agree>()
+                    .flatMapConcat { it.toPartialChangeFlow() }
             )
 
         private fun UserPostUiIntent.Refresh.toPartialChangeFlow(): Flow<UserPostPartialChange> =
@@ -74,6 +94,25 @@ class UserPostViewModel @Inject constructor() :
                 }
                 .onStart { emit(UserPostPartialChange.LoadMore.Start) }
                 .catch { emit(UserPostPartialChange.LoadMore.Failure(it)) }
+
+        private fun UserPostUiIntent.Agree.toPartialChangeFlow(): Flow<UserPostPartialChange.Agree> =
+            TiebaApi.getInstance()
+                .opAgreeFlow(
+                    threadId.toString(), postId.toString(), hasAgree, objType = 3
+                )
+                .map<AgreeBean, UserPostPartialChange.Agree> {
+                    UserPostPartialChange.Agree.Success(threadId, postId, hasAgree xor 1)
+                }
+                .onStart {
+                    emit(
+                        UserPostPartialChange.Agree.Start(
+                            threadId,
+                            postId,
+                            hasAgree xor 1
+                        )
+                    )
+                }
+                .catch { emit(UserPostPartialChange.Agree.Failure(threadId, postId, hasAgree, it)) }
     }
 }
 
@@ -87,6 +126,12 @@ sealed interface UserPostUiIntent : UiIntent {
         val uid: Long,
         val isThread: Boolean,
         val page: Int,
+    ) : UserPostUiIntent
+
+    data class Agree(
+        val threadId: Long,
+        val postId: Long,
+        val hasAgree: Int,
     ) : UserPostUiIntent
 }
 
@@ -167,6 +212,75 @@ sealed interface UserPostPartialChange : PartialChange<UserPostUiState> {
         data class Failure(
             val error: Throwable,
         ) : LoadMore()
+    }
+
+    sealed class Agree : UserPostPartialChange {
+        private fun List<ImmutableHolder<PostInfoList>>.updateAgreeStatus(
+            threadId: Long,
+            postId: Long,
+            hasAgree: Int,
+        ): ImmutableList<ImmutableHolder<PostInfoList>> {
+            return map {
+                val (postInfo) = it
+                if (postInfo.thread_id == threadId && postInfo.post_id == postId) {
+                    postInfo.updateAgreeStatus(hasAgree)
+                } else {
+                    postInfo
+                }
+            }.wrapImmutable()
+        }
+
+        override fun reduce(oldState: UserPostUiState): UserPostUiState =
+            when (this) {
+                is Start -> {
+                    oldState.copy(
+                        posts = oldState.posts.updateAgreeStatus(
+                            threadId,
+                            postId,
+                            hasAgree
+                        )
+                    )
+                }
+
+                is Success -> {
+                    oldState.copy(
+                        posts = oldState.posts.updateAgreeStatus(
+                            threadId,
+                            postId,
+                            hasAgree
+                        )
+                    )
+                }
+
+                is Failure -> {
+                    oldState.copy(
+                        posts = oldState.posts.updateAgreeStatus(
+                            threadId,
+                            postId,
+                            hasAgree
+                        )
+                    )
+                }
+            }
+
+        data class Start(
+            val threadId: Long,
+            val postId: Long,
+            val hasAgree: Int,
+        ) : Agree()
+
+        data class Success(
+            val threadId: Long,
+            val postId: Long,
+            val hasAgree: Int,
+        ) : Agree()
+
+        data class Failure(
+            val threadId: Long,
+            val postId: Long,
+            val hasAgree: Int,
+            val error: Throwable,
+        ) : Agree()
     }
 }
 

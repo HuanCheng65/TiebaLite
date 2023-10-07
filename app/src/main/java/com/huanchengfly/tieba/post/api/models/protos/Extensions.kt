@@ -160,6 +160,36 @@ fun SubPostList.updateAgreeStatus(
     this
 }
 
+fun PostInfoList.updateAgreeStatus(
+    hasAgree: Int,
+) = if (agree != null) {
+    if (hasAgree != agree.hasAgree) {
+        if (hasAgree == 1) {
+            copy(
+                agree = agree.copy(
+                    agreeNum = agree.agreeNum + 1,
+                    diffAgreeNum = agree.diffAgreeNum + 1,
+                    hasAgree = 1
+                ),
+                agree_num = agree_num + 1
+            )
+        } else {
+            copy(
+                agree = agree.copy(
+                    agreeNum = agree.agreeNum - 1,
+                    diffAgreeNum = agree.diffAgreeNum - 1,
+                    hasAgree = 0
+                ),
+                agree_num = agree_num - 1
+            )
+        }
+    } else {
+        this
+    }
+} else {
+    this
+}
+
 private val PbContent.picUrl: String
     get() =
         ImageUtil.getUrl(
