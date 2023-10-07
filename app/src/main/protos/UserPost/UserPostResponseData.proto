@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+package tieba.userPost;
+
+option java_package = "com.huanchengfly.tieba.post.api.models.protos.userPost";
+
+import "PostInfoList.proto";
+
+message UserPostResponseData {
+  repeated PostInfoList post_list = 1;
+  uint32 hide_post = 2;
+  uint64 time = 3;
+  uint64 ctime = 4;
+  uint64 logid = 5;
+  int32 mask_type = 6;
+  int32 view_card_num = 7;
+  int32 reddot_deleted_thread = 8;
+}

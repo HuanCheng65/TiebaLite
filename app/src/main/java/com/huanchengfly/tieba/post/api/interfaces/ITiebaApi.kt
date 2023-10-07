@@ -21,6 +21,7 @@ import com.huanchengfly.tieba.post.api.models.protos.searchSug.SearchSugResponse
 import com.huanchengfly.tieba.post.api.models.protos.threadList.ThreadListResponse
 import com.huanchengfly.tieba.post.api.models.protos.topicList.TopicListResponse
 import com.huanchengfly.tieba.post.api.models.protos.userLike.UserLikeResponse
+import com.huanchengfly.tieba.post.api.models.protos.userPost.UserPostResponse
 import com.huanchengfly.tieba.post.api.models.web.ForumBean
 import com.huanchengfly.tieba.post.api.models.web.ForumHome
 import com.huanchengfly.tieba.post.api.models.web.HotMessageListBean
@@ -1442,4 +1443,22 @@ interface ITiebaApi {
     fun forumRuleDetailFlow(
         forumId: Long,
     ): Flow<ForumRuleDetailResponse>
+
+    /**
+     * 查看用户的所有主题贴/回复
+     *
+     * @param uid 用户 ID
+     * @param page 分页页码（从 1 开始）
+     * @param isThread 是否查看主题贴
+     */
+    fun userPostFlow(
+        uid: Long,
+        page: Int = 1,
+        isThread: Boolean = true,
+    ): Flow<UserPostResponse>
+
+    fun userLikeForumFlow(
+        uid: String,
+        page: Int = 1,
+    ): Flow<UserLikeForumBean>
 }

@@ -100,6 +100,9 @@ import com.huanchengfly.tieba.post.api.models.protos.topicList.TopicListResponse
 import com.huanchengfly.tieba.post.api.models.protos.userLike.UserLikeRequest
 import com.huanchengfly.tieba.post.api.models.protos.userLike.UserLikeRequestData
 import com.huanchengfly.tieba.post.api.models.protos.userLike.UserLikeResponse
+import com.huanchengfly.tieba.post.api.models.protos.userPost.UserPostRequest
+import com.huanchengfly.tieba.post.api.models.protos.userPost.UserPostRequestData
+import com.huanchengfly.tieba.post.api.models.protos.userPost.UserPostResponse
 import com.huanchengfly.tieba.post.api.models.web.ForumBean
 import com.huanchengfly.tieba.post.api.models.web.ForumHome
 import com.huanchengfly.tieba.post.api.models.web.HotMessageListBean
@@ -1348,6 +1351,40 @@ object MixedTiebaApiImpl : ITiebaApi {
                 clientVersion = ClientVersion.TIEBA_V12,
                 needSToken = true
             )
+        )
+    }
+
+    override fun userPostFlow(uid: Long, page: Int, isThread: Boolean): Flow<UserPostResponse> {
+        return RetrofitTiebaApi.OFFICIAL_PROTOBUF_TIEBA_V12_API.userPostFlow(
+            buildProtobufRequestBody(
+                UserPostRequest(
+                    UserPostRequestData(
+                        uid = uid,
+                        rn = 20,
+                        is_thread = if (isThread) 1 else 0,
+                        need_content = 1,
+                        pn = page,
+                        common = buildCommonRequest(clientVersion = ClientVersion.TIEBA_V12),
+                        scr_w = getScreenWidth(),
+                        scr_h = getScreenHeight(),
+                        scr_dip = App.ScreenInfo.DENSITY.toDouble(),
+                        q_type = 1,
+                        is_view_card = 1
+                    )
+                ),
+                clientVersion = ClientVersion.TIEBA_V12,
+                needSToken = true
+            )
+        )
+    }
+
+    override fun userLikeForumFlow(uid: String, page: Int): Flow<UserLikeForumBean> {
+        val myUid = AccountUtil.getUid()
+        return RetrofitTiebaApi.OFFICIAL_TIEBA_API.userLikeForumFlow(
+            page = page,
+            uid = myUid,
+            friendUid = if (!TextUtils.equals(uid, myUid)) uid else null,
+            is_guest = if (!TextUtils.equals(uid, myUid)) "1" else null
         )
     }
 }

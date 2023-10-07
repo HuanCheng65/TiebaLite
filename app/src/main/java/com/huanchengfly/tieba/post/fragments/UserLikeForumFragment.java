@@ -80,7 +80,7 @@ public class UserLikeForumFragment extends BaseFragment {
                 R.id.forum_item_card,
                 (OnItemChildClickListener<UserLikeForumBean.ForumBean>)
                         (viewHolder, forumBean, position) ->
-                                ForumActivity.launch(getAttachContext(), forumBean.getName())
+                                ForumActivity.launch(getAttachContext(), forumBean.name)
         );
         recyclerView.setAdapter(userLikeForumAdapter);
     }
@@ -95,9 +95,9 @@ public class UserLikeForumFragment extends BaseFragment {
                     public void onResponse(@NotNull Call<UserLikeForumBean> call, @NotNull Response<UserLikeForumBean> response) {
                         UserLikeForumBean data = response.body();
                         userLikeForumBean = data;
-                        if (data.getForumList() != null) {
-                            userLikeForumAdapter.setData(data.getForumList().getForumList());
-                            if ("0".equals(data.getHasMore())) {
+                        if (data.forumList != null) {
+                            userLikeForumAdapter.setData(data.forumList.forumList);
+                            if ("0".equals(data.hasMore)) {
                                 //emptyTipView.setText(R.string.tip_empty);
                                 refreshLayout.finishRefreshWithNoMoreData();
                             } else {
@@ -111,6 +111,7 @@ public class UserLikeForumFragment extends BaseFragment {
 
                     @Override
                     public void onFailure(@NotNull Call<UserLikeForumBean> call, @NotNull Throwable t) {
+                        t.printStackTrace();
                         Toast.makeText(getAttachContext(), t.getMessage(), Toast.LENGTH_SHORT).show();
                         refreshLayout.finishRefresh(false);
                     }
@@ -126,9 +127,9 @@ public class UserLikeForumFragment extends BaseFragment {
                         page += 1;
                         UserLikeForumBean data = response.body();
                         userLikeForumBean = data;
-                        if (data.getForumList() != null) {
-                            userLikeForumAdapter.insert(data.getForumList().getForumList());
-                            if ("0".equals(data.getHasMore())) {
+                        if (data.forumList != null) {
+                            userLikeForumAdapter.insert(data.forumList.forumList);
+                            if ("0".equals(data.hasMore)) {
                                 //emptyTipView.setText(R.string.tip_empty);
                                 refreshLayout.finishLoadMoreWithNoMoreData();
                             } else {

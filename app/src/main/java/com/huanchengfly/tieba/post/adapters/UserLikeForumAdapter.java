@@ -17,10 +17,10 @@ public class UserLikeForumAdapter extends BaseSingleTypeAdapter<UserLikeForumBea
 
     @Override
     protected void convert(MyViewHolder viewHolder, UserLikeForumBean.ForumBean forumBean, int position) {
-        viewHolder.setText(R.id.forum_item_name, forumBean.getName());
-        ImageUtil.load(viewHolder.getView(R.id.forum_item_avatar), ImageUtil.LOAD_TYPE_AVATAR, forumBean.getAvatar());
-        viewHolder.setText(R.id.forum_item_slogan, forumBean.getSlogan());
-        viewHolder.setVisibility(R.id.forum_item_slogan, TextUtils.isEmpty(forumBean.getSlogan()) ? View.GONE : View.VISIBLE);
+        viewHolder.setText(R.id.forum_item_name, forumBean.name);
+        ImageUtil.load(viewHolder.getView(R.id.forum_item_avatar), ImageUtil.LOAD_TYPE_AVATAR, forumBean.avatar);
+        viewHolder.setText(R.id.forum_item_slogan, forumBean.slogan);
+        viewHolder.setVisibility(R.id.forum_item_slogan, TextUtils.isEmpty(forumBean.slogan) ? View.GONE : View.VISIBLE);
     }
 
     @Override

@@ -17,6 +17,7 @@ import com.huanchengfly.tieba.post.api.models.protos.searchSug.SearchSugResponse
 import com.huanchengfly.tieba.post.api.models.protos.threadList.ThreadListResponse
 import com.huanchengfly.tieba.post.api.models.protos.topicList.TopicListResponse
 import com.huanchengfly.tieba.post.api.models.protos.userLike.UserLikeResponse
+import com.huanchengfly.tieba.post.api.models.protos.userPost.UserPostResponse
 import com.huanchengfly.tieba.post.api.retrofit.body.MyMultipartBody
 import kotlinx.coroutines.flow.Flow
 import retrofit2.http.Body
@@ -109,4 +110,9 @@ interface OfficialProtobufTiebaApi {
     fun forumRuleDetailFlow(
         @Body body: MyMultipartBody,
     ): Flow<ForumRuleDetailResponse>
+
+    @POST("/c/u/feed/userpost?cmd=303002&format=protobuf")
+    fun userPostFlow(
+        @Body body: MyMultipartBody,
+    ): Flow<UserPostResponse>
 }

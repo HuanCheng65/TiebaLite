@@ -523,4 +523,15 @@ interface OfficialTiebaApi {
         @Field("delete_my_post") deleteMyPost: Int,
         @Field("tbs") tbs: String? = AccountUtil.getLoginInfo()?.tbs,
     ): Flow<CommonResponse>
+
+    @Headers("${Header.FORCE_LOGIN}: ${Header.FORCE_LOGIN_TRUE}")
+    @POST("/c/f/forum/like")
+    @FormUrlEncoded
+    fun userLikeForumFlow(
+        @Field("page_no") page: Int = 1,
+        @Field("page_size") pageSize: Int = 50,
+        @Field("uid") uid: String?,
+        @Field("friend_uid") friendUid: String?,
+        @Field("is_guest") is_guest: String?,
+    ): Flow<UserLikeForumBean>
 }
