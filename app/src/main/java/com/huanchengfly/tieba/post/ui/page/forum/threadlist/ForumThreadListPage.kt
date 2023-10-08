@@ -35,6 +35,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.util.fastForEach
 import com.huanchengfly.tieba.post.R
 import com.huanchengfly.tieba.post.api.models.protos.OriginThreadInfo
 import com.huanchengfly.tieba.post.api.models.protos.ThreadInfo
@@ -59,6 +60,7 @@ import com.huanchengfly.tieba.post.ui.page.forum.getSortType
 import com.huanchengfly.tieba.post.ui.widgets.Chip
 import com.huanchengfly.tieba.post.ui.widgets.compose.BlockTip
 import com.huanchengfly.tieba.post.ui.widgets.compose.BlockableContent
+import com.huanchengfly.tieba.post.ui.widgets.compose.Container
 import com.huanchengfly.tieba.post.ui.widgets.compose.FeedCard
 import com.huanchengfly.tieba.post.ui.widgets.compose.LazyLoad
 import com.huanchengfly.tieba.post.ui.widgets.compose.LoadMoreLayout
@@ -112,18 +114,17 @@ private enum class ItemType {
 
 @Composable
 private fun GoodClassifyTabs(
-    goodClassifyHoldersProvider: () -> List<ImmutableHolder<Classify>>,
+    goodClassifyHolders: ImmutableList<ImmutableHolder<Classify>>,
     selectedItem: Int?,
     onSelected: (Int) -> Unit,
 ) {
-    val goodClassifyHolders = goodClassifyHoldersProvider()
     Row(
         modifier = Modifier
             .horizontalScroll(rememberScrollState())
             .padding(vertical = 8.dp, horizontal = 16.dp),
         horizontalArrangement = Arrangement.spacedBy(8.dp)
     ) {
-        goodClassifyHolders.forEach { holder ->
+        goodClassifyHolders.fastForEach { holder ->
             val (classify) = holder
             Chip(
                 text = classify.class_name,
@@ -173,7 +174,7 @@ private fun ThreadList(
     items: ImmutableList<ThreadItemData>,
     isGood: Boolean,
     goodClassifyId: Int?,
-    goodClassifyHoldersProvider: () -> List<ImmutableHolder<Classify>>,
+    goodClassifyHolders: ImmutableList<ImmutableHolder<Classify>>,
     onItemClicked: (ThreadInfo) -> Unit,
     onItemReplyClicked: (ThreadInfo) -> Unit,
     onAgree: (ThreadInfo) -> Unit,
@@ -188,84 +189,86 @@ private fun ThreadList(
         WindowWidthSizeClass.Expanded -> 0.5f
         else -> 1f
     }
-    MyLazyColumn(
-        state = state,
-        horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = Modifier.fillMaxWidth(),
-        contentPadding = WindowInsets.navigationBars.asPaddingValues()
-    ) {
+    Column {
         if (isGood) {
-            item(key = "GoodClassifyHeader") {
+            Container {
                 GoodClassifyTabs(
-                    goodClassifyHoldersProvider = goodClassifyHoldersProvider,
+                    goodClassifyHolders = goodClassifyHolders,
                     selectedItem = goodClassifyId,
                     onSelected = onClassifySelected
                 )
             }
         }
-        if (!forumRuleTitle.isNullOrEmpty()) {
-            item(key = "ForumRule") {
-                TopThreadItem(
-                    title = forumRuleTitle,
-                    onClick = {
-                        onOpenForumRule?.invoke()
-                    },
-                    modifier = Modifier.fillMaxWidth(),
-                    type = stringResource(id = R.string.desc_forum_rule)
-                )
-            }
-        }
-        itemsIndexed(
-            items = items,
-            key = { index, (holder) ->
-                val (item) = holder
-                "${index}_${item.id}"
-            },
-            contentType = { _, (holder) ->
-                val (item) = holder
-                if (item.isTop == 1) ItemType.Top
-                else {
-                    if (item.media.isNotEmpty())
-                        if (item.media.size == 1) ItemType.SingleMedia else ItemType.MultiMedia
-                    else if (item.videoInfo != null)
-                        ItemType.Video
-                    else ItemType.PlainText
+        MyLazyColumn(
+            state = state,
+//        horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier.fillMaxWidth(),
+            contentPadding = WindowInsets.navigationBars.asPaddingValues()
+        ) {
+            if (!forumRuleTitle.isNullOrEmpty()) {
+                item(key = "ForumRule") {
+                    TopThreadItem(
+                        title = forumRuleTitle,
+                        onClick = {
+                            onOpenForumRule?.invoke()
+                        },
+                        modifier = Modifier.fillMaxWidth(),
+                        type = stringResource(id = R.string.desc_forum_rule)
+                    )
                 }
             }
-        ) { index, (holder, blocked) ->
-            BlockableContent(
-                blocked = blocked,
-                blockedTip = { BlockTip(text = { Text(text = stringResource(id = R.string.tip_blocked_thread)) }) },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(vertical = 8.dp, horizontal = 16.dp),
-            ) {
-                val (item) = holder
-                Column(
-                    modifier = Modifier.fillMaxWidth(itemFraction)
+            itemsIndexed(
+                items = items,
+                key = { index, (holder) ->
+                    val (item) = holder
+                    "${index}_${item.id}"
+                },
+                contentType = { _, (holder) ->
+                    val (item) = holder
+                    if (item.isTop == 1) ItemType.Top
+                    else {
+                        if (item.media.isNotEmpty())
+                            if (item.media.size == 1) ItemType.SingleMedia else ItemType.MultiMedia
+                        else if (item.videoInfo != null)
+                            ItemType.Video
+                        else ItemType.PlainText
+                    }
+                }
+            ) { index, (holder, blocked) ->
+                BlockableContent(
+                    blocked = blocked,
+                    blockedTip = { BlockTip(text = { Text(text = stringResource(id = R.string.tip_blocked_thread)) }) },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 8.dp, horizontal = 16.dp),
                 ) {
-                    if (item.isTop == 1) {
-                        val title = item.title.takeUnless { it.isBlank() } ?: item.abstractText
-                        TopThreadItem(
-                            title = title,
-                            onClick = { onItemClicked(item) },
-                            modifier = Modifier.fillMaxWidth(),
-                        )
-                    } else {
-                        if (index > 0) {
-                            if (items[index - 1].thread.get { isTop } == 1) {
-                                Spacer(modifier = Modifier.height(8.dp))
+                    val (item) = holder
+                    Column(
+                        modifier = Modifier.fillMaxWidth(itemFraction)
+                    ) {
+                        if (item.isTop == 1) {
+                            val title = item.title.takeUnless { it.isBlank() } ?: item.abstractText
+                            TopThreadItem(
+                                title = title,
+                                onClick = { onItemClicked(item) },
+                                modifier = Modifier.fillMaxWidth(),
+                            )
+                        } else {
+                            if (index > 0) {
+                                if (items[index - 1].thread.get { isTop } == 1) {
+                                    Spacer(modifier = Modifier.height(8.dp))
+                                }
+                                VerticalDivider(modifier = Modifier.padding(horizontal = 16.dp))
                             }
-                            VerticalDivider(modifier = Modifier.padding(horizontal = 16.dp))
+                            FeedCard(
+                                item = holder,
+                                onClick = onItemClicked,
+                                onClickReply = onItemReplyClicked,
+                                onAgree = onAgree,
+                                onClickOriginThread = onOriginThreadClicked,
+                                onClickUser = onUserClicked
+                            )
                         }
-                        FeedCard(
-                            item = holder,
-                            onClick = onItemClicked,
-                            onClickReply = onItemReplyClicked,
-                            onAgree = onAgree,
-                            onClickOriginThread = onOriginThreadClicked,
-                            onClickUser = onUserClicked
-                        )
                     }
                 }
             }
@@ -385,7 +388,7 @@ fun ForumThreadListPage(
                 items = threadList,
                 isGood = isGood,
                 goodClassifyId = goodClassifyId,
-                goodClassifyHoldersProvider = { goodClassifies },
+                goodClassifyHolders = goodClassifies,
                 onItemClicked = {
                     navigator.navigate(
                         ThreadPageDestination(
