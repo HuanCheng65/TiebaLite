@@ -55,6 +55,7 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -448,8 +449,8 @@ fun ForumPage(
 
     val density = LocalDensity.current
 
-    var heightOffset by remember { mutableFloatStateOf(0f) }
-    var headerHeight by remember {
+    var heightOffset by rememberSaveable { mutableFloatStateOf(0f) }
+    var headerHeight by rememberSaveable {
         mutableFloatStateOf(
             with(density) {
                 (Sizes.Large + 16.dp * 2).toPx()
@@ -801,7 +802,12 @@ fun ForumPage(
                                             pagerState.animateScrollToPage(0)
                                         }
                                     },
-                                    text = { Text(text = stringResource(id = R.string.tab_forum_latest)) },
+                                    text = {
+                                        Text(
+                                            text = stringResource(id = R.string.tab_forum_latest),
+                                            style = tabTextStyle
+                                        )
+                                    },
                                     menuContent = {
                                         ListSinglePicker(
                                             itemTitles = persistentListOf(
@@ -826,7 +832,9 @@ fun ForumPage(
                                                 dismiss()
                                             }
                                         )
-                                    }
+                                    },
+                                    selectedContentColor = ExtendedTheme.colors.primary,
+                                    unselectedContentColor = ExtendedTheme.colors.textSecondary
                                 )
                                 Tab(
                                     selected = currentPage == 1,

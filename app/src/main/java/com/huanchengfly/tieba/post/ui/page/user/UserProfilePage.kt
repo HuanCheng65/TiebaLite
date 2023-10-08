@@ -46,6 +46,7 @@ import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -158,8 +159,8 @@ fun UserProfilePage(
         derivedStateOf { user == null }
     }
 
-    var heightOffset by remember { mutableFloatStateOf(0f) }
-    var headerHeight by remember {
+    var heightOffset by rememberSaveable { mutableFloatStateOf(0f) }
+    var headerHeight by rememberSaveable {
         mutableFloatStateOf(
             with(density) {
                 (96.dp + 16.dp).toPx()
