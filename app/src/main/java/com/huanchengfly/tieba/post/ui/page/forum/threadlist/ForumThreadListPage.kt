@@ -201,7 +201,7 @@ private fun ThreadList(
         }
         MyLazyColumn(
             state = state,
-//        horizontalAlignment = Alignment.CenterHorizontally,
+            horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier.fillMaxWidth(),
             contentPadding = WindowInsets.navigationBars.asPaddingValues()
         ) {

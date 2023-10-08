@@ -12,14 +12,19 @@ import com.huanchengfly.tieba.post.ui.common.windowsizeclass.WindowWidthSizeClas
 @Composable
 fun Container(
     modifier: Modifier = Modifier,
+    fluid: Boolean = false,
     content: @Composable () -> Unit,
 ) {
     val windowWidthSizeClass = LocalWindowSizeClass.current.widthSizeClass
     val widthFraction = remember(windowWidthSizeClass) {
-        when (windowWidthSizeClass) {
-            WindowWidthSizeClass.Medium -> 0.87f
-            WindowWidthSizeClass.Expanded -> 0.75f
-            else -> 1f
+        if (fluid) {
+            1f
+        } else {
+            when (windowWidthSizeClass) {
+                WindowWidthSizeClass.Medium -> 0.87f
+                WindowWidthSizeClass.Expanded -> 0.75f
+                else -> 1f
+            }
         }
     }
 

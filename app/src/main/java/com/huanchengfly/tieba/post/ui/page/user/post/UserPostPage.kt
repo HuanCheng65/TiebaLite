@@ -20,6 +20,7 @@ import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.material.pullrefresh.PullRefreshIndicator
+import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
@@ -52,6 +53,7 @@ import com.huanchengfly.tieba.post.ui.page.destinations.ThreadPageDestination
 import com.huanchengfly.tieba.post.ui.page.destinations.UserProfilePageDestination
 import com.huanchengfly.tieba.post.ui.widgets.compose.Button
 import com.huanchengfly.tieba.post.ui.widgets.compose.Card
+import com.huanchengfly.tieba.post.ui.widgets.compose.Container
 import com.huanchengfly.tieba.post.ui.widgets.compose.ErrorScreen
 import com.huanchengfly.tieba.post.ui.widgets.compose.FeedCard
 import com.huanchengfly.tieba.post.ui.widgets.compose.FeedCardPlaceholder
@@ -70,6 +72,8 @@ import kotlinx.collections.immutable.persistentListOf
 fun UserPostPage(
     uid: Long,
     isThread: Boolean = true,
+    fluid: Boolean = false,
+    enablePullRefresh: Boolean = false,
     viewModel: UserPostViewModel = pageViewModel(key = if (isThread) "user_thread_$uid" else "user_post_$uid"),
 ) {
     val navigator = LocalNavigator.current
@@ -207,7 +211,10 @@ fun UserPostPage(
 
         val lazyListState = rememberLazyListState()
 
-        Box {
+        val pullRefreshModifier =
+            if (enablePullRefresh) Modifier.pullRefresh(pullRefreshState) else Modifier
+
+        Box(modifier = pullRefreshModifier) {
             LoadMoreLayout(
                 isLoading = isLoadingMore,
                 onLoadMore = {
@@ -218,6 +225,7 @@ fun UserPostPage(
             ) {
                 UserPostList(
                     data = posts,
+                    fluid = fluid,
                     lazyListState = lazyListState,
                     onClickItem = { threadId, postId, isSubPost ->
                         if (postId == null) {
@@ -286,6 +294,7 @@ fun UserPostPage(
 @Composable
 private fun UserPostList(
     data: ImmutableList<PostListItemData>,
+    fluid: Boolean = false,
     lazyListState: LazyListState = rememberLazyListState(),
     onClickItem: (threadId: Long, postId: Long?, isSubPost: Boolean) -> Unit = { _, _, _ -> },
     onAgreeItem: (PostInfoList) -> Unit = {},
@@ -301,15 +310,17 @@ private fun UserPostList(
                 "${it.data.get { thread_id }}_${it.data.get { post_id }}"
             }
         ) { itemData ->
-            UserPostItem(
-                post = itemData,
-                onClick = onClickItem,
-                onAgree = onAgreeItem,
-                onClickReply = onClickReply,
-                onClickUser = onClickUser,
-                onClickForum = onClickForum,
-                onClickOriginThread = onClickOriginThread,
-            )
+            Container(fluid = fluid) {
+                UserPostItem(
+                    post = itemData,
+                    onClick = onClickItem,
+                    onAgree = onAgreeItem,
+                    onClickReply = onClickReply,
+                    onClickUser = onClickUser,
+                    onClickForum = onClickForum,
+                    onClickOriginThread = onClickOriginThread,
+                )
+            }
         }
     }
 }

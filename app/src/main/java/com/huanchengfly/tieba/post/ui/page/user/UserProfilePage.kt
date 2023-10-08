@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -68,6 +69,7 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.util.fastForEachIndexed
 import com.huanchengfly.tieba.post.R
 import com.huanchengfly.tieba.post.api.models.protos.User
+import com.huanchengfly.tieba.post.arch.BaseComposeActivity.Companion.LocalWindowSizeClass
 import com.huanchengfly.tieba.post.arch.GlobalEvent
 import com.huanchengfly.tieba.post.arch.ImmutableHolder
 import com.huanchengfly.tieba.post.arch.collectPartialAsState
@@ -78,6 +80,7 @@ import com.huanchengfly.tieba.post.goToActivity
 import com.huanchengfly.tieba.post.models.database.Block
 import com.huanchengfly.tieba.post.toastShort
 import com.huanchengfly.tieba.post.ui.common.theme.compose.ExtendedTheme
+import com.huanchengfly.tieba.post.ui.common.windowsizeclass.WindowWidthSizeClass
 import com.huanchengfly.tieba.post.ui.page.ProvideNavigator
 import com.huanchengfly.tieba.post.ui.page.editprofile.view.EditProfileActivity
 import com.huanchengfly.tieba.post.ui.page.user.likeforum.UserLikeForumPage
@@ -114,7 +117,6 @@ import kotlin.math.absoluteValue
 import kotlin.math.max
 import kotlin.math.min
 
-@OptIn(ExperimentalFoundationApi::class)
 @Destination
 @Composable
 fun UserProfilePage(
@@ -123,9 +125,6 @@ fun UserProfilePage(
     viewModel: UserProfileViewModel = pageViewModel(),
 ) {
     val account = LocalAccount.current
-    val context = LocalContext.current
-    val coroutineScope = rememberCoroutineScope()
-    val density = LocalDensity.current
 
     val isSelf = remember(account, uid) {
         account?.uid == uid.toString()
@@ -160,6 +159,173 @@ fun UserProfilePage(
         derivedStateOf { user == null }
     }
 
+    ProvideNavigator(navigator = navigator) {
+        StateScreen(
+            modifier = Modifier.fillMaxSize(),
+            isEmpty = isEmpty,
+            isError = isError,
+            isLoading = isRefreshing,
+            onReload = { viewModel.send(UserProfileUiIntent.Refresh(uid)) },
+            errorScreen = { ErrorScreen(error = error.getOrNull()) }
+        ) {
+            user?.let {
+                UserProfileContent(
+                    user = it,
+                    showActionBtn = account != null,
+                    disableButton = disableButton,
+                    isSelf = isSelf,
+                    onBack = { navigator.navigateUp() },
+                    onFollow = {
+                        viewModel.send(
+                            UserProfileUiIntent.Follow(
+                                it.get { portrait },
+                                account!!.tbs,
+                            )
+                        )
+                    },
+                    onUnfollow = {
+                        viewModel.send(
+                            UserProfileUiIntent.Unfollow(
+                                it.get { portrait },
+                                account!!.tbs,
+                            )
+                        )
+                    }
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun UserProfileContent(
+    user: ImmutableHolder<User>,
+    showActionBtn: Boolean,
+    disableButton: Boolean,
+    isSelf: Boolean,
+    onBack: () -> Unit,
+    onFollow: () -> Unit,
+    onUnfollow: () -> Unit,
+) {
+    when (LocalWindowSizeClass.current.widthSizeClass) {
+        WindowWidthSizeClass.Expanded -> {
+            UserProfileContentExpanded(
+                user = user,
+                showActionBtn = showActionBtn,
+                disableButton = disableButton,
+                isSelf = isSelf,
+                onBack = onBack,
+                onFollow = onFollow,
+                onUnfollow = onUnfollow
+            )
+        }
+
+        else -> {
+            UserProfileContentNormal(
+                user = user,
+                showActionBtn = showActionBtn,
+                disableButton = disableButton,
+                isSelf = isSelf,
+                onBack = onBack,
+                onFollow = onFollow,
+                onUnfollow = onUnfollow
+            )
+        }
+    }
+}
+
+@Composable
+private fun UserProfileToolbar(
+    user: ImmutableHolder<User>,
+    isSelf: Boolean,
+    showTitle: Boolean,
+    onBack: () -> Unit,
+) {
+    val context = LocalContext.current
+
+    Toolbar(
+        title = {
+            AnimatedVisibility(
+                visible = showTitle,
+                enter = fadeIn(),
+                exit = fadeOut()
+            ) {
+                ToolbarUserTitle(user = user)
+            }
+        },
+        navigationIcon = {
+            BackNavigationIcon(onBackPressed = onBack)
+        },
+        actions = {
+            user.takeUnless { isSelf }?.let {
+                ClickMenu(
+                    menuContent = {
+                        DropdownMenuItem(
+                            onClick = {
+                                BlockManager.addBlockAsync(
+                                    Block(
+                                        category = Block.CATEGORY_BLACK_LIST,
+                                        type = Block.TYPE_USER,
+                                        username = it.get { name },
+                                        uid = it.get { id }.toString()
+                                    )
+                                ) {
+                                    if (it) context.toastShort(R.string.toast_add_success)
+                                }
+                            }
+                        ) {
+                            Text(text = stringResource(id = R.string.menu_add_user_to_black_list))
+                        }
+                        DropdownMenuItem(
+                            onClick = {
+                                BlockManager.addBlockAsync(
+                                    Block(
+                                        category = Block.CATEGORY_WHITE_LIST,
+                                        type = Block.TYPE_USER,
+                                        username = it.get { name },
+                                        uid = it.get { id }.toString()
+                                    )
+                                ) {
+                                    if (it) context.toastShort(R.string.toast_add_success)
+                                }
+                            }
+                        ) {
+                            Text(text = stringResource(id = R.string.menu_add_user_to_white_list))
+                        }
+                    },
+                    triggerShape = CircleShape
+                ) {
+                    Box(
+                        modifier = Modifier.size(48.dp),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Icon(
+                            imageVector = Icons.Rounded.NoAccounts,
+                            contentDescription = stringResource(id = R.string.btn_block)
+                        )
+                    }
+                }
+            }
+        },
+    )
+}
+
+@OptIn(ExperimentalFoundationApi::class)
+@Composable
+private fun UserProfileContentNormal(
+    user: ImmutableHolder<User>,
+    showActionBtn: Boolean,
+    disableButton: Boolean,
+    isSelf: Boolean,
+    onBack: () -> Unit,
+    onFollow: () -> Unit,
+    onUnfollow: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    val context = LocalContext.current
+    val coroutineScope = rememberCoroutineScope()
+    val density = LocalDensity.current
+
     var heightOffset by rememberSaveable { mutableFloatStateOf(0f) }
     var headerHeight by rememberSaveable {
         mutableFloatStateOf(
@@ -175,268 +341,334 @@ fun UserProfilePage(
         }
     }
 
-    ProvideNavigator(navigator = navigator) {
-        StateScreen(
-            modifier = Modifier.fillMaxSize(),
-            isEmpty = isEmpty,
-            isError = isError,
-            isLoading = isRefreshing,
-            onReload = { viewModel.send(UserProfileUiIntent.Refresh(uid)) },
-            errorScreen = { ErrorScreen(error = error.getOrNull()) }
+    MyScaffold(
+        topBar = {
+            UserProfileToolbar(
+                user = user,
+                isSelf = isSelf,
+                showTitle = !isShowHeaderArea,
+                onBack = onBack
+            )
+        }
+    ) { paddingValues ->
+        var isFakeRefreshing by remember { mutableStateOf(false) }
+
+        LaunchedEffect(isFakeRefreshing) {
+            if (isFakeRefreshing) {
+                delay(1000)
+                isFakeRefreshing = false
+            }
+        }
+
+        PullToRefreshLayout(
+            refreshing = isFakeRefreshing,
+            onRefresh = {
+                coroutineScope.emitGlobalEvent(GlobalEvent.Refresh(key = "user_profile"))
+                isFakeRefreshing = true
+            }
         ) {
-            MyScaffold(
-                topBar = {
-                    Toolbar(
-                        title = {
-                            user?.let {
-                                AnimatedVisibility(
-                                    visible = !isShowHeaderArea,
-                                    enter = fadeIn(),
-                                    exit = fadeOut()
-                                ) {
-                                    ToolbarUserTitle(user = it)
-                                }
+            val headerNestedScrollConnection = remember {
+                object : NestedScrollConnection {
+                    override fun onPreScroll(
+                        available: Offset,
+                        source: NestedScrollSource,
+                    ): Offset {
+                        if (available.y < 0) {
+                            val prevHeightOffset = heightOffset
+                            heightOffset = max(heightOffset + available.y, -headerHeight)
+                            if (prevHeightOffset != heightOffset) {
+                                return available.copy(x = 0f)
                             }
-                        },
-                        navigationIcon = {
-                            BackNavigationIcon {
-                                navigator.navigateUp()
-                            }
-                        },
-                        actions = {
-                            user.takeUnless { isSelf }?.let {
-                                ClickMenu(
-                                    menuContent = {
-                                        DropdownMenuItem(
-                                            onClick = {
-                                                BlockManager.addBlockAsync(
-                                                    Block(
-                                                        category = Block.CATEGORY_BLACK_LIST,
-                                                        type = Block.TYPE_USER,
-                                                        username = it.get { name },
-                                                        uid = it.get { id }.toString()
-                                                    )
-                                                ) {
-                                                    if (it) context.toastShort(R.string.toast_add_success)
-                                                }
-                                            }
-                                        ) {
-                                            Text(text = stringResource(id = R.string.menu_add_user_to_black_list))
-                                        }
-                                        DropdownMenuItem(
-                                            onClick = {
-                                                BlockManager.addBlockAsync(
-                                                    Block(
-                                                        category = Block.CATEGORY_WHITE_LIST,
-                                                        type = Block.TYPE_USER,
-                                                        username = it.get { name },
-                                                        uid = it.get { id }.toString()
-                                                    )
-                                                ) {
-                                                    if (it) context.toastShort(R.string.toast_add_success)
-                                                }
-                                            }
-                                        ) {
-                                            Text(text = stringResource(id = R.string.menu_add_user_to_white_list))
-                                        }
-                                    },
-                                    triggerShape = CircleShape
-                                ) {
-                                    Box(
-                                        modifier = Modifier.size(48.dp),
-                                        contentAlignment = Alignment.Center
-                                    ) {
-                                        Icon(
-                                            imageVector = Icons.Rounded.NoAccounts,
-                                            contentDescription = stringResource(id = R.string.btn_block)
-                                        )
-                                    }
-                                }
-                            }
-                        },
-                    )
-                }
-            ) { paddingValues ->
-                var isFakeRefreshing by remember { mutableStateOf(false) }
+                        }
 
-                LaunchedEffect(isFakeRefreshing) {
-                    if (isFakeRefreshing) {
-                        delay(1000)
-                        isFakeRefreshing = false
+                        return Offset.Zero
+                    }
+
+                    override fun onPostScroll(
+                        consumed: Offset,
+                        available: Offset,
+                        source: NestedScrollSource,
+                    ): Offset {
+                        if (available.y > 0f) {
+                            // Adjust the height offset in case the consumed delta Y is less than what was
+                            // recorded as available delta Y in the pre-scroll.
+                            val prevHeightOffset = heightOffset
+                            heightOffset = min(heightOffset + available.y, 0f)
+                            if (prevHeightOffset != heightOffset) {
+                                return available.copy(x = 0f)
+                            }
+                        }
+
+                        return Offset.Zero
                     }
                 }
+            }
 
-                PullToRefreshLayout(
-                    refreshing = isFakeRefreshing,
-                    onRefresh = {
-                        coroutineScope.emitGlobalEvent(GlobalEvent.Refresh(key = "user_profile"))
-                        isFakeRefreshing = true
-                    }
+            ProvideContentColor(color = ExtendedTheme.colors.text) {
+                Column(
+                    modifier = Modifier
+                        .padding(paddingValues)
+                        .nestedScroll(headerNestedScrollConnection)
                 ) {
-                    val headerNestedScrollConnection = remember {
-                        object : NestedScrollConnection {
-                            override fun onPreScroll(
-                                available: Offset,
-                                source: NestedScrollSource,
-                            ): Offset {
-                                if (available.y < 0) {
-                                    val prevHeightOffset = heightOffset
-                                    heightOffset = max(heightOffset + available.y, -headerHeight)
-                                    if (prevHeightOffset != heightOffset) {
-                                        return available.copy(x = 0f)
-                                    }
+                    val pages = remember {
+                        listOfNotNull(
+                            UserProfilePageData(
+                                id = "threads",
+                                title = {
+                                    stringResource(
+                                        id = R.string.title_profile_threads_tab,
+                                        it.get { thread_num }.getShortNumString()
+                                    )
+                                },
+                                content = { user, fluid ->
+                                    UserPostPage(
+                                        uid = user.get { id },
+                                        isThread = true,
+                                        fluid = fluid,
+                                    )
                                 }
-
-                                return Offset.Zero
-                            }
-
-                            override fun onPostScroll(
-                                consumed: Offset,
-                                available: Offset,
-                                source: NestedScrollSource,
-                            ): Offset {
-                                if (available.y > 0f) {
-                                    // Adjust the height offset in case the consumed delta Y is less than what was
-                                    // recorded as available delta Y in the pre-scroll.
-                                    val prevHeightOffset = heightOffset
-                                    heightOffset = min(heightOffset + available.y, 0f)
-                                    if (prevHeightOffset != heightOffset) {
-                                        return available.copy(x = 0f)
-                                    }
+                            ),
+                            UserProfilePageData(
+                                id = "posts",
+                                title = {
+                                    stringResource(
+                                        id = R.string.title_profile_posts_tab,
+                                        it.get { post_num }.getShortNumString()
+                                    )
+                                },
+                                content = { user, fluid ->
+                                    UserPostPage(
+                                        uid = user.get { id },
+                                        isThread = false,
+                                        fluid = fluid,
+                                    )
                                 }
+                            ).takeIf { isSelf },
+                            UserProfilePageData(
+                                id = "concern_forums",
+                                title = {
+                                    stringResource(
+                                        id = R.string.title_profile_concern_forums_tab,
+                                        it.get { my_like_num }.toString()
+                                    )
+                                },
+                                content = { user, fluid ->
+                                    UserLikeForumPage(
+                                        uid = user.get { id },
+                                        fluid = fluid,
+                                    )
+                                }
+                            ),
+                        ).toImmutableList()
+                    }
+                    val pagerState = rememberPagerState { pages.size }
 
-                                return Offset.Zero
+                    val containerHeight by remember {
+                        derivedStateOf {
+                            with(density) {
+                                (headerHeight + heightOffset).toDp()
                             }
                         }
                     }
 
-                    ProvideContentColor(color = ExtendedTheme.colors.text) {
-                        Column(
+                    Box(
+                        modifier = Modifier
+                            .height(containerHeight)
+                            .clipToBounds()
+                    ) {
+                        Box(
                             modifier = Modifier
-                                .padding(paddingValues)
-                                .nestedScroll(headerNestedScrollConnection)
+                                .wrapContentHeight(
+                                    align = Alignment.Bottom,
+                                    unbounded = true
+                                )
+                                .onSizeChanged {
+                                    headerHeight = it.height.toFloat()
+                                }
                         ) {
-                            user?.let { holder ->
-                                val pages = remember {
-                                    listOfNotNull(
-                                        UserProfilePageData(
-                                            id = "threads",
-                                            title = {
-                                                stringResource(
-                                                    id = R.string.title_profile_threads_tab,
-                                                    it.get { thread_num }.getShortNumString()
-                                                )
-                                            },
-                                            content = {
-                                                UserPostPage(
-                                                    uid = it.get { id },
-                                                    isThread = true
-                                                )
-                                            }
-                                        ),
-                                        UserProfilePageData(
-                                            id = "posts",
-                                            title = {
-                                                stringResource(
-                                                    id = R.string.title_profile_posts_tab,
-                                                    it.get { post_num }.getShortNumString()
-                                                )
-                                            },
-                                            content = {
-                                                UserPostPage(
-                                                    uid = uid,
-                                                    isThread = false
-                                                )
-                                            }
-                                        ).takeIf { isSelf },
-                                        UserProfilePageData(
-                                            id = "concern_forums",
-                                            title = {
-                                                stringResource(
-                                                    id = R.string.title_profile_concern_forums_tab,
-                                                    it.get { my_like_num }.toString()
-                                                )
-                                            },
-                                            content = {
-                                                UserLikeForumPage(uid = it.get { id })
-                                            }
-                                        ),
-                                    ).toImmutableList()
-                                }
-                                val pagerState = rememberPagerState { pages.size }
-
-                                val containerHeight by remember {
-                                    derivedStateOf {
-                                        with(density) {
-                                            (headerHeight + heightOffset).toDp()
-                                        }
+                            UserProfileDetail(
+                                user = user,
+                                modifier = Modifier
+                                    .padding(16.dp)
+                                    .padding(top = 8.dp),
+                                showBtn = showActionBtn,
+                                isSelf = isSelf,
+                                onBtnClick = {
+                                    if (disableButton || !showActionBtn) {
+                                        return@UserProfileDetail
                                     }
-                                }
-
-                                Box(
-                                    modifier = Modifier
-                                        .height(containerHeight)
-                                        .clipToBounds()
-                                ) {
-                                    UserProfileDetail(
-                                        user = holder,
-                                        modifier = Modifier
-                                            .padding(horizontal = 16.dp)
-                                            .wrapContentHeight(
-                                                align = Alignment.Bottom,
-                                                unbounded = true
-                                            )
-                                            .onSizeChanged {
-                                                headerHeight = it.height.toFloat()
-                                            },
-                                        showBtn = account != null,
-                                        isSelf = isSelf,
-                                        onBtnClick = {
-                                            if (disableButton || account == null) {
-                                                return@UserProfileDetail
-                                            }
-                                            if (isSelf) {
-                                                context.goToActivity<EditProfileActivity>()
-                                            } else if (holder.get { has_concerned } == 0) {
-                                                viewModel.send(
-                                                    UserProfileUiIntent.Follow(
-                                                        holder.get { portrait },
-                                                        account.tbs,
-                                                    )
-                                                )
-                                            } else {
-                                                viewModel.send(
-                                                    UserProfileUiIntent.Unfollow(
-                                                        holder.get { portrait },
-                                                        account.tbs,
-                                                    )
-                                                )
-                                            }
-                                        },
-                                        onCopyIdClick = {
-                                            TiebaUtil.copyText(
-                                                context,
-                                                holder.get { id }.toString()
-                                            )
-                                        }
+                                    if (isSelf) {
+                                        context.goToActivity<EditProfileActivity>()
+                                    } else if (user.get { has_concerned } == 0) {
+                                        onFollow()
+                                    } else {
+                                        onUnfollow()
+                                    }
+                                },
+                                onCopyIdClick = {
+                                    TiebaUtil.copyText(
+                                        context,
+                                        user.get { id }.toString()
                                     )
                                 }
+                            )
+                        }
+                    }
 
-                                UserProfileTabRow(
-                                    user = holder,
-                                    pages = pages,
-                                    pagerState = pagerState,
+                    UserProfileTabRow(
+                        user = user,
+                        pages = pages,
+                        pagerState = pagerState,
 //                                    modifier = Modifier.padding(horizontal = 16.dp)
-                                )
+                    )
 
-                                LazyLoadHorizontalPager(
-                                    state = pagerState,
-                                    key = { pages[it].id },
-                                    modifier = Modifier.fillMaxSize()
-                                ) {
-                                    pages[it].content(holder)
+                    LazyLoadHorizontalPager(
+                        state = pagerState,
+                        key = { pages[it].id },
+                        modifier = Modifier.fillMaxSize()
+                    ) {
+                        pages[it].content(user, false)
+                    }
+                }
+            }
+        }
+    }
+}
+
+@OptIn(ExperimentalFoundationApi::class)
+@Composable
+private fun UserProfileContentExpanded(
+    user: ImmutableHolder<User>,
+    showActionBtn: Boolean,
+    disableButton: Boolean,
+    isSelf: Boolean,
+    onBack: () -> Unit,
+    onFollow: () -> Unit,
+    onUnfollow: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    val context = LocalContext.current
+
+    MyScaffold(
+        topBar = {
+            UserProfileToolbar(
+                user = user,
+                isSelf = isSelf,
+                showTitle = false,
+                onBack = onBack
+            )
+        }
+    ) { paddingValues ->
+        ProvideContentColor(color = ExtendedTheme.colors.text) {
+            Box(
+                modifier = Modifier.fillMaxSize()
+            ) {
+                Row(
+                    modifier = Modifier
+                        .padding(paddingValues)
+                        .fillMaxHeight()
+                        .fillMaxWidth(0.75f)
+                        .align(Alignment.TopCenter),
+                    horizontalArrangement = Arrangement.spacedBy(16.dp)
+                ) {
+                    val pages = remember {
+                        listOfNotNull(
+                            UserProfilePageData(
+                                id = "threads",
+                                title = {
+                                    stringResource(
+                                        id = R.string.title_profile_threads_tab,
+                                        it.get { thread_num }.getShortNumString()
+                                    )
+                                },
+                                content = { user, expanded ->
+                                    UserPostPage(
+                                        uid = user.get { id },
+                                        isThread = true,
+                                        fluid = expanded,
+                                        enablePullRefresh = expanded,
+                                    )
                                 }
+                            ),
+                            UserProfilePageData(
+                                id = "posts",
+                                title = {
+                                    stringResource(
+                                        id = R.string.title_profile_posts_tab,
+                                        it.get { post_num }.getShortNumString()
+                                    )
+                                },
+                                content = { user, expanded ->
+                                    UserPostPage(
+                                        uid = user.get { id },
+                                        isThread = false,
+                                        fluid = expanded,
+                                        enablePullRefresh = expanded,
+                                    )
+                                }
+                            ).takeIf { isSelf },
+                            UserProfilePageData(
+                                id = "concern_forums",
+                                title = {
+                                    stringResource(
+                                        id = R.string.title_profile_concern_forums_tab,
+                                        it.get { my_like_num }.toString()
+                                    )
+                                },
+                                content = { user, expanded ->
+                                    UserLikeForumPage(
+                                        uid = user.get { id },
+                                        fluid = expanded,
+                                        enablePullRefresh = expanded,
+                                    )
+                                }
+                            ),
+                        ).toImmutableList()
+                    }
+                    val pagerState = rememberPagerState { pages.size }
+
+                    UserProfileDetail(
+                        user = user,
+                        modifier = Modifier
+                            .weight(1f)
+                            .align(Alignment.Top),
+                        showBtn = showActionBtn,
+                        isSelf = isSelf,
+                        onBtnClick = {
+                            if (disableButton || !showActionBtn) {
+                                return@UserProfileDetail
                             }
+                            if (isSelf) {
+                                context.goToActivity<EditProfileActivity>()
+                            } else if (user.get { has_concerned } == 0) {
+                                onFollow()
+                            } else {
+                                onUnfollow()
+                            }
+                        },
+                        onCopyIdClick = {
+                            TiebaUtil.copyText(
+                                context,
+                                user.get { id }.toString()
+                            )
+                        }
+                    )
+
+                    Column(
+                        modifier = Modifier.weight(2f)
+                    ) {
+                        UserProfileTabRow(
+                            user = user,
+                            pages = pages,
+                            pagerState = pagerState,
+                        )
+
+                        LazyLoadHorizontalPager(
+                            state = pagerState,
+                            key = { pages[it].id },
+                            modifier = Modifier.weight(1f)
+                        ) {
+                            pages[it].content(user, true)
                         }
                     }
                 }
@@ -449,7 +681,7 @@ fun UserProfilePage(
 data class UserProfilePageData(
     val id: String,
     val title: @Composable (ImmutableHolder<User>) -> String,
-    val content: @Composable (ImmutableHolder<User>) -> Unit,
+    val content: @Composable (ImmutableHolder<User>, Boolean) -> Unit,
 )
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -547,7 +779,6 @@ private fun UserProfileDetail(
         modifier = modifier,
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
-        Spacer(modifier = Modifier.height(16.dp))
         Row(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(8.dp)
@@ -736,7 +967,6 @@ private fun UserProfileDetail(
                 )
             )
         }
-        Spacer(modifier = Modifier.height(8.dp))
     }
 }
 

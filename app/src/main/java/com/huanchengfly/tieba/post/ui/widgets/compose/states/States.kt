@@ -25,14 +25,19 @@ import com.huanchengfly.tieba.post.ui.widgets.compose.TipScreen
 
 val DefaultLoadingScreen: @Composable StateScreenScope.() -> Unit = {
     val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.lottie_loading_paperplane))
-    Box(modifier = Modifier.requiredWidthIn(max = 500.dp)) {
-        LottieAnimation(
-            composition = composition,
-            iterations = LottieConstants.IterateForever,
-            modifier = Modifier
-                .fillMaxWidth()
-                .aspectRatio(2f)
-        )
+    Box(
+        modifier = Modifier.fillMaxWidth(),
+        contentAlignment = Alignment.Center
+    ) {
+        Box(modifier = Modifier.requiredWidthIn(max = 500.dp)) {
+            LottieAnimation(
+                composition = composition,
+                iterations = LottieConstants.IterateForever,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .aspectRatio(2f)
+            )
+        }
     }
 //    CircularProgressIndicator(modifier = Modifier.size(48.dp), color = MaterialTheme.colors.primary)
 }
@@ -56,7 +61,8 @@ val DefaultEmptyScreen: @Composable StateScreenScope.() -> Unit = {
                     Text(text = stringResource(id = R.string.btn_refresh))
                 }
             }
-        }
+        },
+        modifier = Modifier.fillMaxWidth(),
     )
 }
 

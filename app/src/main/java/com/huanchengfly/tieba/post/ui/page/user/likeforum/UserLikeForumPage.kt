@@ -14,6 +14,7 @@ import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.material.pullrefresh.PullRefreshIndicator
+import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
@@ -33,6 +34,7 @@ import com.huanchengfly.tieba.post.ui.common.theme.compose.pullRefreshIndicator
 import com.huanchengfly.tieba.post.ui.page.LocalNavigator
 import com.huanchengfly.tieba.post.ui.page.destinations.ForumPageDestination
 import com.huanchengfly.tieba.post.ui.widgets.compose.Avatar
+import com.huanchengfly.tieba.post.ui.widgets.compose.Container
 import com.huanchengfly.tieba.post.ui.widgets.compose.ErrorScreen
 import com.huanchengfly.tieba.post.ui.widgets.compose.LazyLoad
 import com.huanchengfly.tieba.post.ui.widgets.compose.LoadMoreLayout
@@ -46,6 +48,8 @@ import kotlinx.collections.immutable.persistentListOf
 @Composable
 fun UserLikeForumPage(
     uid: Long,
+    fluid: Boolean = false,
+    enablePullRefresh: Boolean = false,
     viewModel: UserLikeForumViewModel = pageViewModel(),
 ) {
     val navigator = LocalNavigator.current
@@ -109,7 +113,10 @@ fun UserLikeForumPage(
 
         val lazyListState = rememberLazyListState()
 
-        Box {
+        val pullRefreshModifier =
+            if (enablePullRefresh) Modifier.pullRefresh(pullRefreshState) else Modifier
+
+        Box(modifier = pullRefreshModifier) {
             LoadMoreLayout(
                 isLoading = isLoadingMore,
                 onLoadMore = {
@@ -120,6 +127,7 @@ fun UserLikeForumPage(
             ) {
                 UserLikeForumList(
                     data = forums,
+                    fluid = fluid,
                     onClickForum = { forumBean ->
                         forumBean.name?.let {
                             navigator.navigate(ForumPageDestination(it))
@@ -144,6 +152,7 @@ fun UserLikeForumPage(
 private fun UserLikeForumList(
     data: ImmutableList<UserLikeForumBean.ForumBean>,
     onClickForum: (UserLikeForumBean.ForumBean) -> Unit,
+    fluid: Boolean = false,
     lazyListState: LazyListState = rememberLazyListState(),
 ) {
     MyLazyColumn(state = lazyListState) {
@@ -151,15 +160,17 @@ private fun UserLikeForumList(
             items = data,
             key = { it.id }
         ) {
-            UserLikeForumItem(
-                item = it,
-                onClick = {
-                    onClickForum(it)
-                },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp, vertical = 8.dp)
-            )
+            Container(fluid = fluid) {
+                UserLikeForumItem(
+                    item = it,
+                    onClick = {
+                        onClickForum(it)
+                    },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp, vertical = 8.dp)
+                )
+            }
         }
     }
 }
