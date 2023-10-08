@@ -101,7 +101,7 @@ open class AppPreferencesUtils private constructor(ctx: Context) {
 
     var darkTheme by DataStoreDelegates.string(key = "dark_theme", defaultValue = "grey_dark")
 
-    var enableNewUi by DataStoreDelegates.boolean(defaultValue = false)
+    var enableNewUi by DataStoreDelegates.boolean(key = "enable_new_ui", defaultValue = true)
 
     var useDynamicColorTheme by DataStoreDelegates.boolean(defaultValue = false)
 

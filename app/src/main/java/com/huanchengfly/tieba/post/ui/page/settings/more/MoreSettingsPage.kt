@@ -116,7 +116,7 @@ fun MoreSettingsPage(
                             )
                         }
                     },
-                    key = "enableNewUi",
+                    key = "enable_new_ui",
                     title = stringResource(id = R.string.title_enable_new_ui),
                     defaultChecked = false,
                     summary = stringResource(id = R.string.summary_enable_new_ui),
