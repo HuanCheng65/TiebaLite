@@ -1,10 +1,12 @@
 package com.huanchengfly.tieba.post.ui.page.user.post
 
+import androidx.compose.runtime.Immutable
 import com.huanchengfly.tieba.post.App
 import com.huanchengfly.tieba.post.R
 import com.huanchengfly.tieba.post.api.TiebaApi
 import com.huanchengfly.tieba.post.api.models.AgreeBean
 import com.huanchengfly.tieba.post.api.models.protos.PostInfoList
+import com.huanchengfly.tieba.post.api.models.protos.abstractText
 import com.huanchengfly.tieba.post.api.models.protos.updateAgreeStatus
 import com.huanchengfly.tieba.post.api.models.protos.userPost.UserPostResponse
 import com.huanchengfly.tieba.post.api.retrofit.exception.getErrorMessage
@@ -143,9 +145,9 @@ sealed interface UserPostPartialChange : PartialChange<UserPostUiState> {
             )
 
             is Success -> {
-                val uniquePosts = posts.wrapImmutable().distinctBy {
-                    "${it.get { thread_id }}_${it.get { post_id }}"
-                }
+                val uniquePosts = posts.distinctBy {
+                    "${it.thread_id}_${it.post_id}"
+                }.toData()
                 oldState.copy(
                     isRefreshing = false,
                     error = null,
@@ -183,15 +185,15 @@ sealed interface UserPostPartialChange : PartialChange<UserPostUiState> {
             )
 
             is Success -> {
-                val uniquePosts = (oldState.posts + posts.wrapImmutable()).distinctBy {
-                    "${it.get { thread_id }}_${it.get { post_id }}"
-                }
+                val uniquePosts = (oldState.posts + posts.toData()).distinctBy {
+                    "${it.data.get { thread_id }}_${it.data.get { post_id }}"
+                }.toImmutableList()
                 oldState.copy(
                     isLoadingMore = false,
                     error = null,
                     currentPage = currentPage,
                     hasMore = hasMore,
-                    posts = uniquePosts.toImmutableList()
+                    posts = uniquePosts
                 )
             }
 
@@ -215,19 +217,21 @@ sealed interface UserPostPartialChange : PartialChange<UserPostUiState> {
     }
 
     sealed class Agree : UserPostPartialChange {
-        private fun List<ImmutableHolder<PostInfoList>>.updateAgreeStatus(
+        private fun List<PostListItemData>.updateAgreeStatus(
             threadId: Long,
             postId: Long,
             hasAgree: Int,
-        ): ImmutableList<ImmutableHolder<PostInfoList>> {
+        ): ImmutableList<PostListItemData> {
             return map {
                 val (postInfo) = it
-                if (postInfo.thread_id == threadId && postInfo.post_id == postId) {
-                    postInfo.updateAgreeStatus(hasAgree)
-                } else {
-                    postInfo
-                }
-            }.wrapImmutable()
+                it.copy(
+                    data = if (postInfo.get { thread_id } == threadId && postInfo.get { post_id } == postId) {
+                        postInfo.getImmutable { updateAgreeStatus(hasAgree) }
+                    } else {
+                        postInfo
+                    }
+                )
+            }.toImmutableList()
         }
 
         override fun reduce(oldState: UserPostUiState): UserPostUiState =
@@ -291,6 +295,38 @@ data class UserPostUiState(
 
     val currentPage: Int = 1,
     val hasMore: Boolean = false,
-    val posts: ImmutableList<ImmutableHolder<PostInfoList>> = persistentListOf(),
+    val posts: ImmutableList<PostListItemData> = persistentListOf(),
     val hidePost: Boolean = false,
 ) : UiState
+
+private fun List<PostInfoList>.toData(): ImmutableList<PostListItemData> {
+    return map { postInfo ->
+        PostListItemData(
+            data = postInfo.wrapImmutable(),
+            contents = postInfo.content.map {
+                PostContentData(
+                    contentText = it.post_content.abstractText,
+                    createTime = it.create_time,
+                    postId = it.post_id,
+                    isSubPost = (it.post_type == 1L),
+                )
+            }.toImmutableList()
+        )
+    }.toImmutableList()
+}
+
+@Immutable
+data class PostListItemData(
+    val data: ImmutableHolder<PostInfoList>,
+//    val blocked: Boolean,
+    val isThread: Boolean = data.get { is_thread } == 1,
+    val contents: ImmutableList<PostContentData> = persistentListOf(),
+)
+
+@Immutable
+data class PostContentData(
+    val contentText: String,
+    val createTime: Long,
+    val postId: Long,
+    val isSubPost: Boolean,
+)

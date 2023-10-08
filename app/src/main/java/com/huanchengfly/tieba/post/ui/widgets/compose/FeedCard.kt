@@ -111,7 +111,7 @@ private val ImmutableHolder<Media>.url: String
     )
 
 @Composable
-private fun DefaultUserHeader(
+private fun UserHeader(
     userProvider: () -> ImmutableHolder<User>,
     timeProvider: () -> Int,
     onClick: () -> Unit,
@@ -155,20 +155,20 @@ private fun DefaultUserHeader(
 }
 
 @Composable
-private fun DefaultUserHeader(
+fun UserHeader(
     nameProvider: () -> String,
     nameShowProvider: () -> String,
     portraitProvider: () -> String,
-    timeProvider: () -> Int,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
+    timeProvider: (() -> Int)? = null,
     content: @Composable RowScope.() -> Unit = {},
 ) {
     val context = LocalContext.current
     val name = remember(nameProvider) { nameProvider() }
     val nameShow = remember(nameShowProvider) { nameShowProvider() }
     val portrait = remember(portraitProvider) { portraitProvider() }
-    val time = remember(timeProvider) { timeProvider() }
+    val time = remember(timeProvider) { timeProvider?.invoke() }
     UserHeader(
         avatar = {
             Avatar(
@@ -189,14 +189,14 @@ private fun DefaultUserHeader(
             )
         },
         onClick = onClick,
-        desc = {
+        desc = (@Composable {
             Text(
                 text = DateTimeUtils.getRelativeTimeString(
                     context,
                     time.toString()
                 )
             )
-        },
+        }).takeIf { time != null },
         content = content,
         modifier = modifier
     )
@@ -758,7 +758,7 @@ fun FeedCard(
         header = {
             val author = remember(item) { item.getNullableImmutable { author } }
             author?.let {
-                DefaultUserHeader(
+                UserHeader(
                     userProvider = { it },
                     timeProvider = { item.get { lastTimeInt } },
                     onClick = {
@@ -837,7 +837,7 @@ fun FeedCard(
 ) {
     Card(
         header = {
-            DefaultUserHeader(
+            UserHeader(
                 nameProvider = { item.get { user_name } },
                 nameShowProvider = { item.get { name_show } },
                 portraitProvider = { item.get { user_portrait } },

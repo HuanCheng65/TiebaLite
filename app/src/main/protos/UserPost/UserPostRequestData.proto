@@ -15,7 +15,7 @@ message UserPostRequestData {
   uint64 forum_id = 6;
   uint32 begin_time = 7;
   uint32 end_time = 8;
-  uint32 subtype = 9;
+  optional uint32 subtype = 9;
   uint32 check_login = 10;
   string ip_str = 11;
   uint32 ip_int = 12;
@@ -39,7 +39,7 @@ message UserPostRequestData {
   int32 scr_h = 30;
   double scr_dip = 31;
   int32 q_type = 32;
-  int32 is_view_card = 33;
+  optional int32 is_view_card = 33;
   uint32 last_thread_time = 34;
   uint32 work_tab_id = 35;
   uint32 type = 36;

@@ -28,6 +28,16 @@ import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
 
+val List<Abstract>.abstractText: String
+    get() = joinToString(separator = "") {
+        when (it.type) {
+            0 -> it.text.replace(Regex(" {2,}"), " ")
+            4 -> it.text
+
+            else -> ""
+        }
+    }
+
 val ThreadInfo.abstractText: String
     get() = richAbstract.joinToString(separator = "") {
         when (it.type) {
@@ -53,6 +63,7 @@ val PostInfoList.abstractText: String
             else -> ""
         }
     }
+
 val ThreadInfo.hasAgree: Int
     get() = agree?.hasAgree ?: 0
 val ThreadInfo.hasAgreed: Boolean

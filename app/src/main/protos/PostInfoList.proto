@@ -1,5 +1,6 @@
 syntax = "proto3";
 
+import "AnchorInfo.proto";
 import "PrivSets.proto";
 import "PostInfoContent.proto";
 import "PbContent.proto";
@@ -19,6 +20,8 @@ import "Item.proto";
 import "PbLinkInfo.proto";
 import "HeadItem.proto";
 import "MultipleForum.proto";
+import "LbsInfo.proto";
+import "UserPostPerm.proto";
 
 package tieba;
 
@@ -45,10 +48,10 @@ message PostInfoList {
   int64 user_id = 18;
   string user_portrait = 19;
   string post_type = 20;
-  //  LbsInfo lbs_info = 21;
+  LbsInfo lbs_info = 21;
   Quote quote = 22;
   repeated Voice voice_info = 23;
-  //  AnchorInfo anchor_info = 24;
+  AnchorInfo anchor_info = 24;
   int32 hide_post = 25;
   uint64 thread_type = 26;
   ZhiBoInfoTW twzhibo_info = 27;
@@ -87,7 +90,7 @@ message PostInfoList {
   int32 is_origin_manager = 60;
   int32 good_types = 61;
   int32 top_types = 62;
-  //  UserPostPerm user_post_perm = 63;
+  UserPostPerm user_post_perm = 63;
   //  VoiceRoom voice_room = 64;
   string target_scheme = 66;
 }

@@ -1369,7 +1369,8 @@ object MixedTiebaApiImpl : ITiebaApi {
                         scr_h = getScreenHeight(),
                         scr_dip = App.ScreenInfo.DENSITY.toDouble(),
                         q_type = 1,
-                        is_view_card = 1
+                        is_view_card = if (isThread) 1 else 0,
+                        subtype = 0.takeUnless { isThread },
                     )
                 ),
                 clientVersion = ClientVersion.TIEBA_V12,

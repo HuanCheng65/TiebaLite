@@ -1,7 +1,11 @@
 package com.huanchengfly.tieba.post.ui.page.user.post
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -10,8 +14,10 @@ import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.material.pullrefresh.PullRefreshIndicator
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
@@ -21,17 +27,18 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.util.fastForEach
 import com.airbnb.lottie.compose.LottieAnimation
 import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.LottieConstants
 import com.airbnb.lottie.compose.rememberLottieComposition
 import com.huanchengfly.tieba.post.R
-import com.huanchengfly.tieba.post.api.models.protos.OriginThreadInfo
 import com.huanchengfly.tieba.post.api.models.protos.PostInfoList
 import com.huanchengfly.tieba.post.arch.GlobalEvent
-import com.huanchengfly.tieba.post.arch.ImmutableHolder
 import com.huanchengfly.tieba.post.arch.collectPartialAsState
 import com.huanchengfly.tieba.post.arch.getOrNull
 import com.huanchengfly.tieba.post.arch.onGlobalEvent
@@ -40,9 +47,11 @@ import com.huanchengfly.tieba.post.ui.common.theme.compose.ExtendedTheme
 import com.huanchengfly.tieba.post.ui.common.theme.compose.pullRefreshIndicator
 import com.huanchengfly.tieba.post.ui.page.LocalNavigator
 import com.huanchengfly.tieba.post.ui.page.destinations.ForumPageDestination
+import com.huanchengfly.tieba.post.ui.page.destinations.SubPostsPageDestination
 import com.huanchengfly.tieba.post.ui.page.destinations.ThreadPageDestination
 import com.huanchengfly.tieba.post.ui.page.destinations.UserProfilePageDestination
 import com.huanchengfly.tieba.post.ui.widgets.compose.Button
+import com.huanchengfly.tieba.post.ui.widgets.compose.Card
 import com.huanchengfly.tieba.post.ui.widgets.compose.ErrorScreen
 import com.huanchengfly.tieba.post.ui.widgets.compose.FeedCard
 import com.huanchengfly.tieba.post.ui.widgets.compose.FeedCardPlaceholder
@@ -50,7 +59,9 @@ import com.huanchengfly.tieba.post.ui.widgets.compose.LazyLoad
 import com.huanchengfly.tieba.post.ui.widgets.compose.LoadMoreLayout
 import com.huanchengfly.tieba.post.ui.widgets.compose.MyLazyColumn
 import com.huanchengfly.tieba.post.ui.widgets.compose.TipScreen
+import com.huanchengfly.tieba.post.ui.widgets.compose.UserHeader
 import com.huanchengfly.tieba.post.ui.widgets.compose.states.StateScreen
+import com.huanchengfly.tieba.post.utils.DateTimeUtils
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 
@@ -156,7 +167,8 @@ fun UserPostPage(
                                     .fillMaxWidth()
                                     .aspectRatio(2.5f)
                             )
-                        }
+                        },
+                        scrollable = false,
                     )
                 } else {
                     TipScreen(
@@ -181,7 +193,8 @@ fun UserPostPage(
                                     Text(text = stringResource(id = R.string.btn_refresh))
                                 }
                             }
-                        }
+                        },
+                        scrollable = false,
                     )
                 }
             }
@@ -206,13 +219,28 @@ fun UserPostPage(
                 UserPostList(
                     data = posts,
                     lazyListState = lazyListState,
-                    onClickItem = {
-                        navigator.navigate(
-                            ThreadPageDestination(
-                                it.thread_id,
-                                it.forum_id,
-                            )
-                        )
+                    onClickItem = { threadId, postId, isSubPost ->
+                        if (postId == null) {
+                            navigator.navigate(ThreadPageDestination(threadId))
+                        } else {
+                            if (isSubPost) {
+                                navigator.navigate(
+                                    SubPostsPageDestination(
+                                        threadId = threadId,
+                                        subPostId = postId,
+                                        loadFromSubPost = true
+                                    )
+                                )
+                            } else {
+                                navigator.navigate(
+                                    ThreadPageDestination(
+                                        threadId,
+                                        postId = postId,
+                                        scrollToReply = true
+                                    )
+                                )
+                            }
+                        }
                     },
                     onAgreeItem = {
                         viewModel.send(
@@ -239,12 +267,7 @@ fun UserPostPage(
                         navigator.navigate(ForumPageDestination(it))
                     },
                     onClickOriginThread = {
-                        navigator.navigate(
-                            ThreadPageDestination(
-                                it.tid.toLong(),
-                                it.fid,
-                            )
-                        )
+                        navigator.navigate(ThreadPageDestination(it))
                     },
                 )
             }
@@ -262,24 +285,24 @@ fun UserPostPage(
 
 @Composable
 private fun UserPostList(
-    data: ImmutableList<ImmutableHolder<PostInfoList>>,
+    data: ImmutableList<PostListItemData>,
     lazyListState: LazyListState = rememberLazyListState(),
-    onClickItem: (PostInfoList) -> Unit = {},
+    onClickItem: (threadId: Long, postId: Long?, isSubPost: Boolean) -> Unit = { _, _, _ -> },
     onAgreeItem: (PostInfoList) -> Unit = {},
     onClickReply: (PostInfoList) -> Unit = {},
     onClickUser: (id: Long) -> Unit = {},
     onClickForum: (name: String) -> Unit = {},
-    onClickOriginThread: (OriginThreadInfo) -> Unit = {},
+    onClickOriginThread: (threadId: Long) -> Unit = {},
 ) {
     MyLazyColumn(state = lazyListState) {
         items(
             items = data,
             key = {
-                "${it.get { thread_id }}_${it.get { post_id }}"
+                "${it.data.get { thread_id }}_${it.data.get { post_id }}"
             }
-        ) {
+        ) { itemData ->
             UserPostItem(
-                post = it,
+                post = itemData,
                 onClick = onClickItem,
                 onAgree = onAgreeItem,
                 onClickReply = onClickReply,
@@ -293,23 +316,90 @@ private fun UserPostList(
 
 @Composable
 fun UserPostItem(
-    post: ImmutableHolder<PostInfoList>,
-    onClick: (PostInfoList) -> Unit,
+    post: PostListItemData,
     onAgree: (PostInfoList) -> Unit,
     modifier: Modifier = Modifier,
+    onClick: (threadId: Long, postId: Long?, isSubPost: Boolean) -> Unit = { _, _, _ -> },
     onClickReply: (PostInfoList) -> Unit = {},
     onClickUser: (id: Long) -> Unit = {},
     onClickForum: (name: String) -> Unit = {},
-    onClickOriginThread: (OriginThreadInfo) -> Unit = {},
+    onClickOriginThread: (threadId: Long) -> Unit = {},
 ) {
-    FeedCard(
-        item = post,
-        onClick = onClick,
-        onAgree = onAgree,
-        modifier = modifier,
-        onClickReply = onClickReply,
-        onClickUser = onClickUser,
-        onClickForum = onClickForum,
-        onClickOriginThread = onClickOriginThread,
-    )
+    val item = post.data
+    if (post.isThread) {
+        FeedCard(
+            item = item,
+            onClick = { onClick(it.thread_id, null, false) },
+            onAgree = onAgree,
+            modifier = modifier,
+            onClickReply = onClickReply,
+            onClickUser = onClickUser,
+            onClickForum = onClickForum,
+            onClickOriginThread = { onClickOriginThread(it.tid.toLong()) },
+        )
+    } else {
+        Card(
+            header = {
+                UserHeader(
+                    nameProvider = { item.get { user_name } },
+                    nameShowProvider = { item.get { name_show } },
+                    portraitProvider = { item.get { user_portrait } },
+                    onClick = {
+                        onClickUser(item.get { user_id })
+                    },
+                    modifier = Modifier.padding(horizontal = 16.dp)
+                )
+            },
+            content = {
+                Column {
+                    post.contents.fastForEach {
+                        Column(
+                            verticalArrangement = Arrangement.spacedBy(8.dp),
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .clickable {
+                                    onClick(
+                                        item.get { thread_id },
+                                        it.postId,
+                                        it.isSubPost
+                                    )
+                                }
+                                .padding(horizontal = 16.dp, vertical = 8.dp)
+                        ) {
+                            Text(
+                                text = it.contentText,
+                                style = MaterialTheme.typography.body1,
+                                color = ExtendedTheme.colors.text,
+                            )
+
+                            Text(
+                                text = DateTimeUtils.getRelativeTimeString(
+                                    LocalContext.current,
+                                    it.createTime
+                                ),
+                                style = MaterialTheme.typography.caption,
+                                color = ExtendedTheme.colors.textSecondary,
+                            )
+                        }
+                    }
+                }
+
+                Text(
+                    text = item.get { title },
+                    modifier = Modifier
+                        .padding(horizontal = 16.dp)
+                        .fillMaxWidth()
+                        .clip(RoundedCornerShape(6.dp))
+                        .background(ExtendedTheme.colors.floorCard)
+                        .clickable {
+                            onClickOriginThread(item.get { thread_id })
+                        }
+                        .padding(horizontal = 16.dp, vertical = 8.dp),
+                    style = MaterialTheme.typography.body2,
+                )
+            },
+            modifier = modifier,
+            contentPadding = PaddingValues(0.dp),
+        )
+    }
 }

@@ -37,7 +37,6 @@ import androidx.compose.material.icons.outlined.ContentCopy
 import androidx.compose.material.icons.rounded.Add
 import androidx.compose.material.icons.rounded.Edit
 import androidx.compose.material.icons.rounded.NoAccounts
-import androidx.compose.material.icons.rounded.SupervisedUserCircle
 import androidx.compose.material.icons.rounded.Verified
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Immutable
@@ -335,21 +334,21 @@ fun UserProfilePage(
                                                 )
                                             }
                                         ),
-//                                        UserProfilePageData(
-//                                            id = "posts",
-//                                            title = {
-//                                                stringResource(
-//                                                    id = R.string.title_profile_posts_tab,
-//                                                    it.get { post_num }.getShortNumString()
-//                                                )
-//                                            },
-//                                            content = {
-//                                                UserPostPage(
-//                                                    uid = uid,
-//                                                    isThread = false
-//                                                )
-//                                            }
-//                                        ).takeIf { account?.uid == uid.toString() },
+                                        UserProfilePageData(
+                                            id = "posts",
+                                            title = {
+                                                stringResource(
+                                                    id = R.string.title_profile_posts_tab,
+                                                    it.get { post_num }.getShortNumString()
+                                                )
+                                            },
+                                            content = {
+                                                UserPostPage(
+                                                    uid = uid,
+                                                    isThread = false
+                                                )
+                                            }
+                                        ).takeIf { isSelf },
                                         UserProfilePageData(
                                             id = "concern_forums",
                                             title = {
@@ -668,7 +667,7 @@ private fun UserProfileDetail(
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 Icon(
-                    imageVector = Icons.Rounded.SupervisedUserCircle,
+                    imageVector = Icons.Rounded.Verified,
                     contentDescription = null,
                     modifier = Modifier.size(16.dp),
                     tint = ExtendedTheme.colors.primary,
@@ -679,8 +678,7 @@ private fun UserProfileDetail(
                     color = ExtendedTheme.colors.primary,
                 )
             }
-        }
-        user.getNullableImmutable { new_god_data }
+        } ?: user.getNullableImmutable { new_god_data }
             ?.takeIf { it.get { status } != 0 }
             ?.let {
                 Row(
