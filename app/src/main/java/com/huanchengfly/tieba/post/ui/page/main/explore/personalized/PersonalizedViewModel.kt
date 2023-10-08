@@ -21,6 +21,7 @@ import com.huanchengfly.tieba.post.arch.wrapImmutable
 import com.huanchengfly.tieba.post.models.DislikeBean
 import com.huanchengfly.tieba.post.repository.PersonalizedRepository
 import com.huanchengfly.tieba.post.ui.models.ThreadItemData
+import com.huanchengfly.tieba.post.ui.models.distinctById
 import com.huanchengfly.tieba.post.utils.appPreferences
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.collections.immutable.ImmutableList
@@ -276,12 +277,16 @@ sealed interface PersonalizedPartialChange : PartialChange<PersonalizedUiState> 
         override fun reduce(oldState: PersonalizedUiState): PersonalizedUiState =
             when (this) {
                 Start -> oldState.copy(isRefreshing = true)
-                is Success -> oldState.copy(
-                    isRefreshing = false,
-                    currentPage = 1,
-                    data = (data + oldState.data).toImmutableList(),
-                    refreshPosition = if (oldState.data.isEmpty()) 0 else data.size
-                )
+                is Success -> {
+                    val oldSize = oldState.data.size
+                    val newData = (data + oldState.data).distinctById()
+                    oldState.copy(
+                        isRefreshing = false,
+                        currentPage = 1,
+                        data = newData,
+                        refreshPosition = if (oldState.data.isEmpty()) 0 else (newData.size - oldSize),
+                    )
+                }
 
                 is Failure -> oldState.copy(
                     isRefreshing = false,
@@ -307,7 +312,7 @@ sealed interface PersonalizedPartialChange : PartialChange<PersonalizedUiState> 
                 is Success -> oldState.copy(
                     isLoadingMore = false,
                     currentPage = currentPage,
-                    data = (oldState.data + data).toImmutableList(),
+                    data = (oldState.data + data).distinctById(),
                 )
 
                 is Failure -> oldState.copy(

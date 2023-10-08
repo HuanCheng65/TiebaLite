@@ -34,6 +34,7 @@ import com.huanchengfly.tieba.post.ui.widgets.compose.LazyLoad
 import com.huanchengfly.tieba.post.ui.widgets.compose.LoadMoreLayout
 import com.huanchengfly.tieba.post.ui.widgets.compose.MyLazyColumn
 import com.huanchengfly.tieba.post.ui.widgets.compose.VerticalDivider
+import kotlinx.collections.immutable.persistentListOf
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
@@ -59,7 +60,7 @@ fun ConcernPage(
     )
     val data by viewModel.uiState.collectPartialAsState(
         prop1 = ConcernUiState::data,
-        initial = emptyList()
+        initial = persistentListOf()
     )
     val pullRefreshState = rememberPullRefreshState(
         refreshing = isRefreshing,
@@ -89,7 +90,7 @@ fun ConcernPage(
             ) {
                 itemsIndexed(
                     items = data,
-                    key = { _, item -> "${item.recommendType}_${item.recommendUserList.size}_${item.threadList?.id}" },
+                    key = { _, item -> "${item.recommendType}_${item.threadList?.id}" },
                     contentType = { _, item -> item.recommendType }
                 ) { index, item ->
                     Container {
