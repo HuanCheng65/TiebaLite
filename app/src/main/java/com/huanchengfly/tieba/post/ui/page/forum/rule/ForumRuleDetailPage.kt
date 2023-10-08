@@ -22,6 +22,7 @@ import com.huanchengfly.tieba.post.R
 import com.huanchengfly.tieba.post.arch.collectPartialAsState
 import com.huanchengfly.tieba.post.arch.getOrNull
 import com.huanchengfly.tieba.post.arch.pageViewModel
+import com.huanchengfly.tieba.post.ui.page.ProvideNavigator
 import com.huanchengfly.tieba.post.ui.widgets.compose.Avatar
 import com.huanchengfly.tieba.post.ui.widgets.compose.BackNavigationIcon
 import com.huanchengfly.tieba.post.ui.widgets.compose.ErrorScreen
@@ -78,74 +79,79 @@ fun ForumRuleDetailPage(
         initial = null
     )
 
-    StateScreen(
-        modifier = Modifier.fillMaxSize(),
-        isEmpty = data.isEmpty(),
-        isError = error != null,
-        isLoading = isLoading,
-        onReload = {
-            viewModel.send(ForumRuleDetailUiIntent.Load(forumId))
-        },
-        errorScreen = { ErrorScreen(error = error.getOrNull()) }
-    ) {
-        MyScaffold(
-            topBar = {
-                TitleCentredToolbar(
-                    title = { Text(text = stringResource(id = R.string.title_forum_rule)) },
-                    navigationIcon = {
-                        BackNavigationIcon {
-                            navigator.navigateUp()
-                        }
-                    }
-                )
-            }
+    ProvideNavigator(navigator = navigator) {
+        StateScreen(
+            modifier = Modifier.fillMaxSize(),
+            isEmpty = data.isEmpty(),
+            isError = error != null,
+            isLoading = isLoading,
+            onReload = {
+                viewModel.send(ForumRuleDetailUiIntent.Load(forumId))
+            },
+            errorScreen = { ErrorScreen(error = error.getOrNull()) }
         ) {
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp)
-                    .verticalScroll(rememberScrollState()),
-                verticalArrangement = Arrangement.spacedBy(16.dp)
-            ) {
-                Text(text = title, style = MaterialTheme.typography.h5)
-                author?.let {
-                    UserHeader(
-                        avatar = {
-                            Avatar(
-                                data = StringUtil.getAvatarUrl(it.get { portrait }),
-                                size = Sizes.Small,
-                                contentDescription = null
-                            )
-                        },
-                        name = {
-                            Text(
-                                text = StringUtil.getUsernameAnnotatedString(
-                                    LocalContext.current,
-                                    it.get { user_name },
-                                    it.get { name_show },
-                                    LocalContentColor.current
-                                )
-                            )
-                        },
-                        desc = (@Composable {
-                            Text(text = publishTime)
-                        }).takeIf { publishTime.isNotEmpty() }
+            MyScaffold(
+                topBar = {
+                    TitleCentredToolbar(
+                        title = { Text(text = stringResource(id = R.string.title_forum_rule)) },
+                        navigationIcon = {
+                            BackNavigationIcon {
+                                navigator.navigateUp()
+                            }
+                        }
                     )
                 }
+            ) {
                 Column(
-                    verticalArrangement = Arrangement.spacedBy(8.dp)
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp)
+                        .verticalScroll(rememberScrollState()),
+                    verticalArrangement = Arrangement.spacedBy(16.dp)
                 ) {
-                    ProvideTextStyle(value = MaterialTheme.typography.body1) {
-                        Text(text = preface)
-                        data.fastForEach {
-                            if (it.title.isNotEmpty()) {
-                                Text(text = it.title, style = MaterialTheme.typography.subtitle1)
-                            }
-                            Column(
-                                verticalArrangement = Arrangement.spacedBy(4.dp)
-                            ) {
-                                it.contentRenders.fastForEach { render ->
-                                    render.Render()
+                    Text(text = title, style = MaterialTheme.typography.h5)
+                    author?.let {
+                        UserHeader(
+                            avatar = {
+                                Avatar(
+                                    data = StringUtil.getAvatarUrl(it.get { portrait }),
+                                    size = Sizes.Small,
+                                    contentDescription = null
+                                )
+                            },
+                            name = {
+                                Text(
+                                    text = StringUtil.getUsernameAnnotatedString(
+                                        LocalContext.current,
+                                        it.get { user_name },
+                                        it.get { name_show },
+                                        LocalContentColor.current
+                                    )
+                                )
+                            },
+                            desc = (@Composable {
+                                Text(text = publishTime)
+                            }).takeIf { publishTime.isNotEmpty() }
+                        )
+                    }
+                    Column(
+                        verticalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
+                        ProvideTextStyle(value = MaterialTheme.typography.body1) {
+                            Text(text = preface)
+                            data.fastForEach {
+                                if (it.title.isNotEmpty()) {
+                                    Text(
+                                        text = it.title,
+                                        style = MaterialTheme.typography.subtitle1
+                                    )
+                                }
+                                Column(
+                                    verticalArrangement = Arrangement.spacedBy(4.dp)
+                                ) {
+                                    it.contentRenders.fastForEach { render ->
+                                        render.Render()
+                                    }
                                 }
                             }
                         }
