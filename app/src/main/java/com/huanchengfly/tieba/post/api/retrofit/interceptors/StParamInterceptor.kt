@@ -17,6 +17,17 @@ class StParamInterceptor(private val method: Boolean = false) : Interceptor {
         var httpUrl = request.url
         var body = request.body
 
+        var addStParam = true
+        val noStParams = headers[Header.NO_ST_PARAMS]
+        if (noStParams != null) {
+            headers = headers.newBuilder().removeAll(Header.NO_ST_PARAMS).build()
+            addStParam = noStParams != Header.NO_ST_PARAMS_TRUE
+        }
+
+        if (!addStParam) {
+            return chain.proceed(request.newBuilder().headers(headers).build())
+        }
+
         //是否强制加到 Query(暂不存在强制加到 FormBody 的情况)
         var forceQuery = false
         val forceParam = headers[Header.FORCE_PARAM]

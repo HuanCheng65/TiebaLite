@@ -145,7 +145,11 @@ object RetrofitTiebaApi {
                     )
                 }
             ),
-            AddWebCookieInterceptor
+            AddWebCookieInterceptor,
+            CommonParamInterceptor(
+                Param.BDUSS to { AccountUtil.getBduss() },
+                Param.STOKEN to { AccountUtil.getSToken() },
+            )
         )
     }
 
