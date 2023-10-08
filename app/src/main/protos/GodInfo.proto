@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+package tieba;
+
+option java_package = "com.huanchengfly.tieba.post.api.models.protos";
+
+message GodInfo {
+  int64 id = 1;
+  string intro = 2;
+  int32 type = 3;
+  int64 fid = 4;
+  int32 followed = 5;
+  string recommend_reason = 6;
+  string forum_name = 7;
+  int32 can_send_msg = 8;
+  string prefix = 9;
+}

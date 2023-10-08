@@ -37,6 +37,8 @@ import androidx.compose.material.icons.outlined.ContentCopy
 import androidx.compose.material.icons.rounded.Add
 import androidx.compose.material.icons.rounded.Edit
 import androidx.compose.material.icons.rounded.NoAccounts
+import androidx.compose.material.icons.rounded.SupervisedUserCircle
+import androidx.compose.material.icons.rounded.Verified
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.LaunchedEffect
@@ -252,7 +254,7 @@ fun UserProfilePage(
                                     }
                                 }
                             }
-                        }
+                        },
                     )
                 }
             ) { paddingValues ->
@@ -656,10 +658,48 @@ private fun UserProfileDetail(
         Text(
             text = user.get { intro }.takeIf { it.isNotEmpty() }
                 ?: stringResource(id = R.string.tip_no_intro),
-            style = MaterialTheme.typography.body1,
+            style = MaterialTheme.typography.body2,
             maxLines = 1,
             overflow = TextOverflow.Ellipsis
         )
+        user.getNullableImmutable { bazhu_grade }?.let {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                Icon(
+                    imageVector = Icons.Rounded.SupervisedUserCircle,
+                    contentDescription = null,
+                    modifier = Modifier.size(16.dp),
+                    tint = ExtendedTheme.colors.primary,
+                )
+                Text(
+                    text = it.get { desc },
+                    style = MaterialTheme.typography.body2,
+                    color = ExtendedTheme.colors.primary,
+                )
+            }
+        }
+        user.getNullableImmutable { new_god_data }
+            ?.takeIf { it.get { status } != 0 }
+            ?.let {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    Icon(
+                        imageVector = Icons.Rounded.Verified,
+                        contentDescription = null,
+                        modifier = Modifier.size(16.dp),
+                        tint = ExtendedTheme.colors.primary,
+                    )
+                    Text(
+                        text = stringResource(id = R.string.text_god_verify, it.get { field_name }),
+                        style = MaterialTheme.typography.body2,
+                        color = ExtendedTheme.colors.primary,
+                    )
+                }
+            }
         val sexEmoji = when (user.get { sex }) {
             1 -> "♂"
             2 -> "♀"

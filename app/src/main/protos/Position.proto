@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+package tieba;
+
+option java_package = "com.huanchengfly.tieba.post.api.models.protos";
+
+message Position {
+  int32 frs = 1;
+  int32 pb = 2;
+  int32 home = 3;
+  int32 card = 4;
+}

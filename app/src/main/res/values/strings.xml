@@ -760,4 +760,5 @@
     <string name="menu_add_user_to_black_list">添加到黑名单</string>
     <string name="menu_add_user_to_white_list">添加到白名单</string>
     <string name="btn_block">屏蔽选项</string>
+    <string name="text_god_verify">%s领域大神</string>
 </resources>

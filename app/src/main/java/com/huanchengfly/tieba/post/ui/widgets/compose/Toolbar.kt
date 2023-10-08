@@ -295,6 +295,8 @@ fun Toolbar(
     title: @Composable (() -> Unit),
     navigationIcon: (@Composable () -> Unit)? = null,
     actions: @Composable RowScope.() -> Unit = {},
+    backgroundColor: Color = ExtendedTheme.colors.topBar,
+    contentColor: Color = ExtendedTheme.colors.onTopBar,
     content: (@Composable ColumnScope.() -> Unit)? = null,
 ) {
     TopAppBarContainer(
@@ -302,21 +304,21 @@ fun Toolbar(
             TopAppBar(
                 title = {
                     ProvideTextStyle(value = MaterialTheme.typography.h6.copy(fontWeight = FontWeight.Bold)) {
-                        ProvideContentColor(color = ExtendedTheme.colors.onTopBar, content = title)
+                        ProvideContentColor(color = contentColor, content = title)
                     }
                 },
                 actions = {
-                    ProvideContentColor(color = ExtendedTheme.colors.onTopBar) {
+                    ProvideContentColor(color = contentColor) {
                         actions()
                     }
                 },
                 navigationIcon = (@Composable {
-                    ProvideContentColor(color = ExtendedTheme.colors.onTopBar) {
+                    ProvideContentColor(color = contentColor) {
                         navigationIcon?.invoke()
                     }
                 }).takeIf { navigationIcon != null },
-                backgroundColor = ExtendedTheme.colors.topBar,
-                contentColor = ExtendedTheme.colors.onTopBar,
+                backgroundColor = backgroundColor,
+                contentColor = contentColor,
                 elevation = 0.dp
             )
         },
