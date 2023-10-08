@@ -119,25 +119,25 @@ wire {
 }
 
 dependencies {
-    implementation 'net.swiftzer.semver:semver:1.1.2'
+    implementation 'net.swiftzer.semver:semver:1.3.0'
     implementation 'com.godaddy.android.colorpicker:compose-color-picker:0.7.0'
 
     implementation "com.airbnb.android:lottie:$lottie_version"
     implementation "com.airbnb.android:lottie-compose:$lottie_version"
 
     implementation 'org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.0'
-    implementation 'org.jetbrains.kotlinx:kotlinx-collections-immutable:0.3.5'
+    implementation 'org.jetbrains.kotlinx:kotlinx-collections-immutable:0.3.6'
 //    implementation 'androidx.compose.material3:material3:1.0.0'
 
     def media3_version = "1.1.1"
     implementation "androidx.media3:media3-exoplayer:$media3_version"
     implementation "androidx.media3:media3-ui:$media3_version"
 
-    def compose_destinations_version = '1.9.53'
+    def compose_destinations_version = '1.9.54'
     implementation "io.github.raamcosta.compose-destinations:animations-core:$compose_destinations_version"
     ksp "io.github.raamcosta.compose-destinations:ksp:$compose_destinations_version"
 
-    implementation "androidx.navigation:navigation-compose:2.7.3"
+    implementation "androidx.navigation:navigation-compose:2.7.4"
 
     api "com.squareup.wire:wire-runtime:$wire_version"
 
@@ -166,7 +166,7 @@ dependencies {
     implementation("io.github.panpf.zoomimage:zoomimage-view-sketch:$zoomimage_version")
 
     def composeBom = platform("androidx.compose:compose-bom:$compose_bom_version")
-    implementation platform('androidx.compose:compose-bom:2023.09.02')
+    implementation composeBom
     androidTestImplementation composeBom
 
     implementation 'androidx.compose.runtime:runtime-tracing:1.0.0-alpha03'
@@ -189,7 +189,7 @@ dependencies {
     implementation "com.google.android.material:compose-theme-adapter:1.2.1"
     implementation "androidx.constraintlayout:constraintlayout-compose:1.0.1"
 
-    def activity_version = "1.7.2"
+    def activity_version = "1.8.0"
 
     implementation "androidx.activity:activity-ktx:$activity_version"
     implementation "androidx.activity:activity-compose:$activity_version"
@@ -241,7 +241,7 @@ dependencies {
     ksp "com.github.bumptech.glide:ksp:$glide_version"
     implementation "com.github.bumptech.glide:okhttp3-integration:$glide_version"
 
-    implementation "com.google.android.material:material:1.9.0"
+    implementation "com.google.android.material:material:1.10.0"
 
     implementation 'com.squareup.okhttp3:okhttp:4.11.0'
     implementation "com.squareup.retrofit2:retrofit:$retrofit_version"
