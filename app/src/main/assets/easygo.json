@@ -5,54 +5,27 @@
     {
       "head": {
         "function": "magicwindow",
-        "required": "true"
+        "required": true
       },
       "body": {
         "mode": "1",
         "activityPairs": [
-          {
-            "from": "com.huanchengfly.tieba.post.activities.MainActivity",
-            "to": "*"
-          },
-          {
-            "from": "com.huanchengfly.tieba.post.activities.NewSearchActivity",
-            "to": "*"
-          },
-          {
-            "from": "com.huanchengfly.tieba.post.activities.ForumActivity",
-            "to": "*"
-          },
-          {
-            "from": "com.huanchengfly.tieba.post.activities.ThreadActivity",
-            "to": "*"
-          },
-          {
-            "from": "com.huanchengfly.tieba.post.activities.MessageActivity",
-            "to": "com.huanchengfly.tieba.post.activities.FloorActivity"
-          },
-          {
-            "from": "com.huanchengfly.tieba.post.activities.UserCollectActivity",
-            "to": "com.huanchengfly.tieba.post.activities.ThreadActivity"
-          },
-          {
-            "from": "com.huanchengfly.tieba.post.activities.UserCollectActivity",
-            "to": "com.huanchengfly.tieba.post.activities.UserActivity"
-          },
-          {
-            "from": "com.huanchengfly.tieba.post.activities.UserActivity",
-            "to": "com.huanchengfly.tieba.post.activities.ThreadActivity"
-          }
+          {"from": "com.huanchengfly.tieba.post.activities.MainActivity", "to": "*"},
+          {"from": "com.huanchengfly.tieba.post.activities.NewSearchActivity", "to": "*"},
+          {"from": "com.huanchengfly.tieba.post.activities.ForumActivity", "to": "*"},
+          {"from": "com.huanchengfly.tieba.post.activities.ThreadActivity", "to": "*"},
+          {"from": "com.huanchengfly.tieba.post.activities.MessageActivity", "to": "com.huanchengfly.tieba.post.activities.FloorActivity"},
+          {"from": "com.huanchengfly.tieba.post.activities.UserCollectActivity", "to": "com.huanchengfly.tieba.post.activities.ThreadActivity"},
+          {"from": "com.huanchengfly.tieba.post.activities.UserCollectActivity", "to": "com.huanchengfly.tieba.post.activities.UserActivity"},
+          {"from": "com.huanchengfly.tieba.post.activities.UserActivity", "to": "com.huanchengfly.tieba.post.activities.ThreadActivity"}
         ],
         "transActivities": [],
         "Activities": [
-          {
-            "name": "com.huanchengfly.tieba.post.activities.MainActivity",
-            "defaultFullScreen": "true"
-          }
+          {"name": "com.huanchengfly.tieba.post.activities.MainActivity", "defaultFullScreen": true}
         ],
         "UX": {
-          "supportRotationUxCompat": "true",
-          "isDraggable": "true"
+          "supportRotationUxCompat": true,
+          "isDraggable": true
         }
       }
     }
