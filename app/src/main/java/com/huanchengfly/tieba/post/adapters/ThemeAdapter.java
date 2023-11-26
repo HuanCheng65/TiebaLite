@@ -3,7 +3,6 @@ package com.huanchengfly.tieba.post.adapters;
 import static com.huanchengfly.tieba.post.utils.ThemeUtil.THEME_CUSTOM;
 import static com.huanchengfly.tieba.post.utils.ThemeUtil.THEME_TRANSLUCENT;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.ColorStateList;
@@ -30,8 +29,10 @@ import java.util.Arrays;
 import java.util.List;
 
 public class ThemeAdapter extends RecyclerView.Adapter<MyViewHolder> implements View.OnClickListener {
-    public static final int THEME_DAY = 0;
-    public static final int THEME_NIGHT = 1;
+    private static final int THEME_DAY = 0;
+    private static final int THEME_NIGHT = 1;
+    private static final int NIGHT_MODE_TIP_VISIBILITY = View.VISIBLE;
+    private static final int NIGHT_MODE_TIP_GONE = View.GONE;
 
     private final Context mContext;
     private final String[] themes;
@@ -78,11 +79,11 @@ public class ThemeAdapter extends RecyclerView.Adapter<MyViewHolder> implements 
     }
 
     @Override
-    public void onBindViewHolder(@NonNull MyViewHolder holder, @SuppressLint("RecyclerView") int position) {
+    public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
         int type = getItemViewType(position);
         View previewView = holder.getView(R.id.theme_preview);
         TextView themeName = holder.getView(R.id.theme_name);
-        holder.setVisibility(R.id.night_mode_tip, type == THEME_NIGHT ? View.VISIBLE : View.GONE);
+        holder.setVisibility(R.id.night_mode_tip, type == THEME_NIGHT ? NIGHT_MODE_TIP_VISIBILITY : NIGHT_MODE_TIP_GONE);
         ImageView selected = holder.getView(R.id.theme_selected);
         String theme = themes[position];
         int toolbarColor = getToolbarColor(theme);
@@ -124,20 +125,27 @@ public class ThemeAdapter extends RecyclerView.Adapter<MyViewHolder> implements 
 
     @Override
     public void onClick(View v) {
-        if (v.getId() != R.id.theme_selected) {
-            return;
+        if (v.getId() == R.id.theme_selected) {
+            handleThemeSelected(v);
         }
+    }
+
+    private void handleThemeSelected(View v) {
         String theme = (String) v.getTag();
         if (THEME_CUSTOM.equals(theme)) {
-            CustomThemeDialog customThemeDialog = new CustomThemeDialog(mContext);
-            customThemeDialog.setOnDismissListener(dialog -> {
-                if (mContext instanceof ExtraRefreshable) {
-                    ThemeUtils.refreshUI(mContext, (ExtraRefreshable) mContext);
-                }
-            });
-            customThemeDialog.show();
+            showCustomThemeDialog();
         } else if (THEME_TRANSLUCENT.equals(theme)) {
             mContext.startActivity(new Intent(mContext, TranslucentThemeActivity.class));
         }
+    }
+
+    private void showCustomThemeDialog() {
+        CustomThemeDialog customThemeDialog = new CustomThemeDialog(mContext);
+        customThemeDialog.setOnDismissListener(dialog -> {
+            if (mContext instanceof ExtraRefreshable) {
+                ThemeUtils.refreshUI(mContext, (ExtraRefreshable) mContext);
+            }
+        });
+        customThemeDialog.show();
     }
 }
