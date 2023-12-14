@@ -154,7 +154,7 @@ dependencies {
 
     implementation 'com.zhihu.android:matisse:0.5.3-beta3'
     implementation 'com.yanzhenjie:permission:2.0.3'
-    implementation 'com.gyf.immersionbar:immersionbar:3.0.0-beta02'
+    implementation 'com.gyf.immersionbar:immersionbar:3.0.0'
     api 'com.flurry.android:analytics:12.2.0'
     implementation 'androidx.palette:palette:1.0.0'
 
