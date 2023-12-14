@@ -143,7 +143,7 @@ dependencies {
     implementation 'com.google.code.gson:gson:2.8.6'
     implementation 'cn.dreamtobe.kpswitch:library:1.6.2'
     implementation 'org.litepal.android:kotlin:3.0.0'
-    implementation 'com.github.SheHuan:RecyclerViewAdapter:1.2.6'
+    implementation 'com.github.SheHuan:RecyclerViewAdapter:1.2.9'
     implementation 'com.lapism:searchview:27.1.1.0.0'
     implementation 'com.github.lygttpod:SuperTextView:2.1.8'
     implementation 'com.davemorrissey.labs:subsampling-scale-image-view:3.10.0'
