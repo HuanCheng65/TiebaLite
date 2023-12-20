@@ -236,7 +236,7 @@ object MixedTiebaApiImpl : ITiebaApi {
     override fun floor(
         threadId: String, page: Int, postId: String?, subPostId: String?
     ): Call<SubFloorListBean> =
-        RetrofitTiebaApi.MINI_TIEBA_API.floor(threadId, page, postId, subPostId)
+        RetrofitTiebaApi.OFFICIAL_TIEBA_API.floor(threadId, page, postId, subPostId)
 
     override fun forumHomeAsync(sortType: Int, page: Int): Deferred<ApiResult<ForumHome>> {
         return RetrofitTiebaApi.WEB_TIEBA_API.getForumHomeAsync(
