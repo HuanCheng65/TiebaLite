@@ -379,10 +379,10 @@ public class RecyclerFloorAdapter extends BaseSingleTypeAdapter<SubFloorListBean
                     ImageView imageView = new ImageView(getContext());
                     imageView.setLayoutParams(getLayoutParams(contentBean));
                     imageView.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
-                    ImageUtil.load(imageView, ImageUtil.LOAD_TYPE_SMALL_PIC, contentBean.getSrc());
+                    ImageUtil.load(imageView, ImageUtil.LOAD_TYPE_SMALL_PIC, ImageUtil.getNonNullString(contentBean.getCdnSrc(), contentBean.getOriginSrc()));
                     List<PhotoViewBean> photoViewBeans = new ArrayList<>();
-                    photoViewBeans.add(new PhotoViewBean(ImageUtil.getNonNullString(contentBean.getSrc(), contentBean.getOriginSrc()),
-                            ImageUtil.getNonNullString(contentBean.getOriginSrc(), contentBean.getSrc()),
+                    photoViewBeans.add(new PhotoViewBean(ImageUtil.getNonNullString(contentBean.getCdnSrc(), contentBean.getOriginSrc()),
+                            ImageUtil.getNonNullString(contentBean.getOriginSrc(), contentBean.getCdnSrc()),
                             "1".equals(contentBean.isLongPic())));
                     ImageUtil.initImageView(imageView, photoViewBeans, 0);
                     views.add(imageView);

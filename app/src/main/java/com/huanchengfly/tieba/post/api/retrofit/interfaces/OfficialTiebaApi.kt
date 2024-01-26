@@ -534,4 +534,14 @@ interface OfficialTiebaApi {
         @Field("friend_uid") friendUid: String?,
         @Field("is_guest") is_guest: String?,
     ): Flow<UserLikeForumBean>
+
+    @POST("/c/f/pb/floor")
+    @FormUrlEncoded
+    fun floor(
+        @Field("kz") threadId: String,
+        @Field("pn") page: Int = 1,
+        @Field("pid") postId: String?,
+        @Field("spid") subPostId: String?,
+        @Field("rn") rn: Int = 20
+    ): Call<SubFloorListBean>
 }
