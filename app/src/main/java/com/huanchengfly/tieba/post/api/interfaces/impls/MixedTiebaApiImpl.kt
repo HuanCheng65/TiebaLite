@@ -1111,6 +1111,7 @@ object MixedTiebaApiImpl : ITiebaApi {
                             entrance_type = "0",
                             fid = forumId,
                             floor_num = "0",
+                            kw = forumName,
                             is_ad = "0",
                             is_addition = "0",
                             is_barrage = "0",
