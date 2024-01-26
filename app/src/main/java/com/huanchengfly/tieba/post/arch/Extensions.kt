@@ -47,7 +47,7 @@ fun <T> Flow<T>.collectIn(
 }
 
 @Composable
-fun <T : UiState, A> Flow<T>.collectPartialAsState(
+inline fun <reified T : UiState, A> Flow<T>.collectPartialAsState(
     prop1: KProperty1<T, A>,
     initial: A,
 ): State<A> {
@@ -58,7 +58,9 @@ fun <T : UiState, A> Flow<T>.collectPartialAsState(
         key3 = initial
     ) {
         this@collectPartialAsState
-            .map { prop1.get(it) }
+            .map {
+                prop1.get(it)
+            }
             .distinctUntilChanged()
             .flowOn(Dispatchers.IO)
             .collect {

@@ -15,7 +15,6 @@ import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
-import androidx.compose.ui.text.ExperimentalTextApi
 import androidx.compose.ui.text.Placeholder
 import androidx.compose.ui.text.PlaceholderVerticalAlign
 import androidx.compose.ui.text.TextStyle
@@ -27,6 +26,7 @@ import com.github.panpf.sketch.fetch.newFileUri
 import com.github.panpf.sketch.fetch.newResourceUri
 import com.github.panpf.sketch.request.LoadRequest
 import com.github.panpf.sketch.request.LoadResult
+import com.github.panpf.sketch.request.execute
 import com.google.accompanist.drawablepainter.rememberDrawablePainter
 import com.huanchengfly.tieba.post.App
 import com.huanchengfly.tieba.post.R
@@ -42,7 +42,6 @@ import kotlinx.coroutines.withContext
 import java.io.File
 import java.lang.ref.WeakReference
 
-@OptIn(ExperimentalTextApi::class)
 @Composable
 fun calcLineHeightPx(style: TextStyle): Int {
     val textMeasurer = rememberTextMeasurer()

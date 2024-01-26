@@ -18,8 +18,8 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
@@ -41,8 +41,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.lerp
 import androidx.compose.ui.util.lerp
 import com.github.panpf.sketch.compose.AsyncImage
+import com.github.panpf.sketch.compose.rememberAsyncImageState
 import com.github.panpf.sketch.request.Depth
 import com.github.panpf.sketch.request.DisplayRequest
+import com.github.panpf.sketch.request.DisplayResult
 import com.github.panpf.sketch.stateimage.ThumbnailMemoryCacheStateImage
 import com.github.panpf.sketch.transform.MaskTransformation
 import com.huanchengfly.tieba.post.App
@@ -238,7 +240,6 @@ fun NetworkImage(
             MaskTransformation(Color.parseColor("#99000000"))
         } else null
 
-    var imageAspectRatio by remember(imageUri) { mutableFloatStateOf(0f) }
     var layoutSize by remember { mutableStateOf(IntSize.Zero) }
 
     var layoutOffset by remember { mutableStateOf(Offset.Zero) }
@@ -253,11 +254,16 @@ fun NetworkImage(
             if (colorMask != null) {
                 transformations(colorMask)
             }
-            listener(
-                onSuccess = { _, result ->
-                    imageAspectRatio = result.imageInfo.height.toFloat() / result.imageInfo.width
-                }
-            )
+        }
+    }
+
+    val state = rememberAsyncImageState()
+    val imageAspectRatio by remember {
+        derivedStateOf {
+            with(state.result) {
+                if (this is DisplayResult.Success) imageInfo.height.toFloat() / imageInfo.width
+                else 0f
+            }
         }
     }
 
@@ -320,6 +326,7 @@ fun NetworkImage(
                 },
             contentDescription = contentDescription,
             contentScale = contentScale,
+            state = state,
         )
     }
 }

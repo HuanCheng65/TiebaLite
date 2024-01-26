@@ -71,6 +71,7 @@ fun LazyLoadHorizontalPager(
     reverseLayout: Boolean = false,
     key: ((index: Int) -> Any)? = null,
     pageNestedScrollConnection: NestedScrollConnection = PagerDefaults.pageNestedScrollConnection(
+        state,
         Orientation.Horizontal
     ),
     pageContent: @Composable PagerScope.(page: Int) -> Unit,

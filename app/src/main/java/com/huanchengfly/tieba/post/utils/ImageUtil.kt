@@ -31,6 +31,7 @@ import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.bumptech.glide.request.RequestOptions
 import com.github.panpf.sketch.request.DownloadRequest
 import com.github.panpf.sketch.request.DownloadResult
+import com.github.panpf.sketch.request.execute
 import com.huanchengfly.tieba.post.App.Companion.INSTANCE
 import com.huanchengfly.tieba.post.R
 import com.huanchengfly.tieba.post.activities.PhotoViewActivity.Companion.launch

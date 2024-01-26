@@ -22,6 +22,7 @@ import androidx.core.content.pm.ShortcutManagerCompat
 import androidx.core.graphics.drawable.IconCompat
 import com.github.panpf.sketch.request.LoadRequest
 import com.github.panpf.sketch.request.LoadResult
+import com.github.panpf.sketch.request.execute
 import com.google.android.material.snackbar.Snackbar
 import com.huanchengfly.tieba.post.App
 import com.huanchengfly.tieba.post.R
