@@ -8,6 +8,7 @@ import com.huanchengfly.tieba.post.api.models.protos.getBawuInfo.GetBawuInfoResp
 import com.huanchengfly.tieba.post.api.models.protos.getForumDetail.GetForumDetailResponse
 import com.huanchengfly.tieba.post.api.models.protos.getLevelInfo.GetLevelInfoResponse
 import com.huanchengfly.tieba.post.api.models.protos.getMemberInfo.GetMemberInfoResponse
+import com.huanchengfly.tieba.post.api.models.protos.getUserInfo.GetUserInfoResponse
 import com.huanchengfly.tieba.post.api.models.protos.hotThreadList.HotThreadListResponse
 import com.huanchengfly.tieba.post.api.models.protos.pbFloor.PbFloorResponse
 import com.huanchengfly.tieba.post.api.models.protos.pbPage.PbPageResponse
@@ -115,4 +116,9 @@ interface OfficialProtobufTiebaApi {
     fun userPostFlow(
         @Body body: MyMultipartBody,
     ): Flow<UserPostResponse>
+
+    @POST("/c/u/user/getuserinfo?cmd=303024&format=protobuf")
+    fun getUserInfoFlow(
+        @Body body: MyMultipartBody,
+    ): Flow<GetUserInfoResponse>
 }

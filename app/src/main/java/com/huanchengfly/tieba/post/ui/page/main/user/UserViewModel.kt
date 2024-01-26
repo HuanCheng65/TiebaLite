@@ -2,14 +2,27 @@ package com.huanchengfly.tieba.post.ui.page.main.user
 
 import androidx.compose.runtime.Stable
 import com.huanchengfly.tieba.post.api.TiebaApi
-import com.huanchengfly.tieba.post.api.models.Profile
+import com.huanchengfly.tieba.post.api.models.protos.profile.ProfileResponse
 import com.huanchengfly.tieba.post.api.retrofit.exception.getErrorMessage
-import com.huanchengfly.tieba.post.arch.*
+import com.huanchengfly.tieba.post.arch.BaseViewModel
+import com.huanchengfly.tieba.post.arch.CommonUiEvent
+import com.huanchengfly.tieba.post.arch.PartialChange
+import com.huanchengfly.tieba.post.arch.PartialChangeProducer
+import com.huanchengfly.tieba.post.arch.UiEvent
+import com.huanchengfly.tieba.post.arch.UiIntent
+import com.huanchengfly.tieba.post.arch.UiState
 import com.huanchengfly.tieba.post.models.database.Account
 import com.huanchengfly.tieba.post.utils.AccountUtil
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.asFlow
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.filterIsInstance
+import kotlinx.coroutines.flow.flatMapConcat
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.merge
+import kotlinx.coroutines.flow.onStart
 import javax.inject.Inject
 
 @Stable
@@ -40,24 +53,24 @@ class UserViewModel @Inject constructor() : BaseViewModel<UserUiIntent, UserPart
                 listOf(UserPartialChange.Refresh.NotLogin).asFlow()
             } else {
                 TiebaApi.getInstance()
-                    .profileFlow(account.uid)
-                    .map<Profile, UserPartialChange> { profile ->
+                    .userProfileFlow(account.uid.toLong())
+                    .map<ProfileResponse, UserPartialChange> { profile ->
+                        val user = checkNotNull(profile.data_?.user)
                         account.apply {
-                            profile.anti?.tbs?.let {
-                                tbs = it
-                            }
-                            portrait = profile.user.portrait
-                            intro = profile.user.intro
-                            sex = profile.user.sex
-                            fansNum = profile.user.fansNum
-                            postNum = profile.user.postNum
-                            threadNum = profile.user.threadNum
-                            concernNum = profile.user.concernNum
-                            tbAge = profile.user.tbAge
-                            age = profile.user.birthdayInfo?.age
-                            birthdayShowStatus = profile.user.birthdayInfo?.birthdayShowStatus
-                            birthdayTime = profile.user.birthdayInfo?.birthdayTime
-                            constellation = profile.user.birthdayInfo?.constellation
+                            nameShow = user.nameShow
+                            portrait = user.portrait
+                            intro = user.intro
+                            sex = user.sex.toString()
+                            fansNum = user.fans_num.toString()
+                            postNum = user.post_num.toString()
+                            threadNum = user.thread_num.toString()
+                            concernNum = user.concern_num.toString()
+                            tbAge = user.tb_age
+                            age = user.birthday_info?.age?.toString()
+                            birthdayShowStatus =
+                                user.birthday_info?.birthday_show_status?.toString()
+                            birthdayTime = user.birthday_info?.birthday_time?.toString()
+                            constellation = user.birthday_info?.constellation
                             loadSuccess = true
                             updateAll("uid = ?", uid)
                         }
@@ -84,7 +97,7 @@ class UserViewModel @Inject constructor() : BaseViewModel<UserUiIntent, UserPart
 }
 
 sealed interface UserUiIntent : UiIntent {
-    object Refresh : UserUiIntent
+    data object Refresh : UserUiIntent
 }
 
 sealed interface UserPartialChange : PartialChange<UserUiState> {
@@ -103,9 +116,9 @@ sealed interface UserPartialChange : PartialChange<UserUiState> {
                 is Failure -> oldState.copy(isLoading = false)
             }
 
-        object Start : Refresh()
+        data object Start : Refresh()
 
-        object NotLogin : Refresh()
+        data object NotLogin : Refresh()
 
         data class Success(val account: Account, val isLocal: Boolean = false) : Refresh()
 

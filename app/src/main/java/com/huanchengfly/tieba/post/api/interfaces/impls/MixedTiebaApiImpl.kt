@@ -72,6 +72,9 @@ import com.huanchengfly.tieba.post.api.models.protos.getLevelInfo.GetLevelInfoRe
 import com.huanchengfly.tieba.post.api.models.protos.getMemberInfo.GetMemberInfoRequest
 import com.huanchengfly.tieba.post.api.models.protos.getMemberInfo.GetMemberInfoRequestData
 import com.huanchengfly.tieba.post.api.models.protos.getMemberInfo.GetMemberInfoResponse
+import com.huanchengfly.tieba.post.api.models.protos.getUserInfo.GetUserInfoRequest
+import com.huanchengfly.tieba.post.api.models.protos.getUserInfo.GetUserInfoRequestData
+import com.huanchengfly.tieba.post.api.models.protos.getUserInfo.GetUserInfoResponse
 import com.huanchengfly.tieba.post.api.models.protos.hotThreadList.HotThreadListRequest
 import com.huanchengfly.tieba.post.api.models.protos.hotThreadList.HotThreadListRequestData
 import com.huanchengfly.tieba.post.api.models.protos.hotThreadList.HotThreadListResponse
@@ -1151,7 +1154,7 @@ object MixedTiebaApiImpl : ITiebaApi {
                         is_from_usercenter = 1,
                         is_guest = if (isSelf) 0 else 1,
                         need_post_count = 1,
-                        page = 2,
+                        page = 1,
                         pn = 1,
                         q_type = 0,
                         rn = 20,
@@ -1386,6 +1389,34 @@ object MixedTiebaApiImpl : ITiebaApi {
             uid = myUid,
             friendUid = if (!TextUtils.equals(uid, myUid)) uid else null,
             is_guest = if (!TextUtils.equals(uid, myUid)) "1" else null
+        )
+    }
+
+    override fun getUserInfoFlow(): Flow<GetUserInfoResponse> {
+        return getUserInfoFlow(AccountUtil.getUid()!!.toLong(), null, null)
+    }
+
+    override fun getUserInfoFlow(
+        uid: Long,
+        bduss: String?,
+        sToken: String?,
+    ): Flow<GetUserInfoResponse> {
+        return RetrofitTiebaApi.OFFICIAL_PROTOBUF_TIEBA_V12_API.getUserInfoFlow(
+            buildProtobufRequestBody(
+                GetUserInfoRequest(
+                    GetUserInfoRequestData(
+                        common = buildCommonRequest(
+                            clientVersion = ClientVersion.TIEBA_V12,
+                            bduss = bduss,
+                            stoken = sToken
+                        ),
+                        uid = uid,
+                        scr_w = getScreenWidth()
+                    )
+                ),
+                clientVersion = ClientVersion.TIEBA_V12,
+                needSToken = true
+            )
         )
     }
 }

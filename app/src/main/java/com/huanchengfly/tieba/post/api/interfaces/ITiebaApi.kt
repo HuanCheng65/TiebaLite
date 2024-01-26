@@ -12,6 +12,7 @@ import com.huanchengfly.tieba.post.api.models.protos.getBawuInfo.GetBawuInfoResp
 import com.huanchengfly.tieba.post.api.models.protos.getForumDetail.GetForumDetailResponse
 import com.huanchengfly.tieba.post.api.models.protos.getLevelInfo.GetLevelInfoResponse
 import com.huanchengfly.tieba.post.api.models.protos.getMemberInfo.GetMemberInfoResponse
+import com.huanchengfly.tieba.post.api.models.protos.getUserInfo.GetUserInfoResponse
 import com.huanchengfly.tieba.post.api.models.protos.hotThreadList.HotThreadListResponse
 import com.huanchengfly.tieba.post.api.models.protos.pbFloor.PbFloorResponse
 import com.huanchengfly.tieba.post.api.models.protos.pbPage.PbPageResponse
@@ -1461,4 +1462,18 @@ interface ITiebaApi {
         uid: String,
         page: Int = 1,
     ): Flow<UserLikeForumBean>
+
+    /**
+     * 获得当前用户信息（需登录）
+     */
+    fun getUserInfoFlow(): Flow<GetUserInfoResponse>
+
+    /**
+     * 获得用户信息
+     */
+    fun getUserInfoFlow(
+        uid: Long,
+        bduss: String?,
+        sToken: String?,
+    ): Flow<GetUserInfoResponse>
 }

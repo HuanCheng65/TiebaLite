@@ -13,13 +13,18 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.staticCompositionLocalOf
 import com.huanchengfly.tieba.post.R
 import com.huanchengfly.tieba.post.api.TiebaApi
-import com.huanchengfly.tieba.post.api.models.InitNickNameBean
 import com.huanchengfly.tieba.post.api.models.LoginBean
 import com.huanchengfly.tieba.post.arch.GlobalEvent
 import com.huanchengfly.tieba.post.arch.emitGlobalEvent
 import com.huanchengfly.tieba.post.models.database.Account
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.flatMapConcat
+import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.zip
 import kotlinx.coroutines.launch
@@ -123,13 +128,11 @@ object AccountUtil {
 
     private fun updateAccount(
         account: Account,
-        initNickNameBean: InitNickNameBean,
         loginBean: LoginBean,
     ) {
         account.apply {
             uid = loginBean.user.id
             name = loginBean.user.name
-            nameShow = initNickNameBean.userInfo.nameShow
             portrait = loginBean.user.portrait
             tbs = loginBean.anti.tbs
             if (uuid.isNullOrBlank()) uuid = UUID.randomUUID().toString()
@@ -140,19 +143,20 @@ object AccountUtil {
         return fetchAccountFlow(account.bduss, account.sToken, account.cookie)
     }
 
+    @OptIn(ExperimentalCoroutinesApi::class)
     fun fetchAccountFlow(
         bduss: String,
         sToken: String,
         cookie: String? = null
     ): Flow<Account> {
         return TiebaApi.getInstance()
-            .initNickNameFlow(bduss, sToken)
-            .zip(TiebaApi.getInstance().loginFlow(bduss, sToken)) { initNickNameBean, loginBean ->
+            .loginFlow(bduss, sToken)
+            .zip(TiebaApi.getInstance().initNickNameFlow(bduss, sToken)) { loginBean, _ ->
                 getAccountInfoByUid(loginBean.user.id)?.apply {
                     this.bduss = bduss
                     this.sToken = sToken
                     this.cookie = cookie ?: getBdussCookie(bduss)
-                    updateAccount(this, initNickNameBean, loginBean)
+                    updateAccount(this, loginBean)
                 } ?: Account(
                     loginBean.user.id,
                     loginBean.user.name,
@@ -161,34 +165,51 @@ object AccountUtil {
                     loginBean.user.portrait,
                     sToken,
                     cookie ?: getBdussCookie(bduss),
-                    initNickNameBean.userInfo.nameShow,
-                    "",
-                    "0"
                 )
             }
             .zip(SofireUtils.fetchZid()) { account, zid ->
                 account.apply { this.zid = zid }
             }
-            .onEach { account ->
-                account.updateAllAsync("uid = ?", account.uid)
-                    .listen { rowAffected ->
-                        if (rowAffected > 0) {
-                            LitePal.findAllAsync<Account>()
-                                .listen {
-                                    mutableAllAccountsState.value = it
-                                }
+            .flatMapConcat { account ->
+                TiebaApi.getInstance()
+                    .getUserInfoFlow(account.uid.toLong(), account.bduss, account.sToken)
+                    .map { checkNotNull(it.data_?.user) }
+                    .map { user ->
+                        account.apply {
+                            nameShow = user.nameShow
+                            portrait = user.portrait
                         }
                     }
+                    .catch {
+                        emit(account)
+                    }
             }
+            .onEach { account ->
+                account.saveOrUpdateAsync("uid = ?", account.uid)
+                    .listen {
+                        LitePal.findAllAsync<Account>()
+                            .listen {
+                                mutableAllAccountsState.value = it
+                            }
+                    }
+            }
+            .flowOn(Dispatchers.IO)
+    }
+
+    fun parseCookie(cookie: String): Map<String, String> {
+        return cookie
+            .split(";")
+            .map { it.split("=") }
+            .filter { it.size == 2 }
+            .associate { it.first() to it.last() }
     }
 
     @JvmStatic
     fun updateLoginInfo(cookie: String): Boolean {
-        val bdussSplit = cookie.split("BDUSS=")
-        val sTokenSplit = cookie.split("STOKEN=")
-        if (bdussSplit.size > 1 && sTokenSplit.size > 1) {
-            val bduss = bdussSplit[1].split(";")[0]
-            val sToken = sTokenSplit[1].split(";")[0]
+        val cookies = parseCookie(cookie).mapKeys { it.key.uppercase() }
+        val bduss = cookies["BDUSS"]
+        val sToken = cookies["STOKEN"]
+        if (bduss != null && sToken != null) {
             val account = getAccountInfoByBduss(bduss)
             account.apply {
                 this.sToken = sToken

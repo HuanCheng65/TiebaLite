@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+package tieba;
+
+option java_package = "com.huanchengfly.tieba.post.api.models.protos";
+
+message BirthdayInfo {
+  int64 birthday_time = 1;
+  uint32 birthday_show_status = 2;
+  string constellation = 3;
+  uint32 age = 4;
+}

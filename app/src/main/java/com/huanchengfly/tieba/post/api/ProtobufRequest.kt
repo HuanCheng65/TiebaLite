@@ -70,11 +70,13 @@ fun buildAppPosInfo(): AppPosInfo {
 fun buildCommonRequest(
     context: Context = App.INSTANCE,
     clientVersion: ClientVersion = ClientVersion.TIEBA_V11,
+    bduss: String? = null,
+    stoken: String? = null,
     tbs: String? = null,
 ): CommonRequest = when (clientVersion) {
     ClientVersion.TIEBA_V11 -> {
         CommonRequest(
-            BDUSS = AccountUtil.getBduss(),
+            BDUSS = bduss ?: AccountUtil.getBduss(),
             _client_id = ClientUtils.clientId ?: RetrofitTiebaApi.randomClientId,
             _client_type = 2,
             _client_version = clientVersion.version,
@@ -94,7 +96,7 @@ fun buildCommonRequest(
             oaid = OAID().toJson(),
             pversion = "1.0.3",
             sample_id = ClientUtils.sampleId,
-            stoken = AccountUtil.getSToken(),
+            stoken = stoken ?: AccountUtil.getSToken(),
         )
     }
 
