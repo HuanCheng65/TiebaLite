@@ -118,7 +118,7 @@ fun MoreSettingsPage(
                     },
                     key = "enable_new_ui",
                     title = stringResource(id = R.string.title_enable_new_ui),
-                    defaultChecked = false,
+                    defaultChecked = true,
                     summary = stringResource(id = R.string.summary_enable_new_ui),
                     onCheckedChange = {
                         App.INSTANCE.setIcon(it)
