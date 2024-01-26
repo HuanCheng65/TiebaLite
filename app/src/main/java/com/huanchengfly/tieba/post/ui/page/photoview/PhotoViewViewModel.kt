@@ -41,6 +41,17 @@ class PhotoViewViewModel :
                     .flatMapConcat { it.producePartialChange() },
             )
 
+        private fun List<PicPageBean.PicBean>.toPhotoViewItems(): List<PhotoViewItem> =
+            map {
+                PhotoViewItem(
+                    picId = it.img.original.id,
+                    originUrl = it.img.original.originalSrc,
+                    url = if (it.showOriginalBtn) it.img.original.bigCdnSrc else null,
+                    overallIndex = it.overAllIndex.toInt(),
+                    postId = it.postId?.toLongOrNull()
+                )
+            }
+
         private fun PhotoViewUiIntent.LoadPrev.producePartialChange(): Flow<PhotoViewPartialChange.LoadPrev> =
             TiebaApi.getInstance()
                 .picPageFlow(
@@ -54,14 +65,7 @@ class PhotoViewViewModel :
                     prev = true
                 )
                 .map<PicPageBean, PhotoViewPartialChange.LoadPrev> { picPageBean ->
-                    val items = picPageBean.picList.map {
-                        PhotoViewItem(
-                            picId = it.img.original.id,
-                            originUrl = it.img.original.originalSrc,
-                            url = if (it.showOriginalBtn) it.img.original.bigCdnSrc else null,
-                            overallIndex = it.overAllIndex.toInt()
-                        )
-                    }
+                    val items = picPageBean.picList.toPhotoViewItems()
                     val hasPrev = items.first().overallIndex > 1
                     PhotoViewPartialChange.LoadPrev.Success(
                         hasPrev = hasPrev,
@@ -87,14 +91,7 @@ class PhotoViewViewModel :
                     prev = false
                 )
                 .map<PicPageBean, PhotoViewPartialChange.LoadMore> { picPageBean ->
-                    val items = picPageBean.picList.map {
-                        PhotoViewItem(
-                            picId = it.img.original.id,
-                            originUrl = it.img.original.originalSrc,
-                            url = if (it.showOriginalBtn) it.img.original.bigCdnSrc else null,
-                            overallIndex = it.overAllIndex.toInt()
-                        )
-                    }
+                    val items = picPageBean.picList.toPhotoViewItems()
                     val hasNext = items.last().overallIndex < picPageBean.picAmount.toInt()
                     PhotoViewPartialChange.LoadMore.Success(
                         hasNext = hasNext,
@@ -115,7 +112,8 @@ class PhotoViewViewModel :
                                 picId = item.picId,
                                 originUrl = item.originUrl,
                                 url = if (item.showOriginBtn) item.url else null,
-                                overallIndex = index + 1
+                                overallIndex = index + 1,
+                                postId = item.postId
                             )
                         },
                         hasNext = false,
@@ -139,14 +137,7 @@ class PhotoViewViewModel :
                     )
                     .map<PicPageBean, PhotoViewPartialChange.Init> { picPageBean ->
                         val picAmount = picPageBean.picAmount.toInt()
-                        val fetchedItems = picPageBean.picList.map {
-                            PhotoViewItem(
-                                picId = it.img.original.id,
-                                originUrl = it.img.original.originalSrc,
-                                url = if (it.showOriginalBtn) it.img.original.bigCdnSrc else null,
-                                overallIndex = it.overAllIndex.toInt()
-                            )
-                        }
+                        val fetchedItems = picPageBean.picList.toPhotoViewItems()
                         val firstItemIndex = fetchedItems.first().overallIndex
                         val localItems =
                             if (data.data.picIndex == 1) emptyList() else data.picItems.subList(
@@ -157,7 +148,8 @@ class PhotoViewViewModel :
                                     picId = item.picId,
                                     originUrl = item.originUrl,
                                     url = if (item.showOriginBtn) item.url else null,
-                                    overallIndex = firstItemIndex - (data.data.picIndex - 1 - index)
+                                    overallIndex = firstItemIndex - (data.data.picIndex - 1 - index),
+                                    postId = item.postId
                                 )
                             }
                         val items = localItems + fetchedItems
@@ -324,5 +316,6 @@ data class PhotoViewItem(
     val picId: String,
     val originUrl: String,
     val url: String?,
-    val overallIndex: Int
+    val overallIndex: Int,
+    val postId: Long? = null,
 )

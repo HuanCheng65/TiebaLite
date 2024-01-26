@@ -27,6 +27,7 @@ import androidx.compose.material.icons.rounded.Download
 import androidx.compose.material.icons.rounded.Share
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
@@ -122,41 +123,25 @@ class PhotoViewActivity : BaseComposeActivityWithParcelable<PhotoViewData>() {
             viewModel.send(PhotoViewUiIntent.Init(data))
             viewModel.initialized = true
         }
-        val items by viewModel.uiState.collectPartialAsState(
-            prop1 = PhotoViewUiState::data,
-            initial = persistentListOf()
-        )
-        val initialIndex by viewModel.uiState.collectPartialAsState(
-            prop1 = PhotoViewUiState::initialIndex,
-            initial = 0
-        )
-        val totalAmount by viewModel.uiState.collectPartialAsState(
-            prop1 = PhotoViewUiState::totalAmount,
-            initial = 0
-        )
-        val hasPrev by viewModel.uiState.collectPartialAsState(
-            prop1 = PhotoViewUiState::hasPrev,
-            initial = false
-        )
-        val hasNext by viewModel.uiState.collectPartialAsState(
-            prop1 = PhotoViewUiState::hasNext,
-            initial = false
-        )
-        val loadPicPageData by viewModel.uiState.collectPartialAsState(
-            prop1 = PhotoViewUiState::loadPicPageData,
-            initial = null
-        )
-
-        val pageCount by remember { derivedStateOf { items.size } }
-
-        val pagerState = rememberPagerState(initialPage = initialIndex) { pageCount }
-
-        LaunchedEffect(initialIndex) {
-            if (pagerState.currentPage != initialIndex) pagerState.scrollToPage(initialIndex)
-        }
+        val uiState by viewModel.uiState.collectAsState()
+        val items by remember { derivedStateOf { uiState.data } }
+        val initialIndex by remember { derivedStateOf { uiState.initialIndex } }
+        val totalAmount by remember { derivedStateOf { uiState.totalAmount } }
+        val hasPrev by remember { derivedStateOf { uiState.hasPrev } }
+        val hasNext by remember { derivedStateOf { uiState.hasNext } }
+        val loadPicPageData by remember { derivedStateOf { uiState.loadPicPageData } }
+        val loaded by remember { derivedStateOf { uiState.data.isNotEmpty() } }
 
         Surface(color = Color.Black) {
-            if (items.isNotEmpty()) {
+            if (loaded) {
+                val pageCount by remember { derivedStateOf { items.size } }
+
+                val pagerState = rememberPagerState(initialPage = initialIndex) { pageCount }
+
+                LaunchedEffect(initialIndex) {
+                    if (pagerState.currentPage != initialIndex) pagerState.scrollToPage(initialIndex)
+                }
+
                 LaunchedEffect(pagerState.currentPage, pageCount, loadPicPageData) {
                     loadPicPageData?.let {
                         val item = items[pagerState.currentPage]
@@ -182,7 +167,7 @@ class PhotoViewActivity : BaseComposeActivityWithParcelable<PhotoViewData>() {
                 Box(modifier = Modifier.fillMaxSize()) {
                     HorizontalPager(
                         state = pagerState,
-                        key = { "${items[it].picId}_${items[it].overallIndex}" }
+                        key = { "${items[it].picId}_${items[it].postId}" }
                     ) {
                         val item = items[it]
                         ViewPhoto(

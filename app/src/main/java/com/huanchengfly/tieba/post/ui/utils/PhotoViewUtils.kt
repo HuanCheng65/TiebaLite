@@ -39,7 +39,8 @@ fun getPhotoViewData(
                 url = picUrl,
                 originUrl = originUrl,
                 showOriginBtn = showOriginBtn,
-                originSize = originSize
+                originSize = originSize,
+                postId = post.id
             )
         )
     )
@@ -85,7 +86,8 @@ fun getPhotoViewData(
                 url = mediaItem.bigPic,
                 originUrl = mediaItem.originPic,
                 showOriginBtn = mediaItem.showOriginalBtn == 1,
-                originSize = mediaItem.originSize
+                originSize = mediaItem.originSize,
+                postId = mediaItem.postId
             )
         }.toImmutableList(),
         index = index
