@@ -1,15 +1,9 @@
 package com.huanchengfly.tieba.post.ui.page.search.thread
 
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.lazy.LazyListState
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.LocalContentColor
-import androidx.compose.material.Text
 import androidx.compose.material.pullrefresh.PullRefreshIndicator
 import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
@@ -20,8 +14,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
-import com.huanchengfly.tieba.post.api.models.SearchThreadBean
 import com.huanchengfly.tieba.post.arch.collectPartialAsState
 import com.huanchengfly.tieba.post.arch.onGlobalEvent
 import com.huanchengfly.tieba.post.arch.pageViewModel
@@ -32,24 +24,12 @@ import com.huanchengfly.tieba.post.ui.page.destinations.ForumPageDestination
 import com.huanchengfly.tieba.post.ui.page.destinations.ThreadPageDestination
 import com.huanchengfly.tieba.post.ui.page.destinations.UserProfilePageDestination
 import com.huanchengfly.tieba.post.ui.page.search.SearchUiEvent
-import com.huanchengfly.tieba.post.ui.widgets.compose.Avatar
-import com.huanchengfly.tieba.post.ui.widgets.compose.Card
 import com.huanchengfly.tieba.post.ui.widgets.compose.ErrorScreen
-import com.huanchengfly.tieba.post.ui.widgets.compose.ForumInfoChip
 import com.huanchengfly.tieba.post.ui.widgets.compose.LazyLoad
 import com.huanchengfly.tieba.post.ui.widgets.compose.LoadMoreLayout
 import com.huanchengfly.tieba.post.ui.widgets.compose.LocalShouldLoad
-import com.huanchengfly.tieba.post.ui.widgets.compose.MyLazyColumn
-import com.huanchengfly.tieba.post.ui.widgets.compose.Sizes
-import com.huanchengfly.tieba.post.ui.widgets.compose.ThreadAgreeBtn
-import com.huanchengfly.tieba.post.ui.widgets.compose.ThreadContent
-import com.huanchengfly.tieba.post.ui.widgets.compose.ThreadReplyBtn
-import com.huanchengfly.tieba.post.ui.widgets.compose.ThreadShareBtn
-import com.huanchengfly.tieba.post.ui.widgets.compose.UserHeader
+import com.huanchengfly.tieba.post.ui.widgets.compose.SearchThreadList
 import com.huanchengfly.tieba.post.ui.widgets.compose.states.StateScreen
-import com.huanchengfly.tieba.post.utils.DateTimeUtils
-import com.huanchengfly.tieba.post.utils.StringUtil
-import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 
 @OptIn(ExperimentalMaterialApi::class)
@@ -59,7 +39,6 @@ fun SearchThreadPage(
     initialSortType: Int = SearchThreadSortType.SORT_TYPE_NEWEST,
     viewModel: SearchThreadViewModel = pageViewModel(),
 ) {
-    val context = LocalContext.current
     val navigator = LocalNavigator.current
     LazyLoad(loaded = viewModel.initialized) {
         viewModel.send(SearchThreadUiIntent.Refresh(keyword, initialSortType))
@@ -186,122 +165,4 @@ fun SearchThreadPage(
             }
         }
     }
-}
-
-@Composable
-private fun SearchThreadList(
-    data: ImmutableList<SearchThreadBean.ThreadInfoBean>,
-    lazyListState: LazyListState,
-    onItemClick: (SearchThreadBean.ThreadInfoBean) -> Unit,
-    onItemUserClick: (SearchThreadBean.UserInfoBean) -> Unit,
-    onItemForumClick: (SearchThreadBean.ForumInfo) -> Unit,
-    modifier: Modifier = Modifier,
-) {
-    MyLazyColumn(
-        state = lazyListState,
-        modifier = modifier
-    ) {
-        items(data) {
-            SearchThreadItem(
-                item = it,
-                onClick = onItemClick,
-                onUserClick = onItemUserClick,
-                onForumClick = onItemForumClick,
-            )
-        }
-    }
-}
-
-@Composable
-private fun SearchThreadUserHeader(
-    user: SearchThreadBean.UserInfoBean,
-    time: String,
-    onClick: () -> Unit,
-    modifier: Modifier = Modifier,
-) {
-    UserHeader(
-        avatar = {
-            Avatar(
-                data = StringUtil.getAvatarUrl(user.portrait),
-                size = Sizes.Small,
-                contentDescription = null
-            )
-        },
-        name = {
-            Text(
-                text = StringUtil.getUsernameAnnotatedString(
-                    LocalContext.current,
-                    user.userName.orEmpty(),
-                    user.showNickname,
-                    color = LocalContentColor.current
-                )
-            )
-        },
-        desc = {
-            Text(
-                text = DateTimeUtils.getRelativeTimeString(LocalContext.current, time)
-            )
-        },
-        onClick = onClick,
-        modifier = modifier
-    )
-}
-
-@Composable
-private fun SearchThreadItem(
-    item: SearchThreadBean.ThreadInfoBean,
-    onClick: (SearchThreadBean.ThreadInfoBean) -> Unit,
-    onUserClick: (SearchThreadBean.UserInfoBean) -> Unit,
-    onForumClick: (SearchThreadBean.ForumInfo) -> Unit,
-    modifier: Modifier = Modifier,
-) {
-    Card(
-        modifier = modifier,
-        header = {
-            SearchThreadUserHeader(
-                user = item.user,
-                time = item.time,
-                onClick = { onUserClick(item.user) }
-            )
-        },
-        content = {
-            ThreadContent(
-                title = item.title,
-                abstractText = item.content,
-                showTitle = item.title.isNotBlank(),
-                showAbstract = item.content.isNotBlank(),
-            )
-            if (item.forumName.isNotEmpty()) {
-                ForumInfoChip(
-                    imageUriProvider = { item.forumInfo.avatar },
-                    nameProvider = { item.forumName }
-                ) {
-                    onForumClick(item.forumInfo)
-                }
-            }
-        },
-        action = {
-            Row(modifier = Modifier.fillMaxWidth()) {
-                ThreadReplyBtn(
-                    replyNum = item.postNum.toInt(),
-                    onClick = {},
-                    modifier = Modifier.weight(1f)
-                )
-
-                ThreadAgreeBtn(
-                    hasAgree = false,
-                    agreeNum = item.likeNum.toInt(),
-                    onClick = {},
-                    modifier = Modifier.weight(1f)
-                )
-
-                ThreadShareBtn(
-                    shareNum = item.shareNum.toLong(),
-                    onClick = {},
-                    modifier = Modifier.weight(1f)
-                )
-            }
-        },
-        onClick = { onClick(item) },
-    )
 }
