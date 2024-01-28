@@ -1493,6 +1493,7 @@ private fun TopBar(
                 if (forum.get { name }.isNotBlank()) {
                     Row(
                         modifier = Modifier
+                            .padding(horizontal = 48.dp)
                             .height(IntrinsicSize.Min)
                             .clip(RoundedCornerShape(100))
                             .background(ExtendedTheme.colors.chip)
@@ -1512,7 +1513,9 @@ private fun TopBar(
                             text = stringResource(id = R.string.title_forum, it.get { name }),
                             fontSize = 14.sp,
                             color = ExtendedTheme.colors.text,
-                            modifier = Modifier.padding(horizontal = 8.dp)
+                            modifier = Modifier.padding(horizontal = 8.dp),
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis,
                         )
                     }
                 }
