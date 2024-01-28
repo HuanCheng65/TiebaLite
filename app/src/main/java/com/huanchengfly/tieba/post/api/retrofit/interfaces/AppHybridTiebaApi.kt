@@ -34,8 +34,11 @@ interface AppHybridTiebaApi {
         @Query("pn") page: Int,
         @Query("st") sort: Int,
         @Query("tt") filter: Int = 1,
+        @Query("rn") pageSize: Int? = null,
+        @Query("fname") forumName: String? = null,
         @Query("ct") ct: Int = 1,
-        @Query("cv") cv: String = "99.9.101",
+        @Query("is_use_zonghe") isUseZonghe: Int? = 1,
+        @Query("cv") clientVersion: String = "99.9.101",
         @Header("Referer") referer: String = "https://tieba.baidu.com/mo/q/hybrid/search?keyword=$keyword&_webview_time=${System.currentTimeMillis()}".urlEncode(),
     ): Flow<SearchThreadBean>
 

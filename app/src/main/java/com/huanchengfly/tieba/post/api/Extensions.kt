@@ -3,27 +3,12 @@ package com.huanchengfly.tieba.post.api
 import com.huanchengfly.tieba.post.api.retrofit.body.MyMultipartBody
 import okhttp3.FormBody
 import okio.Buffer
-import java.io.UnsupportedEncodingException
 import java.net.URLDecoder
 import java.net.URLEncoder
 
-fun String.urlEncode(): String {
-    return try {
-        URLEncoder.encode(this, "UTF-8")
-    } catch (e: UnsupportedEncodingException) {
-        e.printStackTrace()
-        this
-    }
-}
+fun String.urlEncode(): String = runCatching { URLEncoder.encode(this, "UTF-8") }.getOrDefault(this)
 
-fun String.urlDecode(): String {
-    return try {
-        URLDecoder.decode(this, "UTF-8")
-    } catch (e: UnsupportedEncodingException) {
-        e.printStackTrace()
-        this
-    }
-}
+fun String.urlDecode(): String = runCatching { URLDecoder.decode(this, "UTF-8") }.getOrDefault(this)
 
 fun FormBody.containsEncodedName(name: String): Boolean {
     repeat(size) {
@@ -49,7 +34,7 @@ fun FormBody.raw() =
     }.toString()
 
 fun FormBody.sortedEncodedRaw(separator: Boolean = true): String {
-    val nameAndValue = ArrayList<String>()
+    val nameAndValue = mutableListOf<String>()
     repeat(size) {
         nameAndValue.add("${encodedName(it)}=${encodedValue(it)}")
     }
@@ -58,7 +43,7 @@ fun FormBody.sortedEncodedRaw(separator: Boolean = true): String {
 }
 
 fun FormBody.sortedRaw(separator: Boolean = true): String {
-    val nameAndValue = ArrayList<String>()
+    val nameAndValue = mutableListOf<String>()
     repeat(size) {
         nameAndValue.add("${name(it)}=${value(it)}")
     }
@@ -116,7 +101,7 @@ fun MyMultipartBody.newBuilder(): MyMultipartBody.Builder =
 
 fun MyMultipartBody.sort(): MyMultipartBody {
     val builder = newBuilder()
-    var fileParts = mutableListOf<MyMultipartBody.Part>()
+    val fileParts = mutableListOf<MyMultipartBody.Part>()
     parts.forEach {
         if (it.fileName() != null) {
             fileParts.add(it)

@@ -118,6 +118,7 @@ import com.huanchengfly.tieba.post.models.MyInfoBean
 import com.huanchengfly.tieba.post.models.PhotoInfoBean
 import com.huanchengfly.tieba.post.toJson
 import com.huanchengfly.tieba.post.utils.AccountUtil
+import com.huanchengfly.tieba.post.utils.CuidUtils
 import com.huanchengfly.tieba.post.utils.ImageUtil
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.flow.Flow
@@ -669,6 +670,28 @@ object MixedTiebaApiImpl : ITiebaApi {
             keyword,
             page,
             sort
+        )
+
+    override fun searchPostFlow(
+        keyword: String,
+        forumName: String,
+        forumId: Long,
+        sortType: Int,
+        filterType: Int,
+        page: Int,
+        pageSize: Int,
+    ): Flow<SearchThreadBean> =
+        RetrofitTiebaApi.HYBRID_TIEBA_API.searchThreadFlow(
+            keyword,
+            page,
+            sortType,
+            filterType,
+            pageSize,
+            forumName,
+            ct = 2,
+            isUseZonghe = null,
+            clientVersion = ClientVersion.TIEBA_V12.version,
+            referer = "https://tieba.baidu.com/mo/q/hybrid-usergrow-search/searchGlobal?entryPage=frs&loadingSignal=1&forumName=${forumName.urlEncode()}&forumId=$forumId&customfullscreen=1&nonavigationbar=1&cuid=${CuidUtils.getNewCuid()}&cuid_galaxy2=${CuidUtils.getNewCuid()}&cuid_gid=&timestamp=${System.currentTimeMillis()}&_client_version=${ClientVersion.TIEBA_V12.version}&_client_type=2"
         )
 
     override fun webUploadPic(photoInfoBean: PhotoInfoBean): Call<WebUploadPicBean> {
