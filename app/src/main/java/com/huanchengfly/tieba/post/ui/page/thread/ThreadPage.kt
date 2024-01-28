@@ -44,9 +44,10 @@ import androidx.compose.material.SnackbarResult
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.ChromeReaderMode
+import androidx.compose.material.icons.automirrored.outlined.ChromeReaderMode
+import androidx.compose.material.icons.automirrored.rounded.ChromeReaderMode
+import androidx.compose.material.icons.automirrored.rounded.Sort
 import androidx.compose.material.icons.rounded.AlignVerticalTop
-import androidx.compose.material.icons.rounded.ChromeReaderMode
 import androidx.compose.material.icons.rounded.ContentCopy
 import androidx.compose.material.icons.rounded.Delete
 import androidx.compose.material.icons.rounded.Face6
@@ -57,7 +58,6 @@ import androidx.compose.material.icons.rounded.MoreVert
 import androidx.compose.material.icons.rounded.Report
 import androidx.compose.material.icons.rounded.RocketLaunch
 import androidx.compose.material.icons.rounded.Share
-import androidx.compose.material.icons.rounded.Sort
 import androidx.compose.material.icons.rounded.Star
 import androidx.compose.material.icons.rounded.StarBorder
 import androidx.compose.material.pullrefresh.PullRefreshIndicator
@@ -1315,55 +1315,60 @@ fun ThreadPage(
                                                 modifier = Modifier.padding(horizontal = 8.dp),
                                             )
                                             Spacer(modifier = Modifier.weight(1f))
-                                            Text(
-                                                text = stringResource(R.string.text_all),
-                                                modifier = Modifier
-                                                    .padding(horizontal = 8.dp)
-                                                    .clickable(
-                                                        interactionSource = remember { MutableInteractionSource() },
-                                                        indication = null,
-                                                        enabled = isSeeLz
-                                                    ) {
-                                                        if (isSeeLz) {
-                                                            viewModel.send(
-                                                                ThreadUiIntent.LoadFirstPage(
-                                                                    threadId = threadId,
-                                                                    forumId = forumId,
-                                                                    seeLz = false,
-                                                                    sortType = curSortType
+                                            Row(
+                                                verticalAlignment = Alignment.CenterVertically,
+                                                modifier = Modifier.height(IntrinsicSize.Min)
+                                            ) {
+                                                Text(
+                                                    text = stringResource(R.string.text_all),
+                                                    modifier = Modifier
+                                                        .padding(horizontal = 8.dp)
+                                                        .clickable(
+                                                            interactionSource = remember { MutableInteractionSource() },
+                                                            indication = null,
+                                                            enabled = isSeeLz
+                                                        ) {
+                                                            if (isSeeLz) {
+                                                                viewModel.send(
+                                                                    ThreadUiIntent.LoadFirstPage(
+                                                                        threadId = threadId,
+                                                                        forumId = forumId,
+                                                                        seeLz = false,
+                                                                        sortType = curSortType
+                                                                    )
                                                                 )
-                                                            )
-                                                        }
-                                                    },
-                                                fontSize = 13.sp,
-                                                fontWeight = if (!isSeeLz) FontWeight.SemiBold else FontWeight.Normal,
-                                                color = if (!isSeeLz) ExtendedTheme.colors.text else ExtendedTheme.colors.textSecondary,
-                                            )
-                                            HorizontalDivider()
-                                            Text(
-                                                text = stringResource(R.string.title_see_lz),
-                                                modifier = Modifier
-                                                    .padding(horizontal = 8.dp)
-                                                    .clickable(
-                                                        interactionSource = remember { MutableInteractionSource() },
-                                                        indication = null,
-                                                        enabled = !isSeeLz
-                                                    ) {
-                                                        if (!isSeeLz) {
-                                                            viewModel.send(
-                                                                ThreadUiIntent.LoadFirstPage(
-                                                                    threadId = threadId,
-                                                                    forumId = forumId,
-                                                                    seeLz = true,
-                                                                    sortType = curSortType
+                                                            }
+                                                        },
+                                                    fontSize = 13.sp,
+                                                    fontWeight = if (!isSeeLz) FontWeight.SemiBold else FontWeight.Normal,
+                                                    color = if (!isSeeLz) ExtendedTheme.colors.text else ExtendedTheme.colors.textSecondary,
+                                                )
+                                                HorizontalDivider()
+                                                Text(
+                                                    text = stringResource(R.string.title_see_lz),
+                                                    modifier = Modifier
+                                                        .padding(horizontal = 8.dp)
+                                                        .clickable(
+                                                            interactionSource = remember { MutableInteractionSource() },
+                                                            indication = null,
+                                                            enabled = !isSeeLz
+                                                        ) {
+                                                            if (!isSeeLz) {
+                                                                viewModel.send(
+                                                                    ThreadUiIntent.LoadFirstPage(
+                                                                        threadId = threadId,
+                                                                        forumId = forumId,
+                                                                        seeLz = true,
+                                                                        sortType = curSortType
+                                                                    )
                                                                 )
-                                                            )
-                                                        }
-                                                    },
-                                                fontSize = 13.sp,
-                                                fontWeight = if (isSeeLz) FontWeight.SemiBold else FontWeight.Normal,
-                                                color = if (isSeeLz) ExtendedTheme.colors.text else ExtendedTheme.colors.textSecondary,
-                                            )
+                                                            }
+                                                        },
+                                                    fontSize = 13.sp,
+                                                    fontWeight = if (isSeeLz) FontWeight.SemiBold else FontWeight.Normal,
+                                                    color = if (isSeeLz) ExtendedTheme.colors.text else ExtendedTheme.colors.textSecondary,
+                                                )
+                                            }
                                         }
                                     }
                                 }
@@ -2062,7 +2067,7 @@ private fun ThreadMenu(
                     onClick = onImmersiveModeClick,
                     icon = {
                         Icon(
-                            imageVector = if (isImmersiveMode) Icons.Rounded.ChromeReaderMode else Icons.Outlined.ChromeReaderMode,
+                            imageVector = if (isImmersiveMode) Icons.AutoMirrored.Rounded.ChromeReaderMode else Icons.AutoMirrored.Outlined.ChromeReaderMode,
                             contentDescription = null
                         )
                     },
@@ -2083,7 +2088,7 @@ private fun ThreadMenu(
                     onClick = onDescClick,
                     icon = {
                         Icon(
-                            imageVector = Icons.Rounded.Sort,
+                            imageVector = Icons.AutoMirrored.Rounded.Sort,
                             contentDescription = null
                         )
                     },
