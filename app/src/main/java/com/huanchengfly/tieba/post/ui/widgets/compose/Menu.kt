@@ -52,13 +52,13 @@ fun ClickMenu(
     modifier: Modifier = Modifier,
     menuState: MenuState = rememberMenuState(),
     menuShape: Shape = RoundedCornerShape(14.dp),
+    interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
+    indication: Indication? = LocalIndication.current,
     triggerShape: Shape? = null,
     onDismiss: (() -> Unit)? = null,
     content: @Composable () -> Unit,
 ) {
     val menuScope = MenuScope(menuState, onDismiss)
-    val interactionSource = remember { MutableInteractionSource() }
-    val indication = LocalIndication.current
     LaunchedEffect(key1 = null) {
         launch {
             interactionSource.interactions

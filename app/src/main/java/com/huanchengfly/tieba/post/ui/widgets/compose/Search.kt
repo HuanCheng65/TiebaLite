@@ -1,10 +1,12 @@
 package com.huanchengfly.tieba.post.ui.widgets.compose
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -17,6 +19,7 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.Icon
 import androidx.compose.material.LocalContentColor
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
@@ -40,15 +43,91 @@ import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.huanchengfly.tieba.post.R
 import com.huanchengfly.tieba.post.api.models.SearchThreadBean
+import com.huanchengfly.tieba.post.ui.common.PbContentText
 import com.huanchengfly.tieba.post.ui.common.theme.compose.ExtendedTheme
 import com.huanchengfly.tieba.post.utils.DateTimeUtils
 import com.huanchengfly.tieba.post.utils.StringUtil
+import com.huanchengfly.tieba.post.utils.StringUtil.buildAnnotatedStringWithUser
 import kotlinx.collections.immutable.ImmutableList
+
+@Composable
+fun QuotePostCard(
+    quotePostInfo: SearchThreadBean.PostInfo,
+    mainPost: SearchThreadBean.MainPost,
+    modifier: Modifier = Modifier,
+) {
+    val quoteContentString = remember(quotePostInfo) {
+        buildAnnotatedStringWithUser(
+            quotePostInfo.user.userId,
+            quotePostInfo.user.userName ?: "",
+            quotePostInfo.user.showNickname,
+            quotePostInfo.content
+        )
+    }
+    Column(
+        modifier = modifier.padding(16.dp),
+        verticalArrangement = Arrangement.spacedBy(8.dp)
+    ) {
+        PbContentText(
+            text = quoteContentString,
+            style = MaterialTheme.typography.body2,
+            modifier = modifier,
+            maxLines = 2,
+            overflow = TextOverflow.Ellipsis,
+        )
+        MainPostCard(
+            mainPost = mainPost,
+            modifier = Modifier
+                .fillMaxWidth()
+                .clip(RoundedCornerShape(6.dp))
+                .background(ExtendedTheme.colors.card)
+        )
+    }
+}
+
+@Composable
+fun MainPostCard(
+    mainPost: SearchThreadBean.MainPost,
+    modifier: Modifier = Modifier,
+) {
+    val titleString = remember(mainPost) {
+        buildAnnotatedStringWithUser(
+            mainPost.user.userId,
+            mainPost.user.userName ?: "",
+            mainPost.user.showNickname,
+            mainPost.title
+        )
+    }
+    Column(
+        modifier = modifier.padding(16.dp),
+        verticalArrangement = Arrangement.spacedBy(4.dp)
+    ) {
+        PbContentText(
+            text = titleString,
+            style = MaterialTheme.typography.subtitle2,
+            fontWeight = FontWeight.Bold,
+            modifier = modifier,
+            maxLines = 2,
+            overflow = TextOverflow.Ellipsis,
+        )
+        if (mainPost.content.isNotBlank()) {
+            PbContentText(
+                text = mainPost.content,
+                style = MaterialTheme.typography.body2,
+                modifier = modifier,
+                maxLines = 2,
+                overflow = TextOverflow.Ellipsis,
+            )
+        }
+    }
+}
 
 @Composable
 fun SearchThreadList(
@@ -138,9 +217,29 @@ fun SearchThreadItem(
             ThreadContent(
                 title = item.title,
                 abstractText = item.content,
-                showTitle = item.title.isNotBlank(),
+                showTitle = item.mainPost == null && item.title.isNotBlank(),
                 showAbstract = item.content.isNotBlank(),
             )
+            if (item.mainPost != null) {
+                if (item.postInfo != null) {
+                    QuotePostCard(
+                        quotePostInfo = item.postInfo,
+                        mainPost = item.mainPost,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clip(RoundedCornerShape(6.dp))
+                            .background(ExtendedTheme.colors.floorCard)
+                    )
+                } else {
+                    MainPostCard(
+                        mainPost = item.mainPost,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clip(RoundedCornerShape(6.dp))
+                            .background(ExtendedTheme.colors.floorCard)
+                    )
+                }
+            }
             if (!hideForum && item.forumName.isNotEmpty()) {
                 ForumInfoChip(
                     imageUriProvider = { item.forumInfo.avatar },
@@ -198,7 +297,7 @@ fun SearchBox(
         shape = shape,
         color = color,
         contentColor = contentColor,
-        elevation = 0.dp
+        elevation = elevation
     ) {
         Row(
             modifier = Modifier.padding(horizontal = 16.dp),

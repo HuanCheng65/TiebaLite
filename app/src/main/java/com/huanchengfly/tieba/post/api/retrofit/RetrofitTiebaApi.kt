@@ -339,6 +339,7 @@ object RetrofitTiebaApi {
     }
 
     private val json = Json {
+        isLenient = true
         ignoreUnknownKeys = true
         coerceInputValues = true
     }

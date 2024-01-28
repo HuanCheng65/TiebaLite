@@ -224,6 +224,52 @@ data class VideoContentRender(
 
 @Composable
 fun PbContentText(
+    text: String,
+    modifier: Modifier = Modifier,
+    color: Color = Color.Unspecified,
+    fontSize: TextUnit = TextUnit.Unspecified,
+    fontStyle: FontStyle? = null,
+    fontWeight: FontWeight? = null,
+    fontFamily: FontFamily? = null,
+    letterSpacing: TextUnit = TextUnit.Unspecified,
+    textDecoration: TextDecoration? = null,
+    textAlign: TextAlign? = null,
+    lineHeight: TextUnit = TextUnit.Unspecified,
+    lineSpacing: TextUnit = 0.sp,
+    overflow: TextOverflow = TextOverflow.Clip,
+    softWrap: Boolean = true,
+    maxLines: Int = Int.MAX_VALUE,
+    minLines: Int = 1,
+    emoticonSize: Float = 0.9f,
+    onTextLayout: (TextLayoutResult) -> Unit = {},
+    style: TextStyle = LocalTextStyle.current,
+) {
+    PbContentText(
+        text = AnnotatedString(text),
+        modifier = modifier,
+        color = color,
+        fontSize = fontSize,
+        fontStyle = fontStyle,
+        fontWeight = fontWeight,
+        fontFamily = fontFamily,
+        letterSpacing = letterSpacing,
+        textDecoration = textDecoration,
+        textAlign = textAlign,
+        lineHeight = lineHeight,
+        lineSpacing = lineSpacing,
+        overflow = overflow,
+        softWrap = softWrap,
+        maxLines = maxLines,
+        minLines = minLines,
+        emoticonSize = emoticonSize,
+        inlineContent = emptyMap(),
+        onTextLayout = onTextLayout,
+        style = style
+    )
+}
+
+@Composable
+fun PbContentText(
     text: AnnotatedString,
     modifier: Modifier = Modifier,
     color: Color = Color.Unspecified,
