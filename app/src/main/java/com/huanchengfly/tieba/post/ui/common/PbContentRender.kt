@@ -302,9 +302,9 @@ fun PbContentText(
             awaitEachGesture {
                 val change = awaitFirstDown()
                 val annotation =
-                    layoutResult.value?.getOffsetForPosition(change.position)?.let {
-                        text.getStringAnnotations(start = it, end = it)
-                            .firstOrNull()
+                    layoutResult.value?.getOffsetForPosition(change.position)?.let { offset ->
+                        text.getStringAnnotations(start = offset, end = offset)
+                            .firstOrNull { it.tag == "url" || it.tag == "user" }
                     }
                 if (annotation != null) {
                     if (change.pressed != change.previousPressed) change.consume()

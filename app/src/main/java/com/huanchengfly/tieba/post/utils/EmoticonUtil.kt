@@ -146,6 +146,7 @@ object EmoticonUtil {
             }
         }
 
+    @OptIn(ExperimentalTextApi::class)
     val AnnotatedString.emoticonString: AnnotatedString
         get() {
             if (hasStringAnnotations("Emoticon", 0, length)) {
@@ -154,7 +155,9 @@ object EmoticonUtil {
             val regexPattern = Pattern.compile(getRegex(EMOTICON_ALL_TYPE))
             val matcher = regexPattern.matcher(this.text)
             return buildAnnotatedString {
-                append(this@emoticonString)
+                withAnnotation("Emoticon", "true") {
+                    append(this@emoticonString)
+                }
                 while (matcher.find()) {
                     val start = matcher.start()
                     val end = matcher.end()
