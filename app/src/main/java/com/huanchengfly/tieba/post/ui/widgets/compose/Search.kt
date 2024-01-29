@@ -71,6 +71,7 @@ import kotlin.math.min
 fun QuotePostCard(
     quotePostInfo: SearchThreadBean.PostInfo,
     mainPost: SearchThreadBean.MainPost,
+    onMainPostClick: (SearchThreadBean.MainPost) -> Unit,
     modifier: Modifier = Modifier,
     medias: ImmutableList<SearchThreadBean.MediaInfo> = persistentListOf(),
     keyword: String? = null,
@@ -99,7 +100,10 @@ fun QuotePostCard(
             modifier = Modifier
                 .fillMaxWidth()
                 .clip(RoundedCornerShape(6.dp))
-                .background(ExtendedTheme.colors.card),
+                .background(ExtendedTheme.colors.card)
+                .clickable {
+                    onMainPostClick(mainPost)
+                },
             medias = medias,
             keyword = keyword
         )
@@ -252,6 +256,7 @@ fun SearchThreadItem(
                     QuotePostCard(
                         quotePostInfo = item.postInfo,
                         mainPost = item.mainPost,
+                        onMainPostClick = onMainPostClick,
                         modifier = Modifier
                             .fillMaxWidth()
                             .clip(RoundedCornerShape(6.dp))
