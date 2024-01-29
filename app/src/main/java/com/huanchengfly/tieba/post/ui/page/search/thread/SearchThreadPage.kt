@@ -153,6 +153,7 @@ fun SearchThreadPage(
                             )
                         )
                     },
+                    searchKeyword = keyword,
                 )
 
                 PullRefreshIndicator(

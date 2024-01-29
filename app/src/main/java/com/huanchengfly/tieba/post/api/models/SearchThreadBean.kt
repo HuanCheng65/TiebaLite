@@ -35,7 +35,7 @@ data class SearchThreadBean(
     data class ThreadInfoBean(
         val tid: String,
         val pid: String,
-        val cid: String,
+        val cid: String = "0",
         val title: String,
         val content: String,
         val time: String,

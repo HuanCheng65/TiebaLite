@@ -271,6 +271,7 @@ fun ThreadContent(
     showAbstract: Boolean = true,
     isGood: Boolean = false,
     maxLines: Int = 5,
+    highlightKeywords: ImmutableList<String> = persistentListOf(),
 ) {
     val content = buildAnnotatedString {
         if (showTitle) {
@@ -298,7 +299,7 @@ fun ThreadContent(
         }
     }
 
-    EmoticonText(
+    HighlightText(
         text = content,
         modifier = Modifier
             .fillMaxWidth()
@@ -308,6 +309,7 @@ fun ThreadContent(
         overflow = TextOverflow.Ellipsis,
         maxLines = maxLines,
         style = MaterialTheme.typography.body1,
+        highlightKeywords = highlightKeywords
     )
 }
 

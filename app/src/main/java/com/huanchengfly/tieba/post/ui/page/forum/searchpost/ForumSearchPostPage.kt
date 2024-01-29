@@ -326,6 +326,7 @@ fun ForumSearchPostPage(
                                         )
                                     },
                                     hideForum = true,
+                                    searchKeyword = currentKeyword,
                                 ) {
                                     stickyHeader(key = "Sort&Filter") {
                                         Row(

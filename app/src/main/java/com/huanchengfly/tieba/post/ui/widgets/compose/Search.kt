@@ -71,6 +71,7 @@ fun QuotePostCard(
     quotePostInfo: SearchThreadBean.PostInfo,
     mainPost: SearchThreadBean.MainPost,
     modifier: Modifier = Modifier,
+    keyword: String? = null,
 ) {
     val quoteContentString = remember(quotePostInfo) {
         buildAnnotatedStringWithUser(
@@ -84,13 +85,15 @@ fun QuotePostCard(
         modifier = modifier.padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
-        PbContentText(
+        HighlightText(
             text = quoteContentString,
             style = MaterialTheme.typography.body2,
             maxLines = 2,
             overflow = TextOverflow.Ellipsis,
+            highlightKeywords = (keyword?.split(" ") ?: emptyList()).toImmutableList()
         )
         MainPostCard(
+            keyword = keyword,
             mainPost = mainPost,
             modifier = Modifier
                 .fillMaxWidth()
@@ -104,6 +107,7 @@ fun QuotePostCard(
 fun MainPostCard(
     mainPost: SearchThreadBean.MainPost,
     modifier: Modifier = Modifier,
+    keyword: String? = null,
 ) {
     val titleString = remember(mainPost) {
         buildAnnotatedStringWithUser(
@@ -117,12 +121,13 @@ fun MainPostCard(
         modifier = modifier.padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(4.dp)
     ) {
-        PbContentText(
+        HighlightText(
             text = titleString,
             style = MaterialTheme.typography.subtitle2,
             fontWeight = FontWeight.Bold,
             maxLines = 2,
             overflow = TextOverflow.Ellipsis,
+            highlightKeywords = (keyword?.split(" ") ?: emptyList()).toImmutableList()
         )
         if (mainPost.content.isNotBlank()) {
             PbContentText(
@@ -146,6 +151,7 @@ fun SearchThreadList(
     onQuotePostClick: (SearchThreadBean.PostInfo) -> Unit = {},
     onMainPostClick: (SearchThreadBean.MainPost) -> Unit = {},
     hideForum: Boolean = false,
+    searchKeyword: String? = null,
     header: LazyListScope.() -> Unit = {},
 ) {
     MyLazyColumn(
@@ -162,9 +168,10 @@ fun SearchThreadList(
                 onClick = onItemClick,
                 onUserClick = onItemUserClick,
                 onForumClick = onItemForumClick,
-                hideForum = hideForum,
                 onQuotePostClick = onQuotePostClick,
                 onMainPostClick = onMainPostClick,
+                hideForum = hideForum,
+                searchKeyword = searchKeyword
             )
         }
     }
@@ -215,6 +222,7 @@ fun SearchThreadItem(
     onQuotePostClick: (SearchThreadBean.PostInfo) -> Unit = {},
     onMainPostClick: (SearchThreadBean.MainPost) -> Unit = {},
     hideForum: Boolean = false,
+    searchKeyword: String? = null,
 ) {
     Card(
         modifier = modifier,
@@ -232,8 +240,8 @@ fun SearchThreadItem(
                 showTitle = item.mainPost == null && item.title.isNotBlank(),
                 showAbstract = item.content.isNotBlank(),
                 maxLines = 2,
+                highlightKeywords = (searchKeyword?.split(" ") ?: emptyList()).toImmutableList(),
             )
-            SearchMedia(medias = item.media.toImmutableList())
             if (item.mainPost != null) {
                 if (item.postInfo != null) {
                     QuotePostCard(
@@ -245,7 +253,8 @@ fun SearchThreadItem(
                             .background(ExtendedTheme.colors.floorCard)
                             .clickable {
                                 onQuotePostClick(item.postInfo)
-                            }
+                            },
+                        keyword = searchKeyword
                     )
                 } else {
                     MainPostCard(
@@ -256,9 +265,12 @@ fun SearchThreadItem(
                             .background(ExtendedTheme.colors.floorCard)
                             .clickable {
                                 onMainPostClick(item.mainPost)
-                            }
+                            },
+                        keyword = searchKeyword
                     )
                 }
+            } else {
+                SearchMedia(medias = item.media.toImmutableList())
             }
             if (!hideForum && item.forumName.isNotEmpty()) {
                 ForumInfoChip(
