@@ -1,27 +1,38 @@
 package com.huanchengfly.tieba.post.ui.page.forum.searchpost
 
+import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.ContentAlpha
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Icon
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.ArrowBack
 import androidx.compose.material.icons.rounded.ArrowDropDown
+import androidx.compose.material.icons.rounded.ExpandLess
+import androidx.compose.material.icons.rounded.ExpandMore
 import androidx.compose.material.pullrefresh.PullRefreshIndicator
 import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
@@ -38,6 +49,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
@@ -45,9 +57,11 @@ import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.util.fastForEach
 import com.huanchengfly.tieba.post.R
 import com.huanchengfly.tieba.post.arch.collectPartialAsState
 import com.huanchengfly.tieba.post.arch.pageViewModel
+import com.huanchengfly.tieba.post.models.database.SearchPostHistory
 import com.huanchengfly.tieba.post.ui.common.theme.compose.ExtendedTheme
 import com.huanchengfly.tieba.post.ui.common.theme.compose.pullRefreshIndicator
 import com.huanchengfly.tieba.post.ui.page.ProvideNavigator
@@ -55,6 +69,7 @@ import com.huanchengfly.tieba.post.ui.page.destinations.ForumPageDestination
 import com.huanchengfly.tieba.post.ui.page.destinations.SubPostsPageDestination
 import com.huanchengfly.tieba.post.ui.page.destinations.ThreadPageDestination
 import com.huanchengfly.tieba.post.ui.page.destinations.UserProfilePageDestination
+import com.huanchengfly.tieba.post.ui.widgets.compose.Button
 import com.huanchengfly.tieba.post.ui.widgets.compose.ClickMenu
 import com.huanchengfly.tieba.post.ui.widgets.compose.ErrorScreen
 import com.huanchengfly.tieba.post.ui.widgets.compose.HorizontalDivider
@@ -68,8 +83,120 @@ import com.huanchengfly.tieba.post.ui.widgets.compose.rememberMenuState
 import com.huanchengfly.tieba.post.ui.widgets.compose.states.StateScreen
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
+import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
+
+@OptIn(ExperimentalLayoutApi::class, ExperimentalFoundationApi::class)
+@Composable
+private fun SearchHistoryList(
+    searchHistories: ImmutableList<SearchPostHistory>,
+    onSearchHistoryClick: (SearchPostHistory) -> Unit,
+    expanded: Boolean = false,
+    onToggleExpand: () -> Unit = {},
+    onDelete: (SearchPostHistory) -> Unit = {},
+    onClear: () -> Unit = {},
+) {
+    val hasItem = remember(searchHistories) {
+        searchHistories.isNotEmpty()
+    }
+    val hasMore = remember(searchHistories) {
+        searchHistories.size > 6
+    }
+    val showItem = remember(expanded, hasMore, searchHistories) {
+        if (!expanded && hasMore) searchHistories.take(6) else searchHistories
+    }
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+    ) {
+        Row(
+            modifier = Modifier
+                .padding(horizontal = 16.dp, vertical = 16.dp),
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            Text(
+                text = stringResource(id = R.string.title_search_history),
+                modifier = Modifier
+                    .weight(1f),
+                style = MaterialTheme.typography.subtitle1
+            )
+            if (hasItem) {
+                Text(
+                    text = stringResource(id = R.string.button_clear_all),
+                    modifier = Modifier.clickable(onClick = onClear),
+                    style = MaterialTheme.typography.button
+                )
+            }
+        }
+        FlowRow(
+            modifier = Modifier
+                .padding(horizontal = 16.dp)
+                .animateContentSize(),
+            horizontalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            showItem.fastForEach { searchHistory ->
+                Box(
+                    modifier = Modifier
+                        .padding(bottom = 8.dp)
+                        .clip(RoundedCornerShape(100))
+                        .combinedClickable(
+                            onClick = { onSearchHistoryClick(searchHistory) },
+                            onLongClick = { onDelete(searchHistory) }
+                        )
+                        .background(ExtendedTheme.colors.chip)
+                        .padding(horizontal = 16.dp, vertical = 8.dp)
+                ) {
+                    Text(
+                        text = searchHistory.content
+                    )
+                }
+            }
+        }
+        if (hasMore) {
+            Button(
+                onClick = onToggleExpand,
+                modifier = Modifier.fillMaxWidth(),
+                colors = ButtonDefaults.textButtonColors(
+                    backgroundColor = Color.Transparent,
+                    contentColor = ExtendedTheme.colors.text
+                )
+            ) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    Icon(
+                        imageVector = if (expanded) Icons.Rounded.ExpandLess else Icons.Rounded.ExpandMore,
+                        contentDescription = null,
+                        modifier = Modifier.size(16.dp)
+                    )
+                    Text(
+                        text = stringResource(
+                            id = if (expanded) R.string.button_expand_less_history else R.string.button_expand_more_history
+                        ),
+                        style = MaterialTheme.typography.button,
+                        fontWeight = FontWeight.Bold
+                    )
+                }
+            }
+        }
+        if (!hasItem) {
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp),
+                contentAlignment = Alignment.Center
+            ) {
+                Text(
+                    text = stringResource(id = R.string.tip_empty),
+                    color = ExtendedTheme.colors.textDisabled,
+                    fontSize = 16.sp
+                )
+            }
+        }
+    }
+}
 
 @OptIn(ExperimentalMaterialApi::class, ExperimentalFoundationApi::class)
 @Destination
@@ -78,7 +205,9 @@ fun ForumSearchPostPage(
     forumName: String,
     forumId: Long,
     navigator: DestinationsNavigator,
-    viewModel: ForumSearchPostViewModel = pageViewModel(),
+    viewModel: ForumSearchPostViewModel = pageViewModel<ForumSearchPostUiIntent, ForumSearchPostViewModel>(
+        listOf(ForumSearchPostUiIntent.Init)
+    ),
 ) {
     val context = LocalContext.current
     val currentKeyword by viewModel.uiState.collectPartialAsState(
@@ -117,6 +246,11 @@ fun ForumSearchPostPage(
         prop1 = ForumSearchPostUiState::hasMore,
         initial = true
     )
+    val searchHistories by viewModel.uiState.collectPartialAsState(
+        prop1 = ForumSearchPostUiState::searchHistories,
+        initial = persistentListOf()
+    )
+
     val isEmpty by remember {
         derivedStateOf { data.isEmpty() }
     }
@@ -453,6 +587,27 @@ fun ForumSearchPostPage(
                             )
                         }
                     }
+                } else {
+                    SearchHistoryList(
+                        searchHistories = searchHistories,
+                        onSearchHistoryClick = {
+                            viewModel.send(
+                                ForumSearchPostUiIntent.Refresh(
+                                    it.content,
+                                    forumName,
+                                    forumId,
+                                    currentSortType,
+                                    currentFilterType
+                                )
+                            )
+                        },
+                        onDelete = {
+                            viewModel.send(ForumSearchPostUiIntent.DeleteHistory(it.id))
+                        },
+                        onClear = {
+                            viewModel.send(ForumSearchPostUiIntent.ClearHistory)
+                        }
+                    )
                 }
             }
         }

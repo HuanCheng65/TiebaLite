@@ -75,9 +75,9 @@ class SearchPostActivity : BaseActivity() {
             } else {
                 State.SEARCH
             }
-            if (value != null) {
+            if (value != null && forumName != null) {
                 refreshLayout.autoRefresh()
-                SearchPostHistory(value, forumName)
+                SearchPostHistory(value, forumName!!)
                     .saveOrUpdate("content = ?", value)
             }
         }
@@ -170,7 +170,7 @@ class SearchPostActivity : BaseActivity() {
             state = State.INPUT
             editText.showSoftInput()
         } else {
-            finish()
+            super.onBackPressed()
         }
     }
 

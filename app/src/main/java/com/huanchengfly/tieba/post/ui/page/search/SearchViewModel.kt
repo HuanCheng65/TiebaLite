@@ -104,16 +104,15 @@ class SearchViewModel :
             }.flowOn(Dispatchers.IO)
 
         private fun SearchUiIntent.SubmitKeyword.producePartialChange() =
-            flowOf(SearchPartialChange.SubmitKeyword(keyword.trim()))
+            flowOf(keyword.trim())
                 .onEach {
-                    runCatching {
-                        val trimKeyword = keyword.trim()
-                        if (trimKeyword.isNotBlank()) SearchHistory(trimKeyword).saveOrUpdate(
-                            "content = ?",
-                            trimKeyword
-                        )
+                    if (it.isNotBlank()) {
+                        runCatching {
+                            SearchHistory(it).saveOrUpdate("content = ?", it)
+                        }
                     }
                 }
+                .map { SearchPartialChange.SubmitKeyword(it) }
 
         private fun SearchUiIntent.KeywordInputChanged.producePartialChange() =
             if (keyword.isNotBlank()) {
