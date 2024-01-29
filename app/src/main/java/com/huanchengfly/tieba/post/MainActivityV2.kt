@@ -99,6 +99,8 @@ import com.huanchengfly.tieba.post.utils.PickMediasRequest
 import com.huanchengfly.tieba.post.utils.QuickPreviewUtil
 import com.huanchengfly.tieba.post.utils.ThemeUtil
 import com.huanchengfly.tieba.post.utils.TiebaUtil
+import com.huanchengfly.tieba.post.utils.compose.LaunchActivityForResult
+import com.huanchengfly.tieba.post.utils.compose.LaunchActivityRequest
 import com.huanchengfly.tieba.post.utils.isIgnoringBatteryOptimizations
 import com.huanchengfly.tieba.post.utils.launchUrl
 import com.huanchengfly.tieba.post.utils.newIntentFilter
@@ -159,6 +161,12 @@ class MainActivityV2 : BaseComposeActivity() {
         registerPickMediasLauncher {
             emitGlobalEvent(GlobalEvent.SelectedImages(it.id, it.uris))
         }
+
+    private val mLaunchActivityForResultLauncher = registerForActivityResult(
+        LaunchActivityForResult()
+    ) {
+        emitGlobalEvent(GlobalEvent.ActivityResult(it.requesterId, it.resultCode, it.intent))
+    }
 
     private val devicePostureFlow: StateFlow<DevicePosture> by lazy {
         WindowInfoTracker.getOrCreate(this)
@@ -388,6 +396,14 @@ class MainActivityV2 : BaseComposeActivity() {
         onGlobalEvent<GlobalEvent.StartSelectImages> {
             pickMediasLauncher.launch(
                 PickMediasRequest(it.id, it.maxCount, it.mediaType)
+            )
+        }
+        onGlobalEvent<GlobalEvent.StartActivityForResult> {
+            mLaunchActivityForResultLauncher.launch(
+                LaunchActivityRequest(
+                    it.requesterId,
+                    it.intent
+                )
             )
         }
         TiebaLiteLocalProvider {

@@ -200,8 +200,8 @@ object AccountUtil {
         return cookie
             .split(";")
             .map { it.split("=") }
-            .filter { it.size == 2 }
-            .associate { it.first() to it.last() }
+            .filter { it.size > 1 }
+            .associate { it.first() to it.drop(1).joinToString("=") }
     }
 
     @JvmStatic
@@ -266,6 +266,6 @@ object AccountUtil {
     }
 
     fun getBdussCookie(bduss: String): String {
-        return "BDUSS=$bduss; path=/; domain=.baidu.com; httponly"
+        return "BDUSS=$bduss; Path=/; Max-Age=315360000; Domain=.baidu.com; Httponly"
     }
 }

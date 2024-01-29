@@ -3,7 +3,6 @@ package com.huanchengfly.tieba.post.fragments;
 import static com.huanchengfly.tieba.post.utils.FileUtil.FILE_TYPE_DOWNLOAD;
 
 import android.annotation.SuppressLint;
-import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.ClipData;
 import android.content.Intent;
@@ -305,7 +304,6 @@ public class WebViewFragment extends BaseFragment implements DownloadListener, B
         }
     }
 
-    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     private void onActivityResultAboveL(int requestCode, int resultCode, Intent intent) {
         if (requestCode != FILE_CHOOSER_RESULT_CODE || uploadMessageAboveL == null)
             return;

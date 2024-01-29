@@ -35,7 +35,7 @@ fun isPhotoPickerAvailable(): Boolean {
     }
 }
 
-private fun Intent.getClipDataUris(): List<Uri> {
+fun Intent.getClipDataUris(): List<Uri> {
     // Use a LinkedHashSet to maintain any ordering that may be
     // present in the ClipData
     val resultSet = LinkedHashSet<Uri>()
@@ -53,7 +53,7 @@ private fun Intent.getClipDataUris(): List<Uri> {
             }
         }
     }
-    return ArrayList(resultSet)
+    return resultSet.toList()
 }
 
 @SuppressLint("NewApi")
@@ -70,11 +70,11 @@ data class PickMediasRequest(
 ) {
     sealed interface MediaType
 
-    object ImageOnly : MediaType
+    data object ImageOnly : MediaType
 
-    object VideoOnly : MediaType
+    data object VideoOnly : MediaType
 
-    object ImageAndVideo : MediaType
+    data object ImageAndVideo : MediaType
 
     data class SingleMimeType(val mimeType: String) : MediaType
 

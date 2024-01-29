@@ -38,12 +38,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.github.panpf.sketch.compose.AsyncImage
 import com.huanchengfly.tieba.post.R
-import com.huanchengfly.tieba.post.activities.WebViewActivity
 import com.huanchengfly.tieba.post.arch.BaseComposeActivity.Companion.LocalWindowSizeClass
 import com.huanchengfly.tieba.post.models.PhotoViewData
 import com.huanchengfly.tieba.post.ui.common.windowsizeclass.WindowWidthSizeClass
 import com.huanchengfly.tieba.post.ui.page.LocalNavigator
 import com.huanchengfly.tieba.post.ui.page.destinations.UserProfilePageDestination
+import com.huanchengfly.tieba.post.ui.page.destinations.WebViewPageDestination
 import com.huanchengfly.tieba.post.ui.widgets.compose.EmoticonText
 import com.huanchengfly.tieba.post.ui.widgets.compose.NetworkImage
 import com.huanchengfly.tieba.post.ui.widgets.compose.VoicePlayer
@@ -183,6 +183,7 @@ data class VideoContentRender(
         val widthFraction =
             if (LocalWindowSizeClass.current.widthSizeClass == WindowWidthSizeClass.Compact) 1f else 0.5f
         val context = LocalContext.current
+        val navigator = LocalNavigator.current
 
         if (picUrl.isNotBlank()) {
             val picModifier = Modifier
@@ -210,7 +211,9 @@ data class VideoContentRender(
                     contentDescription = stringResource(id = R.string.desc_video),
                     modifier = picModifier
                         .clickable {
-                            WebViewActivity.launch(context, webUrl)
+                            navigator.navigate(
+                                WebViewPageDestination(webUrl)
+                            )
                         },
                     contentScale = ContentScale.Crop
                 )
@@ -314,7 +317,7 @@ fun PbContentText(
                         when (annotation.tag) {
                             "url" -> {
                                 val url = annotation.item
-                                launchUrl(context, url)
+                                launchUrl(context, navigator, url)
                             }
 
                             "user" -> {

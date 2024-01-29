@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
@@ -62,7 +63,12 @@ fun AccountManagePage(
         backgroundColor = Color.Transparent,
         topBar = {
             TitleCentredToolbar(
-                title = stringResource(id = R.string.title_account_manage),
+                title = {
+                    Text(
+                        text = stringResource(id = R.string.title_account_manage),
+                        fontWeight = FontWeight.Bold, style = MaterialTheme.typography.h6
+                    )
+                },
                 navigationIcon = {
                     BackNavigationIcon(onBackPressed = { navigator.navigateUp() })
                 }
@@ -179,6 +185,7 @@ fun AccountManagePage(
                     onClick = {
                         launchUrl(
                             context,
+                            navigator,
                             "https://wappass.baidu.com/static/manage-chunk/change-username.html#/showUsername"
                         )
                     },
