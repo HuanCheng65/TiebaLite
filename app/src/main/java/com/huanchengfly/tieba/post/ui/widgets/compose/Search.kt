@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -24,6 +25,7 @@ import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Clear
+import androidx.compose.material.icons.rounded.PhotoSizeSelectActual
 import androidx.compose.material.icons.rounded.Search
 import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.runtime.Composable
@@ -40,6 +42,7 @@ import androidx.compose.ui.focus.onFocusEvent
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.Shape
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
@@ -48,14 +51,20 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.util.fastForEach
 import com.huanchengfly.tieba.post.R
 import com.huanchengfly.tieba.post.api.models.SearchThreadBean
+import com.huanchengfly.tieba.post.arch.BaseComposeActivity
 import com.huanchengfly.tieba.post.ui.common.PbContentText
 import com.huanchengfly.tieba.post.ui.common.theme.compose.ExtendedTheme
+import com.huanchengfly.tieba.post.ui.common.windowsizeclass.WindowWidthSizeClass
 import com.huanchengfly.tieba.post.utils.DateTimeUtils
 import com.huanchengfly.tieba.post.utils.StringUtil
 import com.huanchengfly.tieba.post.utils.StringUtil.buildAnnotatedStringWithUser
+import com.huanchengfly.tieba.post.utils.appPreferences
 import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.toImmutableList
+import kotlin.math.min
 
 @Composable
 fun QuotePostCard(
@@ -224,6 +233,7 @@ fun SearchThreadItem(
                 showAbstract = item.content.isNotBlank(),
                 maxLines = 2,
             )
+            SearchMedia(medias = item.media.toImmutableList())
             if (item.mainPost != null) {
                 if (item.postInfo != null) {
                     QuotePostCard(
@@ -283,6 +293,79 @@ fun SearchThreadItem(
         },
         onClick = { onClick(item) },
     )
+}
+
+@Composable
+fun SearchMedia(
+    medias: ImmutableList<SearchThreadBean.MediaInfo>,
+    modifier: Modifier = Modifier,
+) {
+    val context = LocalContext.current
+
+    val pics = medias.filter { it.type == "pic" }
+//    val video = medias.filter { it.type == "flash" }
+
+    val picCount = remember(pics) {
+        pics.size
+    }
+    val hasPhoto = remember(picCount) { picCount > 0 }
+    val isSinglePhoto = remember(picCount) { picCount == 1 }
+    val hideMedia = context.appPreferences.hideMedia
+
+    val windowWidthSizeClass = BaseComposeActivity.LocalWindowSizeClass.current.widthSizeClass
+    val singleMediaFraction = remember(windowWidthSizeClass) {
+        if (windowWidthSizeClass == WindowWidthSizeClass.Compact)
+            1f
+        else 0.5f
+    }
+
+    if (hasPhoto && !hideMedia) {
+        val mediaWidthFraction = remember(isSinglePhoto, singleMediaFraction) {
+            if (isSinglePhoto) singleMediaFraction else 1f
+        }
+        val mediaAspectRatio = remember(isSinglePhoto) {
+            if (isSinglePhoto) 2f else 3f
+        }
+        val showMediaCount = remember(pics) { min(pics.size, 3) }
+        val hasMoreMedia = remember(pics) { pics.size > 3 }
+        val showMedias = remember(pics) { pics.subList(0, showMediaCount) }
+        Row(
+            modifier = modifier,
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            Box {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth(mediaWidthFraction)
+                        .aspectRatio(mediaAspectRatio)
+                        .clip(RoundedCornerShape(8.dp)),
+                    horizontalArrangement = Arrangement.spacedBy(4.dp)
+                ) {
+                    showMedias.fastForEach { pic ->
+                        NetworkImage(
+                            imageUri = pic.bigPic ?: pic.smallPic ?: pic.waterPic ?: "",
+                            contentDescription = null,
+                            modifier = Modifier
+                                .fillMaxHeight()
+                                .weight(1f),
+                            contentScale = ContentScale.Crop,
+                            enablePreview = true
+                        )
+                    }
+                }
+                if (hasMoreMedia) {
+                    Badge(
+                        icon = Icons.Rounded.PhotoSizeSelectActual,
+                        text = "${medias.size}",
+                        modifier = Modifier
+                            .align(Alignment.BottomEnd)
+                            .padding(8.dp)
+                    )
+                }
+            }
+        }
+    }
 }
 
 @Composable

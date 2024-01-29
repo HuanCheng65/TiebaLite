@@ -235,7 +235,7 @@ fun Card(
 }
 
 @Composable
-private fun Badge(
+fun Badge(
     icon: ImageVector,
     text: String,
     modifier: Modifier = Modifier,
