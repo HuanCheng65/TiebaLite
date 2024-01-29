@@ -78,7 +78,6 @@ fun QuotePostCard(
         PbContentText(
             text = quoteContentString,
             style = MaterialTheme.typography.body2,
-            modifier = modifier,
             maxLines = 2,
             overflow = TextOverflow.Ellipsis,
         )
@@ -113,7 +112,6 @@ fun MainPostCard(
             text = titleString,
             style = MaterialTheme.typography.subtitle2,
             fontWeight = FontWeight.Bold,
-            modifier = modifier,
             maxLines = 2,
             overflow = TextOverflow.Ellipsis,
         )
@@ -121,7 +119,6 @@ fun MainPostCard(
             PbContentText(
                 text = mainPost.content,
                 style = MaterialTheme.typography.body2,
-                modifier = modifier,
                 maxLines = 2,
                 overflow = TextOverflow.Ellipsis,
             )
@@ -137,6 +134,8 @@ fun SearchThreadList(
     onItemUserClick: (SearchThreadBean.UserInfoBean) -> Unit,
     onItemForumClick: (SearchThreadBean.ForumInfo) -> Unit,
     modifier: Modifier = Modifier,
+    onQuotePostClick: (SearchThreadBean.PostInfo) -> Unit = {},
+    onMainPostClick: (SearchThreadBean.MainPost) -> Unit = {},
     hideForum: Boolean = false,
     header: LazyListScope.() -> Unit = {},
 ) {
@@ -155,6 +154,8 @@ fun SearchThreadList(
                 onUserClick = onItemUserClick,
                 onForumClick = onItemForumClick,
                 hideForum = hideForum,
+                onQuotePostClick = onQuotePostClick,
+                onMainPostClick = onMainPostClick,
             )
         }
     }
@@ -202,6 +203,8 @@ fun SearchThreadItem(
     onUserClick: (SearchThreadBean.UserInfoBean) -> Unit,
     onForumClick: (SearchThreadBean.ForumInfo) -> Unit,
     modifier: Modifier = Modifier,
+    onQuotePostClick: (SearchThreadBean.PostInfo) -> Unit = {},
+    onMainPostClick: (SearchThreadBean.MainPost) -> Unit = {},
     hideForum: Boolean = false,
 ) {
     Card(
@@ -219,6 +222,7 @@ fun SearchThreadItem(
                 abstractText = item.content,
                 showTitle = item.mainPost == null && item.title.isNotBlank(),
                 showAbstract = item.content.isNotBlank(),
+                maxLines = 2,
             )
             if (item.mainPost != null) {
                 if (item.postInfo != null) {
@@ -229,6 +233,9 @@ fun SearchThreadItem(
                             .fillMaxWidth()
                             .clip(RoundedCornerShape(6.dp))
                             .background(ExtendedTheme.colors.floorCard)
+                            .clickable {
+                                onQuotePostClick(item.postInfo)
+                            }
                     )
                 } else {
                     MainPostCard(
@@ -237,6 +244,9 @@ fun SearchThreadItem(
                             .fillMaxWidth()
                             .clip(RoundedCornerShape(6.dp))
                             .background(ExtendedTheme.colors.floorCard)
+                            .clickable {
+                                onMainPostClick(item.mainPost)
+                            }
                     )
                 }
             }

@@ -47,6 +47,7 @@ import com.huanchengfly.tieba.post.ui.page.destinations.UserProfilePageDestinati
 import com.huanchengfly.tieba.post.ui.widgets.compose.EmoticonText
 import com.huanchengfly.tieba.post.ui.widgets.compose.NetworkImage
 import com.huanchengfly.tieba.post.ui.widgets.compose.VoicePlayer
+import com.huanchengfly.tieba.post.utils.EmoticonUtil.emoticonString
 import com.huanchengfly.tieba.post.utils.appPreferences
 import com.huanchengfly.tieba.post.utils.launchUrl
 
@@ -245,7 +246,7 @@ fun PbContentText(
     style: TextStyle = LocalTextStyle.current,
 ) {
     PbContentText(
-        text = AnnotatedString(text),
+        text = text.emoticonString,
         modifier = modifier,
         color = color,
         fontSize = fontSize,

@@ -27,6 +27,7 @@ import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -51,6 +52,7 @@ import com.huanchengfly.tieba.post.ui.common.theme.compose.ExtendedTheme
 import com.huanchengfly.tieba.post.ui.common.theme.compose.pullRefreshIndicator
 import com.huanchengfly.tieba.post.ui.page.ProvideNavigator
 import com.huanchengfly.tieba.post.ui.page.destinations.ForumPageDestination
+import com.huanchengfly.tieba.post.ui.page.destinations.SubPostsPageDestination
 import com.huanchengfly.tieba.post.ui.page.destinations.ThreadPageDestination
 import com.huanchengfly.tieba.post.ui.page.destinations.UserProfilePageDestination
 import com.huanchengfly.tieba.post.ui.widgets.compose.ClickMenu
@@ -125,6 +127,12 @@ fun ForumSearchPostPage(
         derivedStateOf { currentKeyword.isEmpty() }
     }
     var inputKeyword by remember { mutableStateOf("") }
+
+    LaunchedEffect(currentKeyword) {
+        if (currentKeyword.isNotEmpty() && currentKeyword != inputKeyword) {
+            inputKeyword = currentKeyword
+        }
+    }
 
     fun refresh() {
         viewModel.send(
@@ -266,11 +274,29 @@ fun ForumSearchPostPage(
                                     data = data,
                                     lazyListState = lazyListState,
                                     onItemClick = {
-                                        navigator.navigate(
-                                            ThreadPageDestination(
-                                                threadId = it.tid.toLong()
+                                        if (it.postInfo != null) {
+                                            navigator.navigate(
+                                                SubPostsPageDestination(
+                                                    threadId = it.tid.toLong(),
+                                                    subPostId = it.cid.toLong(),
+                                                    loadFromSubPost = true
+                                                )
                                             )
-                                        )
+                                        } else if (it.mainPost != null) {
+                                            navigator.navigate(
+                                                ThreadPageDestination(
+                                                    threadId = it.tid.toLong(),
+                                                    postId = it.pid.toLong(),
+                                                    scrollToReply = true,
+                                                )
+                                            )
+                                        } else {
+                                            navigator.navigate(
+                                                ThreadPageDestination(
+                                                    threadId = it.tid.toLong()
+                                                )
+                                            )
+                                        }
                                     },
                                     onItemUserClick = {
                                         navigator.navigate(UserProfilePageDestination(it.userId.toLong()))
@@ -279,6 +305,23 @@ fun ForumSearchPostPage(
                                         navigator.navigate(
                                             ForumPageDestination(
                                                 it.forumName
+                                            )
+                                        )
+                                    },
+                                    onQuotePostClick = {
+                                        navigator.navigate(
+                                            ThreadPageDestination(
+                                                threadId = it.tid,
+                                                postId = it.pid,
+                                                scrollToReply = true
+                                            )
+                                        )
+                                    },
+                                    onMainPostClick = {
+                                        navigator.navigate(
+                                            ThreadPageDestination(
+                                                threadId = it.tid,
+                                                scrollToReply = true
                                             )
                                         )
                                     },

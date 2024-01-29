@@ -35,6 +35,7 @@ data class SearchThreadBean(
     data class ThreadInfoBean(
         val tid: String,
         val pid: String,
+        val cid: String,
         val title: String,
         val content: String,
         val time: String,
@@ -74,18 +75,22 @@ data class SearchThreadBean(
     @Serializable
     data class MediaInfo(
         val type: String,
-        val size: String,
+        val size: String? = null,
         val width: String,
         val height: String,
         @SerialName("water_pic")
         @SerializedName("water_pic")
-        val waterPic: String,
+        val waterPic: String? = null,
         @SerialName("small_pic")
         @SerializedName("small_pic")
-        val smallPic: String,
+        val smallPic: String? = null,
         @SerialName("big_pic")
         @SerializedName("big_pic")
-        val bigPic: String,
+        val bigPic: String? = null,
+        val src: String? = null,
+        val vsrc: String? = null,
+        val vhsrc: String? = null,
+        val vpic: String? = null,
     )
 
     @Immutable

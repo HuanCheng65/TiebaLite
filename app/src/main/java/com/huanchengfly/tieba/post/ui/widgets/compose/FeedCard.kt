@@ -270,6 +270,7 @@ fun ThreadContent(
     showTitle: Boolean = true,
     showAbstract: Boolean = true,
     isGood: Boolean = false,
+    maxLines: Int = 5,
 ) {
     val content = buildAnnotatedString {
         if (showTitle) {
@@ -305,7 +306,7 @@ fun ThreadContent(
         fontSize = 15.sp,
         lineSpacing = 0.8.sp,
         overflow = TextOverflow.Ellipsis,
-        maxLines = 5,
+        maxLines = maxLines,
         style = MaterialTheme.typography.body1,
     )
 }
