@@ -63,6 +63,7 @@ import com.huanchengfly.tieba.post.utils.StringUtil
 import com.huanchengfly.tieba.post.utils.StringUtil.buildAnnotatedStringWithUser
 import com.huanchengfly.tieba.post.utils.appPreferences
 import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
 import kotlin.math.min
 
@@ -71,6 +72,7 @@ fun QuotePostCard(
     quotePostInfo: SearchThreadBean.PostInfo,
     mainPost: SearchThreadBean.MainPost,
     modifier: Modifier = Modifier,
+    medias: ImmutableList<SearchThreadBean.MediaInfo> = persistentListOf(),
     keyword: String? = null,
 ) {
     val quoteContentString = remember(quotePostInfo) {
@@ -93,12 +95,13 @@ fun QuotePostCard(
             highlightKeywords = (keyword?.split(" ") ?: emptyList()).toImmutableList()
         )
         MainPostCard(
-            keyword = keyword,
             mainPost = mainPost,
             modifier = Modifier
                 .fillMaxWidth()
                 .clip(RoundedCornerShape(6.dp))
-                .background(ExtendedTheme.colors.card)
+                .background(ExtendedTheme.colors.card),
+            medias = medias,
+            keyword = keyword
         )
     }
 }
@@ -107,6 +110,7 @@ fun QuotePostCard(
 fun MainPostCard(
     mainPost: SearchThreadBean.MainPost,
     modifier: Modifier = Modifier,
+    medias: ImmutableList<SearchThreadBean.MediaInfo> = persistentListOf(),
     keyword: String? = null,
 ) {
     val titleString = remember(mainPost) {
@@ -137,6 +141,7 @@ fun MainPostCard(
                 overflow = TextOverflow.Ellipsis,
             )
         }
+        SearchMedia(medias = medias)
     }
 }
 
@@ -254,6 +259,7 @@ fun SearchThreadItem(
                             .clickable {
                                 onQuotePostClick(item.postInfo)
                             },
+                        medias = item.media.toImmutableList(),
                         keyword = searchKeyword
                     )
                 } else {
@@ -266,6 +272,7 @@ fun SearchThreadItem(
                             .clickable {
                                 onMainPostClick(item.mainPost)
                             },
+                        medias = item.media.toImmutableList(),
                         keyword = searchKeyword
                     )
                 }
