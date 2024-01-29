@@ -5,7 +5,9 @@ import android.widget.AdapterView
 import android.widget.EditText
 import androidx.annotation.DrawableRes
 import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.ExperimentalTextApi
 import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.withAnnotation
 import com.huanchengfly.tieba.post.R
 import com.huanchengfly.tieba.post.adapters.EmoticonGridViewAdapter
 import com.huanchengfly.tieba.post.utils.StringUtil.getEmoticonContent
@@ -119,10 +121,38 @@ object EmoticonUtil {
         }
     }
 
+    @OptIn(ExperimentalTextApi::class)
     val String.emoticonString: AnnotatedString
         get() {
             val regexPattern = Pattern.compile(getRegex(EMOTICON_ALL_TYPE))
             val matcher = regexPattern.matcher(this)
+            return buildAnnotatedString {
+                withAnnotation("Emoticon", "true") {
+                    append(this@emoticonString)
+                }
+                while (matcher.find()) {
+                    val start = matcher.start()
+                    val end = matcher.end()
+                    val emoticonName = matcher.group(1)
+                    if (emoticonName != null) {
+                        addStringAnnotation(
+                            INLINE_CONTENT_TAG,
+                            "Emoticon#${EmoticonManager.getEmoticonIdByName(emoticonName)}",
+                            start,
+                            end,
+                        )
+                    }
+                }
+            }
+        }
+
+    val AnnotatedString.emoticonString: AnnotatedString
+        get() {
+            if (hasStringAnnotations("Emoticon", 0, length)) {
+                return this
+            }
+            val regexPattern = Pattern.compile(getRegex(EMOTICON_ALL_TYPE))
+            val matcher = regexPattern.matcher(this.text)
             return buildAnnotatedString {
                 append(this@emoticonString)
                 while (matcher.find()) {

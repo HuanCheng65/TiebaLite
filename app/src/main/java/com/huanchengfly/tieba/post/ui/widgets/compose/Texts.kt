@@ -152,7 +152,7 @@ fun EmoticonText(
     val emoticonInlineContent =
         remember(sizePx) { EmoticonManager.getEmoticonInlineContent(sizePx * emoticonSize) }
     IconText(
-        text,
+        text.emoticonString,
         modifier,
         color,
         fontSize,
@@ -343,7 +343,6 @@ fun TextWithMinWidth(
     )
 }
 
-@OptIn(ExperimentalTextApi::class)
 @Composable
 fun buildChipInlineContent(
     text: String,
