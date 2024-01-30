@@ -80,6 +80,8 @@ import com.huanchengfly.tieba.post.components.ClipBoardThreadLink
 import com.huanchengfly.tieba.post.services.NotifyJobService
 import com.huanchengfly.tieba.post.ui.common.theme.compose.ExtendedTheme
 import com.huanchengfly.tieba.post.ui.page.NavGraphs
+import com.huanchengfly.tieba.post.ui.page.destinations.ForumPageDestination
+import com.huanchengfly.tieba.post.ui.page.destinations.ThreadPageDestination
 import com.huanchengfly.tieba.post.ui.utils.DevicePosture
 import com.huanchengfly.tieba.post.ui.utils.isBookPosture
 import com.huanchengfly.tieba.post.ui.utils.isSeparating
@@ -111,8 +113,11 @@ import com.microsoft.appcenter.analytics.Analytics
 import com.ramcosta.composedestinations.DestinationsNavHost
 import com.ramcosta.composedestinations.animations.defaults.RootNavGraphDefaultAnimations
 import com.ramcosta.composedestinations.animations.rememberAnimatedNavHostEngine
+import com.ramcosta.composedestinations.navigation.navigate
 import com.ramcosta.composedestinations.spec.DestinationSpec
+import com.ramcosta.composedestinations.spec.Direction
 import com.ramcosta.composedestinations.utils.currentDestinationAsState
+import com.ramcosta.composedestinations.utils.currentDestinationFlow
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.BufferOverflow
@@ -125,7 +130,9 @@ import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.launch
+import java.util.concurrent.atomic.AtomicBoolean
 
 val LocalNotificationCountFlow =
     staticCompositionLocalOf<Flow<Int>> { throw IllegalStateException("not allowed here!") }
@@ -194,12 +201,61 @@ class MainActivityV2 : BaseComposeActivity() {
             )
     }
 
-    private var myNavCollector: NavHostController? = null
+    private var direction: Direction? = null
+    private var waitingNavCollectorToNavigate = AtomicBoolean(false)
+    private var myNavController: NavHostController? = null
+        set(value) {
+            field = value
+            if (value != null && waitingNavCollectorToNavigate.get() && direction != null) {
+                launch {
+                    value.currentDestinationFlow
+                        .take(1)
+                        .collect {
+                            if (waitingNavCollectorToNavigate.get() && direction != null) {
+                                value.navigate(direction!!)
+                                waitingNavCollectorToNavigate.set(false)
+                                direction = null
+                            }
+                        }
+                }
+            }
+        }
+
+    private fun navigate(direction: Direction) {
+        if (myNavController == null) {
+            waitingNavCollectorToNavigate.set(true)
+            this.direction = direction
+        } else {
+            myNavController?.navigate(direction)
+        }
+    }
+
+    private fun checkIntent(intent: Intent): Boolean {
+        return if (intent.data?.scheme == "com.baidu.tieba" && intent.data?.host == "unidispatch") {
+            val uri = intent.data!!
+            when (uri.path.orEmpty().lowercase()) {
+                "/frs" -> {
+                    val forumName = uri.getQueryParameter("kw") ?: return true
+                    navigate(ForumPageDestination(forumName))
+                }
+
+                "/pb" -> {
+                    val threadId = uri.getQueryParameter("tid")?.toLongOrNull() ?: return true
+                    navigate(ThreadPageDestination(threadId))
+                }
+            }
+            true
+        } else {
+            false
+        }
+    }
 
     override fun onNewIntent(intent: Intent?) {
         super.onNewIntent(intent)
         intent?.let {
-            myNavCollector?.handleDeepLink(it)
+            if (!checkIntent(it)) {
+                myNavController?.handleDeepLink(it)
+            }
         }
     }
 
@@ -265,6 +321,7 @@ class MainActivityV2 : BaseComposeActivity() {
         launch {
             ClientUtils.setActiveTimestamp()
         }
+        intent?.let { checkIntent(it) }
     }
 
     override fun onCreateContent(systemUiController: SystemUiController) {
@@ -276,11 +333,11 @@ class MainActivityV2 : BaseComposeActivity() {
     private fun openClipBoardLink(link: ClipBoardLink) {
         when (link) {
             is ClipBoardThreadLink -> {
-                myNavCollector?.navigate(Uri.parse("tblite://thread/${link.threadId}"))
+                myNavController?.navigate(Uri.parse("tblite://thread/${link.threadId}"))
             }
 
             is ClipBoardForumLink -> {
-                myNavCollector?.navigate(Uri.parse("tblite://forum/${link.forumName}"))
+                myNavController?.navigate(Uri.parse("tblite://forum/${link.forumName}"))
             }
 
             else -> {
@@ -409,9 +466,6 @@ class MainActivityV2 : BaseComposeActivity() {
         TiebaLiteLocalProvider {
             TranslucentThemeBackground {
                 val navController = rememberNavController()
-                SideEffect {
-                    myNavCollector = navController
-                }
                 val engine = TiebaNavHostDefaults.rememberNavHostEngine()
                 val navigator = TiebaNavHostDefaults.rememberBottomSheetNavigator()
                 val currentDestination by navController.currentDestinationAsState()
@@ -446,6 +500,10 @@ class MainActivityV2 : BaseComposeActivity() {
                             engine = engine,
                         )
                     }
+                }
+
+                SideEffect {
+                    myNavController = navController
                 }
             }
         }

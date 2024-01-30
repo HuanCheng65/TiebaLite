@@ -170,6 +170,17 @@
                 <data android:scheme="tblite" />
             </intent-filter>
 
+            <intent-filter android:autoVerify="true">
+                <data
+                    android:host="unidispatch"
+                    android:scheme="com.baidu.tieba" />
+
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+            </intent-filter>
+
             <meta-data
                 android:name="android.app.shortcuts"
                 android:resource="@xml/shortcut_new" />
@@ -269,42 +280,7 @@
             android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".activities.DispatchActivity"
-            android:exported="true">
-            <intent-filter android:autoVerify="true">
-                <data
-                    android:host="tieba.baidu.com"
-                    android:scheme="tbfrs" />
-                <data
-                    android:host="tieba.baidu.com"
-                    android:scheme="tbpb" />
-                <data
-                    android:host="tieba.baidu.com"
-                    android:scheme="http" />
-                <data
-                    android:host="tieba.baidu.com"
-                    android:scheme="https" />
-                <data
-                    android:host="unidispatch"
-                    android:scheme="com.baidu.tieba" />
-
-                <action android:name="android.intent.action.VIEW" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
-            </intent-filter>
-            <intent-filter>
-                <data
-                    android:host="tieba.baidu.com"
-                    android:scheme="http" />
-                <data
-                    android:host="tieba.baidu.com"
-                    android:scheme="https" />
-
-                <action android:name="com.huanchengfly.tieba.post.ACTION_JUMP" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </activity>
+            android:exported="true" />
         <activity
             android:name=".activities.PreferencesActivity"
             android:configChanges="screenSize|screenLayout|orientation|smallestScreenSize|keyboardHidden"
