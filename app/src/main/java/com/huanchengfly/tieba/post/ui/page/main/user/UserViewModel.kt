@@ -71,6 +71,7 @@ class UserViewModel @Inject constructor() : BaseViewModel<UserUiIntent, UserPart
                                 user.birthday_info?.birthday_show_status?.toString()
                             birthdayTime = user.birthday_info?.birthday_time?.toString()
                             constellation = user.birthday_info?.constellation
+                            tiebaUid = user.tieba_uid
                             loadSuccess = true
                             updateAll("uid = ?", uid)
                         }

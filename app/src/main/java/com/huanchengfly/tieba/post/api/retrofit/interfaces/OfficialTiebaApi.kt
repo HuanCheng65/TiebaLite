@@ -238,9 +238,11 @@ interface OfficialTiebaApi {
         @Field("birthday_time") birthdayTime: String,
         @Field("intro") intro: String,
         @Field("sex") sex: String,
+        @Field("nick_name") nickName: String,
         @Field("stoken") sToken: String = AccountUtil.getSToken()!!,
-        @Field("_client_version") client_version: String = "11.10.8.6",
-        @retrofit2.http.Header(Header.USER_AGENT) user_agent: String = "bdtb for Android $client_version",
+        @Field("cam") cam: String = "",
+        @Field("need_cam_decrypt") needCamDecrypt: String = "1",
+        @Field("need_keep_nickname_flag") needKeepNicknameFlag: String = "0",
     ): Flow<CommonResponse>
 
     @Headers(

@@ -362,7 +362,7 @@
             android:label="@string/title_theme_settings"
             android:windowSoftInputMode="adjustResize" />
         <activity
-            android:name=".ui.page.editprofile.view.EditProfileActivity"
+            android:name=".ui.page.user.edit.EditProfileActivity"
             android:configChanges="screenSize|screenLayout|orientation|smallestScreenSize|keyboardHidden"
             android:label="@string/title_activity_edit_profile"
             android:windowSoftInputMode="adjustResize" />

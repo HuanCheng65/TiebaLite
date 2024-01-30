@@ -1245,12 +1245,14 @@ interface ITiebaApi {
      * @param birthdayTime 生日时间戳 / 1000
      * @param intro 个人简介（最多 500 字）
      * @param sex 性别（1 = 男，2 = 女）
+     * @param nickName 昵称
      */
     fun profileModifyFlow(
         birthdayShowStatus: Boolean,
         birthdayTime: String,
         intro: String,
-        sex: String
+        sex: String,
+        nickName: String,
     ): Flow<CommonResponse>
 
     /**

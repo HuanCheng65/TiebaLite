@@ -44,7 +44,7 @@
                 android:textSize="@dimen/text_size_user_name"
                 android:textStyle="bold"
                 app:tint="@color/default_color_text"
-                tools:text="幻了个城fly" />
+                tools:text="test" />
 
             <RelativeLayout
                 android:id="@+id/thread_list_item_user_status"

@@ -10,7 +10,7 @@
         android:layout_centerVertical="true"
         android:textSize="14sp"
         app:tint="@color/default_color_text"
-        tools:text="幻了个城fly:" />
+        tools:text="test:" />
 
     <com.huanchengfly.tieba.post.ui.widgets.VoicePlayerView
         android:id="@+id/floor_audio"

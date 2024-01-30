@@ -934,13 +934,15 @@ object MixedTiebaApiImpl : ITiebaApi {
         birthdayShowStatus: Boolean,
         birthdayTime: String,
         intro: String,
-        sex: String
+        sex: String,
+        nickName: String,
     ): Flow<CommonResponse> =
         RetrofitTiebaApi.OFFICIAL_TIEBA_API.profileModify(
             birthdayShowStatus.booleanToString(),
             birthdayTime,
             intro,
-            sex
+            sex,
+            nickName
         )
 
     override fun imgPortrait(file: File): Flow<CommonResponse> {

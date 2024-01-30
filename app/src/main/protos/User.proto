@@ -92,6 +92,7 @@ message User {
   int32 isDefaultAvatar = 106;
   int32 favorite_num = 109;
   uint32 total_agree_num = 118;
+  string tieba_uid = 120;
   string level_name = 125;
   string ip_address = 127;
   int32 is_nickname_editing = 128;

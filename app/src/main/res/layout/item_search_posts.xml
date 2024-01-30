@@ -41,7 +41,7 @@
         android:layout_below="@id/item_search_thread_content"
         android:textSize="12sp"
         app:tint="@color/default_color_text_disabled"
-        tools:text="幻了个城fly" />
+        tools:text="test" />
 
     <com.huanchengfly.tieba.post.ui.widgets.theme.TintTextView
         android:id="@+id/item_search_thread_info"
