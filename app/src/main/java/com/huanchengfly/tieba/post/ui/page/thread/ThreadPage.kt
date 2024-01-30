@@ -122,6 +122,7 @@ import com.huanchengfly.tieba.post.ui.common.theme.compose.invertChipBackground
 import com.huanchengfly.tieba.post.ui.common.theme.compose.invertChipContent
 import com.huanchengfly.tieba.post.ui.common.theme.compose.pullRefreshIndicator
 import com.huanchengfly.tieba.post.ui.common.theme.compose.threadBottomBar
+import com.huanchengfly.tieba.post.ui.page.LocalNavigator
 import com.huanchengfly.tieba.post.ui.page.ProvideNavigator
 import com.huanchengfly.tieba.post.ui.page.destinations.CopyTextDialogPageDestination
 import com.huanchengfly.tieba.post.ui.page.destinations.ForumPageDestination
@@ -1167,10 +1168,13 @@ fun ThreadPage(
                                     thread?.get { firstPostId }.takeIf { it != 0L }
                                         ?: firstPost?.get { id }
                                         ?: 0L
-                                TiebaUtil.reportPost(
-                                    context,
-                                    firstPostId.toString()
-                                )
+                                coroutineScope.launch {
+                                    TiebaUtil.reportPost(
+                                        context,
+                                        navigator,
+                                        firstPostId.toString()
+                                    )
+                                }
                             },
                             onDeleteClick = {
                                 deletePost = null
@@ -1634,6 +1638,8 @@ fun PostCard(
     onMenuDeleteClick: ((Post) -> Unit)? = null,
 ) {
     val context = LocalContext.current
+    val navigator = LocalNavigator.current
+    val coroutineScope = rememberCoroutineScope()
     val post = remember(postHolder) { postHolder.get() }
     val hasPadding = remember(key1 = postHolder, key2 = immersiveMode) {
         postHolder.get { floor > 1 } && !immersiveMode
@@ -1693,7 +1699,9 @@ fun PostCard(
                 }
                 DropdownMenuItem(
                     onClick = {
-                        TiebaUtil.reportPost(context, post.id.toString())
+                        coroutineScope.launch {
+                            TiebaUtil.reportPost(context, navigator, post.id.toString())
+                        }
                         menuState.expanded = false
                     }
                 ) {
@@ -1879,6 +1887,8 @@ private fun SubPostItem(
     onMenuCopyClick: ((SubPostList) -> Unit)?,
 ) {
     val context = LocalContext.current
+    val navigator = LocalNavigator.current
+    val coroutineScope = rememberCoroutineScope()
     val menuState = rememberMenuState()
     LongClickMenu(
         menuState = menuState,
@@ -1905,7 +1915,9 @@ private fun SubPostItem(
             }
             DropdownMenuItem(
                 onClick = {
-                    TiebaUtil.reportPost(context, subPostList.get { id }.toString())
+                    coroutineScope.launch {
+                        TiebaUtil.reportPost(context, navigator, subPostList.get { id }.toString())
+                    }
                     menuState.expanded = false
                 }
             ) {

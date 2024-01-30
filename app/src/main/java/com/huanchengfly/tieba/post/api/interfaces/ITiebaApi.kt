@@ -1200,8 +1200,17 @@ interface ITiebaApi {
      * @param postId PID
      */
     fun checkReportPost(
-        postId: String
+        postId: String,
     ): Call<CheckReportBean>
+
+    /**
+     * 获取举报贴子/回贴页面 URL
+     *
+     * @param postId PID
+     */
+    fun checkReportPostAsync(
+        postId: String,
+    ): Deferred<ApiResult<CheckReportBean>>
 
     /**
      * 获得当前用户昵称（需登录）
@@ -1213,7 +1222,7 @@ interface ITiebaApi {
      */
     fun initNickNameFlow(
         bduss: String,
-        sToken: String
+        sToken: String,
     ): Flow<InitNickNameBean>
 
     /**

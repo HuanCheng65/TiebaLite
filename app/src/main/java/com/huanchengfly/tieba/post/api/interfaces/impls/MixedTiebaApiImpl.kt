@@ -910,6 +910,14 @@ object MixedTiebaApiImpl : ITiebaApi {
             )
         )
 
+    override fun checkReportPostAsync(postId: String): Deferred<ApiResult<CheckReportBean>> =
+        RetrofitTiebaApi.OFFICIAL_TIEBA_API.checkReportAsync(
+            category = "1",
+            reportParam = mapOf(
+                "pid" to postId
+            )
+        )
+
     override fun initNickNameFlow(): Flow<InitNickNameBean> =
         RetrofitTiebaApi.OFFICIAL_TIEBA_API.initNickNameFlow()
 

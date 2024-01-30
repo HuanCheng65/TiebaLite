@@ -492,8 +492,18 @@ interface OfficialTiebaApi {
         @Field("category") category: String,
         @FieldMap reportParam: Map<String, String>,
         @Field("stoken") stoken: String? = AccountUtil.getLoginInfo()
-            ?.sToken
+            ?.sToken,
     ): Call<CheckReportBean>
+
+    @Headers("${Header.FORCE_LOGIN}: ${Header.FORCE_LOGIN_TRUE}")
+    @POST("/c/f/ueg/checkjubao")
+    @FormUrlEncoded
+    fun checkReportAsync(
+        @Field("category") category: String,
+        @FieldMap reportParam: Map<String, String>,
+        @Field("stoken") stoken: String? = AccountUtil.getLoginInfo()
+            ?.sToken,
+    ): Deferred<ApiResult<CheckReportBean>>
 
     @Headers("${Header.FORCE_LOGIN}: ${Header.FORCE_LOGIN_TRUE}")
     @POST("/c/c/bawu/delthread")

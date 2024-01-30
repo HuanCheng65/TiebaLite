@@ -24,13 +24,14 @@ import androidx.compose.material.IconButton
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.ArrowBack
+import androidx.compose.material.icons.automirrored.rounded.ArrowBack
 import androidx.compose.material.icons.rounded.Close
 import androidx.compose.material.icons.rounded.OpenInBrowser
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -88,6 +89,7 @@ import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import com.ramcosta.composedestinations.spec.DestinationStyleBottomSheet
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 @Destination
 @Composable
@@ -282,7 +284,7 @@ internal fun SubPostsContent(
                     navigationIcon = {
                         IconButton(onClick = { navigator.navigateUp() }) {
                             Icon(
-                                imageVector = if (isSheet) Icons.Rounded.Close else Icons.Rounded.ArrowBack,
+                                imageVector = if (isSheet) Icons.Rounded.Close else Icons.AutoMirrored.Rounded.ArrowBack,
                                 contentDescription = stringResource(id = R.string.btn_close)
                             )
                         }
@@ -535,6 +537,8 @@ private fun SubPostItem(
 ) {
     val (subPost, contentRenders, blocked) = item
     val context = LocalContext.current
+    val navigator = LocalNavigator.current
+    val coroutineScope = rememberCoroutineScope()
     val author = remember(subPost) { subPost.get { author }?.wrapImmutable() }
     val hasAgreed = remember(subPost) {
         subPost.get { agree?.hasAgree == 1 }
@@ -576,7 +580,9 @@ private fun SubPostItem(
                 }
                 DropdownMenuItem(
                     onClick = {
-                        TiebaUtil.reportPost(context, subPost.get { id }.toString())
+                        coroutineScope.launch {
+                            TiebaUtil.reportPost(context, navigator, subPost.get { id }.toString())
+                        }
                         menuState.expanded = false
                     }
                 ) {
