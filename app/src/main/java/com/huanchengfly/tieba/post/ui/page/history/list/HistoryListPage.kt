@@ -20,8 +20,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.huanchengfly.tieba.post.R
-import com.huanchengfly.tieba.post.activities.ForumActivity
-import com.huanchengfly.tieba.post.activities.ThreadActivity
 import com.huanchengfly.tieba.post.arch.collectPartialAsState
 import com.huanchengfly.tieba.post.arch.onEvent
 import com.huanchengfly.tieba.post.arch.onGlobalEvent
@@ -34,8 +32,8 @@ import com.huanchengfly.tieba.post.ui.page.LocalNavigator
 import com.huanchengfly.tieba.post.ui.page.destinations.ForumPageDestination
 import com.huanchengfly.tieba.post.ui.page.destinations.ThreadPageDestination
 import com.huanchengfly.tieba.post.ui.page.thread.ThreadPageFrom
-import com.huanchengfly.tieba.post.ui.widgets.Chip
 import com.huanchengfly.tieba.post.ui.widgets.compose.Avatar
+import com.huanchengfly.tieba.post.ui.widgets.compose.Chip
 import com.huanchengfly.tieba.post.ui.widgets.compose.LazyLoad
 import com.huanchengfly.tieba.post.ui.widgets.compose.LoadMoreLayout
 import com.huanchengfly.tieba.post.ui.widgets.compose.LocalSnackbarHostState
@@ -180,20 +178,20 @@ fun HistoryListPage(
                             },
                             onClick = {
                                 when (it.type) {
-                                    HistoryUtil.TYPE_FORUM -> ForumActivity.launch(
-                                        context,
-                                        it.data
-                                    )
+                                    HistoryUtil.TYPE_FORUM -> {
+                                        navigator.navigate(ForumPageDestination(it.data))
+                                    }
 
                                     HistoryUtil.TYPE_THREAD -> {
                                         val extra =
                                             if (it.extras != null) it.extras.fromJson<ThreadHistoryInfoBean>() else null
-                                        ThreadActivity.launch(
-                                            context,
-                                            it.data,
-                                            extra?.pid,
-                                            extra?.isSeeLz,
-                                            ThreadActivity.FROM_HISTORY
+                                        navigator.navigate(
+                                            ThreadPageDestination(
+                                                it.data.toLong(),
+                                                postId = extra?.pid?.toLongOrNull() ?: 0L,
+                                                seeLz = extra?.isSeeLz ?: false,
+                                                from = ThreadPageFrom.FROM_HISTORY
+                                            )
                                         )
                                     }
                                 }

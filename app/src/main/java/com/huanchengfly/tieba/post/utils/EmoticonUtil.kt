@@ -1,16 +1,11 @@
 package com.huanchengfly.tieba.post.utils
 
-import android.view.View
-import android.widget.AdapterView
-import android.widget.EditText
 import androidx.annotation.DrawableRes
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.ExperimentalTextApi
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.withAnnotation
 import com.huanchengfly.tieba.post.R
-import com.huanchengfly.tieba.post.adapters.EmoticonGridViewAdapter
-import com.huanchengfly.tieba.post.utils.StringUtil.getEmoticonContent
 import org.intellij.lang.annotations.RegExp
 import java.util.regex.Pattern
 
@@ -173,47 +168,4 @@ object EmoticonUtil {
                 }
             }
         }
-
-    /**
-     * Created by zejian
-     * Time  16/1/8 下午5:05
-     * Email shinezejian@163.com
-     * Description:点击表情的全局监听管理类
-     */
-    object GlobalOnItemClickManagerUtil {
-        private var mEditText //输入框
-                : EditText? = null
-
-        fun attachToEditText(editText: EditText?) {
-            mEditText = editText
-        }
-
-        fun getOnItemClickListener(emoticon_map_type: Int): AdapterView.OnItemClickListener {
-            return AdapterView.OnItemClickListener { parent: AdapterView<*>, _: View?, position: Int, _: Long ->
-                val itemAdapter: Any = parent.adapter
-                if (itemAdapter is EmoticonGridViewAdapter) {
-                    // 点击的是表情
-                    //if (position == emoticonGvAdapter.getCount() - 1) {
-                    // 如果点击了表情,则添加到输入框中
-                    val emoticonName = itemAdapter.getItem(position)
-
-                    // 获取当前光标位置,在指定位置上添加表情图片文本
-                    val curPosition = mEditText!!.selectionStart
-                    val sb = mEditText!!.text
-                    sb.insert(curPosition, emoticonName)
-
-                    // 特殊文字处理,将表情等转换一下
-                    mEditText!!.setText(
-                        getEmoticonContent(
-                            mEditText!!,
-                            sb, emoticon_map_type
-                        )
-                    )
-
-                    // 将光标设置到新增完表情的右侧
-                    mEditText!!.setSelection(curPosition + emoticonName.length)
-                }
-            }
-        }
-    }
 }

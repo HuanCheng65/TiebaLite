@@ -6,16 +6,17 @@ import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.BrandingWatermark
+import androidx.compose.material.icons.automirrored.outlined.BrandingWatermark
+import androidx.compose.material.icons.automirrored.outlined.ExitToApp
+import androidx.compose.material.icons.automirrored.rounded.Sort
 import androidx.compose.material.icons.outlined.CalendarViewDay
-import androidx.compose.material.icons.outlined.ExitToApp
+import androidx.compose.material.icons.outlined.ImageSearch
 import androidx.compose.material.icons.outlined.NightsStay
 import androidx.compose.material.icons.outlined.PhotoSizeSelectActual
 import androidx.compose.material.icons.outlined.SecurityUpdateWarning
 import androidx.compose.material.icons.outlined.SpeakerNotesOff
 import androidx.compose.material.icons.outlined.StarOutline
 import androidx.compose.material.icons.outlined.Verified
-import androidx.compose.material.icons.rounded.Sort
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
@@ -37,6 +38,7 @@ import com.huanchengfly.tieba.post.ui.widgets.compose.BackNavigationIcon
 import com.huanchengfly.tieba.post.ui.widgets.compose.MyScaffold
 import com.huanchengfly.tieba.post.ui.widgets.compose.Sizes
 import com.huanchengfly.tieba.post.ui.widgets.compose.TitleCentredToolbar
+import com.huanchengfly.tieba.post.utils.isPhotoPickerAvailable
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 
@@ -46,6 +48,7 @@ import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 fun HabitSettingsPage(
     navigator: DestinationsNavigator
 ) {
+    val context = LocalContext.current
     MyScaffold(
         backgroundColor = Color.Transparent,
         topBar = {
@@ -106,7 +109,7 @@ fun HabitSettingsPage(
                     leadingIcon = {
                         LeadingIcon {
                             AvatarIcon(
-                                icon = Icons.Outlined.BrandingWatermark,
+                                icon = Icons.AutoMirrored.Outlined.BrandingWatermark,
                                 size = Sizes.Small,
                                 contentDescription = null,
                             )
@@ -119,16 +122,15 @@ fun HabitSettingsPage(
                     key = "imageDarkenWhenNightMode",
                     title = stringResource(id = R.string.settings_image_darken_when_night_mode),
                     defaultChecked = true,
-                    leadingIcon = {
-                        LeadingIcon {
-                            AvatarIcon(
-                                icon = Icons.Outlined.NightsStay,
-                                size = Sizes.Small,
-                                contentDescription = null,
-                            )
-                        }
-                    },
-                )
+                ) {
+                    LeadingIcon {
+                        AvatarIcon(
+                            icon = Icons.Outlined.NightsStay,
+                            size = Sizes.Small,
+                            contentDescription = null,
+                        )
+                    }
+                }
             }
             prefsItem {
                 ListPref(
@@ -159,7 +161,7 @@ fun HabitSettingsPage(
                     leadingIcon = {
                         LeadingIcon {
                             AvatarIcon(
-                                icon = Icons.Outlined.ExitToApp,
+                                icon = Icons.AutoMirrored.Outlined.ExitToApp,
                                 size = Sizes.Small,
                                 contentDescription = null,
                             )
@@ -178,17 +180,16 @@ fun HabitSettingsPage(
                 SwitchPref(
                     key = "hideMedia",
                     title = stringResource(id = R.string.title_hide_media),
-                    defaultChecked = false,
-                    leadingIcon = {
-                        LeadingIcon {
-                            AvatarIcon(
-                                icon = ImageVector.vectorResource(R.drawable.ic_outline_collapse_all),
-                                size = Sizes.Small,
-                                contentDescription = null,
-                            )
-                        }
+                    defaultChecked = false
+                ) {
+                    LeadingIcon {
+                        AvatarIcon(
+                            icon = ImageVector.vectorResource(R.drawable.ic_outline_collapse_all),
+                            size = Sizes.Small,
+                            contentDescription = null,
+                        )
                     }
-                )
+                }
             }
             prefsItem {
                 SwitchPref(
@@ -234,7 +235,7 @@ fun HabitSettingsPage(
                     leadingIcon = {
                         LeadingIcon {
                             AvatarIcon(
-                                icon = Icons.Rounded.Sort,
+                                icon = Icons.AutoMirrored.Rounded.Sort,
                                 size = Sizes.Small,
                                 contentDescription = null,
                             )
@@ -249,47 +250,70 @@ fun HabitSettingsPage(
                     key = "show_both_username_and_nickname",
                     title = stringResource(id = R.string.title_show_both_username_and_nickname),
                     defaultChecked = false,
-                    leadingIcon = {
-                        LeadingIcon {
-                            AvatarIcon(
-                                icon = Icons.Outlined.Verified,
-                                size = Sizes.Small,
-                                contentDescription = null,
-                            )
-                        }
-                    },
-                )
+                ) {
+                    LeadingIcon {
+                        AvatarIcon(
+                            icon = Icons.Outlined.Verified,
+                            size = Sizes.Small,
+                            contentDescription = null,
+                        )
+                    }
+                }
             }
             prefsItem {
                 SwitchPref(
                     key = "postOrReplyWarning",
                     title = stringResource(id = R.string.title_post_or_reply_warning),
                     defaultChecked = true,
-                    leadingIcon = {
-                        LeadingIcon {
-                            AvatarIcon(
-                                icon = Icons.Outlined.SecurityUpdateWarning,
-                                size = Sizes.Small,
-                                contentDescription = null,
-                            )
-                        }
-                    },
-                )
+                ) {
+                    LeadingIcon {
+                        AvatarIcon(
+                            icon = Icons.Outlined.SecurityUpdateWarning,
+                            size = Sizes.Small,
+                            contentDescription = null,
+                        )
+                    }
+                }
             }
             prefsItem {
                 SwitchPref(
                     key = "hideReply",
                     title = stringResource(id = R.string.title_hide_reply),
                     defaultChecked = false,
+                ) {
+                    LeadingIcon {
+                        AvatarIcon(
+                            icon = Icons.Outlined.SpeakerNotesOff,
+                            size = Sizes.Small,
+                            contentDescription = null,
+                        )
+                    }
+                }
+            }
+            prefsItem {
+                SwitchPref(
+                    key = "doNotUsePhotoPicker",
+                    title = stringResource(id = R.string.title_do_not_use_photo_picker),
+                    summary = {
+                        if (!isPhotoPickerAvailable()) {
+                            context.getString(R.string.summary_photo_picker_not_supported)
+                        } else if (it) {
+                            context.getString(R.string.summary_do_not_use_photo_picker)
+                        } else {
+                            context.getString(R.string.summary_use_photo_picker)
+                        }
+                    },
+                    defaultChecked = false,
                     leadingIcon = {
                         LeadingIcon {
                             AvatarIcon(
-                                icon = Icons.Outlined.SpeakerNotesOff,
+                                icon = Icons.Outlined.ImageSearch,
                                 size = Sizes.Small,
                                 contentDescription = null,
                             )
                         }
                     },
+                    enabled = isPhotoPickerAvailable()
                 )
             }
         }

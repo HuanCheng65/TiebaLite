@@ -76,16 +76,6 @@
             android:label="@string/title_custom_font_size"
             android:windowSoftInputMode="adjustResize" />
         <activity
-            android:name=".activities.PluginManageActivity"
-            android:configChanges="screenSize|screenLayout|orientation|smallestScreenSize|keyboardHidden"
-            android:label="@string/title_plugin_manage"
-            android:windowSoftInputMode="adjustResize" />
-        <activity
-            android:name=".activities.PhotoViewActivity"
-            android:configChanges="screenSize|screenLayout|orientation|smallestScreenSize|keyboardHidden"
-            android:theme="@style/AppTheme.PhotoView"
-            android:windowSoftInputMode="adjustResize" />
-        <activity
             android:name=".ui.page.photoview.PhotoViewActivity"
             android:configChanges="screenSize|screenLayout|orientation|smallestScreenSize|keyboardHidden"
             android:theme="@style/AppTheme.PhotoView"
@@ -127,26 +117,6 @@
             android:name="is_self_build"
             android:value="${is_self_build}" />
 
-        <activity
-            android:name=".activities.MainActivity"
-            android:enabled="false"
-            android:configChanges="screenSize|screenLayout|orientation|smallestScreenSize|keyboardHidden"
-            android:exported="true"
-            android:icon="@mipmap/ic_launcher"
-            android:resizeableActivity="true"
-            android:roundIcon="@mipmap/ic_launcher_round"
-            android:theme="@style/AppTheme.Splash"
-            android:windowSoftInputMode="adjustResize">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-
-            <meta-data
-                android:name="android.app.shortcuts"
-                android:resource="@xml/shortcut" />
-        </activity>
         <activity
             android:name=".MainActivityV2"
             android:configChanges="screenSize|screenLayout|orientation|smallestScreenSize|keyboard|navigation|keyboardHidden"
@@ -240,33 +210,6 @@
         </activity-alias>
 
         <activity
-            android:name=".activities.UserActivity"
-            android:configChanges="screenSize|screenLayout|orientation|smallestScreenSize|keyboardHidden"
-            android:windowSoftInputMode="adjustResize" />
-        <activity
-            android:name=".activities.ForumActivity"
-            android:configChanges="screenSize|screenLayout|orientation|smallestScreenSize|keyboardHidden"
-            android:exported="true"
-            android:windowSoftInputMode="adjustResize" />
-        <activity
-            android:name=".activities.ThreadActivity"
-            android:configChanges="screenSize|screenLayout|orientation|smallestScreenSize|keyboardHidden"
-            android:windowSoftInputMode="adjustResize" />
-        <activity
-            android:name=".activities.WebViewActivity"
-            android:configChanges="screenSize|screenLayout|orientation|smallestScreenSize|keyboardHidden"
-            android:windowSoftInputMode="adjustResize" />
-        <activity
-            android:name=".activities.LoginActivity"
-            android:configChanges="screenSize|screenLayout|orientation|smallestScreenSize|keyboardHidden"
-            android:label="@string/title_activity_login"
-            android:windowSoftInputMode="adjustResize" />
-        <activity
-            android:name=".activities.HistoryActivity"
-            android:configChanges="screenSize|screenLayout|orientation|smallestScreenSize|keyboardHidden"
-            android:label="@string/title_history"
-            android:windowSoftInputMode="adjustResize" />
-        <activity
             android:name=".activities.OKSignActivity"
             android:excludeFromRecents="true"
             android:exported="true">
@@ -274,17 +217,6 @@
                 <action android:name="com.huanchengfly.tieba.post.action.OKSIGN" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".activities.AboutActivity"
-            android:configChanges="screenSize|screenLayout|orientation|smallestScreenSize|keyboardHidden"
-            android:windowSoftInputMode="adjustResize" />
-        <activity
-            android:name=".activities.DispatchActivity"
-            android:exported="true" />
-        <activity
-            android:name=".activities.PreferencesActivity"
-            android:configChanges="screenSize|screenLayout|orientation|smallestScreenSize|keyboardHidden"
-            android:windowSoftInputMode="adjustPan" />
 
         <service
             android:name=".services.OKSignTileService"
@@ -297,70 +229,21 @@
             </intent-filter>
         </service>
 
-        <activity
-            android:name=".activities.FloorActivity"
-            android:configChanges="screenSize|screenLayout|orientation|smallestScreenSize|keyboardHidden"
-            android:windowSoftInputMode="adjustResize" />
-        <activity
-            android:name=".activities.ReplyActivity"
-            android:configChanges="screenSize|screenLayout|orientation|smallestScreenSize|keyboardHidden"
-            android:windowSoftInputMode="stateAlwaysHidden|adjustResize"
-            android:theme="@style/AppTheme.Floating" />
-        <activity
-            android:name=".activities.BlockListActivity"
-            android:configChanges="screenSize|screenLayout|orientation|smallestScreenSize|keyboardHidden"
-            android:windowSoftInputMode="adjustResize" />
-        <activity
-            android:name=".activities.UserCollectActivity"
-            android:configChanges="screenSize|screenLayout|orientation|smallestScreenSize|keyboardHidden"
-            android:label="@string/title_my_collect"
-            android:windowSoftInputMode="adjustResize" />
-        <activity
-            android:name=".activities.MessageActivity"
-            android:configChanges="screenSize|screenLayout|orientation|smallestScreenSize|keyboardHidden"
-            android:windowSoftInputMode="adjustResize" />
-        <activity
-            android:name=".activities.UpdateInfoActivity"
-            android:configChanges="screenSize|screenLayout|orientation|smallestScreenSize|keyboardHidden"
-            android:windowSoftInputMode="adjustResize" />
-
         <service
             android:name=".services.NotifyJobService"
             android:exported="true"
             android:permission="android.permission.BIND_JOB_SERVICE" />
 
         <activity
-            android:name=".activities.SearchPostActivity"
-            android:configChanges="screenSize|screenLayout|orientation|smallestScreenSize|keyboardHidden"
-            android:theme="@style/AppTheme.Floating"
-            android:windowSoftInputMode="adjustResize" />
-        <activity
-            android:name=".activities.NewIntroActivity"
-            android:configChanges="screenSize|screenLayout|orientation|smallestScreenSize|keyboardHidden"
-            android:theme="@style/AppTheme.Intro"
-            android:windowSoftInputMode="adjustResize" />
-        <activity
             android:name=".activities.TranslucentThemeActivity"
             android:configChanges="screenSize|screenLayout|orientation|smallestScreenSize|keyboardHidden"
             android:windowSoftInputMode="adjustResize" />
-        <activity
-            android:name=".activities.ForumInfoActivity"
-            android:configChanges="screenSize|screenLayout|orientation|smallestScreenSize|keyboardHidden"
-            android:label="@string/title_forum_info"
-            android:windowSoftInputMode="adjustResize" />
+
         <activity
             android:name="com.yalantis.ucrop.UCropActivity"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
-        <activity
-            android:name=".activities.NewSearchActivity"
-            android:configChanges="screenSize|screenLayout|orientation|smallestScreenSize|keyboardHidden"
-            android:windowSoftInputMode="adjustResize" />
-        <activity
-            android:name=".activities.AppThemeActivity"
-            android:configChanges="screenSize|screenLayout|orientation|smallestScreenSize|keyboardHidden"
-            android:label="@string/title_theme_settings"
-            android:windowSoftInputMode="adjustResize" />
+
         <activity
             android:name=".ui.page.user.edit.EditProfileActivity"
             android:configChanges="screenSize|screenLayout|orientation|smallestScreenSize|keyboardHidden"
@@ -378,6 +261,7 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/file_paths_share_img" />
         </provider>
+
         <provider
             android:name="androidx.startup.InitializationProvider"
             android:authorities="com.huanchengfly.tieba.post.androidx-startup"
@@ -388,5 +272,4 @@
                 android:value="androidx.startup" />
         </provider>
     </application>
-
 </manifest>

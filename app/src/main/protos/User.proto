@@ -1,5 +1,7 @@
 syntax = "proto3";
 
+package tieba;
+
 import "BawuThrones.proto";
 import "BazhuSign.proto";
 import "BirthdayInfo.proto";
@@ -10,8 +12,6 @@ import "NewGodInfo.proto";
 import "UserPics.proto";
 import "PrivSets.proto";
 import "SimpleUser.proto";
-
-package tieba;
 
 option java_package = "com.huanchengfly.tieba.post.api.models.protos";
 

@@ -1,5 +1,9 @@
 syntax = "proto3";
 
+package tieba.profile;
+
+option java_package = "com.huanchengfly.tieba.post.api.models.protos.profile";
+
 message ForumGodDetailInfo {
   int64 god_id = 1;
   int64 user_id = 2;

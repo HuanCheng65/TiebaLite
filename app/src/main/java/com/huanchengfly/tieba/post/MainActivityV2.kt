@@ -104,7 +104,6 @@ import com.huanchengfly.tieba.post.utils.TiebaUtil
 import com.huanchengfly.tieba.post.utils.compose.LaunchActivityForResult
 import com.huanchengfly.tieba.post.utils.compose.LaunchActivityRequest
 import com.huanchengfly.tieba.post.utils.isIgnoringBatteryOptimizations
-import com.huanchengfly.tieba.post.utils.launchUrl
 import com.huanchengfly.tieba.post.utils.newIntentFilter
 import com.huanchengfly.tieba.post.utils.registerPickMediasLauncher
 import com.huanchengfly.tieba.post.utils.requestIgnoreBatteryOptimizations
@@ -341,7 +340,7 @@ class MainActivityV2 : BaseComposeActivity() {
             }
 
             else -> {
-                launchUrl(this, link.url)
+//                launchUrl(this, link.url)
             }
         }
     }

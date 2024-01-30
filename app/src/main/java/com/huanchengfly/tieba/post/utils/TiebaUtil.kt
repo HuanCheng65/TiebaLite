@@ -11,9 +11,7 @@ import android.os.Build
 import android.os.PersistableBundle
 import androidx.core.content.ContextCompat
 import com.huanchengfly.tieba.post.R
-import com.huanchengfly.tieba.post.activities.WebViewActivity
 import com.huanchengfly.tieba.post.api.TiebaApi
-import com.huanchengfly.tieba.post.api.models.CheckReportBean
 import com.huanchengfly.tieba.post.api.retrofit.doIfFailure
 import com.huanchengfly.tieba.post.api.retrofit.doIfSuccess
 import com.huanchengfly.tieba.post.components.dialogs.LoadingDialog
@@ -23,9 +21,6 @@ import com.huanchengfly.tieba.post.services.OKSignService
 import com.huanchengfly.tieba.post.toastShort
 import com.huanchengfly.tieba.post.ui.page.destinations.WebViewPageDestination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 import java.util.Calendar
 
 object TiebaUtil {
@@ -119,27 +114,6 @@ object TiebaUtil {
                 "${if (title != null) "「$title」\n" else ""}$text\n（分享自贴吧 Lite）"
             )
         })
-    }
-
-    @JvmStatic
-    fun reportPost(context: Context, postId: String) {
-        val dialog = LoadingDialog(context).apply { show() }
-        TiebaApi.getInstance()
-            .checkReportPost(postId)
-            .enqueue(object : Callback<CheckReportBean> {
-                override fun onResponse(
-                    call: Call<CheckReportBean>,
-                    response: Response<CheckReportBean>,
-                ) {
-                    dialog.dismiss()
-                    WebViewActivity.launch(context, response.body()!!.data.url)
-                }
-
-                override fun onFailure(call: Call<CheckReportBean>, t: Throwable) {
-                    dialog.dismiss()
-                    context.toastShort(R.string.toast_load_failed)
-                }
-            })
     }
 
     suspend fun reportPost(

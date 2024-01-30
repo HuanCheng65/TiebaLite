@@ -4,8 +4,6 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.ActivityManager
 import android.app.Application
-import android.app.Dialog
-import android.content.ComponentName
 import android.content.Context
 import android.content.res.Configuration
 import android.content.res.Resources
@@ -17,7 +15,6 @@ import android.webkit.WebSettings
 import android.webkit.WebView
 import androidx.annotation.Keep
 import androidx.annotation.RequiresApi
-import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.compose.ui.graphics.toArgb
 import com.github.gzuliyujiang.oaid.DeviceID
@@ -32,27 +29,19 @@ import com.github.panpf.sketch.request.PauseLoadWhenScrollingDrawableDecodeInter
 import com.huanchengfly.tieba.post.activities.BaseActivity
 import com.huanchengfly.tieba.post.components.ClipBoardLinkDetector
 import com.huanchengfly.tieba.post.components.OAIDGetter
-import com.huanchengfly.tieba.post.components.dialogs.LoadingDialog
-import com.huanchengfly.tieba.post.plugins.PluginManager
-import com.huanchengfly.tieba.post.plugins.interfaces.IApp
 import com.huanchengfly.tieba.post.ui.common.theme.compose.dynamicTonalPalette
 import com.huanchengfly.tieba.post.ui.common.theme.interfaces.ThemeSwitcher
 import com.huanchengfly.tieba.post.ui.common.theme.utils.ThemeUtils
 import com.huanchengfly.tieba.post.utils.AccountUtil
 import com.huanchengfly.tieba.post.utils.AppIconUtil
-import com.huanchengfly.tieba.post.utils.AppIconUtil.disableComponent
-import com.huanchengfly.tieba.post.utils.AppIconUtil.enableComponent
 import com.huanchengfly.tieba.post.utils.BlockManager
 import com.huanchengfly.tieba.post.utils.ClientUtils
 import com.huanchengfly.tieba.post.utils.EmoticonManager
-import com.huanchengfly.tieba.post.utils.LauncherIcons
 import com.huanchengfly.tieba.post.utils.SharedPreferencesUtil
 import com.huanchengfly.tieba.post.utils.ThemeUtil
-import com.huanchengfly.tieba.post.utils.TiebaUtil
 import com.huanchengfly.tieba.post.utils.Util
 import com.huanchengfly.tieba.post.utils.appPreferences
 import com.huanchengfly.tieba.post.utils.applicationMetaData
-import com.huanchengfly.tieba.post.utils.launchUrl
 import com.huanchengfly.tieba.post.utils.packageInfo
 import com.microsoft.appcenter.AppCenter
 import com.microsoft.appcenter.analytics.Analytics
@@ -69,7 +58,7 @@ import kotlin.concurrent.thread
 
 
 @HiltAndroidApp
-class App : Application(), IApp, SketchFactory {
+class App : Application(), SketchFactory {
     private val mActivityList: MutableList<Activity> = mutableListOf()
 
     @RequiresApi(api = 28)
@@ -92,32 +81,6 @@ class App : Application(), IApp, SketchFactory {
         return null
     }
 
-    private fun setOldMainActivityEnabled(enabled: Boolean) {
-        if (enabled) {
-            packageManager.enableComponent(
-                ComponentName(
-                    this,
-                    "com.huanchengfly.tieba.post.activities.MainActivity"
-                )
-            )
-        } else {
-            packageManager.disableComponent(
-                ComponentName(
-                    this,
-                    "com.huanchengfly.tieba.post.activities.MainActivity"
-                )
-            )
-        }
-    }
-
-    fun setIcon(
-        enableNewUi: Boolean = appPreferences.enableNewUi,
-    ) {
-        setOldMainActivityEnabled(!enableNewUi)
-        if (enableNewUi) AppIconUtil.setIcon()
-        else AppIconUtil.setIcon(LauncherIcons.DISABLE)
-    }
-
     override fun onCreate() {
         INSTANCE = this
         super.onCreate()
@@ -137,12 +100,11 @@ class App : Application(), IApp, SketchFactory {
                 Analytics::class.java, Crashes::class.java, Distribute::class.java
             )
         }
-        setIcon()
+        AppIconUtil.setIcon()
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
         ThemeUtils.init(ThemeDelegate)
         registerActivityLifecycleCallbacks(ClipBoardLinkDetector)
         registerActivityLifecycleCallbacks(OAIDGetter)
-        PluginManager.init(this)
         thread {
             BlockManager.init()
             EmoticonManager.init(this@App)
@@ -303,9 +265,6 @@ class App : Application(), IApp, SketchFactory {
 
         private val nightMode: Int
             get() = INSTANCE.resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
-
-        private val isNewUi: Boolean
-            get() = INSTANCE.appPreferences.enableNewUi
     }
 
     object ThemeDelegate : ThemeSwitcher {
@@ -499,40 +458,24 @@ class App : Application(), IApp, SketchFactory {
                     } else context.getColorCompat(R.color.theme_color_background_light)
                 }
                 R.attr.colorWindowBackground -> {
-                    return if (isNewUi) {
-                        if (ThemeUtil.isTranslucentTheme(theme)) {
-                            context.getColorCompat(
-                                resources.getIdentifier(
-                                    "theme_color_window_background_$theme",
-                                    "color",
-                                    packageName
-                                )
+                    return if (ThemeUtil.isTranslucentTheme(theme)) {
+                        context.getColorCompat(
+                            resources.getIdentifier(
+                                "theme_color_window_background_$theme",
+                                "color",
+                                packageName
                             )
-                        } else if (ThemeUtil.isNightMode()) {
-                            context.getColorCompat(
-                                resources.getIdentifier(
-                                    "theme_color_background_$theme",
-                                    "color",
-                                    packageName
-                                )
+                        )
+                    } else if (ThemeUtil.isNightMode()) {
+                        context.getColorCompat(
+                            resources.getIdentifier(
+                                "theme_color_background_$theme",
+                                "color",
+                                packageName
                             )
-                        } else {
-                            context.getColorCompat(R.color.theme_color_background_light)
-                        }
+                        )
                     } else {
-                        if (ThemeUtil.isTranslucentTheme(theme)) {
-                            context.getColorCompat(R.color.transparent)
-                        } else if (ThemeUtil.isNightMode()) {
-                            context.getColorCompat(
-                                resources.getIdentifier(
-                                    "theme_color_window_background_$theme",
-                                    "color",
-                                    packageName
-                                )
-                            )
-                        } else {
-                            context.getColorCompat(R.color.theme_color_window_background_light)
-                        }
+                        context.getColorCompat(R.color.theme_color_background_light)
                     }
                 }
                 R.attr.colorChip -> {
@@ -841,40 +784,6 @@ class App : Application(), IApp, SketchFactory {
             }
             return context.getColorCompat(colorId)
         }
-    }
-
-    override fun getAppContext(): Context {
-        return this
-    }
-
-    override fun getCurrentContext(): Context {
-        return mActivityList.lastOrNull() ?: this
-    }
-
-    override fun launchUrl(url: String) {
-        launchUrl(getCurrentContext(), url)
-    }
-
-    override fun showLoadingDialog(): Dialog {
-        return LoadingDialog(getCurrentContext()).apply { show() }
-    }
-
-    override fun toastShort(text: String) {
-        getCurrentContext().toastShort(text)
-    }
-
-    override fun showAlertDialog(builder: AlertDialog.Builder.() -> Unit): AlertDialog {
-        val dialog = AlertDialog.Builder(getCurrentContext())
-            .apply(builder)
-            .create()
-        if (getCurrentContext() !is BaseActivity || (getCurrentContext() as BaseActivity).isActivityRunning) {
-            dialog.show()
-        }
-        return dialog
-    }
-
-    override fun copyText(text: String) {
-        TiebaUtil.copyText(getCurrentContext(), text)
     }
 
     override fun createSketch(): Sketch = Sketch.Builder(this).apply {

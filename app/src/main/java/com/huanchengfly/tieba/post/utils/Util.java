@@ -1,12 +1,10 @@
 package com.huanchengfly.tieba.post.utils;
 
-import static android.content.Intent.ACTION_VIEW;
 import static com.huanchengfly.tieba.post.utils.ColorUtils.greifyColor;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.content.res.TypedArray;
 import android.graphics.Bitmap;
@@ -17,7 +15,6 @@ import android.graphics.PorterDuff;
 import android.graphics.PorterDuffColorFilter;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
-import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -31,60 +28,17 @@ import androidx.annotation.IntRange;
 import androidx.annotation.NonNull;
 import androidx.annotation.Px;
 import androidx.annotation.StringRes;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatDrawableManager;
 
 import com.google.android.material.snackbar.Snackbar;
-import com.gyf.immersionbar.OSUtils;
-import com.huanchengfly.tieba.post.BundleConfig;
-import com.huanchengfly.tieba.post.IntentConfig;
 import com.huanchengfly.tieba.post.R;
-import com.huanchengfly.tieba.post.components.dialogs.CopyTextDialog;
-import com.huanchengfly.tieba.post.fragments.MenuDialogFragment;
 import com.huanchengfly.tieba.post.ui.common.theme.utils.ThemeUtils;
 
 import java.lang.reflect.Field;
-import java.util.ArrayList;
 import java.util.Calendar;
 
 public class Util {
     public static final String TAG = "Util";
-
-    public static boolean isMIUI9Later() {
-        String version = OSUtils.getMIUIVersion();
-        int num;
-        if ((!version.isEmpty())) {
-            try {
-                num = Integer.valueOf(version.substring(1));
-                return num >= 9;
-            } catch (NumberFormatException e) {
-                return false;
-            }
-        } else
-            return false;
-    }
-
-    public static void miuiFav(Context context, String title, String url) {
-        if (!isMIUI9Later()) {
-            return;
-        }
-        Bundle bundle = new Bundle();
-        bundle.putString(BundleConfig.MATCH_ACTION, ACTION_VIEW);
-        bundle.putString(BundleConfig.TARGET_URL, url);
-        bundle.putString(BundleConfig.TARGET_DATA, url);
-        bundle.putString(BundleConfig.TARGET_TITLE, title);
-        ArrayList<Bundle> bundleList = new ArrayList<>();
-        bundleList.add(bundle);
-        Intent intent = new Intent(IntentConfig.ACTION);
-        intent.putParcelableArrayListExtra(IntentConfig.BUNDLES, bundleList);
-        intent.putExtra(IntentConfig.ACTION_FAV, true);
-        intent.setPackage(IntentConfig.PACKAGE);// 限定当前收藏广播接收者的包名和权限
-        try {
-            context.sendBroadcast(intent, IntentConfig.PERMISSION);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
 
     public static Snackbar createSnackbar(@NonNull View view, @NonNull CharSequence text, @Snackbar.Duration int duration) {
         Snackbar snackbar = Snackbar.make(view, text, duration);
@@ -130,52 +84,12 @@ public class Util {
         return bitmap;
     }
 
-    public static void showNetworkErrorSnackbar(View view, Runnable runnable) {
-        try {
-            createSnackbar(view, R.string.toast_network_error, Snackbar.LENGTH_LONG)
-                    .setAction(R.string.button_retry, v -> runnable.run())
-                    .show();
-        } catch (Exception ignored) {
-        }
-    }
-
     public static int changeAlpha(int color, float fraction) {
         int red = Color.red(color);
         int green = Color.green(color);
         int blue = Color.blue(color);
         int alpha = (int) (Color.alpha(color) * fraction);
         return Color.argb(alpha, red, green, blue);
-    }
-
-    public static Drawable getMaskDrawable(Context context, int maskId) {
-        Drawable drawable;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            drawable = context.getDrawable(maskId);
-        } else {
-            drawable = context.getResources().getDrawable(maskId);
-        }
-
-        if (drawable == null) {
-            throw new IllegalArgumentException("maskId is invalid");
-        }
-
-        return drawable;
-    }
-
-    public static void showCopyDialog(AppCompatActivity activity, String text, String tag) {
-        MenuDialogFragment.newInstance(R.menu.menu_copy_dialog, null)
-                .setOnNavigationItemSelectedListener(item1 -> {
-                    switch (item1.getItemId()) {
-                        case R.id.menu_copy:
-                            TiebaUtil.copyText(activity, text);
-                            break;
-                        case R.id.menu_copy_selectable:
-                            new CopyTextDialog(activity, text).show();
-                            break;
-                    }
-                    return true;
-                })
-                .show(activity.getSupportFragmentManager(), tag + "_Copy");
     }
 
     /**

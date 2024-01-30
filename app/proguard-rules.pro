@@ -155,8 +155,6 @@
 
 # Matisse
 -dontwarn com.squareup.picasso.**
--dontwarn com.zhihu.matisse.**
--keep class com.zhihu.matisse.**{*;}
 
 -keep class com.lijiankun24.** { *; }
 
@@ -276,7 +274,6 @@
 -keep,allowobfuscation,allowshrinking class * extends com.google.gson.reflect.TypeToken
 
 -keep,allowobfuscation,allowshrinking class com.billy.android.preloader.** { *; }
--keep,allowobfuscation,allowshrinking class com.huanchengfly.tieba.post.utils.preload.** { *; }
 
 -if interface * { @retrofit2.http.* <methods>; }
 -keep,allowobfuscation interface <1>

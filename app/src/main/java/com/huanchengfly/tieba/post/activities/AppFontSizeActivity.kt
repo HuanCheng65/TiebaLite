@@ -50,7 +50,7 @@ class AppFontSizeActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        ThemeUtil.setTranslucentThemeBackground(findViewById(R.id.background))
+        ThemeUtil.setTranslucentThemeBackground(this, findViewById(R.id.background))
         setSupportActionBar(toolbar)
         supportActionBar?.apply {
             setDisplayHomeAsUpEnabled(true)

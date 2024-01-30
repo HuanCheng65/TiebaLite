@@ -67,7 +67,6 @@ import com.google.accompanist.placeholder.material.placeholder
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.huanchengfly.tieba.post.R
 import com.huanchengfly.tieba.post.activities.BaseActivity
-import com.huanchengfly.tieba.post.activities.WebViewActivity
 import com.huanchengfly.tieba.post.arch.collectIn
 import com.huanchengfly.tieba.post.arch.collectPartialAsState
 import com.huanchengfly.tieba.post.toastShort
@@ -89,9 +88,9 @@ import com.huanchengfly.tieba.post.utils.PermissionUtils
 import com.huanchengfly.tieba.post.utils.PickMediasRequest
 import com.huanchengfly.tieba.post.utils.StringUtil
 import com.huanchengfly.tieba.post.utils.ThemeUtil
-import com.huanchengfly.tieba.post.utils.isPhotoPickerAvailable
 import com.huanchengfly.tieba.post.utils.registerPickMediasLauncher
 import com.huanchengfly.tieba.post.utils.requestPermission
+import com.huanchengfly.tieba.post.utils.shouldUsePhotoPicker
 import com.yalantis.ucrop.UCrop
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.collections.immutable.persistentListOf
@@ -104,9 +103,14 @@ import java.io.File
 
 @AndroidEntryPoint
 class EditProfileActivity : BaseActivity() {
-    private val modifyNicknameLauncher =
-        registerForActivityResult(WebViewActivity.ModifyNicknameResultContract()) { result ->
-            viewModel.send(EditProfileIntent.ModifyNicknameFinish(result))
+    private val uCropLauncher =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+            if (it.resultCode == Activity.RESULT_OK) {
+                viewModel.send(EditProfileIntent.UploadPortrait(File(cacheDir, "cropped_portrait")))
+            } else if (it.resultCode == UCrop.RESULT_ERROR) {
+                val cropError = UCrop.getError(it.data!!)
+                cropError!!.printStackTrace()
+            }
         }
 
     private val pickMediasLauncher =
@@ -163,27 +167,14 @@ class EditProfileActivity : BaseActivity() {
                                         )
                                     )
                                     setCompressionFormat(Bitmap.CompressFormat.JPEG)
-                                })
+                                }
+                                )
                                 .getIntent(this@EditProfileActivity)
                             uCropLauncher.launch(intent)
                         }
-
-                        override fun onLoadFailed(errorDrawable: Drawable?) {
-                            toastShort(R.string.text_load_failed)
-                        }
                     })
             }
-        }
-
-    private val uCropLauncher =
-        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
-            if (it.resultCode == Activity.RESULT_OK) {
-                viewModel.send(EditProfileIntent.UploadPortrait(File(cacheDir, "cropped_portrait")))
-            } else if (it.resultCode == UCrop.RESULT_ERROR) {
-                val cropError = UCrop.getError(it.data!!)
-                cropError!!.printStackTrace()
             }
-        }
 
     private val viewModel: EditProfileViewModel by viewModels()
 
@@ -230,6 +221,7 @@ class EditProfileActivity : BaseActivity() {
             is EditProfileEvent.Init.Fail -> {
                 toastShort(event.toast)
             }
+
             is EditProfileEvent.Submit.Result -> {
                 if (event.success) {
                     if (event.changed) toastShort(R.string.toast_success)
@@ -238,14 +230,9 @@ class EditProfileActivity : BaseActivity() {
                     toastShort(event.message)
                 }
             }
-            EditProfileEvent.ModifyNickname.Start -> {
-                modifyNicknameLauncher.launch(null)
-            }
-            is EditProfileEvent.ModifyNickname.Finish -> {
-                if (event.result.isClose == 1) toastShort(R.string.toast_modify_nickname_success)
-            }
+
             EditProfileEvent.UploadPortrait.Pick -> {
-                if (isPhotoPickerAvailable()) {
+                if (shouldUsePhotoPicker()) {
                     pickMediasLauncher.launch(PickMediasRequest(mediaType = PickMediasRequest.ImageOnly))
                 } else {
                     requestPermission {
@@ -271,6 +258,7 @@ class EditProfileActivity : BaseActivity() {
                     }
                 }
             }
+
             is EditProfileEvent.UploadPortrait.Fail -> toastShort(event.error)
             is EditProfileEvent.UploadPortrait.Success -> toastShort(event.message)
         }
@@ -481,7 +469,7 @@ fun EditProfileCard(
 @Composable
 fun PageEditProfile(
     viewModel: EditProfileViewModel,
-    onBackPressed: () -> Unit
+    onBackPressed: () -> Unit,
 ) {
     val isLoading by viewModel.uiState.collectPartialAsState(
         EditProfileState::isLoading,

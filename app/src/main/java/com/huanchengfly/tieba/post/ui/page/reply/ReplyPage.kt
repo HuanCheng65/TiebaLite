@@ -48,11 +48,11 @@ import androidx.compose.material.LocalTextStyle
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.rounded.Send
 import androidx.compose.material.icons.outlined.EmojiEmotions
 import androidx.compose.material.icons.outlined.InsertPhoto
 import androidx.compose.material.icons.rounded.Add
 import androidx.compose.material.icons.rounded.Close
-import androidx.compose.material.icons.rounded.Send
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
@@ -79,7 +79,6 @@ import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.widget.addTextChangedListener
-import com.effective.android.panel.utils.PanelUtil
 import com.github.panpf.sketch.compose.AsyncImage
 import com.google.accompanist.drawablepainter.rememberDrawablePainter
 import com.huanchengfly.tieba.post.R
@@ -112,6 +111,8 @@ import com.huanchengfly.tieba.post.utils.EmoticonManager
 import com.huanchengfly.tieba.post.utils.PickMediasRequest
 import com.huanchengfly.tieba.post.utils.StringUtil
 import com.huanchengfly.tieba.post.utils.appPreferences
+import com.huanchengfly.tieba.post.utils.hideKeyboard
+import com.huanchengfly.tieba.post.utils.showKeyboard
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import com.ramcosta.composedestinations.spec.DestinationStyleBottomSheet
@@ -273,7 +274,7 @@ fun ReplyPage(
 
     fun showKeyboard() {
         editTextView?.apply {
-            PanelUtil.showKeyboard(context, this)
+            showKeyboard(context, this)
             requestFocus()
         }
         keyboardController?.show()
@@ -281,7 +282,7 @@ fun ReplyPage(
 
     fun hideKeyboard() {
         editTextView?.apply {
-            PanelUtil.hideKeyboard(context, this)
+            hideKeyboard(context, this)
             clearFocus()
         }
         keyboardController?.hide()
@@ -564,7 +565,7 @@ fun ReplyPage(
                     modifier = Modifier.size(24.dp)
                 ) {
                     Icon(
-                        imageVector = Icons.Rounded.Send,
+                        imageVector = Icons.AutoMirrored.Rounded.Send,
                         contentDescription = stringResource(id = R.string.send_reply),
                         modifier = Modifier.size(24.dp)
                     )

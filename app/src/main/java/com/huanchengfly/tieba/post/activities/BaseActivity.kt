@@ -30,9 +30,6 @@ import com.gyf.immersionbar.ImmersionBar
 import com.huanchengfly.tieba.post.App
 import com.huanchengfly.tieba.post.App.Companion.INSTANCE
 import com.huanchengfly.tieba.post.R
-import com.huanchengfly.tieba.post.activities.MainActivity.Companion.SP_SHOULD_SHOW_SNACKBAR
-import com.huanchengfly.tieba.post.dataStore
-import com.huanchengfly.tieba.post.putBoolean
 import com.huanchengfly.tieba.post.ui.common.theme.interfaces.ExtraRefreshable
 import com.huanchengfly.tieba.post.ui.common.theme.utils.ThemeUtils
 import com.huanchengfly.tieba.post.ui.widgets.VoicePlayerView
@@ -154,10 +151,8 @@ abstract class BaseActivity : AppCompatActivity(), ExtraRefreshable, CoroutineSc
         isActivityRunning = true
         if (appPreferences.followSystemNight) {
             if (App.isSystemNight && !ThemeUtil.isNightMode()) {
-                dataStore.putBoolean(SP_SHOULD_SHOW_SNACKBAR, true)
                 ThemeUtil.switchToNightMode(this, false)
             } else if (!App.isSystemNight && ThemeUtil.isNightMode()) {
-                dataStore.putBoolean(SP_SHOULD_SHOW_SNACKBAR, true)
                 ThemeUtil.switchFromNightMode(this, false)
             }
         }
@@ -180,10 +175,6 @@ abstract class BaseActivity : AppCompatActivity(), ExtraRefreshable, CoroutineSc
                 if (!HandleBackUtil.handleBackPress(this)) {
                     finish()
                 }
-                return true
-            }
-            R.id.menu_exit -> {
-                finish()
                 return true
             }
         }

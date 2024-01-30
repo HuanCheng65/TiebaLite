@@ -1,32 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string-array name="sort_type_entry_values">
-        <item>0</item>
-        <item>1</item>
-    </string-array>
-
-    <string-array name="sort_type_entries">
-        <item>@string/title_sort_by_reply</item>
-        <item>@string/title_sort_by_send</item>
-    </string-array>
-
-    <string-array name="image_load_type_entry_values">
-        <item>0</item>
-        <item>1</item>
-        <item>2</item>
-        <item>3</item>
-    </string-array>
-
-    <string-array name="experimental_features">
-        <item>checkCIUpdate</item>
-    </string-array>
-
-    <string-array name="image_load_type_entries">
-        <item>@string/title_image_load_type_smart_origin</item>
-        <item>@string/title_image_load_type_smart_load</item>
-        <item>@string/title_image_load_type_all_origin</item>
-        <item>@string/title_image_load_type_all_no</item>
-    </string-array>
 
     <string-array name="theme_values">
         <item>tieba</item>
@@ -64,15 +37,4 @@
         <item>amoled_dark</item>
     </string-array>
 
-    <string-array name="forum_fab_function_values">
-        <item>post</item>
-        <item>refresh</item>
-        <item>back_to_top</item>
-    </string-array>
-
-    <string-array name="forum_fab_function_name_values">
-        <item>@string/btn_post</item>
-        <item>@string/btn_refresh</item>
-        <item>@string/btn_back_to_top</item>
-    </string-array>
 </resources>

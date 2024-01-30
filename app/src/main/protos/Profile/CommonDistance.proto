@@ -1,5 +1,9 @@
 syntax = "proto3";
 
+package tieba.profile;
+
+option java_package = "com.huanchengfly.tieba.post.api.models.protos.profile";
+
 message CommonDistance {
   uint32 distance = 1;
   uint32 time = 2;

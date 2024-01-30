@@ -17,20 +17,58 @@ import androidx.compose.ui.res.stringResource
 import com.huanchengfly.tieba.post.R
 import com.huanchengfly.tieba.post.ui.common.theme.compose.ExtendedTheme
 import com.huanchengfly.tieba.post.ui.page.LocalNavigator
+import com.huanchengfly.tieba.post.ui.page.ProvideNavigator
 import com.huanchengfly.tieba.post.ui.page.destinations.SearchPageDestination
 import com.huanchengfly.tieba.post.ui.page.main.notifications.list.NotificationsListPage
 import com.huanchengfly.tieba.post.ui.page.main.notifications.list.NotificationsType
 import com.huanchengfly.tieba.post.ui.widgets.compose.ActionItem
+import com.huanchengfly.tieba.post.ui.widgets.compose.BackNavigationIcon
 import com.huanchengfly.tieba.post.ui.widgets.compose.LazyLoadHorizontalPager
+import com.huanchengfly.tieba.post.ui.widgets.compose.MyScaffold
 import com.huanchengfly.tieba.post.ui.widgets.compose.PagerTabIndicator
 import com.huanchengfly.tieba.post.ui.widgets.compose.TabRow
+import com.huanchengfly.tieba.post.ui.widgets.compose.TitleCentredToolbar
 import com.huanchengfly.tieba.post.ui.widgets.compose.Toolbar
 import com.huanchengfly.tieba.post.ui.widgets.compose.accountNavIconIfCompact
+import com.ramcosta.composedestinations.annotation.DeepLink
+import com.ramcosta.composedestinations.annotation.Destination
+import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import kotlinx.coroutines.launch
+
+@Destination(
+    deepLinks = [
+        DeepLink(uriPattern = "tblite://notifications/{initialTab}")
+    ]
+)
+@Composable
+fun NotificationsPage(
+    navigator: DestinationsNavigator,
+    initialTab: Int = 0,
+) {
+    ProvideNavigator(navigator = navigator) {
+        MyScaffold(
+            topBar = {
+                TitleCentredToolbar(
+                    title = { Text(text = stringResource(id = R.string.title_notifications)) },
+                    navigationIcon = {
+                        BackNavigationIcon {
+                            navigator.navigateUp()
+                        }
+                    }
+                )
+            },
+            modifier = Modifier.fillMaxSize(),
+        ) {
+            NotificationsPage(initialTab = initialTab)
+        }
+    }
+}
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun NotificationsPage() {
+fun NotificationsPage(
+    initialTab: Int = 0,
+) {
     val navigator = LocalNavigator.current
     val pages = listOf<Pair<String, (@Composable () -> Unit)>>(
         stringResource(id = R.string.title_reply_me) to @Composable {
@@ -40,7 +78,9 @@ fun NotificationsPage() {
             NotificationsListPage(type = NotificationsType.AtMe)
         }
     )
-    val pagerState = rememberPagerState { pages.size }
+    val pagerState = rememberPagerState(
+        initialPage = initialTab,
+    ) { pages.size }
     val coroutineScope = rememberCoroutineScope()
     Scaffold(
         backgroundColor = Color.Transparent,

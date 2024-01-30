@@ -12,7 +12,6 @@ import com.huanchengfly.tieba.post.arch.PartialChangeProducer
 import com.huanchengfly.tieba.post.arch.UiEvent
 import com.huanchengfly.tieba.post.arch.UiIntent
 import com.huanchengfly.tieba.post.arch.UiState
-import com.huanchengfly.tieba.post.models.ModifyNicknameResult
 import com.huanchengfly.tieba.post.models.database.Account
 import com.huanchengfly.tieba.post.utils.AccountUtil
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -49,10 +48,6 @@ class EditProfileViewModel @Inject constructor() :
                 intentFlow.filterIsInstance<EditProfileIntent.Submit>()
                     .flatMapConcat { it.toPartialChangeFlow() },
                 intentFlow.filterIsInstance<EditProfileIntent.SubmitWithoutChange>()
-                    .flatMapConcat { it.toPartialChangeFlow() },
-                intentFlow.filterIsInstance<EditProfileIntent.ModifyNickname>()
-                    .flatMapConcat { it.toPartialChangeFlow() },
-                intentFlow.filterIsInstance<EditProfileIntent.ModifyNicknameFinish>()
                     .flatMapConcat { it.toPartialChangeFlow() },
                 intentFlow.filterIsInstance<EditProfileIntent.UploadPortrait>()
                     .flatMapConcat { it.toPartialChangeFlow() },
@@ -124,14 +119,8 @@ class EditProfileViewModel @Inject constructor() :
         private fun EditProfileIntent.SubmitWithoutChange.toPartialChangeFlow() =
             flow { emit(EditProfilePartialChange.Submit.SuccessWithoutChange) }
 
-        private fun EditProfileIntent.ModifyNickname.toPartialChangeFlow() =
-            flow { emit(EditProfilePartialChange.ModifyNickname.Start) }
-
         private fun EditProfileIntent.UploadPortraitStart.toPartialChangeFlow() =
             flow { emit(EditProfilePartialChange.UploadPortrait.Start) }
-
-        private fun EditProfileIntent.ModifyNicknameFinish.toPartialChangeFlow() =
-            flow { emit(EditProfilePartialChange.ModifyNickname.Finish(result)) }
 
         private fun EditProfileIntent.UploadPortrait.toPartialChangeFlow(): Flow<EditProfilePartialChange.UploadPortrait> =
             tiebaApi.imgPortrait(file)
@@ -168,11 +157,6 @@ class EditProfileViewModel @Inject constructor() :
                 true
             )
 
-            EditProfilePartialChange.ModifyNickname.Start -> EditProfileEvent.ModifyNickname.Start
-            is EditProfilePartialChange.ModifyNickname.Finish -> EditProfileEvent.ModifyNickname.Finish(
-                partialChange.result
-            )
-
             EditProfilePartialChange.UploadPortrait.Start -> EditProfileEvent.UploadPortrait.Pick
             is EditProfilePartialChange.UploadPortrait.Success -> EditProfileEvent.UploadPortrait.Success(
                 partialChange.message
@@ -200,12 +184,6 @@ sealed interface EditProfileEvent : UiEvent {
         ) : Submit
     }
 
-    sealed interface ModifyNickname : EditProfileEvent {
-        data object Start : ModifyNickname
-
-        data class Finish(val result: ModifyNicknameResult) : ModifyNickname
-    }
-
     sealed interface UploadPortrait : EditProfileEvent {
         data object Pick : UploadPortrait
         data class Success(val message: String) : UploadPortrait
@@ -225,10 +203,6 @@ sealed interface EditProfileIntent : UiIntent {
     ) : EditProfileIntent
 
     data object SubmitWithoutChange : EditProfileIntent
-
-    data object ModifyNickname : EditProfileIntent
-
-    data class ModifyNicknameFinish(val result: ModifyNicknameResult) : EditProfileIntent
 
     data class UploadPortrait(val file: File) : EditProfileIntent
 
@@ -250,23 +224,6 @@ sealed class EditProfilePartialChange : PartialChange<EditProfileState> {
         data class Success(val message: String) : UploadPortrait()
         data class Fail(val error: String) : UploadPortrait()
 
-    }
-
-    sealed class ModifyNickname : EditProfilePartialChange() {
-        override fun reduce(oldState: EditProfileState): EditProfileState =
-            when (this) {
-                Start -> oldState.copy()
-                is Finish -> {
-                    if (result.nickname != null) {
-                        oldState.copy(nickName = result.nickname)
-                    } else {
-                        oldState.copy()
-                    }
-                }
-            }
-
-        data object Start : ModifyNickname()
-        data class Finish(val result: ModifyNicknameResult) : ModifyNickname()
     }
 
     sealed class Init : EditProfilePartialChange() {

@@ -7,7 +7,6 @@ plugins {
     id 'com.squareup.wire'
     id 'com.google.devtools.ksp' version "$kotlin_version-1.0.17"
     id "org.jetbrains.kotlin.plugin.parcelize"
-//    id 'com.didiglobal.booster'
 }
 
 def keystoreProperties = new Properties()
@@ -91,6 +90,7 @@ android {
     packagingOptions {
         resources {
             excludes += '/META-INF/{AL2.0,LGPL2.1}'
+            excludes += "DebugProbesKt.bin"
         }
     }
     namespace 'com.huanchengfly.tieba.post'
@@ -167,7 +167,7 @@ dependencies {
     implementation composeBom
     androidTestImplementation composeBom
 
-    implementation 'androidx.compose.runtime:runtime-tracing:1.0.0-beta01'
+    runtimeOnly 'androidx.compose.runtime:runtime-tracing:1.0.0-beta01'
     implementation 'androidx.compose.animation:animation'
     implementation 'androidx.compose.animation:animation-graphics'
     implementation 'androidx.compose.material:material'
@@ -183,7 +183,7 @@ dependencies {
 
     // UI Tests
     androidTestImplementation 'androidx.compose.ui:ui-test-junit4'
-    debugImplementation 'androidx.compose.ui:ui-test-manifest'
+    debugRuntimeOnly 'androidx.compose.ui:ui-test-manifest'
 
     implementation "com.google.android.material:compose-theme-adapter:1.2.1"
     implementation "androidx.constraintlayout:constraintlayout-compose:1.0.1"
@@ -200,8 +200,8 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
     implementation "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"
 
-    api "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutines_version"
-    api "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutines_version"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutines_version"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutines_version"
 
     def lifecycle_version = "2.7.0"
 
@@ -218,7 +218,6 @@ dependencies {
     implementation "androidx.constraintlayout:constraintlayout:2.1.4"
     implementation "androidx.core:core-ktx:1.12.0"
     implementation 'androidx.core:core-splashscreen:1.0.1'
-    implementation "androidx.preference:preference-ktx:1.2.1"
     implementation "androidx.gridlayout:gridlayout:1.0.0"
     implementation "androidx.browser:browser:1.7.0"
     implementation "androidx.viewpager2:viewpager2:1.0.0"
@@ -232,8 +231,8 @@ dependencies {
     androidTestImplementation "androidx.test:core:1.5.0"
     androidTestImplementation "androidx.test.ext:junit:1.1.5"
     androidTestImplementation "androidx.test:rules:1.5.0"
-    androidTestImplementation "androidx.test:runner:1.5.2"
     androidTestImplementation "androidx.test.espresso:espresso-core:3.5.1"
+    androidTestRuntimeOnly "androidx.test:runner:1.5.2"
 
     //Glide
     implementation "com.github.bumptech.glide:glide:$glide_version"
@@ -244,11 +243,9 @@ dependencies {
 
     implementation 'com.squareup.okhttp3:okhttp:4.12.0'
     implementation "com.squareup.retrofit2:retrofit:$retrofit_version"
-    implementation "com.squareup.retrofit2:converter-gson:$retrofit_version"
     implementation "com.squareup.retrofit2:converter-wire:$retrofit_version"
 
     implementation 'com.google.code.gson:gson:2.10.1'
-    implementation 'com.github.DSAppTeam:PanelSwitchHelper:v1.5.2'
     implementation "org.litepal.android:kotlin:3.0.0"
     implementation 'cn.jzvd:jiaozivideoplayer:7.7.2.3300'
     implementation 'com.jaredrummler:colorpicker:1.1.0'
@@ -262,15 +259,8 @@ dependencies {
 
     implementation "com.github.yalantis:ucrop:2.2.8"
 
-    implementation "com.billy.android:pre-loader:2.1.0"
-
     implementation "com.jakewharton:butterknife:10.2.3"
     kapt "com.jakewharton:butterknife-compiler:10.2.3"
-
-    //noinspection GradleDependency
-    implementation ('com.alibaba.android:vlayout:1.2.40@aar') {
-        transitive = true
-    }
 
     def appCenterSdkVersion = '5.0.4'
     implementation "com.microsoft.appcenter:appcenter-analytics:${appCenterSdkVersion}"

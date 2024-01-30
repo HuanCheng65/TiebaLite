@@ -2,34 +2,19 @@ package com.huanchengfly.tieba.post.components
 
 import android.app.Activity
 import android.app.Application
-import android.content.Context
-import android.content.Intent
-import android.content.res.ColorStateList
 import android.net.Uri
 import android.os.Bundle
-import android.view.View
-import android.widget.FrameLayout
-import android.widget.ImageView
-import android.widget.TextView
 import com.huanchengfly.tieba.post.App
 import com.huanchengfly.tieba.post.MainActivityV2
-import com.huanchengfly.tieba.post.R
 import com.huanchengfly.tieba.post.activities.BaseActivity
 import com.huanchengfly.tieba.post.arch.collectIn
-import com.huanchengfly.tieba.post.dpToPx
-import com.huanchengfly.tieba.post.interfaces.CommonCallback
-import com.huanchengfly.tieba.post.ui.common.theme.utils.ThemeUtils
-import com.huanchengfly.tieba.post.utils.DialogUtil
-import com.huanchengfly.tieba.post.utils.ImageUtil
 import com.huanchengfly.tieba.post.utils.QuickPreviewUtil
-import com.huanchengfly.tieba.post.utils.Util
 import com.huanchengfly.tieba.post.utils.getClipBoardText
 import com.huanchengfly.tieba.post.utils.getClipBoardTimestamp
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import org.intellij.lang.annotations.RegExp
-import java.util.Objects
 import java.util.regex.Pattern
 
 open class ClipBoardLink(
@@ -87,52 +72,6 @@ object ClipBoardLinkDetector : Application.ActivityLifecycleCallbacks {
         activity.window.decorView.post { checkClipBoard(activity) }
     }
 
-    private fun updatePreviewView(
-        context: Context,
-        previewView: View,
-        data: QuickPreviewUtil.PreviewInfo?,
-    ) {
-        if (data == null) {
-            previewView.visibility = View.GONE
-            return
-        }
-        previewView.visibility = View.VISIBLE
-        val iconView =
-            Objects.requireNonNull(previewView).findViewById<ImageView>(R.id.icon)
-        val title = previewView.findViewById<TextView>(R.id.title)
-        val subtitle = previewView.findViewById<TextView>(R.id.subtitle)
-        title.text = data.title
-        subtitle.text = data.subtitle
-        if (data.icon != null) when (data.icon.type) {
-            QuickPreviewUtil.Icon.TYPE_DRAWABLE_RES -> {
-                iconView.setImageResource(data.icon.res)
-                val iconLayoutParams = iconView.layoutParams as FrameLayout.LayoutParams
-                run {
-                    iconLayoutParams.height = 24f.dpToPx()
-                    iconLayoutParams.width = iconLayoutParams.height
-                }
-                iconView.layoutParams = iconLayoutParams
-                iconView.imageTintList = ColorStateList.valueOf(
-                    ThemeUtils.getColorByAttr(
-                        context,
-                        R.attr.colorAccent
-                    )
-                )
-            }
-
-            QuickPreviewUtil.Icon.TYPE_URL -> {
-                ImageUtil.load(iconView, ImageUtil.LOAD_TYPE_AVATAR, data.icon.url)
-                val avatarLayoutParams = iconView.layoutParams as FrameLayout.LayoutParams
-                run {
-                    avatarLayoutParams.height = 24f.dpToPx()
-                    avatarLayoutParams.width = avatarLayoutParams.height
-                }
-                iconView.layoutParams = avatarLayoutParams
-                iconView.imageTintList = null
-            }
-        }
-    }
-
     private fun parseLink(url: String): ClipBoardLink? {
         val uri = Uri.parse(url)
         if (!isTiebaDomain(uri.host)) {
@@ -174,9 +113,7 @@ object ClipBoardLinkDetector : Application.ActivityLifecycleCallbacks {
                 val url = matcher.group()
                 val link = parseLink(url)
                 if (link != null) {
-                    if (activity !is MainActivityV2) {
-                        showDialog(activity, link)
-                    } else {
+                    if (activity is MainActivityV2) {
                         activity.launch {
                             QuickPreviewUtil.getPreviewInfoFlow(
                                 activity,
@@ -194,76 +131,6 @@ object ClipBoardLinkDetector : Application.ActivityLifecycleCallbacks {
         } else {
             mutablePreviewInfoStateFlow.value = null
         }
-    }
-
-    private fun showDialog(
-        activity: Activity,
-        clipBoardLink: ClipBoardLink,
-    ) {
-        val previewView = Util.inflate(activity, R.layout.preview_url)
-        if (clipBoardLink is ClipBoardForumLink) {
-            updatePreviewView(
-                activity,
-                previewView,
-                QuickPreviewUtil.PreviewInfo(
-                    clipBoardLink = clipBoardLink,
-                    url = clipBoardLink.url,
-                    title = activity.getString(
-                        R.string.title_forum,
-                        clipBoardLink.forumName
-                    ),
-                    subtitle = activity.getString(R.string.text_loading),
-                    icon = QuickPreviewUtil.Icon(R.drawable.ic_round_forum)
-                )
-            )
-        } else if (clipBoardLink is ClipBoardThreadLink) {
-            updatePreviewView(
-                activity,
-                previewView,
-                QuickPreviewUtil.PreviewInfo(
-                    clipBoardLink = clipBoardLink,
-                    url = clipBoardLink.url,
-                    title = clipBoardLink.url,
-                    subtitle = activity.getString(R.string.text_loading),
-                    icon = QuickPreviewUtil.Icon(R.drawable.ic_round_mode_comment)
-                )
-            )
-        }
-        QuickPreviewUtil.getPreviewInfo(
-            activity,
-            clipBoardLink,
-            object :
-                CommonCallback<QuickPreviewUtil.PreviewInfo> {
-                override fun onSuccess(data: QuickPreviewUtil.PreviewInfo) {
-                    updatePreviewView(activity, previewView, data)
-                }
-
-                override fun onFailure(code: Int, error: String) {
-                    updatePreviewView(
-                        activity,
-                        previewView,
-                        QuickPreviewUtil.PreviewInfo(
-                            clipBoardLink = clipBoardLink,
-                            url = clipBoardLink.url,
-                            title = clipBoardLink.url,
-                            subtitle = activity.getString(R.string.subtitle_link),
-                            icon = QuickPreviewUtil.Icon(R.drawable.ic_link)
-                        )
-                    )
-                }
-            })
-        DialogUtil.build(activity)
-            .setTitle(R.string.title_dialog_clip_board_tieba_url)
-            .setPositiveButton(R.string.button_yes) { _, _ ->
-                activity.startActivity(
-                    Intent("com.huanchengfly.tieba.post.ACTION_JUMP", Uri.parse(clipBoardLink.url))
-                        .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                        .addCategory(Intent.CATEGORY_DEFAULT)
-                )
-            }
-            .setView(previewView)
-            .setNegativeButton(R.string.button_no, null)
-            .show()
     }
 
     override fun onActivityPaused(activity: Activity) {}

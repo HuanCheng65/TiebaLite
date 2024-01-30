@@ -16,7 +16,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.huanchengfly.tieba.post.App;
-import com.huanchengfly.tieba.post.activities.MainActivity;
+import com.huanchengfly.tieba.post.MainActivityV2;
 
 public class CrashUtil {
     public static final String TAG = "CrashUtil";
@@ -108,7 +108,7 @@ public class CrashUtil {
 
     @SuppressWarnings("WrongConstant")
     private static void restart(@NonNull Context context) {
-        Intent intent = new Intent(context.getApplicationContext(), MainActivity.class)
+        Intent intent = new Intent(context.getApplicationContext(), MainActivityV2.class)
                 .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         AlarmManager mAlarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         if (mAlarmManager != null) {

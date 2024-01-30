@@ -29,7 +29,17 @@
         android:shortcutShortLabel="@string/shortcut_search">
         <intent
             android:action="android.intent.action.VIEW"
-            android:targetClass="com.huanchengfly.tieba.post.activities.NewSearchActivity"
+            android:data="tblite://search"
+            android:targetPackage="com.huanchengfly.tieba.post" />
+    </shortcut>
+    <shortcut
+        android:icon="@mipmap/ic_shortcut_my_message"
+        android:shortcutId="notifications"
+        android:shortcutLongLabel="@string/shortcut_my_message"
+        android:shortcutShortLabel="@string/shortcut_my_message">
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:data="tblite://notifications/0"
             android:targetPackage="com.huanchengfly.tieba.post" />
     </shortcut>
 </shortcuts>

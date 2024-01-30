@@ -26,13 +26,10 @@ import com.github.panpf.sketch.request.execute
 import com.google.android.material.snackbar.Snackbar
 import com.huanchengfly.tieba.post.App
 import com.huanchengfly.tieba.post.R
-import com.huanchengfly.tieba.post.activities.ThreadActivity
-import com.huanchengfly.tieba.post.activities.WebViewActivity
 import com.huanchengfly.tieba.post.api.retrofit.exception.TiebaException
 import com.huanchengfly.tieba.post.dataStore
 import com.huanchengfly.tieba.post.dpToPxFloat
 import com.huanchengfly.tieba.post.getBoolean
-import com.huanchengfly.tieba.post.goToActivity
 import com.huanchengfly.tieba.post.toastShort
 import com.huanchengfly.tieba.post.ui.common.theme.utils.ColorStateListUtils
 import com.huanchengfly.tieba.post.ui.common.theme.utils.ThemeUtils
@@ -205,76 +202,6 @@ fun launchUrl(
             navigator.navigate(
                 WebViewPageDestination(url)
             )
-        } else {
-            if (context.appPreferences.useCustomTabs) {
-                val intentBuilder = CustomTabsIntent.Builder()
-                    .setShowTitle(true)
-                    .setDefaultColorSchemeParams(
-                        CustomTabColorSchemeParams.Builder()
-                            .setToolbarColor(
-                                ThemeUtils.getColorByAttr(
-                                    context,
-                                    R.attr.colorToolbar
-                                )
-                            )
-                            .build()
-                    )
-                try {
-                    intentBuilder.build().launchUrl(context, uri)
-                } catch (e: ActivityNotFoundException) {
-                    context.startActivity(Intent(Intent.ACTION_VIEW, uri))
-                }
-            } else {
-                context.startActivity(Intent(Intent.ACTION_VIEW, uri))
-            }
-        }
-    }
-}
-
-fun launchUrl(context: Context, url: String) {
-    val uri = Uri.parse(url)
-    val host = uri.host
-    val path = uri.path
-    val scheme = uri.scheme
-    if (host == null || scheme == null || path == null) {
-        return
-    }
-    if (scheme == "tiebaclient") {
-        val action = uri.getQueryParameter("action")
-        when (action) {
-            "preview_file" -> {
-                val realUrl = uri.getQueryParameter("url")
-                if (realUrl.isNullOrEmpty()) {
-                    return
-                }
-                launchUrl(context, realUrl)
-            }
-            else -> {
-                context.toastShort(R.string.toast_feature_unavailable)
-            }
-        }
-        return
-    }
-    if (!path.contains("android_asset")) {
-        if (path == "/mo/q/checkurl") {
-            launchUrl(
-                context,
-                uri.getQueryParameter("url").toString().replace("http://https://", "https://")
-            )
-            return
-        }
-        if (host == "tieba.baidu.com" && path.startsWith("/p/")) {
-            context.goToActivity<ThreadActivity> {
-                putExtra("url", url)
-            }
-            return
-        }
-        val isTiebaLink =
-            host.contains("tieba.baidu.com") || host.contains("wappass.baidu.com") || host.contains(
-                "ufosdk.baidu.com"
-            ) || host.contains("m.help.baidu.com")
-        if (isTiebaLink || context.appPreferences.useWebView) {
-            WebViewActivity.launch(context, url)
         } else {
             if (context.appPreferences.useCustomTabs) {
                 val intentBuilder = CustomTabsIntent.Builder()

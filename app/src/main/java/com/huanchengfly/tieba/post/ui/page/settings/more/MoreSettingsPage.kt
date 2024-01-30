@@ -25,7 +25,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import com.huanchengfly.tieba.post.App
 import com.huanchengfly.tieba.post.BuildConfig
 import com.huanchengfly.tieba.post.R
 import com.huanchengfly.tieba.post.dataStore
@@ -41,6 +40,7 @@ import com.huanchengfly.tieba.post.ui.widgets.compose.LocalSnackbarHostState
 import com.huanchengfly.tieba.post.ui.widgets.compose.MyScaffold
 import com.huanchengfly.tieba.post.ui.widgets.compose.Sizes
 import com.huanchengfly.tieba.post.ui.widgets.compose.TitleCentredToolbar
+import com.huanchengfly.tieba.post.utils.AppIconUtil
 import com.huanchengfly.tieba.post.utils.ImageCacheUtil
 import com.huanchengfly.tieba.post.utils.appPreferences
 import com.ramcosta.composedestinations.annotation.Destination
@@ -121,7 +121,7 @@ fun MoreSettingsPage(
                     defaultChecked = true,
                     summary = stringResource(id = R.string.summary_enable_new_ui),
                     onCheckedChange = {
-                        App.INSTANCE.setIcon(it)
+                        AppIconUtil.setIcon()
                     }
                 )
             }

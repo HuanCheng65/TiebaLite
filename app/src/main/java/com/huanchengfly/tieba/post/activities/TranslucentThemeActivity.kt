@@ -5,8 +5,6 @@ import android.app.Activity
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.Color
-import android.graphics.drawable.BitmapDrawable
-import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -25,11 +23,12 @@ import androidx.palette.graphics.Palette
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import butterknife.BindView
-import com.bumptech.glide.Glide
-import com.bumptech.glide.load.engine.DiskCacheStrategy
-import com.bumptech.glide.request.RequestOptions
-import com.bumptech.glide.request.target.CustomTarget
-import com.bumptech.glide.request.transition.Transition
+import com.github.panpf.sketch.request.DisplayRequest
+import com.github.panpf.sketch.request.DisplayResult
+import com.github.panpf.sketch.request.LoadRequest
+import com.github.panpf.sketch.request.LoadResult
+import com.github.panpf.sketch.request.execute
+import com.github.panpf.sketch.resize.Scale
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.gyf.immersionbar.ImmersionBar
 import com.huanchengfly.tieba.post.*
@@ -40,7 +39,7 @@ import com.huanchengfly.tieba.post.api.LiteApi
 import com.huanchengfly.tieba.post.api.retrofit.doIfSuccess
 import com.huanchengfly.tieba.post.components.MyLinearLayoutManager
 import com.huanchengfly.tieba.post.components.dividers.HorizontalSpacesDecoration
-import com.huanchengfly.tieba.post.components.transformations.BlurTransformation
+import com.huanchengfly.tieba.post.components.transformations.SketchBlurTransformation
 import com.huanchengfly.tieba.post.interfaces.OnItemClickListener
 import com.huanchengfly.tieba.post.ui.common.theme.utils.ThemeUtils
 import com.huanchengfly.tieba.post.ui.widgets.theme.TintMaterialButton
@@ -119,67 +118,61 @@ class TranslucentThemeActivity : BaseActivity(), View.OnClickListener, OnSeekBar
 
     private fun launchUCrop(sourceUri: Uri) {
         mProgress.visibility = View.VISIBLE
-        Glide.with(this)
-            .asBitmap()
-            .load(sourceUri)
-            .into(object : CustomTarget<Bitmap>() {
-                override fun onLoadCleared(placeholder: Drawable?) {}
-
-                override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
-                    mProgress.visibility = View.GONE
-                    val file =
-                        ImageUtil.bitmapToFile(resource, File(cacheDir, "origin_background.jpg"))
-                    val sourceFileUri = Uri.fromFile(file)
-                    val destUri = Uri.fromFile(File(filesDir, "cropped_background.jpg"))
-                    val height = App.ScreenInfo.EXACT_SCREEN_HEIGHT.toFloat()
-                    val width = App.ScreenInfo.EXACT_SCREEN_WIDTH.toFloat()
-                    UCrop.of(sourceFileUri, destUri)
-                        .withAspectRatio(width / height, 1f)
-                        .withOptions(UCrop.Options().apply {
-                            setShowCropFrame(true)
-                            setShowCropGrid(true)
-                            setStatusBarColor(
-                                ColorUtils.getDarkerColor(
-                                    ThemeUtils.getColorByAttr(
-                                        this@TranslucentThemeActivity,
-                                        R.attr.colorPrimary
-                                    )
-                                )
-                            )
-                            setToolbarColor(
+        launch {
+            val result = LoadRequest(this@TranslucentThemeActivity, sourceUri.toString()).execute()
+            if (result is LoadResult.Success) {
+                mProgress.visibility = View.GONE
+                val file =
+                    ImageUtil.bitmapToFile(result.bitmap, File(cacheDir, "origin_background.jpg"))
+                val sourceFileUri = Uri.fromFile(file)
+                val destUri = Uri.fromFile(File(filesDir, "cropped_background.jpg"))
+                val height = App.ScreenInfo.EXACT_SCREEN_HEIGHT.toFloat()
+                val width = App.ScreenInfo.EXACT_SCREEN_WIDTH.toFloat()
+                UCrop.of(sourceFileUri, destUri)
+                    .withAspectRatio(width / height, 1f)
+                    .withOptions(UCrop.Options().apply {
+                        setShowCropFrame(true)
+                        setShowCropGrid(true)
+                        setStatusBarColor(
+                            ColorUtils.getDarkerColor(
                                 ThemeUtils.getColorByAttr(
                                     this@TranslucentThemeActivity,
                                     R.attr.colorPrimary
                                 )
                             )
-                            setToolbarWidgetColor(
-                                ThemeUtils.getColorByAttr(
-                                    this@TranslucentThemeActivity,
-                                    R.attr.colorTextOnPrimary
-                                )
+                        )
+                        setToolbarColor(
+                            ThemeUtils.getColorByAttr(
+                                this@TranslucentThemeActivity,
+                                R.attr.colorPrimary
                             )
-                            setActiveControlsWidgetColor(
-                                ThemeUtils.getColorByAttr(
-                                    this@TranslucentThemeActivity,
-                                    R.attr.colorAccent
-                                )
+                        )
+                        setToolbarWidgetColor(
+                            ThemeUtils.getColorByAttr(
+                                this@TranslucentThemeActivity,
+                                R.attr.colorTextOnPrimary
                             )
-                            setLogoColor(
-                                ThemeUtils.getColorByAttr(
-                                    this@TranslucentThemeActivity,
-                                    R.attr.colorPrimary
-                                )
+                        )
+                        setActiveControlsWidgetColor(
+                            ThemeUtils.getColorByAttr(
+                                this@TranslucentThemeActivity,
+                                R.attr.colorAccent
                             )
-                            setCompressionFormat(Bitmap.CompressFormat.JPEG)
-                        })
-                        .start(this@TranslucentThemeActivity)
-                }
-
-                override fun onLoadFailed(errorDrawable: Drawable?) {
-                    mProgress.visibility = View.GONE
-                    toastShort(R.string.text_load_failed)
-                }
-            })
+                        )
+                        setLogoColor(
+                            ThemeUtils.getColorByAttr(
+                                this@TranslucentThemeActivity,
+                                R.attr.colorPrimary
+                            )
+                        )
+                        setCompressionFormat(Bitmap.CompressFormat.JPEG)
+                    })
+                    .start(this@TranslucentThemeActivity)
+            } else if (result is LoadResult.Error) {
+                mProgress.visibility = View.GONE
+                toastShort(R.string.text_load_failed)
+            }
+        }
     }
 
     @Deprecated("Deprecated in Java")
@@ -211,33 +204,22 @@ class TranslucentThemeActivity : BaseActivity(), View.OnClickListener, OnSeekBar
             mProgress.visibility = View.GONE
             return
         }
-        var bgOptions = RequestOptions.centerCropTransform()
-            .skipMemoryCache(true)
-            .diskCacheStrategy(DiskCacheStrategy.NONE)
-        if (blur > 0) {
-            bgOptions = bgOptions.transform(BlurTransformation(blur))
-        }
-        Glide.with(this)
-            .asDrawable()
-            .load(mUri)
-            .apply(bgOptions)
-            .into(object : CustomTarget<Drawable>() {
-                override fun onResourceReady(
-                    resource: Drawable,
-                    transition: Transition<in Drawable>?
-                ) {
-                    resource.alpha = alpha
-                    val bitmap = ImageUtil.drawableToBitmap(resource)
-                    findViewById<View>(R.id.background).background =
-                        BitmapDrawable(resources, bitmap)
-                    mPalette = Palette.from(bitmap).generate()
-                    mTranslucentThemeColorAdapter.setPalette(mPalette)
-                    mSelectColor.visibility = View.VISIBLE
-                    mProgress.visibility = View.GONE
+        launch {
+            val result = DisplayRequest(this@TranslucentThemeActivity, mUri.toString()) {
+                resizeScale(Scale.CENTER_CROP)
+                if (blur > 0) {
+                    transformations(SketchBlurTransformation(blur))
                 }
-
-                override fun onLoadCleared(placeholder: Drawable?) {}
-            })
+            }.execute()
+            if (result is DisplayResult.Success) {
+                result.drawable.alpha = alpha
+                findViewById<View>(R.id.background).background = result.drawable
+                mPalette = Palette.from(ImageUtil.drawableToBitmap(result.drawable)).generate()
+                mTranslucentThemeColorAdapter.setPalette(mPalette)
+                mSelectColor.visibility = View.VISIBLE
+                mProgress.visibility = View.GONE
+            }
+        }
     }
 
     override fun refreshStatusBarColor() {
@@ -382,40 +364,31 @@ class TranslucentThemeActivity : BaseActivity(), View.OnClickListener, OnSeekBar
             }
         }
         mProgress.visibility = View.VISIBLE
-        var bgOptions = RequestOptions.centerCropTransform()
-            .skipMemoryCache(true)
-            .diskCacheStrategy(DiskCacheStrategy.NONE)
-        if (blur > 0) {
-            bgOptions = bgOptions.transform(BlurTransformation(blur))
-        }
-        Glide.with(this)
-            .asDrawable()
-            .load(mUri)
-            .apply(bgOptions)
-            .into(object : CustomTarget<Drawable>() {
-                override fun onResourceReady(
-                    resource: Drawable,
-                    transition: Transition<in Drawable>?
-                ) {
-                    resource.alpha = alpha
-                    val bitmap = ImageUtil.drawableToBitmap(resource)
-                    val file = ImageUtil.compressImage(
-                        bitmap,
-                        File(filesDir, "background_${System.currentTimeMillis()}.jpg"),
-                        maxSizeKb = 512,
-                        initialQuality = 97
-                    )
-                    mPalette = Palette.from(bitmap).generate()
-                    appPreferences.translucentThemeBackgroundPath = file.absolutePath
-                    ThemeUtils.refreshUI(
-                        this@TranslucentThemeActivity,
-                        this@TranslucentThemeActivity
-                    )
-                    callback.onSuccess(file)
+        launch {
+            val result = DisplayRequest(this@TranslucentThemeActivity, mUri.toString()) {
+                resizeScale(Scale.CENTER_CROP)
+                if (blur > 0) {
+                    transformations(SketchBlurTransformation(blur))
                 }
-
-                override fun onLoadCleared(placeholder: Drawable?) {}
-            })
+            }.execute()
+            if (result is DisplayResult.Success) {
+                result.drawable.alpha = alpha
+                val bitmap = ImageUtil.drawableToBitmap(result.drawable)
+                val file = ImageUtil.compressImage(
+                    bitmap,
+                    File(filesDir, "background_${System.currentTimeMillis()}.jpg"),
+                    maxSizeKb = 512,
+                    initialQuality = 97
+                )
+                mPalette = Palette.from(bitmap).generate()
+                appPreferences.translucentThemeBackgroundPath = file.absolutePath
+                ThemeUtils.refreshUI(
+                    this@TranslucentThemeActivity,
+                    this@TranslucentThemeActivity
+                )
+                callback.onSuccess(file)
+            }
+        }
     }
 
     private fun invalidateFinishBtn() {
@@ -527,7 +500,7 @@ class TranslucentThemeActivity : BaseActivity(), View.OnClickListener, OnSeekBar
     }
 
     private fun askPermission(granted: () -> Unit) {
-        if (isPhotoPickerAvailable()) {
+        if (shouldUsePhotoPicker()) {
             granted()
             return
         }

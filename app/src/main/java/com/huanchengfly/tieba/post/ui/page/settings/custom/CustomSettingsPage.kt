@@ -226,16 +226,15 @@ fun CustomSettingsPage(
                     key = "follow_system_night",
                     title = stringResource(id = R.string.title_settings_follow_system_night),
                     defaultChecked = true,
-                    leadingIcon = {
-                        LeadingIcon {
-                            AvatarIcon(
-                                icon = Icons.Outlined.BrightnessAuto,
-                                size = Sizes.Small,
-                                contentDescription = null,
-                            )
-                        }
-                    },
-                )
+                ) {
+                    LeadingIcon {
+                        AvatarIcon(
+                            icon = Icons.Outlined.BrightnessAuto,
+                            size = Sizes.Small,
+                            contentDescription = null,
+                        )
+                    }
+                }
             }
             prefsItem {
                 SwitchPref(
@@ -259,32 +258,30 @@ fun CustomSettingsPage(
                     key = "listSingle",
                     title = stringResource(id = R.string.settings_forum_single),
                     defaultChecked = false,
-                    leadingIcon = {
-                        LeadingIcon {
-                            AvatarIcon(
-                                icon = Icons.Outlined.ViewAgenda,
-                                size = Sizes.Small,
-                                contentDescription = null,
-                            )
-                        }
-                    },
-                )
+                ) {
+                    LeadingIcon {
+                        AvatarIcon(
+                            icon = Icons.Outlined.ViewAgenda,
+                            size = Sizes.Small,
+                            contentDescription = null,
+                        )
+                    }
+                }
             }
             prefsItem {
                 SwitchPref(
                     key = "hideExplore",
                     title = stringResource(id = R.string.title_hide_explore),
                     defaultChecked = false,
-                    leadingIcon = {
-                        LeadingIcon {
-                            AvatarIcon(
-                                icon = Icons.Outlined.Explore,
-                                size = Sizes.Small,
-                                contentDescription = null,
-                            )
-                        }
-                    },
-                )
+                ) {
+                    LeadingIcon {
+                        AvatarIcon(
+                            icon = Icons.Outlined.Explore,
+                            size = Sizes.Small,
+                            contentDescription = null,
+                        )
+                    }
+                }
             }
             prefsItem {
                 SwitchPref(

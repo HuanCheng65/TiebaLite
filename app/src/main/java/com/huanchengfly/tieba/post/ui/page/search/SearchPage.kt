@@ -90,6 +90,7 @@ import com.huanchengfly.tieba.post.ui.widgets.compose.TabClickMenu
 import com.huanchengfly.tieba.post.ui.widgets.compose.TabRow
 import com.huanchengfly.tieba.post.ui.widgets.compose.TopAppBarContainer
 import com.huanchengfly.tieba.post.ui.widgets.compose.picker.ListSinglePicker
+import com.ramcosta.composedestinations.annotation.DeepLink
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import kotlinx.collections.immutable.ImmutableList
@@ -113,7 +114,11 @@ data class SearchPageItem(
 )
 
 @OptIn(ExperimentalFoundationApi::class, FlowPreview::class)
-@Destination
+@Destination(
+    deepLinks = [
+        DeepLink(uriPattern = "tblite://search")
+    ]
+)
 @Composable
 fun SearchPage(
     navigator: DestinationsNavigator,

@@ -85,10 +85,10 @@ import com.huanchengfly.tieba.post.ui.page.ProvideNavigator
 import com.huanchengfly.tieba.post.ui.page.user.edit.EditProfileActivity
 import com.huanchengfly.tieba.post.ui.page.user.likeforum.UserLikeForumPage
 import com.huanchengfly.tieba.post.ui.page.user.post.UserPostPage
-import com.huanchengfly.tieba.post.ui.widgets.Chip
 import com.huanchengfly.tieba.post.ui.widgets.compose.Avatar
 import com.huanchengfly.tieba.post.ui.widgets.compose.BackNavigationIcon
 import com.huanchengfly.tieba.post.ui.widgets.compose.Button
+import com.huanchengfly.tieba.post.ui.widgets.compose.Chip
 import com.huanchengfly.tieba.post.ui.widgets.compose.ClickMenu
 import com.huanchengfly.tieba.post.ui.widgets.compose.ErrorScreen
 import com.huanchengfly.tieba.post.ui.widgets.compose.LazyLoad
@@ -942,7 +942,7 @@ private fun UserProfileDetail(
             Chip(
                 text = stringResource(
                     id = R.string.text_profile_user_id,
-                    user.get { id }.toString()
+                    user.get { tieba_uid }.toString()
                 ),
                 appendIcon = {
                     Icon(

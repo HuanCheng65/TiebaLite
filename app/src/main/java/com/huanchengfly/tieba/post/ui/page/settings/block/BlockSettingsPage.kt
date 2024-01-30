@@ -80,17 +80,16 @@ fun BlockSettingsPage(
                 SwitchPref(
                     key = "hideBlockedContent",
                     title = stringResource(id = R.string.settings_hide_blocked_content),
-                    defaultChecked = false,
-                    leadingIcon = {
-                        LeadingIcon {
-                            AvatarIcon(
-                                icon = Icons.Outlined.HideSource,
-                                size = Sizes.Small,
-                                contentDescription = null,
-                            )
-                        }
+                    defaultChecked = false
+                ) {
+                    LeadingIcon {
+                        AvatarIcon(
+                            icon = Icons.Outlined.HideSource,
+                            size = Sizes.Small,
+                            contentDescription = null,
+                        )
                     }
-                )
+                }
             }
             prefsItem {
                 SwitchPref(
