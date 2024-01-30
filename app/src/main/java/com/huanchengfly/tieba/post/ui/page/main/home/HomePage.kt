@@ -64,16 +64,15 @@ import com.airbnb.lottie.compose.rememberLottieComposition
 import com.google.accompanist.drawablepainter.rememberDrawablePainter
 import com.google.accompanist.placeholder.placeholder
 import com.huanchengfly.tieba.post.R
-import com.huanchengfly.tieba.post.activities.LoginActivity
 import com.huanchengfly.tieba.post.arch.GlobalEvent
 import com.huanchengfly.tieba.post.arch.collectPartialAsState
 import com.huanchengfly.tieba.post.arch.onGlobalEvent
 import com.huanchengfly.tieba.post.arch.pageViewModel
-import com.huanchengfly.tieba.post.goToActivity
 import com.huanchengfly.tieba.post.ui.common.theme.compose.ExtendedTheme
 import com.huanchengfly.tieba.post.ui.common.theme.compose.pullRefreshIndicator
 import com.huanchengfly.tieba.post.ui.page.LocalNavigator
 import com.huanchengfly.tieba.post.ui.page.destinations.ForumPageDestination
+import com.huanchengfly.tieba.post.ui.page.destinations.LoginPageDestination
 import com.huanchengfly.tieba.post.ui.page.destinations.SearchPageDestination
 import com.huanchengfly.tieba.post.ui.widgets.Chip
 import com.huanchengfly.tieba.post.ui.widgets.compose.ActionItem
@@ -638,7 +637,7 @@ fun EmptyScreen(
     canOpenExplore: Boolean,
     onOpenExplore: () -> Unit
 ) {
-    val context = LocalContext.current
+    val navigator = LocalNavigator.current
     TipScreen(
         title = {
             if (!loggedIn) {
@@ -671,7 +670,7 @@ fun EmptyScreen(
             if (!loggedIn) {
                 Button(
                     onClick = {
-                        context.goToActivity<LoginActivity>()
+                        navigator.navigate(LoginPageDestination)
                     },
                     modifier = Modifier
                         .fillMaxWidth()

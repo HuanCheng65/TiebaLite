@@ -199,7 +199,7 @@ object AccountUtil {
     fun parseCookie(cookie: String): Map<String, String> {
         return cookie
             .split(";")
-            .map { it.split("=") }
+            .map { it.trim().split("=") }
             .filter { it.size > 1 }
             .associate { it.first() to it.drop(1).joinToString("=") }
     }

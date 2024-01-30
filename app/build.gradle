@@ -127,7 +127,6 @@ dependencies {
 
     implementation 'org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.2'
     implementation 'org.jetbrains.kotlinx:kotlinx-collections-immutable:0.3.7'
-//    implementation 'androidx.compose.material3:material3:1.0.0'
 
     def media3_version = "1.2.1"
     implementation "androidx.media3:media3-exoplayer:$media3_version"
@@ -176,6 +175,7 @@ dependencies {
     // Optional - Add full set of material icons
     implementation 'androidx.compose.material:material-icons-extended'
     implementation 'androidx.compose.ui:ui-util'
+//    implementation 'androidx.compose.material3:material3:1.0.0'
 
     // Android Studio Preview support
     implementation 'androidx.compose.ui:ui-tooling-preview'

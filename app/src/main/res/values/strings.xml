@@ -761,4 +761,7 @@
     <string name="menu_add_user_to_white_list">添加到白名单</string>
     <string name="btn_block">屏蔽选项</string>
     <string name="text_god_verify">%s领域大神</string>
+    <string name="text_login_failed">登录失败 %s</string>
+    <string name="text_login_success">登录成功，即将跳转</string>
+    <string name="text_login_failed_default">登录失败</string>
 </resources>

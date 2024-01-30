@@ -50,13 +50,13 @@ import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import com.google.accompanist.drawablepainter.rememberDrawablePainter
 import com.huanchengfly.tieba.post.R
-import com.huanchengfly.tieba.post.activities.LoginActivity
 import com.huanchengfly.tieba.post.arch.BaseComposeActivity.Companion.LocalWindowSizeClass
 import com.huanchengfly.tieba.post.arch.GlobalEvent
 import com.huanchengfly.tieba.post.arch.emitGlobalEvent
-import com.huanchengfly.tieba.post.goToActivity
 import com.huanchengfly.tieba.post.ui.common.theme.compose.ExtendedTheme
 import com.huanchengfly.tieba.post.ui.common.windowsizeclass.WindowWidthSizeClass.Companion.Compact
+import com.huanchengfly.tieba.post.ui.page.LocalNavigator
+import com.huanchengfly.tieba.post.ui.page.destinations.LoginPageDestination
 import com.huanchengfly.tieba.post.utils.AccountUtil
 import com.huanchengfly.tieba.post.utils.AccountUtil.LocalAccount
 import com.huanchengfly.tieba.post.utils.StringUtil
@@ -73,6 +73,7 @@ fun AccountNavIcon(
     spacer: Boolean = true,
     size: Dp = Sizes.Small
 ) {
+    val navigator = LocalNavigator.current
     val currentAccount = LocalAccount.current
     if (spacer) Spacer(modifier = Modifier.width(12.dp))
     if (currentAccount == null) {
@@ -125,9 +126,11 @@ fun AccountNavIcon(
                 VerticalDivider(
                     modifier = Modifier.padding(vertical = 8.dp)
                 )
-                DropdownMenuItem(onClick = {
-                    context.goToActivity<LoginActivity>()
-                }) {
+                DropdownMenuItem(
+                    onClick = {
+                        navigator.navigate(LoginPageDestination)
+                    }
+                ) {
                     Icon(
                         imageVector = Icons.Rounded.Add,
                         contentDescription = stringResource(id = R.string.title_new_account),
