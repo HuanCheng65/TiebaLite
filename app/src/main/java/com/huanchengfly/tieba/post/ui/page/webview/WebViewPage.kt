@@ -16,6 +16,7 @@ import androidx.browser.customtabs.CustomTabColorSchemeParams
 import androidx.browser.customtabs.CustomTabsIntent
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -24,6 +25,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.DropdownMenuItem
 import androidx.compose.material.Icon
 import androidx.compose.material.LinearProgressIndicator
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.MoreVert
@@ -41,6 +43,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.core.content.getSystemService
 import androidx.core.location.LocationManagerCompat
@@ -52,6 +55,7 @@ import com.huanchengfly.tieba.post.arch.GlobalEvent
 import com.huanchengfly.tieba.post.arch.onGlobalEvent
 import com.huanchengfly.tieba.post.components.dialogs.PermissionDialog
 import com.huanchengfly.tieba.post.models.PermissionBean
+import com.huanchengfly.tieba.post.ui.common.theme.compose.ExtendedTheme
 import com.huanchengfly.tieba.post.ui.common.theme.utils.ThemeUtils
 import com.huanchengfly.tieba.post.ui.page.destinations.ForumPageDestination
 import com.huanchengfly.tieba.post.ui.page.destinations.ThreadPageDestination
@@ -108,6 +112,16 @@ fun WebViewPage(
             }
         }
     }
+    val currentHost by remember {
+        derivedStateOf {
+            webViewState.lastLoadedUrl?.toUri()?.host.orEmpty().lowercase()
+        }
+    }
+    val isExternalHost by remember {
+        derivedStateOf {
+            currentHost.isNotEmpty() && !isInternalHost(currentHost)
+        }
+    }
 
     DisposableEffect(Unit) {
         val job = coroutineScope.launch {
@@ -147,15 +161,28 @@ fun WebViewPage(
         }
     }
 
-    val animatedProgress by animateFloatAsState(targetValue = progress)
+    val animatedProgress by animateFloatAsState(targetValue = progress, label = "progress")
 
     MyScaffold(
         topBar = {
             Toolbar(
                 title = {
-                    Text(
-                        text = displayPageTitle
-                    )
+                    Column {
+                        Text(
+                            text = displayPageTitle,
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis
+                        )
+                        if (isExternalHost) {
+                            Text(
+                                text = currentHost,
+                                maxLines = 1,
+                                overflow = TextOverflow.Ellipsis,
+                                color = ExtendedTheme.colors.onTopBarSecondary,
+                                style = MaterialTheme.typography.caption
+                            )
+                        }
+                    }
                 },
                 navigationIcon = { BackNavigationIcon(onBackPressed = { navigator.navigateUp() }) },
                 actions = {
@@ -241,8 +268,21 @@ fun WebViewPage(
     }
 }
 
-class MyWebViewClient(
-    private val nativeNavigator: DestinationsNavigator? = null,
+fun isTiebaHost(host: String): Boolean {
+    return host == "wapp.baidu.com" ||
+            host.contains("tieba.baidu.com") ||
+            host == "tiebac.baidu.com"
+}
+
+fun isInternalHost(host: String): Boolean {
+    return isTiebaHost(host) ||
+            host.contains("wappass.baidu.com") ||
+            host.contains("ufosdk.baidu.com") ||
+            host.contains("m.help.baidu.com")
+}
+
+open class MyWebViewClient(
+    protected val nativeNavigator: DestinationsNavigator? = null,
 ) : AccompanistWebViewClient() {
     val context: Context
         get() = state.webView?.context ?: App.INSTANCE
@@ -400,8 +440,7 @@ class MyWebViewClient(
         }
     }
 
-    override fun onPageStarted(view: WebView, url: String?, favicon: Bitmap?) {
-        super.onPageStarted(view, url, favicon)
+    open fun injectCookies(url: String) {
         val cookieStr = CookieManager.getInstance().getCookie(url) ?: ""
         val cookies = AccountUtil.parseCookie(cookieStr)
         val BDUSS = cookies["BDUSS"]
@@ -410,6 +449,11 @@ class MyWebViewClient(
             CookieManager.getInstance()
                 .setCookie(url, AccountUtil.getBdussCookie(currentAccountBDUSS))
         }
+    }
+
+    override fun onPageStarted(view: WebView, url: String?, favicon: Bitmap?) {
+        super.onPageStarted(view, url, favicon)
+        injectCookies(url ?: "")
     }
 
     override fun shouldOverrideUrlLoading(view: WebView, request: WebResourceRequest?): Boolean {
