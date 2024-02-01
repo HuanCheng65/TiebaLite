@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+package tieba;
+
+option java_package = "com.huanchengfly.tieba.post.api.models.protos";
+
+
+message BlockPopInfo {
+  int32 can_post = 1;
+  string block_info = 2;
+  string ahead_info = 3;
+  string ahead_url = 4;
+  string ok_info = 5;
+  int32 ahead_type = 6;
+  int32 appeal_status = 7;
+  string appeal_msg = 8;
+  string sub_block_info = 11;
+}

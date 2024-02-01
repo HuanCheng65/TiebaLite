@@ -1,8 +1,8 @@
 syntax = "proto3";
 
-package tieba.frsPage;
+package tieba;
 
-option java_package = "com.huanchengfly.tieba.post.api.models.protos.frsPage";
+option java_package = "com.huanchengfly.tieba.post.api.models.protos";
 
 message PostPrefix {
   int32 mode = 1;

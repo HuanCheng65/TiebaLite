@@ -17,6 +17,7 @@ import "FrsPage/NavTabInfo.proto";
 import "FrsPage/Group.proto";
 import "FrsPage/AdParam.proto";
 import "FrsPage/ForumInfo.proto";
+import "FrsPage/ActivityHead.proto";
 
 message FrsPageRequestData {
   optional string ad_context_list = 60;
@@ -75,9 +76,9 @@ message FrsPageResponseData {
   int32 server_time = 14;
   repeated User user_list = 17;
   repeated FrsTabInfo frs_tab_info = 22;
+  ActivityHead activity_head = 23;
   NavTabInfo nav_tab_info = 37;
   ForumRuleStatus forum_rule = 105;
-
 }
 
 message FrsPageResponse {

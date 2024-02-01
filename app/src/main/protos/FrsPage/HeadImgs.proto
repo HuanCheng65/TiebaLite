@@ -1,0 +1,38 @@
+syntax = "proto3";
+
+package tieba.frsPage;
+
+option java_package = "com.huanchengfly.tieba.post.api.models.protos.frsPage";
+
+import "FrsPage/CoverImageColor.proto";
+import "FrsPage/VideoImageColor.proto";
+
+message HeadImgs {
+  string img_url = 1;
+  string pc_url = 2;
+  string title = 3;
+  string subtitle = 4;
+  string btn_text = 5;
+  string tag_name_url = 6;
+  string tag_name_wh = 7;
+  string schema = 8;
+  repeated string third_statistics_url = 9;
+  uint32 has_second_page = 10;
+  string package_name = 11;
+  int32 download_is_thirdpage = 12;
+  string download_appname = 13;
+  string download_developer = 14;
+  string download_package_size = 15;
+  string download_url = 16;
+  string download_img = 17;
+  string download_version = 18;
+  string download_user_power = 19;
+  string download_privacy_policy = 20;
+  string download_package_name = 21;
+  int32 download_item_id = 22;
+  string download_appid = 23;
+  string cover_url = 24;
+  string play_url = 25;
+  CoverImageColor cover_image_color = 26;
+  repeated VideoImageColor video_image_color = 27;
+}
