@@ -515,4 +515,6 @@
     <string name="summary_do_not_use_photo_picker">将使用 App 内置的照片选择器</string>
     <string name="summary_use_photo_picker">将使用原生的照片选择器</string>
     <string name="desc_show">显示</string>
+    <string name="title_settings_status_bar_darker">状态栏遮罩</string>
+    <string name="summary_settings_status_bar_darker">开启后非白色主题状态栏将略微变暗</string>
 </resources>
