@@ -399,7 +399,7 @@ fun AppThemePage(
                                     horizontalArrangement = Arrangement.spacedBy(16.dp),
                                 ) {
                                     Icon(
-                                        imageVector = if (currentTheme == ThemeUtil.THEME_CUSTOM) {
+                                        imageVector = if (!isDynamicTheme && currentTheme == ThemeUtil.THEME_CUSTOM) {
                                             Icons.Rounded.Check
                                         } else {
                                             Icons.Rounded.ColorLens
