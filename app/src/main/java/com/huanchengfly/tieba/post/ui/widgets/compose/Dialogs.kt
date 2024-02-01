@@ -1,5 +1,6 @@
 package com.huanchengfly.tieba.post.ui.widgets.compose
 
+import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -8,6 +9,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -29,7 +31,6 @@ import androidx.compose.runtime.saveable.listSaver
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
@@ -39,6 +40,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.constraintlayout.compose.ConstraintLayout
+import androidx.constraintlayout.compose.Dimension
+import androidx.constraintlayout.compose.Visibility
 import com.huanchengfly.tieba.post.R
 import com.huanchengfly.tieba.post.arch.BaseComposeActivity.Companion.LocalWindowSizeClass
 import com.huanchengfly.tieba.post.ui.common.theme.compose.ExtendedTheme
@@ -239,7 +243,6 @@ fun ConfirmDialog(
  *
  * @param onValueChange 输入框内容变化时的回调，返回true表示允许变化，false表示不允许变化
  */
-@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun PromptDialog(
     onConfirm: (String) -> Unit,
@@ -361,40 +364,72 @@ fun Dialog(
                 dismissOnClickOutside = cancelableOnTouchOutside
             )
         ) {
-            Column(
-                modifier = modifier
-                    .fillMaxWidth(
-                        fraction = if (windowWidthSizeClass == WindowWidthSizeClass.Compact) {
-                            1f
-                        } else {
-                            0.6f
-                        }
-                    )
-                    .padding(16.dp)
-                    .background(
-                        color = ExtendedTheme.colors.windowBackground,
-                        shape = RoundedCornerShape(24.dp)
-                    )
-                    .padding(vertical = 24.dp),
-                verticalArrangement = Arrangement.spacedBy(16.dp)
-            ) {
-                ProvideContentColor(color = ExtendedTheme.colors.text) {
-                    if (title != null) {
-                        Box(
-                            modifier = Modifier
-                                .padding(horizontal = 24.dp)
-                                .align(Alignment.CenterHorizontally)
-                        ) {
-                            ProvideTextStyle(value = MaterialTheme.typography.h6.copy(fontWeight = FontWeight.Bold)) {
-                                dialogScope.title()
+            ProvideContentColor(color = ExtendedTheme.colors.text) {
+                ConstraintLayout(
+                    modifier = modifier
+                        .wrapContentHeight()
+                        .animateContentSize()
+                        .fillMaxWidth(
+                            fraction = if (windowWidthSizeClass == WindowWidthSizeClass.Compact) {
+                                1f
+                            } else {
+                                0.6f
+                            }
+                        )
+                        .padding(16.dp)
+                        .background(
+                            color = ExtendedTheme.colors.windowBackground,
+                            shape = RoundedCornerShape(24.dp)
+                        )
+                        .padding(vertical = 24.dp),
+                ) {
+                    val (titleRef, contentRef, buttonsRef) = createRefs()
+                    Column(
+                        modifier = Modifier
+                            .constrainAs(titleRef) {
+                                top.linkTo(parent.top)
+                                start.linkTo(parent.start)
+                                end.linkTo(parent.end)
+                                width = Dimension.fillToConstraints
+                                visibility = if (title == null) {
+                                    Visibility.Gone
+                                } else {
+                                    Visibility.Visible
+                                }
+                            }
+                    ) {
+                        if (title != null) {
+                            Box(
+                                modifier = Modifier
+                                    .padding(horizontal = 24.dp)
+                                    .align(Alignment.CenterHorizontally)
+                            ) {
+                                ProvideTextStyle(value = MaterialTheme.typography.h6.copy(fontWeight = FontWeight.Bold)) {
+                                    dialogScope.title()
+                                }
                             }
                         }
                     }
-                    Box(modifier = Modifier.align(Alignment.CenterHorizontally)) {
+                    Column(
+                        modifier = Modifier
+                            .constrainAs(contentRef) {
+                                top.linkTo(titleRef.bottom, margin = 16.dp, goneMargin = 0.dp)
+                                bottom.linkTo(buttonsRef.top, margin = 16.dp, goneMargin = 0.dp)
+                                start.linkTo(parent.start)
+                                end.linkTo(parent.end)
+                                height = Dimension.preferredWrapContent
+                            }
+                    ) {
                         dialogScope.content()
                     }
                     Column(
                         modifier = Modifier
+                            .constrainAs(buttonsRef) {
+                                start.linkTo(parent.start)
+                                end.linkTo(parent.end)
+                                bottom.linkTo(parent.bottom)
+                                width = Dimension.fillToConstraints
+                            }
                             .padding(horizontal = 24.dp),
                         verticalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
