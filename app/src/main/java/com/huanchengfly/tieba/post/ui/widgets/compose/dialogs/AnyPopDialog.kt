@@ -199,10 +199,14 @@ fun AnyPopDialog(
         onDismissRequest = onDismiss,
         properties = properties
     ) {
+        val innerModifier = if (properties.imePadding) {
+            modifier.imePadding()
+        } else {
+            modifier
+        }
         Column(
-            modifier = modifier
+            modifier = innerModifier
                 .systemBarsPadding()
-                .imePadding()
         ) {
             content()
         }
@@ -217,6 +221,7 @@ fun AnyPopDialog(
  * @param backgroundDimEnabled 背景渐入检出开关
  * @param durationMillis 弹框消失和进入的时长
  * @param securePolicy 屏幕安全策略
+ * @param imePadding 输入法弹出时是否自动调整布局
  */
 @Immutable
 class AnyPopDialogProperties(
@@ -227,6 +232,7 @@ class AnyPopDialogProperties(
     val backgroundDimEnabled: Boolean = true,
     val durationMillis: Int = DefaultDurationMillis,
     val securePolicy: SecureFlagPolicy = SecureFlagPolicy.Inherit,
+    val imePadding: Boolean = true,
 ) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

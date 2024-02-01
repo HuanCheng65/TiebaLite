@@ -39,9 +39,24 @@ fun LazyLoad(
 }
 
 @Composable
+fun LazyLoad(
+    key: Any,
+    loaded: Boolean,
+    onLoad: () -> Unit,
+) {
+    val shouldLoad = LocalShouldLoad.current
+    val curOnLoad by rememberUpdatedState(newValue = onLoad)
+    LaunchedEffect(key, loaded, shouldLoad) {
+        if (!loaded && shouldLoad) {
+            curOnLoad()
+        }
+    }
+}
+
+@Composable
 fun ProvideShouldLoad(
     shouldLoad: Boolean,
-    content: @Composable () -> Unit
+    content: @Composable () -> Unit,
 ) {
     val currentShouldLoad = LocalShouldLoad.current
 

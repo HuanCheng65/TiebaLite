@@ -56,9 +56,10 @@ import com.huanchengfly.tieba.post.ui.common.theme.compose.threadBottomBar
 import com.huanchengfly.tieba.post.ui.page.LocalNavigator
 import com.huanchengfly.tieba.post.ui.page.ProvideNavigator
 import com.huanchengfly.tieba.post.ui.page.destinations.CopyTextDialogPageDestination
-import com.huanchengfly.tieba.post.ui.page.destinations.ReplyPageDestination
 import com.huanchengfly.tieba.post.ui.page.destinations.ThreadPageDestination
 import com.huanchengfly.tieba.post.ui.page.destinations.UserProfilePageDestination
+import com.huanchengfly.tieba.post.ui.page.reply.ReplyArgs
+import com.huanchengfly.tieba.post.ui.page.reply.ReplyDialog
 import com.huanchengfly.tieba.post.ui.page.thread.PostAgreeBtn
 import com.huanchengfly.tieba.post.ui.page.thread.PostCard
 import com.huanchengfly.tieba.post.ui.page.thread.UserNameText
@@ -109,7 +110,8 @@ fun SubPostsPage(
             threadId = threadId,
             postId = postId,
             subPostId = subPostId,
-            loadFromSubPost = loadFromSubPost
+            loadFromSubPost = loadFromSubPost,
+            onNavigateUp = { navigator.navigateUp() }
         )
     }
 }
@@ -135,7 +137,8 @@ fun SubPostsSheetPage(
             postId = postId,
             subPostId = subPostId,
             loadFromSubPost = loadFromSubPost,
-            isSheet = true
+            isSheet = true,
+            onNavigateUp = { navigator.navigateUp() }
         )
     }
 }
@@ -149,13 +152,13 @@ internal fun SubPostsContent(
     postId: Long,
     subPostId: Long = 0L,
     loadFromSubPost: Boolean = false,
-    isSheet: Boolean = false
+    isSheet: Boolean = false,
+    onNavigateUp: () -> Unit = {},
 ) {
-    val context = LocalContext.current
     val navigator = LocalNavigator.current
     val account = LocalAccount.current
 
-    LazyLoad(loaded = viewModel.initialized) {
+    LazyLoad(key = viewModel, loaded = viewModel.initialized) {
         viewModel.send(
             SubPostsUiIntent.Load(
                 forumId,
@@ -263,6 +266,30 @@ internal fun SubPostsContent(
         )
     }
 
+    val replyDialogState = rememberDialogState()
+    var currentReplyArgs by remember { mutableStateOf<ReplyArgs?>(null) }
+    if (currentReplyArgs != null) {
+        ReplyDialog(args = currentReplyArgs!!, state = replyDialogState)
+    }
+
+//    onGlobalEvent<GlobalEvent.ReplySuccess>(
+//        filter = { it.threadId == threadId && it.postId == postId }
+//    ) { event ->
+//        viewModel.send(
+//            SubPostsUiIntent.Load(
+//                forumId,
+//                threadId,
+//                postId,
+//                subPostId.takeIf { loadFromSubPost } ?: 0L
+//            )
+//        )
+//    }
+
+    fun showReplyDialog(args: ReplyArgs) {
+        currentReplyArgs = args
+        replyDialogState.show()
+    }
+
     StateScreen(
         modifier = Modifier.fillMaxSize(),
         isEmpty = subPosts.isEmpty(),
@@ -282,7 +309,7 @@ internal fun SubPostsContent(
                             fontWeight = FontWeight.Bold, style = MaterialTheme.typography.h6)
                     },
                     navigationIcon = {
-                        IconButton(onClick = { navigator.navigateUp() }) {
+                        IconButton(onClick = onNavigateUp) {
                             Icon(
                                 imageVector = if (isSheet) Icons.Rounded.Close else Icons.AutoMirrored.Rounded.ArrowBack,
                                 contentDescription = stringResource(id = R.string.btn_close)
@@ -336,8 +363,8 @@ internal fun SubPostsContent(
                                         val fid = forum?.get { id } ?: forumId
                                         val forumName = forum?.get { name }
                                         if (!forumName.isNullOrEmpty()) {
-                                            navigator.navigate(
-                                                ReplyPageDestination(
+                                            showReplyDialog(
+                                                ReplyArgs(
                                                     forumId = fid,
                                                     forumName = forumName,
                                                     threadId = threadId,
@@ -411,8 +438,8 @@ internal fun SubPostsContent(
                                         )
                                     },
                                     onReplyClick = {
-                                        navigator.navigate(
-                                            ReplyPageDestination(
+                                        showReplyDialog(
+                                            ReplyArgs(
                                                 forumId = forumId,
                                                 forumName = forum?.get { name } ?: "",
                                                 threadId = threadId,
@@ -477,8 +504,8 @@ internal fun SubPostsContent(
                                 )
                             },
                             onReplyClick = {
-                                navigator.navigate(
-                                    ReplyPageDestination(
+                                showReplyDialog(
+                                    ReplyArgs(
                                         forumId = forumId,
                                         forumName = forum?.get { name } ?: "",
                                         threadId = threadId,

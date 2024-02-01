@@ -323,7 +323,6 @@ fun UserPage(
                             .padding(top = 8.dp),
                     )
                 }
-                val navigator = LocalNavigator.current
                 if (account != null) {
                     ListMenuItem(
                         icon = ImageVector.vectorResource(id = R.drawable.ic_favorite),

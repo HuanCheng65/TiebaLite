@@ -370,51 +370,50 @@ class MainActivityV2 : BaseComposeActivity() {
                 }
                 DialogNegativeButton(text = stringResource(id = R.string.btn_close))
             },
-            content = {
-                previewInfo?.let {
-                    Surface(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(horizontal = 24.dp),
-                        border = BorderStroke(1.dp, ExtendedTheme.colors.divider),
-                        shape = RoundedCornerShape(6.dp)
+        ) {
+            previewInfo?.let {
+                Surface(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 24.dp),
+                    border = BorderStroke(1.dp, ExtendedTheme.colors.divider),
+                    shape = RoundedCornerShape(6.dp)
+                ) {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(16.dp),
+                        modifier = Modifier.padding(16.dp)
                     ) {
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.spacedBy(16.dp),
-                            modifier = Modifier.padding(16.dp)
-                        ) {
-                            it.icon?.let { icon ->
-                                if (icon.type == QuickPreviewUtil.Icon.TYPE_DRAWABLE_RES) {
-                                    AvatarIcon(
-                                        resId = icon.res,
-                                        size = Sizes.Medium,
-                                        contentDescription = null
-                                    )
-                                } else {
-                                    Avatar(
-                                        data = icon.url,
-                                        size = Sizes.Medium,
-                                        contentDescription = null
-                                    )
-                                }
+                        it.icon?.let { icon ->
+                            if (icon.type == QuickPreviewUtil.Icon.TYPE_DRAWABLE_RES) {
+                                AvatarIcon(
+                                    resId = icon.res,
+                                    size = Sizes.Medium,
+                                    contentDescription = null
+                                )
+                            } else {
+                                Avatar(
+                                    data = icon.url,
+                                    size = Sizes.Medium,
+                                    contentDescription = null
+                                )
                             }
-                            Column(
-                                modifier = Modifier.weight(1f),
-                                verticalArrangement = Arrangement.spacedBy(4.dp)
-                            ) {
-                                it.title?.let { title ->
-                                    Text(text = title, style = MaterialTheme.typography.subtitle1)
-                                }
-                                it.subtitle?.let { subtitle ->
-                                    Text(text = subtitle, style = MaterialTheme.typography.body2)
-                                }
+                        }
+                        Column(
+                            modifier = Modifier.weight(1f),
+                            verticalArrangement = Arrangement.spacedBy(4.dp)
+                        ) {
+                            it.title?.let { title ->
+                                Text(text = title, style = MaterialTheme.typography.subtitle1)
+                            }
+                            it.subtitle?.let { subtitle ->
+                                Text(text = subtitle, style = MaterialTheme.typography.body2)
                             }
                         }
                     }
                 }
-            },
-        )
+            }
+        }
     }
 
     @OptIn(ExperimentalMaterialNavigationApi::class)

@@ -131,146 +131,6 @@ fun AppThemePage(
     Dialog(
         dialogState = customPrimaryColorDialogState,
         title = { Text(text = stringResource(id = R.string.title_custom_theme)) },
-        content = {
-            var useInput by remember { mutableStateOf(false) }
-
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp)
-                    .verticalScroll(rememberScrollState()),
-                verticalArrangement = Arrangement.spacedBy(8.dp)
-            ) {
-                AnimatedContent(
-                    targetState = useInput,
-                    label = "",
-                    modifier = Modifier
-                        .wrapContentHeight()
-                        .animateContentSize()
-                ) { input ->
-                    if (input) {
-                        var inputHexColor by remember { mutableStateOf(customPrimaryColor.toHexString()) }
-                        val lastValidColor by produceState(
-                            initialValue = customPrimaryColor,
-                            inputHexColor
-                        ) {
-                            if ("^#([0-9a-fA-F]{6})$".toRegex().matches(inputHexColor)) {
-                                value = Color(inputHexColor.toColorInt())
-                            }
-                        }
-
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.spacedBy(8.dp),
-                            modifier = Modifier.fillMaxWidth()
-                        ) {
-                            Spacer(
-                                modifier = Modifier
-                                    .size(48.dp)
-                                    .clip(CircleShape)
-                                    .background(lastValidColor)
-                            )
-                            OutlinedTextField(
-                                value = inputHexColor,
-                                onValueChange = {
-                                    if ("^#([0-9a-fA-F]{0,6})$".toRegex().matches(it)) {
-                                        inputHexColor = it
-                                    }
-                                },
-                                maxLines = 1,
-                                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
-                                modifier = Modifier.weight(1f),
-                                colors = TextFieldDefaults.outlinedTextFieldColors(
-                                    cursorColor = ExtendedTheme.colors.primary,
-                                    focusedBorderColor = ExtendedTheme.colors.primary,
-                                    focusedLabelColor = ExtendedTheme.colors.primary
-                                )
-                            )
-                            IconButton(
-                                onClick = {
-                                    customPrimaryColor = Color(inputHexColor.toColorInt())
-                                    useInput = false
-                                }
-                            ) {
-                                Icon(
-                                    imageVector = Icons.Rounded.Check,
-                                    contentDescription = stringResource(id = R.string.button_sure_default)
-                                )
-                            }
-                        }
-                    } else {
-                        Box {
-                            HarmonyColorPicker(
-                                harmonyMode = ColorHarmonyMode.ANALOGOUS,
-                                color = HsvColor.from(customPrimaryColor),
-                                onColorChanged = {
-                                    customPrimaryColor = it.toColor()
-                                },
-                                modifier = Modifier.sizeIn(maxWidth = 320.dp, maxHeight = 320.dp)
-                            )
-
-                            IconButton(
-                                onClick = { useInput = true },
-                                modifier = Modifier.align(Alignment.TopEnd)
-                            ) {
-                                Icon(
-                                    imageVector = Icons.Rounded.BorderColor,
-                                    contentDescription = stringResource(id = R.string.desc_input_color)
-                                )
-                            }
-                        }
-                    }
-                }
-
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(8.dp),
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .clickable(
-                            interactionSource = remember { MutableInteractionSource() },
-                            indication = null,
-                            onClick = {
-                                customToolbarPrimaryColor =
-                                    !customToolbarPrimaryColor
-                            }
-                        )
-                ) {
-                    Checkbox(
-                        checked = customToolbarPrimaryColor,
-                        onCheckedChange = {
-                            customToolbarPrimaryColor = it
-                        },
-                    )
-                    Text(text = stringResource(id = R.string.tip_toolbar_primary_color))
-                }
-
-                if (customToolbarPrimaryColor) {
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.spacedBy(8.dp),
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .clickable(
-                                interactionSource = remember { MutableInteractionSource() },
-                                indication = null,
-                                onClick = {
-                                    customStatusBarFontDark =
-                                        !customStatusBarFontDark
-                                }
-                            )
-                    ) {
-                        Checkbox(
-                            checked = customStatusBarFontDark,
-                            onCheckedChange = {
-                                customStatusBarFontDark = it
-                            },
-                        )
-                        Text(text = stringResource(id = R.string.tip_status_bar_font))
-                    }
-                }
-            }
-        },
         buttons = {
             DialogPositiveButton(
                 text = stringResource(id = R.string.button_finish),
@@ -297,7 +157,146 @@ fun AppThemePage(
                 }
             )
         }
-    )
+    ) {
+        var useInput by remember { mutableStateOf(false) }
+
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp)
+                .verticalScroll(rememberScrollState()),
+            verticalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            AnimatedContent(
+                targetState = useInput,
+                label = "",
+                modifier = Modifier
+                    .wrapContentHeight()
+                    .animateContentSize()
+            ) { input ->
+                if (input) {
+                    var inputHexColor by remember { mutableStateOf(customPrimaryColor.toHexString()) }
+                    val lastValidColor by produceState(
+                        initialValue = customPrimaryColor,
+                        inputHexColor
+                    ) {
+                        if ("^#([0-9a-fA-F]{6})$".toRegex().matches(inputHexColor)) {
+                            value = Color(inputHexColor.toColorInt())
+                        }
+                    }
+
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(8.dp),
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Spacer(
+                            modifier = Modifier
+                                .size(48.dp)
+                                .clip(CircleShape)
+                                .background(lastValidColor)
+                        )
+                        OutlinedTextField(
+                            value = inputHexColor,
+                            onValueChange = {
+                                if ("^#([0-9a-fA-F]{0,6})$".toRegex().matches(it)) {
+                                    inputHexColor = it
+                                }
+                            },
+                            maxLines = 1,
+                            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
+                            modifier = Modifier.weight(1f),
+                            colors = TextFieldDefaults.outlinedTextFieldColors(
+                                cursorColor = ExtendedTheme.colors.primary,
+                                focusedBorderColor = ExtendedTheme.colors.primary,
+                                focusedLabelColor = ExtendedTheme.colors.primary
+                            )
+                        )
+                        IconButton(
+                            onClick = {
+                                customPrimaryColor = Color(inputHexColor.toColorInt())
+                                useInput = false
+                            }
+                        ) {
+                            Icon(
+                                imageVector = Icons.Rounded.Check,
+                                contentDescription = stringResource(id = R.string.button_sure_default)
+                            )
+                        }
+                    }
+                } else {
+                    Box {
+                        HarmonyColorPicker(
+                            harmonyMode = ColorHarmonyMode.ANALOGOUS,
+                            color = HsvColor.from(customPrimaryColor),
+                            onColorChanged = {
+                                customPrimaryColor = it.toColor()
+                            },
+                            modifier = Modifier.sizeIn(maxWidth = 320.dp, maxHeight = 320.dp)
+                        )
+
+                        IconButton(
+                            onClick = { useInput = true },
+                            modifier = Modifier.align(Alignment.TopEnd)
+                        ) {
+                            Icon(
+                                imageVector = Icons.Rounded.BorderColor,
+                                contentDescription = stringResource(id = R.string.desc_input_color)
+                            )
+                        }
+                    }
+                }
+            }
+
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clickable(
+                        interactionSource = remember { MutableInteractionSource() },
+                        indication = null,
+                        onClick = {
+                            customToolbarPrimaryColor =
+                                !customToolbarPrimaryColor
+                        }
+                    )
+            ) {
+                Checkbox(
+                    checked = customToolbarPrimaryColor,
+                    onCheckedChange = {
+                        customToolbarPrimaryColor = it
+                    },
+                )
+                Text(text = stringResource(id = R.string.tip_toolbar_primary_color))
+            }
+
+            if (customToolbarPrimaryColor) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clickable(
+                            interactionSource = remember { MutableInteractionSource() },
+                            indication = null,
+                            onClick = {
+                                customStatusBarFontDark =
+                                    !customStatusBarFontDark
+                            }
+                        )
+                ) {
+                    Checkbox(
+                        checked = customStatusBarFontDark,
+                        onCheckedChange = {
+                            customStatusBarFontDark = it
+                        },
+                    )
+                    Text(text = stringResource(id = R.string.tip_status_bar_font))
+                }
+            }
+        }
+    }
 
     MyScaffold(
         backgroundColor = Color.Transparent,
