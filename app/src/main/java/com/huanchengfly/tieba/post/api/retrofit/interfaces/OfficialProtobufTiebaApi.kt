@@ -6,6 +6,7 @@ import com.huanchengfly.tieba.post.api.models.protos.forumRuleDetail.ForumRuleDe
 import com.huanchengfly.tieba.post.api.models.protos.frsPage.FrsPageResponse
 import com.huanchengfly.tieba.post.api.models.protos.getBawuInfo.GetBawuInfoResponse
 import com.huanchengfly.tieba.post.api.models.protos.getForumDetail.GetForumDetailResponse
+import com.huanchengfly.tieba.post.api.models.protos.getHistoryForum.GetHistoryForumResponse
 import com.huanchengfly.tieba.post.api.models.protos.getLevelInfo.GetLevelInfoResponse
 import com.huanchengfly.tieba.post.api.models.protos.getMemberInfo.GetMemberInfoResponse
 import com.huanchengfly.tieba.post.api.models.protos.getUserInfo.GetUserInfoResponse
@@ -121,4 +122,9 @@ interface OfficialProtobufTiebaApi {
     fun getUserInfoFlow(
         @Body body: MyMultipartBody,
     ): Flow<GetUserInfoResponse>
+
+    @POST("/c/f/forum/gethistoryforum?cmd=309601&format=protobuf")
+    fun getHistoryForumFlow(
+        @Body body: MyMultipartBody,
+    ): Flow<GetHistoryForumResponse>
 }

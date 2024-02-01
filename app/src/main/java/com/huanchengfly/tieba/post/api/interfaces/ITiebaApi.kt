@@ -10,6 +10,7 @@ import com.huanchengfly.tieba.post.api.models.protos.forumRuleDetail.ForumRuleDe
 import com.huanchengfly.tieba.post.api.models.protos.frsPage.FrsPageResponse
 import com.huanchengfly.tieba.post.api.models.protos.getBawuInfo.GetBawuInfoResponse
 import com.huanchengfly.tieba.post.api.models.protos.getForumDetail.GetForumDetailResponse
+import com.huanchengfly.tieba.post.api.models.protos.getHistoryForum.GetHistoryForumResponse
 import com.huanchengfly.tieba.post.api.models.protos.getLevelInfo.GetLevelInfoResponse
 import com.huanchengfly.tieba.post.api.models.protos.getMemberInfo.GetMemberInfoResponse
 import com.huanchengfly.tieba.post.api.models.protos.getUserInfo.GetUserInfoResponse
@@ -1508,4 +1509,11 @@ interface ITiebaApi {
         bduss: String?,
         sToken: String?,
     ): Flow<GetUserInfoResponse>
+
+    /**
+     * 获取吧浏览历史信息
+     */
+    fun getHistoryForumFlow(
+        history: String,
+    ): Flow<GetHistoryForumResponse>
 }

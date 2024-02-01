@@ -66,6 +66,9 @@ import com.huanchengfly.tieba.post.api.models.protos.getBawuInfo.GetBawuInfoResp
 import com.huanchengfly.tieba.post.api.models.protos.getForumDetail.GetForumDetailRequest
 import com.huanchengfly.tieba.post.api.models.protos.getForumDetail.GetForumDetailRequestData
 import com.huanchengfly.tieba.post.api.models.protos.getForumDetail.GetForumDetailResponse
+import com.huanchengfly.tieba.post.api.models.protos.getHistoryForum.GetHistoryForumRequest
+import com.huanchengfly.tieba.post.api.models.protos.getHistoryForum.GetHistoryForumRequestData
+import com.huanchengfly.tieba.post.api.models.protos.getHistoryForum.GetHistoryForumResponse
 import com.huanchengfly.tieba.post.api.models.protos.getLevelInfo.GetLevelInfoRequest
 import com.huanchengfly.tieba.post.api.models.protos.getLevelInfo.GetLevelInfoRequestData
 import com.huanchengfly.tieba.post.api.models.protos.getLevelInfo.GetLevelInfoResponse
@@ -1446,6 +1449,21 @@ object MixedTiebaApiImpl : ITiebaApi {
                         ),
                         uid = uid,
                         scr_w = getScreenWidth()
+                    )
+                ),
+                clientVersion = ClientVersion.TIEBA_V12,
+                needSToken = true
+            )
+        )
+    }
+
+    override fun getHistoryForumFlow(history: String): Flow<GetHistoryForumResponse> {
+        return RetrofitTiebaApi.OFFICIAL_PROTOBUF_TIEBA_V12_API.getHistoryForumFlow(
+            buildProtobufRequestBody(
+                GetHistoryForumRequest(
+                    GetHistoryForumRequestData(
+                        common = buildCommonRequest(clientVersion = ClientVersion.TIEBA_V12),
+                        history = history,
                     )
                 ),
                 clientVersion = ClientVersion.TIEBA_V12,
