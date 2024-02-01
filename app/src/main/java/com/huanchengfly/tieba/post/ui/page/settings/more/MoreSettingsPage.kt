@@ -7,7 +7,6 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.BugReport
-import androidx.compose.material.icons.outlined.FiberNew
 import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material.icons.outlined.OfflineBolt
 import androidx.compose.runtime.Composable
@@ -40,7 +39,6 @@ import com.huanchengfly.tieba.post.ui.widgets.compose.LocalSnackbarHostState
 import com.huanchengfly.tieba.post.ui.widgets.compose.MyScaffold
 import com.huanchengfly.tieba.post.ui.widgets.compose.Sizes
 import com.huanchengfly.tieba.post.ui.widgets.compose.TitleCentredToolbar
-import com.huanchengfly.tieba.post.utils.AppIconUtil
 import com.huanchengfly.tieba.post.utils.ImageCacheUtil
 import com.huanchengfly.tieba.post.utils.appPreferences
 import com.ramcosta.composedestinations.annotation.Destination
@@ -104,26 +102,6 @@ fun MoreSettingsPage(
                         summary = stringResource(id = R.string.tip_check_ci_update)
                     )
                 }
-            }
-            prefsItem {
-                SwitchPref(
-                    leadingIcon = {
-                        LeadingIcon {
-                            AvatarIcon(
-                                icon = Icons.Outlined.FiberNew,
-                                size = Sizes.Small,
-                                contentDescription = null,
-                            )
-                        }
-                    },
-                    key = "enable_new_ui",
-                    title = stringResource(id = R.string.title_enable_new_ui),
-                    defaultChecked = true,
-                    summary = stringResource(id = R.string.summary_enable_new_ui),
-                    onCheckedChange = {
-                        AppIconUtil.setIcon()
-                    }
-                )
             }
             prefsItem {
                 SwitchPref(
