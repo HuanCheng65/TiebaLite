@@ -106,15 +106,17 @@ fun LoadMoreLayout(
     val curIsEmpty by rememberUpdatedState(newValue = isEmpty)
     val curIsLoading by rememberUpdatedState(newValue = isLoading)
     val curCanLoadMore by rememberUpdatedState(newValue = canLoadMore)
+    val curPreloadCount by rememberUpdatedState(newValue = preloadCount)
 
     // 处理列表滚动到底部时自动加载更多
     val curLazyListState by rememberUpdatedState(newValue = lazyListState)
     LaunchedEffect(curLazyListState) {
         curLazyListState?.let { state ->
             snapshotFlow {
-                val shouldPreload = !curIsEmpty && curCanLoadMore && !curIsLoading
+                val shouldPreload =
+                    !curIsEmpty && curCanLoadMore && !curIsLoading && curPreloadCount > 0
                 val isInPreloadRange =
-                    state.firstVisibleItemIndex + state.layoutInfo.visibleItemsInfo.size - 1 >= state.layoutInfo.totalItemsCount - preloadCount
+                    state.firstVisibleItemIndex + state.layoutInfo.visibleItemsInfo.size - 1 >= state.layoutInfo.totalItemsCount - curPreloadCount
                 shouldPreload && isInPreloadRange
             }
                 .distinctUntilChanged()

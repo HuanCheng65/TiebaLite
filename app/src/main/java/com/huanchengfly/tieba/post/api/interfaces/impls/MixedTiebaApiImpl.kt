@@ -1216,6 +1216,7 @@ object MixedTiebaApiImpl : ITiebaApi {
         forumId: Long?,
         stType: String,
         mark: Int,
+        lastPostId: Long?,
     ): Flow<PbPageResponse> {
         return RetrofitTiebaApi.OFFICIAL_PROTOBUF_TIEBA_V12_API.pbPageFlow(
             buildProtobufRequestBody(
@@ -1234,9 +1235,10 @@ object MixedTiebaApiImpl : ITiebaApi {
                             is_req_ad = 1
                         ),
                         mark = mark,
+                        last_pid = lastPostId ?: 0,
                         app_pos = buildAppPosInfo(),
                         back = if (back) 1 else 0,
-                        banner = 1,
+                        banner = 0,
                         broadcast_id = 0,
                         floor_rn = 4,
                         floor_sort_type = 1,
@@ -1247,10 +1249,9 @@ object MixedTiebaApiImpl : ITiebaApi {
                         is_fold_comment_req = 0,
                         is_jumpfloor = 0,
                         jumpfloor_num = 0,
-                        last_pid = 0,
                         need_repost_recommend_forum = 0,
                         obj_locate = "",
-                        obj_param1 = "13",
+                        obj_param1 = "10",
                         obj_source = "",
                         ori_ugc_type = 0,
                         pb_rn = 0,
@@ -1261,6 +1262,7 @@ object MixedTiebaApiImpl : ITiebaApi {
                         scr_dip = App.ScreenInfo.DENSITY.toDouble(),
                         scr_h = getScreenHeight(),
                         scr_w = getScreenWidth(),
+                        similar_from = 0,
                         source_type = 2,
                         st_type = stType,
                         thread_type = 0,

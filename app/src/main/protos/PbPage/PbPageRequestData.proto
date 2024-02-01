@@ -12,7 +12,7 @@ import "PbPage/AdParam.proto";
 message PbPageRequestData {
   optional int32 pb_rn = 1;
   int32 mark = 2;
-  int32 back = 3;
+  optional int32 back = 3;
   int64 kz = 4;
   int32 lz = 5;
   int32 r = 6;
@@ -30,7 +30,7 @@ message PbPageRequestData {
   int32 pn = 18;
   string st_type = 19;
   optional int32 thread_type = 20;
-  int32 banner = 21;
+  optional int32 banner = 21;
   int32 arround = 22;
   int32 last = 23;
   string msg_click = 24;
@@ -81,4 +81,7 @@ message PbPageRequestData {
   optional int32 is_edit_comment_req = 79;
   optional int32 request_times = 80;
   optional int64 last_pid = 81;
+  optional int32 similar_from = 82;
+  string come_from = 83;
+  string search_query = 84;
 }

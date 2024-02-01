@@ -1392,6 +1392,14 @@ interface ITiebaApi {
      *
      * @param threadId 贴子 ID
      * @param page 页码（从 1 开始）
+     * @param postId 回复 ID
+     * @param seeLz 是否只看楼主
+     * @param back 是否向前翻页
+     * @param sortType 排序类型
+     * @param forumId 吧 ID
+     * @param stType 来源类型（？）
+     * @param mark 是否收藏
+     * @param lastPostId 最后一条回复 ID
      */
     fun pbPageFlow(
         threadId: Long,
@@ -1403,6 +1411,7 @@ interface ITiebaApi {
         forumId: Long? = null,
         stType: String = "",
         mark: Int = 0,
+        lastPostId: Long? = null,
     ): Flow<PbPageResponse>
 
     /**

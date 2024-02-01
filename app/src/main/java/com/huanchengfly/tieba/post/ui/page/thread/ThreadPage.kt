@@ -2,6 +2,7 @@ package com.huanchengfly.tieba.post.ui.page.thread
 
 import android.util.Log
 import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -32,6 +33,7 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.appendInlineContent
 import androidx.compose.material.ButtonDefaults
+import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.DropdownMenuItem
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Icon
@@ -120,6 +122,7 @@ import com.huanchengfly.tieba.post.ui.common.PbContentText
 import com.huanchengfly.tieba.post.ui.common.theme.compose.ExtendedTheme
 import com.huanchengfly.tieba.post.ui.common.theme.compose.invertChipBackground
 import com.huanchengfly.tieba.post.ui.common.theme.compose.invertChipContent
+import com.huanchengfly.tieba.post.ui.common.theme.compose.loadMoreIndicator
 import com.huanchengfly.tieba.post.ui.common.theme.compose.pullRefreshIndicator
 import com.huanchengfly.tieba.post.ui.common.theme.compose.threadBottomBar
 import com.huanchengfly.tieba.post.ui.page.LocalNavigator
@@ -400,8 +403,73 @@ data object ThreadPageNoExtra : ThreadPageExtra
 @Serializable
 data class ThreadPageFromStoreExtra(
     val maxPid: Long,
-    val maxFloor: Int
+    val maxFloor: Int,
 ) : ThreadPageExtra
+
+@Composable
+private fun ThreadLoadMoreIndicator(
+    isLoading: Boolean,
+    loadMoreEnd: Boolean,
+    willLoad: Boolean,
+    hasMore: Boolean,
+) {
+    Surface(
+        elevation = 8.dp,
+        shape = RoundedCornerShape(100),
+        color = ExtendedTheme.colors.loadMoreIndicator,
+        contentColor = ExtendedTheme.colors.text
+    ) {
+        Row(
+            modifier = Modifier
+                .height(IntrinsicSize.Min)
+                .padding(10.dp)
+                .animateContentSize(),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            ProvideTextStyle(value = MaterialTheme.typography.body2.copy(fontSize = 13.sp)) {
+                when {
+                    isLoading -> {
+                        CircularProgressIndicator(
+                            modifier = Modifier.size(24.dp),
+                            strokeWidth = 3.dp,
+                            color = ExtendedTheme.colors.primary
+                        )
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Text(
+                            text = stringResource(id = R.string.text_loading),
+                            modifier = Modifier.padding(horizontal = 8.dp)
+                        )
+                    }
+
+                    loadMoreEnd -> {
+                        Text(
+                            text = stringResource(id = R.string.no_more),
+                            modifier = Modifier.padding(horizontal = 8.dp)
+                        )
+                    }
+
+                    hasMore -> {
+                        Text(
+                            text = if (willLoad) stringResource(id = R.string.release_to_load) else stringResource(
+                                id = R.string.pull_to_load
+                            ),
+                            modifier = Modifier.padding(horizontal = 8.dp)
+                        )
+                    }
+
+                    else -> {
+                        Text(
+                            text = if (willLoad) stringResource(id = R.string.release_to_load_latest_posts) else stringResource(
+                                id = R.string.pull_to_load_latest_posts
+                            ),
+                            modifier = Modifier.padding(horizontal = 8.dp)
+                        )
+                    }
+                }
+            }
+        }
+    }
+}
 
 @OptIn(ExperimentalFoundationApi::class, ExperimentalMaterialApi::class)
 @Destination(
@@ -421,7 +489,7 @@ fun ThreadPage(
     extra: ThreadPageExtra? = null,
     threadInfo: ThreadInfo? = null,
     scrollToReply: Boolean = false,
-    viewModel: ThreadViewModel = pageViewModel()
+    viewModel: ThreadViewModel = pageViewModel(),
 ) {
     LazyLoad(loaded = viewModel.initialized) {
         viewModel.send(
@@ -536,6 +604,25 @@ fun ThreadPage(
     val isEmpty by remember {
         derivedStateOf { data.isEmpty() && firstPost == null }
     }
+    val enablePullRefresh by remember {
+        derivedStateOf {
+            hasPrevious || curSortType == ThreadSortType.SORT_TYPE_DESC
+        }
+    }
+    val loadMoreEnd by remember {
+        derivedStateOf {
+            !hasMore && curSortType == ThreadSortType.SORT_TYPE_DESC
+        }
+    }
+    val loadMorePreloadCount by remember {
+        derivedStateOf {
+            if (hasMore) {
+                1
+            } else {
+                0
+            }
+        }
+    }
     val isCollected = remember(thread) {
         thread?.get { collectStatus != 0 } == true
     }
@@ -624,7 +711,7 @@ fun ThreadPage(
         filter = { it.threadId == threadId }
     ) { event ->
         viewModel.send(
-            ThreadUiIntent.LoadLatestReply(
+            ThreadUiIntent.LoadMyLatestReply(
                 threadId = threadId,
                 postId = event.newPostId,
                 forumId = curForumId,
@@ -1193,27 +1280,48 @@ fun ThreadPage(
                 ) {
                     Box(
                         modifier = Modifier
-                            .pullRefresh(state = pullRefreshState, enabled = hasPrevious)
+                            .pullRefresh(state = pullRefreshState, enabled = enablePullRefresh)
                     ) {
                         LoadMoreLayout(
                             isLoading = isLoadingMore,
                             onLoadMore = {
-                                viewModel.send(
-                                    ThreadUiIntent.LoadMore(
-                                        threadId = threadId,
-                                        page = if (curSortType == ThreadSortType.SORT_TYPE_DESC) totalPage - currentPageMax
-                                        else currentPageMax + 1,
-                                        forumId = forumId,
-                                        postId = nextPagePostId,
-                                        seeLz = isSeeLz,
-                                        sortType = curSortType,
-                                        postIds = data.map { it.post.get { id } }
+                                if (hasMore) {
+                                    viewModel.send(
+                                        ThreadUiIntent.LoadMore(
+                                            threadId = threadId,
+                                            page = if (curSortType == ThreadSortType.SORT_TYPE_DESC) totalPage - currentPageMax
+                                            else currentPageMax + 1,
+                                            forumId = forumId,
+                                            postId = nextPagePostId,
+                                            seeLz = isSeeLz,
+                                            sortType = curSortType,
+                                            postIds = data.map { it.post.get { id } }
+                                        )
                                     )
+                                } else if (data.isNotEmpty() && curSortType != ThreadSortType.SORT_TYPE_DESC) {
+                                    viewModel.send(
+                                        ThreadUiIntent.LoadLatestPosts(
+                                            threadId = threadId,
+                                            curLatestPostId = data.last().post.get { id },
+                                            forumId = curForumId,
+                                            seeLz = isSeeLz,
+                                            sortType = curSortType
+                                        )
+                                    )
+                                }
+                            },
+                            loadEnd = loadMoreEnd,
+                            indicator = { isLoading, loadMoreEnd, willLoad ->
+                                ThreadLoadMoreIndicator(
+                                    isLoading,
+                                    loadMoreEnd,
+                                    willLoad,
+                                    hasMore
                                 )
                             },
-                            loadEnd = !hasMore,
                             lazyListState = lazyListState,
-                            isEmpty = data.isEmpty()
+                            isEmpty = data.isEmpty(),
+                            preloadCount = loadMorePreloadCount,
                         ) {
                             MyLazyColumn(
                                 state = lazyListState,
