@@ -1,7 +1,9 @@
 package com.huanchengfly.tieba.post.models.database
 
+import androidx.compose.runtime.Immutable
 import org.litepal.crud.LitePalSupport
 
+@Immutable
 data class History(
     val title: String = "",
     val data: String = "",

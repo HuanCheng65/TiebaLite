@@ -9,6 +9,7 @@ import okhttp3.Response
 import java.io.IOException
 import java.net.SocketException
 import java.net.SocketTimeoutException
+import javax.net.ssl.SSLHandshakeException
 
 object ConnectivityInterceptor : Interceptor {
     override fun intercept(chain: Interceptor.Chain): Response {
@@ -17,7 +18,7 @@ object ConnectivityInterceptor : Interceptor {
         val exception = response.exceptionOrNull()
 
         return when {
-            (exception is SocketTimeoutException || exception is SocketException) && isNetworkConnected() -> throw NoConnectivityException(
+            (exception is SocketTimeoutException || exception is SocketException || exception is SSLHandshakeException) && isNetworkConnected() -> throw NoConnectivityException(
                 App.INSTANCE.getString(R.string.connectivity_timeout)
             )
 

@@ -1,4 +1,4 @@
-package com.huanchengfly.tieba.post.utils
+package com.huanchengfly.tieba.post.utils.extension
 
 /**
  * 添加flag

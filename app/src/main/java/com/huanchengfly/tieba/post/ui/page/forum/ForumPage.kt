@@ -92,6 +92,7 @@ import com.huanchengfly.tieba.post.arch.onEvent
 import com.huanchengfly.tieba.post.arch.pageViewModel
 import com.huanchengfly.tieba.post.dataStore
 import com.huanchengfly.tieba.post.getInt
+import com.huanchengfly.tieba.post.models.ForumHistoryExtra
 import com.huanchengfly.tieba.post.models.database.History
 import com.huanchengfly.tieba.post.toastShort
 import com.huanchengfly.tieba.post.ui.common.theme.compose.ExtendedTheme
@@ -133,6 +134,8 @@ import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 import kotlin.math.absoluteValue
 import kotlin.math.max
 import kotlin.math.min
@@ -474,7 +477,8 @@ fun ForumPage(
                     timestamp = System.currentTimeMillis(),
                     avatar = forum.avatar,
                     type = HistoryUtil.TYPE_FORUM,
-                    data = forum.name
+                    data = forum.name,
+                    extras = Json.encodeToString(ForumHistoryExtra(forum.id))
                 ),
                 true
             )
