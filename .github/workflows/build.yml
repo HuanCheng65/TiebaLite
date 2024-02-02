@@ -17,19 +17,11 @@ jobs:
           distribution: "zulu"
           cache: gradle
 
-      - name: Decode Keystore
-        id: decode_keystore
-        if: ${{ github.event_name != 'pull_request' || github.ref_type == 'tag' }}
-        uses: timheuer/base64-to-file@v1.2
-        with:
-          fileName: ${{ vars.RELEASE_KEYSTORE }}
-          fileDir: ${{ github.workspace }}
-          encodedString: ${{ secrets.KEYSTORE }}
-
       - name: Generate keystore.properties
         if: ${{ github.event_name != 'pull_request' || github.ref_type == 'tag' }}
         run: |
           if [ -n "${{ secrets.RELEASEKEYPASSWORD }}" ]; then
+            echo ${{ secrets.KEYSTORE }} | base64 --decode > ${{ vars.RELEASE_KEYSTORE }}
             echo releaseKeyAlias="${{ vars.RELEASE_KEY_ALIAS }}" >> keystore.properties
             echo releaseKeyPassword="${{ secrets.RELEASEKEYPASSWORD }}" >> keystore.properties
             echo releaseKeyStore=$(pwd)/"${{ vars.RELEASE_KEYSTORE }}" >> keystore.properties
