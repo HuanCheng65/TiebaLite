@@ -26,7 +26,10 @@ sweetProperty {
                 isAddDefault = true
             )
             permanentKeyValues(
-                "releaseKeyStore" to ""
+                "keystore.file" to "",
+                "keystore.password" to "",
+                "keystore.key.alias" to "",
+                "keystore.key.password" to ""
             )
             generateFrom(CURRENT_PROJECT, ROOT_PROJECT)
         }
