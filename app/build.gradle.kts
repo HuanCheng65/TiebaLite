@@ -54,34 +54,35 @@ android {
         compose = true
     }
     signingConfigs {
-        println("keystore.file: ${property.keystore.file}")
         if (property.keystore.file.isNotBlank()) {
-            val config by creating {
+            create("config") {
                 storeFile = file(File(rootDir, property.keystore.file))
                 storePassword = property.keystore.password
                 keyAlias = property.keystore.key.alias
                 keyPassword = property.keystore.key.password
+                enableV1Signing = true
+                enableV2Signing = true
                 enableV3Signing = true
                 enableV4Signing = true
             }
         }
     }
     buildTypes {
-        configureEach {
+        all {
             signingConfig =
-                if (signingConfigs.any { it.name == "config" }) signingConfigs.getByName("config") else signingConfigs.getByName(
-                    "debug"
-                )
+                if (signingConfigs.any { it.name == "config" })
+                    signingConfigs.getByName("config")
+                else signingConfigs.getByName("debug")
         }
-        val release by getting {
+        release {
             isMinifyEnabled = true
             isShrinkResources = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
-            isDebuggable = true
-            isJniDebuggable = true
+            isDebuggable = false
+            isJniDebuggable = false
             multiDexEnabled = true
         }
     }
