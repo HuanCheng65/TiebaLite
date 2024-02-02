@@ -1,0 +1,14 @@
+syntax = "proto3";
+
+package tieba.profile;
+
+option java_package = "com.huanchengfly.tieba.post.api.models.protos.profile";
+
+import "Profile/FinanceTabItems.proto";
+
+message FinanceTab {
+  string title = 1;
+  string general_tab_text = 2;
+  string general_tab_url = 3;
+  repeated FinanceTabItems tabs = 4;
+}

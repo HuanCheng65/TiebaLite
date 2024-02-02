@@ -2,11 +2,15 @@ package com.huanchengfly.tieba.post.ui.page.main.home
 
 import android.content.Context
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -17,20 +21,21 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.GridItemSpan
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.DropdownMenuItem
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Scaffold
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.rounded.KeyboardArrowRight
 import androidx.compose.material.icons.outlined.ViewAgenda
 import androidx.compose.material.icons.rounded.Check
 import androidx.compose.material.icons.rounded.Search
@@ -38,6 +43,7 @@ import androidx.compose.material.pullrefresh.PullRefreshIndicator
 import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -48,6 +54,7 @@ import androidx.compose.ui.Alignment.Companion.Center
 import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
@@ -65,25 +72,26 @@ import com.airbnb.lottie.compose.rememberLottieComposition
 import com.google.accompanist.drawablepainter.rememberDrawablePainter
 import com.google.accompanist.placeholder.placeholder
 import com.huanchengfly.tieba.post.R
-import com.huanchengfly.tieba.post.activities.LoginActivity
 import com.huanchengfly.tieba.post.arch.GlobalEvent
 import com.huanchengfly.tieba.post.arch.collectPartialAsState
 import com.huanchengfly.tieba.post.arch.onGlobalEvent
 import com.huanchengfly.tieba.post.arch.pageViewModel
-import com.huanchengfly.tieba.post.goToActivity
 import com.huanchengfly.tieba.post.ui.common.theme.compose.ExtendedTheme
 import com.huanchengfly.tieba.post.ui.common.theme.compose.pullRefreshIndicator
 import com.huanchengfly.tieba.post.ui.page.LocalNavigator
 import com.huanchengfly.tieba.post.ui.page.destinations.ForumPageDestination
+import com.huanchengfly.tieba.post.ui.page.destinations.LoginPageDestination
 import com.huanchengfly.tieba.post.ui.page.destinations.SearchPageDestination
-import com.huanchengfly.tieba.post.ui.widgets.Chip
 import com.huanchengfly.tieba.post.ui.widgets.compose.ActionItem
 import com.huanchengfly.tieba.post.ui.widgets.compose.Avatar
 import com.huanchengfly.tieba.post.ui.widgets.compose.Button
+import com.huanchengfly.tieba.post.ui.widgets.compose.Chip
 import com.huanchengfly.tieba.post.ui.widgets.compose.ConfirmDialog
 import com.huanchengfly.tieba.post.ui.widgets.compose.ErrorScreen
 import com.huanchengfly.tieba.post.ui.widgets.compose.LongClickMenu
 import com.huanchengfly.tieba.post.ui.widgets.compose.MenuState
+import com.huanchengfly.tieba.post.ui.widgets.compose.MyLazyVerticalGrid
+import com.huanchengfly.tieba.post.ui.widgets.compose.MyScaffold
 import com.huanchengfly.tieba.post.ui.widgets.compose.TextButton
 import com.huanchengfly.tieba.post.ui.widgets.compose.TipScreen
 import com.huanchengfly.tieba.post.ui.widgets.compose.Toolbar
@@ -122,12 +130,16 @@ fun SearchBox(
     contentColor: Color = ExtendedTheme.colors.onTopBarSurface,
     onClick: () -> Unit,
 ) {
-    Box(modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)) {
+    Box(
+        modifier = modifier
+            .background(ExtendedTheme.colors.topBar)
+            .padding(horizontal = 16.dp, vertical = 8.dp)
+    ) {
         Surface(
             color = backgroundColor,
             contentColor = contentColor,
             shape = RoundedCornerShape(6.dp),
-            modifier = modifier
+            modifier = Modifier
                 .fillMaxWidth()
                 .clickable(onClick = onClick)
         ) {
@@ -391,6 +403,14 @@ fun HomePage(
         prop1 = HomeUiState::topForums,
         initial = persistentListOf()
     )
+    val historyForums by viewModel.uiState.collectPartialAsState(
+        prop1 = HomeUiState::historyForums,
+        initial = persistentListOf()
+    )
+    val expandHistoryForum by viewModel.uiState.collectPartialAsState(
+        prop1 = HomeUiState::expandHistoryForum,
+        initial = true
+    )
     val error by viewModel.uiState.collectPartialAsState(
         prop1 = HomeUiState::error,
         initial = null
@@ -398,6 +418,7 @@ fun HomePage(
     val isLoggedIn = remember(account) { account != null }
     val isEmpty by remember { derivedStateOf { forums.isEmpty() } }
     val hasTopForum by remember { derivedStateOf { topForums.isNotEmpty() } }
+    val showHistoryForum by remember { derivedStateOf { context.appPreferences.homePageShowHistoryForum && historyForums.isNotEmpty() } }
     var listSingle by remember { mutableStateOf(context.appPreferences.listSingle) }
     val isError by remember { derivedStateOf { error != null } }
     val gridCells by remember { derivedStateOf { getGridCells(context, listSingle) } }
@@ -426,7 +447,11 @@ fun HomePage(
         )
     }
 
-    Scaffold(
+    LaunchedEffect(Unit) {
+        if (viewModel.initialized) viewModel.send(HomeUiIntent.RefreshHistory)
+    }
+
+    MyScaffold(
         backgroundColor = Color.Transparent,
         topBar = {
             Toolbar(
@@ -461,14 +486,16 @@ fun HomePage(
                 .padding(contentPaddings)
         ) {
             Column {
-                SearchBox(modifier = Modifier.padding(bottom = 12.dp)) {
+                SearchBox(modifier = Modifier.padding(bottom = 4.dp)) {
                     navigator.navigate(SearchPageDestination)
                 }
                 StateScreen(
                     isEmpty = isEmpty,
                     isError = isError,
                     isLoading = isLoading,
-                    modifier = Modifier.weight(1f),
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .weight(1f),
                     onReload = {
                         viewModel.send(HomeUiIntent.Refresh)
                     },
@@ -486,19 +513,108 @@ fun HomePage(
                         error?.let { ErrorScreen(error = it) }
                     }
                 ) {
-                    LazyVerticalGrid(
+                    MyLazyVerticalGrid(
                         columns = gridCells,
                         contentPadding = PaddingValues(bottom = 12.dp),
                         modifier = Modifier.fillMaxSize(),
                     ) {
+                        if (showHistoryForum) {
+                            item(key = "HistoryForums", span = { GridItemSpan(maxLineSpan) }) {
+                                val rotate by animateFloatAsState(
+                                    targetValue = if (expandHistoryForum) 90f else 0f,
+                                    label = "rotate"
+                                )
+                                Column {
+                                    Row(
+                                        verticalAlignment = CenterVertically,
+                                        modifier = Modifier
+                                            .clickable(
+                                                interactionSource = remember { MutableInteractionSource() },
+                                                indication = null
+                                            ) {
+                                                viewModel.send(
+                                                    HomeUiIntent.ToggleHistory(
+                                                        expandHistoryForum
+                                                    )
+                                                )
+                                            }
+                                            .padding(vertical = 8.dp)
+                                            .padding(end = 16.dp)
+                                    ) {
+                                        Header(
+                                            text = stringResource(id = R.string.title_history_forum),
+                                            invert = false
+                                        )
+
+                                        Spacer(modifier = Modifier.weight(1f))
+
+                                        Icon(
+                                            imageVector = Icons.AutoMirrored.Rounded.KeyboardArrowRight,
+                                            contentDescription = stringResource(id = R.string.desc_show),
+                                            modifier = Modifier
+                                                .size(24.dp)
+                                                .rotate(rotate)
+                                        )
+                                    }
+                                    AnimatedVisibility(visible = expandHistoryForum) {
+                                        LazyRow(
+                                            contentPadding = PaddingValues(bottom = 8.dp),
+                                        ) {
+                                            item(key = "Spacer1") {
+                                                Spacer(modifier = Modifier.width(12.dp))
+                                            }
+                                            items(
+                                                historyForums,
+                                                key = { it.data }
+                                            ) {
+                                                Row(
+                                                    modifier = Modifier
+                                                        .padding(horizontal = 4.dp)
+                                                        .height(IntrinsicSize.Min)
+                                                        .clip(RoundedCornerShape(100))
+                                                        .background(color = ExtendedTheme.colors.chip)
+                                                        .clickable {
+                                                            navigator.navigate(
+                                                                ForumPageDestination(
+                                                                    it.data
+                                                                )
+                                                            )
+                                                        }
+                                                        .padding(4.dp),
+                                                    verticalAlignment = CenterVertically,
+                                                    horizontalArrangement = Arrangement.spacedBy(4.dp)
+                                                ) {
+                                                    Avatar(
+                                                        data = it.avatar,
+                                                        contentDescription = null,
+                                                        size = 24.dp,
+                                                        shape = CircleShape
+                                                    )
+                                                    Text(
+                                                        text = it.title,
+                                                        fontSize = 12.sp,
+                                                        fontWeight = FontWeight.Bold,
+                                                        modifier = Modifier.padding(end = 4.dp)
+                                                    )
+                                                }
+                                            }
+                                            item(key = "Spacer2") {
+                                                Spacer(modifier = Modifier.width(12.dp))
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
                         if (hasTopForum) {
                             item(key = "TopForumHeader", span = { GridItemSpan(maxLineSpan) }) {
-                                Column {
+                                Column(
+                                    modifier = Modifier.padding(vertical = 8.dp)
+                                ) {
                                     Header(
                                         text = stringResource(id = R.string.title_top_forum),
                                         invert = true
                                     )
-                                    Spacer(modifier = Modifier.height(8.dp))
                                 }
                             }
                             items(
@@ -524,11 +640,11 @@ fun HomePage(
                                     isTopForum = true
                                 )
                             }
+                        }
+                        if (showHistoryForum || hasTopForum) {
                             item(key = "ForumHeader", span = { GridItemSpan(maxLineSpan) }) {
                                 Column(
-                                    modifier = Modifier.padding(
-                                        vertical = 8.dp
-                                    )
+                                    modifier = Modifier.padding(vertical = 8.dp)
                                 ) {
                                     Header(text = stringResource(id = R.string.forum_list_title))
                                 }
@@ -576,15 +692,16 @@ private fun HomePageSkeletonScreen(
     listSingle: Boolean,
     gridCells: GridCells
 ) {
-    val context = LocalContext.current
-    LazyVerticalGrid(
+    MyLazyVerticalGrid(
         columns = gridCells,
         contentPadding = PaddingValues(bottom = 12.dp),
         modifier = Modifier
             .fillMaxSize(),
     ) {
         item(key = "TopForumHeaderPlaceholder", span = { GridItemSpan(maxLineSpan) }) {
-            Column {
+            Column(
+                modifier = Modifier.padding(vertical = 8.dp)
+            ) {
                 Header(
                     text = stringResource(id = R.string.title_top_forum),
                     modifier = Modifier.placeholder(
@@ -593,7 +710,6 @@ private fun HomePageSkeletonScreen(
                     ),
                     invert = true
                 )
-                Spacer(modifier = Modifier.height(8.dp))
             }
         }
         items(6, key = { "TopPlaceholder$it" }) {
@@ -633,7 +749,7 @@ fun EmptyScreen(
     canOpenExplore: Boolean,
     onOpenExplore: () -> Unit
 ) {
-    val context = LocalContext.current
+    val navigator = LocalNavigator.current
     TipScreen(
         title = {
             if (!loggedIn) {
@@ -666,7 +782,7 @@ fun EmptyScreen(
             if (!loggedIn) {
                 Button(
                     onClick = {
-                        context.goToActivity<LoginActivity>()
+                        navigator.navigate(LoginPageDestination)
                     },
                     modifier = Modifier
                         .fillMaxWidth()

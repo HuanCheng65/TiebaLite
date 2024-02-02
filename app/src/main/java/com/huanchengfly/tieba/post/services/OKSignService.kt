@@ -14,8 +14,6 @@ import androidx.core.app.NotificationCompat.FOREGROUND_SERVICE_IMMEDIATE
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.app.ServiceCompat
 import com.huanchengfly.tieba.post.R
-import com.huanchengfly.tieba.post.activities.LoginActivity
-import com.huanchengfly.tieba.post.activities.MainActivity
 import com.huanchengfly.tieba.post.api.models.SignResultBean
 import com.huanchengfly.tieba.post.models.SignDataBean
 import com.huanchengfly.tieba.post.pendingIntentFlagImmutable
@@ -23,7 +21,7 @@ import com.huanchengfly.tieba.post.ui.common.theme.utils.ThemeUtils
 import com.huanchengfly.tieba.post.utils.AccountUtil
 import com.huanchengfly.tieba.post.utils.ProgressListener
 import com.huanchengfly.tieba.post.utils.SingleAccountSigner
-import com.huanchengfly.tieba.post.utils.addFlag
+import com.huanchengfly.tieba.post.utils.extension.addFlag
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -74,8 +72,7 @@ class OKSignService : IntentService(TAG), CoroutineScope, ProgressListener {
             } else {
                 updateNotification(
                     getString(R.string.title_oksign_fail),
-                    getString(R.string.text_login_first),
-                    Intent(this, LoginActivity::class.java)
+                    getString(R.string.text_login_first)
                 )
                 ServiceCompat.stopForeground(this, ServiceCompat.STOP_FOREGROUND_DETACH)
             }
@@ -110,7 +107,7 @@ class OKSignService : IntentService(TAG), CoroutineScope, ProgressListener {
             .setColor(ThemeUtils.getColorByAttr(this, R.attr.colorPrimary))
     }
 
-    private fun updateNotification(title: String, text: String, intent: Intent) {
+    private fun updateNotification(title: String, text: String, intent: Intent?) {
         if (ActivityCompat.checkSelfPermission(
                 this,
                 Manifest.permission.POST_NOTIFICATIONS
@@ -121,14 +118,19 @@ class OKSignService : IntentService(TAG), CoroutineScope, ProgressListener {
         notificationManager.notify(
             NOTIFICATION_ID,
             buildNotification(title, text)
-                .setContentIntent(
-                    PendingIntent.getActivity(
-                        this,
-                        0,
-                        intent,
-                        pendingIntentFlagImmutable()
-                    )
-                )
+                .apply {
+                    if (intent != null) {
+                        setContentIntent(
+                            PendingIntent.getActivity(
+                                this@OKSignService,
+                                0,
+                                intent,
+                                pendingIntentFlagImmutable()
+                            )
+                        )
+
+                    }
+                }
                 .build()
         )
     }
@@ -213,7 +215,9 @@ class OKSignService : IntentService(TAG), CoroutineScope, ProgressListener {
                 R.string.text_oksign_done,
                 signedCount
             ) else getString(R.string.text_oksign_no_signable),
-            Intent(this, MainActivity::class.java)
+            packageManager.getLaunchIntentForPackage(packageName)?.apply {
+                addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+            }
         )
         sendBroadcast(Intent(ACTION_SIGN_SUCCESS_ALL))
         ServiceCompat.stopForeground(this, ServiceCompat.STOP_FOREGROUND_DETACH)

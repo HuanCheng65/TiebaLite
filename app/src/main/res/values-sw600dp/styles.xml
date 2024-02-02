@@ -1,21 +1,3 @@
 <resources>
 
-    <style name="Widget.TabLayout.Toolbar.Fixed" parent="Widget.TabLayout.Toolbar">
-        <item name="paddingStart">5dp</item>
-        <item name="paddingEnd">5dp</item>
-        <item name="tabPaddingStart">16dp</item>
-        <item name="tabPaddingEnd">16dp</item>
-        <item name="tabUnboundedRipple">false</item>
-        <item name="tabRippleColor">@color/transparent</item>
-        <item name="tabMode">fixed</item>
-        <item name="tabGravity">fill</item>
-        <item name="tabMaxWidth">0dp</item>
-        <item name="tabTextColor">@color/default_color_toolbar_item_secondary</item>
-        <item name="tabSelectedTextColor">@color/default_color_toolbar_item</item>
-        <item name="tabBackground">@color/transparent</item>
-        <item name="tabIndicatorFullWidth">true</item>
-        <item name="tabIndicatorGravity">center</item>
-        <item name="tabIndicator">@drawable/drawable_tab_indicator_new</item>
-        <item name="tabIndicatorColor">@color/default_color_toolbar</item>
-    </style>
 </resources>

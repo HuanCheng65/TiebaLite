@@ -33,7 +33,7 @@ public class TiebaLiteJavaScript {
 
     @JavascriptInterface
     public String getTheme() {
-        return ThemeUtil.getTheme();
+        return ThemeUtil.getRawTheme();
     }
 
     @JavascriptInterface

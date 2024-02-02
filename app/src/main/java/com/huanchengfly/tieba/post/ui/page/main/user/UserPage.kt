@@ -45,20 +45,19 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.google.accompanist.placeholder.placeholder
 import com.huanchengfly.tieba.post.R
-import com.huanchengfly.tieba.post.activities.AppThemeActivity
-import com.huanchengfly.tieba.post.activities.UserActivity
-import com.huanchengfly.tieba.post.activities.WebViewActivity
 import com.huanchengfly.tieba.post.arch.collectPartialAsState
 import com.huanchengfly.tieba.post.arch.pageViewModel
-import com.huanchengfly.tieba.post.goToActivity
 import com.huanchengfly.tieba.post.models.database.Account
 import com.huanchengfly.tieba.post.ui.common.theme.compose.ExtendedTheme
 import com.huanchengfly.tieba.post.ui.common.theme.compose.pullRefreshIndicator
 import com.huanchengfly.tieba.post.ui.page.LocalNavigator
 import com.huanchengfly.tieba.post.ui.page.destinations.AboutPageDestination
+import com.huanchengfly.tieba.post.ui.page.destinations.AppThemePageDestination
 import com.huanchengfly.tieba.post.ui.page.destinations.HistoryPageDestination
 import com.huanchengfly.tieba.post.ui.page.destinations.SettingsPageDestination
 import com.huanchengfly.tieba.post.ui.page.destinations.ThreadStorePageDestination
+import com.huanchengfly.tieba.post.ui.page.destinations.UserProfilePageDestination
+import com.huanchengfly.tieba.post.ui.page.destinations.WebViewPageDestination
 import com.huanchengfly.tieba.post.ui.widgets.compose.Avatar
 import com.huanchengfly.tieba.post.ui.widgets.compose.ConfirmDialog
 import com.huanchengfly.tieba.post.ui.widgets.compose.HorizontalDivider
@@ -239,6 +238,7 @@ fun UserPage(
     )
 ) {
     val context = LocalContext.current
+    val navigator = LocalNavigator.current
     val isLoading by viewModel.uiState.collectPartialAsState(
         prop1 = UserUiState::isLoading,
         initial = false
@@ -287,11 +287,7 @@ fun UserPage(
                         modifier = Modifier
                             .padding(top = 8.dp)
                             .clickable {
-                                UserActivity.launch(
-                                    context = context,
-                                    userId = account!!.uid,
-                                    avatarUrl = StringUtil.getAvatarUrl(account!!.portrait),
-                                )
+                                navigator.navigate(UserProfilePageDestination(account!!.uid.toLong()))
                             }
                             .padding(horizontal = 16.dp, vertical = 16.dp),
                         userName = account!!.nameShow ?: account!!.name,
@@ -327,7 +323,6 @@ fun UserPage(
                             .padding(top = 8.dp),
                     )
                 }
-                val navigator = LocalNavigator.current
                 if (account != null) {
                     ListMenuItem(
                         icon = ImageVector.vectorResource(id = R.drawable.ic_favorite),
@@ -348,7 +343,7 @@ fun UserPage(
                     icon = ImageVector.vectorResource(id = R.drawable.ic_brush_24),
                     text = stringResource(id = R.string.title_theme),
                     onClick = {
-                        context.goToActivity<AppThemeActivity>()
+                        navigator.navigate(AppThemePageDestination)
                     }
                 ) {
                     Text(
@@ -373,9 +368,10 @@ fun UserPage(
                         icon = ImageVector.vectorResource(id = R.drawable.ic_help_outline_black_24),
                         text = stringResource(id = R.string.my_info_service_center),
                         onClick = {
-                            WebViewActivity.launch(
-                                context,
-                                "https://tieba.baidu.com/mo/q/hybrid-main-service/uegServiceCenter?cuid=${CuidUtils.getNewCuid()}&cuid_galaxy2=${CuidUtils.getNewCuid()}&cuid_gid=&timestamp=${System.currentTimeMillis()}&_client_version=11.10.8.6&nohead=1"
+                            navigator.navigate(
+                                WebViewPageDestination(
+                                    initialUrl = "https://tieba.baidu.com/mo/q/hybrid-main-service/uegServiceCenter?cuid=${CuidUtils.getNewCuid()}&cuid_galaxy2=${CuidUtils.getNewCuid()}&cuid_gid=&timestamp=${System.currentTimeMillis()}&_client_version=12.52.1.0&nohead=1"
+                                )
                             )
                         },
                     )

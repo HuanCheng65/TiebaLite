@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+package tieba.getLevelInfo;
+
+option java_package = "com.huanchengfly.tieba.post.api.models.protos.getLevelInfo";
+
+import "GetLevelInfo/GetLevelInfoRequestData.proto";
+
+message GetLevelInfoRequest {
+  GetLevelInfoRequestData data = 1;
+}

@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -15,6 +14,7 @@ import androidx.compose.foundation.text.appendInlineContent
 import androidx.compose.material.DropdownMenuItem
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.LocalContentColor
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.material.pullrefresh.PullRefreshIndicator
 import androidx.compose.material.pullrefresh.pullRefresh
@@ -40,7 +40,6 @@ import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.huanchengfly.tieba.post.R
-import com.huanchengfly.tieba.post.activities.UserActivity
 import com.huanchengfly.tieba.post.api.models.ThreadStoreBean
 import com.huanchengfly.tieba.post.arch.collectPartialAsState
 import com.huanchengfly.tieba.post.arch.onEvent
@@ -50,14 +49,17 @@ import com.huanchengfly.tieba.post.pxToSp
 import com.huanchengfly.tieba.post.ui.common.theme.compose.ExtendedTheme
 import com.huanchengfly.tieba.post.ui.common.theme.compose.pullRefreshIndicator
 import com.huanchengfly.tieba.post.ui.page.destinations.ThreadPageDestination
+import com.huanchengfly.tieba.post.ui.page.destinations.UserProfilePageDestination
 import com.huanchengfly.tieba.post.ui.page.thread.ThreadPageFrom
 import com.huanchengfly.tieba.post.ui.page.thread.ThreadPageFromStoreExtra
+import com.huanchengfly.tieba.post.ui.page.thread.ThreadSortType
 import com.huanchengfly.tieba.post.ui.widgets.compose.Avatar
 import com.huanchengfly.tieba.post.ui.widgets.compose.BackNavigationIcon
 import com.huanchengfly.tieba.post.ui.widgets.compose.ErrorScreen
 import com.huanchengfly.tieba.post.ui.widgets.compose.LazyLoad
 import com.huanchengfly.tieba.post.ui.widgets.compose.LoadMoreLayout
 import com.huanchengfly.tieba.post.ui.widgets.compose.LongClickMenu
+import com.huanchengfly.tieba.post.ui.widgets.compose.MyLazyColumn
 import com.huanchengfly.tieba.post.ui.widgets.compose.MyScaffold
 import com.huanchengfly.tieba.post.ui.widgets.compose.Sizes
 import com.huanchengfly.tieba.post.ui.widgets.compose.TitleCentredToolbar
@@ -131,7 +133,12 @@ fun ThreadStorePage(
         scaffoldState = scaffoldState,
         topBar = {
             TitleCentredToolbar(
-                title = stringResource(id = R.string.title_my_collect),
+                title = {
+                    Text(
+                        text = stringResource(id = R.string.title_my_collect),
+                        fontWeight = FontWeight.Bold, style = MaterialTheme.typography.h6
+                    )
+                },
                 navigationIcon = {
                     BackNavigationIcon(onBackPressed = { navigator.navigateUp() })
                 }
@@ -142,7 +149,9 @@ fun ThreadStorePage(
             isEmpty = data.isEmpty(),
             isError = isError,
             isLoading = isRefreshing,
-            modifier = Modifier.padding(contentPaddings),
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(contentPaddings),
             onReload = {
                 viewModel.send(ThreadStoreUiIntent.Refresh)
             },
@@ -167,7 +176,7 @@ fun ThreadStorePage(
                     loadEnd = !hasMore,
                     lazyListState = lazyListState
                 ) {
-                    LazyColumn(state = lazyListState) {
+                    MyLazyColumn(state = lazyListState) {
                         items(
                             items = data,
                             key = { it.threadId }
@@ -176,11 +185,7 @@ fun ThreadStorePage(
                                 info = info,
                                 onUserClick = {
                                     info.author.lzUid?.let {
-                                        UserActivity.launch(
-                                            context,
-                                            it,
-                                            StringUtil.getAvatarUrl(info.author.userPortrait)
-                                        )
+                                        navigator.navigate(UserProfilePageDestination(it.toLong()))
                                     }
                                 },
                                 onClick = {
@@ -189,6 +194,7 @@ fun ThreadStorePage(
                                             threadId = info.threadId.toLong(),
                                             postId = info.markPid.toLong(),
                                             seeLz = context.appPreferences.collectThreadSeeLz,
+                                            sortType = if(context.appPreferences.collectThreadDescSort) ThreadSortType.SORT_TYPE_DESC else ThreadSortType.SORT_TYPE_DEFAULT,
                                             from = ThreadPageFrom.FROM_STORE,
                                             extra = ThreadPageFromStoreExtra(
                                                 maxPid = info.maxPid.toLong(),

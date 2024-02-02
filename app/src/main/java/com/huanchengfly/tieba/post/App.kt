@@ -4,8 +4,6 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.ActivityManager
 import android.app.Application
-import android.app.Dialog
-import android.content.ComponentName
 import android.content.Context
 import android.content.res.Configuration
 import android.content.res.Resources
@@ -17,8 +15,8 @@ import android.webkit.WebSettings
 import android.webkit.WebView
 import androidx.annotation.Keep
 import androidx.annotation.RequiresApi
-import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.compose.ui.graphics.toArgb
 import com.github.gzuliyujiang.oaid.DeviceID
 import com.github.panpf.sketch.Sketch
 import com.github.panpf.sketch.SketchFactory
@@ -31,26 +29,19 @@ import com.github.panpf.sketch.request.PauseLoadWhenScrollingDrawableDecodeInter
 import com.huanchengfly.tieba.post.activities.BaseActivity
 import com.huanchengfly.tieba.post.components.ClipBoardLinkDetector
 import com.huanchengfly.tieba.post.components.OAIDGetter
-import com.huanchengfly.tieba.post.components.dialogs.LoadingDialog
-import com.huanchengfly.tieba.post.plugins.PluginManager
-import com.huanchengfly.tieba.post.plugins.interfaces.IApp
+import com.huanchengfly.tieba.post.ui.common.theme.compose.dynamicTonalPalette
 import com.huanchengfly.tieba.post.ui.common.theme.interfaces.ThemeSwitcher
 import com.huanchengfly.tieba.post.ui.common.theme.utils.ThemeUtils
 import com.huanchengfly.tieba.post.utils.AccountUtil
 import com.huanchengfly.tieba.post.utils.AppIconUtil
-import com.huanchengfly.tieba.post.utils.AppIconUtil.disableComponent
-import com.huanchengfly.tieba.post.utils.AppIconUtil.enableComponent
 import com.huanchengfly.tieba.post.utils.BlockManager
 import com.huanchengfly.tieba.post.utils.ClientUtils
 import com.huanchengfly.tieba.post.utils.EmoticonManager
-import com.huanchengfly.tieba.post.utils.Icons
 import com.huanchengfly.tieba.post.utils.SharedPreferencesUtil
 import com.huanchengfly.tieba.post.utils.ThemeUtil
-import com.huanchengfly.tieba.post.utils.TiebaUtil
 import com.huanchengfly.tieba.post.utils.Util
 import com.huanchengfly.tieba.post.utils.appPreferences
 import com.huanchengfly.tieba.post.utils.applicationMetaData
-import com.huanchengfly.tieba.post.utils.launchUrl
 import com.huanchengfly.tieba.post.utils.packageInfo
 import com.microsoft.appcenter.AppCenter
 import com.microsoft.appcenter.analytics.Analytics
@@ -61,12 +52,13 @@ import com.microsoft.appcenter.distribute.ReleaseDetails
 import com.microsoft.appcenter.distribute.UpdateAction
 import com.microsoft.appcenter.distribute.UpdateTrack
 import dagger.hilt.android.HiltAndroidApp
+import net.swiftzer.semver.SemVer
 import org.litepal.LitePal
 import kotlin.concurrent.thread
 
 
 @HiltAndroidApp
-class App : Application(), IApp, SketchFactory {
+class App : Application(), SketchFactory {
     private val mActivityList: MutableList<Activity> = mutableListOf()
 
     @RequiresApi(api = 28)
@@ -89,33 +81,6 @@ class App : Application(), IApp, SketchFactory {
         return null
     }
 
-    private fun setOldMainActivityEnabled(enabled: Boolean) {
-        if (enabled) {
-            packageManager.enableComponent(
-                ComponentName(
-                    this,
-                    "com.huanchengfly.tieba.post.activities.MainActivity"
-                )
-            )
-        } else {
-            packageManager.disableComponent(
-                ComponentName(
-                    this,
-                    "com.huanchengfly.tieba.post.activities.MainActivity"
-                )
-            )
-        }
-    }
-
-    fun setIcon(
-        enableNewUi: Boolean = applicationMetaData.getBoolean("enable_new_ui") || appPreferences.enableNewUi,
-        keepOld: Boolean = BuildConfig.DEBUG
-    ) {
-        setOldMainActivityEnabled(!enableNewUi || keepOld)
-        if (enableNewUi) AppIconUtil.setIcon()
-        else AppIconUtil.setIcon(Icons.DISABLE)
-    }
-
     override fun onCreate() {
         INSTANCE = this
         super.onCreate()
@@ -135,12 +100,11 @@ class App : Application(), IApp, SketchFactory {
                 Analytics::class.java, Crashes::class.java, Distribute::class.java
             )
         }
-        setIcon(keepOld = BuildConfig.DEBUG || isSelfBuild)
+        AppIconUtil.setIcon()
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
         ThemeUtils.init(ThemeDelegate)
         registerActivityLifecycleCallbacks(ClipBoardLinkDetector)
         registerActivityLifecycleCallbacks(OAIDGetter)
-        PluginManager.init(this)
         thread {
             BlockManager.init()
             EmoticonManager.init(this@App)
@@ -248,6 +212,11 @@ class App : Application(), IApp, SketchFactory {
             releaseDetails: ReleaseDetails
         ): Boolean {
             val versionName = releaseDetails.shortVersion
+            val newSemVer = SemVer.parse(versionName)
+            val currentSemVer = SemVer.parse(BuildConfig.VERSION_NAME)
+            if (newSemVer <= currentSemVer) {
+                return true
+            }
             val releaseNotes = releaseDetails.releaseNotes
             if (activity is BaseActivity) {
                 activity.showDialog {
@@ -296,9 +265,6 @@ class App : Application(), IApp, SketchFactory {
 
         private val nightMode: Int
             get() = INSTANCE.resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
-
-        private val isNewUi: Boolean
-            get() = INSTANCE.applicationMetaData.getBoolean("enable_new_ui") || INSTANCE.appPreferences.enableNewUi
     }
 
     object ThemeDelegate : ThemeSwitcher {
@@ -342,7 +308,14 @@ class App : Application(), IApp, SketchFactory {
             val resources = context.resources
             when (attrId) {
                 R.attr.colorPrimary -> {
-                    if (ThemeUtil.THEME_CUSTOM == theme) {
+                    if (ThemeUtil.isDynamicTheme(theme) && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                        val dynamicTonalPalette = dynamicTonalPalette(context)
+                        return if (ThemeUtil.isNightMode(theme)) {
+                            dynamicTonalPalette.primary80.toArgb()
+                        } else {
+                            dynamicTonalPalette.primary40.toArgb()
+                        }
+                    } else if (ThemeUtil.THEME_CUSTOM == theme) {
                         val customPrimaryColorStr = context.appPreferences.customPrimaryColor
                         return if (customPrimaryColorStr != null) {
                             Color.parseColor(customPrimaryColorStr)
@@ -363,22 +336,33 @@ class App : Application(), IApp, SketchFactory {
                 }
 
                 R.attr.colorNewPrimary -> {
-                    return if (ThemeUtil.isNightMode(theme)) {
+                    return if (ThemeUtil.isDynamicTheme(theme) && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                        val dynamicTonalPalette = dynamicTonalPalette(context)
+                        if (ThemeUtil.isNightMode(theme)) {
+                            dynamicTonalPalette.primary80.toArgb()
+                        } else {
+                            dynamicTonalPalette.primary40.toArgb()
+                        }
+                    } else if (ThemeUtil.isNightMode(theme)) {
                         context.getColorCompat(R.color.theme_color_new_primary_night)
-                    } else if (
-                        theme == ThemeUtil.THEME_CUSTOM
-                        || ThemeUtil.isTranslucentTheme(theme)
-                    ) {
-                        getColorByAttr(context, R.attr.colorPrimary, theme)
-                    } else {
+                    } else if (theme == ThemeUtil.THEME_DEFAULT) {
                         context.getColorCompat(
                             R.color.theme_color_new_primary_light
                         )
+                    } else {
+                        getColorByAttr(context, R.attr.colorPrimary, theme)
                     }
                 }
 
                 R.attr.colorAccent -> {
-                    return if (ThemeUtil.THEME_CUSTOM == theme || ThemeUtil.isTranslucentTheme(theme)) {
+                    return if (ThemeUtil.isDynamicTheme(theme) && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                        val dynamicTonalPalette = dynamicTonalPalette(context)
+                        if (ThemeUtil.isNightMode(theme)) {
+                            dynamicTonalPalette.secondary80.toArgb()
+                        } else {
+                            dynamicTonalPalette.secondary40.toArgb()
+                        }
+                    } else if (ThemeUtil.THEME_CUSTOM == theme || ThemeUtil.isTranslucentTheme(theme)) {
                         getColorByAttr(context, R.attr.colorPrimary, theme)
                     } else {
                         context.getColorCompat(
@@ -474,40 +458,24 @@ class App : Application(), IApp, SketchFactory {
                     } else context.getColorCompat(R.color.theme_color_background_light)
                 }
                 R.attr.colorWindowBackground -> {
-                    return if (isNewUi) {
-                        if (ThemeUtil.isTranslucentTheme(theme)) {
-                            context.getColorCompat(
-                                resources.getIdentifier(
-                                    "theme_color_window_background_$theme",
-                                    "color",
-                                    packageName
-                                )
+                    return if (ThemeUtil.isTranslucentTheme(theme)) {
+                        context.getColorCompat(
+                            resources.getIdentifier(
+                                "theme_color_window_background_$theme",
+                                "color",
+                                packageName
                             )
-                        } else if (ThemeUtil.isNightMode()) {
-                            context.getColorCompat(
-                                resources.getIdentifier(
-                                    "theme_color_background_$theme",
-                                    "color",
-                                    packageName
-                                )
+                        )
+                    } else if (ThemeUtil.isNightMode()) {
+                        context.getColorCompat(
+                            resources.getIdentifier(
+                                "theme_color_background_$theme",
+                                "color",
+                                packageName
                             )
-                        } else {
-                            context.getColorCompat(R.color.theme_color_background_light)
-                        }
+                        )
                     } else {
-                        if (ThemeUtil.isTranslucentTheme(theme)) {
-                            context.getColorCompat(R.color.transparent)
-                        } else if (ThemeUtil.isNightMode()) {
-                            context.getColorCompat(
-                                resources.getIdentifier(
-                                    "theme_color_window_background_$theme",
-                                    "color",
-                                    packageName
-                                )
-                            )
-                        } else {
-                            context.getColorCompat(R.color.theme_color_window_background_light)
-                        }
+                        context.getColorCompat(R.color.theme_color_background_light)
                     }
                 }
                 R.attr.colorChip -> {
@@ -718,7 +686,13 @@ class App : Application(), IApp, SketchFactory {
         }
 
         override fun getColorByAttr(context: Context, attrId: Int): Int {
-            return getColorByAttr(context, attrId, ThemeUtil.getThemeTranslucent())
+            return when (attrId) {
+                R.attr.colorPrimary, R.attr.colorNewPrimary, R.attr.colorAccent -> {
+                    getColorByAttr(context, attrId, ThemeUtil.getCurrentTheme(checkDynamic = true))
+                }
+
+                else -> getColorByAttr(context, attrId, ThemeUtil.getCurrentTheme())
+            }
         }
 
         override fun getColorById(context: Context, colorId: Int): Int {
@@ -810,40 +784,6 @@ class App : Application(), IApp, SketchFactory {
             }
             return context.getColorCompat(colorId)
         }
-    }
-
-    override fun getAppContext(): Context {
-        return this
-    }
-
-    override fun getCurrentContext(): Context {
-        return mActivityList.lastOrNull() ?: this
-    }
-
-    override fun launchUrl(url: String) {
-        launchUrl(getCurrentContext(), url)
-    }
-
-    override fun showLoadingDialog(): Dialog {
-        return LoadingDialog(getCurrentContext()).apply { show() }
-    }
-
-    override fun toastShort(text: String) {
-        getCurrentContext().toastShort(text)
-    }
-
-    override fun showAlertDialog(builder: AlertDialog.Builder.() -> Unit): AlertDialog {
-        val dialog = AlertDialog.Builder(getCurrentContext())
-            .apply(builder)
-            .create()
-        if (getCurrentContext() !is BaseActivity || (getCurrentContext() as BaseActivity).isActivityRunning) {
-            dialog.show()
-        }
-        return dialog
-    }
-
-    override fun copyText(text: String) {
-        TiebaUtil.copyText(getCurrentContext(), text)
     }
 
     override fun createSketch(): Sketch = Sketch.Builder(this).apply {

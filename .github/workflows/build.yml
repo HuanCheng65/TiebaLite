@@ -1,10 +1,6 @@
 name: Build, Deploy
 
-on:
-  push:
-    branches: ["master", "4.0-dev"]
-  pull_request:
-    branches: ["master", "4.0-dev"]
+on: [ push, pull_request ]
 
 jobs:
   build:
@@ -21,14 +17,14 @@ jobs:
           distribution: "zulu"
           cache: gradle
 
-      - name: Decrypt keystore
+      - name: Decode Keystore
+        id: decode_keystore
         if: ${{ github.event_name != 'pull_request' || github.ref_type == 'tag' }}
-        env:
-          RELEASE_ENCRYPT_SECRET_KEY: ${{ secrets.RELEASE_ENCRYPT_SECRET_KEY }}
-        run: |
-          if [ -n "${{ secrets.RELEASE_ENCRYPT_SECRET_KEY }}" ] && [ -f "${{ vars.RELEASE_KEYSTORE }}.encrypted" ]; then
-            openssl aes-256-cbc -d -in "${{ vars.RELEASE_KEYSTORE }}.encrypted" -k $RELEASE_ENCRYPT_SECRET_KEY -md md5 >> ${{ vars.RELEASE_KEYSTORE }}
-          fi
+        uses: timheuer/base64-to-file@v1.2
+        with:
+          fileName: ${{ vars.RELEASE_KEYSTORE }}
+          fileDir: ${{ github.workspace }}
+          encodedString: ${{ secrets.KEYSTORE }}
 
       - name: Generate keystore.properties
         if: ${{ github.event_name != 'pull_request' || github.ref_type == 'tag' }}
@@ -110,4 +106,4 @@ jobs:
         uses: saurav-aggarwal/appcenter-cli-action@1.0.1
         with:
           token: ${{ secrets.APP_CENTER_TOKEN }}
-          command: appcenter crashes upload-mappings -c ${{ env.version_code }} -n ${{ env.version_name }} -m ${{ github.workspace }}/app/build/outputs/mapping/release/mapping.txt -a huanchengfly/TiebaLite
+          command: appcenter crashes upload-mappings -c ${{ env.version_code }} -n ${{ env.version_name }} -m ${{ github.workspace }}/app/build/outputs/mapping/release/mapping.txt -a ${{ secrets.APP_CENTER_APP }}

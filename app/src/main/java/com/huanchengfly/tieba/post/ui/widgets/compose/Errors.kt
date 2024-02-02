@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.requiredWidthIn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.MaterialTheme
@@ -40,22 +41,28 @@ fun TipScreen(
     modifier: Modifier = Modifier,
     image: @Composable (ColumnScope.() -> Unit) = {},
     message: @Composable (ColumnScope.() -> Unit) = {},
-    actions: @Composable (ColumnScope.() -> Unit) = {}
+    actions: @Composable (ColumnScope.() -> Unit) = {},
+    scrollable: Boolean = true,
 ) {
+    val scrollableModifier =
+        if (scrollable) Modifier.verticalScroll(rememberScrollState()) else Modifier
     val widthFraction =
         if (LocalWindowSizeClass.current.widthSizeClass == WindowWidthSizeClass.Compact) 0.9f else 0.5f
-    Column(modifier = modifier) {
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = modifier
+    ) {
         Column(
             modifier = Modifier
                 .fillMaxWidth(fraction = widthFraction)
                 .padding(16.dp)
-                .verticalScroll(
-                    rememberScrollState()
-                ),
+                .then(scrollableModifier),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(8.dp, alignment = Alignment.CenterVertically)
         ) {
-            image()
+            Column(modifier = Modifier.requiredWidthIn(max = 400.dp)) {
+                image()
+            }
             ProvideTextStyle(
                 value = MaterialTheme.typography.h6.copy(
                     color = ExtendedTheme.colors.text,
@@ -87,24 +94,26 @@ enum class ErrorType {
 
 @Composable
 fun StateScreenScope.ErrorScreen(
-    error: Throwable,
+    error: Throwable?,
     modifier: Modifier = Modifier,
     showReload: Boolean = true,
     actions: @Composable (ColumnScope.() -> Unit) = {},
 ) {
-    ErrorTipScreen(
-        error = error,
-        modifier = modifier,
-        actions = {
-            if (showReload && canReload) {
-                Button(onClick = { reload() }) {
-                    Text(text = stringResource(id = R.string.btn_reload))
+    error?.let {
+        ErrorTipScreen(
+            error = it,
+            modifier = modifier,
+            actions = {
+                if (showReload && canReload) {
+                    Button(onClick = { reload() }) {
+                        Text(text = stringResource(id = R.string.btn_reload))
+                    }
                 }
-            }
 
-            actions()
-        }
-    )
+                actions()
+            }
+        )
+    }
 }
 
 @Composable

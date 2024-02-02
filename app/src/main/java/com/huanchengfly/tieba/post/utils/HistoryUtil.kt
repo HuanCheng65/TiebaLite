@@ -1,15 +1,13 @@
 package com.huanchengfly.tieba.post.utils
 
 import com.huanchengfly.tieba.post.models.database.History
-import kotlinx.coroutines.Dispatchers
+import com.huanchengfly.tieba.post.utils.extension.findFlow
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.flowOn
-import org.litepal.LitePal.deleteAll
-import org.litepal.LitePal.order
-import org.litepal.LitePal.where
+import org.litepal.LitePal
 import org.litepal.crud.async.FindMultiExecutor
+import org.litepal.extension.deleteAll
 import org.litepal.extension.find
+import org.litepal.extension.findAsync
 import org.litepal.extension.findFirstAsync
 
 object HistoryUtil {
@@ -17,7 +15,7 @@ object HistoryUtil {
     const val TYPE_FORUM = 1
     const val TYPE_THREAD = 2
     fun deleteAll() {
-        deleteAll(History::class.java)
+        LitePal.deleteAll<History>()
     }
 
     @JvmOverloads
@@ -30,43 +28,33 @@ object HistoryUtil {
     }
 
     val all: List<History>
-        get() = order("timestamp desc, count desc").limit(100).find(
-            History::class.java
-        )
+        get() = LitePal.order("timestamp desc, count desc").limit(100).find<History>()
 
     fun getAll(type: Int): List<History> {
-        return order("timestamp desc, count desc").where("type = ?", type.toString())
+        return LitePal.order("timestamp desc, count desc").where("type = ?", type.toString())
             .limit(PAGE_SIZE)
-            .find(
-                History::class.java
-            )
+            .find<History>()
     }
 
     fun getAllAsync(type: Int): FindMultiExecutor<History> {
-        return order("timestamp desc, count desc").where("type = ?", type.toString())
+        return LitePal.order("timestamp desc, count desc").where("type = ?", type.toString())
             .limit(PAGE_SIZE)
-            .findAsync(
-                History::class.java
-            )
+            .findAsync<History>()
     }
 
     fun getFlow(
         type: Int,
         page: Int
     ): Flow<List<History>> {
-        return flow<List<History>> {
-            emit(
-                where("type = ?", "$type")
-                    .order("timestamp desc, count desc")
-                    .limit(PAGE_SIZE)
-                    .offset(page * 100)
-                    .find()
-            )
-        }.flowOn(Dispatchers.IO)
+        return LitePal.where("type = ?", "$type")
+            .order("timestamp desc, count desc")
+            .limit(PAGE_SIZE)
+            .offset(page * 100)
+            .findFlow()
     }
 
     private fun update(history: History): Boolean {
-        val historyBean = where("data = ?", history.data).findFirst(
+        val historyBean = LitePal.where("data = ?", history.data).findFirst(
             History::class.java
         )
         if (historyBean != null) {
@@ -84,15 +72,15 @@ object HistoryUtil {
     }
 
     private fun updateAsync(
-        data: String,
-        callback: ((Boolean) -> Unit)? = null
+        history: History,
+        callback: ((Boolean) -> Unit)? = null,
     ) {
-        where("data = ?", data).findFirstAsync<History?>()
+        LitePal.where("data = ?", history.data).findFirstAsync<History?>()
             .listen {
                 if (it == null) {
                     callback?.invoke(false)
                 } else {
-                    it.copy(
+                    history.copy(
                         timestamp = System.currentTimeMillis(),
                         count = it.count + 1
                     ).updateAsync(it.id).listen {
@@ -118,7 +106,7 @@ object HistoryUtil {
         history: History,
         callback: ((Boolean) -> Unit)? = null
     ) {
-        updateAsync(history.data) { success ->
+        updateAsync(history) { success ->
             if (!success) {
                 history.copy(count = 1, timestamp = System.currentTimeMillis())
                     .saveAsync()

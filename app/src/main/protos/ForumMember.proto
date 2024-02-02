@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+package tieba;
+
+option java_package = "com.huanchengfly.tieba.post.api.models.protos";
+
+message ForumMember {
+  int32 is_like = 1;
+  int32 user_level = 2;
+  string level_name = 3;
+  int32 cur_score = 4;
+  int32 levelup_score = 5;
+}

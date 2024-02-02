@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+package tieba;
+
+option java_package = "com.huanchengfly.tieba.post.api.models.protos";
+
+message BubbleInfo {
+  int32 bubble_id = 1;
+  string bubble_text = 2;
+  string bubble_pic = 3;
+}

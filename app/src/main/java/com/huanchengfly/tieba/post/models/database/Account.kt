@@ -24,9 +24,10 @@ data class Account @JvmOverloads constructor(
     var birthdayShowStatus: String? = null,
     var birthdayTime: String? = null,
     var constellation: String? = null,
+    var tiebaUid: String? = null,
     var loadSuccess: Boolean = false,
     var uuid: String? = "",
-    var zid: String? = ""
+    var zid: String? = "",
 ) : LitePalSupport() {
     val id: Int = 0
 }

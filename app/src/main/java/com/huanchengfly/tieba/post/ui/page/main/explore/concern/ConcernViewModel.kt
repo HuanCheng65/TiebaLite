@@ -17,6 +17,9 @@ import com.huanchengfly.tieba.post.arch.UiIntent
 import com.huanchengfly.tieba.post.arch.UiState
 import com.huanchengfly.tieba.post.utils.appPreferences
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.persistentListOf
+import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
@@ -91,23 +94,29 @@ class ConcernViewModel @Inject constructor() :
 }
 
 sealed interface ConcernUiIntent : UiIntent {
-    object Refresh : ConcernUiIntent
+    data object Refresh : ConcernUiIntent
 
     data class LoadMore(val pageTag: String) : ConcernUiIntent
 
     data class Agree(
         val threadId: Long,
         val postId: Long,
-        val hasAgree: Int
+        val hasAgree: Int,
     ) : ConcernUiIntent
+}
+
+internal fun List<ConcernData>.distinctById(): ImmutableList<ConcernData> {
+    return distinctBy {
+        it.threadList?.id
+    }.toImmutableList()
 }
 
 sealed interface ConcernPartialChange : PartialChange<ConcernUiState> {
     sealed class Agree private constructor() : ConcernPartialChange {
         private fun List<ConcernData>.updateAgreeStatus(
             threadId: Long,
-            hasAgree: Int
-        ) : List<ConcernData> {
+            hasAgree: Int,
+        ): ImmutableList<ConcernData> {
             return map {
                 val threadInfo = it.threadList
                 if (threadInfo == null) it
@@ -118,7 +127,7 @@ sealed interface ConcernPartialChange : PartialChange<ConcernUiState> {
                         threadInfo
                     }
                 )
-            }
+            }.toImmutableList()
         }
 
         override fun reduce(oldState: ConcernUiState): ConcernUiState =
@@ -157,14 +166,14 @@ sealed interface ConcernPartialChange : PartialChange<ConcernUiState> {
                 Start -> oldState.copy(isRefreshing = true)
                 is Success -> oldState.copy(
                     isRefreshing = false,
-                    data = data,
+                    data = data.distinctById(),
                     hasMore = hasMore,
                     nextPageTag = nextPageTag,
                 )
                 is Failure -> oldState.copy(isRefreshing = false)
             }
 
-        object Start: Refresh()
+        data object Start : Refresh()
 
         data class Success(
             val data: List<ConcernData>,
@@ -183,14 +192,14 @@ sealed interface ConcernPartialChange : PartialChange<ConcernUiState> {
                 Start -> oldState.copy(isLoadingMore = true)
                 is Success -> oldState.copy(
                     isLoadingMore = false,
-                    data = oldState.data + data,
+                    data = (oldState.data + data).distinctById(),
                     hasMore = hasMore,
                     nextPageTag = nextPageTag,
                 )
                 is Failure -> oldState.copy(isLoadingMore = false)
             }
 
-        object Start: LoadMore()
+        data object Start : LoadMore()
 
         data class Success(
             val data: List<ConcernData>,
@@ -209,7 +218,7 @@ data class ConcernUiState(
     val isLoadingMore: Boolean = false,
     val hasMore: Boolean = true,
     val nextPageTag: String = "",
-    val data: List<ConcernData> = emptyList(),
+    val data: ImmutableList<ConcernData> = persistentListOf(),
 ): UiState
 
 sealed interface ConcernUiEvent : UiEvent

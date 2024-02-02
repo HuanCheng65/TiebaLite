@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+package tieba;
+
+option java_package = "com.huanchengfly.tieba.post.api.models.protos";
+
+message MultipleForum {
+  int64 forum_id = 1;
+  string forum_name = 2;
+  int32 is_bawu = 3;
+  string bawu_type = 4;
+  int32 is_deleted = 5;
+}

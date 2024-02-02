@@ -1,61 +1,4 @@
-<resources xmlns:tools="http://schemas.android.com/tools">
-
-    <style name="TextAppearance.MaterialSubhead">
-        <item name="android:textSize">16sp</item>
-        <item name="android:fontFamily" tools:ignore="NewApi">sans-serif</item>
-        <item name="android:textColor">?android:attr/textColorPrimary</item>
-        <item name="android:textStyle">normal</item>
-    </style>
-
-    <style name="Widget.Switch" parent="Widget.MaterialComponents.CompoundButton.Switch">
-        <item name="android:thumb">@drawable/switch_ios_thumb</item>
-        <item name="track">@drawable/switch_ios_track</item>
-        <item name="android:track">@drawable/switch_ios_track</item>
-    </style>
-
-    <style name="Widget.TabLayout" parent="Widget.Design.TabLayout">
-        <item name="tabMode">scrollable</item>
-        <item name="tabTextAppearance">@style/TextAppearance.Tab</item>
-        <item name="tabIndicatorFullWidth">false</item>
-        <item name="layoutBackground">@color/default_color_background</item>
-        <item name="tabTextColor">@color/default_color_text_secondary</item>
-        <item name="tabIconTint">@color/selector_tab_icon</item>
-        <item name="tabSelectedTextColor">@color/default_color_primary</item>
-        <item name="tabBackground">@color/transparent</item>
-        <item name="tabIndicator">@drawable/drawable_tab_indicator</item>
-        <item name="tabUnboundedRipple">false</item>
-        <item name="tabRippleColor">?attr/colorControlHighlight</item>
-    </style>
-
-    <style name="Widget.TabLayout.Toolbar" parent="Widget.Design.TabLayout">
-        <item name="tabMode">scrollable</item>
-        <item name="tabTextAppearance">@style/TextAppearance.Tab</item>
-        <item name="tabIndicatorFullWidth">false</item>
-        <item name="layoutBackground">@color/default_color_toolbar</item>
-        <item name="tabTextColor">@color/default_color_toolbar_item</item>
-        <item name="tabSelectedTextColor">@color/default_color_toolbar_item_active</item>
-        <item name="tabBackground">@color/transparent</item>
-        <item name="tabIndicator">@drawable/drawable_toolbar_tab_indicator</item>
-        <item name="tabUnboundedRipple">false</item>
-        <item name="tabRippleColor">?attr/colorControlHighlight</item>
-    </style>
-
-    <style name="Widget.TabLayout.Toolbar.Fixed" parent="Widget.TabLayout.Toolbar">
-        <item name="paddingStart">5dp</item>
-        <item name="paddingEnd">5dp</item>
-        <item name="tabPaddingStart">5dp</item>
-        <item name="tabPaddingEnd">5dp</item>
-        <item name="tabUnboundedRipple">false</item>
-        <item name="tabRippleColor">@color/transparent</item>
-        <item name="tabMode">fixed</item>
-        <item name="tabTextColor">@color/default_color_toolbar_item_secondary</item>
-        <item name="tabSelectedTextColor">@color/default_color_toolbar_item</item>
-        <item name="tabBackground">@color/transparent</item>
-        <item name="tabIndicatorFullWidth">true</item>
-        <item name="tabIndicatorGravity">center</item>
-        <item name="tabIndicator">@drawable/drawable_tab_indicator_new</item>
-        <item name="tabIndicatorColor">@color/default_color_toolbar</item>
-    </style>
+<resources>
 
     <style name="Widget" />
 
@@ -85,51 +28,6 @@
         <item name="android:gravity">center</item>
     </style>
 
-    <style name="Widget.Button.Dense" parent="Widget.MaterialComponents.Button.UnelevatedButton">
-        <item name="android:minWidth">0dp</item>
-        <item name="android:minHeight">0dp</item>
-        <item name="android:padding">4dp</item>
-        <item name="android:paddingStart">8dp</item>
-        <item name="android:paddingEnd">8dp</item>
-        <item name="android:elevation">0dp</item>
-        <item name="buttonBackgroundTint">@color/default_color_primary</item>
-        <item name="buttonTextColor">@color/default_color_text_on_primary</item>
-        <item name="cornerRadius">16dp</item>
-        <item name="android:textStyle">bold</item>
-    </style>
-
-    <style name="Widget.Button.Outlined" parent="Widget.MaterialComponents.Button.OutlinedButton">
-        <item name="android:minWidth">0dp</item>
-        <item name="android:minHeight">0dp</item>
-        <item name="android:padding">6dp</item>
-        <item name="android:paddingStart">17.5dp</item>
-        <item name="android:paddingEnd">17.5dp</item>
-        <item name="android:elevation">0dp</item>
-        <item name="buttonStrokeColor">@color/default_color_primary</item>
-        <item name="buttonTextColor">@color/default_color_primary</item>
-        <item name="elevation">0dp</item>
-        <item name="cornerRadius">16dp</item>
-        <item name="android:textStyle">bold</item>
-    </style>
-
-    <style name="Widget.Button.Outlined.Dense" parent="Widget.MaterialComponents.Button.OutlinedButton">
-        <item name="android:minWidth">0dp</item>
-        <item name="android:minHeight">0dp</item>
-        <item name="android:padding">4dp</item>
-        <item name="android:paddingStart">8dp</item>
-        <item name="android:paddingEnd">8dp</item>
-        <item name="android:elevation">0dp</item>
-        <item name="buttonStrokeColor">@color/default_color_primary</item>
-        <item name="buttonTextColor">@color/default_color_primary</item>
-        <item name="elevation">0dp</item>
-        <item name="cornerRadius">15dp</item>
-        <item name="android:textStyle">bold</item>
-    </style>
-
-    <style name="Widget.TabLayout.Fixed" parent="Widget.TabLayout">
-        <item name="tabMode">fixed</item>
-    </style>
-
     <style name="BottomSheetDialogStyle" parent="Theme.Design.BottomSheetDialog">
         <item name="android:windowFrame">@null</item>
         <item name="android:backgroundDimEnabled">true</item>
@@ -150,11 +48,6 @@
         <item name="android:windowAnimationStyle">@style/Animation.Fade</item>
     </style>
 
-    <style name="Widget.ScrollCollapsingToolbar" parent="android:Widget">
-        <item name="expandedTitleMargin">32dp</item>
-        <item name="statusBarScrim">?attr/colorPrimaryDark</item>
-    </style>
-
     <style name="Toolbar.Title" parent="TextAppearance.Widget.AppCompat.Toolbar.Title">
         <item name="android:textStyle">bold</item>
         <item name="android:textSize">18sp</item>
@@ -166,27 +59,12 @@
         <item name="android:textSize">32sp</item>
     </style>
 
-    <style name="Toolbar.Subtitle">
-        <item name="android:textStyle">bold</item>
-        <item name="android:textSize">14sp</item>
-        <item name="android:textColor">?attr/colorToolbarItemSecondary</item>
-        <item name="textColor">?attr/colorToolbarItemSecondary</item>
-    </style>
-
     <style name="TextAppearance.ListTitle" parent="Widget.AppCompat.TextView.SpinnerItem">
         <item name="paddingStart">0dp</item>
     </style>
 
-    <style name="TextAppearance.Normal">
-        <item name="android:textStyle">normal</item>
-    </style>
-
     <style name="TextAppearance.Bold">
         <item name="android:textStyle">bold</item>
-    </style>
-
-    <style name="TextAppearance.Bold.Italic">
-        <item name="android:textStyle">bold|italic</item>
     </style>
 
     <style name="TextAppearance.Title">
@@ -196,10 +74,6 @@
 
     <style name="TextAppearance.Subtitle">
         <item name="android:textSize">15sp</item>
-    </style>
-
-    <style name="TextAppearance.Tab" parent="TextAppearance.AppCompat">
-        <item name="android:textStyle">bold</item>
     </style>
 
     <style name="TextAppearance" />
@@ -264,33 +138,9 @@
         <item name="android:colorControlNormal">@color/theme_color_toolbar_item_dark</item>
     </style>
 
-    <style name="Animation" parent="@android:style/Animation" />
-
-    <style name="Animation.Popup" parent="@android:style/Animation">
-        <item name="android:windowEnterAnimation">@anim/popup_window_enter</item>
-        <item name="android:windowExitAnimation">@anim/popup_window_exit</item>
-    </style>
-
-    <style name="Animation.Popup.BottomStart" parent="@android:style/Animation">
-        <item name="android:windowEnterAnimation">@anim/popup_window_enter_bottom_start</item>
-        <item name="android:windowExitAnimation">@anim/popup_window_exit_bottom_start</item>
-    </style>
-
-    <style name="Animation.Popup.Bottom" parent="@android:style/Animation">
-        <item name="android:windowEnterAnimation">@anim/popup_window_enter_bottom</item>
-        <item name="android:windowExitAnimation">@anim/popup_window_exit_bottom</item>
-    </style>
-
     <style name="Animation.Bottom" parent="@android:style/Animation">
         <item name="android:windowEnterAnimation">@anim/in_bottom</item>
         <item name="android:windowExitAnimation">@anim/out_bottom</item>
-    </style>
-
-    <style name="Animation.Activity.Bottom" parent="@android:style/Animation.Activity">
-        <item name="android:activityOpenEnterAnimation">@anim/in_bottom</item>
-        <item name="android:activityOpenExitAnimation">@anim/out_bottom</item>
-        <item name="android:activityCloseEnterAnimation">@anim/in_bottom</item>
-        <item name="android:activityCloseExitAnimation">@anim/out_bottom</item>
     </style>
 
     <style name="Animation.Fade" parent="@android:style/Animation.Activity">
@@ -298,17 +148,6 @@
         <item name="android:activityOpenExitAnimation">@anim/anim_fade_out</item>
         <item name="android:activityCloseEnterAnimation">@anim/anim_fade_in</item>
         <item name="android:activityCloseExitAnimation">@anim/anim_fade_out</item>
-    </style>
-
-    <style name="AppTheme.Floating" parent="AppTheme">
-        <item name="android:windowIsFloating">true</item>
-        <item name="android:windowNoTitle">true</item>
-        <item name="android:windowIsTranslucent">true</item>
-        <item name="android:windowAnimationStyle">@style/Animation.Activity.Bottom</item>
-        <item name="android:windowTranslucentStatus">true</item>
-        <item name="android:windowBackground">@android:color/transparent</item>
-        <item name="android:colorBackgroundCacheHint">@null</item>
-        <item name="android:windowContentOverlay">@null</item>
     </style>
 
     <style name="AppTheme.PhotoView" parent="Theme.MaterialComponents.Light.NoActionBar">
@@ -322,32 +161,13 @@
         <item name="android:statusBarColor">@color/transparent</item>
     </style>
 
-    <style name="AppTheme.Intro" parent="Theme.MaterialComponents.Light.NoActionBar">
-        <item name="preferenceTheme">@style/PreferenceTheme</item>
-        <item name="android:colorPrimary">@color/tieba</item>
-        <item name="android:colorAccent">@color/colorAccent</item>
-        <item name="colorPrimary">@color/tieba</item>
-        <item name="colorAccent">@color/colorAccent</item>
-        <item name="android:windowActionModeOverlay">true</item>
-        <item name="windowActionModeOverlay">true</item>
-        <item name="android:windowIsTranslucent">false</item>
-        <item name="android:windowTranslucentStatus">false</item>
-        <item name="android:windowTranslucentNavigation">false</item>
-        <item name="android:statusBarColor">@color/white</item>
-        <item name="android:navigationBarColor">@color/white</item>
-        <item name="android:windowLightStatusBar" tools:targetApi="m">true</item>
-        <item name="android:windowLightNavigationBar" tools:targetApi="o_mr1">true</item>
-        <item name="android:windowBackground">@color/transparent</item>
-        <item name="android:textColorSecondary">@color/default_color_text_secondary</item>
-        <item name="android:textColorPrimary">@color/default_color_text</item>
-    </style>
-
     <style name="Base" />
 
     <style name="Theme.NewAppTheme" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <item name="android:windowIsTranslucent">true</item>
         <item name="android:statusBarColor">@android:color/transparent</item>
         <item name="android:navigationBarColor">@android:color/transparent</item>
+        <item name="dialogCornerRadius">@dimen/radius</item>
     </style>
 
     <style name="Theme.Splash" parent="Theme.SplashScreen">
@@ -382,46 +202,6 @@
         <item name="android:windowDrawsSystemBarBackgrounds">true</item>
     </style>
 
-    <style name="PreferenceTheme" parent="PreferenceThemeOverlay.v14.Material">
-        <item name="dialogPreferenceStyle">@style/PreferenceTheme.DialogPreference</item>
-        <item name="dropdownPreferenceStyle">@style/PreferenceTheme.DropDown</item>
-        <item name="editTextPreferenceStyle">@style/PreferenceTheme.EditTextPreference</item>
-        <item name="preferenceCategoryStyle">@style/PreferenceTheme.Category</item>
-        <item name="preferenceStyle">@style/PreferenceTheme.Preference</item>
-        <item name="seekBarPreferenceStyle">@style/PreferenceTheme.SeekBarPreference</item>
-        <item name="switchPreferenceStyle">@style/PreferenceTheme.SwitchPreference</item>
-    </style>
-
-    <style name="PreferenceTheme.Preference" parent="Preference.Material">
-        <item name="android:layout">@layout/layout_preference</item>
-    </style>
-
-    <style name="PreferenceTheme.SwitchPreference" parent="Preference.SwitchPreference.Material">
-        <item name="android:layout">@layout/layout_preference</item>
-        <item name="android:widgetLayout">@layout/layout_switch</item>
-    </style>
-
-    <style name="PreferenceTheme.DialogPreference" parent="Preference.DialogPreference.Material">
-        <item name="android:layout">@layout/layout_preference</item>
-    </style>
-
-    <style name="PreferenceTheme.DropDown" parent="Preference.DropDown.Material">
-        <item name="android:layout">@layout/layout_preference_dropdown</item>
-    </style>
-
-    <style name="PreferenceTheme.EditTextPreference" parent="Preference.DialogPreference.EditTextPreference.Material">
-        <item name="android:layout">@layout/layout_preference</item>
-        <item name="android:dialogLayout">@layout/dialog_preference_edittext</item>
-    </style>
-
-    <style name="PreferenceTheme.Category" parent="Preference.Category.Material">
-        <item name="android:layout">@layout/layout_preference_category</item>
-    </style>
-
-    <style name="PreferenceTheme.SeekBarPreference" parent="Preference.SeekBarPreference.Material">
-        <item name="android:layout">@layout/layout_preference_seekbar</item>
-    </style>
-
     <style name="AppTheme" parent="Base.AppTheme">
         <item name="android:letterSpacing">0.01</item>
         <item name="android:overScrollMode">never</item>
@@ -432,7 +212,6 @@
         <item name="actionOverflowMenuStyle">@style/OverflowMenu</item>
         <item name="dialogCornerRadius">@dimen/radius</item>
         <item name="alertDialogStyle">@style/AlertDialog</item>
-        <item name="preferenceTheme">@style/PreferenceTheme</item>
         <item name="android:listSeparatorTextViewStyle">@style/TextAppearance.ListTitle</item>
         <item name="android:colorPrimary">@color/colorPrimary</item>
         <item name="android:colorAccent">@color/colorAccent</item>
@@ -464,7 +243,6 @@
         <item name="actionOverflowMenuStyle">@style/OverflowMenu.Dark</item>
         <item name="dialogCornerRadius">8dp</item>
         <item name="alertDialogStyle">@style/AlertDialog.Dark</item>
-        <item name="preferenceTheme">@style/PreferenceTheme</item>
         <item name="android:listSeparatorTextViewStyle">@style/TextAppearance.ListTitle</item>
         <item name="android:colorPrimary">?attr/colorPrimary</item>
         <item name="android:colorAccent">?attr/colorAccent</item>
@@ -481,13 +259,6 @@
         <item name="colorFloorCard">#FF1A2A39</item>
         <item name="colorCard">#15202B</item>
         <item name="shadow_color">#FE191919</item>
-    </style>
-
-    <style name="AppTheme.Splash" parent="AppTheme">
-        <item name="android:statusBarColor">@color/colorSplashBg</item>
-        <item name="android:windowIsTranslucent">false</item>
-        <item name="android:windowBackground">@drawable/splash</item>
-        <item name="android:windowDisablePreview">false</item>
     </style>
 
     <style name="OverflowMenu" parent="Widget.AppCompat.Light.PopupMenu.Overflow">
@@ -615,18 +386,6 @@
         <item name="colorToolbarItem">@color/white</item>
     </style>
 
-    <style name="TiebaLite.Dark" parent="AppTheme.Dark">
-        <item name="colorPrimary">@color/tieba</item>
-        <item name="colorToolbar">#FF15202B</item>
-        <item name="colorToolbarItem">#FFE6E7EE</item>
-        <item name="colorToolbarItemActive">@color/white</item>
-        <item name="colorToolbarItemSecondary">#CCE6E7EE</item>
-        <item name="colorBackground">@color/theme_color_background_dark</item>
-        <item name="colorChip">@color/theme_color_window_background_dark</item>
-        <item name="colorNavBar">#FF15202B</item>
-        <item name="colorDivider">#FF10171D</item>
-    </style>
-
     <style name="TiebaLite.Dark.Blue" parent="AppTheme.Dark">
         <item name="toolbarStyle">@style/Toolbar.Dark.Blue</item>
         <item name="actionOverflowMenuStyle">@style/OverflowMenu.Dark.Blue</item>
@@ -692,28 +451,8 @@
         <item name="android:layout">@layout/layout_alert_dialog</item>
     </style>
 
-    <style name="AlertDialog.FullScreen" parent="AlertDialog">
-        <item name="android:windowFrame">@null</item>
-        <item name="android:windowIsFloating">true</item>
-        <item name="android:windowNoTitle">true</item>
-        <item name="android:windowIsTranslucent">true</item>
-        <item name="android:windowCloseOnTouchOutside">false</item>
-    </style>
-
     <style name="AlertDialog.Dark" parent="AlertDialog.AppCompat">
         <item name="android:layout">@layout/layout_alert_dialog</item>
     </style>
 
-    <style name="AlertDialog.Dark.FullScreen" parent="AlertDialog.AppCompat">
-        <item name="android:windowFrame">@null</item>
-        <item name="android:windowIsFloating">true</item>
-        <item name="android:windowNoTitle">true</item>
-        <item name="android:windowIsTranslucent">true</item>
-        <item name="android:windowCloseOnTouchOutside">false</item>
-    </style>
-
-    <style name="RoundedCornerShape">
-        <item name="cornerFamily">rounded</item>
-        <item name="cornerSize">50dp</item>
-    </style>
 </resources>

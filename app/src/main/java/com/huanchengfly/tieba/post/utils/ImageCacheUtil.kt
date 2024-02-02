@@ -3,19 +3,18 @@ package com.huanchengfly.tieba.post.utils
 import android.content.Context
 import android.os.Looper
 import android.text.TextUtils
-import com.bumptech.glide.Glide
-import com.bumptech.glide.load.engine.cache.ExternalPreferredCacheDiskCacheFactory
-import com.bumptech.glide.load.engine.cache.InternalCacheDiskCacheFactory
 import com.github.panpf.sketch.sketch
 import java.io.File
 import java.math.BigDecimal
 import kotlin.concurrent.thread
 
 /**
- * Glide缓存工具类
+ * 图片缓存工具类
  * Created by Trojx on 2016/10/10 0010.
  */
 object ImageCacheUtil {
+    const val DEFAULT_DISK_CACHE_DIR = "image_manager_disk_cache"
+
     /**
      * 清除图片磁盘缓存
      */
@@ -23,7 +22,6 @@ object ImageCacheUtil {
         try {
             if (Looper.myLooper() == Looper.getMainLooper()) {
                 thread {
-                    Glide.get(context).clearDiskCache()
                     context.sketch
                         .downloadCache
                         .clear()
@@ -32,7 +30,6 @@ object ImageCacheUtil {
                         .clear()
                 }
             } else {
-                Glide.get(context).clearDiskCache()
                 context.sketch
                     .downloadCache
                     .clear()
@@ -51,7 +48,6 @@ object ImageCacheUtil {
     fun clearImageMemoryCache(context: Context) {
         try {
             if (Looper.myLooper() == Looper.getMainLooper()) { //只能在主线程执行
-                Glide.get(context).clearMemory()
                 context.sketch
                     .memoryCache
                     .clear()
@@ -68,13 +64,13 @@ object ImageCacheUtil {
         clearImageDiskCache(context)
         clearImageMemoryCache(context)
         val imageExternalCacheDir =
-            context.externalCacheDir.toString() + File.separator + ExternalPreferredCacheDiskCacheFactory.DEFAULT_DISK_CACHE_DIR
+            context.externalCacheDir.toString() + File.separator + DEFAULT_DISK_CACHE_DIR
         deleteFolderFile(imageExternalCacheDir, false)
         deleteFolderFile(context.cacheDir.toString() + File.separator + ".shareTemp", false)
     }
 
     /**
-     * 获取Glide造成的缓存大小
+     * 获取缓存大小
      *
      * @return CacheSize
      */
@@ -83,7 +79,7 @@ object ImageCacheUtil {
             val glideCacheSize = getFolderSize(
                 File(
                     context.cacheDir,
-                    InternalCacheDiskCacheFactory.DEFAULT_DISK_CACHE_DIR
+                    DEFAULT_DISK_CACHE_DIR
                 )
             ).toDouble()
             val shareCacheSize = getFolderSize(File(context.cacheDir, ".shareTemp")).toDouble()
@@ -129,16 +125,15 @@ object ImageCacheUtil {
             try {
                 val file = File(filePath)
                 if (file.isDirectory) {
-                    val files = file.listFiles()
-                    for (file1 in files) {
-                        deleteFolderFile(file1.absolutePath, true)
+                    file.listFiles()?.forEach {
+                        deleteFolderFile(it.absolutePath, true)
                     }
                 }
                 if (deleteThisPath) {
                     if (!file.isDirectory) {
                         file.delete()
                     } else {
-                        if (file.listFiles().size == 0) {
+                        if (file.listFiles().isNullOrEmpty()) {
                             file.delete()
                         }
                     }

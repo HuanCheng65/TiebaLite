@@ -1,0 +1,10 @@
+syntax = "proto3";
+
+package tieba.profile;
+
+option java_package = "com.huanchengfly.tieba.post.api.models.protos.profile";
+
+message CommonLocation {
+  string distance = 1;
+  int64 time = 2;
+}

@@ -2,15 +2,24 @@ package com.huanchengfly.tieba.post.api.retrofit.interfaces
 
 import com.huanchengfly.tieba.post.api.models.protos.addPost.AddPostResponse
 import com.huanchengfly.tieba.post.api.models.protos.forumRecommend.ForumRecommendResponse
+import com.huanchengfly.tieba.post.api.models.protos.forumRuleDetail.ForumRuleDetailResponse
 import com.huanchengfly.tieba.post.api.models.protos.frsPage.FrsPageResponse
+import com.huanchengfly.tieba.post.api.models.protos.getBawuInfo.GetBawuInfoResponse
+import com.huanchengfly.tieba.post.api.models.protos.getForumDetail.GetForumDetailResponse
+import com.huanchengfly.tieba.post.api.models.protos.getHistoryForum.GetHistoryForumResponse
+import com.huanchengfly.tieba.post.api.models.protos.getLevelInfo.GetLevelInfoResponse
+import com.huanchengfly.tieba.post.api.models.protos.getMemberInfo.GetMemberInfoResponse
+import com.huanchengfly.tieba.post.api.models.protos.getUserInfo.GetUserInfoResponse
 import com.huanchengfly.tieba.post.api.models.protos.hotThreadList.HotThreadListResponse
 import com.huanchengfly.tieba.post.api.models.protos.pbFloor.PbFloorResponse
 import com.huanchengfly.tieba.post.api.models.protos.pbPage.PbPageResponse
 import com.huanchengfly.tieba.post.api.models.protos.personalized.PersonalizedResponse
 import com.huanchengfly.tieba.post.api.models.protos.profile.ProfileResponse
+import com.huanchengfly.tieba.post.api.models.protos.searchSug.SearchSugResponse
 import com.huanchengfly.tieba.post.api.models.protos.threadList.ThreadListResponse
 import com.huanchengfly.tieba.post.api.models.protos.topicList.TopicListResponse
 import com.huanchengfly.tieba.post.api.models.protos.userLike.UserLikeResponse
+import com.huanchengfly.tieba.post.api.models.protos.userPost.UserPostResponse
 import com.huanchengfly.tieba.post.api.retrofit.body.MyMultipartBody
 import kotlinx.coroutines.flow.Flow
 import retrofit2.http.Body
@@ -54,7 +63,7 @@ interface OfficialProtobufTiebaApi {
         @Body body: MyMultipartBody,
     ): Flow<ThreadListResponse>
 
-    @POST("/c/u/user/profile?cmd=303012")
+    @POST("/c/u/user/profile?cmd=303012&format=protobuf")
     fun profileFlow(
         @Body body: MyMultipartBody,
     ): Flow<ProfileResponse>
@@ -73,4 +82,49 @@ interface OfficialProtobufTiebaApi {
     fun addPostFlow(
         @Body body: MyMultipartBody,
     ): Flow<AddPostResponse>
+
+    @POST("/c/s/searchSug?cmd=309438&format=protobuf")
+    fun searchSugFlow(
+        @Body body: MyMultipartBody,
+    ): Flow<SearchSugResponse>
+
+    @POST("/c/f/forum/getforumdetail?cmd=303021&format=protobuf")
+    fun getForumDetailFlow(
+        @Body body: MyMultipartBody,
+    ): Flow<GetForumDetailResponse>
+
+    @POST("/c/f/forum/getBawuInfo?cmd=301007&format=protobuf")
+    fun getBawuInfoFlow(
+        @Body body: MyMultipartBody,
+    ): Flow<GetBawuInfoResponse>
+
+    @POST("/c/f/forum/getLevelInfo?cmd=301005&format=protobuf")
+    fun getLevelInfoFlow(
+        @Body body: MyMultipartBody,
+    ): Flow<GetLevelInfoResponse>
+
+    @POST("/c/f/forum/getMemberInfo?cmd=301004&format=protobuf")
+    fun getMemberInfoFlow(
+        @Body body: MyMultipartBody,
+    ): Flow<GetMemberInfoResponse>
+
+    @POST("/c/f/forum/forumRuleDetail?cmd=309690&format=protobuf")
+    fun forumRuleDetailFlow(
+        @Body body: MyMultipartBody,
+    ): Flow<ForumRuleDetailResponse>
+
+    @POST("/c/u/feed/userpost?cmd=303002&format=protobuf")
+    fun userPostFlow(
+        @Body body: MyMultipartBody,
+    ): Flow<UserPostResponse>
+
+    @POST("/c/u/user/getuserinfo?cmd=303024&format=protobuf")
+    fun getUserInfoFlow(
+        @Body body: MyMultipartBody,
+    ): Flow<GetUserInfoResponse>
+
+    @POST("/c/f/forum/gethistoryforum?cmd=309601&format=protobuf")
+    fun getHistoryForumFlow(
+        @Body body: MyMultipartBody,
+    ): Flow<GetHistoryForumResponse>
 }

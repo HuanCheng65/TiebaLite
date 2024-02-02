@@ -11,8 +11,10 @@ import android.widget.TextView
 import androidx.compose.runtime.Stable
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.ExperimentalTextApi
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.withAnnotation
 import androidx.compose.ui.text.withStyle
 import com.huanchengfly.tieba.post.App
 import com.huanchengfly.tieba.post.R
@@ -109,6 +111,37 @@ object StringUtil {
             } else {
                 append(nickname ?: username)
             }
+        }
+    }
+
+    @OptIn(ExperimentalTextApi::class)
+    @Stable
+    fun buildAnnotatedStringWithUser(
+        userId: String,
+        username: String,
+        nickname: String?,
+        content: String,
+        context: Context = App.INSTANCE,
+    ): AnnotatedString {
+        return buildAnnotatedString {
+            withAnnotation(tag = "user", annotation = userId) {
+                withStyle(
+                    SpanStyle(
+                        color = Color(ThemeUtils.getColorByAttr(context, R.attr.colorNewPrimary))
+                    )
+                ) {
+                    append("@")
+                    append(
+                        getUsernameAnnotatedString(
+                            context,
+                            username,
+                            nickname,
+                        )
+                    )
+                }
+            }
+            append(": ")
+            append(content)
         }
     }
 

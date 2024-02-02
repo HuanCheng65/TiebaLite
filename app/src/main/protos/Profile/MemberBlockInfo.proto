@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+package tieba.profile;
+
+option java_package = "com.huanchengfly.tieba.post.api.models.protos.profile";
+
+message MemberBlockInfo {
+  int32 is_permanent_ban = 1;
+  int32 is_auto_pay = 2;
+  int32 is_ban = 3;
+}

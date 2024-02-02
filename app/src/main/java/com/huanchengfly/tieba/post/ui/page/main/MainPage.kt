@@ -2,20 +2,15 @@ package com.huanchengfly.tieba.post.ui.page.main
 
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.graphics.ExperimentalAnimationGraphicsApi
+import androidx.compose.animation.graphics.res.animatedVectorResource
+import androidx.compose.animation.graphics.vector.AnimatedImageVector
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.pager.rememberPagerState
-import androidx.compose.material.Scaffold
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.AccountCircle
-import androidx.compose.material.icons.outlined.Inventory2
-import androidx.compose.material.icons.outlined.Notifications
-import androidx.compose.material.icons.rounded.AccountCircle
-import androidx.compose.material.icons.rounded.Inventory2
-import androidx.compose.material.icons.rounded.Notifications
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
@@ -26,10 +21,8 @@ import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.res.vectorResource
 import androidx.datastore.preferences.core.booleanPreferencesKey
 import com.huanchengfly.tieba.post.LocalDevicePosture
 import com.huanchengfly.tieba.post.LocalNotificationCountFlow
@@ -52,6 +45,7 @@ import com.huanchengfly.tieba.post.ui.utils.DevicePosture
 import com.huanchengfly.tieba.post.ui.utils.MainNavigationContentPosition
 import com.huanchengfly.tieba.post.ui.utils.MainNavigationType
 import com.huanchengfly.tieba.post.ui.widgets.compose.LazyLoadHorizontalPager
+import com.huanchengfly.tieba.post.ui.widgets.compose.MyScaffold
 import com.huanchengfly.tieba.post.utils.appPreferences
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.annotation.RootNavGraph
@@ -97,7 +91,7 @@ private fun NavigationWrapper(
     }
 }
 
-@OptIn(ExperimentalFoundationApi::class)
+@OptIn(ExperimentalFoundationApi::class, ExperimentalAnimationGraphicsApi::class)
 @RootNavGraph(start = true)
 @Destination
 @Composable
@@ -145,7 +139,7 @@ fun MainPage(
             listOfNotNull(
                 NavigationItem(
                     id = "home",
-                    icon = { if (it) Icons.Rounded.Inventory2 else Icons.Outlined.Inventory2 },
+                    icon = { AnimatedImageVector.animatedVectorResource(id = R.drawable.ic_animated_rounded_inventory_2) },
                     title = { stringResource(id = R.string.title_main) },
                     content = {
                         HomePage(
@@ -161,8 +155,7 @@ fun MainPage(
                 else NavigationItem(
                     id = "explore",
                     icon = {
-                        if (it) ImageVector.vectorResource(id = R.drawable.ic_round_toys)
-                        else ImageVector.vectorResource(id = R.drawable.ic_outline_toys)
+                        AnimatedImageVector.animatedVectorResource(id = R.drawable.ic_animated_toy_fans)
                     },
                     title = { stringResource(id = R.string.title_explore) },
                     content = {
@@ -171,7 +164,9 @@ fun MainPage(
                 ),
                 NavigationItem(
                     id = "notification",
-                    icon = { if (it) Icons.Rounded.Notifications else Icons.Outlined.Notifications },
+                    icon = {
+                        AnimatedImageVector.animatedVectorResource(id = R.drawable.ic_animated_rounded_notifications)
+                    },
                     title = { stringResource(id = R.string.title_notifications) },
                     badge = messageCount > 0,
                     badgeText = "$messageCount",
@@ -184,7 +179,9 @@ fun MainPage(
                 ),
                 NavigationItem(
                     id = "user",
-                    icon = { if (it) Icons.Rounded.AccountCircle else Icons.Outlined.AccountCircle },
+                    icon = {
+                        AnimatedImageVector.animatedVectorResource(id = R.drawable.ic_animated_rounded_person)
+                    },
                     title = { stringResource(id = R.string.title_user) },
                     content = {
                         UserPage()
@@ -246,40 +243,40 @@ fun MainPage(
             GlobalEvent.Refresh(navigationItems[it].id)
         )
     }
-    NavigationWrapper(
-        currentPosition = pagerState.currentPage,
-        onChangePosition = { coroutineScope.launch { pagerState.scrollToPage(it) } },
-        onReselected = onReselected,
-        navigationItems = navigationItems,
-        navigationType = navigationType,
-        navigationContentPosition = navigationContentPosition
-    ) {
-        Scaffold(
-            backgroundColor = Color.Transparent,
-            modifier = Modifier.fillMaxSize(),
-            bottomBar = {
-                AnimatedVisibility(visible = navigationType == MainNavigationType.BOTTOM_NAVIGATION) {
-                    BottomNavigation(
-                        currentPosition = pagerState.currentPage,
-                        onChangePosition = {
-                            coroutineScope.launch { pagerState.scrollToPage(it) }
-                        },
-                        onReselected = onReselected,
-                        navigationItems = navigationItems,
-                        themeColors = themeColors,
-                    )
-                }
-            }
-        ) { paddingValues ->
-            LazyLoadHorizontalPager(
-                contentPadding = paddingValues,
-                state = pagerState,
-                key = { navigationItems[it].id },
+    ProvideNavigator(navigator = navigator) {
+        NavigationWrapper(
+            currentPosition = pagerState.currentPage,
+            onChangePosition = { coroutineScope.launch { pagerState.scrollToPage(it) } },
+            onReselected = onReselected,
+            navigationItems = navigationItems,
+            navigationType = navigationType,
+            navigationContentPosition = navigationContentPosition
+        ) {
+            MyScaffold(
+                backgroundColor = Color.Transparent,
                 modifier = Modifier.fillMaxSize(),
-                verticalAlignment = Alignment.Top,
-                userScrollEnabled = false
-            ) {
-                ProvideNavigator(navigator = navigator) {
+                bottomBar = {
+                    AnimatedVisibility(visible = navigationType == MainNavigationType.BOTTOM_NAVIGATION) {
+                        BottomNavigation(
+                            currentPosition = pagerState.currentPage,
+                            onChangePosition = {
+                                coroutineScope.launch { pagerState.scrollToPage(it) }
+                            },
+                            onReselected = onReselected,
+                            navigationItems = navigationItems,
+                            themeColors = themeColors,
+                        )
+                    }
+                }
+            ) { paddingValues ->
+                LazyLoadHorizontalPager(
+                    contentPadding = paddingValues,
+                    state = pagerState,
+                    key = { navigationItems[it].id },
+                    modifier = Modifier.fillMaxSize(),
+                    verticalAlignment = Alignment.Top,
+                    userScrollEnabled = false
+                ) {
                     navigationItems[it].content()
                 }
             }

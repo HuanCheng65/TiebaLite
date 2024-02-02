@@ -53,9 +53,11 @@ open class AppPreferencesUtils private constructor(ctx: Context) {
     var ignoreBatteryOptimizationsDialog by DataStoreDelegates.boolean(defaultValue = false)
 
     var appIcon by DataStoreDelegates.string(
-        defaultValue = Icons.DEFAULT_ICON,
+        defaultValue = LauncherIcons.DEFAULT_ICON,
         key = AppIconUtil.PREF_KEY_APP_ICON
     )
+
+    var useThemedIcon by DataStoreDelegates.boolean(defaultValue = false)
 
     var autoSign by DataStoreDelegates.boolean(defaultValue = false, key = "auto_sign")
 
@@ -73,6 +75,11 @@ open class AppPreferencesUtils private constructor(ctx: Context) {
     var collectThreadSeeLz by DataStoreDelegates.boolean(
         defaultValue = true,
         key = "collect_thread_see_lz"
+    )
+
+    var collectThreadDescSort by DataStoreDelegates.boolean(
+        defaultValue = false,
+        key = "collect_thread_desc_sort"
     )
 
     var customPrimaryColor by DataStoreDelegates.string(key = "custom_primary_color")
@@ -94,7 +101,9 @@ open class AppPreferencesUtils private constructor(ctx: Context) {
 
     var darkTheme by DataStoreDelegates.string(key = "dark_theme", defaultValue = "grey_dark")
 
-    var enableNewUi by DataStoreDelegates.boolean(defaultValue = false)
+    var doNotUsePhotoPicker by DataStoreDelegates.boolean(defaultValue = false)
+
+    var useDynamicColorTheme by DataStoreDelegates.boolean(defaultValue = false)
 
     var followSystemNight by DataStoreDelegates.boolean(
         defaultValue = true,
@@ -111,7 +120,15 @@ open class AppPreferencesUtils private constructor(ctx: Context) {
 
     var hideForumIntroAndStat by DataStoreDelegates.boolean(defaultValue = false)
 
+    var hideMedia by DataStoreDelegates.boolean(defaultValue = false)
+
+    var hideReply by DataStoreDelegates.boolean(defaultValue = false)
+
     var homePageScroll by DataStoreDelegates.boolean(defaultValue = false)
+
+    var homePageShowHistoryForum by DataStoreDelegates.boolean(defaultValue = true)
+
+    var imageDarkenWhenNightMode by DataStoreDelegates.boolean(defaultValue = true)
 
     var imageLoadType by DataStoreDelegates.string(
         key = "image_load_type",
@@ -119,6 +136,8 @@ open class AppPreferencesUtils private constructor(ctx: Context) {
     )
 
     var imeHeight by DataStoreDelegates.int(defaultValue = 800)
+
+    var liftUpBottomBar by DataStoreDelegates.boolean(defaultValue = true)
 
     var listItemsBackgroundIntermixed by DataStoreDelegates.boolean(defaultValue = true)
 
@@ -130,15 +149,13 @@ open class AppPreferencesUtils private constructor(ctx: Context) {
 
     var oldTheme by DataStoreDelegates.string(key = "old_theme")
 
-    var oksignWorkId by DataStoreDelegates.string()
-
     var oksignSlowMode by DataStoreDelegates.boolean(
         defaultValue = true,
         key = "oksign_slow_mode"
     )
 
     var oksignUseOfficialOksign by DataStoreDelegates.boolean(
-        defaultValue = false,
+        defaultValue = true,
         key = "oksign_use_official_oksign"
     )
 

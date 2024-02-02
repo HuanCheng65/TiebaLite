@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+package tieba.getForumDetail;
+
+option java_package = "com.huanchengfly.tieba.post.api.models.protos.getForumDetail";
+
+import "Error.proto";
+import "GetForumDetail/GetForumDetailResponseData.proto";
+
+message GetForumDetailResponse {
+  Error error = 1;
+  GetForumDetailResponseData data = 2;
+}

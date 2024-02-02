@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+package tieba;
+
+option java_package = "com.huanchengfly.tieba.post.api.models.protos";
+
+import "BawuRoleDes.proto";
+
+message BawuTeam {
+  int32 total_num = 1;
+  repeated BawuRoleDes bawu_team_list = 2;
+}

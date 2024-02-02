@@ -146,12 +146,18 @@ sealed interface NotificationsListPartialChange : PartialChange<NotificationsLis
         override fun reduce(oldState: NotificationsListUiState): NotificationsListUiState =
             when (this) {
                 Start -> oldState.copy(isLoadingMore = true)
-                is Success -> oldState.copy(
-                    isLoadingMore = false,
-                    currentPage = currentPage,
-                    data = (oldState.data + data).toImmutableList(),
-                    hasMore = hasMore
-                )
+                is Success -> {
+                    val uniqueData = data.filter { item ->
+                        oldState.data.none { it.info == item.info }
+                    }
+                    oldState.copy(
+                        isLoadingMore = false,
+                        currentPage = currentPage,
+                        data = (oldState.data + uniqueData).toImmutableList(),
+                        hasMore = hasMore
+                    )
+                }
+
                 is Failure -> oldState.copy(isLoadingMore = false)
             }
 

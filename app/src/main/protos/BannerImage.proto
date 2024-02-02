@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+package tieba;
+
+option java_package = "com.huanchengfly.tieba.post.api.models.protos";
+
+message BannerImage {
+  string img_url = 1;
+  string ahead_url = 2;
+  string title = 3;
+}

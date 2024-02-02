@@ -1,0 +1,30 @@
+syntax = "proto3";
+
+package tieba;
+
+option java_package = "com.huanchengfly.tieba.post.api.models.protos";
+
+import "ZhiBoInfoTW.proto";
+
+message AnchorInfo {
+  string portrait = 1;
+  string name = 2;
+  int32 start_time = 3;
+  int32 status = 4;
+  int64 author_id = 5;
+  string author_name = 6;
+  int32 listeners = 7;
+  int32 likers = 8;
+  int64 group_id = 9;
+  string intro = 10;
+  string publisherPortrait = 11;
+  string publisherName = 12;
+  int64 publisherId = 13;
+  string forumName = 14;
+  int32 from_type = 15;
+  int32 is_vip = 16;
+  int32 label_id = 17;
+  string label_name = 18;
+  int32 type = 19;
+  ZhiBoInfoTW twzhibo_info = 20;
+}

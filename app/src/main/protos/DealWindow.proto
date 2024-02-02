@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+package tieba;
+
+option java_package = "com.huanchengfly.tieba.post.api.models.protos";
+
+import "DisplayWindowInfo.proto";
+
+message DealWindow {
+  repeated DisplayWindowInfo list = 1;
+  uint64 total = 2;
+}

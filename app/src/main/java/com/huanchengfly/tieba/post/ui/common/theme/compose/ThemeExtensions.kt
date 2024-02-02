@@ -17,8 +17,22 @@ val ExtendedColors.loadMoreIndicator: Color
         indicator
     }
 
+val ExtendedColors.threadBottomBar: Color
+    get() = if (ThemeUtil.isTranslucentTheme(theme)) {
+        windowBackground
+    } else {
+        bottomBar
+    }
+
+val ExtendedColors.menuBackground: Color
+    get() = if (ThemeUtil.isTranslucentTheme(theme)) {
+        windowBackground
+    } else {
+        card
+    }
+
 val ExtendedColors.invertChipBackground: Color
     get() = if (ThemeUtil.isNightMode(theme)) primary.copy(alpha = 0.3f) else primary
 
 val ExtendedColors.invertChipContent: Color
-    get() = if (ThemeUtil.isNightMode(theme)) primary else textOnPrimary
+    get() = if (ThemeUtil.isNightMode(theme)) primary else onPrimary

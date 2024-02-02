@@ -1,0 +1,48 @@
+syntax = "proto3";
+
+package tieba.userPost;
+
+option java_package = "com.huanchengfly.tieba.post.api.models.protos.userPost";
+
+import "CommonRequest.proto";
+
+message UserPostRequestData {
+  int64 uid = 1;
+  uint32 rn = 2;
+  uint32 offset = 3;
+  optional uint32 is_thread = 4;
+  uint32 need_content = 5;
+  uint64 forum_id = 6;
+  uint32 begin_time = 7;
+  uint32 end_time = 8;
+  optional uint32 subtype = 9;
+  uint32 check_login = 10;
+  string ip_str = 11;
+  uint32 ip_int = 12;
+  string module_name = 13;
+  uint32 st_type = 14;
+  uint32 st_param = 15;
+  uint32 smile_grade = 16;
+  uint32 support_noun = 17;
+  uint32 login = 18;
+  int64 user_id = 19;
+  string user_name = 20;
+  uint32 no_un = 21;
+  string portrait = 22;
+  string mobile = 23;
+  string email = 24;
+  string cookie = 25;
+  uint32 pn = 26;
+  CommonRequest common = 27;
+  uint32 is_twzhibo = 28;
+  int32 scr_w = 29;
+  int32 scr_h = 30;
+  double scr_dip = 31;
+  int32 q_type = 32;
+  optional int32 is_view_card = 33;
+  uint32 last_thread_time = 34;
+  uint32 work_tab_id = 35;
+  uint32 type = 36;
+  uint32 from_type = 37;
+  uint64 begin_thread_id = 38;
+}

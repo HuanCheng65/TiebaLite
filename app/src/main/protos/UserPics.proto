@@ -1,0 +1,10 @@
+syntax = "proto3";
+
+package tieba;
+
+option java_package = "com.huanchengfly.tieba.post.api.models.protos";
+
+message UserPics {
+  string big = 1;
+  string small = 2;
+}

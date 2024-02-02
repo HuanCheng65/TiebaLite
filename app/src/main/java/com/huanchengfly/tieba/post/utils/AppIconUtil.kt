@@ -4,17 +4,24 @@ import android.content.ComponentName
 import android.content.Context
 import android.content.pm.PackageManager
 import com.huanchengfly.tieba.post.App
+import kotlinx.collections.immutable.persistentListOf
 
 
-object Icons {
+object LauncherIcons {
     const val NEW_ICON = "com.huanchengfly.tieba.post.MainActivityV2"
+    const val NEW_ICON_THEMED = "com.huanchengfly.tieba.post.MainActivityIconThemed"
     const val NEW_ICON_INVERT = "com.huanchengfly.tieba.post.MainActivityIconInvert"
     const val OLD_ICON = "com.huanchengfly.tieba.post.MainActivityIconOld"
     const val DISABLE = "com.huanchengfly.tieba.post.MainActivityV2Disabled"
 
     const val DEFAULT_ICON = NEW_ICON
 
-    val ICONS = listOf(NEW_ICON, NEW_ICON_INVERT, OLD_ICON)
+    val ICONS = persistentListOf(NEW_ICON, NEW_ICON_THEMED, NEW_ICON_INVERT, OLD_ICON)
+
+    val SUPPORT_THEMED_ICON = persistentListOf(NEW_ICON)
+    val THEMED_ICON_MAPPING = mapOf(
+        NEW_ICON to NEW_ICON_THEMED,
+    )
 }
 
 object AppIconUtil {
@@ -26,11 +33,18 @@ object AppIconUtil {
     private val appPreferences: AppPreferencesUtils
         get() = context.appPreferences
 
-    fun setIcon(icon: String = appPreferences.appIcon ?: Icons.NEW_ICON) {
-        val newIcon = if (Icons.ICONS.contains(icon) || icon == Icons.DISABLE) {
+    fun setIcon(
+        icon: String = appPreferences.appIcon ?: LauncherIcons.NEW_ICON,
+        isThemed: Boolean = appPreferences.useThemedIcon,
+    ) {
+        val useThemedIcon = isThemed && LauncherIcons.SUPPORT_THEMED_ICON.contains(icon)
+        var newIcon = if (LauncherIcons.ICONS.contains(icon) || icon == LauncherIcons.DISABLE) {
             icon
-        } else Icons.DEFAULT_ICON
-        Icons.ICONS.forEach {
+        } else LauncherIcons.DEFAULT_ICON
+        if (useThemedIcon) {
+            newIcon = LauncherIcons.THEMED_ICON_MAPPING[newIcon] ?: newIcon
+        }
+        LauncherIcons.ICONS.forEach {
             if (it == newIcon) {
                 context.packageManager.enableComponent(ComponentName(context, it))
             } else {

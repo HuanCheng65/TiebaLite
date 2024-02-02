@@ -20,6 +20,7 @@ import com.huanchengfly.tieba.post.arch.UiState
 import com.huanchengfly.tieba.post.arch.wrapImmutable
 import com.huanchengfly.tieba.post.repository.FrsPageRepository
 import com.huanchengfly.tieba.post.ui.models.ThreadItemData
+import com.huanchengfly.tieba.post.ui.models.distinctById
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
@@ -104,6 +105,9 @@ private class ForumThreadListPartialChangeProducer(val type: ForumThreadListType
                 val threadList =
                     response.data_.thread_list.map { ThreadItemData(it.wrapImmutable()) }
                 ForumThreadListPartialChange.FirstLoad.Success(
+                    response.data_.forum_rule?.title.takeIf {
+                        type == ForumThreadListType.Latest && response.data_.forum_rule?.has_forum_rule == 1
+                    },
                     threadList,
                     response.data_.thread_id_list,
                     (response.data_.forum?.good_classify ?: emptyList()).wrapImmutable(),
@@ -244,7 +248,8 @@ sealed interface ForumThreadListPartialChange : PartialChange<ForumThreadListUiS
                 Start -> oldState
                 is Success -> oldState.copy(
                     isRefreshing = false,
-                    threadList = threadList.toImmutableList(),
+                    forumRuleTitle = forumRuleTitle,
+                    threadList = threadList.distinctById(),
                     threadListIds = threadListIds.toImmutableList(),
                     goodClassifies = goodClassifies.toImmutableList(),
                     goodClassifyId = goodClassifyId,
@@ -258,6 +263,7 @@ sealed interface ForumThreadListPartialChange : PartialChange<ForumThreadListUiS
         data object Start : FirstLoad()
 
         data class Success(
+            val forumRuleTitle: String?,
             val threadList: List<ThreadItemData>,
             val threadListIds: List<Long>,
             val goodClassifies: List<ImmutableHolder<Classify>>,
@@ -276,7 +282,7 @@ sealed interface ForumThreadListPartialChange : PartialChange<ForumThreadListUiS
                 Start -> oldState.copy(isRefreshing = true)
                 is Success -> oldState.copy(
                     isRefreshing = false,
-                    threadList = threadList.toImmutableList(),
+                    threadList = threadList.distinctById(),
                     threadListIds = threadListIds.toImmutableList(),
                     goodClassifies = goodClassifies.toImmutableList(),
                     goodClassifyId = goodClassifyId,
@@ -308,7 +314,7 @@ sealed interface ForumThreadListPartialChange : PartialChange<ForumThreadListUiS
                 Start -> oldState.copy(isLoadingMore = true)
                 is Success -> oldState.copy(
                     isLoadingMore = false,
-                    threadList = (oldState.threadList + threadList).toImmutableList(),
+                    threadList = (oldState.threadList + threadList).distinctById(),
                     threadListIds = threadListIds.toImmutableList(),
                     currentPage = currentPage,
                     hasMore = hasMore
@@ -397,6 +403,7 @@ data class ForumThreadListUiState(
     val isRefreshing: Boolean = false,
     val isLoadingMore: Boolean = false,
     val goodClassifyId: Int? = null,
+    val forumRuleTitle: String? = null,
     val threadList: ImmutableList<ThreadItemData> = persistentListOf(),
     val threadListIds: ImmutableList<Long> = persistentListOf(),
     val goodClassifies: ImmutableList<ImmutableHolder<Classify>> = persistentListOf(),

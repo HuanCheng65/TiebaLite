@@ -145,7 +145,7 @@ public class ForumBeanCaster extends ICaster<ForumBean, ForumPageBean> {
             if (mediaBean.getBigPic().contains(".hiphotos.baidu.com") || mediaBean.getBigPic().contains("imgsrc.baidu.com")) {
                 origin = "http://imgsrc.baidu.com/forum/pic/item/" + fileName;
             } else {
-                origin = "http://tiebapic.baidu.com/forum/pic/item/" + fileName;
+                origin = "http://imgsa.baidu.com/forum/pic/item/" + fileName;
             }
             mediaInfoBean.setBigPic(mediaBean.getBigPic())
                     .setShowOriginalBtn(mediaBean.isGif() ? "0" : "1")

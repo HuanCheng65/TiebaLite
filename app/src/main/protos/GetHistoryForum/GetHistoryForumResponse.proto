@@ -1,0 +1,14 @@
+syntax = "proto3";
+
+package tieba.getHistoryForum;
+
+option java_package = "com.huanchengfly.tieba.post.api.models.protos.getHistoryForum";
+
+
+import "Error.proto";
+import "GetHistoryForum/GetHistoryForumResponseData.proto";
+
+message GetHistoryForumResponse {
+  Error error = 1;
+  GetHistoryForumResponseData data = 2;
+}

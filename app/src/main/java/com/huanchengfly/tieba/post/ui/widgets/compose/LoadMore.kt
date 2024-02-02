@@ -61,6 +61,7 @@ private val LoadDistance = 70.dp
 fun LoadMoreLayout(
     isLoading: Boolean,
     onLoadMore: () -> Unit,
+    modifier: Modifier = Modifier,
     enableLoadMore: Boolean = true,
     loadEnd: Boolean = false,
     indicator: @Composable (Boolean, Boolean, Boolean) -> Unit = { loading, end, willLoad ->
@@ -105,15 +106,17 @@ fun LoadMoreLayout(
     val curIsEmpty by rememberUpdatedState(newValue = isEmpty)
     val curIsLoading by rememberUpdatedState(newValue = isLoading)
     val curCanLoadMore by rememberUpdatedState(newValue = canLoadMore)
+    val curPreloadCount by rememberUpdatedState(newValue = preloadCount)
 
     // 处理列表滚动到底部时自动加载更多
     val curLazyListState by rememberUpdatedState(newValue = lazyListState)
     LaunchedEffect(curLazyListState) {
         curLazyListState?.let { state ->
             snapshotFlow {
-                val shouldPreload = !curIsEmpty && curCanLoadMore && !curIsLoading
+                val shouldPreload =
+                    !curIsEmpty && curCanLoadMore && !curIsLoading && curPreloadCount > 0
                 val isInPreloadRange =
-                    state.firstVisibleItemIndex + state.layoutInfo.visibleItemsInfo.size - 1 >= state.layoutInfo.totalItemsCount - preloadCount
+                    state.firstVisibleItemIndex + state.layoutInfo.visibleItemsInfo.size - 1 >= state.layoutInfo.totalItemsCount - curPreloadCount
                 shouldPreload && isInPreloadRange
             }
                 .distinctUntilChanged()
@@ -150,7 +153,7 @@ fun LoadMoreLayout(
 
     Box(
         modifier = Modifier
-            .nestedScroll(swipeableState.LoadPreUpPostDownNestedScrollConnection)
+            .nestedScroll(swipeableState.LoadPreDownPostUpNestedScrollConnection)
             .swipeable(
                 state = swipeableState,
                 anchors = mapOf(
@@ -162,6 +165,7 @@ fun LoadMoreLayout(
                 enabled = enableLoadMore && !waitingStateReset,
             )
             .fillMaxSize()
+            .then(modifier)
     ) {
         content()
 
@@ -219,8 +223,7 @@ fun DefaultIndicator(
     }
 }
 
-@ExperimentalMaterialApi
-private val <T> SwipeableState<T>.LoadPreUpPostDownNestedScrollConnection: NestedScrollConnection
+private val <T> SwipeableState<T>.LoadPreDownPostUpNestedScrollConnection: NestedScrollConnection
     get() = object : NestedScrollConnection {
         override fun onPreScroll(available: Offset, source: NestedScrollSource): Offset {
             val delta = available.toFloat()
@@ -245,22 +248,18 @@ private val <T> SwipeableState<T>.LoadPreUpPostDownNestedScrollConnection: Neste
 
         override suspend fun onPreFling(available: Velocity): Velocity {
             val toFling = Offset(available.x, available.y).toFloat()
-            return if (toFling > 0) {
+            return if (toFling > 0 && offset.value < maxBound) {
                 performFling(velocity = toFling)
                 // since we go to the anchor with tween settling, consume all for the best UX
-                // available
-                Velocity.Zero
+                available
             } else {
                 Velocity.Zero
             }
         }
 
-        override suspend fun onPostFling(
-            consumed: Velocity,
-            available: Velocity
-        ): Velocity {
+        override suspend fun onPostFling(consumed: Velocity, available: Velocity): Velocity {
             performFling(velocity = Offset(available.x, available.y).toFloat())
-            return Velocity.Zero
+            return available
         }
 
         private fun Float.toOffset(): Offset = Offset(0f, this)

@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+package tieba;
+
+option java_package = "com.huanchengfly.tieba.post.api.models.protos";
+
+message PriManagerApplyInfo {
+  int32 assist_left_num = 1;
+  string assist_apply_url = 2;
+  int32 assist_apply_status = 3;
+}

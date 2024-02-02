@@ -20,6 +20,9 @@ object Error {
 }
 
 object Header {
+    const val NO_ST_PARAMS = "no_st_params"
+    const val NO_ST_PARAMS_TRUE = "true"
+
     const val FORCE_PARAM = "force_param"
     const val FORCE_PARAM_QUERY = "query"
 

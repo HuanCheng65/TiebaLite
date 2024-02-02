@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+package tieba;
+
+option java_package = "com.huanchengfly.tieba.post.api.models.protos";
+
+import "Abstract.proto";
+import "Zan.proto";
+
+message SimpleThreadInfo {
+  uint64 tid = 1;
+  string title = 2;
+  int32 reply_num = 3;
+  int32 last_time_int = 4;
+  repeated Abstract _abstract = 5;
+  Zan zan = 6;
+  uint64 thread_type = 7;
+}

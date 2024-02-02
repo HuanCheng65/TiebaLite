@@ -1,0 +1,14 @@
+syntax = "proto3";
+
+package tieba.profile;
+
+option java_package = "com.huanchengfly.tieba.post.api.models.protos.profile";
+
+message VipBanner {
+  string title = 1;
+  string sub_title = 2;
+  string button_lable = 3;
+  string bubble = 4;
+  string url = 5;
+  string button_url = 6;
+}

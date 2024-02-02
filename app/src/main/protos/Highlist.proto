@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+package tieba;
+
+option java_package = "com.huanchengfly.tieba.post.api.models.protos";
+
+import "High.proto";
+
+message Highlist {
+  repeated High list = 1;
+  bool has_more = 2;
+}

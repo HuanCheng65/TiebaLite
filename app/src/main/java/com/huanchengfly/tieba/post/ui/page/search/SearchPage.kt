@@ -1,14 +1,11 @@
 package com.huanchengfly.tieba.post.ui.page.search
 
-import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateContentSize
-import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.interaction.PressInteraction
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -16,30 +13,28 @@ import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.KeyboardActions
-import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.ButtonDefaults
+import androidx.compose.material.ContentAlpha
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.ProvideTextStyle
-import androidx.compose.material.Surface
 import androidx.compose.material.Tab
-import androidx.compose.material.TabRow
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.ArrowBack
-import androidx.compose.material.icons.rounded.ArrowDropDown
-import androidx.compose.material.icons.rounded.Clear
+import androidx.compose.material.icons.automirrored.rounded.ArrowBack
 import androidx.compose.material.icons.rounded.ExpandLess
 import androidx.compose.material.icons.rounded.ExpandMore
 import androidx.compose.material.icons.rounded.Search
@@ -54,18 +49,15 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.rotate
-import androidx.compose.ui.focus.onFocusEvent
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -87,16 +79,18 @@ import com.huanchengfly.tieba.post.ui.page.search.thread.SearchThreadPage
 import com.huanchengfly.tieba.post.ui.page.search.thread.SearchThreadSortType
 import com.huanchengfly.tieba.post.ui.page.search.thread.SearchThreadUiEvent
 import com.huanchengfly.tieba.post.ui.page.search.user.SearchUserPage
-import com.huanchengfly.tieba.post.ui.widgets.compose.BaseTextField
 import com.huanchengfly.tieba.post.ui.widgets.compose.Button
-import com.huanchengfly.tieba.post.ui.widgets.compose.ClickMenu
+import com.huanchengfly.tieba.post.ui.widgets.compose.Container
 import com.huanchengfly.tieba.post.ui.widgets.compose.LazyLoadHorizontalPager
 import com.huanchengfly.tieba.post.ui.widgets.compose.MyBackHandler
 import com.huanchengfly.tieba.post.ui.widgets.compose.MyScaffold
 import com.huanchengfly.tieba.post.ui.widgets.compose.PagerTabIndicator
+import com.huanchengfly.tieba.post.ui.widgets.compose.SearchBox
+import com.huanchengfly.tieba.post.ui.widgets.compose.TabClickMenu
+import com.huanchengfly.tieba.post.ui.widgets.compose.TabRow
 import com.huanchengfly.tieba.post.ui.widgets.compose.TopAppBarContainer
 import com.huanchengfly.tieba.post.ui.widgets.compose.picker.ListSinglePicker
-import com.huanchengfly.tieba.post.ui.widgets.compose.rememberMenuState
+import com.ramcosta.composedestinations.annotation.DeepLink
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import kotlinx.collections.immutable.ImmutableList
@@ -104,7 +98,8 @@ import kotlinx.collections.immutable.ImmutableMap
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.persistentMapOf
 import kotlinx.collections.immutable.toImmutableList
-import kotlinx.coroutines.flow.filterIsInstance
+import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.launch
 
 @Immutable
@@ -118,8 +113,12 @@ data class SearchPageItem(
     val onSelectedSortTypeChange: (Int) -> Unit = {},
 )
 
-@OptIn(ExperimentalFoundationApi::class)
-@Destination
+@OptIn(ExperimentalFoundationApi::class, FlowPreview::class)
+@Destination(
+    deepLinks = [
+        DeepLink(uriPattern = "tblite://search")
+    ]
+)
 @Composable
 fun SearchPage(
     navigator: DestinationsNavigator,
@@ -141,7 +140,25 @@ fun SearchPage(
         prop1 = SearchUiState::isKeywordEmpty,
         initial = true
     )
+    val suggestions by viewModel.uiState.collectPartialAsState(
+        prop1 = SearchUiState::suggestions,
+        initial = persistentListOf()
+    )
+
+    val showSuggestions by remember {
+        derivedStateOf { suggestions.isNotEmpty() }
+    }
+
     var inputKeyword by remember { mutableStateOf("") }
+
+    LaunchedEffect(Unit) {
+        snapshotFlow { inputKeyword }
+            .debounce(500)
+            .collect {
+                viewModel.send(SearchUiIntent.KeywordInputChanged(it))
+            }
+    }
+
     LaunchedEffect(keyword) {
         if (keyword.isNotEmpty() && keyword != inputKeyword) {
             inputKeyword = keyword
@@ -224,6 +241,7 @@ fun SearchPage(
                     Box(
                         modifier = Modifier
                             .height(64.dp)
+                            .background(ExtendedTheme.colors.topBar)
                             .padding(horizontal = 16.dp, vertical = 8.dp)
                     ) {
                         SearchTopBar(
@@ -248,8 +266,10 @@ fun SearchPage(
                 }
             }
         }
-    ) {
-        Box(modifier = Modifier.fillMaxSize()) {
+    ) { paddingValues ->
+        Box(modifier = Modifier
+            .fillMaxSize()
+            .padding(paddingValues)) {
             if (!isKeywordEmpty) {
                 ProvideNavigator(navigator = navigator) {
                     LazyLoadHorizontalPager(
@@ -261,22 +281,94 @@ fun SearchPage(
                     }
                 }
             } else {
-                Column(
-                    modifier = Modifier.fillMaxSize()
+                if (showSuggestions) {
+                    SearchSuggestionList(
+                        suggestions = suggestions,
+                        onItemClick = {
+                            inputKeyword = it
+                            viewModel.send(SearchUiIntent.SubmitKeyword(it))
+                        }
+                    )
+                } else {
+                    Column(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .verticalScroll(rememberScrollState())
+                    ) {
+                        Container {
+                            SearchHistoryList(
+                                searchHistories = searchHistories,
+                                onSearchHistoryClick = {
+                                    inputKeyword = it.content
+                                    viewModel.send(SearchUiIntent.SubmitKeyword(it.content))
+                                },
+                                expanded = expanded,
+                                onToggleExpand = { expanded = !expanded },
+                                onDelete = { viewModel.send(SearchUiIntent.DeleteSearchHistory(it.id)) },
+                                onClear = { viewModel.send(SearchUiIntent.ClearSearchHistory) }
+                            )
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+@OptIn(ExperimentalFoundationApi::class)
+@Composable
+private fun SearchSuggestionList(
+    suggestions: ImmutableList<String>,
+    onItemClick: (String) -> Unit,
+) {
+    LazyColumn(
+        modifier = Modifier.fillMaxWidth()
+    ) {
+        items(
+            items = suggestions,
+            key = { it }
+        ) {
+            Container(
+                modifier = Modifier.animateItemPlacement()
+            ) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(16.dp),
+                    modifier = Modifier
+                        .clickable {
+                            onItemClick(it)
+                        }
+                        .padding(horizontal = 16.dp, vertical = 8.dp)
                 ) {
-                    SearchHistoryList(
-                        searchHistories = searchHistories,
-                        onSearchHistoryClick = {
-                            inputKeyword = it.content
-                            viewModel.send(SearchUiIntent.SubmitKeyword(it.content))
-                        },
-                        expanded = expanded,
-                        onToggleExpand = { expanded = !expanded },
-                        onDelete = { viewModel.send(SearchUiIntent.DeleteSearchHistory(it.id)) },
-                        onClear = { viewModel.send(SearchUiIntent.ClearSearchHistory) }
+                    Icon(
+                        imageVector = Icons.Rounded.Search,
+                        contentDescription = stringResource(id = R.string.desc_search_sug, it),
+                        tint = ExtendedTheme.colors.text
+                    )
+
+                    Text(
+                        text = it,
+                        style = MaterialTheme.typography.subtitle2,
+                        modifier = Modifier.weight(1f),
+                        color = ExtendedTheme.colors.text
                     )
                 }
             }
+        }
+    }
+}
+
+@Preview("SearchSuggestionList", backgroundColor = 0xFFFFFFFF)
+@Composable
+private fun SearchSuggestionListPreview() {
+    TiebaLiteTheme {
+        Box(
+            modifier = Modifier.background(ExtendedTheme.colors.topBar)
+        ) {
+            SearchSuggestionList(
+                suggestions = persistentListOf("1", "2", "3"),
+                onItemClick = {}
+            )
         }
     }
 }
@@ -304,74 +396,34 @@ private fun ColumnScope.SearchTabRow(
             .width(76.dp * pages.size),
     ) {
         pages.fastForEachIndexed { index, item ->
-            val tabTextStyle = MaterialTheme.typography.button.copy(
-//                fontWeight = FontWeight.Bold,
-                fontSize = 13.sp,
-                letterSpacing = 0.sp
-            )
+            val tabTextStyle =
+                MaterialTheme.typography.button.copy(fontSize = 13.sp, letterSpacing = 0.sp)
 
             if (item.supportSort) {
-                val sortMenuState = rememberMenuState()
-                val interactionSource = remember { MutableInteractionSource() }
-                LaunchedEffect(null) {
-                    launch {
-                        interactionSource.interactions
-                            .filterIsInstance<PressInteraction.Press>()
-                            .collect {
-                                sortMenuState.offset = it.pressPosition
-                            }
-                    }
-                }
-                ClickMenu(
-                    menuState = sortMenuState,
+                TabClickMenu(
+                    selected = pagerState.currentPage == index,
+                    onClick = {
+                        coroutineScope.launch {
+                            pagerState.animateScrollToPage(index)
+                        }
+                    },
+                    text = {
+                        ProvideTextStyle(value = tabTextStyle) {
+                            item.text(pagerState.currentPage == index)
+                        }
+                    },
                     menuContent = {
                         ListSinglePicker(
                             itemTitles = item.sortTypes.keys.toImmutableList(),
                             itemValues = item.sortTypes.values.toImmutableList(),
                             selectedPosition = item.sortTypes.values.indexOf(item.selectedSortType()),
-                            onItemSelected = { _, _, value, _ ->
-                                item.onSelectedSortTypeChange(value)
-                                sortMenuState.dismiss()
+                            onItemSelected = { _, _, value, changed ->
+                                if (changed) item.onSelectedSortTypeChange(value)
+                                dismiss()
                             }
                         )
                     }
-                ) {
-                    val rotate by animateFloatAsState(targetValue = if (sortMenuState.expanded) 180f else 0f)
-                    val alpha by animateFloatAsState(targetValue = if (pagerState.currentPage == index) 1f else 0f)
-
-                    Tab(
-                        selected = pagerState.currentPage == index,
-                        onClick = {
-                            if (pagerState.currentPage != index) {
-                                coroutineScope.launch {
-                                    pagerState.animateScrollToPage(index)
-                                }
-                            } else {
-                                sortMenuState.toggle()
-                            }
-                        },
-                        interactionSource = interactionSource,
-                    ) {
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically,
-                            modifier = Modifier
-                                .height(48.dp)
-                                .padding(start = 16.dp)
-                        ) {
-                            ProvideTextStyle(value = tabTextStyle) {
-                                item.text(pagerState.currentPage == index)
-                            }
-                            Icon(
-                                imageVector = Icons.Rounded.ArrowDropDown,
-                                contentDescription = stringResource(id = R.string.sort_menu),
-                                modifier = Modifier
-                                    .size(16.dp)
-                                    .rotate(rotate)
-                                    .alpha(alpha)
-                            )
-                        }
-                    }
-                }
+                )
             } else {
                 Tab(
                     text = {
@@ -401,16 +453,19 @@ private fun SearchHistoryList(
     onDelete: (SearchHistory) -> Unit = {},
     onClear: () -> Unit = {},
 ) {
+    val hasItem = remember(searchHistories) {
+        searchHistories.isNotEmpty()
+    }
     val hasMore = remember(searchHistories) {
         searchHistories.size > 6
     }
     val showItem = remember(expanded, hasMore, searchHistories) {
         if (!expanded && hasMore) searchHistories.take(6) else searchHistories
     }
-    val hasItem = remember(showItem) {
-        showItem.isNotEmpty()
-    }
-    Column(modifier = Modifier.fillMaxWidth()) {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+    ) {
         Row(
             modifier = Modifier
                 .padding(horizontal = 16.dp, vertical = 16.dp),
@@ -506,20 +561,18 @@ private fun SearchTopBar(
     onKeywordSubmit: (String) -> Unit = {},
     onBack: () -> Unit = {},
 ) {
-    val isKeywordNotEmpty = remember(keyword) { keyword.isNotEmpty() }
-    var isFocused by remember { mutableStateOf(false) }
-    Surface(
+    SearchBox(
+        keyword = keyword,
+        onKeywordChange = onKeywordChange,
         modifier = Modifier.fillMaxSize(),
-        shape = RoundedCornerShape(6.dp),
-        color = ExtendedTheme.colors.topBarSurface,
-        contentColor = ExtendedTheme.colors.onTopBarSurface,
-        elevation = 0.dp
-    ) {
-        Row(
-            modifier = Modifier.padding(horizontal = 16.dp),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(16.dp)
-        ) {
+        onKeywordSubmit = onKeywordSubmit,
+        placeholder = {
+            Text(
+                text = stringResource(id = R.string.hint_search),
+                color = ExtendedTheme.colors.onTopBarSurface.copy(alpha = ContentAlpha.medium)
+            )
+        },
+        prependIcon = {
             Box(
                 modifier = Modifier
                     .clip(RoundedCornerShape(100))
@@ -532,76 +585,13 @@ private fun SearchTopBar(
                 contentAlignment = Alignment.Center,
             ) {
                 Icon(
-                    imageVector = Icons.Rounded.ArrowBack,
+                    imageVector = Icons.AutoMirrored.Rounded.ArrowBack,
                     contentDescription = stringResource(id = R.string.button_back)
                 )
             }
-            BaseTextField(
-                value = keyword,
-                onValueChange = {
-                    onKeywordChange(it)
-                },
-                singleLine = true,
-                keyboardOptions = KeyboardOptions(
-                    imeAction = ImeAction.Search,
-                ),
-                keyboardActions = KeyboardActions(
-                    onSearch = {
-                        onKeywordSubmit(keyword)
-                    }
-                ),
-                placeholder = {
-                    Text(
-                        text = stringResource(id = R.string.hint_search),
-                        color = ExtendedTheme.colors.textDisabled
-                    )
-                },
-                modifier = Modifier
-                    .fillMaxHeight()
-                    .weight(1f)
-                    .onFocusEvent { isFocused = it.isFocused }
-            )
-            AnimatedVisibility(visible = isKeywordNotEmpty && isFocused) {
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(16.dp)
-                ) {
-                    Box(
-                        modifier = Modifier
-                            .clip(RoundedCornerShape(100))
-                            .clickable(
-                                interactionSource = remember { MutableInteractionSource() },
-                                indication = rememberRipple(bounded = false, 24.dp),
-                                role = Role.Button
-                            ) { onKeywordChange("") },
-                        contentAlignment = Alignment.Center,
-                    ) {
-                        Icon(
-                            imageVector = Icons.Rounded.Clear,
-                            contentDescription = stringResource(id = R.string.button_clear)
-                        )
-                    }
-                }
-            }
-            AnimatedVisibility(visible = isKeywordNotEmpty) {
-                Box(
-                    modifier = Modifier
-                        .clip(RoundedCornerShape(100))
-                        .clickable(
-                            interactionSource = remember { MutableInteractionSource() },
-                            indication = rememberRipple(bounded = false, 24.dp),
-                            role = Role.Button
-                        ) { onKeywordSubmit(keyword) },
-                    contentAlignment = Alignment.Center,
-                ) {
-                    Icon(
-                        imageVector = Icons.Rounded.Search,
-                        contentDescription = stringResource(id = R.string.button_search)
-                    )
-                }
-            }
-        }
-    }
+        },
+        shape = RoundedCornerShape(6.dp)
+    )
 }
 
 @Preview("SearchBox")

@@ -28,6 +28,16 @@ import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
 
+val List<Abstract>.abstractText: String
+    get() = joinToString(separator = "") {
+        when (it.type) {
+            0 -> it.text.replace(Regex(" {2,}"), " ")
+            4 -> it.text
+
+            else -> ""
+        }
+    }
+
 val ThreadInfo.abstractText: String
     get() = richAbstract.joinToString(separator = "") {
         when (it.type) {
@@ -40,6 +50,20 @@ val ThreadInfo.abstractText: String
             else -> ""
         }
     }
+
+val PostInfoList.abstractText: String
+    get() = rich_abstract.joinToString(separator = "") {
+        when (it.type) {
+            0 -> it.text.replace(Regex(" {2,}"), " ")
+            2 -> {
+                EmoticonManager.registerEmoticon(it.text, it.c)
+                "#(${it.c})"
+            }
+
+            else -> ""
+        }
+    }
+
 val ThreadInfo.hasAgree: Int
     get() = agree?.hasAgree ?: 0
 val ThreadInfo.hasAgreed: Boolean
@@ -147,6 +171,36 @@ fun SubPostList.updateAgreeStatus(
     this
 }
 
+fun PostInfoList.updateAgreeStatus(
+    hasAgree: Int,
+) = if (agree != null) {
+    if (hasAgree != agree.hasAgree) {
+        if (hasAgree == 1) {
+            copy(
+                agree = agree.copy(
+                    agreeNum = agree.agreeNum + 1,
+                    diffAgreeNum = agree.diffAgreeNum + 1,
+                    hasAgree = 1
+                ),
+                agree_num = agree_num + 1
+            )
+        } else {
+            copy(
+                agree = agree.copy(
+                    agreeNum = agree.agreeNum - 1,
+                    diffAgreeNum = agree.diffAgreeNum - 1,
+                    hasAgree = 0
+                ),
+                agree_num = agree_num - 1
+            )
+        }
+    } else {
+        this
+    }
+} else {
+    this
+}
+
 private val PbContent.picUrl: String
     get() =
         ImageUtil.getUrl(
@@ -184,7 +238,7 @@ val List<PbContent>.renders: ImmutableList<PbContentRender>
                                     color = Color(
                                         ThemeUtils.getColorByAttr(
                                             App.INSTANCE,
-                                            R.attr.colorPrimary
+                                            R.attr.colorNewPrimary
                                         )
                                     )
                                 )
@@ -229,7 +283,7 @@ val List<PbContent>.renders: ImmutableList<PbContentRender>
                                     color = Color(
                                         ThemeUtils.getColorByAttr(
                                             App.INSTANCE,
-                                            R.attr.colorPrimary
+                                            R.attr.colorNewPrimary
                                         )
                                     )
                                 )
@@ -263,7 +317,7 @@ val List<PbContent>.renders: ImmutableList<PbContentRender>
                                         color = Color(
                                             ThemeUtils.getColorByAttr(
                                                 App.INSTANCE,
-                                                R.attr.colorPrimary
+                                                R.attr.colorNewPrimary
                                             )
                                         )
                                     )
@@ -308,15 +362,16 @@ val Post.contentRenders: ImmutableList<PbContentRender>
 
         return renders.map {
             if (it is PicContentRender) {
-                val data = getPhotoViewData(
-                    this,
-                    it.picId,
-                    it.picUrl,
-                    it.originUrl,
-                    it.showOriginBtn,
-                    it.originSize
+                it.copy(
+                    photoViewData = getPhotoViewData(
+                        this,
+                        it.picId,
+                        it.picUrl,
+                        it.originUrl,
+                        it.showOriginBtn,
+                        it.originSize
+                    )
                 )
-                if (data != null) it.copy(photoViewData = wrapImmutable(data)) else it
             } else it
         }.toImmutableList()
     }
@@ -337,35 +392,34 @@ val Post.subPosts: ImmutableList<SubPostItemData>
             it.wrapImmutable(),
             it.getContentText(origin_thread_info?.author?.id)
         )
-    }
-        ?.toImmutableList()
-        ?: persistentListOf()
+    }?.toImmutableList() ?: persistentListOf()
 
+@OptIn(ExperimentalTextApi::class)
 fun SubPostList.getContentText(threadAuthorId: Long? = null): AnnotatedString {
     val context = App.INSTANCE
     val accentColor = Color(ThemeUtils.getColorByAttr(context, R.attr.colorNewPrimary))
 
     val userNameString = buildAnnotatedString {
-        val annotation = pushStringAnnotation("user", "${author?.id}")
-        val style = pushStyle(
-            SpanStyle(
-                color = accentColor,
-                fontWeight = FontWeight.Bold
-            )
-        )
-        append(
-            StringUtil.getUsernameAnnotatedString(
-                context,
-                author?.name ?: "",
-                author?.nameShow
-            )
-        )
-        pop(style)
-        if (author?.id == threadAuthorId) {
-            appendInlineContent("Lz")
+        withAnnotation("user", "${author?.id}") {
+            withStyle(
+                SpanStyle(
+                    color = accentColor,
+                    fontWeight = FontWeight.Bold
+                )
+            ) {
+                append(
+                    StringUtil.getUsernameAnnotatedString(
+                        context,
+                        author?.name ?: "",
+                        author?.nameShow
+                    )
+                )
+            }
+            if (author?.id == threadAuthorId) {
+                appendInlineContent("Lz")
+            }
+            append(": ")
         }
-        append(": ")
-        pop(annotation)
     }
 
     val contentStrings = content.renders.map { it.toAnnotationString() }

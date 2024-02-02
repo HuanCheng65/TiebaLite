@@ -11,6 +11,7 @@ import com.huanchengfly.tieba.post.api.models.OAID
 import com.huanchengfly.tieba.post.api.retrofit.adapter.DeferredCallAdapterFactory
 import com.huanchengfly.tieba.post.api.retrofit.adapter.FlowCallAdapterFactory
 import com.huanchengfly.tieba.post.api.retrofit.converter.gson.GsonConverterFactory
+import com.huanchengfly.tieba.post.api.retrofit.converter.kotlinx.serialization.asConverterFactory
 import com.huanchengfly.tieba.post.api.retrofit.interceptors.AddWebCookieInterceptor
 import com.huanchengfly.tieba.post.api.retrofit.interceptors.CommonHeaderInterceptor
 import com.huanchengfly.tieba.post.api.retrofit.interceptors.CommonParamInterceptor
@@ -37,6 +38,7 @@ import com.huanchengfly.tieba.post.utils.CuidUtils
 import com.huanchengfly.tieba.post.utils.DeviceUtils
 import com.huanchengfly.tieba.post.utils.MobileInfoUtil
 import com.huanchengfly.tieba.post.utils.UIDUtil
+import kotlinx.serialization.json.Json
 import okhttp3.ConnectionPool
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
@@ -143,7 +145,11 @@ object RetrofitTiebaApi {
                     )
                 }
             ),
-            AddWebCookieInterceptor
+            AddWebCookieInterceptor,
+            CommonParamInterceptor(
+                Param.BDUSS to { AccountUtil.getBduss() },
+                Param.STOKEN to { AccountUtil.getSToken() },
+            )
         )
     }
 
@@ -332,12 +338,19 @@ object RetrofitTiebaApi {
         )
     }
 
+    private val json = Json {
+        isLenient = true
+        ignoreUnknownKeys = true
+        coerceInputValues = true
+    }
+
     val SOFIRE_API: SofireApi by lazy {
         Retrofit.Builder()
             .baseUrl("https://sofire.baidu.com/")
             .addCallAdapterFactory(DeferredCallAdapterFactory())
             .addCallAdapterFactory(FlowCallAdapterFactory.create())
             .addConverterFactory(NullOnEmptyConverterFactory())
+            .addConverterFactory(json.asConverterFactory())
             .addConverterFactory(gsonConverterFactory)
             .client(OkHttpClient.Builder().apply {
 //                addInterceptor()
@@ -355,6 +368,7 @@ object RetrofitTiebaApi {
         .addCallAdapterFactory(DeferredCallAdapterFactory())
         .addCallAdapterFactory(FlowCallAdapterFactory.create())
         .addConverterFactory(NullOnEmptyConverterFactory())
+        .addConverterFactory(json.asConverterFactory())
         .addConverterFactory(gsonConverterFactory)
         .client(OkHttpClient.Builder().apply {
             readTimeout(READ_TIMEOUT, TimeUnit.SECONDS)

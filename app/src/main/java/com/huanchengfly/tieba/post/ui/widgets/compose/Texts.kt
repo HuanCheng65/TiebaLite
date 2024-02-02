@@ -32,11 +32,11 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
-import androidx.compose.ui.text.ExperimentalTextApi
 import androidx.compose.ui.text.Placeholder
 import androidx.compose.ui.text.PlaceholderVerticalAlign
 import androidx.compose.ui.text.TextLayoutResult
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -54,10 +54,12 @@ import com.huanchengfly.tieba.post.pxToDp
 import com.huanchengfly.tieba.post.pxToSp
 import com.huanchengfly.tieba.post.pxToSpFloat
 import com.huanchengfly.tieba.post.spToPxFloat
+import com.huanchengfly.tieba.post.ui.common.PbContentText
 import com.huanchengfly.tieba.post.ui.common.theme.compose.ExtendedTheme
 import com.huanchengfly.tieba.post.utils.EmoticonManager
 import com.huanchengfly.tieba.post.utils.EmoticonUtil.emoticonString
 import com.huanchengfly.tieba.post.utils.calcLineHeightPx
+import java.util.regex.Pattern
 
 @Composable
 fun EmoticonText(
@@ -138,7 +140,7 @@ fun EmoticonText(
             color = textColor,
             fontSize = fontSize,
             fontWeight = fontWeight,
-            textAlign = textAlign,
+            textAlign = textAlign ?: TextAlign.Unspecified,
             lineHeight = lineHeight,
             fontFamily = fontFamily,
             textDecoration = textDecoration,
@@ -152,7 +154,7 @@ fun EmoticonText(
     val emoticonInlineContent =
         remember(sizePx) { EmoticonManager.getEmoticonInlineContent(sizePx * emoticonSize) }
     IconText(
-        text,
+        text.emoticonString,
         modifier,
         color,
         fontSize,
@@ -204,7 +206,7 @@ fun IconText(
             color = textColor,
             fontSize = fontSize,
             fontWeight = fontWeight,
-            textAlign = textAlign,
+            textAlign = textAlign ?: TextAlign.Unspecified,
             lineHeight = lineHeight,
             fontFamily = fontFamily,
             textDecoration = textDecoration,
@@ -343,7 +345,6 @@ fun TextWithMinWidth(
     )
 }
 
-@OptIn(ExperimentalTextApi::class)
 @Composable
 fun buildChipInlineContent(
     text: String,
@@ -398,5 +399,131 @@ fun buildChipInlineContent(
                 )
             }
         }
+    )
+}
+
+@Composable
+fun HighlightText(
+    text: String,
+    modifier: Modifier = Modifier,
+    color: Color = Color.Unspecified,
+    fontSize: TextUnit = TextUnit.Unspecified,
+    fontStyle: FontStyle? = null,
+    fontWeight: FontWeight? = null,
+    fontFamily: FontFamily? = null,
+    letterSpacing: TextUnit = TextUnit.Unspecified,
+    textDecoration: TextDecoration? = null,
+    textAlign: TextAlign? = null,
+    lineHeight: TextUnit = TextUnit.Unspecified,
+    lineSpacing: TextUnit = 0.sp,
+    overflow: TextOverflow = TextOverflow.Clip,
+    softWrap: Boolean = true,
+    maxLines: Int = Int.MAX_VALUE,
+    minLines: Int = 1,
+    emoticonSize: Float = 0.9f,
+    onTextLayout: (TextLayoutResult) -> Unit = {},
+    style: TextStyle = LocalTextStyle.current,
+    highlightKeywords: List<String> = emptyList(),
+    highlightColor: Color = ExtendedTheme.colors.primary,
+    highlightStyle: TextStyle = style,
+) {
+    HighlightText(
+        text = AnnotatedString(text),
+        modifier = modifier,
+        color = color,
+        fontSize = fontSize,
+        fontStyle = fontStyle,
+        fontWeight = fontWeight,
+        fontFamily = fontFamily,
+        letterSpacing = letterSpacing,
+        textDecoration = textDecoration,
+        textAlign = textAlign,
+        lineHeight = lineHeight,
+        lineSpacing = lineSpacing,
+        overflow = overflow,
+        softWrap = softWrap,
+        maxLines = maxLines,
+        minLines = minLines,
+        emoticonSize = emoticonSize,
+        onTextLayout = onTextLayout,
+        style = style,
+        highlightKeywords = highlightKeywords,
+        highlightColor = highlightColor,
+        highlightStyle = highlightStyle,
+    )
+}
+
+@Composable
+fun HighlightText(
+    text: AnnotatedString,
+    modifier: Modifier = Modifier,
+    color: Color = Color.Unspecified,
+    fontSize: TextUnit = TextUnit.Unspecified,
+    fontStyle: FontStyle? = null,
+    fontWeight: FontWeight? = null,
+    fontFamily: FontFamily? = null,
+    letterSpacing: TextUnit = TextUnit.Unspecified,
+    textDecoration: TextDecoration? = null,
+    textAlign: TextAlign? = null,
+    lineHeight: TextUnit = TextUnit.Unspecified,
+    lineSpacing: TextUnit = 0.sp,
+    overflow: TextOverflow = TextOverflow.Clip,
+    softWrap: Boolean = true,
+    maxLines: Int = Int.MAX_VALUE,
+    minLines: Int = 1,
+    emoticonSize: Float = 0.9f,
+    inlineContent: Map<String, InlineTextContent> = emptyMap(),
+    onTextLayout: (TextLayoutResult) -> Unit = {},
+    style: TextStyle = LocalTextStyle.current,
+    highlightKeywords: List<String> = emptyList(),
+    highlightColor: Color = ExtendedTheme.colors.primary,
+    highlightStyle: TextStyle = style,
+) {
+    val mergedHighlightStyle = remember(highlightStyle, highlightColor) {
+        highlightStyle.copy(color = highlightColor)
+    }
+    val highlightText = remember(text, highlightKeywords) {
+        if (highlightKeywords.isEmpty()) {
+            text
+        } else {
+            buildAnnotatedString {
+                append(text)
+                highlightKeywords.forEach { keyword ->
+                    val regexPattern = keyword.toPattern(Pattern.CASE_INSENSITIVE)
+                    val matcher = regexPattern.matcher(text.text)
+                    while (matcher.find()) {
+                        val start = matcher.start()
+                        val end = matcher.end()
+                        addStyle(
+                            mergedHighlightStyle.toSpanStyle(),
+                            start,
+                            end
+                        )
+                    }
+                }
+            }
+        }
+    }
+    PbContentText(
+        text = highlightText,
+        modifier = modifier,
+        color = color,
+        fontSize = fontSize,
+        fontStyle = fontStyle,
+        fontWeight = fontWeight,
+        fontFamily = fontFamily,
+        letterSpacing = letterSpacing,
+        textDecoration = textDecoration,
+        textAlign = textAlign,
+        lineHeight = lineHeight,
+        lineSpacing = lineSpacing,
+        overflow = overflow,
+        softWrap = softWrap,
+        maxLines = maxLines,
+        minLines = minLines,
+        emoticonSize = emoticonSize,
+        inlineContent = inlineContent,
+        onTextLayout = onTextLayout,
+        style = style,
     )
 }

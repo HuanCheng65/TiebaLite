@@ -11,13 +11,14 @@ import android.widget.CompoundButton
 import android.widget.LinearLayout
 import androidx.annotation.ColorInt
 import androidx.appcompat.app.AlertDialog
+import androidx.fragment.app.FragmentActivity
 import com.huanchengfly.tieba.post.App.ThemeDelegate.getColorByAttr
 import com.huanchengfly.tieba.post.R
 import com.huanchengfly.tieba.post.ui.common.theme.utils.ThemeUtils
 import com.huanchengfly.tieba.post.utils.ThemeUtil
 import com.huanchengfly.tieba.post.utils.appPreferences
-import com.jrummyapps.android.colorpicker.ColorPickerDialog
-import com.jrummyapps.android.colorpicker.ColorPickerDialogListener
+import com.jaredrummler.android.colorpicker.ColorPickerDialog
+import com.jaredrummler.android.colorpicker.ColorPickerDialogListener
 
 class CustomThemeDialog(context: Context) : AlertDialog(context),
     View.OnClickListener, DialogInterface.OnClickListener, CompoundButton.OnCheckedChangeListener,
@@ -67,10 +68,14 @@ class CustomThemeDialog(context: Context) : AlertDialog(context),
                 .setColor(primaryColor)
                 .create()
             primaryColorPicker.setColorPickerDialogListener(this)
-            primaryColorPicker.show(
-                ThemeUtils.getWrapperActivity(context)!!.fragmentManager,
-                "ColorPicker_PrimaryColor"
-            )
+            val activity = ThemeUtils.getWrapperActivity(context)
+            if (activity is FragmentActivity) {
+                primaryColorPicker.show(
+                    activity.supportFragmentManager,
+                    "ColorPicker_PrimaryColor"
+                )
+                return
+            }
         }
         refreshView()
     }

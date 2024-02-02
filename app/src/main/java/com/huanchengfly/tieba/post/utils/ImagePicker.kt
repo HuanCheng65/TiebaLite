@@ -11,6 +11,7 @@ import android.provider.MediaStore
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContract
 import androidx.appcompat.app.AppCompatActivity
+import com.huanchengfly.tieba.post.App
 import com.huanchengfly.tieba.post.R
 import com.zhihu.matisse.Matisse
 import com.zhihu.matisse.MimeType
@@ -35,7 +36,11 @@ fun isPhotoPickerAvailable(): Boolean {
     }
 }
 
-private fun Intent.getClipDataUris(): List<Uri> {
+fun shouldUsePhotoPicker(): Boolean {
+    return !App.INSTANCE.appPreferences.doNotUsePhotoPicker && isPhotoPickerAvailable()
+}
+
+fun Intent.getClipDataUris(): List<Uri> {
     // Use a LinkedHashSet to maintain any ordering that may be
     // present in the ClipData
     val resultSet = LinkedHashSet<Uri>()
@@ -53,11 +58,11 @@ private fun Intent.getClipDataUris(): List<Uri> {
             }
         }
     }
-    return ArrayList(resultSet)
+    return resultSet.toList()
 }
 
 @SuppressLint("NewApi")
-private fun getMaxItems() = if (isPhotoPickerAvailable()) {
+private fun getMaxItems() = if (shouldUsePhotoPicker()) {
     MediaStore.getPickImagesMaxLimit()
 } else {
     Integer.MAX_VALUE
@@ -70,11 +75,11 @@ data class PickMediasRequest(
 ) {
     sealed interface MediaType
 
-    object ImageOnly : MediaType
+    data object ImageOnly : MediaType
 
-    object VideoOnly : MediaType
+    data object VideoOnly : MediaType
 
-    object ImageAndVideo : MediaType
+    data object ImageAndVideo : MediaType
 
     data class SingleMimeType(val mimeType: String) : MediaType
 
@@ -103,7 +108,7 @@ object PickMediasContract : ActivityResultContract<PickMediasRequest, PickMedias
 
     override fun createIntent(context: Context, input: PickMediasRequest): Intent {
         curRequestId = input.id
-        if (isPhotoPickerAvailable()) {
+        if (shouldUsePhotoPicker()) {
             return Intent(MediaStore.ACTION_PICK_IMAGES).apply {
                 type = PickMediasRequest.getMimeType(input.mediaType)
                 if (input.maxItems > 1) {
@@ -132,7 +137,7 @@ object PickMediasContract : ActivityResultContract<PickMediasRequest, PickMedias
         if (resultCode != Activity.RESULT_OK || intent == null) {
             return PickMediasResult(id, emptyList())
         }
-        if (isPhotoPickerAvailable()) {
+        if (shouldUsePhotoPicker()) {
             return PickMediasResult(id, intent.getClipDataUris())
         }
         return PickMediasResult(id, Matisse.obtainResult(intent))

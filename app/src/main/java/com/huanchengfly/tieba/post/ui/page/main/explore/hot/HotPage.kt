@@ -12,7 +12,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentSize
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.ContentAlpha
@@ -52,10 +51,14 @@ import com.huanchengfly.tieba.post.ui.common.theme.compose.White
 import com.huanchengfly.tieba.post.ui.common.theme.compose.Yellow
 import com.huanchengfly.tieba.post.ui.common.theme.compose.pullRefreshIndicator
 import com.huanchengfly.tieba.post.ui.page.LocalNavigator
+import com.huanchengfly.tieba.post.ui.page.destinations.ForumPageDestination
 import com.huanchengfly.tieba.post.ui.page.destinations.HotTopicListPageDestination
 import com.huanchengfly.tieba.post.ui.page.destinations.ThreadPageDestination
+import com.huanchengfly.tieba.post.ui.page.destinations.UserProfilePageDestination
+import com.huanchengfly.tieba.post.ui.widgets.compose.Container
 import com.huanchengfly.tieba.post.ui.widgets.compose.FeedCard
 import com.huanchengfly.tieba.post.ui.widgets.compose.LazyLoad
+import com.huanchengfly.tieba.post.ui.widgets.compose.MyLazyColumn
 import com.huanchengfly.tieba.post.ui.widgets.compose.ProvideContentColor
 import com.huanchengfly.tieba.post.ui.widgets.compose.VerticalDivider
 import com.huanchengfly.tieba.post.ui.widgets.compose.VerticalGrid
@@ -108,144 +111,165 @@ fun HotPage(
         refreshing = isLoading,
         onRefresh = { viewModel.send(HotUiIntent.Load) })
     Box(modifier = Modifier.pullRefresh(pullRefreshState)) {
-        LazyColumn(
+        MyLazyColumn(
             modifier = Modifier
                 .fillMaxWidth(),
         ) {
             if (topicList.isNotEmpty()) {
                 item(key = "TopicHeader") {
-                    Box(
-                        modifier = Modifier
-                            .padding(bottom = 8.dp)
-                            .padding(horizontal = 16.dp)
-                    ) { ChipHeader(text = stringResource(id = R.string.hot_topic_rank)) }
+                    Container {
+                        Box(
+                            modifier = Modifier
+                                .padding(bottom = 8.dp)
+                                .padding(horizontal = 16.dp)
+                        ) { ChipHeader(text = stringResource(id = R.string.hot_topic_rank)) }
+                    }
                 }
                 item(key = "TopicList") {
-                    VerticalGrid(
-                        column = 2,
-                        modifier = Modifier.padding(horizontal = 16.dp),
-                        horizontalArrangement = Arrangement.spacedBy(16.dp)
-                    ) {
-                        itemsIndexed(
-                            items = topicList,
-                        ) { index, item ->
-                            Row(
-                                verticalAlignment = Alignment.CenterVertically,
-                                horizontalArrangement = Arrangement.spacedBy(8.dp),
-                                modifier = Modifier.padding(vertical = 8.dp)
-                            ) {
-                                Text(
-                                    text = "${index + 1}",
-                                    fontWeight = FontWeight.Bold,
-                                    color = when (index) {
-                                        0 -> RedA700
-                                        1 -> OrangeA700
-                                        2 -> Yellow
-                                        else -> MaterialTheme.colors.onBackground.copy(ContentAlpha.medium)
-                                    },
-                                    fontFamily = FontFamily(
-                                        Typeface.createFromAsset(
-                                            LocalContext.current.assets,
-                                            "bebas.ttf"
-                                        )
-                                    ),
-                                    modifier = Modifier.padding(bottom = 2.dp)
-                                )
-                                Text(
-                                    text = item.get { topicName },
-                                    maxLines = 1,
-                                    overflow = TextOverflow.Ellipsis,
-                                    modifier = Modifier.weight(1f)
-                                )
-                                when (item.get { tag }) {
-                                    2 -> Text(
-                                        text = stringResource(id = R.string.topic_tag_hot),
-                                        fontSize = 10.sp,
-                                        color = White,
-                                        modifier = Modifier
-                                            .clip(RoundedCornerShape(4.dp))
-                                            .background(RedA700)
-                                            .padding(vertical = 2.dp, horizontal = 4.dp)
-                                    )
-
-                                    1 -> Text(
-                                        text = stringResource(id = R.string.topic_tag_new),
-                                        fontSize = 10.sp,
-                                        color = White,
-                                        modifier = Modifier
-                                            .clip(RoundedCornerShape(4.dp))
-                                            .background(OrangeA700)
-                                            .padding(vertical = 2.dp, horizontal = 4.dp)
-                                    )
-                                }
-                            }
-                        }
-                        item {
-                            ProvideContentColor(color = ExtendedTheme.colors.primary) {
+                    Container {
+                        VerticalGrid(
+                            column = 2,
+                            modifier = Modifier.padding(horizontal = 16.dp),
+                            horizontalArrangement = Arrangement.spacedBy(16.dp)
+                        ) {
+                            itemsIndexed(
+                                items = topicList,
+                            ) { index, item ->
                                 Row(
                                     verticalAlignment = Alignment.CenterVertically,
                                     horizontalArrangement = Arrangement.spacedBy(8.dp),
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                        .clickable {
-                                            navigator.navigate(HotTopicListPageDestination)
-                                        }
-                                        .padding(vertical = 8.dp)
+                                    modifier = Modifier.padding(vertical = 8.dp)
                                 ) {
                                     Text(
-                                        text = stringResource(id = R.string.tip_more_topic),
-                                        fontWeight = FontWeight.Bold
+                                        text = "${index + 1}",
+                                        fontWeight = FontWeight.Bold,
+                                        color = when (index) {
+                                            0 -> RedA700
+                                            1 -> OrangeA700
+                                            2 -> Yellow
+                                            else -> MaterialTheme.colors.onBackground.copy(
+                                                ContentAlpha.medium
+                                            )
+                                        },
+                                        fontFamily = FontFamily(
+                                            Typeface.createFromAsset(
+                                                LocalContext.current.assets,
+                                                "bebas.ttf"
+                                            )
+                                        ),
+                                        modifier = Modifier.padding(bottom = 2.dp)
                                     )
-                                    Icon(
-                                        imageVector = Icons.Rounded.KeyboardArrowRight,
-                                        contentDescription = null,
-                                        modifier = Modifier.size(16.dp)
+                                    Text(
+                                        text = item.get { topicName },
+                                        maxLines = 1,
+                                        overflow = TextOverflow.Ellipsis,
+                                        modifier = Modifier.weight(1f)
                                     )
+                                    when (item.get { tag }) {
+                                        2 -> Text(
+                                            text = stringResource(id = R.string.topic_tag_hot),
+                                            fontSize = 10.sp,
+                                            color = White,
+                                            modifier = Modifier
+                                                .clip(RoundedCornerShape(4.dp))
+                                                .background(RedA700)
+                                                .padding(vertical = 2.dp, horizontal = 4.dp)
+                                        )
+
+                                        1 -> Text(
+                                            text = stringResource(id = R.string.topic_tag_new),
+                                            fontSize = 10.sp,
+                                            color = White,
+                                            modifier = Modifier
+                                                .clip(RoundedCornerShape(4.dp))
+                                                .background(OrangeA700)
+                                                .padding(vertical = 2.dp, horizontal = 4.dp)
+                                        )
+                                    }
+                                }
+                            }
+                            item {
+                                ProvideContentColor(color = ExtendedTheme.colors.primary) {
+                                    Row(
+                                        verticalAlignment = Alignment.CenterVertically,
+                                        horizontalArrangement = Arrangement.spacedBy(8.dp),
+                                        modifier = Modifier
+                                            .fillMaxWidth()
+                                            .clickable {
+                                                navigator.navigate(HotTopicListPageDestination)
+                                            }
+                                            .padding(vertical = 8.dp)
+                                    ) {
+                                        Text(
+                                            text = stringResource(id = R.string.tip_more_topic),
+                                            fontWeight = FontWeight.Bold
+                                        )
+                                        Icon(
+                                            imageVector = Icons.Rounded.KeyboardArrowRight,
+                                            contentDescription = null,
+                                            modifier = Modifier.size(16.dp)
+                                        )
+                                    }
                                 }
                             }
                         }
                     }
                 }
                 item(key = "TopicDivider") {
-                    VerticalDivider(
-                        modifier = Modifier
-                            .padding(top = 16.dp, bottom = 8.dp)
-                            .padding(horizontal = 16.dp),
-                        thickness = 2.dp
-                    )
+                    Container {
+                        VerticalDivider(
+                            modifier = Modifier
+                                .padding(top = 16.dp, bottom = 8.dp)
+                                .padding(horizontal = 16.dp),
+                            thickness = 2.dp
+                        )
+                    }
                 }
             }
             if (threadList.isNotEmpty()) {
                 if (tabList.isNotEmpty()) {
                     item(key = "ThreadTabs") {
-                        VerticalGrid(
-                            column = 5,
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .background(ExtendedTheme.colors.background)
-                                .padding(vertical = 8.dp)
-                                .padding(horizontal = 16.dp),
-                            horizontalArrangement = Arrangement.spacedBy(16.dp),
-                        ) {
-                            item {
-                                ThreadListTab(
-                                    text = stringResource(id = R.string.tab_all_hot_thread),
-                                    selected = currentTabCode == "all",
-                                    onSelected = { viewModel.send(HotUiIntent.RefreshThreadList("all")) }
-                                )
-                            }
-                            items(tabList) {
-                                ThreadListTab(
-                                    text = it.get { tabName },
-                                    selected = currentTabCode == it.get { tabCode },
-                                    onSelected = { viewModel.send(HotUiIntent.RefreshThreadList(it.get { tabCode })) }
-                                )
+                        Container {
+                            VerticalGrid(
+                                column = 5,
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .background(ExtendedTheme.colors.background)
+                                    .padding(vertical = 8.dp)
+                                    .padding(horizontal = 16.dp),
+                                horizontalArrangement = Arrangement.spacedBy(16.dp),
+                            ) {
+                                item {
+                                    ThreadListTab(
+                                        text = stringResource(id = R.string.tab_all_hot_thread),
+                                        selected = currentTabCode == "all",
+                                        onSelected = {
+                                            viewModel.send(
+                                                HotUiIntent.RefreshThreadList(
+                                                    "all"
+                                                )
+                                            )
+                                        }
+                                    )
+                                }
+                                items(tabList) {
+                                    ThreadListTab(
+                                        text = it.get { tabName },
+                                        selected = currentTabCode == it.get { tabCode },
+                                        onSelected = {
+                                            viewModel.send(
+                                                HotUiIntent.RefreshThreadList(
+                                                    it.get { tabCode })
+                                            )
+                                        }
+                                    )
+                                }
                             }
                         }
                     }
                 }
                 item(key = "ThreadListTip") {
-                    Column(
+                    Container(
                         modifier = Modifier
                             .padding(bottom = 8.dp)
                             .padding(horizontal = 16.dp)
@@ -265,60 +289,64 @@ fun HotPage(
                         items = threadList,
                         key = { _, item -> "Thread_${item.get { threadId }}" }
                     ) { index, item ->
-                        FeedCard(
-                            item = item,
-                            onClick = {
-                                navigator.navigate(
-                                    ThreadPageDestination(
-                                        threadId = it.id,
-                                        threadInfo = it
+                        Container {
+                            FeedCard(
+                                item = item,
+                                onClick = {
+                                    navigator.navigate(
+                                        ThreadPageDestination(
+                                            threadId = it.id,
+                                            threadInfo = it
+                                        )
                                     )
-                                )
-                            },
-                            onReplyClick = {
-                                navigator.navigate(
-                                    ThreadPageDestination(
-                                        threadId = it.id,
-                                        scrollToReply = true
+                                },
+                                onClickReply = {
+                                    navigator.navigate(
+                                        ThreadPageDestination(
+                                            threadId = it.id,
+                                            scrollToReply = true
+                                        )
                                     )
-                                )
-                            },
-                            onAgree = {
-                                viewModel.send(
-                                    HotUiIntent.Agree(
-                                        threadId = it.threadId,
-                                        postId = it.firstPostId,
-                                        hasAgree = it.hasAgree
+                                },
+                                onAgree = {
+                                    viewModel.send(
+                                        HotUiIntent.Agree(
+                                            threadId = it.threadId,
+                                            postId = it.firstPostId,
+                                            hasAgree = it.hasAgree
+                                        )
                                     )
-                                )
-                            },
-                        ) {
-                            Column(
-                                horizontalAlignment = Alignment.End,
-                                verticalArrangement = Arrangement.spacedBy(4.dp)
+                                },
+                                onClickForum = { navigator.navigate(ForumPageDestination(it.name)) },
+                                onClickUser = { navigator.navigate(UserProfilePageDestination(it.id)) },
                             ) {
-                                val color = when (index) {
-                                    0 -> RedA700
-                                    1 -> OrangeA700
-                                    2 -> Yellow
-                                    else -> MaterialTheme.colors.onBackground.copy(
-                                        ContentAlpha.medium
+                                Column(
+                                    horizontalAlignment = Alignment.End,
+                                    verticalArrangement = Arrangement.spacedBy(4.dp)
+                                ) {
+                                    val color = when (index) {
+                                        0 -> RedA700
+                                        1 -> OrangeA700
+                                        2 -> Yellow
+                                        else -> MaterialTheme.colors.onBackground.copy(
+                                            ContentAlpha.medium
+                                        )
+                                    }
+                                    Text(
+                                        text = "${index + 1}",
+                                        color = color,
+                                        fontWeight = FontWeight.Bold,
+                                        fontSize = 16.sp
+                                    )
+                                    Text(
+                                        text = stringResource(
+                                            id = R.string.hot_num,
+                                            item.get { hotNum }.getShortNumString()
+                                        ),
+                                        style = MaterialTheme.typography.caption,
+                                        color = color
                                     )
                                 }
-                                Text(
-                                    text = "${index + 1}",
-                                    color = color,
-                                    fontWeight = FontWeight.Bold,
-                                    fontSize = 16.sp
-                                )
-                                Text(
-                                    text = stringResource(
-                                        id = R.string.hot_num,
-                                        item.get { hotNum }.getShortNumString()
-                                    ),
-                                    style = MaterialTheme.typography.caption,
-                                    color = color
-                                )
                             }
                         }
 //                        ThreadListItem(

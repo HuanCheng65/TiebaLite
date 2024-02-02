@@ -17,7 +17,6 @@ import com.huanchengfly.tieba.post.api.models.protos.User
 import com.huanchengfly.tieba.post.api.models.protos.contentRenders
 import com.huanchengfly.tieba.post.api.models.protos.pbPage.PbPageResponse
 import com.huanchengfly.tieba.post.api.models.protos.renders
-import com.huanchengfly.tieba.post.api.models.protos.subPostContents
 import com.huanchengfly.tieba.post.api.models.protos.subPosts
 import com.huanchengfly.tieba.post.api.models.protos.updateAgreeStatus
 import com.huanchengfly.tieba.post.api.models.protos.updateCollectStatus
@@ -34,6 +33,7 @@ import com.huanchengfly.tieba.post.arch.UiIntent
 import com.huanchengfly.tieba.post.arch.UiState
 import com.huanchengfly.tieba.post.arch.wrapImmutable
 import com.huanchengfly.tieba.post.removeAt
+import com.huanchengfly.tieba.post.repository.EmptyDataException
 import com.huanchengfly.tieba.post.repository.PbPageRepository
 import com.huanchengfly.tieba.post.ui.common.PbContentRender
 import com.huanchengfly.tieba.post.utils.BlockManager.shouldBlock
@@ -86,7 +86,7 @@ class ThreadViewModel @Inject constructor() :
             ThreadPartialChange.RemoveFavorite.Success -> ThreadUiEvent.RemoveFavoriteSuccess
             is ThreadPartialChange.Load.Success -> ThreadUiEvent.LoadSuccess(partialChange.currentPage)
 
-            is ThreadPartialChange.LoadLatestReply.Success -> ThreadUiEvent.ScrollToLatestReply.takeIf {
+            is ThreadPartialChange.LoadMyLatestReply.Success -> ThreadUiEvent.ScrollToLatestReply.takeIf {
                 partialChange.hasNewPost
             }
 
@@ -122,7 +122,9 @@ class ThreadViewModel @Inject constructor() :
                     .flatMapConcat { it.producePartialChange() },
                 intentFlow.filterIsInstance<ThreadUiIntent.LoadPrevious>()
                     .flatMapConcat { it.producePartialChange() },
-                intentFlow.filterIsInstance<ThreadUiIntent.LoadLatestReply>()
+                intentFlow.filterIsInstance<ThreadUiIntent.LoadLatestPosts>()
+                    .flatMapConcat { it.producePartialChange() },
+                intentFlow.filterIsInstance<ThreadUiIntent.LoadMyLatestReply>()
                     .flatMapConcat { it.producePartialChange() },
                 intentFlow.filterIsInstance<ThreadUiIntent.ToggleImmersiveMode>()
                     .flatMapConcat { it.producePartialChange() },
@@ -220,8 +222,6 @@ class ThreadViewModel @Inject constructor() :
                         ),
                         response.data_.page.has_prev != 0,
                         firstPost?.contentRenders ?: emptyList(),
-                        notFirstPosts.map { it.contentRenders },
-                        notFirstPosts.map { it.subPostContents }.toImmutableList(),
                         postId = 0,
                         seeLz,
                         sortType,
@@ -252,8 +252,6 @@ class ThreadViewModel @Inject constructor() :
                             postIds + posts.map { it.id },
                             sortType
                         ),
-                        posts.map { it.contentRenders },
-                        posts.map { it.subPostContents }.toImmutableList(),
                     )
                 }
                 .onStart { emit(ThreadPartialChange.LoadMore.Start) }
@@ -284,8 +282,6 @@ class ThreadViewModel @Inject constructor() :
                         response.data_.page.current_page,
                         response.data_.page.new_total_page,
                         response.data_.page.has_prev != 0,
-                        posts.map { it.contentRenders },
-                        posts.map { it.subPostContents }.toImmutableList(),
                     )
                 }
                 .onStart { emit(ThreadPartialChange.LoadPrevious.Start) }
@@ -298,17 +294,60 @@ class ThreadViewModel @Inject constructor() :
                     )
                 }
 
-        fun ThreadUiIntent.LoadLatestReply.producePartialChange(): Flow<ThreadPartialChange.LoadLatestReply> =
+        fun ThreadUiIntent.LoadLatestPosts.producePartialChange(): Flow<ThreadPartialChange.LoadLatestPosts> =
+            PbPageRepository
+                .pbPage(
+                    threadId = threadId,
+                    page = 0,
+                    postId = curLatestPostId,
+                    forumId = forumId,
+                    seeLz = seeLz,
+                    sortType = sortType,
+                    lastPostId = curLatestPostId
+                )
+                .map { response ->
+                    checkNotNull(response.data_)
+                    checkNotNull(response.data_.thread)
+                    checkNotNull(response.data_.thread.author)
+                    checkNotNull(response.data_.page)
+                    val postList = response.data_.post_list.filterNot { it.floor == 1 }
+                    if (postList.isEmpty()) {
+                        ThreadPartialChange.LoadLatestPosts.SuccessWithNoNewPost
+                    } else {
+                        ThreadPartialChange.LoadLatestPosts.Success(
+                            author = response.data_.thread.author,
+                            data = postList.map { PostItemData(it.wrapImmutable()) },
+                            threadInfo = response.data_.thread,
+                            currentPage = response.data_.page.current_page,
+                            totalPage = response.data_.page.new_total_page,
+                            hasMore = response.data_.page.has_more != 0,
+                            nextPagePostId = response.data_.thread.getNextPagePostId(
+                                postList.map { it.id },
+                                sortType
+                            ),
+                        )
+                    }
+                }
+                .onStart { emit(ThreadPartialChange.LoadLatestPosts.Start) }
+                .catch {
+                    if (it is EmptyDataException) {
+                        emit(ThreadPartialChange.LoadLatestPosts.SuccessWithNoNewPost)
+                    } else {
+                        emit(ThreadPartialChange.LoadLatestPosts.Failure(it))
+                    }
+                }
+
+        fun ThreadUiIntent.LoadMyLatestReply.producePartialChange(): Flow<ThreadPartialChange.LoadMyLatestReply> =
             PbPageRepository
                 .pbPage(threadId, page = 0, postId = postId, forumId = forumId)
-                .map<PbPageResponse, ThreadPartialChange.LoadLatestReply> { response ->
+                .map<PbPageResponse, ThreadPartialChange.LoadMyLatestReply> { response ->
                     if (response.data_?.page == null
                         || response.data_.thread?.author == null
                         || response.data_.forum == null
                         || response.data_.anti == null
                     ) throw TiebaUnknownException
                     val firstLatestPost = response.data_.post_list.first()
-                    ThreadPartialChange.LoadLatestReply.Success(
+                    ThreadPartialChange.LoadMyLatestReply.Success(
                         anti = response.data_.anti,
                         posts = response.data_.post_list.map { PostItemData(it.wrapImmutable()) },
                         page = response.data_.page.current_page,
@@ -317,8 +356,8 @@ class ThreadViewModel @Inject constructor() :
                         hasNewPost = response.data_.post_list.any { !curPostIds.contains(it.id) },
                     )
                 }
-                .onStart { emit(ThreadPartialChange.LoadLatestReply.Start) }
-                .catch { emit(ThreadPartialChange.LoadLatestReply.Failure(it)) }
+                .onStart { emit(ThreadPartialChange.LoadMyLatestReply.Start) }
+                .catch { emit(ThreadPartialChange.LoadMyLatestReply.Failure(it)) }
 
         fun ThreadUiIntent.ToggleImmersiveMode.producePartialChange(): Flow<ThreadPartialChange.ToggleImmersiveMode> =
             flowOf(ThreadPartialChange.ToggleImmersiveMode.Success(isImmersiveMode))
@@ -496,7 +535,21 @@ sealed interface ThreadUiIntent : UiIntent {
         val postIds: List<Long> = emptyList(),
     ) : ThreadUiIntent
 
-    data class LoadLatestReply(
+    /**
+     * 加载当前贴子的最新回复
+     */
+    data class LoadLatestPosts(
+        val threadId: Long,
+        val curLatestPostId: Long,
+        val forumId: Long? = null,
+        val seeLz: Boolean = false,
+        val sortType: Int = 0,
+    ) : ThreadUiIntent
+
+    /**
+     * 当前用户发送新的回复时，加载用户发送的回复
+     */
+    data class LoadMyLatestReply(
         val threadId: Long,
         val postId: Long,
         val forumId: Long? = null,
@@ -506,7 +559,7 @@ sealed interface ThreadUiIntent : UiIntent {
     ) : ThreadUiIntent
 
     data class ToggleImmersiveMode(
-        val isImmersiveMode: Boolean
+        val isImmersiveMode: Boolean,
     ) : ThreadUiIntent
 
     data class AddFavorite(
@@ -634,7 +687,7 @@ sealed interface ThreadPartialChange : PartialChange<ThreadUiState> {
             )
         }
 
-        object Start : Load()
+        data object Start : Load()
 
         data class Success(
             val title: String,
@@ -692,7 +745,7 @@ sealed interface ThreadPartialChange : PartialChange<ThreadUiState> {
             )
         }
 
-        object Start : LoadFirstPage()
+        data object Start : LoadFirstPage()
 
         data class Success(
             val title: String,
@@ -705,8 +758,6 @@ sealed interface ThreadPartialChange : PartialChange<ThreadUiState> {
             val nextPagePostId: Long,
             val hasPrevious: Boolean,
             val firstPostContentRenders: List<PbContentRender>,
-            val contentRenders: List<ImmutableList<PbContentRender>>,
-            val subPostContents: List<ImmutableList<AnnotatedString>>,
             val postId: Long,
             val seeLz: Boolean,
             val sortType: Int,
@@ -740,7 +791,7 @@ sealed interface ThreadPartialChange : PartialChange<ThreadUiState> {
             is Failure -> oldState.copy(isLoadingMore = false)
         }
 
-        object Start : LoadMore()
+        data object Start : LoadMore()
 
         data class Success(
             val author: User,
@@ -750,8 +801,6 @@ sealed interface ThreadPartialChange : PartialChange<ThreadUiState> {
             val totalPage: Int,
             val hasMore: Boolean,
             val nextPagePostId: Long,
-            val contentRenders: List<ImmutableList<PbContentRender>>,
-            val subPostContents: List<ImmutableList<AnnotatedString>>,
         ) : LoadMore()
 
         data class Failure(
@@ -776,7 +825,7 @@ sealed interface ThreadPartialChange : PartialChange<ThreadUiState> {
             is Failure -> oldState.copy(isRefreshing = false)
         }
 
-        object Start : LoadPrevious()
+        data object Start : LoadPrevious()
 
         data class Success(
             val author: User,
@@ -785,17 +834,58 @@ sealed interface ThreadPartialChange : PartialChange<ThreadUiState> {
             val currentPage: Int,
             val totalPage: Int,
             val hasPrevious: Boolean,
-            val contentRenders: List<ImmutableList<PbContentRender>>,
-            val subPostContents: List<ImmutableList<AnnotatedString>>,
         ) : LoadPrevious()
 
         data class Failure(
             val errorCode: Int,
-            val errorMessage: String
+            val errorMessage: String,
         ) : LoadPrevious()
     }
 
-    sealed class LoadLatestReply : ThreadPartialChange {
+    sealed class LoadLatestPosts : ThreadPartialChange {
+        override fun reduce(oldState: ThreadUiState): ThreadUiState = when (this) {
+            Start -> oldState.copy(isLoadingMore = true)
+            is Success -> {
+                val uniqueData = data.filterNot { item ->
+                    oldState.data.any { it.post.get { id } == item.post.get { id } }
+                }
+                oldState.copy(
+                    isLoadingMore = false,
+                    author = wrapImmutable(author),
+                    data = (oldState.data + uniqueData).toImmutableList(),
+                    threadInfo = threadInfo.wrapImmutable(),
+                    currentPageMax = currentPage,
+                    totalPage = totalPage,
+                    hasMore = hasMore,
+                    nextPagePostId = nextPagePostId,
+                    latestPosts = persistentListOf(),
+                )
+            }
+
+            SuccessWithNoNewPost -> oldState.copy(isLoadingMore = false)
+            is Failure -> oldState.copy(isLoadingMore = false)
+        }
+
+        data object Start : LoadLatestPosts()
+
+        data class Success(
+            val author: User,
+            val data: List<PostItemData>,
+            val threadInfo: ThreadInfo,
+            val currentPage: Int,
+            val totalPage: Int,
+            val hasMore: Boolean,
+            val nextPagePostId: Long,
+        ) : LoadLatestPosts()
+
+        data object SuccessWithNoNewPost : LoadLatestPosts()
+
+        data class Failure(
+            val error: Throwable,
+        ) : LoadLatestPosts()
+    }
+
+    sealed class LoadMyLatestReply : ThreadPartialChange {
         override fun reduce(oldState: ThreadUiState): ThreadUiState =
             when (this) {
                 Start -> oldState.copy(isLoadingLatestReply = true)
@@ -836,7 +926,7 @@ sealed interface ThreadPartialChange : PartialChange<ThreadUiState> {
                             )
                         }
 
-                        hasNewPost && !continuous -> {
+                        hasNewPost -> {
                             oldState.copy(
                                 isLoadingLatestReply = false,
                                 isError = false,
@@ -875,7 +965,7 @@ sealed interface ThreadPartialChange : PartialChange<ThreadUiState> {
                 )
             }
 
-        object Start : LoadLatestReply()
+        object Start : LoadMyLatestReply()
 
         data class Success(
             val anti: Anti,
@@ -884,11 +974,11 @@ sealed interface ThreadPartialChange : PartialChange<ThreadUiState> {
             val isContinuous: Boolean,
             val isDesc: Boolean,
             val hasNewPost: Boolean,
-        ) : LoadLatestReply()
+        ) : LoadMyLatestReply()
 
         data class Failure(
             val error: Throwable,
-        ) : LoadLatestReply()
+        ) : LoadMyLatestReply()
     }
 
     sealed class ToggleImmersiveMode : ThreadPartialChange {
@@ -1114,9 +1204,9 @@ data class ThreadUiState(
 ) : UiState
 
 sealed interface ThreadUiEvent : UiEvent {
-    object ScrollToFirstReply : ThreadUiEvent
+    data object ScrollToFirstReply : ThreadUiEvent
 
-    object ScrollToLatestReply : ThreadUiEvent
+    data object ScrollToLatestReply : ThreadUiEvent
 
     data class LoadSuccess(
         val page: Int
@@ -1124,7 +1214,7 @@ sealed interface ThreadUiEvent : UiEvent {
 
     data class AddFavoriteSuccess(val floor: Int) : ThreadUiEvent
 
-    object RemoveFavoriteSuccess : ThreadUiEvent
+    data object RemoveFavoriteSuccess : ThreadUiEvent
 }
 
 object ThreadSortType {

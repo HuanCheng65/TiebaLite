@@ -7,8 +7,8 @@ import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Tab
-import androidx.compose.material.TabRow
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Delete
@@ -20,6 +20,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.huanchengfly.tieba.post.R
@@ -31,6 +32,7 @@ import com.huanchengfly.tieba.post.ui.page.history.list.HistoryListUiEvent
 import com.huanchengfly.tieba.post.ui.widgets.compose.BackNavigationIcon
 import com.huanchengfly.tieba.post.ui.widgets.compose.MyScaffold
 import com.huanchengfly.tieba.post.ui.widgets.compose.PagerTabIndicator
+import com.huanchengfly.tieba.post.ui.widgets.compose.TabRow
 import com.huanchengfly.tieba.post.ui.widgets.compose.TitleCentredToolbar
 import com.huanchengfly.tieba.post.utils.HistoryUtil
 import com.ramcosta.composedestinations.annotation.DeepLink
@@ -59,7 +61,12 @@ fun HistoryPage(
         scaffoldState = scaffoldState,
         topBar = {
             TitleCentredToolbar(
-                title = stringResource(id = R.string.title_history),
+                title = {
+                    Text(
+                        text = stringResource(id = R.string.title_history),
+                        fontWeight = FontWeight.Bold, style = MaterialTheme.typography.h6
+                    )
+                },
                 navigationIcon = {
                     BackNavigationIcon(onBackPressed = { navigator.navigateUp() })
                 },
@@ -83,63 +90,65 @@ fun HistoryPage(
                             tint = ExtendedTheme.colors.onTopBar
                         )
                     }
-                }
-            ) {
-                TabRow(
-                    selectedTabIndex = pagerState.currentPage,
-                    indicator = { tabPositions ->
-                        PagerTabIndicator(
-                            pagerState = pagerState,
-                            tabPositions = tabPositions
+                },
+                content = {
+                    TabRow(
+                        selectedTabIndex = pagerState.currentPage,
+                        indicator = { tabPositions ->
+                            PagerTabIndicator(
+                                pagerState = pagerState,
+                                tabPositions = tabPositions
+                            )
+                        },
+                        divider = {},
+                        backgroundColor = Color.Transparent,
+                        contentColor = ExtendedTheme.colors.primary,
+                        modifier = Modifier
+                            .width(100.dp * 2)
+                            .align(Alignment.CenterHorizontally)
+                    ) {
+                        Tab(
+                            text = {
+                                Text(
+                                    text = stringResource(id = R.string.title_history_thread),
+                                    fontSize = 13.sp
+                                )
+                            },
+                            selected = pagerState.currentPage == 0,
+                            onClick = {
+                                coroutineScope.launch {
+                                    pagerState.animateScrollToPage(0)
+                                }
+                            },
+                            selectedContentColor = ExtendedTheme.colors.onTopBar,
+                            unselectedContentColor = ExtendedTheme.colors.onTopBarSecondary
                         )
-                    },
-                    divider = {},
-                    backgroundColor = Color.Transparent,
-                    contentColor = ExtendedTheme.colors.primary,
-                    modifier = Modifier
-                        .width(100.dp * 2)
-                        .align(Alignment.CenterHorizontally)
-                ) {
-                    Tab(
-                        text = {
-                            Text(
-                                text = stringResource(id = R.string.title_history_thread),
-                                fontSize = 13.sp
-                            )
-                        },
-                        selected = pagerState.currentPage == 0,
-                        onClick = {
-                            coroutineScope.launch {
-                                pagerState.animateScrollToPage(0)
-                            }
-                        },
-                        selectedContentColor = ExtendedTheme.colors.primary,
-                        unselectedContentColor = ExtendedTheme.colors.onTopBarSecondary
-                    )
-                    Tab(
-                        text = {
-                            Text(
-                                text = stringResource(id = R.string.title_history_forum),
-                                fontSize = 13.sp
-                            )
-                        },
-                        selected = pagerState.currentPage == 1,
-                        onClick = {
-                            coroutineScope.launch {
-                                pagerState.animateScrollToPage(1)
-                            }
-                        },
-                        selectedContentColor = ExtendedTheme.colors.primary,
-                        unselectedContentColor = ExtendedTheme.colors.onTopBarSecondary
-                    )
+                        Tab(
+                            text = {
+                                Text(
+                                    text = stringResource(id = R.string.title_history_forum),
+                                    fontSize = 13.sp
+                                )
+                            },
+                            selected = pagerState.currentPage == 1,
+                            onClick = {
+                                coroutineScope.launch {
+                                    pagerState.animateScrollToPage(1)
+                                }
+                            },
+                            selectedContentColor = ExtendedTheme.colors.onTopBar,
+                            unselectedContentColor = ExtendedTheme.colors.onTopBarSecondary
+                        )
+                    }
                 }
-            }
+            )
         }
     ) {
         ProvideNavigator(navigator = navigator) {
             HorizontalPager(
                 state = pagerState,
                 modifier = Modifier.fillMaxSize(),
+                key = { it },
                 verticalAlignment = Alignment.Top,
                 userScrollEnabled = true,
             ) {

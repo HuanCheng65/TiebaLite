@@ -6,6 +6,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.LocalContentColor
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Scaffold
+import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.AccountCircle
 import androidx.compose.runtime.Composable
@@ -16,20 +19,28 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import com.google.accompanist.insets.ui.Scaffold
 import com.huanchengfly.tieba.post.R
-import com.huanchengfly.tieba.post.activities.LoginActivity
 import com.huanchengfly.tieba.post.dataStore
-import com.huanchengfly.tieba.post.goToActivity
 import com.huanchengfly.tieba.post.models.database.Account
 import com.huanchengfly.tieba.post.ui.common.prefs.PrefsScreen
 import com.huanchengfly.tieba.post.ui.common.prefs.widgets.TextPref
 import com.huanchengfly.tieba.post.ui.common.theme.compose.ExtendedTheme
 import com.huanchengfly.tieba.post.ui.page.LocalNavigator
 import com.huanchengfly.tieba.post.ui.page.ProvideNavigator
-import com.huanchengfly.tieba.post.ui.page.destinations.*
-import com.huanchengfly.tieba.post.ui.widgets.compose.*
+import com.huanchengfly.tieba.post.ui.page.destinations.AccountManagePageDestination
+import com.huanchengfly.tieba.post.ui.page.destinations.BlockSettingsPageDestination
+import com.huanchengfly.tieba.post.ui.page.destinations.CustomSettingsPageDestination
+import com.huanchengfly.tieba.post.ui.page.destinations.HabitSettingsPageDestination
+import com.huanchengfly.tieba.post.ui.page.destinations.LoginPageDestination
+import com.huanchengfly.tieba.post.ui.page.destinations.MoreSettingsPageDestination
+import com.huanchengfly.tieba.post.ui.page.destinations.OKSignSettingsPageDestination
+import com.huanchengfly.tieba.post.ui.widgets.compose.Avatar
+import com.huanchengfly.tieba.post.ui.widgets.compose.AvatarIcon
+import com.huanchengfly.tieba.post.ui.widgets.compose.BackNavigationIcon
+import com.huanchengfly.tieba.post.ui.widgets.compose.Sizes
+import com.huanchengfly.tieba.post.ui.widgets.compose.TitleCentredToolbar
 import com.huanchengfly.tieba.post.utils.AccountUtil.LocalAccount
 import com.huanchengfly.tieba.post.utils.StringUtil
 import com.ramcosta.composedestinations.annotation.Destination
@@ -51,8 +62,8 @@ fun NowAccountItem(
     account: Account?,
     modifier: Modifier = Modifier
 ) {
+    val navigator = LocalNavigator.current
     if (account != null) {
-        val navigator = LocalNavigator.current
         TextPref(
             title = stringResource(id = R.string.title_account_manage),
             summary = stringResource(id = R.string.summary_now_account, account.nameShow ?: account.name),
@@ -70,12 +81,11 @@ fun NowAccountItem(
             modifier = modifier,
         )
     } else {
-        val context = LocalContext.current
         TextPref(
             title = stringResource(id = R.string.title_account_manage),
             summary = stringResource(id = R.string.summary_not_logged_in),
             enabled = true,
-            onClick = { context.goToActivity<LoginActivity>() },
+            onClick = { navigator.navigate(LoginPageDestination) },
             leadingIcon = {
                 LeadingIcon {
                     AvatarIcon(
@@ -98,18 +108,23 @@ fun NowAccountItem(
 fun SettingsPage(
     navigator: DestinationsNavigator,
 ) {
-    Scaffold(
-        backgroundColor = Color.Transparent,
-        topBar = {
-            TitleCentredToolbar(
-                title = stringResource(id = R.string.title_settings),
-                navigationIcon = {
-                    BackNavigationIcon(onBackPressed = { navigator.navigateUp() })
-                }
-            )
-        },
-    ) {
-        ProvideNavigator(navigator = navigator) {
+    ProvideNavigator(navigator = navigator) {
+        Scaffold(
+            backgroundColor = Color.Transparent,
+            topBar = {
+                TitleCentredToolbar(
+                    title = {
+                        Text(
+                            text = stringResource(id = R.string.title_settings),
+                            fontWeight = FontWeight.Bold, style = MaterialTheme.typography.h6
+                        )
+                    },
+                    navigationIcon = {
+                        BackNavigationIcon(onBackPressed = { navigator.navigateUp() })
+                    }
+                )
+            },
+        ) {
             PrefsScreen(
                 dataStore = LocalContext.current.dataStore,
                 dividerThickness = 0.dp,
@@ -128,8 +143,8 @@ fun SettingsPage(
                             LeadingIcon {
                                 AvatarIcon(
                                     icon = ImageVector.vectorResource(id = R.drawable.ic_settings_block),
-                                    contentDescription = null,
                                     size = Sizes.Small,
+                                    contentDescription = null,
                                 )
                             }
                         },
@@ -145,8 +160,8 @@ fun SettingsPage(
                             LeadingIcon {
                                 AvatarIcon(
                                     icon = ImageVector.vectorResource(id = R.drawable.ic_brush_black_24dp),
-                                    contentDescription = null,
                                     size = Sizes.Small,
+                                    contentDescription = null,
                                 )
                             }
                         },
@@ -162,8 +177,8 @@ fun SettingsPage(
                             LeadingIcon {
                                 AvatarIcon(
                                     icon = ImageVector.vectorResource(id = R.drawable.ic_dashboard_customize_black_24),
-                                    contentDescription = null,
                                     size = Sizes.Small,
+                                    contentDescription = null,
                                 )
                             }
                         },
@@ -179,8 +194,8 @@ fun SettingsPage(
                             LeadingIcon {
                                 AvatarIcon(
                                     icon = ImageVector.vectorResource(id = R.drawable.ic_rocket_launch_black_24),
-                                    contentDescription = null,
                                     size = Sizes.Small,
+                                    contentDescription = null,
                                 )
                             }
                         },
@@ -198,8 +213,8 @@ fun SettingsPage(
                             LeadingIcon {
                                 AvatarIcon(
                                     icon = ImageVector.vectorResource(id = R.drawable.ic_more_horiz_black_24),
-                                    contentDescription = null,
                                     size = Sizes.Small,
+                                    contentDescription = null,
                                 )
                             }
                         },

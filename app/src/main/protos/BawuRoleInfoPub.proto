@@ -1,0 +1,20 @@
+syntax = "proto3";
+
+package tieba;
+
+option java_package = "com.huanchengfly.tieba.post.api.models.protos";
+
+import "BaijiahaoInfo.proto";
+
+message BawuRoleInfoPub {
+  uint64 forum_id = 1;
+  int64 user_id = 2;
+  int32 role_id = 3;
+  string role_name = 4;
+  string portrait = 5;
+  int32 user_level = 6;
+  string level_name = 7;
+  string user_name = 8;
+  string name_show = 9;
+  BaijiahaoInfo baijiahao_info = 10;
+}

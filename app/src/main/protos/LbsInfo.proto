@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+package tieba;
+
+option java_package = "com.huanchengfly.tieba.post.api.models.protos";
+
+message LbsInfo {
+  string lat = 1;
+  string lon = 2;
+  string town = 3;
+}

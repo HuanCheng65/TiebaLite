@@ -2,14 +2,27 @@ package com.huanchengfly.tieba.post.utils
 
 import android.content.Context
 import android.net.Uri
-import android.text.TextUtils
 import androidx.annotation.DrawableRes
+import androidx.compose.runtime.Immutable
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.flowWithLifecycle
 import com.huanchengfly.tieba.post.R
 import com.huanchengfly.tieba.post.api.TiebaApi
 import com.huanchengfly.tieba.post.api.models.ForumPageBean
 import com.huanchengfly.tieba.post.api.models.ThreadContentBean
 import com.huanchengfly.tieba.post.api.retrofit.exception.TiebaException
+import com.huanchengfly.tieba.post.components.ClipBoardForumLink
+import com.huanchengfly.tieba.post.components.ClipBoardLink
+import com.huanchengfly.tieba.post.components.ClipBoardThreadLink
 import com.huanchengfly.tieba.post.interfaces.CommonCallback
+import com.huanchengfly.tieba.post.repository.FrsPageRepository
+import com.huanchengfly.tieba.post.repository.PbPageRepository
+import com.huanchengfly.tieba.post.ui.page.forum.getSortType
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.merge
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -70,11 +83,10 @@ object QuickPreviewUtil {
 
     private fun getThreadPreviewInfo(
         context: Context,
-        uri: Uri,
-        threadId: String,
-        callback: CommonCallback<PreviewInfo>
+        link: ClipBoardThreadLink,
+        callback: CommonCallback<PreviewInfo>,
     ) {
-        TiebaApi.getInstance().threadContent(threadId)
+        TiebaApi.getInstance().threadContent(link.threadId)
             .enqueue(object : Callback<ThreadContentBean> {
                 override fun onFailure(call: Call<ThreadContentBean>, t: Throwable) {
                     val code = if (t is TiebaException) t.code else -1
@@ -87,29 +99,55 @@ object QuickPreviewUtil {
                 ) {
                     val threadContentBean = response.body()!!
                     callback.onSuccess(
-                        PreviewInfo()
-                            .setTitle(threadContentBean.thread?.title)
-                            .setSubtitle(
-                                context.getString(
-                                    R.string.subtitle_quick_preview_thread,
-                                    threadContentBean.forum?.name,
-                                    threadContentBean.thread?.replyNum
-                                )
-                            )
-                            .setUrl(uri.toString())
-                            .setIconUrl(threadContentBean.thread?.author?.portrait)
+                        PreviewInfo(
+                            clipBoardLink = link,
+                            url = link.url,
+                            title = threadContentBean.thread?.title,
+                            subtitle = context.getString(
+                                R.string.subtitle_quick_preview_thread,
+                                threadContentBean.forum?.name,
+                                threadContentBean.thread?.replyNum
+                            ),
+                            icon = Icon(threadContentBean.thread?.author?.portrait)
+                        )
                     )
                 }
             })
     }
 
+    private fun getThreadPreviewInfoFlow(
+        context: Context,
+        link: ClipBoardThreadLink,
+        lifeCycle: Lifecycle? = null,
+    ): Flow<PreviewInfo> =
+        PbPageRepository
+            .pbPage(link.threadId.toLong())
+            .map {
+                PreviewInfo(
+                    clipBoardLink = link,
+                    url = link.url,
+                    title = it.data_?.thread?.title,
+                    subtitle = context.getString(
+                        R.string.subtitle_quick_preview_thread,
+                        it.data_?.forum?.name,
+                        it.data_?.thread?.replyNum?.toString()
+                    ),
+                    icon = Icon(StringUtil.getAvatarUrl(it.data_?.thread?.author?.portrait))
+                )
+            }
+            .catch { it.printStackTrace() }
+            .apply {
+                if (lifeCycle != null) {
+                    flowWithLifecycle(lifeCycle)
+                }
+            }
+
     private fun getForumPreviewInfo(
         context: Context,
-        uri: Uri,
-        forumName: String,
-        callback: CommonCallback<PreviewInfo>
+        link: ClipBoardForumLink,
+        callback: CommonCallback<PreviewInfo>,
     ) {
-        TiebaApi.getInstance().forumPage(forumName).enqueue(object : Callback<ForumPageBean> {
+        TiebaApi.getInstance().forumPage(link.forumName).enqueue(object : Callback<ForumPageBean> {
             override fun onFailure(call: Call<ForumPageBean>, t: Throwable) {
                 val code = if (t is TiebaException) t.code else -1
                 callback.onFailure(code, t.message)
@@ -118,130 +156,116 @@ object QuickPreviewUtil {
             override fun onResponse(call: Call<ForumPageBean>, response: Response<ForumPageBean>) {
                 val forumPageBean = response.body()!!
                 callback.onSuccess(
-                    PreviewInfo()
-                        .setTitle(
-                            context.getString(
-                                R.string.title_forum,
-                                forumPageBean.forum?.name
-                            )
-                        )
-                        .setSubtitle(forumPageBean.forum?.slogan)
-                        .setUrl(uri.toString())
-                        .setIconUrl(forumPageBean.forum?.avatar)
+                    PreviewInfo(
+                        clipBoardLink = link,
+                        url = link.url,
+                        title = context.getString(
+                            R.string.title_forum,
+                            forumPageBean.forum?.name
+                        ),
+                        subtitle = forumPageBean.forum?.slogan,
+                        icon = Icon(forumPageBean.forum?.avatar)
+                    )
                 )
             }
         })
     }
 
-    @JvmStatic
-    fun getPreviewInfo(context: Context, url: String?, callback: CommonCallback<PreviewInfo>) {
-        val uri = Uri.parse(url)
-        if (isTiebaUrl(uri.host) && !TextUtils.isEmpty(uri.path)) {
-            val path = uri.path
-            if (path!!.startsWith("/p/")) {
-                getThreadPreviewInfo(context, uri, path.substring(3), callback)
-            } else if (path.equals("/f", ignoreCase = true) || path.equals(
-                    "/mo/q/m",
-                    ignoreCase = true
-                )
-            ) {
-                val kw = uri.getQueryParameter("kw")
-                val word = uri.getQueryParameter("word")
-                val kz = uri.getQueryParameter("kz")
-                kw?.let { getForumPreviewInfo(context, uri, it, callback) }
-                    ?: (word?.let { getForumPreviewInfo(context, uri, it, callback) }
-                        ?: kz?.let { getThreadPreviewInfo(context, uri, it, callback) })
-            } else {
-                callback.onSuccess(
-                    PreviewInfo()
-                        .setUrl(url)
-                        .setTitle(url)
-                        .setSubtitle(context.getString(R.string.subtitle_link))
-                        .setIconRes(R.drawable.ic_link)
+    private fun getForumPreviewInfoFlow(
+        context: Context,
+        link: ClipBoardForumLink,
+        lifeCycle: Lifecycle? = null,
+    ): Flow<PreviewInfo> =
+        FrsPageRepository.frsPage(link.forumName, 1, 1, getSortType(context, link.forumName))
+            .map {
+                PreviewInfo(
+                    clipBoardLink = link,
+                    url = link.url,
+                    title = context.getString(
+                        R.string.title_forum,
+                        link.forumName
+                    ),
+                    subtitle = it.data_?.forum?.slogan,
+                    icon = Icon(it.data_?.forum?.avatar)
                 )
             }
-        } else {
-            callback.onSuccess(
-                PreviewInfo()
-                    .setUrl(url)
-                    .setTitle(url)
-                    .setSubtitle(context.getString(R.string.subtitle_link))
-                    .setIconRes(R.drawable.ic_link)
+            .catch { it.printStackTrace() }
+            .apply {
+                if (lifeCycle != null) {
+                    flowWithLifecycle(lifeCycle)
+                }
+            }
+
+    fun getPreviewInfoFlow(
+        context: Context,
+        clipBoardLink: ClipBoardLink,
+        lifeCycle: Lifecycle? = null,
+    ): Flow<PreviewInfo?> {
+        val detailFlow = when (clipBoardLink) {
+            is ClipBoardForumLink -> getForumPreviewInfoFlow(context, clipBoardLink, lifeCycle)
+            is ClipBoardThreadLink -> getThreadPreviewInfoFlow(context, clipBoardLink, lifeCycle)
+            else -> null
+        }
+        val flow = flowOf(
+            PreviewInfo(
+                clipBoardLink = clipBoardLink,
+                url = clipBoardLink.url,
+                title = clipBoardLink.url,
+                subtitle = context.getString(R.string.subtitle_link),
+                icon = Icon(R.drawable.ic_link)
+            )
+        )
+        return listOfNotNull(flow, detailFlow).merge()
+            .apply { if (lifeCycle != null) flowWithLifecycle(lifeCycle) }
+    }
+
+    @JvmStatic
+    fun getPreviewInfo(
+        context: Context,
+        link: ClipBoardLink,
+        callback: CommonCallback<PreviewInfo>,
+    ) {
+        when (link) {
+            is ClipBoardForumLink -> getForumPreviewInfo(context, link, callback)
+            is ClipBoardThreadLink -> getThreadPreviewInfo(context, link, callback)
+            else -> callback.onSuccess(
+                PreviewInfo(
+                    clipBoardLink = link,
+                    url = link.url,
+                    title = link.url,
+                    subtitle = context.getString(R.string.subtitle_link),
+                    icon = Icon(R.drawable.ic_link)
+                )
             )
         }
     }
 
-    class PreviewInfo {
-        var icon: Icon? = null
-            private set
-        var title: String? = null
-            private set
-        var subtitle: String? = null
-            private set
-        var url: String? = null
-            private set
+    @Immutable
+    data class PreviewInfo(
+        val clipBoardLink: ClipBoardLink,
+        val url: String? = null,
+        val title: String? = null,
+        val subtitle: String? = null,
+        val icon: Icon? = null,
+    )
 
-        fun setIconRes(@DrawableRes res: Int): PreviewInfo {
-            icon = Icon(res)
-            return this
-        }
-
-        fun setIconUrl(url: String?): PreviewInfo {
-            icon = Icon(url)
-            return this
-        }
-
-        fun setTitle(title: String?): PreviewInfo {
-            this.title = title
-            return this
-        }
-
-        fun setSubtitle(subtitle: String?): PreviewInfo {
-            this.subtitle = subtitle
-            return this
-        }
-
-        fun setUrl(url: String?): PreviewInfo {
-            this.url = url
-            return this
-        }
-    }
-
-    class Icon {
-
-        fun setType(type: Int): Icon {
-            this.type = type
-            return this
-        }
-
-        fun setUrl(url: String?): Icon {
-            this.url = url
-            return this
-        }
-
-        fun setRes(res: Int): Icon {
-            this.res = res
-            return this
-        }
-
-        var type: Int
-            private set
-        var url: String? = null
-            private set
-
+    @Immutable
+    data class Icon(
+        val type: Int,
+        val url: String? = null,
         @DrawableRes
-        var res = 0
-            private set
+        val res: Int = 0,
+    ) {
 
-        constructor(url: String?) {
-            type = TYPE_URL
-            this.url = url
-        }
+        constructor(url: String?) : this(
+            type = TYPE_URL,
+            url = url
+        )
 
-        constructor(@DrawableRes res: Int) {
-            type = TYPE_DRAWABLE_RES
-            this.res = res
-        }
+        constructor(@DrawableRes res: Int) : this(
+            type = TYPE_DRAWABLE_RES,
+            res = res
+        )
 
         companion object {
             const val TYPE_DRAWABLE_RES = 0

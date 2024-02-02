@@ -1,0 +1,10 @@
+syntax = "proto3";
+
+package tieba;
+
+option java_package = "com.huanchengfly.tieba.post.api.models.protos";
+
+message GoodsWin {
+  int32 show = 1;
+  string goods_url = 2;
+}

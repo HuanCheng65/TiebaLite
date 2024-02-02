@@ -2,6 +2,8 @@ package com.huanchengfly.tieba.post.ui.page.search
 
 import com.huanchengfly.tieba.post.App
 import com.huanchengfly.tieba.post.R
+import com.huanchengfly.tieba.post.api.TiebaApi
+import com.huanchengfly.tieba.post.api.models.protos.searchSug.SearchSugResponse
 import com.huanchengfly.tieba.post.api.retrofit.exception.getErrorCode
 import com.huanchengfly.tieba.post.api.retrofit.exception.getErrorMessage
 import com.huanchengfly.tieba.post.arch.BaseViewModel
@@ -24,6 +26,7 @@ import kotlinx.coroutines.flow.flatMapConcat
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.merge
 import kotlinx.coroutines.flow.onEach
 import org.litepal.LitePal
@@ -70,6 +73,8 @@ class SearchViewModel :
                     .flatMapConcat { it.producePartialChange() },
                 intentFlow.filterIsInstance<SearchUiIntent.SubmitKeyword>()
                     .flatMapConcat { it.producePartialChange() },
+                intentFlow.filterIsInstance<SearchUiIntent.KeywordInputChanged>()
+                    .flatMapConcat { it.producePartialChange() },
             )
 
         private fun produceInitPartialChange() = flow<SearchPartialChange.Init> {
@@ -99,16 +104,30 @@ class SearchViewModel :
             }.flowOn(Dispatchers.IO)
 
         private fun SearchUiIntent.SubmitKeyword.producePartialChange() =
-            flowOf(SearchPartialChange.SubmitKeyword(keyword.trim()))
+            flowOf(keyword.trim())
                 .onEach {
-                    runCatching {
-                        val trimKeyword = keyword.trim()
-                        if (trimKeyword.isNotBlank()) SearchHistory(trimKeyword).saveOrUpdate(
-                            "content = ?",
-                            trimKeyword
-                        )
+                    if (it.isNotBlank()) {
+                        runCatching {
+                            SearchHistory(it).saveOrUpdate("content = ?", it)
+                        }
                     }
                 }
+                .map { SearchPartialChange.SubmitKeyword(it) }
+
+        private fun SearchUiIntent.KeywordInputChanged.producePartialChange() =
+            if (keyword.isNotBlank()) {
+                TiebaApi.getInstance().searchSuggestionsFlow(keyword)
+                    .map<SearchSugResponse, SearchPartialChange.KeywordInputChanged> {
+                        SearchPartialChange.KeywordInputChanged.Success(
+                            it.data_?.list ?: listOf()
+                        )
+                    }
+                    .catch {
+                        emit(SearchPartialChange.KeywordInputChanged.Failure(it.getErrorMessage()))
+                    }
+            } else {
+                flowOf(SearchPartialChange.KeywordInputChanged.Success(emptyList()))
+            }
     }
 }
 
@@ -120,6 +139,8 @@ sealed interface SearchUiIntent : UiIntent {
     data class DeleteSearchHistory(val id: Long) : SearchUiIntent
 
     data class SubmitKeyword(val keyword: String) : SearchUiIntent
+
+    data class KeywordInputChanged(val keyword: String) : SearchUiIntent
 }
 
 sealed interface SearchPartialChange : PartialChange<SearchUiState> {
@@ -167,7 +188,10 @@ sealed interface SearchPartialChange : PartialChange<SearchUiState> {
     data class SubmitKeyword(val keyword: String) : SearchPartialChange {
         override fun reduce(oldState: SearchUiState): SearchUiState {
             if (keyword.isEmpty()) {
-                return oldState.copy(isKeywordEmpty = true)
+                return oldState.copy(
+                    isKeywordEmpty = true,
+                    suggestions = persistentListOf()
+                )
             }
             val newSearchHistories = (oldState.searchHistories
                 .filterNot { it.content == keyword } + SearchHistory(content = keyword))
@@ -179,12 +203,26 @@ sealed interface SearchPartialChange : PartialChange<SearchUiState> {
             )
         }
     }
+
+    sealed class KeywordInputChanged : SearchPartialChange {
+        override fun reduce(oldState: SearchUiState): SearchUiState = when (this) {
+            is Success -> oldState.copy(suggestions = suggestions.toImmutableList())
+            is Failure -> oldState
+        }
+
+        data class Success(val suggestions: List<String>) : KeywordInputChanged()
+
+        data class Failure(
+            val errorMessage: String,
+        ) : KeywordInputChanged()
+    }
 }
 
 data class SearchUiState(
     val keyword: String = "",
     val isKeywordEmpty: Boolean = true,
     val searchHistories: ImmutableList<SearchHistory> = persistentListOf(),
+    val suggestions: ImmutableList<String> = persistentListOf(),
 ) : UiState
 
 sealed interface SearchUiEvent : UiEvent {

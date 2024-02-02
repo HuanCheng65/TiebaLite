@@ -55,7 +55,6 @@ fun Dislike(
     val menuState = rememberMenuState()
     val dislikeResource = personalized.getImmutableList { dislikeResource }
     ClickMenu(
-        menuState = menuState,
         menuContent = {
             DisposableEffect(personalized) {
                 clickTime = System.currentTimeMillis()
@@ -147,6 +146,7 @@ fun Dislike(
                 }
             }
         },
+        menuState = menuState,
     ) {
         IconButton(
             onClick = { menuState.expanded = true },

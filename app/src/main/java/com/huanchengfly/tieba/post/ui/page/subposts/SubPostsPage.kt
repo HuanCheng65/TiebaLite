@@ -4,13 +4,17 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.navigationBarsPadding
+import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.layout.requiredHeightIn
+import androidx.compose.foundation.layout.windowInsetsBottomHeight
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -18,28 +22,29 @@ import androidx.compose.material.DropdownMenuItem
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.ArrowBack
+import androidx.compose.material.icons.automirrored.rounded.ArrowBack
 import androidx.compose.material.icons.rounded.Close
 import androidx.compose.material.icons.rounded.OpenInBrowser
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.util.fastForEach
 import com.huanchengfly.tieba.post.App
 import com.huanchengfly.tieba.post.R
-import com.huanchengfly.tieba.post.activities.UserActivity
 import com.huanchengfly.tieba.post.api.models.protos.SubPostList
+import com.huanchengfly.tieba.post.api.models.protos.User
 import com.huanchengfly.tieba.post.api.models.protos.bawuType
 import com.huanchengfly.tieba.post.arch.ImmutableHolder
 import com.huanchengfly.tieba.post.arch.collectPartialAsState
@@ -47,10 +52,14 @@ import com.huanchengfly.tieba.post.arch.onEvent
 import com.huanchengfly.tieba.post.arch.pageViewModel
 import com.huanchengfly.tieba.post.arch.wrapImmutable
 import com.huanchengfly.tieba.post.ui.common.theme.compose.ExtendedTheme
+import com.huanchengfly.tieba.post.ui.common.theme.compose.threadBottomBar
 import com.huanchengfly.tieba.post.ui.page.LocalNavigator
 import com.huanchengfly.tieba.post.ui.page.ProvideNavigator
-import com.huanchengfly.tieba.post.ui.page.destinations.ReplyPageDestination
+import com.huanchengfly.tieba.post.ui.page.destinations.CopyTextDialogPageDestination
 import com.huanchengfly.tieba.post.ui.page.destinations.ThreadPageDestination
+import com.huanchengfly.tieba.post.ui.page.destinations.UserProfilePageDestination
+import com.huanchengfly.tieba.post.ui.page.reply.ReplyArgs
+import com.huanchengfly.tieba.post.ui.page.reply.ReplyDialog
 import com.huanchengfly.tieba.post.ui.page.thread.PostAgreeBtn
 import com.huanchengfly.tieba.post.ui.page.thread.PostCard
 import com.huanchengfly.tieba.post.ui.page.thread.UserNameText
@@ -62,6 +71,7 @@ import com.huanchengfly.tieba.post.ui.widgets.compose.ConfirmDialog
 import com.huanchengfly.tieba.post.ui.widgets.compose.LazyLoad
 import com.huanchengfly.tieba.post.ui.widgets.compose.LoadMoreLayout
 import com.huanchengfly.tieba.post.ui.widgets.compose.LongClickMenu
+import com.huanchengfly.tieba.post.ui.widgets.compose.MyLazyColumn
 import com.huanchengfly.tieba.post.ui.widgets.compose.MyScaffold
 import com.huanchengfly.tieba.post.ui.widgets.compose.Sizes
 import com.huanchengfly.tieba.post.ui.widgets.compose.TitleCentredToolbar
@@ -74,11 +84,13 @@ import com.huanchengfly.tieba.post.utils.AccountUtil.LocalAccount
 import com.huanchengfly.tieba.post.utils.DateTimeUtils
 import com.huanchengfly.tieba.post.utils.StringUtil
 import com.huanchengfly.tieba.post.utils.TiebaUtil
+import com.huanchengfly.tieba.post.utils.appPreferences
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import com.ramcosta.composedestinations.spec.DestinationStyleBottomSheet
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 @Destination
 @Composable
@@ -98,7 +110,8 @@ fun SubPostsPage(
             threadId = threadId,
             postId = postId,
             subPostId = subPostId,
-            loadFromSubPost = loadFromSubPost
+            loadFromSubPost = loadFromSubPost,
+            onNavigateUp = { navigator.navigateUp() }
         )
     }
 }
@@ -124,7 +137,8 @@ fun SubPostsSheetPage(
             postId = postId,
             subPostId = subPostId,
             loadFromSubPost = loadFromSubPost,
-            isSheet = true
+            isSheet = true,
+            onNavigateUp = { navigator.navigateUp() }
         )
     }
 }
@@ -138,12 +152,13 @@ internal fun SubPostsContent(
     postId: Long,
     subPostId: Long = 0L,
     loadFromSubPost: Boolean = false,
-    isSheet: Boolean = false
+    isSheet: Boolean = false,
+    onNavigateUp: () -> Unit = {},
 ) {
     val navigator = LocalNavigator.current
     val account = LocalAccount.current
 
-    LazyLoad(loaded = viewModel.initialized) {
+    LazyLoad(key = viewModel, loaded = viewModel.initialized) {
         viewModel.send(
             SubPostsUiIntent.Load(
                 forumId,
@@ -251,7 +266,32 @@ internal fun SubPostsContent(
         )
     }
 
+    val replyDialogState = rememberDialogState()
+    var currentReplyArgs by remember { mutableStateOf<ReplyArgs?>(null) }
+    if (currentReplyArgs != null) {
+        ReplyDialog(args = currentReplyArgs!!, state = replyDialogState)
+    }
+
+//    onGlobalEvent<GlobalEvent.ReplySuccess>(
+//        filter = { it.threadId == threadId && it.postId == postId }
+//    ) { event ->
+//        viewModel.send(
+//            SubPostsUiIntent.Load(
+//                forumId,
+//                threadId,
+//                postId,
+//                subPostId.takeIf { loadFromSubPost } ?: 0L
+//            )
+//        )
+//    }
+
+    fun showReplyDialog(args: ReplyArgs) {
+        currentReplyArgs = args
+        replyDialogState.show()
+    }
+
     StateScreen(
+        modifier = Modifier.fillMaxSize(),
         isEmpty = subPosts.isEmpty(),
         isError = false,
         isLoading = isRefreshing
@@ -260,15 +300,18 @@ internal fun SubPostsContent(
             modifier = Modifier.fillMaxSize(),
             topBar = {
                 TitleCentredToolbar(
-                    title = post?.let {
-                        stringResource(
-                            id = R.string.title_sub_posts,
-                            it.get { floor })
-                    } ?: stringResource(id = R.string.title_sub_posts_default),
+                    title = {
+                        Text(text = post?.let {
+                            stringResource(
+                                id = R.string.title_sub_posts,
+                                it.get { floor })
+                        } ?: stringResource(id = R.string.title_sub_posts_default),
+                            fontWeight = FontWeight.Bold, style = MaterialTheme.typography.h6)
+                    },
                     navigationIcon = {
-                        IconButton(onClick = { navigator.navigateUp() }) {
+                        IconButton(onClick = onNavigateUp) {
                             Icon(
-                                imageVector = if (isSheet) Icons.Rounded.Close else Icons.Rounded.ArrowBack,
+                                imageVector = if (isSheet) Icons.Rounded.Close else Icons.AutoMirrored.Rounded.ArrowBack,
                                 contentDescription = stringResource(id = R.string.btn_close)
                             )
                         }
@@ -294,17 +337,13 @@ internal fun SubPostsContent(
                 )
             },
             bottomBar = {
-                if (account != null) {
-                    Surface(
-                        elevation = 16.dp,
-                        color = ExtendedTheme.colors.bottomBar,
-                        contentColor = ExtendedTheme.colors.text,
-                        modifier = Modifier.fillMaxWidth()
+                if (account != null && !LocalContext.current.appPreferences.hideReply) {
+                    Column(
+                        modifier = Modifier.background(ExtendedTheme.colors.threadBottomBar)
                     ) {
                         Row(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .navigationBarsPadding()
                                 .padding(horizontal = 16.dp),
                             verticalAlignment = Alignment.CenterVertically,
                             horizontalArrangement = Arrangement.spacedBy(8.dp)
@@ -324,8 +363,8 @@ internal fun SubPostsContent(
                                         val fid = forum?.get { id } ?: forumId
                                         val forumName = forum?.get { name }
                                         if (!forumName.isNullOrEmpty()) {
-                                            navigator.navigate(
-                                                ReplyPageDestination(
+                                            showReplyDialog(
+                                                ReplyArgs(
                                                     forumId = fid,
                                                     forumName = forumName,
                                                     threadId = threadId,
@@ -343,11 +382,22 @@ internal fun SubPostsContent(
                                 )
                             }
                         }
+
+                        Box(
+                            modifier = Modifier
+                                .requiredHeightIn(min = if (LocalContext.current.appPreferences.liftUpBottomBar) 16.dp else 0.dp)
+                        ) {
+                            Spacer(
+                                modifier = Modifier
+                                    .windowInsetsBottomHeight(WindowInsets.navigationBars)
+                            )
+                        }
                     }
                 }
             }
         ) { paddingValues ->
             LoadMoreLayout(
+                modifier = Modifier.padding(paddingValues),
                 isLoading = isLoading,
                 onLoadMore = {
                     viewModel.send(
@@ -364,10 +414,7 @@ internal fun SubPostsContent(
                 lazyListState = lazyListState,
                 isEmpty = post == null && subPosts.isEmpty(),
             ) {
-                LazyColumn(
-                    modifier = Modifier.padding(paddingValues),
-                    state = lazyListState
-                ) {
+                MyLazyColumn(state = lazyListState) {
                     item(key = "Post$postId") {
                         post?.let {
                             Column {
@@ -376,6 +423,9 @@ internal fun SubPostsContent(
                                     contentRenders = postContentRenders,
                                     canDelete = { it.author_id == account?.uid?.toLongOrNull() },
                                     showSubPosts = false,
+                                    onUserClick = {
+                                        navigator.navigate(UserProfilePageDestination(it.id))
+                                    },
                                     onAgree = {
                                         val hasAgreed = it.get { agree?.hasAgree != 0 }
                                         viewModel.send(
@@ -388,8 +438,8 @@ internal fun SubPostsContent(
                                         )
                                     },
                                     onReplyClick = {
-                                        navigator.navigate(
-                                            ReplyPageDestination(
+                                        showReplyDialog(
+                                            ReplyArgs(
                                                 forumId = forumId,
                                                 forumName = forum?.get { name } ?: "",
                                                 threadId = threadId,
@@ -399,6 +449,11 @@ internal fun SubPostsContent(
                                                     ?: it.author?.name,
                                                 replyUserPortrait = it.author?.portrait,
                                             )
+                                        )
+                                    },
+                                    onMenuCopyClick = {
+                                        navigator.navigate(
+                                            CopyTextDialogPageDestination(it)
                                         )
                                     },
                                 ) {
@@ -433,6 +488,9 @@ internal fun SubPostsContent(
                             item = item,
                             canDelete = { it.author_id == account?.uid?.toLongOrNull() },
                             threadAuthorId = thread?.get { author?.id },
+                            onUserClick = {
+                                navigator.navigate(UserProfilePageDestination(it.id))
+                            },
                             onAgree = {
                                 val hasAgreed = it.agree?.hasAgree != 0
                                 viewModel.send(
@@ -446,8 +504,8 @@ internal fun SubPostsContent(
                                 )
                             },
                             onReplyClick = {
-                                navigator.navigate(
-                                    ReplyPageDestination(
+                                showReplyDialog(
+                                    ReplyArgs(
                                         forumId = forumId,
                                         forumName = forum?.get { name } ?: "",
                                         threadId = threadId,
@@ -459,6 +517,12 @@ internal fun SubPostsContent(
                                         replyUserPortrait = it.author?.portrait,
                                     )
                                 )
+                            },
+                            onMenuCopyClick = {
+                                navigator.navigate(
+                                    CopyTextDialogPageDestination(it)
+                                )
+//                                TiebaUtil.copyText(context, it)
                             },
                             onMenuDeleteClick = {
                                 deleteSubPost = it.wrapImmutable()
@@ -492,12 +556,16 @@ private fun SubPostItem(
     item: SubPostItemData,
     threadAuthorId: Long? = null,
     canDelete: (SubPostList) -> Boolean = { false },
+    onUserClick: (User) -> Unit = {},
     onAgree: (SubPostList) -> Unit = {},
     onReplyClick: (SubPostList) -> Unit = {},
+    onMenuCopyClick: ((String) -> Unit)? = null,
     onMenuDeleteClick: ((SubPostList) -> Unit)? = null,
 ) {
     val (subPost, contentRenders, blocked) = item
     val context = LocalContext.current
+    val navigator = LocalNavigator.current
+    val coroutineScope = rememberCoroutineScope()
     val author = remember(subPost) { subPost.get { author }?.wrapImmutable() }
     val hasAgreed = remember(subPost) {
         subPost.get { agree?.hasAgree == 1 }
@@ -517,27 +585,31 @@ private fun SubPostItem(
             menuState = menuState,
             indication = null,
             menuContent = {
-                DropdownMenuItem(
-                    onClick = {
-                        onReplyClick(subPost.get())
-                        menuState.expanded = false
+                if (!context.appPreferences.hideReply) {
+                    DropdownMenuItem(
+                        onClick = {
+                            onReplyClick(subPost.get())
+                            menuState.expanded = false
+                        }
+                    ) {
+                        Text(text = stringResource(id = R.string.btn_reply))
                     }
-                ) {
-                    Text(text = stringResource(id = R.string.btn_reply))
+                }
+                if (onMenuCopyClick != null) {
+                    DropdownMenuItem(
+                        onClick = {
+                            onMenuCopyClick(contentRenders.joinToString("\n") { it.toString() })
+                            menuState.expanded = false
+                        }
+                    ) {
+                        Text(text = stringResource(id = R.string.menu_copy))
+                    }
                 }
                 DropdownMenuItem(
                     onClick = {
-                        TiebaUtil.copyText(
-                            context,
-                            contentRenders.joinToString("\n") { it.toString() })
-                        menuState.expanded = false
-                    }
-                ) {
-                    Text(text = stringResource(id = R.string.menu_copy))
-                }
-                DropdownMenuItem(
-                    onClick = {
-                        TiebaUtil.reportPost(context, subPost.get { id }.toString())
+                        coroutineScope.launch {
+                            TiebaUtil.reportPost(context, navigator, subPost.get { id }.toString())
+                        }
                         menuState.expanded = false
                     }
                 ) {
@@ -554,7 +626,7 @@ private fun SubPostItem(
                     }
                 }
             },
-            onClick = { onReplyClick(subPost.get()) }
+            onClick = { onReplyClick(subPost.get()) }.takeUnless { context.appPreferences.hideReply }
         ) {
             Card(
                 header = {
@@ -587,7 +659,7 @@ private fun SubPostItem(
                                 )
                             },
                             onClick = {
-                                UserActivity.launch(context, author.get { id }.toString())
+                                onUserClick(author.get())
                             }
                         ) {
                             PostAgreeBtn(

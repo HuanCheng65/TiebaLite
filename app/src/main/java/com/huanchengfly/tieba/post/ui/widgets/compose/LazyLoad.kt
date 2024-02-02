@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.PageSize
 import androidx.compose.foundation.pager.PagerDefaults
+import androidx.compose.foundation.pager.PagerScope
 import androidx.compose.foundation.pager.PagerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
@@ -38,9 +39,24 @@ fun LazyLoad(
 }
 
 @Composable
+fun LazyLoad(
+    key: Any,
+    loaded: Boolean,
+    onLoad: () -> Unit,
+) {
+    val shouldLoad = LocalShouldLoad.current
+    val curOnLoad by rememberUpdatedState(newValue = onLoad)
+    LaunchedEffect(key, loaded, shouldLoad) {
+        if (!loaded && shouldLoad) {
+            curOnLoad()
+        }
+    }
+}
+
+@Composable
 fun ProvideShouldLoad(
     shouldLoad: Boolean,
-    content: @Composable () -> Unit
+    content: @Composable () -> Unit,
 ) {
     val currentShouldLoad = LocalShouldLoad.current
 
@@ -70,9 +86,10 @@ fun LazyLoadHorizontalPager(
     reverseLayout: Boolean = false,
     key: ((index: Int) -> Any)? = null,
     pageNestedScrollConnection: NestedScrollConnection = PagerDefaults.pageNestedScrollConnection(
+        state,
         Orientation.Horizontal
     ),
-    pageContent: @Composable (page: Int) -> Unit,
+    pageContent: @Composable PagerScope.(page: Int) -> Unit,
 ) {
     HorizontalPager(
         state = state,

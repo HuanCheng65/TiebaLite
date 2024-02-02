@@ -18,25 +18,24 @@ import android.os.Environment
 import android.provider.MediaStore
 import android.text.TextUtils
 import android.util.Base64
-import android.view.MenuItem
-import android.view.View
 import android.webkit.URLUtil
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.annotation.IntDef
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
-import com.bumptech.glide.Glide
-import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
-import com.bumptech.glide.request.RequestOptions
+import com.github.panpf.sketch.disposeDisplay
+import com.github.panpf.sketch.request.Depth
+import com.github.panpf.sketch.request.DisplayRequest
 import com.github.panpf.sketch.request.DownloadRequest
 import com.github.panpf.sketch.request.DownloadResult
+import com.github.panpf.sketch.request.enqueue
+import com.github.panpf.sketch.request.execute
+import com.github.panpf.sketch.transform.CircleCropTransformation
+import com.github.panpf.sketch.transform.RoundedCornersTransformation
 import com.huanchengfly.tieba.post.App.Companion.INSTANCE
 import com.huanchengfly.tieba.post.R
-import com.huanchengfly.tieba.post.activities.PhotoViewActivity.Companion.launch
-import com.huanchengfly.tieba.post.components.transformations.RadiusTransformation
-import com.huanchengfly.tieba.post.dpToPx
-import com.huanchengfly.tieba.post.models.PhotoViewBean
+import com.huanchengfly.tieba.post.dpToPxFloat
 import com.huanchengfly.tieba.post.utils.PermissionUtils.PermissionData
 import com.huanchengfly.tieba.post.utils.PermissionUtils.askPermission
 import com.huanchengfly.tieba.post.utils.ThemeUtil.isNightMode
@@ -430,86 +429,6 @@ object ImageUtil {
     }
 
     @JvmStatic
-    fun initImageView(
-        view: ImageView,
-        photoViewBeans: List<PhotoViewBean?>,
-        position: Int,
-        forumName: String?,
-        forumId: String?,
-        threadId: String?,
-        seeLz: Boolean,
-        objType: String?
-    ) {
-        view.setOnClickListener { v: View ->
-            val tag = view.getTag(R.id.image_load_tag)
-            if (tag != null) {
-                val loaded = tag as Boolean
-                if (loaded) {
-                    launch(
-                        v.context,
-                        photoViewBeans.toTypedArray(),
-                        position,
-                        forumName,
-                        forumId,
-                        threadId,
-                        seeLz,
-                        objType
-                    )
-                } else {
-                    load(view, LOAD_TYPE_SMALL_PIC, photoViewBeans[position]!!.url, true)
-                }
-            }
-        }
-        view.setOnLongClickListener {
-            val popupMenu = PopupUtil.create(view)
-            popupMenu.menuInflater.inflate(R.menu.menu_image_long_click, popupMenu.menu)
-            popupMenu.setOnMenuItemClickListener { item: MenuItem ->
-                if (item.itemId == R.id.menu_save_image) {
-                    download(view.context, photoViewBeans[position]!!.originUrl)
-                    return@setOnMenuItemClickListener true
-                }
-                false
-            }
-            popupMenu.show()
-            true
-        }
-    }
-
-    @JvmStatic
-    fun initImageView(view: ImageView, photoViewBeans: List<PhotoViewBean>, position: Int) {
-        view.setOnClickListener { v: View ->
-            val tag = view.getTag(R.id.image_load_tag)
-            if (tag != null) {
-                val loaded = tag as Boolean
-                if (loaded) {
-                    launch(v.context, photoViewBeans, position)
-                } else {
-                    load(view, LOAD_TYPE_SMALL_PIC, photoViewBeans[position].url, true)
-                }
-            }
-        }
-        view.setOnLongClickListener {
-            val popupMenu = PopupUtil.create(view)
-            popupMenu.menuInflater.inflate(R.menu.menu_image_long_click, popupMenu.menu)
-            popupMenu.setOnMenuItemClickListener { item: MenuItem ->
-                if (item.itemId == R.id.menu_save_image) {
-                    download(view.context, photoViewBeans[position].originUrl)
-                    return@setOnMenuItemClickListener true
-                }
-                false
-            }
-            popupMenu.show()
-            true
-        }
-    }
-
-    fun initImageView(view: ImageView, photoViewBean: PhotoViewBean) {
-        val photoViewBeans: MutableList<PhotoViewBean> = ArrayList()
-        photoViewBeans.add(photoViewBean)
-        initImageView(view, photoViewBeans, 0)
-    }
-
-    @JvmStatic
     fun getNonNullString(vararg strings: String?): String? {
         for (url in strings) {
             if (!TextUtils.isEmpty(url)) {
@@ -529,7 +448,7 @@ object ImageUtil {
     }
 
     fun clear(imageView: ImageView?) {
-        Glide.with(imageView!!).clear(imageView)
+        imageView?.disposeDisplay()
     }
 
     fun getPlaceHolder(context: Context, radius: Int): Drawable {
@@ -543,18 +462,33 @@ object ImageUtil {
         return drawable
     }
 
+    fun getPlaceHolder(context: Context, radius: Float): Drawable {
+        val drawable = GradientDrawable()
+        val colorResId =
+            if (isNightMode()) R.color.color_place_holder_night else R.color.color_place_holder
+        val color = ContextCompat.getColor(context, colorResId)
+        drawable.setColor(color)
+        drawable.cornerRadius = radius.dpToPxFloat()
+        return drawable
+    }
+
     @SuppressLint("CheckResult")
     fun load(
         imageView: ImageView,
         @LoadType type: Int,
         url: String?,
         skipNetworkCheck: Boolean,
-        noTransition: Boolean
+        noTransition: Boolean,
     ) {
         if (!Util.canLoadGlide(imageView.context)) {
             return
         }
-        val radius = getRadiusDp(imageView.context)
+        if (isNightMode()) {
+            changeBrightness(imageView, -35)
+        } else {
+            imageView.clearColorFilter()
+        }
+        val radius = getRadiusDp(imageView.context).toFloat()
         val requestBuilder =
             if (skipNetworkCheck ||
                 type == LOAD_TYPE_AVATAR ||
@@ -563,51 +497,31 @@ object ImageUtil {
                 (imageLoadSettings == SETTINGS_SMART_LOAD && NetworkUtil.isWifiConnected(imageView.context))
             ) {
                 imageView.setTag(R.id.image_load_tag, true)
-                Glide.with(imageView).load(url)
+                DisplayRequest.Builder(imageView.context, url)
             } else {
                 imageView.setTag(R.id.image_load_tag, false)
-                Glide.with(imageView).load(
-                    getPlaceHolder(
-                        imageView.context,
-                        if (type == LOAD_TYPE_SMALL_PIC) radius else 0
-                    )
-                )
+                DisplayRequest.Builder(imageView.context, url).depth(Depth.LOCAL)
             }
-        if (isNightMode()) {
-            changeBrightness(imageView, -35)
-        } else {
-            imageView.clearColorFilter()
-        }
         when (type) {
-            LOAD_TYPE_SMALL_PIC -> requestBuilder.apply(
-                RequestOptions.bitmapTransform(RadiusTransformation(radius))
-                    .placeholder(getPlaceHolder(imageView.context, radius))
-                    .skipMemoryCache(true)
-            )
+            LOAD_TYPE_SMALL_PIC -> requestBuilder
+                .placeholder(getPlaceHolder(imageView.context, radius))
+                .transformations(RoundedCornersTransformation(radius.dpToPxFloat()))
 
-            LOAD_TYPE_AVATAR -> requestBuilder.apply(
-                RequestOptions.bitmapTransform(RadiusTransformation(6))
-                    .placeholder(getPlaceHolder(imageView.context, 6))
-                    .skipMemoryCache(true)
-            )
+            LOAD_TYPE_AVATAR -> requestBuilder
+                .placeholder(getPlaceHolder(imageView.context, 6f))
+                .transformations(RoundedCornersTransformation(6f.dpToPxFloat()))
 
-            LOAD_TYPE_NO_RADIUS -> requestBuilder.apply(
-                RequestOptions()
-                    .placeholder(getPlaceHolder(imageView.context, 0))
-                    .skipMemoryCache(true)
-            )
+            LOAD_TYPE_NO_RADIUS -> requestBuilder
+                .placeholder(getPlaceHolder(imageView.context, 0f))
 
-            LOAD_TYPE_ALWAYS_ROUND -> requestBuilder.apply(
-                RequestOptions()
-                    .circleCrop()
-                    .placeholder(getPlaceHolder(imageView.context, 100.dpToPx()))
-                    .skipMemoryCache(true)
-            )
+            LOAD_TYPE_ALWAYS_ROUND -> requestBuilder
+                .placeholder(getPlaceHolder(imageView.context, 100f))
+                .transformations(CircleCropTransformation())
         }
         if (!noTransition) {
-            requestBuilder.transition(DrawableTransitionOptions.withCrossFade())
+            requestBuilder.crossfade()
         }
-        requestBuilder.into(imageView)
+        requestBuilder.target(imageView).build().enqueue()
     }
 
     @JvmStatic

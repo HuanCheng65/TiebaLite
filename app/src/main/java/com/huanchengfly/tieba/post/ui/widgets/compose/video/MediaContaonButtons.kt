@@ -63,6 +63,16 @@ fun MediaControlButtons(
                 .background(Color.Black.copy(alpha = appearAlpha.value * 0.6f))
                 .then(modifier)
         )
+    } else {
+        Box(modifier = modifier) {
+            Box(modifier = Modifier
+                .fillMaxSize()
+                .clickable(
+                    indication = null,
+                    interactionSource = remember { MutableInteractionSource() }
+                ) {}
+            )
+        }
     }
 }
 

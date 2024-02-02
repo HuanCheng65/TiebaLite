@@ -8,14 +8,14 @@ import android.app.job.JobParameters
 import android.app.job.JobService
 import android.content.Context
 import android.content.Intent
+import android.content.Intent.ACTION_VIEW
+import android.net.Uri
 import android.os.Build
 import android.util.Log
 import androidx.core.app.NotificationCompat
 import com.huanchengfly.tieba.post.R
-import com.huanchengfly.tieba.post.activities.MessageActivity
 import com.huanchengfly.tieba.post.api.TiebaApi
 import com.huanchengfly.tieba.post.api.models.MsgBean
-import com.huanchengfly.tieba.post.fragments.MessageFragment
 import com.huanchengfly.tieba.post.pendingIntentFlagImmutable
 import com.huanchengfly.tieba.post.ui.common.theme.utils.ThemeUtils
 import retrofit2.Call
@@ -78,10 +78,7 @@ class NotifyJobService : JobService() {
                             ID_REPLY,
                             CHANNEL_REPLY,
                             CHANNEL_REPLY_NAME,
-                            MessageActivity.createIntent(
-                                this@NotifyJobService,
-                                MessageFragment.TYPE_REPLY_ME
-                            )
+                            Intent(ACTION_VIEW, Uri.parse("tblite://notifications/0"))
                         )
                     }
                     if ("0" != msgBean.message?.atMe) {
@@ -103,10 +100,7 @@ class NotifyJobService : JobService() {
                             ID_AT,
                             CHANNEL_AT,
                             CHANNEL_AT_NAME,
-                            MessageActivity.createIntent(
-                                this@NotifyJobService,
-                                MessageFragment.TYPE_AT_ME
-                            )
+                            Intent(ACTION_VIEW, Uri.parse("tblite://notifications/1"))
                         )
                     }
                     sendBroadcast(

@@ -1,0 +1,21 @@
+syntax = "proto3";
+
+package tieba.getMemberInfo;
+
+option java_package = "com.huanchengfly.tieba.post.api.models.protos.getMemberInfo";
+
+import "ForumMember.proto";
+import "GetMemberInfo/MemberGodInfo.proto";
+import "GetMemberInfo/ManagerApplyInfo.proto";
+import "MemberGroupInfo.proto";
+import "PriManagerApplyInfo.proto";
+
+message GetMemberInfoResponseData {
+  repeated MemberGroupInfo member_group_info = 1;
+  ForumMember forum_member_info = 2;
+  MemberGodInfo member_god_info = 3;
+  ManagerApplyInfo manager_apply_info = 4;
+  int32 is_private_forum = 5;
+  int32 is_bawuapply_show = 6;
+  PriManagerApplyInfo primanager_apply_info = 7;
+}

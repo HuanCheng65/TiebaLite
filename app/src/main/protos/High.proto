@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+package tieba;
+
+option java_package = "com.huanchengfly.tieba.post.api.models.protos";
+
+message High {
+  uint64 album_id = 1;
+  uint64 hid = 2;
+  uint64 uid = 3;
+  string pic_url = 4;
+  uint32 create_time = 5;
+  uint32 num_zan = 6;
+  uint32 num_cai = 7;
+  uint32 weight = 8;
+  uint32 type = 9;
+  string portrait = 10;
+  string user_name = 11;
+}

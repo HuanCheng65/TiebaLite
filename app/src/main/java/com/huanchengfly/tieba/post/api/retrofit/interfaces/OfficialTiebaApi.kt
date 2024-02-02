@@ -238,9 +238,11 @@ interface OfficialTiebaApi {
         @Field("birthday_time") birthdayTime: String,
         @Field("intro") intro: String,
         @Field("sex") sex: String,
+        @Field("nick_name") nickName: String,
         @Field("stoken") sToken: String = AccountUtil.getSToken()!!,
-        @Field("_client_version") client_version: String = "11.10.8.6",
-        @retrofit2.http.Header(Header.USER_AGENT) user_agent: String = "bdtb for Android $client_version",
+        @Field("cam") cam: String = "",
+        @Field("need_cam_decrypt") needCamDecrypt: String = "1",
+        @Field("need_keep_nickname_flag") needKeepNicknameFlag: String = "0",
     ): Flow<CommonResponse>
 
     @Headers(
@@ -492,8 +494,18 @@ interface OfficialTiebaApi {
         @Field("category") category: String,
         @FieldMap reportParam: Map<String, String>,
         @Field("stoken") stoken: String? = AccountUtil.getLoginInfo()
-            ?.sToken
+            ?.sToken,
     ): Call<CheckReportBean>
+
+    @Headers("${Header.FORCE_LOGIN}: ${Header.FORCE_LOGIN_TRUE}")
+    @POST("/c/f/ueg/checkjubao")
+    @FormUrlEncoded
+    fun checkReportAsync(
+        @Field("category") category: String,
+        @FieldMap reportParam: Map<String, String>,
+        @Field("stoken") stoken: String? = AccountUtil.getLoginInfo()
+            ?.sToken,
+    ): Deferred<ApiResult<CheckReportBean>>
 
     @Headers("${Header.FORCE_LOGIN}: ${Header.FORCE_LOGIN_TRUE}")
     @POST("/c/c/bawu/delthread")
@@ -523,4 +535,25 @@ interface OfficialTiebaApi {
         @Field("delete_my_post") deleteMyPost: Int,
         @Field("tbs") tbs: String? = AccountUtil.getLoginInfo()?.tbs,
     ): Flow<CommonResponse>
+
+    @Headers("${Header.FORCE_LOGIN}: ${Header.FORCE_LOGIN_TRUE}")
+    @POST("/c/f/forum/like")
+    @FormUrlEncoded
+    fun userLikeForumFlow(
+        @Field("page_no") page: Int = 1,
+        @Field("page_size") pageSize: Int = 50,
+        @Field("uid") uid: String?,
+        @Field("friend_uid") friendUid: String?,
+        @Field("is_guest") is_guest: String?,
+    ): Flow<UserLikeForumBean>
+
+    @POST("/c/f/pb/floor")
+    @FormUrlEncoded
+    fun floor(
+        @Field("kz") threadId: String,
+        @Field("pn") page: Int = 1,
+        @Field("pid") postId: String?,
+        @Field("spid") subPostId: String?,
+        @Field("rn") rn: Int = 20
+    ): Call<SubFloorListBean>
 }

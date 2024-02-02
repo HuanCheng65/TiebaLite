@@ -2,7 +2,19 @@ package com.huanchengfly.tieba.post.ui.widgets.compose
 
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.material.*
+import androidx.compose.material.DismissValue
+import androidx.compose.material.DrawerDefaults
+import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.FabPosition
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Scaffold
+import androidx.compose.material.ScaffoldState
+import androidx.compose.material.SnackbarHost
+import androidx.compose.material.SnackbarHostState
+import androidx.compose.material.SwipeToDismiss
+import androidx.compose.material.contentColorFor
+import androidx.compose.material.rememberDismissState
+import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
@@ -11,20 +23,22 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.unit.Dp
-import kotlinx.coroutines.delay
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 private fun SwipeToDismissSnackbarHost(hostState: SnackbarHostState) {
     val dismissState = rememberDismissState(
-        confirmStateChange = {
-            hostState.currentSnackbarData?.dismiss()
-            true
+        confirmStateChange = { value ->
+            if (value != DismissValue.Default) {
+                hostState.currentSnackbarData?.dismiss()
+                true
+            } else {
+                false
+            }
         }
     )
-    LaunchedEffect(hostState.currentSnackbarData) {
-        if (hostState.currentSnackbarData == null) {
-            delay(75)
+    LaunchedEffect(dismissState.currentValue) {
+        if (dismissState.currentValue != DismissValue.Default) {
             dismissState.reset()
         }
     }

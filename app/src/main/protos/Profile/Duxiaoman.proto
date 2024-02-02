@@ -1,0 +1,10 @@
+syntax = "proto3";
+
+package tieba.profile;
+
+option java_package = "com.huanchengfly.tieba.post.api.models.protos.profile";
+
+message Duxiaoman {
+  uint32 total_cash = 1;
+  uint32 is_end = 2;
+}

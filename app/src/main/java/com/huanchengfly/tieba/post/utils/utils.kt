@@ -22,20 +22,21 @@ import androidx.core.content.pm.ShortcutManagerCompat
 import androidx.core.graphics.drawable.IconCompat
 import com.github.panpf.sketch.request.LoadRequest
 import com.github.panpf.sketch.request.LoadResult
+import com.github.panpf.sketch.request.execute
 import com.google.android.material.snackbar.Snackbar
 import com.huanchengfly.tieba.post.App
 import com.huanchengfly.tieba.post.R
-import com.huanchengfly.tieba.post.activities.ThreadActivity
-import com.huanchengfly.tieba.post.activities.WebViewActivity
 import com.huanchengfly.tieba.post.api.retrofit.exception.TiebaException
 import com.huanchengfly.tieba.post.dataStore
 import com.huanchengfly.tieba.post.dpToPxFloat
 import com.huanchengfly.tieba.post.getBoolean
-import com.huanchengfly.tieba.post.goToActivity
 import com.huanchengfly.tieba.post.toastShort
 import com.huanchengfly.tieba.post.ui.common.theme.utils.ColorStateListUtils
 import com.huanchengfly.tieba.post.ui.common.theme.utils.ThemeUtils
+import com.huanchengfly.tieba.post.ui.page.destinations.ThreadPageDestination
+import com.huanchengfly.tieba.post.ui.page.destinations.WebViewPageDestination
 import com.huanchengfly.tieba.post.utils.Util.createSnackbar
+import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 
 @JvmOverloads
 fun getItemBackgroundDrawable(
@@ -147,7 +148,11 @@ fun getIntermixedColorBackground(
     )
 }
 
-fun launchUrl(context: Context, url: String) {
+fun launchUrl(
+    context: Context,
+    navigator: DestinationsNavigator,
+    url: String,
+) {
     val uri = Uri.parse(url)
     val host = uri.host
     val path = uri.path
@@ -156,15 +161,15 @@ fun launchUrl(context: Context, url: String) {
         return
     }
     if (scheme == "tiebaclient") {
-        val action = uri.getQueryParameter("action")
-        when (action) {
+        when (uri.getQueryParameter("action")) {
             "preview_file" -> {
                 val realUrl = uri.getQueryParameter("url")
                 if (realUrl.isNullOrEmpty()) {
                     return
                 }
-                launchUrl(context, realUrl)
+                launchUrl(context, navigator, realUrl)
             }
+
             else -> {
                 context.toastShort(R.string.toast_feature_unavailable)
             }
@@ -175,13 +180,17 @@ fun launchUrl(context: Context, url: String) {
         if (path == "/mo/q/checkurl") {
             launchUrl(
                 context,
-                uri.getQueryParameter("url").toString().replace("http://https://", "https://")
+                navigator,
+                uri.getQueryParameter("url")?.replace("http://https://", "https://").orEmpty()
             )
             return
         }
         if (host == "tieba.baidu.com" && path.startsWith("/p/")) {
-            context.goToActivity<ThreadActivity> {
-                putExtra("url", url)
+            val threadId = path.substring(3).toLongOrNull()
+            if (threadId != null) {
+                navigator.navigate(
+                    ThreadPageDestination(threadId)
+                )
             }
             return
         }
@@ -190,7 +199,9 @@ fun launchUrl(context: Context, url: String) {
                 "ufosdk.baidu.com"
             ) || host.contains("m.help.baidu.com")
         if (isTiebaLink || context.appPreferences.useWebView) {
-            WebViewActivity.launch(context, url)
+            navigator.navigate(
+                WebViewPageDestination(url)
+            )
         } else {
             if (context.appPreferences.useCustomTabs) {
                 val intentBuilder = CustomTabsIntent.Builder()

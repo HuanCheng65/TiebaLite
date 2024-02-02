@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+package tieba.profile;
+
+option java_package = "com.huanchengfly.tieba.post.api.models.protos.profile";
+
+import "Error.proto";
+import "Profile/ProfileResponseData.proto";
+
+message ProfileResponse {
+  Error error = 1;
+  ProfileResponseData data = 2;
+}
