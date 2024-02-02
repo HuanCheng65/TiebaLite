@@ -32,7 +32,7 @@ jobs:
           if [ -n "${{ secrets.RELEASEKEYPASSWORD }}" ]; then
             echo releaseKeyAlias="${{ vars.RELEASE_KEY_ALIAS }}" >> keystore.properties
             echo releaseKeyPassword="${{ secrets.RELEASEKEYPASSWORD }}" >> keystore.properties
-            echo releaseKeyStore=$(pwd)/"${{ vars.RELEASE_KEYSTORE }}" >> keystore.properties
+            echo releaseKeyStore="${{ vars.RELEASE_KEYSTORE }}" >> keystore.properties
             echo releaseStorePassword="${{ secrets.RELEASESTOREPASSWORD }}" >> keystore.properties
           fi
 
