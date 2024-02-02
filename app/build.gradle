@@ -248,11 +248,7 @@ dependencies {
 
     implementation 'com.google.code.gson:gson:2.10.1'
     implementation "org.litepal.android:kotlin:3.0.0"
-    implementation 'cn.jzvd:jiaozivideoplayer:7.7.2.3300'
     implementation 'com.jaredrummler:colorpicker:1.1.0'
-
-    implementation "com.scwang.smart:refresh-layout-kernel:2.0.1"
-    implementation "com.scwang.smart:refresh-header-material:2.0.1"
 
     implementation 'com.github.lwj1994:Matisse:0.5.3-20220115'
     implementation 'com.github.getActivity:XXPermissions:18.3'

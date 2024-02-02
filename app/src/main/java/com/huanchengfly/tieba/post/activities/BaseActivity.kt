@@ -25,7 +25,6 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import butterknife.ButterKnife
-import cn.jzvd.Jzvd
 import com.gyf.immersionbar.ImmersionBar
 import com.huanchengfly.tieba.post.App
 import com.huanchengfly.tieba.post.App.Companion.INSTANCE
@@ -54,8 +53,7 @@ abstract class BaseActivity : AppCompatActivity(), ExtraRefreshable, CoroutineSc
     private var mTintToolbar: TintToolbar? = null
     private var oldTheme: String = ""
 
-    var isActivityRunning = true
-        private set
+    private var isActivityRunning = true
     private var customStatusColor = -1
     private var statusBarTinted = false
 
@@ -64,7 +62,6 @@ abstract class BaseActivity : AppCompatActivity(), ExtraRefreshable, CoroutineSc
     override fun onPause() {
         super.onPause()
         isActivityRunning = false
-        Jzvd.releaseAllVideos()
     }
 
     //禁止app字体大小跟随系统字体大小调节

@@ -38,8 +38,6 @@ import com.huanchengfly.tieba.post.putBoolean
 import com.huanchengfly.tieba.post.putString
 import com.huanchengfly.tieba.post.ui.common.theme.utils.ThemeUtils
 import com.huanchengfly.tieba.post.ui.widgets.theme.TintSwipeRefreshLayout
-import com.scwang.smart.refresh.header.MaterialHeader
-import com.scwang.smart.refresh.layout.SmartRefreshLayout
 import kotlinx.coroutines.launch
 import java.util.Locale
 
@@ -185,34 +183,6 @@ object ThemeUtil {
         if (resources != null) {
             swipeRefreshLayout.setProgressBackgroundColorSchemeColor(resources.getColor(R.color.color_swipe_refresh_bg))
             swipeRefreshLayout.setColorSchemeColors(
-                ThemeUtils.getColorByAttr(
-                    context,
-                    R.attr.colorAccent
-                )
-            )
-        }
-    }
-
-    @JvmStatic
-    fun setThemeForSmartRefreshLayout(smartRefreshLayout: SmartRefreshLayout) {
-        val context = smartRefreshLayout.context
-        val resources = context.resources
-        if (resources != null) {
-            smartRefreshLayout.setPrimaryColors(
-                ThemeUtils.getColorByAttr(
-                    context,
-                    R.attr.colorAccent
-                )
-            )
-        }
-    }
-
-    fun setThemeForMaterialHeader(materialHeader: MaterialHeader) {
-        val context = materialHeader.context
-        val resources = context.resources
-        if (resources != null) {
-            materialHeader.setProgressBackgroundColorSchemeColor(resources.getColor(R.color.color_swipe_refresh_bg))
-            materialHeader.setColorSchemeColors(
                 ThemeUtils.getColorByAttr(
                     context,
                     R.attr.colorAccent
