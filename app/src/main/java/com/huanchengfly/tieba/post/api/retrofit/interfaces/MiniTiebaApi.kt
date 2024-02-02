@@ -116,27 +116,10 @@ interface MiniTiebaApi {
         @Field("agree_type") agreeType: Int = 2,
         @Field("obj_type") objType: Int = 3,
         @Field("op_type") opType: Int = 0,
-        @retrofit2.http.Header("client_user_token") client_user_token: String? = AccountUtil.getUid(),
-        @Field("cuid_gid") cuid_gid: String = "",
-        @Field("tbs") tbs: String = AccountUtil.getLoginInfo()!!.tbs,
-        @Field("stoken") stoken: String = AccountUtil.getSToken()!!
-    ): Flow<AgreeBean>
-
-    @Headers("${Header.FORCE_LOGIN}: ${Header.FORCE_LOGIN_TRUE}")
-    @POST("/c/c/agree/opAgree")
-    @FormUrlEncoded
-    fun agreeFlow(
-        @Field("post_id") postId: String,
-        @Field("thread_id") threadId: String,
-        @retrofit2.http.Header("client_user_token") client_user_token: String? = AccountUtil.getUid(),
-        @Field("_client_version") client_version: String = "8.0.8.0",
-        @retrofit2.http.Header(Header.USER_AGENT) user_agent: String = "bdtb for Android $client_version",
-        @Field("cuid_gid") cuid_gid: String = "",
-        @Field("agree_type") agree_type: Int = 2,
-        @Field("obj_type") obj_type: Int = 3,
-        @Field("op_type") op_type: Int = 0,
-        @Field("tbs") tbs: String = AccountUtil.getLoginInfo()!!.tbs,
-        @Field("stoken") stoken: String = AccountUtil.getSToken()!!
+        @retrofit2.http.Header("client_user_token") clientUserToken: String? = AccountUtil.getUid(),
+        @Field("cuid_gid") cuidGid: String = "",
+        @Field("tbs") tbs: String? = AccountUtil.getLoginInfo()?.tbs,
+        @Field("stoken") stoken: String? = AccountUtil.getSToken(),
     ): Flow<AgreeBean>
 
     @Headers("${Header.FORCE_LOGIN}: ${Header.FORCE_LOGIN_TRUE}")
