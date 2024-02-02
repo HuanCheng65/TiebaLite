@@ -12,7 +12,6 @@ object LauncherIcons {
     const val NEW_ICON_THEMED = "com.huanchengfly.tieba.post.MainActivityIconThemed"
     const val NEW_ICON_INVERT = "com.huanchengfly.tieba.post.MainActivityIconInvert"
     const val OLD_ICON = "com.huanchengfly.tieba.post.MainActivityIconOld"
-    const val DISABLE = "com.huanchengfly.tieba.post.MainActivityV2Disabled"
 
     const val DEFAULT_ICON = NEW_ICON
 
@@ -22,6 +21,8 @@ object LauncherIcons {
     val THEMED_ICON_MAPPING = mapOf(
         NEW_ICON to NEW_ICON_THEMED,
     )
+
+    const val OLD_LAUNCHER_ICON = "com.huanchengfly.tieba.post.activities.MainActivity"
 }
 
 object AppIconUtil {
@@ -38,7 +39,7 @@ object AppIconUtil {
         isThemed: Boolean = appPreferences.useThemedIcon,
     ) {
         val useThemedIcon = isThemed && LauncherIcons.SUPPORT_THEMED_ICON.contains(icon)
-        var newIcon = if (LauncherIcons.ICONS.contains(icon) || icon == LauncherIcons.DISABLE) {
+        var newIcon = if (LauncherIcons.ICONS.contains(icon)) {
             icon
         } else LauncherIcons.DEFAULT_ICON
         if (useThemedIcon) {
@@ -51,6 +52,12 @@ object AppIconUtil {
                 context.packageManager.disableComponent(ComponentName(context, it))
             }
         }
+        context.packageManager.disableComponent(
+            ComponentName(
+                context,
+                LauncherIcons.OLD_LAUNCHER_ICON
+            )
+        )
     }
 
     /**
