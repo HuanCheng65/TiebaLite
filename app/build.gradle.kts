@@ -54,12 +54,13 @@ android {
         compose = true
     }
     signingConfigs {
-        if (property.releaseKeyStore.isNotEmpty()) {
+        println("keystore.file: ${property.keystore.file}")
+        if (property.keystore.file.isNotBlank()) {
             val config by creating {
-                keyAlias = property.releaseKeyAlias
-                keyPassword = property.releaseKeyPassword
-                storeFile = file(File(rootDir, property.releaseKeyStore))
-                storePassword = property.releaseStorePassword
+                storeFile = file(File(rootDir, property.keystore.file))
+                storePassword = property.keystore.password
+                keyAlias = property.keystore.key.alias
+                keyPassword = property.keystore.key.password
                 enableV3Signing = true
                 enableV4Signing = true
             }
