@@ -22,10 +22,10 @@ jobs:
         run: |
           if [ -n "${{ secrets.RELEASEKEYPASSWORD }}" ]; then
             echo ${{ secrets.KEYSTORE }} | base64 --decode > ${{ vars.RELEASE_KEYSTORE }}
-            echo releaseKeyAlias="${{ vars.RELEASE_KEY_ALIAS }}" >> keystore.properties
-            echo releaseKeyPassword="${{ secrets.RELEASEKEYPASSWORD }}" >> keystore.properties
-            echo releaseKeyStore="${{ vars.RELEASE_KEYSTORE }}" >> keystore.properties
-            echo releaseStorePassword="${{ secrets.RELEASESTOREPASSWORD }}" >> keystore.properties
+            echo keystore.file="${{ vars.RELEASE_KEYSTORE }}" >> keystore.properties
+            echo keystore.password="${{ secrets.RELEASESTOREPASSWORD }}" >> keystore.properties
+            echo keystore.key.alias="${{ vars.RELEASE_KEY_ALIAS }}" >> keystore.properties
+            echo keystore.key.password="${{ secrets.RELEASEKEYPASSWORD }}" >> keystore.properties
           fi
 
       - name: Setup Gradle
