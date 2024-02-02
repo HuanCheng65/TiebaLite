@@ -54,6 +54,7 @@ android {
         compose = true
     }
     signingConfigs {
+        println("keystore.file: ${property.keystore.file}")
         if (property.keystore.file.isNotBlank()) {
             val config by creating {
                 storeFile = file(File(rootDir, property.keystore.file))
