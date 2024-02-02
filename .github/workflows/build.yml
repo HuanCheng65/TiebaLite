@@ -100,7 +100,7 @@ jobs:
           fi
 
       - name: Upload Mapping to App Center
-        if: ${{ success() && secrets.APP_CENTER_TOKEN && secrets.APP_CENTER_APP }}
+        if: ${{ github.event_name != 'pull_request' || github.ref_type == 'tag' }}
         env:
           version_code: ${{ fromJSON(steps.read_output_metadata.outputs.content).elements[0].versionCode }}
           version_name: ${{ fromJSON(steps.read_output_metadata.outputs.content).elements[0].versionName }}
