@@ -17,19 +17,11 @@ jobs:
           distribution: "zulu"
           cache: gradle
 
-      - name: Decode Keystore
-        id: decode_keystore
-        if: ${{ github.event_name != 'pull_request' || github.ref_type == 'tag' }}
-        uses: timheuer/base64-to-file@v1.2
-        with:
-          fileName: ${{ vars.RELEASE_KEYSTORE }}
-          fileDir: ${{ github.workspace }}
-          encodedString: ${{ secrets.KEYSTORE }}
-
       - name: Generate keystore.properties
         if: ${{ github.event_name != 'pull_request' || github.ref_type == 'tag' }}
         run: |
           if [ -n "${{ secrets.RELEASEKEYPASSWORD }}" ]; then
+            echo ${{ secrets.KEYSTORE }} | base64 --decode > ${{ vars.RELEASE_KEYSTORE }}
             echo keystore.file="${{ vars.RELEASE_KEYSTORE }}" >> keystore.properties
             echo keystore.password="${{ secrets.RELEASESTOREPASSWORD }}" >> keystore.properties
             echo keystore.key.alias="${{ vars.RELEASE_KEY_ALIAS }}" >> keystore.properties
@@ -56,7 +48,7 @@ jobs:
         env:
           version_code: ${{ fromJSON(steps.read_output_metadata.outputs.content).elements[0].versionCode }}
           version_name: ${{ fromJSON(steps.read_output_metadata.outputs.content).elements[0].versionName }}
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: "release-${{ env.version_name }}(${{ env.version_code }})"
           path: ./app/build/outputs/apk/release
@@ -72,7 +64,6 @@ jobs:
         env:
           CHANNEL_ID: ${{ secrets.CHANNEL_DEV_ID }}
           BOT_TOKEN: ${{ secrets.BOT_DEV_TOKEN }}
-          MAPPING: ./app/build/outputs/mapping/release/mapping.txt
           COMMIT_URL: ${{ github.event.head_commit.url }}
           COMMIT_MESSAGE: |+
             ```
@@ -85,9 +76,8 @@ jobs:
         run: |
           if [ -n "$BOT_TOKEN" ] && [ -n "$CHANNEL_ID" ]; then
             export RELEASE=$(find ./app/build/outputs/apk/release -name "*.apk")
-            export DEBUG=$(find ./app/build/outputs/apk/debug -name "*.apk")
             ESCAPED=`python3 -c 'import json,os,urllib.parse; msg = json.dumps(os.environ["COMMIT_MESSAGE"]); print(urllib.parse.quote(msg if len(msg) <= 1024 else json.dumps(os.environ["COMMIT_URL"])))'`
-            curl -v "https://api.telegram.org/bot${BOT_TOKEN}/sendMediaGroup?chat_id=${CHANNEL_ID}&media=%5B%7B%22type%22%3A%22document%22%2C%22media%22%3A%22attach%3A%2F%2Frelease%22%7D%2C%7B%22type%22%3A%22document%22%2C%22media%22%3A%22attach%3A%2F%2Fdebug%22%7D%2C%7B%22type%22%3A%22document%22%2C%22media%22%3A%22attach%3A%2F%2Fmapping%22%2C%22parse_mode%22%3A%22MarkdownV2%22%2C%22caption%22%3A${ESCAPED}%7D%5D&reply_markup=%7B%22inline_keyboard%22%3A%20%5B%5B%7B%22text%22%3A%20%22%E5%9C%A8+Github+%E4%B8%8A%E6%9F%A5%E7%9C%8B%22%2C%20%22url%22%3A%20${ACTION_URL}%7D%5D%5D%7D" -F release="@$RELEASE" -F debug="@$DEBUG" -F mapping="@$MAPPING"
+            curl -v "https://api.telegram.org/bot${BOT_TOKEN}/sendMediaGroup?chat_id=${CHANNEL_ID}&media=%5B%7B%22type%22%3A%22document%22%2C%22media%22%3A%22attach%3A%2F%2Frelease%22%2C%22parse_mode%22%3A%22MarkdownV2%22%2C%22caption%22%3A${ESCAPED}%7D%5D&reply_markup=%7B%22inline_keyboard%22%3A%20%5B%5B%7B%22text%22%3A%20%22%E5%9C%A8+Github+%E4%B8%8A%E6%9F%A5%E7%9C%8B%22%2C%20%22url%22%3A%20${ACTION_URL}%7D%5D%5D%7D" -F release="@$RELEASE"
           fi
 
       - name: Upload Mapping to App Center
@@ -98,4 +88,4 @@ jobs:
         uses: saurav-aggarwal/appcenter-cli-action@1.0.1
         with:
           token: ${{ secrets.APP_CENTER_TOKEN }}
-          command: appcenter crashes upload-mappings -c ${{ env.version_code }} -n ${{ env.version_name }} -m /github/workspace/app/build/outputs/mapping/release/mapping.txt -a huanchengfly/TiebaLite
+          command: appcenter crashes upload-mappings -c ${{ env.version_code }} -n ${{ env.version_name }} -m ./app/build/outputs/mapping/release/mapping.txt -a ${{ secrets.APP_CENTER_APP }}
