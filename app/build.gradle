@@ -10,7 +10,8 @@ plugins {
 }
 
 def keystoreProperties = new Properties()
-keystoreProperties.load(new FileInputStream(rootProject.file("keystore.properties")))
+if (rootProject.file("keystore.properties").canRead())
+    keystoreProperties.load(new FileInputStream(rootProject.file("keystore.properties")))
 def applicationProperties = new Properties()
 applicationProperties.load(new FileInputStream(rootProject.file("application.properties")))
 def sha = System.getenv("GITHUB_SHA")
@@ -48,20 +49,20 @@ android {
         compose true
     }
     signingConfigs {
-        release {
-            keyAlias keystoreProperties["releaseKeyAlias"]
-            keyPassword keystoreProperties["releaseKeyPassword"]
-            storeFile file(rootDir.getCanonicalPath() + "/" + keystoreProperties["releaseKeyStore"])
-            storePassword keystoreProperties["releaseStorePassword"]
-            enableV1Signing true
-            enableV2Signing true
-            enableV3Signing true
-            enableV4Signing true
+        if (keystoreProperties.containsKey("releaseKeyStore")) {
+            config {
+                keyAlias keystoreProperties["releaseKeyAlias"]
+                keyPassword keystoreProperties["releaseKeyPassword"]
+                storeFile file(keystoreProperties["releaseKeyStore"])
+                storePassword keystoreProperties["releaseStorePassword"]
+                enableV3Signing true
+                enableV4Signing true
+            }
         }
     }
     buildTypes {
-        debug {
-            signingConfig signingConfigs.release
+        configureEach {
+            signingConfig signingConfigs.hasProperty("config") ? signingConfigs.config : signingConfigs.debug
         }
         release {
             minifyEnabled true
@@ -69,8 +70,6 @@ android {
             proguardFiles getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro"
             debuggable false
             jniDebuggable false
-            signingConfig signingConfigs.release
-            zipAlignEnabled true
             multiDexEnabled true
         }
     }
@@ -96,7 +95,7 @@ android {
         }
     }
     namespace 'com.huanchengfly.tieba.post'
-    applicationVariants.all { variant ->
+    applicationVariants.configureEach { variant ->
         variant.outputs.each { output ->
             def outputFile = output.outputFile
             def fileName = "${variant.buildType.name}-${applicationVersionName}(${applicationVersionCode}).apk"
