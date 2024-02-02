@@ -4,10 +4,10 @@ plugins {
     autowire(libs.plugins.com.android.application)
     autowire(libs.plugins.kotlin.android)
     autowire(libs.plugins.kotlin.kapt)
-    autowire(libs.plugins.kotlin.ksp)
     autowire(libs.plugins.kotlin.serialization)
     autowire(libs.plugins.kotlin.parcelize)
     autowire(libs.plugins.hilt.android)
+    autowire(libs.plugins.kotlin.ksp)
     autowire(libs.plugins.com.squareup.wire)
 }
 
@@ -22,6 +22,16 @@ if (isPerVersion) {
 }
 if (!isSelfBuild && !sha.isNullOrEmpty()) {
     applicationVersionName += "+${sha.substring(0, 7)}"
+}
+
+wire {
+    sourcePath {
+        srcDir("src/main/protos")
+    }
+
+    kotlin {
+        android = true
+    }
 }
 
 android {
@@ -119,16 +129,6 @@ android {
     }
 }
 
-wire {
-    sourcePath {
-        srcDir("src/main/protos")
-    }
-
-    kotlin {
-        android = true
-    }
-}
-
 dependencies {
     //Local Files
 //    implementation fileTree(include: ["*.jar"], dir: "libs")
@@ -153,9 +153,9 @@ dependencies {
     api(wire.runtime)
 
     implementation(hilt.android)
-    ksp(hilt.compiler)
+    kapt(hilt.compiler)
     implementation(androidx.hilt.navigation.compose)
-    ksp(androidx.hilt.compiler)
+    kapt(androidx.hilt.compiler)
 
     implementation(accompanist.drawablepainter)
     implementation(accompanist.insets.ui)
@@ -164,6 +164,7 @@ dependencies {
 
     implementation(sketch.core)
     implementation(sketch.compose)
+    implementation(sketch.ext.compose)
     implementation(sketch.gif)
     implementation(sketch.okhttp)
 

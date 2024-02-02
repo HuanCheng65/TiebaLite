@@ -32,6 +32,13 @@ repositories:
   # JitPack
   jit-pack:
 
+versions:
+  accompanist: 0.34.0
+  hilt: 2.46.1
+  kotlin: 1.9.22
+  sketch: 3.3.0
+  wire: 4.9.3
+
 # Configure plugins that need to be used
 # For example:
 # plugins:
@@ -50,24 +57,24 @@ plugins:
     version: 8.2.2
   org.jetbrains.kotlin.android:
     alias: kotlin-android
-    version: 1.9.22
+    version-ref: kotlin
   org.jetbrains.kotlin.kapt:
     alias: kotlin-kapt
-    version-ref: kotlin-android
+    version-ref: kotlin
   com.google.devtools.ksp:
     alias: kotlin-ksp
     version: 1.9.22-1.0.17
   org.jetbrains.kotlin.plugin.serialization:
     alias: kotlin-serialization
-    version-ref: kotlin-android
+    version-ref: kotlin
   org.jetbrains.kotlin.plugin.parcelize:
     alias: kotlin-parcelize
-    version-ref: kotlin-android
+    version-ref: kotlin
   com.google.dagger.hilt.android:
     alias: hilt-android
-    version: 2.46.1
+    version-ref: hilt
   com.squareup.wire:
-    version: 4.9.5
+    version-ref: wire
 
 # Configure libraries that need to be used
 # For example:
@@ -120,7 +127,7 @@ libraries:
   com.squareup.wire:
     wire-runtime:
       alias: wire-runtime
-      version: 4.9.3
+      version-ref: wire
   net.swiftzer.semver:
     semver:
       alias: swiftzer-semver
@@ -170,10 +177,10 @@ libraries:
   com.google.dagger:
     hilt-android:
       alias: hilt-android
-      version: 2.48
+      version-ref: hilt
     hilt-compiler:
       alias: hilt-compiler
-      version-ref: hilt-android
+      version-ref: hilt
   androidx.hilt:
     hilt-navigation-compose:
       alias: androidx-hilt-navigation-compose
@@ -184,29 +191,32 @@ libraries:
   com.google.accompanist:
     accompanist-drawablepainter:
       alias: accompanist-drawablepainter
-      version: 0.34.0
+      version-ref: accompanist
     accompanist-insets-ui:
       alias: accompanist-insets-ui
-      version-ref: accompanist-drawablepainter
+      version-ref: accompanist
     accompanist-systemuicontroller:
       alias: accompanist-systemuicontroller
-      version-ref: accompanist-drawablepainter
+      version-ref: accompanist
     accompanist-placeholder-material:
       alias: accompanist-placeholder-material
-      version-ref: accompanist-drawablepainter
+      version-ref: accompanist
   io.github.panpf.sketch3:
     sketch:
       alias: sketch-core
-      version: 3.3.0
+      version-ref: sketch
     sketch-compose:
       alias: sketch-compose
-      version-ref: sketch-core
+      version-ref: sketch
+    sketch-extensions-compose:
+      alias: sketch-ext-compose
+      version-ref: sketch
     sketch-gif:
       alias: sketch-gif
-      version-ref: sketch-core
+      version-ref: sketch
     sketch-okhttp:
       alias: sketch-okhttp
-      version-ref: sketch-core
+      version-ref: sketch
   io.github.panpf.zoomimage:
     zoomimage-compose-sketch:
       alias: zoomimage-compose-sketch
@@ -256,10 +266,10 @@ libraries:
   org.jetbrains.kotlin:
     kotlin-stdlib:
       alias: kotlin-stdlib
-      version: 1.9.22
+      version-ref: kotlin
     kotlin-reflect:
       alias: kotlin-reflect
-      version-ref: kotlin-stdlib
+      version-ref: kotlin
   androidx.lifecycle:
     lifecycle-runtime-ktx:
       alias: androidx-lifecycle-runtime
