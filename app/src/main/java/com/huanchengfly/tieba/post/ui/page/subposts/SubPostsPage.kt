@@ -540,14 +540,11 @@ private fun getDescText(
     time: Long?,
     ipAddress: String?
 ): String {
-    val texts = mutableListOf<String>()
-    if (time != null) texts.add(DateTimeUtils.getRelativeTimeString(App.INSTANCE, time))
-    if (!ipAddress.isNullOrEmpty()) texts.add(
-        App.INSTANCE.getString(
-            R.string.text_ip_location,
-            "$ipAddress"
-        )
+    val texts = listOfNotNull(
+        time?.let { DateTimeUtils.getRelativeTimeString(App.INSTANCE, it) },
+        ipAddress?.let { App.INSTANCE.getString(R.string.text_ip_location, it) }
     )
+    if (texts.isEmpty()) return ""
     return texts.joinToString(" ")
 }
 

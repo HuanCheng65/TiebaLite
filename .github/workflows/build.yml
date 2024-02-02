@@ -21,10 +21,10 @@ jobs:
         if: ${{ github.event_name != 'pull_request' || github.ref_type == 'tag' }}
         run: |
           if [ -n "${{ secrets.RELEASEKEYPASSWORD }}" ]; then
-            echo ${{ secrets.KEYSTORE }} | base64 --decode > signing.jks
+            echo ${{ secrets.KEYSTORE }} | base64 --decode > ${{ vars.RELEASE_KEYSTORE }}
             echo releaseKeyAlias="${{ vars.RELEASE_KEY_ALIAS }}" >> keystore.properties
             echo releaseKeyPassword="${{ secrets.RELEASEKEYPASSWORD }}" >> keystore.properties
-            echo releaseKeyStore=$(pwd)/signing.jks >> keystore.properties
+            echo releaseKeyStore="${{ vars.RELEASE_KEYSTORE }}" >> keystore.properties
             echo releaseStorePassword="${{ secrets.RELEASESTOREPASSWORD }}" >> keystore.properties
           fi
 

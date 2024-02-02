@@ -44,7 +44,9 @@ abstract class BaseComposeActivityWithData<DATA> : BaseComposeActivity() {
 
     @Composable
     final override fun Content() {
-        Content(data!!)
+        data?.let { data ->
+            Content(data)
+        }
     }
 
     @Composable

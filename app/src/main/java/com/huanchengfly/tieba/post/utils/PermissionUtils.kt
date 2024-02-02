@@ -5,8 +5,8 @@ import android.content.Context
 import android.os.Build
 import android.os.Handler
 import android.os.Looper
-import com.hjq.permissions.IPermissionInterceptor
 import com.hjq.permissions.OnPermissionCallback
+import com.hjq.permissions.OnPermissionInterceptor
 import com.hjq.permissions.Permission
 import com.hjq.permissions.XXPermissions
 import com.huanchengfly.tieba.post.R
@@ -369,7 +369,7 @@ object PermissionUtils {
 }
 
 class ShowPermissionTipInterceptor(val permissions: List<String>, val description: String) :
-    IPermissionInterceptor {
+    OnPermissionInterceptor {
     companion object {
         @JvmStatic
         val HANDLER: Handler = Handler(Looper.getMainLooper())

@@ -187,16 +187,18 @@ private fun getDescText(
     floor: Int,
     ipAddress: String?
 ): String {
-    val texts = mutableListOf<String>()
-    if (time != null) texts.add(getRelativeTimeString(App.INSTANCE, time))
-    if (floor > 1) texts.add(App.INSTANCE.getString(R.string.tip_post_floor, floor))
-    if (!ipAddress.isNullOrEmpty()) texts.add(
-        App.INSTANCE.getString(
+    val texts = listOfNotNull(
+        time?.let { getRelativeTimeString(App.INSTANCE, it) },
+        if (floor > 1) App.INSTANCE.getString(R.string.tip_post_floor, floor) else null,
+        if (ipAddress.isNullOrEmpty()) null else App.INSTANCE.getString(
             R.string.text_ip_location,
-            "$ipAddress"
+            ipAddress
         )
     )
-    return texts.joinToString(" ")
+    if (texts.isEmpty()) {
+        return ""
+    }
+    return texts.joinToString(" · ")
 }
 
 @Composable

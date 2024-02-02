@@ -35,6 +35,7 @@ import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import kotlinx.coroutines.launch
 
+@OptIn(ExperimentalFoundationApi::class)
 @Destination(
     deepLinks = [
         DeepLink(uriPattern = "tblite://notifications/{initialTab}")
@@ -45,8 +46,21 @@ fun NotificationsPage(
     navigator: DestinationsNavigator,
     initialTab: Int = 0,
 ) {
+    val pages = listOf<Pair<String, (@Composable () -> Unit)>>(
+        stringResource(id = R.string.title_reply_me) to @Composable {
+            NotificationsListPage(type = NotificationsType.ReplyMe)
+        },
+        stringResource(id = R.string.title_at_me) to @Composable {
+            NotificationsListPage(type = NotificationsType.AtMe)
+        }
+    )
+    val pagerState = rememberPagerState(
+        initialPage = initialTab,
+    ) { pages.size }
+    val coroutineScope = rememberCoroutineScope()
     ProvideNavigator(navigator = navigator) {
         MyScaffold(
+            backgroundColor = Color.Transparent,
             topBar = {
                 TitleCentredToolbar(
                     title = { Text(text = stringResource(id = R.string.title_notifications)) },
@@ -55,11 +69,45 @@ fun NotificationsPage(
                             navigator.navigateUp()
                         }
                     }
-                )
+                ) {
+                    TabRow(
+                        selectedTabIndex = pagerState.currentPage,
+                        indicator = { tabPositions ->
+                            PagerTabIndicator(
+                                pagerState = pagerState,
+                                tabPositions = tabPositions
+                            )
+                        },
+                        divider = {},
+                        backgroundColor = Color.Transparent,
+                        contentColor = ExtendedTheme.colors.onTopBar,
+                    ) {
+                        pages.forEachIndexed { index, pair ->
+                            Tab(
+                                text = { Text(text = pair.first) },
+                                selected = pagerState.currentPage == index,
+                                onClick = {
+                                    coroutineScope.launch {
+                                        pagerState.animateScrollToPage(index)
+                                    }
+                                },
+                            )
+                        }
+                    }
+                }
             },
             modifier = Modifier.fillMaxSize(),
-        ) {
-            NotificationsPage(initialTab = initialTab)
+        ) { paddingValues ->
+            LazyLoadHorizontalPager(
+                state = pagerState,
+                contentPadding = paddingValues,
+                key = { pages[it].first },
+                modifier = Modifier.fillMaxSize(),
+                verticalAlignment = Alignment.Top,
+                userScrollEnabled = true,
+            ) {
+                pages[it].second()
+            }
         }
     }
 }

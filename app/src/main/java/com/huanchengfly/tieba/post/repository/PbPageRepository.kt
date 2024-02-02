@@ -61,7 +61,10 @@ object PbPageRepository {
                 }
                 val userList = response.data_.user_list
                 val postList = response.data_.post_list.map {
+                    val author = it.author
+                        ?: userList.first { user -> user.id == it.author_id }
                     it.copy(
+                        author_id = author.id,
                         author = it.author
                             ?: userList.first { user -> user.id == it.author_id },
                         from_forum = response.data_.forum,
@@ -81,6 +84,7 @@ object PbPageRepository {
                 }
                 val firstPost = postList.firstOrNull { it.floor == 1 }
                     ?: response.data_.first_floor_post?.copy(
+                        author_id = response.data_.thread.author.id,
                         author = response.data_.thread.author,
                         from_forum = response.data_.forum,
                         tid = response.data_.thread.id,
