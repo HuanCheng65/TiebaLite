@@ -35,7 +35,7 @@ jobs:
           cache-read-only: ${{ github.ref != 'refs/heads/master' && github.ref != 'refs/heads/4.0-dev' }}
 
       - name: Build with Gradle
-        run: ./gradlew assemble
+        run: ./gradlew assembleRelease
 
       - name: Read Output Metadata
         id: read_output_metadata
@@ -52,15 +52,6 @@ jobs:
         with:
           name: "release-${{ env.version_name }}(${{ env.version_code }})"
           path: ./app/build/outputs/apk/release
-
-      - name: Upload Debug Package
-        env:
-          version_code: ${{ fromJSON(steps.read_output_metadata.outputs.content).elements[0].versionCode }}
-          version_name: ${{ fromJSON(steps.read_output_metadata.outputs.content).elements[0].versionName }}
-        uses: actions/upload-artifact@v4
-        with:
-          name: "debug-${{ env.version_name }}(${{ env.version_code }})"
-          path: ./app/build/outputs/apk/debug
 
       - name: Upload Mapping
         uses: actions/upload-artifact@v4
