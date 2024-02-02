@@ -35,6 +35,7 @@ import com.huanchengfly.tieba.post.arch.pageViewModel
 import com.huanchengfly.tieba.post.ui.common.theme.compose.ExtendedTheme
 import com.huanchengfly.tieba.post.ui.common.theme.compose.pullRefreshIndicator
 import com.huanchengfly.tieba.post.ui.page.LocalNavigator
+import com.huanchengfly.tieba.post.ui.page.destinations.UserProfilePageDestination
 import com.huanchengfly.tieba.post.ui.page.search.SearchUiEvent
 import com.huanchengfly.tieba.post.ui.widgets.compose.Avatar
 import com.huanchengfly.tieba.post.ui.widgets.compose.Chip
@@ -142,12 +143,18 @@ fun SearchUserPage(
                             )
                         }
                     }
-                    item(key = "ExactMatch") {
-                        SearchUserItem(
-                            item = exactMatch!!,
-                            onClick = {
-                            }
-                        )
+                    exactMatch?.let {
+                        item(key = "ExactMatch") {
+                            SearchUserItem(
+                                item = it,
+                                onClick = {
+                                    val id = it.id?.toLongOrNull()
+                                    if (id != null) {
+                                        navigator.navigate(UserProfilePageDestination(id))
+                                    }
+                                }
+                            )
+                        }
                     }
                 }
                 if (showFuzzyMatchResult) {
@@ -168,6 +175,10 @@ fun SearchUserPage(
                         SearchUserItem(
                             item = it,
                             onClick = {
+                                val id = it.id?.toLongOrNull()
+                                if (id != null) {
+                                    navigator.navigate(UserProfilePageDestination(id))
+                                }
                             }
                         )
                     }
