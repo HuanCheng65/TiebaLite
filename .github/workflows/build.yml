@@ -23,10 +23,13 @@ jobs:
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
-      - name: Decrypt keystore
-        env:
-          RELEASE_ENCRYPT_SECRET_KEY: ${{ secrets.RELEASE_ENCRYPT_SECRET_KEY }}
-        run: openssl aes-256-cbc -d -in "${{ github.workspace }}/${{ vars.RELEASE_KEYSTORE }}.encrypted" -k $RELEASE_ENCRYPT_SECRET_KEY -md md5 >> ${{ github.workspace }}/${{ vars.RELEASE_KEYSTORE }}
+      - name: Decode Keystore
+        id: decode_keystore
+        uses: timheuer/base64-to-file@v1.2
+        with:
+          fileName: ${{ vars.RELEASE_KEYSTORE }}
+          fileDir: ${{ github.workspace }}
+          encodedString: ${{ secrets.KEYSTORE }}
 
       - name: Generate keystore.properties
         env:
