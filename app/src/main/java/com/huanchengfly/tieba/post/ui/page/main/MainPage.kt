@@ -243,40 +243,40 @@ fun MainPage(
             GlobalEvent.Refresh(navigationItems[it].id)
         )
     }
-    NavigationWrapper(
-        currentPosition = pagerState.currentPage,
-        onChangePosition = { coroutineScope.launch { pagerState.scrollToPage(it) } },
-        onReselected = onReselected,
-        navigationItems = navigationItems,
-        navigationType = navigationType,
-        navigationContentPosition = navigationContentPosition
-    ) {
-        MyScaffold(
-            backgroundColor = Color.Transparent,
-            modifier = Modifier.fillMaxSize(),
-            bottomBar = {
-                AnimatedVisibility(visible = navigationType == MainNavigationType.BOTTOM_NAVIGATION) {
-                    BottomNavigation(
-                        currentPosition = pagerState.currentPage,
-                        onChangePosition = {
-                            coroutineScope.launch { pagerState.scrollToPage(it) }
-                        },
-                        onReselected = onReselected,
-                        navigationItems = navigationItems,
-                        themeColors = themeColors,
-                    )
-                }
-            }
-        ) { paddingValues ->
-            LazyLoadHorizontalPager(
-                contentPadding = paddingValues,
-                state = pagerState,
-                key = { navigationItems[it].id },
+    ProvideNavigator(navigator = navigator) {
+        NavigationWrapper(
+            currentPosition = pagerState.currentPage,
+            onChangePosition = { coroutineScope.launch { pagerState.scrollToPage(it) } },
+            onReselected = onReselected,
+            navigationItems = navigationItems,
+            navigationType = navigationType,
+            navigationContentPosition = navigationContentPosition
+        ) {
+            MyScaffold(
+                backgroundColor = Color.Transparent,
                 modifier = Modifier.fillMaxSize(),
-                verticalAlignment = Alignment.Top,
-                userScrollEnabled = false
-            ) {
-                ProvideNavigator(navigator = navigator) {
+                bottomBar = {
+                    AnimatedVisibility(visible = navigationType == MainNavigationType.BOTTOM_NAVIGATION) {
+                        BottomNavigation(
+                            currentPosition = pagerState.currentPage,
+                            onChangePosition = {
+                                coroutineScope.launch { pagerState.scrollToPage(it) }
+                            },
+                            onReselected = onReselected,
+                            navigationItems = navigationItems,
+                            themeColors = themeColors,
+                        )
+                    }
+                }
+            ) { paddingValues ->
+                LazyLoadHorizontalPager(
+                    contentPadding = paddingValues,
+                    state = pagerState,
+                    key = { navigationItems[it].id },
+                    modifier = Modifier.fillMaxSize(),
+                    verticalAlignment = Alignment.Top,
+                    userScrollEnabled = false
+                ) {
                     navigationItems[it].content()
                 }
             }
