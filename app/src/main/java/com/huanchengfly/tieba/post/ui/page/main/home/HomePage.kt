@@ -407,8 +407,8 @@ fun HomePage(
         prop1 = HomeUiState::historyForums,
         initial = persistentListOf()
     )
-    val showHistoryForum by viewModel.uiState.collectPartialAsState(
-        prop1 = HomeUiState::showHistoryForum,
+    val expandHistoryForum by viewModel.uiState.collectPartialAsState(
+        prop1 = HomeUiState::expandHistoryForum,
         initial = true
     )
     val error by viewModel.uiState.collectPartialAsState(
@@ -418,7 +418,7 @@ fun HomePage(
     val isLoggedIn = remember(account) { account != null }
     val isEmpty by remember { derivedStateOf { forums.isEmpty() } }
     val hasTopForum by remember { derivedStateOf { topForums.isNotEmpty() } }
-    val hasHistoryForum by remember { derivedStateOf { historyForums.isNotEmpty() } }
+    val showHistoryForum by remember { derivedStateOf { context.appPreferences.homePageShowHistoryForum && historyForums.isNotEmpty() } }
     var listSingle by remember { mutableStateOf(context.appPreferences.listSingle) }
     val isError by remember { derivedStateOf { error != null } }
     val gridCells by remember { derivedStateOf { getGridCells(context, listSingle) } }
@@ -518,10 +518,10 @@ fun HomePage(
                         contentPadding = PaddingValues(bottom = 12.dp),
                         modifier = Modifier.fillMaxSize(),
                     ) {
-                        if (hasHistoryForum) {
+                        if (showHistoryForum) {
                             item(key = "HistoryForums", span = { GridItemSpan(maxLineSpan) }) {
                                 val rotate by animateFloatAsState(
-                                    targetValue = if (showHistoryForum) 90f else 0f,
+                                    targetValue = if (expandHistoryForum) 90f else 0f,
                                     label = "rotate"
                                 )
                                 Column {
@@ -534,7 +534,7 @@ fun HomePage(
                                             ) {
                                                 viewModel.send(
                                                     HomeUiIntent.ToggleHistory(
-                                                        showHistoryForum
+                                                        expandHistoryForum
                                                     )
                                                 )
                                             }
@@ -556,7 +556,7 @@ fun HomePage(
                                                 .rotate(rotate)
                                         )
                                     }
-                                    AnimatedVisibility(visible = showHistoryForum) {
+                                    AnimatedVisibility(visible = expandHistoryForum) {
                                         LazyRow(
                                             contentPadding = PaddingValues(bottom = 8.dp),
                                         ) {
@@ -641,7 +641,7 @@ fun HomePage(
                                 )
                             }
                         }
-                        if (hasHistoryForum || hasTopForum) {
+                        if (showHistoryForum || hasTopForum) {
                             item(key = "ForumHeader", span = { GridItemSpan(maxLineSpan) }) {
                                 Column(
                                     modifier = Modifier.padding(vertical = 8.dp)

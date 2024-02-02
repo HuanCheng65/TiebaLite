@@ -126,6 +126,8 @@ open class AppPreferencesUtils private constructor(ctx: Context) {
 
     var homePageScroll by DataStoreDelegates.boolean(defaultValue = false)
 
+    var homePageShowHistoryForum by DataStoreDelegates.boolean(defaultValue = true)
+
     var imageDarkenWhenNightMode by DataStoreDelegates.boolean(defaultValue = true)
 
     var imageLoadType by DataStoreDelegates.string(

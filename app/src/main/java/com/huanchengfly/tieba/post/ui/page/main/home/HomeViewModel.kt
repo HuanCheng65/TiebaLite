@@ -132,7 +132,7 @@ class HomeViewModel : BaseViewModel<HomeUiIntent, HomePartialChange, HomeUiState
                 .catch { emit(HomePartialChange.Unfollow.Failure(it.getErrorMessage())) }
 
         private fun HomeUiIntent.ToggleHistory.toPartialChangeFlow() =
-            flowOf(HomePartialChange.ToggleHistory(!currentShow))
+            flowOf(HomePartialChange.ToggleHistory(!currentExpand))
     }
 }
 
@@ -149,7 +149,7 @@ sealed interface HomeUiIntent : UiIntent {
         data class Add(val forum: HomeUiState.Forum) : TopForums
     }
 
-    data class ToggleHistory(val currentShow: Boolean) : HomeUiIntent
+    data class ToggleHistory(val currentExpand: Boolean) : HomeUiIntent
 }
 
 sealed interface HomePartialChange : PartialChange<HomeUiState> {
@@ -256,9 +256,9 @@ sealed interface HomePartialChange : PartialChange<HomeUiState> {
         }
     }
 
-    data class ToggleHistory(val show: Boolean) : HomePartialChange {
+    data class ToggleHistory(val expand: Boolean) : HomePartialChange {
         override fun reduce(oldState: HomeUiState): HomeUiState =
-            oldState.copy(showHistoryForum = show)
+            oldState.copy(expandHistoryForum = expand)
     }
 }
 
@@ -268,7 +268,7 @@ data class HomeUiState(
     val forums: ImmutableList<Forum> = persistentListOf(),
     val topForums: ImmutableList<Forum> = persistentListOf(),
     val historyForums: ImmutableList<History> = persistentListOf(),
-    val showHistoryForum: Boolean = true,
+    val expandHistoryForum: Boolean = true,
     val error: Throwable? = null,
 ) : UiState {
     @Immutable

@@ -520,4 +520,5 @@
     <string name="desc_input_color">手动输入颜色</string>
     <string name="release_to_load_latest_posts">松开加载最新回复</string>
     <string name="pull_to_load_latest_posts">继续上拉加载最新回复</string>
+    <string name="settings_home_page_show_history_forum">首页显示最近逛的吧</string>
 </resources>

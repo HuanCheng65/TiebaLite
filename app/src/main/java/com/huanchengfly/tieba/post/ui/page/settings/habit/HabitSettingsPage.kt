@@ -17,6 +17,7 @@ import androidx.compose.material.icons.outlined.SecurityUpdateWarning
 import androidx.compose.material.icons.outlined.SpeakerNotesOff
 import androidx.compose.material.icons.outlined.StarOutline
 import androidx.compose.material.icons.outlined.Verified
+import androidx.compose.material.icons.outlined.WatchLater
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
@@ -191,24 +192,24 @@ fun HabitSettingsPage(
                     }
                 }
             }
-            prefsItem {
-                SwitchPref(
-                    key = "showShortcutInThread",
-                    title = stringResource(id = R.string.settings_show_shortcut),
-                    defaultChecked = true,
-                    leadingIcon = {
-                        LeadingIcon {
-                            AvatarIcon(
-                                icon = ImageVector.vectorResource(id = R.drawable.ic_quick_yellow),
-                                size = Sizes.Small,
-                                contentDescription = null,
-                            )
-                        }
-                    },
-                    summaryOn = stringResource(id = R.string.tip_show_shortcut_in_thread_on),
-                    summaryOff = stringResource(id = R.string.tip_show_shortcut_in_thread)
-                )
-            }
+//            prefsItem {
+//                SwitchPref(
+//                    key = "showShortcutInThread",
+//                    title = stringResource(id = R.string.settings_show_shortcut),
+//                    defaultChecked = true,
+//                    leadingIcon = {
+//                        LeadingIcon {
+//                            AvatarIcon(
+//                                icon = ImageVector.vectorResource(id = R.drawable.ic_quick_yellow),
+//                                size = Sizes.Small,
+//                                contentDescription = null,
+//                            )
+//                        }
+//                    },
+//                    summaryOn = stringResource(id = R.string.tip_show_shortcut_in_thread_on),
+//                    summaryOff = stringResource(id = R.string.tip_show_shortcut_in_thread)
+//                )
+//            }
             prefsItem {
                 SwitchPref(
                     key = "collect_thread_see_lz",
@@ -259,6 +260,22 @@ fun HabitSettingsPage(
                         )
                     }
                 }
+            }
+            prefsItem {
+                SwitchPref(
+                    key = "homePageShowHistoryForum",
+                    title = stringResource(id = R.string.settings_home_page_show_history_forum),
+                    defaultChecked = true,
+                    leadingIcon = {
+                        LeadingIcon {
+                            AvatarIcon(
+                                icon = Icons.Outlined.WatchLater,
+                                size = Sizes.Small,
+                                contentDescription = null,
+                            )
+                        }
+                    },
+                )
             }
             prefsItem {
                 SwitchPref(
