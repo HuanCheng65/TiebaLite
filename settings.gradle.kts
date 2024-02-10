@@ -41,3 +41,4 @@ sweetProperty {
 
 rootProject.name = "TiebaLite"
 include(":app")
+include(":benchmark")

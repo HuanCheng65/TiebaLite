@@ -58,10 +58,15 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
         tools:ignore="UnusedAttribute">
+
+        <profileable
+            android:shell="true"
+            tools:targetApi="29" />
+
         <service
             android:name=".services.OKSignService"
-            android:exported="true"
             android:enabled="true"
+            android:exported="true"
             android:foregroundServiceType="specialUse"
             android:permission="android.permission.BIND_JOB_SERVICE"
             android:process=":oksign">
@@ -123,9 +128,9 @@
             android:enabled="true"
             android:exported="true"
             android:icon="@mipmap/ic_launcher_new"
-            android:roundIcon="@mipmap/ic_launcher_new_round"
             android:launchMode="singleTop"
             android:resizeableActivity="true"
+            android:roundIcon="@mipmap/ic_launcher_new_round"
             android:theme="@style/Theme.Splash"
             android:windowSoftInputMode="adjustResize">
             <intent-filter>
@@ -133,13 +138,13 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.DEFAULT" />
+
                 <data android:scheme="tblite" />
             </intent-filter>
-
             <intent-filter android:autoVerify="true">
                 <data
                     android:host="unidispatch"
@@ -157,11 +162,11 @@
         </activity>
 
         <activity-alias
-            android:name=".activities.MainActivity"
+            android:name=".MainActivityIconOld"
             android:enabled="false"
             android:exported="true"
-            android:icon="@mipmap/ic_launcher_new"
-            android:roundIcon="@mipmap/ic_launcher_new_round"
+            android:icon="@mipmap/ic_launcher"
+            android:roundIcon="@mipmap/ic_launcher_round"
             android:targetActivity=".MainActivityV2">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -173,25 +178,6 @@
                 android:name="android.app.shortcuts"
                 android:resource="@xml/shortcut_new" />
         </activity-alias>
-
-        <activity-alias
-            android:name=".MainActivityIconThemed"
-            android:enabled="false"
-            android:exported="true"
-            android:icon="@mipmap/ic_launcher_new_themed"
-            android:roundIcon="@mipmap/ic_launcher_new_themed_round"
-            android:targetActivity=".MainActivityV2">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-
-            <meta-data
-                android:name="android.app.shortcuts"
-                android:resource="@xml/shortcut_new" />
-        </activity-alias>
-
         <activity-alias
             android:name=".MainActivityIconInvert"
             android:enabled="false"
@@ -210,11 +196,28 @@
                 android:resource="@xml/shortcut_new" />
         </activity-alias>
         <activity-alias
-            android:name=".MainActivityIconOld"
+            android:name=".MainActivityIconThemed"
             android:enabled="false"
             android:exported="true"
-            android:icon="@mipmap/ic_launcher"
-            android:roundIcon="@mipmap/ic_launcher_round"
+            android:icon="@mipmap/ic_launcher_new_themed"
+            android:roundIcon="@mipmap/ic_launcher_new_themed_round"
+            android:targetActivity=".MainActivityV2">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.app.shortcuts"
+                android:resource="@xml/shortcut_new" />
+        </activity-alias>
+        <activity-alias
+            android:name=".activities.MainActivity"
+            android:enabled="false"
+            android:exported="true"
+            android:icon="@mipmap/ic_launcher_new"
+            android:roundIcon="@mipmap/ic_launcher_new_round"
             android:targetActivity=".MainActivityV2">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -246,7 +249,6 @@
                 <action android:name="android.service.quicksettings.action.QS_TILE" />
             </intent-filter>
         </service>
-
         <service
             android:name=".services.NotifyJobService"
             android:exported="true"
@@ -256,12 +258,10 @@
             android:name=".activities.TranslucentThemeActivity"
             android:configChanges="screenSize|screenLayout|orientation|smallestScreenSize|keyboardHidden"
             android:windowSoftInputMode="adjustResize" />
-
         <activity
             android:name="com.yalantis.ucrop.UCropActivity"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
-
         <activity
             android:name=".ui.page.user.edit.EditProfileActivity"
             android:configChanges="screenSize|screenLayout|orientation|smallestScreenSize|keyboardHidden"
@@ -279,7 +279,6 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/file_paths_share_img" />
         </provider>
-
         <provider
             android:name="androidx.startup.InitializationProvider"
             android:authorities="com.huanchengfly.tieba.post.androidx-startup"
@@ -290,4 +289,5 @@
                 android:value="androidx.startup" />
         </provider>
     </application>
+
 </manifest>

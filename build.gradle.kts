@@ -10,6 +10,8 @@ plugins {
     autowire(libs.plugins.com.squareup.wire) apply false
 
     autowire(libs.plugins.com.autonomousapps.dependency.analysis)
+
+    id("com.android.test") version "8.2.2" apply false
 }
 
 tasks.register<Delete>("clean") {
