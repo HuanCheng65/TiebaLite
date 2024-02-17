@@ -1,9 +1,0 @@
-syntax = "proto3";
-
-package tieba.getForumDetail;
-
-option java_package = "com.huanchengfly.tieba.post.api.models.protos.getForumDetail";
-
-message BzApplySwitch {
-
-}

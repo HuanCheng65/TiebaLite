@@ -1,1 +1,0 @@
-com.huanchengfly.tieba.post.api.models.protos.**

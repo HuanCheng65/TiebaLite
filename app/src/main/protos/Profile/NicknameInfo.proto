@@ -1,9 +1,0 @@
-syntax = "proto3";
-
-package tieba.profile;
-
-option java_package = "com.huanchengfly.tieba.post.api.models.protos.profile";
-
-message NicknameInfo {
-  int32 left_days = 2;
-}

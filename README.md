@@ -1,20 +1,15 @@
-# <p align="center">Tieba Lite</p>
-<p align="center">
-    <a href="https://github.com/HuanCheng65/TiebaLite/actions/workflows/build.yml">
-        <img alt="Build Status" src="https://github.com/HuanCheng65/TiebaLite/actions/workflows/build.yml/badge.svg?branch=4.0-dev">
-    </a>
-    <a href="https://t.me/tblite_discuss">
-        <img alt="Status" src="https://img.shields.io/badge/-Telegram-blue?logo=telegram&style=flat">
-    </a>
-</p>
+## 👋再见
 
-贴吧 Lite 是一个**非官方**的贴吧客户端。
+亲爱的朋友们：
 
-## 说明
+我之所以写下这些文字，是因为我已经做出了一个艰难的决定——永久停止对贴吧 Lite 的维护。这个决定并非一蹴而就，而是经过深思熟虑、反复权衡之后的结果。
 
-**本软件及源码仅供学习交流使用，严禁用于商业用途。**
+首先，最主要的原因是个人精力的限制。随着学业压力的增加，我发现自己越来越难以分配足够的时间和精力来维持项目所需的持续投入。项目的维护不仅仅是时间的问题，更是一个精力的挑战，需要我不断地更新、解决问题，这成为了我越来越难以克服的障碍。此外，尽管这绝非决定性的原因，但项目存在的合规性问题也为我带来了额外的顾虑，这些顾虑随时间积累，最终对我的决定产生了一定影响。
 
-## 友情链接
+在过去的四年中，我与贴吧 Lite 一同成长。因此，作出这一决定，我的内心充满了不舍。在此，我想向所有关注、使用和支持贴吧 Lite 的朋友们表达我的深深感谢。正是你们的反馈、建议和鼓励，让我在过去的岁月里不断前进，持续成长。
 
-+ [Starry-OvO/aiotieba: Asynchronous I/O Client for Baidu Tieba](https://github.com/Starry-OvO/aiotieba)
-+ [n0099/tbclient.protobuf: 百度贴吧客户端 Protocol Buffers 定义文件合集](https://github.com/n0099/tbclient.protobuf)
+宇宙很大，生活更大。我们的路径仍有可能在未来的某个时刻再次交汇。❤️
+
+幻城
+
+2024年2月18日
