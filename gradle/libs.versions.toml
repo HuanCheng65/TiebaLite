@@ -19,7 +19,6 @@ androidx-lifecycle = "2.7.0"
 androidx-media3 = "1.2.1"
 androidx-test = "1.5.0"
 kotlinx-coroutines = "1.7.3"
-butterknife = "10.2.3"
 
 [libraries]
 # Kotlin
@@ -110,8 +109,6 @@ matisse = { module = "com.github.lwj1994:Matisse", version = "0.5.3-20220115" }
 xxpermissions = { module = "com.github.getActivity:XXPermissions", version = "18.6" }
 immersionbar = { module = "com.gyf.immersionbar:immersionbar", version = "3.0.0" }
 ucrop = { module = "com.github.yalantis:ucrop", version = "2.2.8" }
-butterknife = { module = "com.jakewharton:butterknife", version.ref = "butterknife" }
-butterknife-compiler = { module = "com.jakewharton:butterknife-compiler", version.ref = "butterknife" }
 
 # Test
 junit = { module = "junit:junit", version = "4.13.2" }

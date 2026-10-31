@@ -260,7 +260,4 @@ dependencies {
     implementation(libs.immersionbar)
 
     implementation(libs.ucrop)
-
-    implementation(libs.butterknife)
-    kapt(libs.butterknife.compiler)
 }

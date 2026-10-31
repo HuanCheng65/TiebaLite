@@ -22,14 +22,11 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.huanchengfly.tieba.post.R;
 import com.huanchengfly.tieba.post.utils.Util;
 
-import butterknife.ButterKnife;
-import butterknife.Unbinder;
 
 public abstract class BaseBottomSheetDialogFragment extends BottomSheetDialogFragment {
     public static final String TAG = "BaseBottomSheetDialog";
     protected BottomSheetDialog dialog;
     protected BottomSheetBehavior mBehavior;
-    Unbinder mUnbinder;
     View rootView;
     private Context attachContext;
 
@@ -127,7 +124,6 @@ public abstract class BaseBottomSheetDialogFragment extends BottomSheetDialogFra
         if (rootView == null) {
             rootView = Util.inflate(getAttachContext(), getLayoutId());
             assert rootView != null;
-            mUnbinder = ButterKnife.bind(this, rootView);
         }
         resetView();
         dialog.setContentView(rootView);

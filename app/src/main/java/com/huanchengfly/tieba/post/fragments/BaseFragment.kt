@@ -11,8 +11,6 @@ import android.view.ViewGroup
 import androidx.annotation.CallSuper
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
-import butterknife.ButterKnife
-import butterknife.Unbinder
 import com.huanchengfly.tieba.post.App
 import com.huanchengfly.tieba.post.interfaces.BackHandledInterface
 import com.huanchengfly.tieba.post.interfaces.Refreshable
@@ -44,8 +42,6 @@ abstract class BaseFragment : Fragment(), BackHandledInterface, CoroutineScope {
     val job = Job()
     override val coroutineContext: CoroutineContext
         get() = Dispatchers.Main + job
-
-    var unbinder: Unbinder? = null
 
     protected var isFragmentVisible = false
         private set
@@ -163,9 +159,7 @@ abstract class BaseFragment : Fragment(), BackHandledInterface, CoroutineScope {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        val inflate = inflater.inflate(getLayoutId(), container, false)
-        unbinder = ButterKnife.bind(this, inflate)
-        return inflate
+        return inflater.inflate(getLayoutId(), container, false)
     }
 
 

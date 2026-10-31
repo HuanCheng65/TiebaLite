@@ -7,7 +7,6 @@ import android.widget.TextView
 import androidx.appcompat.widget.Toolbar
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import butterknife.BindView
 import com.google.android.material.appbar.CollapsingToolbarLayout
 import com.huanchengfly.tieba.post.*
 import com.huanchengfly.tieba.post.adapters.ChatBubbleStyleAdapter
@@ -17,20 +16,15 @@ import com.huanchengfly.tieba.post.utils.ThemeUtil
 
 
 class AppFontSizeActivity : BaseActivity() {
-    @BindView(R.id.toolbar)
-    lateinit var toolbar: Toolbar
+    val toolbar: Toolbar by lazy { findViewById(R.id.toolbar) }
 
-    @BindView(R.id.collapsing_toolbar)
-    lateinit var collapsingToolbar: CollapsingToolbarLayout
+    val collapsingToolbar: CollapsingToolbarLayout by lazy { findViewById(R.id.collapsing_toolbar) }
 
-    @BindView(R.id.app_font_size_seekbar)
-    lateinit var seekBar: RulerSeekBar
+    val seekBar: RulerSeekBar by lazy { findViewById(R.id.app_font_size_seekbar) }
 
-    @BindView(R.id.app_font_size_text)
-    lateinit var sizeText: TextView
+    val sizeText: TextView by lazy { findViewById(R.id.app_font_size_text) }
 
-    @BindView(R.id.app_font_size_bubbles)
-    lateinit var chatBubblesRv: RecyclerView
+    val chatBubblesRv: RecyclerView by lazy { findViewById(R.id.app_font_size_bubbles) }
 
     var oldFontSize: Float = 0f
     var finished: Boolean = false

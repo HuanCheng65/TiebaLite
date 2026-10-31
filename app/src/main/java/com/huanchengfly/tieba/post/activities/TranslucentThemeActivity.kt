@@ -22,7 +22,6 @@ import androidx.core.text.HtmlCompat
 import androidx.palette.graphics.Palette
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import butterknife.BindView
 import com.github.panpf.sketch.request.DisplayRequest
 import com.github.panpf.sketch.request.DisplayResult
 import com.github.panpf.sketch.request.LoadRequest
@@ -60,41 +59,29 @@ class TranslucentThemeActivity : BaseActivity(), View.OnClickListener, OnSeekBar
     private var blur = 0
     private var mPalette: Palette? = null
 
-    @BindView(R.id.select_color)
-    lateinit var mSelectColor: View
+    val mSelectColor: View by lazy { findViewById(R.id.select_color) }
 
-    @BindView(R.id.recommend_wallpapers)
-    lateinit var recommendWallpapers: View
+    val recommendWallpapers: View by lazy { findViewById(R.id.recommend_wallpapers) }
 
-    @BindView(R.id.wallpapers_rv)
-    lateinit var recommendWallpapersRv: RecyclerView
+    val recommendWallpapersRv: RecyclerView by lazy { findViewById(R.id.wallpapers_rv) }
 
-    @BindView(R.id.progress)
-    lateinit var mProgress: View
+    val mProgress: View by lazy { findViewById(R.id.progress) }
 
-    @BindView(R.id.dark_color)
-    lateinit var darkColorBtn: TintMaterialButton
+    val darkColorBtn: TintMaterialButton by lazy { findViewById(R.id.dark_color) }
 
-    @BindView(R.id.light_color)
-    lateinit var lightColorBtn: TintMaterialButton
+    val lightColorBtn: TintMaterialButton by lazy { findViewById(R.id.light_color) }
 
-    @BindView(R.id.button_back)
-    lateinit var backBtn: View
+    val backBtn: View by lazy { findViewById(R.id.button_back) }
 
-    @BindView(R.id.bottom_sheet)
-    lateinit var bottomSheet: LinearLayout
+    val bottomSheet: LinearLayout by lazy { findViewById(R.id.bottom_sheet) }
 
-    @BindView(R.id.button_finish)
-    lateinit var finishBtn: View
+    val finishBtn: View by lazy { findViewById(R.id.button_finish) }
 
-    @BindView(R.id.mask)
-    lateinit var maskView: View
+    val maskView: View by lazy { findViewById(R.id.mask) }
 
-    @BindView(R.id.experimental_tip)
-    lateinit var experimentalTipView: View
+    val experimentalTipView: View by lazy { findViewById(R.id.experimental_tip) }
 
-    @BindView(R.id.color_theme)
-    lateinit var colorTheme: ViewGroup
+    val colorTheme: ViewGroup by lazy { findViewById(R.id.color_theme) }
 
     private val selectImageLauncher = registerPickMediasLauncher { (_, uris) ->
         if (uris.isNotEmpty()) {
