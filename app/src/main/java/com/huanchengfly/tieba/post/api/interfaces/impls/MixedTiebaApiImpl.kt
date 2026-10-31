@@ -22,6 +22,7 @@ import com.huanchengfly.tieba.post.api.models.CollectDataBean
 import com.huanchengfly.tieba.post.api.models.CommonResponse
 import com.huanchengfly.tieba.post.api.models.FollowBean
 import com.huanchengfly.tieba.post.api.models.ForumPageBean
+import com.huanchengfly.tieba.post.api.models.ForumGuideBean
 import com.huanchengfly.tieba.post.api.models.ForumRecommend
 import com.huanchengfly.tieba.post.api.models.GetForumListBean
 import com.huanchengfly.tieba.post.api.models.InitNickNameBean
@@ -125,6 +126,8 @@ import com.huanchengfly.tieba.post.utils.CuidUtils
 import com.huanchengfly.tieba.post.utils.ImageUtil
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.flow
 import okhttp3.RequestBody.Companion.asRequestBody
 import retrofit2.Call
 import java.io.File
@@ -133,6 +136,8 @@ import java.io.IOException
 import java.net.URLEncoder
 
 object MixedTiebaApiImpl : ITiebaApi {
+    private const val FORUM_GUIDE_PAGE_SIZE = 50
+
     override fun personalized(loadType: Int, page: Int): Call<PersonalizedBean> =
         RetrofitTiebaApi.MINI_TIEBA_API.personalized(loadType, page)
 
@@ -1015,6 +1020,20 @@ object MixedTiebaApiImpl : ITiebaApi {
                 )
             )
         )
+    }
+
+    override fun allForumGuideFlow(): Flow<List<ForumGuideBean.LikeForum>> = flow {
+        val forums = mutableListOf<ForumGuideBean.LikeForum>()
+        var pageNo = 1
+        do {
+            val page = RetrofitTiebaApi.OFFICIAL_TIEBA_API
+                .forumGuideFlow(pageNo = pageNo, resNum = FORUM_GUIDE_PAGE_SIZE)
+                .first()
+            val pageForums = page.likeForum.orEmpty()
+            forums += pageForums
+            pageNo++
+        } while (page.likeForumHasMore && pageForums.isNotEmpty())
+        emit(forums)
     }
 
     override fun forumRecommendNewFlow(

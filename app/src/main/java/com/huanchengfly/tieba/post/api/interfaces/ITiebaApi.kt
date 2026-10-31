@@ -1318,6 +1318,15 @@ interface ITiebaApi {
     ): Flow<ForumRecommendResponse>
 
     /**
+     * 全部关注的吧
+     *
+     * 分页拉取直到没有更多，不受 [forumRecommendFlow] / [forumRecommendNewFlow] 最多 200 个的限制
+     *
+     * **需登录**
+     */
+    fun allForumGuideFlow(): Flow<List<ForumGuideBean.LikeForum>>
+
+    /**
      * 吧页面
      *
      * @param forumName 吧名

@@ -166,6 +166,19 @@ interface OfficialTiebaApi {
     ): Flow<GetForumListBean>
 
     @Headers("${Header.FORCE_LOGIN}: ${Header.FORCE_LOGIN_TRUE}")
+    @POST("/c/f/forum/forumGuide")
+    @FormUrlEncoded
+    fun forumGuideFlow(
+        @Field("page_no") pageNo: Int,
+        @Field("res_num") resNum: Int,
+        @Field("sort_type") sortType: Int = 3,
+        @Field("call_from") callFrom: Int = 3,
+        @Field("top_forum_num") topForumNum: Int = 0,
+        @Field("tbs") tbs: String? = AccountUtil.getAccountInfo { this.tbs },
+        @Field("stoken") stoken: String = AccountUtil.getSToken()!!,
+    ): Flow<ForumGuideBean>
+
+    @Headers("${Header.FORCE_LOGIN}: ${Header.FORCE_LOGIN_TRUE}")
     @POST("/c/c/forum/msign")
     @FormUrlEncoded
     fun mSignFlow(

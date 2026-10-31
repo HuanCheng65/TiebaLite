@@ -72,17 +72,17 @@ class HomeViewModel : BaseViewModel<HomeUiIntent, HomePartialChange, HomeUiState
         private fun produceRefreshPartialChangeFlow(): Flow<HomePartialChange.Refresh> =
             HistoryUtil.getFlow(HistoryUtil.TYPE_FORUM, 0)
                 .zip(
-                    TiebaApi.getInstance().forumRecommendNewFlow()
-                ) { historyForums, forumRecommend ->
-                    val forums = forumRecommend.data_?.like_forum?.map {
+                    TiebaApi.getInstance().allForumGuideFlow()
+                ) { historyForums, likeForums ->
+                    val forums = likeForums.map {
                         HomeUiState.Forum(
-                            it.avatar,
-                            it.forum_id.toString(),
-                            it.forum_name,
-                            it.is_sign == 1,
-                            it.level_id.toString()
+                            it.avatar.orEmpty(),
+                            it.forumId.toString(),
+                            it.forumName,
+                            it.isSign == 1,
+                            it.levelId.toString()
                         )
-                    } ?: emptyList()
+                    }
                     val topForums = mutableListOf<HomeUiState.Forum>()
                     val topForumsDB = LitePal.findAll(TopForum::class.java).map { it.forumId }
                     topForums.addAll(forums.filter { topForumsDB.contains(it.forumId) })
