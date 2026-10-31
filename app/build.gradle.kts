@@ -125,8 +125,11 @@ kotlin {
 }
 
 composeCompiler {
-    reportsDestination = layout.buildDirectory.dir("compose_metrics")
-    metricsDestination = layout.buildDirectory.dir("compose_metrics")
+    // Pass -PcomposeCompilerReports=true to generate stability reports and metrics
+    if (providers.gradleProperty("composeCompilerReports").orNull.toBoolean()) {
+        reportsDestination = layout.buildDirectory.dir("compose_metrics")
+        metricsDestination = layout.buildDirectory.dir("compose_metrics")
+    }
     stabilityConfigurationFiles.add(rootProject.layout.projectDirectory.file("compose_stability_configuration.txt"))
 }
 
