@@ -194,6 +194,10 @@ internal fun SubPostsContent(
         prop1 = SubPostsUiState::post,
         initial = null
     )
+    // Entering from a notification only gives the thread and sub-post ids, so prefer the forum
+    // and post ids returned by pb/floor over the route arguments for every action
+    val resolvedForumId = forum?.get { id }?.takeIf { it != 0L } ?: forumId
+    val resolvedPostId = post?.get { id }?.takeIf { it != 0L } ?: postId
     val postContentRenders by viewModel.uiState.collectPartialAsState(
         prop1 = SubPostsUiState::postContentRenders,
         initial = persistentListOf()
@@ -231,12 +235,12 @@ internal fun SubPostsContent(
                 val isSelfPost = post?.get { resolvedAuthorId } == account?.uid?.toLongOrNull()
                 viewModel.send(
                     SubPostsUiIntent.DeletePost(
-                        forumId = forumId,
+                        forumId = resolvedForumId,
                         forumName = forum?.get { name }.orEmpty(),
                         threadId = threadId,
-                        postId = postId,
+                        postId = resolvedPostId,
                         deleteMyPost = isSelfPost,
-                        tbs = anti?.get { tbs },
+                        tbs = anti?.get { tbs }?.takeIf { it.isNotEmpty() } ?: account?.tbs,
                     )
                 )
             } else {
@@ -244,13 +248,13 @@ internal fun SubPostsContent(
                     deleteSubPost!!.get { resolvedAuthorId } == account?.uid?.toLongOrNull()
                 viewModel.send(
                     SubPostsUiIntent.DeletePost(
-                        forumId = forumId,
+                        forumId = resolvedForumId,
                         forumName = forum?.get { name }.orEmpty(),
                         threadId = threadId,
-                        postId = postId,
+                        postId = resolvedPostId,
                         subPostId = deleteSubPost!!.get { id },
                         deleteMyPost = isSelfSubPost,
-                        tbs = anti?.get { tbs },
+                        tbs = anti?.get { tbs }?.takeIf { it.isNotEmpty() } ?: account?.tbs,
                     )
                 )
             }
@@ -322,7 +326,7 @@ internal fun SubPostsContent(
                             IconButton(onClick = {
                                 navigator.navigate(
                                     ThreadPageDestination(
-                                        forumId = forumId,
+                                        forumId = resolvedForumId,
                                         threadId = threadId,
                                         postId = postId
                                     )
@@ -361,7 +365,7 @@ internal fun SubPostsContent(
                                     .clip(RoundedCornerShape(6.dp))
                                     .background(ExtendedTheme.colors.bottomBarSurface)
                                     .clickable {
-                                        val fid = forum?.get { id } ?: forumId
+                                        val fid = resolvedForumId
                                         val forumName = forum?.get { name }
                                         if (!forumName.isNullOrEmpty()) {
                                             showReplyDialog(
@@ -369,7 +373,7 @@ internal fun SubPostsContent(
                                                     forumId = fid,
                                                     forumName = forumName,
                                                     threadId = threadId,
-                                                    postId = postId,
+                                                    postId = resolvedPostId,
                                                 )
                                             )
                                         }
@@ -403,9 +407,9 @@ internal fun SubPostsContent(
                 onLoadMore = {
                     viewModel.send(
                         SubPostsUiIntent.LoadMore(
-                            forumId,
+                            resolvedForumId,
                             threadId,
-                            postId,
+                            resolvedPostId,
 //                            subPostId,
                             page = currentPage + 1,
                         )
@@ -431,9 +435,9 @@ internal fun SubPostsContent(
                                         val hasAgreed = it.get { agree?.hasAgree != 0 }
                                         viewModel.send(
                                             SubPostsUiIntent.Agree(
-                                                forumId,
+                                                resolvedForumId,
                                                 threadId,
-                                                postId,
+                                                resolvedPostId,
                                                 agree = !hasAgreed
                                             )
                                         )
@@ -441,10 +445,10 @@ internal fun SubPostsContent(
                                     onReplyClick = {
                                         showReplyDialog(
                                             ReplyArgs(
-                                                forumId = forumId,
+                                                forumId = resolvedForumId,
                                                 forumName = forum?.get { name } ?: "",
                                                 threadId = threadId,
-                                                postId = postId,
+                                                postId = resolvedPostId,
                                                 replyUserId = it.resolvedAuthorId,
                                                 replyUserName = it.author?.nameShow.takeIf { name -> !name.isNullOrEmpty() }
                                                     ?: it.author?.name,
@@ -496,9 +500,9 @@ internal fun SubPostsContent(
                                 val hasAgreed = it.agree?.hasAgree != 0
                                 viewModel.send(
                                     SubPostsUiIntent.Agree(
-                                        forumId,
+                                        resolvedForumId,
                                         threadId,
-                                        postId,
+                                        resolvedPostId,
                                         subPostId = it.id,
                                         agree = !hasAgreed
                                     )
@@ -507,10 +511,10 @@ internal fun SubPostsContent(
                             onReplyClick = {
                                 showReplyDialog(
                                     ReplyArgs(
-                                        forumId = forumId,
+                                        forumId = resolvedForumId,
                                         forumName = forum?.get { name } ?: "",
                                         threadId = threadId,
-                                        postId = postId,
+                                        postId = resolvedPostId,
                                         subPostId = it.id,
                                         replyUserId = it.resolvedAuthorId,
                                         replyUserName = it.author?.nameShow.takeIf { name -> !name.isNullOrEmpty() }

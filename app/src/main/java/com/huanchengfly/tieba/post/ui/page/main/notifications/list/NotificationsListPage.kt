@@ -190,10 +190,12 @@ fun NotificationsListPage(
                                             .clip(RoundedCornerShape(6.dp))
                                             .clickable {
                                                 if ("1" == info.isFloor && info.quotePid != null) {
+                                                    // quote_pid may point to either the floor or a sub-post,
+                                                    // so let pb/floor resolve it as a sub-post id
                                                     navigator.navigate(
                                                         SubPostsPageDestination(
                                                             threadId = info.threadId!!.toLong(),
-                                                            postId = info.quotePid.toLong(),
+                                                            subPostId = info.quotePid.toLong(),
                                                             loadFromSubPost = true,
                                                         )
                                                     )
