@@ -296,20 +296,20 @@ fun SearchThreadItem(
         action = {
             Row(modifier = Modifier.fillMaxWidth()) {
                 ThreadReplyBtn(
-                    replyNum = item.postNum.toInt(),
+                    replyNum = item.postNum.parseCount().toInt(),
                     onClick = {},
                     modifier = Modifier.weight(1f)
                 )
 
                 ThreadAgreeBtn(
                     hasAgree = false,
-                    agreeNum = item.likeNum.toInt(),
+                    agreeNum = item.likeNum.parseCount().toInt(),
                     onClick = {},
                     modifier = Modifier.weight(1f)
                 )
 
                 ThreadShareBtn(
-                    shareNum = item.shareNum.toLong(),
+                    shareNum = item.shareNum.parseCount(),
                     onClick = {},
                     modifier = Modifier.weight(1f)
                 )
@@ -487,4 +487,18 @@ fun SearchBox(
             }
         }
     }
+}
+
+/**
+ * Search results may abbreviate counts, e.g. "1W" or "1.2万" for 10,000 and 12,000.
+ */
+private fun String.parseCount(): Long {
+    val value = trim()
+    val multiplier = when (value.lastOrNull()) {
+        'W', 'w', '万' -> 10_000L
+        'K', 'k' -> 1_000L
+        else -> 1L
+    }
+    val number = if (multiplier == 1L) value else value.dropLast(1)
+    return number.toBigDecimalOrNull()?.multiply(multiplier.toBigDecimal())?.toLong() ?: 0L
 }

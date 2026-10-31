@@ -139,9 +139,10 @@ data class SearchThreadBean(
         @SerialName("show_nickname")
         @SerializedName("show_nickname")
         val showNickname: String?,
+        // Missing when sorting oldest first
         @SerialName("user_id")
         @SerializedName("user_id")
-        val userId: String,
+        val userId: String = "0",
         val portrait: String?,
     )
 }
