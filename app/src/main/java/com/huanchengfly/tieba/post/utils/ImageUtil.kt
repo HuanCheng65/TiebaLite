@@ -267,15 +267,11 @@ object ImageUtil {
                             }
                         }
                     }
-                    val shareUri = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                        FileProvider.getUriForFile(
-                            context,
-                            context.packageName + ".share.FileProvider",
-                            destFile
-                        )
-                    } else {
-                        Uri.fromFile(destFile)
-                    }
+                    val shareUri = FileProvider.getUriForFile(
+                        context,
+                        context.packageName + ".share.FileProvider",
+                        destFile
+                    )
                     withContext(Dispatchers.Main) {
                         taskCallback.onGetUri(shareUri)
                     }

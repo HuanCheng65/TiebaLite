@@ -2,7 +2,6 @@ package com.huanchengfly.tieba.post.ui.page.photoview
 
 import android.content.Intent
 import android.net.Uri
-import android.os.Build
 import android.view.MotionEvent
 import androidx.activity.viewModels
 import androidx.compose.foundation.ExperimentalFoundationApi
@@ -211,12 +210,8 @@ class PhotoViewActivity : BaseComposeActivityWithParcelable<PhotoViewData>() {
                                     ) { uri: Uri ->
                                         val chooser = Intent(Intent.ACTION_SEND).apply {
                                             type = Intent.normalizeMimeType("image/jpeg")
-                                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                                                putExtra(Intent.EXTRA_STREAM, uri)
-                                                addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-                                            } else {
-                                                putExtra(Intent.EXTRA_STREAM, uri)
-                                            }
+                                            putExtra(Intent.EXTRA_STREAM, uri)
+                                            addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
                                         }.let {
                                             Intent.createChooser(
                                                 it,

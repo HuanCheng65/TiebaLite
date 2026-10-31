@@ -1,6 +1,5 @@
 package com.huanchengfly.tieba.post.ui.page.settings.oksign
 
-import android.os.Build
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -161,19 +160,16 @@ fun OKSignSettingsPage(
                         }
                     },
                     title = stringResource(id = R.string.title_ignore_battery_optimization),
-                    enabled = Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !context.isIgnoringBatteryOptimizations(),
+                    enabled = !context.isIgnoringBatteryOptimizations(),
                     summary =
-                    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) stringResource(id = R.string.summary_battery_optimization_old_android_version)
-                    else if (context.isIgnoringBatteryOptimizations()) stringResource(id = R.string.summary_battery_optimization_ignored)
+                    if (context.isIgnoringBatteryOptimizations()) stringResource(id = R.string.summary_battery_optimization_ignored)
                     else stringResource(id = R.string.summary_ignore_battery_optimization),
                     onClick = {
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                            if (!context.powerManager.isIgnoringBatteryOptimizations(context.packageName)) {
-                                context.requestIgnoreBatteryOptimizations()
-                            } else {
-                                coroutineScope.launch {
-                                    snackbarHostState.showSnackbar(context.getString(R.string.toast_ignore_battery_optimization_already))
-                                }
+                        if (!context.powerManager.isIgnoringBatteryOptimizations(context.packageName)) {
+                            context.requestIgnoreBatteryOptimizations()
+                        } else {
+                            coroutineScope.launch {
+                                snackbarHostState.showSnackbar(context.getString(R.string.toast_ignore_battery_optimization_already))
                             }
                         }
                     }

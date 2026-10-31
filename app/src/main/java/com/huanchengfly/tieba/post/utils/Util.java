@@ -14,7 +14,6 @@ import android.graphics.Paint;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffColorFilter;
 import android.graphics.drawable.Drawable;
-import android.os.Build;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -207,7 +206,7 @@ public class Util {
 
     @SuppressLint("PrivateApi")
     public static void setStatusBarTransparent(Activity activity) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) try {
+        try {
             Class decorViewClazz = Class.forName("com.android.internal.policy.DecorView");
             Field field = decorViewClazz.getDeclaredField("mSemiTransparentStatusBarColor");
             field.setAccessible(true);

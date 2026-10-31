@@ -148,13 +148,7 @@ fun pendingIntentFlagMutable(): Int {
     }
 }
 
-fun pendingIntentFlagImmutable(): Int {
-    return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-        PendingIntent.FLAG_IMMUTABLE
-    } else {
-        0
-    }
-}
+fun pendingIntentFlagImmutable(): Int = PendingIntent.FLAG_IMMUTABLE
 
 fun <T> ImmutableList<T>.removeAt(index: Int): ImmutableList<T> {
     return this.toMutableList().apply { removeAt(index) }.toImmutableList()

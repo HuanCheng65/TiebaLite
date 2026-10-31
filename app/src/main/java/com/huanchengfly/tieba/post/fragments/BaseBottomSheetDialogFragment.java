@@ -1,12 +1,10 @@
 package com.huanchengfly.tieba.post.fragments;
 
 import android.annotation.TargetApi;
-import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Color;
-import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
@@ -38,15 +36,6 @@ public abstract class BaseBottomSheetDialogFragment extends BottomSheetDialogFra
     public void onAttach(Context context) {
         super.onAttach(context);
         onAttachToContext(context);
-    }
-
-    @SuppressWarnings("deprecation")
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
-            onAttachToContext(activity);
-        }
     }
 
     @CallSuper

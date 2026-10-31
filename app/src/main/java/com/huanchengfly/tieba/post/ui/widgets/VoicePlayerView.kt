@@ -4,7 +4,6 @@ import android.content.Context
 import android.content.res.ColorStateList
 import android.graphics.ColorFilter
 import android.net.Uri
-import android.os.Build
 import android.os.Handler
 import android.os.Looper
 import android.text.TextUtils
@@ -116,9 +115,7 @@ class VoicePlayerView @JvmOverloads constructor(
         setBackgroundResource(R.drawable.bg_audio)
         setOnClickListener(this)
         setOnLongClickListener(this)
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            foreground = ContextCompat.getDrawable(context, R.drawable.fg_ripple_radius_50dp)
-        }
+        foreground = ContextCompat.getDrawable(context, R.drawable.fg_ripple_radius_50dp)
         inflate(context, R.layout.layout_audio, this)
         time = findViewById(R.id.audio_text)
         icon = findViewById(R.id.audio_play_icon)

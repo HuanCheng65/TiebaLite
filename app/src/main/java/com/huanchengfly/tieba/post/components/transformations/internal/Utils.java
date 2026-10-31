@@ -3,7 +3,6 @@ package com.huanchengfly.tieba.post.components.transformations.internal;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
-import android.os.Build;
 
 /**
  * Copyright (C) 2019 Wasabeef
@@ -28,12 +27,7 @@ public final class Utils {
     }
 
     public static Drawable getMaskDrawable(Context context, int maskId) {
-        Drawable drawable;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            drawable = context.getDrawable(maskId);
-        } else {
-            drawable = context.getResources().getDrawable(maskId);
-        }
+        Drawable drawable = context.getDrawable(maskId);
 
         if (drawable == null) {
             throw new IllegalArgumentException("maskId is invalid");

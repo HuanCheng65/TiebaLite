@@ -3,20 +3,14 @@ package com.huanchengfly.tieba.post.utils
 import android.content.Context
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
-import android.os.Build
 import com.huanchengfly.tieba.post.App
 
 fun isNetworkConnected(context: Context = App.INSTANCE): Boolean {
     val connectivityManager =
         context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
-        val activeNetwork = connectivityManager.activeNetworkInfo ?: return false
-        return activeNetwork.isConnected
-    } else {
-        val network = connectivityManager.activeNetwork ?: return false
-        val capabilities = connectivityManager.getNetworkCapabilities(network) ?: return false
-        return capabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_VALIDATED)
-    }
+    val network = connectivityManager.activeNetwork ?: return false
+    val capabilities = connectivityManager.getNetworkCapabilities(network) ?: return false
+    return capabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_VALIDATED)
 }
 
 object NetworkUtil {

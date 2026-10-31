@@ -10,7 +10,6 @@ import android.graphics.drawable.Drawable
 import android.graphics.drawable.GradientDrawable
 import android.graphics.drawable.RippleDrawable
 import android.net.Uri
-import android.os.Build
 import android.os.PowerManager
 import android.provider.Settings
 import android.view.View
@@ -266,21 +265,15 @@ val Context.powerManager: PowerManager
 
 @SuppressLint("BatteryLife")
 fun Context.requestIgnoreBatteryOptimizations() {
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-        if (!powerManager.isIgnoringBatteryOptimizations(packageName)) {
-            val intent = Intent(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS)
-            intent.data = Uri.parse("package:${packageName}")
-            startActivity(intent)
-        }
+    if (!powerManager.isIgnoringBatteryOptimizations(packageName)) {
+        val intent = Intent(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS)
+        intent.data = Uri.parse("package:${packageName}")
+        startActivity(intent)
     }
 }
 
 fun Context.isIgnoringBatteryOptimizations(): Boolean =
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-        powerManager.isIgnoringBatteryOptimizations(packageName)
-    } else {
-        true
-    }
+    powerManager.isIgnoringBatteryOptimizations(packageName)
 
 suspend fun requestPinShortcut(
     context: Context,
