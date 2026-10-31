@@ -25,9 +25,9 @@ import com.github.panpf.sketch.compose.AsyncImage
 import com.github.panpf.sketch.fetch.newResourceUri
 import com.github.panpf.sketch.request.DisplayRequest
 import com.google.accompanist.drawablepainter.rememberDrawablePainter
-import com.google.accompanist.placeholder.PlaceholderHighlight
-import com.google.accompanist.placeholder.material.fade
-import com.google.accompanist.placeholder.material.placeholder
+import com.huanchengfly.tieba.post.ui.widgets.compose.placeholder.PlaceholderHighlight
+import com.huanchengfly.tieba.post.ui.widgets.compose.placeholder.fade
+import com.huanchengfly.tieba.post.ui.widgets.compose.placeholder.placeholder
 import com.huanchengfly.tieba.post.utils.ImageUtil
 
 object Sizes {

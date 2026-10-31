@@ -21,10 +21,10 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.google.accompanist.placeholder.PlaceholderHighlight
-import com.google.accompanist.placeholder.material.fade
-import com.google.accompanist.placeholder.material.placeholder
 import com.huanchengfly.tieba.post.ui.common.theme.compose.ExtendedTheme
+import com.huanchengfly.tieba.post.ui.widgets.compose.placeholder.PlaceholderHighlight
+import com.huanchengfly.tieba.post.ui.widgets.compose.placeholder.fade
+import com.huanchengfly.tieba.post.ui.widgets.compose.placeholder.placeholder
 
 @Composable
 fun UserHeaderPlaceholder(

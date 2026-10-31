@@ -66,7 +66,6 @@ import com.github.panpf.sketch.compose.AsyncImage
 import com.github.panpf.sketch.fetch.newFileUri
 import androidx.compose.material.navigation.BottomSheetNavigator
 import androidx.compose.material.navigation.ModalBottomSheetLayout
-import com.google.accompanist.systemuicontroller.SystemUiController
 import com.huanchengfly.tieba.post.api.retrofit.exception.getErrorMessage
 import com.huanchengfly.tieba.post.arch.BaseComposeActivity
 import com.huanchengfly.tieba.post.arch.GlobalEvent
@@ -82,6 +81,7 @@ import com.huanchengfly.tieba.post.ui.page.NavGraphs
 import com.huanchengfly.tieba.post.ui.page.destinations.ForumPageDestination
 import com.huanchengfly.tieba.post.ui.page.destinations.ThreadPageDestination
 import com.huanchengfly.tieba.post.ui.utils.DevicePosture
+import com.huanchengfly.tieba.post.ui.utils.SystemUiController
 import com.huanchengfly.tieba.post.ui.utils.isBookPosture
 import com.huanchengfly.tieba.post.ui.utils.isSeparating
 import com.huanchengfly.tieba.post.ui.widgets.compose.AlertDialog

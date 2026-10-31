@@ -56,6 +56,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -70,7 +71,6 @@ import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.LottieConstants
 import com.airbnb.lottie.compose.rememberLottieComposition
 import com.google.accompanist.drawablepainter.rememberDrawablePainter
-import com.google.accompanist.placeholder.placeholder
 import com.huanchengfly.tieba.post.R
 import com.huanchengfly.tieba.post.arch.GlobalEvent
 import com.huanchengfly.tieba.post.arch.collectPartialAsState
@@ -96,6 +96,7 @@ import com.huanchengfly.tieba.post.ui.widgets.compose.TextButton
 import com.huanchengfly.tieba.post.ui.widgets.compose.TipScreen
 import com.huanchengfly.tieba.post.ui.widgets.compose.Toolbar
 import com.huanchengfly.tieba.post.ui.widgets.compose.accountNavIconIfCompact
+import com.huanchengfly.tieba.post.ui.widgets.compose.placeholder.placeholder
 import com.huanchengfly.tieba.post.ui.widgets.compose.rememberDialogState
 import com.huanchengfly.tieba.post.ui.widgets.compose.rememberMenuState
 import com.huanchengfly.tieba.post.ui.widgets.compose.states.StateScreen
@@ -203,7 +204,7 @@ private fun ForumItemPlaceholder(
                     .clip(CircleShape)
                     .size(40.dp)
                     .align(CenterVertically)
-                    .placeholder(visible = true, color = ExtendedTheme.colors.chip),
+                    .placeholder(visible = true, color = ExtendedTheme.colors.chip, shape = RectangleShape),
             )
             Spacer(modifier = Modifier.width(14.dp))
         }
@@ -213,7 +214,7 @@ private fun ForumItemPlaceholder(
             modifier = Modifier
                 .weight(1f)
                 .align(CenterVertically)
-                .placeholder(visible = true, color = ExtendedTheme.colors.chip),
+                .placeholder(visible = true, color = ExtendedTheme.colors.chip, shape = RectangleShape),
             fontSize = 15.sp,
             fontWeight = FontWeight.Bold,
             maxLines = 1,
@@ -228,7 +229,7 @@ private fun ForumItemPlaceholder(
                 )
                 .padding(vertical = 4.dp)
                 .align(CenterVertically)
-                .placeholder(visible = true, color = ExtendedTheme.colors.chip)
+                .placeholder(visible = true, color = ExtendedTheme.colors.chip, shape = RectangleShape)
         ) {
             Text(
                 text = "0",
@@ -706,7 +707,8 @@ private fun HomePageSkeletonScreen(
                     text = stringResource(id = R.string.title_top_forum),
                     modifier = Modifier.placeholder(
                         visible = true,
-                        color = ExtendedTheme.colors.chip
+                        color = ExtendedTheme.colors.chip,
+                        shape = RectangleShape,
                     ),
                     invert = true
                 )
@@ -730,7 +732,8 @@ private fun HomePageSkeletonScreen(
                     text = stringResource(id = R.string.forum_list_title),
                     modifier = Modifier.placeholder(
                         visible = true,
-                        color = ExtendedTheme.colors.chip
+                        color = ExtendedTheme.colors.chip,
+                        shape = RectangleShape,
                     ),
                     invert = true
                 )

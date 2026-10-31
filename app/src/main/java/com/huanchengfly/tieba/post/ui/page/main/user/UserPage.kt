@@ -35,6 +35,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -43,7 +44,6 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.google.accompanist.placeholder.placeholder
 import com.huanchengfly.tieba.post.R
 import com.huanchengfly.tieba.post.arch.collectPartialAsState
 import com.huanchengfly.tieba.post.arch.pageViewModel
@@ -65,6 +65,7 @@ import com.huanchengfly.tieba.post.ui.widgets.compose.ListMenuItem
 import com.huanchengfly.tieba.post.ui.widgets.compose.Sizes
 import com.huanchengfly.tieba.post.ui.widgets.compose.Switch
 import com.huanchengfly.tieba.post.ui.widgets.compose.VerticalDivider
+import com.huanchengfly.tieba.post.ui.widgets.compose.placeholder.placeholder
 import com.huanchengfly.tieba.post.ui.widgets.compose.rememberDialogState
 import com.huanchengfly.tieba.post.utils.CuidUtils
 import com.huanchengfly.tieba.post.utils.StringUtil
@@ -74,7 +75,7 @@ import com.huanchengfly.tieba.post.utils.appPreferences
 @Composable
 private fun StatCardPlaceholder(modifier: Modifier = Modifier) {
     Row(
-        modifier = modifier.placeholder(visible = true, color = ExtendedTheme.colors.chip),
+        modifier = modifier.placeholder(visible = true, color = ExtendedTheme.colors.chip, shape = RectangleShape),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         StatCardItem(
@@ -146,7 +147,7 @@ private fun InfoCard(
                 color = ExtendedTheme.colors.text,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .placeholder(visible = isPlaceholder, color = ExtendedTheme.colors.chip),
+                    .placeholder(visible = isPlaceholder, color = ExtendedTheme.colors.chip, shape = RectangleShape),
             )
             Spacer(modifier = Modifier.height(4.dp))
             Text(
@@ -155,7 +156,7 @@ private fun InfoCard(
                 color = ExtendedTheme.colors.textSecondary,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .placeholder(visible = isPlaceholder, color = ExtendedTheme.colors.chip),
+                    .placeholder(visible = isPlaceholder, color = ExtendedTheme.colors.chip, shape = RectangleShape),
             )
         }
         Spacer(modifier = Modifier.width(16.dp))
@@ -166,7 +167,7 @@ private fun InfoCard(
                 contentDescription = stringResource(id = R.string.desc_user_avatar),
                 modifier = Modifier
                     .align(Alignment.Bottom)
-                    .placeholder(visible = isPlaceholder, color = ExtendedTheme.colors.chip),
+                    .placeholder(visible = isPlaceholder, color = ExtendedTheme.colors.chip, shape = RectangleShape),
             )
         }
     }

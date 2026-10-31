@@ -158,9 +158,6 @@ dependencies {
     ksp(libs.androidx.hilt.compiler)
 
     implementation(libs.accompanist.drawablepainter)
-    implementation(libs.accompanist.insets.ui)
-    implementation(libs.accompanist.systemuicontroller)
-    implementation(libs.accompanist.placeholder.material)
 
     implementation(libs.sketch.core)
     implementation(libs.sketch.compose)

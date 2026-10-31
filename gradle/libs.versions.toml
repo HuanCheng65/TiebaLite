@@ -6,7 +6,6 @@ hilt = "2.60.1"
 androidx-hilt = "1.4.0"
 wire = "6.4.0"
 
-accompanist = "0.34.0"
 compose-bom = "2026.09.00"
 compose-destinations = "1.11.9"
 sketch = "3.3.2"
@@ -47,9 +46,6 @@ compose-destinations-core = { module = "io.github.raamcosta.compose-destinations
 compose-destinations-ksp = { module = "io.github.raamcosta.compose-destinations:ksp", version.ref = "compose-destinations" }
 
 accompanist-drawablepainter = { module = "com.google.accompanist:accompanist-drawablepainter", version = "0.37.3" }
-accompanist-insets-ui = { module = "com.google.accompanist:accompanist-insets-ui", version.ref = "accompanist" }
-accompanist-systemuicontroller = { module = "com.google.accompanist:accompanist-systemuicontroller", version.ref = "accompanist" }
-accompanist-placeholder-material = { module = "com.google.accompanist:accompanist-placeholder-material", version.ref = "accompanist" }
 
 # AndroidX
 androidx-activity = { module = "androidx.activity:activity-ktx", version.ref = "androidx-activity" }
