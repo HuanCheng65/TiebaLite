@@ -38,10 +38,12 @@ val List<Abstract>.abstractText: String
         }
     }
 
+private val TEXT_ABSTRACT_TYPES = setOf(0, 40)
+
 val ThreadInfo.abstractText: String
     get() = richAbstract.joinToString(separator = "") {
         when (it.type) {
-            0 -> it.text.replace(Regex(" {2,}"), " ")
+            in TEXT_ABSTRACT_TYPES -> it.text.replace(Regex(" {2,}"), " ")
             2 -> {
                 EmoticonManager.registerEmoticon(it.text, it.c)
                 "#(${it.c})"
@@ -54,7 +56,7 @@ val ThreadInfo.abstractText: String
 val PostInfoList.abstractText: String
     get() = rich_abstract.joinToString(separator = "") {
         when (it.type) {
-            0 -> it.text.replace(Regex(" {2,}"), " ")
+            in TEXT_ABSTRACT_TYPES -> it.text.replace(Regex(" {2,}"), " ")
             2 -> {
                 EmoticonManager.registerEmoticon(it.text, it.c)
                 "#(${it.c})"
@@ -69,7 +71,7 @@ val ThreadInfo.hasAgree: Int
 val ThreadInfo.hasAgreed: Boolean
     get() = hasAgree == 1
 val ThreadInfo.hasAbstract: Boolean
-    get() = richAbstract.any { (it.type == 0 && it.text.isNotBlank()) || it.type == 2 }
+    get() = richAbstract.any { (it.type in TEXT_ABSTRACT_TYPES && it.text.isNotBlank()) || it.type == 2 }
 
 fun ThreadInfo.updateAgreeStatus(
     hasAgree: Int
@@ -225,7 +227,8 @@ val List<PbContent>.renders: ImmutableList<PbContentRender>
 
         forEach {
             when (it.type) {
-                0, 9, 27 -> {
+                // 35: ad-like text, 40: keyword links in replies; both are shown as plain text
+                0, 9, 27, 35, 40 -> {
                     renders.appendText(it.text)
                 }
 
