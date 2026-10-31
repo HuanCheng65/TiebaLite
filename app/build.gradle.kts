@@ -154,7 +154,7 @@ dependencies {
 
     implementation(libs.hilt.android)
     ksp(libs.hilt.compiler)
-    implementation(libs.androidx.hilt.navigation.compose)
+    implementation(libs.androidx.hilt.lifecycle.viewmodel.compose)
     ksp(libs.androidx.hilt.compiler)
 
     implementation(libs.accompanist.drawablepainter)
@@ -222,6 +222,7 @@ dependencies {
     implementation(libs.androidx.palette)
     implementation(libs.androidx.window)
     implementation(libs.androidx.startup.runtime)
+    implementation(libs.androidx.swiperefreshlayout)
 
     //Test
     testImplementation(libs.junit)
