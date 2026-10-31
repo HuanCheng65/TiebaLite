@@ -78,8 +78,7 @@ import com.huanchengfly.tieba.post.components.ClipBoardThreadLink
 import com.huanchengfly.tieba.post.services.NotifyJobService
 import com.huanchengfly.tieba.post.ui.common.theme.compose.ExtendedTheme
 import com.huanchengfly.tieba.post.ui.page.NavGraphs
-import com.huanchengfly.tieba.post.ui.page.destinations.ForumPageDestination
-import com.huanchengfly.tieba.post.ui.page.destinations.ThreadPageDestination
+import com.huanchengfly.tieba.post.ui.page.destinations.WebViewPageDestination
 import com.huanchengfly.tieba.post.ui.utils.DevicePosture
 import com.huanchengfly.tieba.post.ui.utils.SystemUiController
 import com.huanchengfly.tieba.post.ui.utils.isBookPosture
@@ -107,6 +106,7 @@ import com.huanchengfly.tieba.post.utils.newIntentFilter
 import com.huanchengfly.tieba.post.utils.registerPickMediasLauncher
 import com.huanchengfly.tieba.post.utils.requestIgnoreBatteryOptimizations
 import com.huanchengfly.tieba.post.utils.requestPermission
+import com.huanchengfly.tieba.post.utils.toTiebaDirection
 import com.ramcosta.composedestinations.DestinationsNavHost
 import com.ramcosta.composedestinations.animations.defaults.RootNavGraphDefaultAnimations
 import com.ramcosta.composedestinations.animations.rememberAnimatedNavHostEngine
@@ -138,6 +138,9 @@ val LocalDevicePosture =
 val LocalNavController =
     staticCompositionLocalOf<NavHostController> { throw IllegalStateException("not allowed here!") }
 val LocalDestination = compositionLocalOf<DestinationSpec<*>?> { null }
+
+// Link schemes handled by checkIntent instead of the navigation deep links
+private val EXTERNAL_LINK_SCHEMES = setOf("http", "https", "tbfrs", "tbpb", "com.baidu.tieba")
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
@@ -228,23 +231,13 @@ class MainActivityV2 : BaseComposeActivity() {
     }
 
     private fun checkIntent(intent: Intent): Boolean {
-        return if (intent.data?.scheme == "com.baidu.tieba" && intent.data?.host == "unidispatch") {
-            val uri = intent.data!!
-            when (uri.path.orEmpty().lowercase()) {
-                "/frs" -> {
-                    val forumName = uri.getQueryParameter("kw") ?: return true
-                    navigate(ForumPageDestination(forumName))
-                }
-
-                "/pb" -> {
-                    val threadId = uri.getQueryParameter("tid")?.toLongOrNull() ?: return true
-                    navigate(ThreadPageDestination(threadId))
-                }
-            }
-            true
-        } else {
-            false
-        }
+        val uri = intent.data ?: return false
+        val scheme = uri.scheme?.lowercase()
+        if (scheme !in EXTERNAL_LINK_SCHEMES) return false
+        val direction = uri.toTiebaDirection()
+            ?: if (scheme == "http" || scheme == "https") WebViewPageDestination(uri.toString()) else null
+        direction?.let { navigate(it) }
+        return true
     }
 
     override fun onNewIntent(intent: Intent) {

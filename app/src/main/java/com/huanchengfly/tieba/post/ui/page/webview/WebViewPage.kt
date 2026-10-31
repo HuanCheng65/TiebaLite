@@ -57,8 +57,6 @@ import com.huanchengfly.tieba.post.components.dialogs.PermissionDialog
 import com.huanchengfly.tieba.post.models.PermissionBean
 import com.huanchengfly.tieba.post.ui.common.theme.compose.ExtendedTheme
 import com.huanchengfly.tieba.post.ui.common.theme.utils.ThemeUtils
-import com.huanchengfly.tieba.post.ui.page.destinations.ForumPageDestination
-import com.huanchengfly.tieba.post.ui.page.destinations.ThreadPageDestination
 import com.huanchengfly.tieba.post.ui.widgets.compose.AccompanistWebChromeClient
 import com.huanchengfly.tieba.post.ui.widgets.compose.AccompanistWebViewClient
 import com.huanchengfly.tieba.post.ui.widgets.compose.BackNavigationIcon
@@ -78,6 +76,8 @@ import com.huanchengfly.tieba.post.utils.PermissionUtils.PermissionData
 import com.huanchengfly.tieba.post.utils.TiebaUtil
 import com.huanchengfly.tieba.post.utils.appPreferences
 import com.huanchengfly.tieba.post.utils.compose.launchActivityForResult
+import com.huanchengfly.tieba.post.utils.isTiebaHost
+import com.huanchengfly.tieba.post.utils.toTiebaDirection
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import kotlinx.coroutines.CoroutineScope
@@ -296,39 +296,17 @@ open class MyWebViewClient(
         val host = newUri.host?.lowercase() ?: return false
         val path = newUri.path?.lowercase() ?: return false
         val isHttp = scheme.startsWith("http")
-        val isTieba = host == "wapp.baidu.com" ||
-                host.contains("tieba.baidu.com") ||
-                host == "tiebac.baidu.com"
+        val isTieba = isTiebaHost(host)
         val isInternal = isTieba ||
                 host.contains("wappass.baidu.com") ||
                 host.contains("ufosdk.baidu.com") ||
                 host.contains("m.help.baidu.com")
         return when {
             isHttp && isTieba -> {
-                if (path == "/f" || path == "/mo/q/m") {
-                    val forumName =
-                        newUri.getQueryParameter("kw") ?: newUri.getQueryParameter("word")
-                    val threadId = newUri.getQueryParameter("kz")?.toLongOrNull()
-                    if (threadId != null) {
-                        nativeNavigator?.navigate(
-                            ThreadPageDestination(threadId)
-                        )
-                        true
-                    } else if (forumName != null) {
-                        nativeNavigator?.navigate(
-                            ForumPageDestination(forumName)
-                        )
-                        true
-                    } else false
-                } else if (path.startsWith("/p/")) {
-                    val threadId = path.substring(3).toLongOrNull()
-                    if (threadId != null) {
-                        nativeNavigator?.navigate(
-                            ThreadPageDestination(threadId)
-                        )
-                        true
-                    } else false
-                } else false
+                newUri.toTiebaDirection()?.let { direction ->
+                    nativeNavigator?.navigate(direction)
+                    true
+                } ?: false
             }
 
             isHttp && !isInternal -> {

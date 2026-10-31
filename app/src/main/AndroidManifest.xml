@@ -148,6 +148,34 @@
                 <category android:name="android.intent.category.BROWSABLE" />
             </intent-filter>
 
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data android:scheme="http" />
+                <data android:scheme="https" />
+                <data android:host="tieba.baidu.com" />
+                <data android:pathPrefix="/p/" />
+                <data android:path="/f" />
+                <data android:path="/mo/q/m" />
+            </intent-filter>
+
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:host="tieba.baidu.com"
+                    android:scheme="tbfrs" />
+                <data
+                    android:host="tieba.baidu.com"
+                    android:scheme="tbpb" />
+            </intent-filter>
+
             <meta-data
                 android:name="android.app.shortcuts"
                 android:resource="@xml/shortcut_new" />
@@ -203,6 +231,34 @@
                 <category android:name="android.intent.category.BROWSABLE" />
             </intent-filter>
 
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data android:scheme="http" />
+                <data android:scheme="https" />
+                <data android:host="tieba.baidu.com" />
+                <data android:pathPrefix="/p/" />
+                <data android:path="/f" />
+                <data android:path="/mo/q/m" />
+            </intent-filter>
+
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:host="tieba.baidu.com"
+                    android:scheme="tbfrs" />
+                <data
+                    android:host="tieba.baidu.com"
+                    android:scheme="tbpb" />
+            </intent-filter>
+
             <meta-data
                 android:name="android.app.shortcuts"
                 android:resource="@xml/shortcut_new" />
@@ -238,6 +294,34 @@
                 <category android:name="android.intent.category.BROWSABLE" />
             </intent-filter>
 
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data android:scheme="http" />
+                <data android:scheme="https" />
+                <data android:host="tieba.baidu.com" />
+                <data android:pathPrefix="/p/" />
+                <data android:path="/f" />
+                <data android:path="/mo/q/m" />
+            </intent-filter>
+
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:host="tieba.baidu.com"
+                    android:scheme="tbfrs" />
+                <data
+                    android:host="tieba.baidu.com"
+                    android:scheme="tbpb" />
+            </intent-filter>
+
             <meta-data
                 android:name="android.app.shortcuts"
                 android:resource="@xml/shortcut_new" />
@@ -270,6 +354,34 @@
 
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
+            </intent-filter>
+
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data android:scheme="http" />
+                <data android:scheme="https" />
+                <data android:host="tieba.baidu.com" />
+                <data android:pathPrefix="/p/" />
+                <data android:path="/f" />
+                <data android:path="/mo/q/m" />
+            </intent-filter>
+
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:host="tieba.baidu.com"
+                    android:scheme="tbfrs" />
+                <data
+                    android:host="tieba.baidu.com"
+                    android:scheme="tbpb" />
             </intent-filter>
 
             <meta-data
