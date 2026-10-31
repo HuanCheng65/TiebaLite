@@ -425,7 +425,5 @@ fun SubPostList.getContentText(threadAuthorId: Long? = null): AnnotatedString {
         }
     }
 
-    val contentStrings = content.renders.map { it.toAnnotationString() }
-
-    return userNameString + contentStrings.reduce { acc, annotatedString -> acc + annotatedString }
+    return content.renders.fold(userNameString) { acc, render -> acc + render.toAnnotationString() }
 }
