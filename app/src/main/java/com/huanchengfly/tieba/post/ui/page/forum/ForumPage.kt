@@ -47,6 +47,7 @@ import androidx.compose.material.icons.rounded.Search
 import androidx.compose.material.icons.rounded.VerticalAlignTop
 import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
@@ -85,7 +86,6 @@ import com.google.accompanist.placeholder.material.placeholder
 import com.huanchengfly.tieba.post.R
 import com.huanchengfly.tieba.post.api.models.protos.frsPage.ForumInfo
 import com.huanchengfly.tieba.post.arch.ImmutableHolder
-import com.huanchengfly.tieba.post.arch.collectPartialAsState
 import com.huanchengfly.tieba.post.arch.emitGlobalEvent
 import com.huanchengfly.tieba.post.arch.emitGlobalEventSuspend
 import com.huanchengfly.tieba.post.arch.onEvent
@@ -424,19 +424,12 @@ fun ForumPage(
         )
     }
 
-    val isLoading by viewModel.uiState.collectPartialAsState(
-        prop1 = ForumUiState::isLoading,
-        initial = false
-    )
-    val isError by viewModel.uiState.collectPartialAsState(
-        prop1 = ForumUiState::isError,
-        initial = false
-    )
-    val forumInfo by viewModel.uiState.collectPartialAsState(
-        prop1 = ForumUiState::forum,
-        initial = null
-    )
-    val tbs by viewModel.uiState.collectPartialAsState(prop1 = ForumUiState::tbs, initial = null)
+    // Restore the cached snapshot atomically; never render a placeholder empty list on return.
+    val pageState by viewModel.uiState.collectAsState()
+    val isLoading = pageState.isLoading
+    val isError = pageState.isError
+    val forumInfo = pageState.forum
+    val tbs = pageState.tbs
 
     val account = LocalAccount.current
     val pagerState = rememberPagerState { 2 }
