@@ -113,9 +113,6 @@
         <meta-data
             android:name="android.supports_size_changes"
             android:value="true" />
-        <meta-data
-            android:name="is_self_build"
-            android:value="${is_self_build}" />
 
         <activity
             android:name=".MainActivityV2"

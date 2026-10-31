@@ -58,7 +58,6 @@ android {
         vectorDrawables {
             useSupportLibrary = true
         }
-        manifestPlaceholders["is_self_build"] = "$isSelfBuild"
     }
     buildFeatures {
         compose = true
@@ -145,7 +144,6 @@ dependencies {
     //Local Files
 //    implementation fileTree(include: ["*.jar"], dir: "libs")
 
-    implementation(libs.swiftzer.semver)
     implementation(libs.godaddy.color.picker)
 
     implementation(libs.lottie)
@@ -265,8 +263,4 @@ dependencies {
 
     implementation(libs.butterknife)
     kapt(libs.butterknife.compiler)
-
-    implementation(libs.appcenter.analytics)
-    implementation(libs.appcenter.crashes)
-    implementation(libs.appcenter.distribute)
 }

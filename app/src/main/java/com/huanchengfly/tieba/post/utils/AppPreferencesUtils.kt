@@ -68,10 +68,6 @@ open class AppPreferencesUtils private constructor(ctx: Context) {
 
     var blockVideo by DataStoreDelegates.boolean(defaultValue = false)
 
-    var checkCIUpdate by DataStoreDelegates.boolean(
-        defaultValue = false
-    )
-
     var collectThreadSeeLz by DataStoreDelegates.boolean(
         defaultValue = true,
         key = "collect_thread_see_lz"

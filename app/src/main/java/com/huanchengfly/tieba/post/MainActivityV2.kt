@@ -108,7 +108,6 @@ import com.huanchengfly.tieba.post.utils.newIntentFilter
 import com.huanchengfly.tieba.post.utils.registerPickMediasLauncher
 import com.huanchengfly.tieba.post.utils.requestIgnoreBatteryOptimizations
 import com.huanchengfly.tieba.post.utils.requestPermission
-import com.microsoft.appcenter.analytics.Analytics
 import com.ramcosta.composedestinations.DestinationsNavHost
 import com.ramcosta.composedestinations.animations.defaults.RootNavGraphDefaultAnimations
 import com.ramcosta.composedestinations.animations.rememberAnimatedNavHostEngine
@@ -469,18 +468,6 @@ class MainActivityV2 : BaseComposeActivity() {
                 val currentDestination by navController.currentDestinationAsState()
 
                 navController.navigatorProvider += navigator
-
-                LaunchedEffect(currentDestination) {
-                    val curDest = currentDestination
-                    if (curDest != null) {
-                        Analytics.trackEvent(
-                            "PageChanged",
-                            mapOf(
-                                "page" to curDest.route,
-                            )
-                        )
-                    }
-                }
 
                 CompositionLocalProvider(
                     LocalNavController provides navController,

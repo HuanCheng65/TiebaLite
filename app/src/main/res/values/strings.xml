@@ -93,8 +93,6 @@
     <string name="toast_clear_picture_cache_success">成功清除图片缓存</string>
     <string name="tip_cache">当前共有缓存 %1$s</string>
     <string name="tip_no_little_tail">你还没有设置小尾巴</string>
-    <string name="button_next_time">下次再说</string>
-    <string name="title_dialog_update">发现新版本 %1$s</string>
     <string name="toast_no_permission_insert_photo">未授予「存储空间」权限，无法插入图片</string>
     <string name="tip_permission_storage">用于保存、上传图片，更换头像。</string>
     <string name="tip_no_permission">权限未授予，部分功能可能无法使用</string>
@@ -340,8 +338,6 @@
     <string name="summary_oksign_use_official_oksign">先使用官方一键签到减少需签到吧数量，以加快签到速度</string>
     <string name="title_stat_posts_num">回贴</string>
     <string name="toast_feature_unavailable">该功能尚未实现</string>
-    <string name="title_check_ci_update">接收自动构建版本更新</string>
-    <string name="tip_check_ci_update">仅供测试</string>
     <string name="desc_permission_post_notifications">用于发送消息通知、显示一键签到进度</string>
     <string name="desc_current_account">当前登录</string>
     <string name="source_code">开源代码</string>
