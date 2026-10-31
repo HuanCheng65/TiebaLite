@@ -952,7 +952,7 @@ object MixedTiebaApiImpl : ITiebaApi {
         return RetrofitTiebaApi.OFFICIAL_TIEBA_API.imgPortrait(
             MyMultipartBody.Builder("--------7da3d81520810*").apply {
                 setType(MyMultipartBody.FORM)
-                addFormDataPart(Param.CLIENT_VERSION, "11.10.8.6")
+                addFormDataPart(Param.CLIENT_VERSION, ClientVersion.TIEBA_V12.version)
                 addFormDataPart("pic", "file", file.asRequestBody())
             }.build()
         )

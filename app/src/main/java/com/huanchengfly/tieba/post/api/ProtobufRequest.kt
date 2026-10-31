@@ -144,6 +144,7 @@ fun buildCommonRequest(
             start_type = 1,
             stoken = AccountUtil.getSToken(),
             swan_game_ver = "1038000",
+            tbs = tbs,
             user_agent = getUserAgent("tieba/${clientVersion.version}"),
             z_id = AccountUtil.getAccountInfo { zid }
         )

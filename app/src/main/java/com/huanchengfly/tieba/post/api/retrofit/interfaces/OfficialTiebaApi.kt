@@ -3,6 +3,7 @@ package com.huanchengfly.tieba.post.api.retrofit.interfaces
 import android.os.Build
 import com.huanchengfly.tieba.post.App
 import com.huanchengfly.tieba.post.App.ScreenInfo
+import com.huanchengfly.tieba.post.api.ClientVersion
 import com.huanchengfly.tieba.post.api.Header
 import com.huanchengfly.tieba.post.api.Param
 import com.huanchengfly.tieba.post.api.getScreenHeight
@@ -254,7 +255,7 @@ interface OfficialTiebaApi {
     @POST("/c/c/img/portrait")
     fun imgPortrait(
         @Body body: MyMultipartBody,
-        @retrofit2.http.Header(Header.USER_AGENT) user_agent: String = "bdtb for Android 11.10.8.6",
+        @retrofit2.http.Header(Header.USER_AGENT) user_agent: String = "bdtb for Android ${ClientVersion.TIEBA_V12.version}",
     ): Flow<CommonResponse>
 
     @POST("/c/f/excellent/personalized")

@@ -116,7 +116,7 @@ object RetrofitTiebaApi {
     val HYBRID_TIEBA_API: AppHybridTiebaApi by lazy {
         createJsonApi<AppHybridTiebaApi>("https://tieba.baidu.com/",
             CommonHeaderInterceptor(
-                Header.USER_AGENT to { getUserAgent("tieba/12.35.1.0 skin/default") },
+                Header.USER_AGENT to { getUserAgent("tieba/${ClientVersion.TIEBA_V12.version} skin/default") },
                 Header.HOST to { "tieba.baidu.com" },
                 Header.PRAGMA to { "no-cache" },
                 Header.CACHE_CONTROL to { "no-cache" },
@@ -177,7 +177,7 @@ object RetrofitTiebaApi {
         createJsonApi<OfficialTiebaApi>(
             "http://c.tieba.baidu.com/",
             CommonHeaderInterceptor(
-                Header.USER_AGENT to { "bdtb for Android 12.25.1.0" },
+                Header.USER_AGENT to { "bdtb for Android ${ClientVersion.TIEBA_V12.version}" },
                 Header.COOKIE to { "CUID=${CuidUtils.getNewCuid()};ka=open;TBBRAND=${Build.MODEL};BAIDUID=${ClientUtils.baiduId};" },
                 Header.CUID to { CuidUtils.getNewCuid() },
                 Header.CUID_GALAXY2 to { CuidUtils.getNewCuid() },
@@ -185,7 +185,7 @@ object RetrofitTiebaApi {
                 Header.CUID_GALAXY3 to { UIDUtil.getAid() },
                 Header.CLIENT_TYPE to { "2" },
                 Header.CHARSET to { "UTF-8" },
-                "client_logid" to { "$initTime" }
+                Header.CLIENT_LOG_ID to { "$initTime" }
             ),
             defaultCommonParamInterceptor + CommonParamInterceptor(
                 Param.ACTIVE_TIMESTAMP to { ClientUtils.activeTimestamp.toString() },
@@ -215,7 +215,7 @@ object RetrofitTiebaApi {
                 Param.START_SCHEME to { "" },
                 Param.START_TYPE to { "1" },
                 Param.SWAN_GAME_VER to { "1038000" },
-                Param.CLIENT_VERSION to { "12.25.1.0" },
+                Param.CLIENT_VERSION to { ClientVersion.TIEBA_V12.version },
                 Param.CUID_GALAXY3 to { UIDUtil.getAid() },
                 Param.OAID to { OAID().toJson() },
             ),
@@ -271,6 +271,7 @@ object RetrofitTiebaApi {
                 Header.CUID_GALAXY3 to { UIDUtil.getAid() },
                 Header.USER_AGENT to { getUserAgent("tieba/${ClientVersion.TIEBA_V12.version}") },
                 Header.X_BD_DATA_TYPE to { "protobuf" },
+                Header.CLIENT_LOG_ID to { "$initTime" },
             ),
             stParamInterceptor,
         )
