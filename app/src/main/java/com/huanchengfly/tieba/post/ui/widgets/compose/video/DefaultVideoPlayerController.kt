@@ -44,8 +44,6 @@ internal class DefaultVideoPlayerController(
     private val coroutineScope: CoroutineScope,
     private val fullScreenModeChangedListener: OnFullScreenModeChangedListener? = null
 ) : VideoPlayerController {
-    private val released = AtomicBoolean(false)
-
     private val _state = MutableStateFlow(initialState)
     override val state: StateFlow<VideoPlayerState>
         get() = _state.asStateFlow()
@@ -371,12 +369,12 @@ internal class DefaultVideoPlayerController(
 
     override fun release() {
         Log.i("VideoPlayerController", "$this release")
-        if (released.compareAndSet(false, true)) {
-            exoPlayer.release()
-            previewExoPlayer.release()
-            _exoPlayer = null
-            _previewExoPlayer = null
-        }
+        // initialize() lazily creates new players after a release, so release whatever
+        // instances exist now instead of guarding with a one-shot flag
+        _exoPlayer?.release()
+        _previewExoPlayer?.release()
+        _exoPlayer = null
+        _previewExoPlayer = null
     }
 
     override fun supportFullScreen(): Boolean {
