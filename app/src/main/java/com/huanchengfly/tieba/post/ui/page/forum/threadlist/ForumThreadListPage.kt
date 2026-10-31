@@ -27,10 +27,13 @@ import androidx.compose.material.Text
 import androidx.compose.material.pullrefresh.PullRefreshIndicator
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalLifecycleOwner
+import androidx.lifecycle.Lifecycle
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -43,7 +46,6 @@ import com.huanchengfly.tieba.post.api.models.protos.abstractText
 import com.huanchengfly.tieba.post.api.models.protos.frsPage.Classify
 import com.huanchengfly.tieba.post.arch.BaseComposeActivity.Companion.LocalWindowSizeClass
 import com.huanchengfly.tieba.post.arch.ImmutableHolder
-import com.huanchengfly.tieba.post.arch.collectPartialAsState
 import com.huanchengfly.tieba.post.arch.onEvent
 import com.huanchengfly.tieba.post.arch.onGlobalEvent
 import com.huanchengfly.tieba.post.arch.pageViewModel
@@ -66,7 +68,6 @@ import com.huanchengfly.tieba.post.ui.widgets.compose.LocalSnackbarHostState
 import com.huanchengfly.tieba.post.ui.widgets.compose.MyLazyColumn
 import com.huanchengfly.tieba.post.ui.widgets.compose.VerticalDivider
 import kotlinx.collections.immutable.ImmutableList
-import kotlinx.collections.immutable.persistentListOf
 
 private fun getFirstLoadIntent(
     context: Context,
@@ -201,7 +202,7 @@ private fun ThreadList(
             items = items,
             key = { index, (holder) ->
                 val (item) = holder
-                "${index}_${item.id}"
+                item.id
             },
             contentType = { _, (holder) ->
                 val (item) = holder
@@ -268,6 +269,7 @@ fun ForumThreadListPage(
     val snackbarHostState = LocalSnackbarHostState.current
 
     val lazyListState = rememberLazyListState()
+    val lifecycle = LocalLifecycleOwner.current.lifecycle
 
     LazyLoad(loaded = viewModel.initialized) {
         viewModel.send(getFirstLoadIntent(context, forumName, isGood))
@@ -281,7 +283,9 @@ fun ForumThreadListPage(
     onGlobalEvent<ForumThreadListUiEvent.BackToTop>(
         filter = { it.isGood == isGood },
     ) {
-        lazyListState.animateScrollToItem(0)
+        if (lifecycle.currentState.isAtLeast(Lifecycle.State.RESUMED)) {
+            lazyListState.animateScrollToItem(0)
+        }
     }
     viewModel.onEvent<ForumThreadListUiEvent.AgreeFail> {
         val snackbarResult = snackbarHostState.showSnackbar(
@@ -303,42 +307,17 @@ fun ForumThreadListPage(
             )
         }
     }
-    val isRefreshing by viewModel.uiState.collectPartialAsState(
-        prop1 = ForumThreadListUiState::isRefreshing,
-        initial = false
-    )
-    val isLoadingMore by viewModel.uiState.collectPartialAsState(
-        prop1 = ForumThreadListUiState::isLoadingMore,
-        initial = false
-    )
-    val hasMore by viewModel.uiState.collectPartialAsState(
-        prop1 = ForumThreadListUiState::hasMore,
-        initial = true
-    )
-    val currentPage by viewModel.uiState.collectPartialAsState(
-        prop1 = ForumThreadListUiState::currentPage,
-        initial = 1
-    )
-    val forumRuleTitle by viewModel.uiState.collectPartialAsState(
-        prop1 = ForumThreadListUiState::forumRuleTitle,
-        initial = null
-    )
-    val threadList by viewModel.uiState.collectPartialAsState(
-        prop1 = ForumThreadListUiState::threadList,
-        initial = persistentListOf()
-    )
-    val threadListIds by viewModel.uiState.collectPartialAsState(
-        prop1 = ForumThreadListUiState::threadListIds,
-        initial = persistentListOf()
-    )
-    val goodClassifyId by viewModel.uiState.collectPartialAsState(
-        prop1 = ForumThreadListUiState::goodClassifyId,
-        initial = null
-    )
-    val goodClassifies by viewModel.uiState.collectPartialAsState(
-        prop1 = ForumThreadListUiState::goodClassifies,
-        initial = persistentListOf()
-    )
+    // Restore the cached snapshot atomically; never render a placeholder empty list on return.
+    val pageState by viewModel.uiState.collectAsState()
+    val isRefreshing = pageState.isRefreshing
+    val isLoadingMore = pageState.isLoadingMore
+    val hasMore = pageState.hasMore
+    val currentPage = pageState.currentPage
+    val forumRuleTitle = pageState.forumRuleTitle
+    val threadList = pageState.threadList
+    val threadListIds = pageState.threadListIds
+    val goodClassifyId = pageState.goodClassifyId
+    val goodClassifies = pageState.goodClassifies
     val pullRefreshState = rememberPullRefreshState(
         refreshing = isRefreshing,
         onRefresh = { viewModel.send(getRefreshIntent(context, forumName, isGood)) }
