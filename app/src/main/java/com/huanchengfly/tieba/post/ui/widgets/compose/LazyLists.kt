@@ -16,6 +16,8 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalLifecycleOwner
+import androidx.lifecycle.Lifecycle
 import androidx.compose.ui.unit.dp
 import com.huanchengfly.tieba.post.arch.GlobalEvent
 import com.huanchengfly.tieba.post.arch.onGlobalEvent
@@ -33,8 +35,11 @@ fun MyLazyColumn(
     userScrollEnabled: Boolean = true,
     content: LazyListScope.() -> Unit,
 ) {
+    val lifecycle = LocalLifecycleOwner.current.lifecycle
     onGlobalEvent<GlobalEvent.ScrollToTop> {
-        state.animateScrollToItem(0)
+        if (lifecycle.currentState.isAtLeast(Lifecycle.State.RESUMED)) {
+            state.animateScrollToItem(0)
+        }
     }
 
     LazyColumn(
@@ -64,8 +69,11 @@ fun MyLazyVerticalGrid(
     userScrollEnabled: Boolean = true,
     content: LazyGridScope.() -> Unit,
 ) {
+    val lifecycle = LocalLifecycleOwner.current.lifecycle
     onGlobalEvent<GlobalEvent.ScrollToTop> {
-        state.animateScrollToItem(0)
+        if (lifecycle.currentState.isAtLeast(Lifecycle.State.RESUMED)) {
+            state.animateScrollToItem(0)
+        }
     }
 
     LazyVerticalGrid(
