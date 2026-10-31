@@ -48,7 +48,7 @@ android {
     compileSdk = 37
     defaultConfig {
         applicationId = "com.huanchengfly.tieba.post"
-        minSdk = 23
+        minSdk = 24
         //noinspection OldTargetApi
         targetSdk = 34
         versionCode = applicationVersionCode
