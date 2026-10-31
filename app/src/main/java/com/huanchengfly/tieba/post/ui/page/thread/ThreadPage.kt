@@ -105,6 +105,7 @@ import com.huanchengfly.tieba.post.api.models.protos.ThreadInfo
 import com.huanchengfly.tieba.post.api.models.protos.User
 import com.huanchengfly.tieba.post.api.models.protos.bawuType
 import com.huanchengfly.tieba.post.api.models.protos.plainText
+import com.huanchengfly.tieba.post.api.models.protos.resolvedAuthorId
 import com.huanchengfly.tieba.post.api.retrofit.exception.getErrorMessage
 import com.huanchengfly.tieba.post.arch.GlobalEvent
 import com.huanchengfly.tieba.post.arch.ImmutableHolder
@@ -788,7 +789,7 @@ fun ThreadPage(
                     )
                 )
             } else {
-                val isSelfPost = deletePost!!.get { author_id } == user.get { id }
+                val isSelfPost = deletePost!!.get { resolvedAuthorId } == user.get { id }
                 viewModel.send(
                     ThreadUiIntent.DeletePost(
                         forumId = curForumId,
@@ -921,7 +922,7 @@ fun ThreadPage(
             subPosts = subPosts,
             threadAuthorId = author?.get { id } ?: 0L,
             blocked = blocked,
-            canDelete = { it.author_id == user.get { id } },
+            canDelete = { it.resolvedAuthorId == user.get { id } },
             immersiveMode = isImmersiveMode,
             isCollected = { it.id == thread?.get { collectMarkPid.toLongOrNull() } },
             onUserClick = {
@@ -945,7 +946,7 @@ fun ThreadPage(
                         forumName = forum?.get { name } ?: "",
                         threadId = threadId,
                         postId = it.id,
-                        replyUserId = it.author?.id ?: it.author_id,
+                        replyUserId = it.resolvedAuthorId,
                         replyUserName = it.author?.nameShow.takeIf { name -> !name.isNullOrEmpty() }
                             ?: it.author?.name,
                         replyUserPortrait = it.author?.portrait,
@@ -960,7 +961,7 @@ fun ThreadPage(
                         threadId = threadId,
                         postId = post.id,
                         subPostId = subPost.id,
-                        replyUserId = subPost.author?.id ?: subPost.author_id,
+                        replyUserId = subPost.resolvedAuthorId,
                         replyUserName = subPost.author?.nameShow.takeIf { name -> !name.isNullOrEmpty() }
                             ?: subPost.author?.name,
                         replyUserPortrait = subPost.author?.portrait,
@@ -1336,7 +1337,7 @@ fun ThreadPage(
                                                 PostCard(
                                                     postHolder = firstPost!!,
                                                     contentRenders = firstPostContentRenders,
-                                                    canDelete = { it.author_id == user.get { id } },
+                                                    canDelete = { it.resolvedAuthorId == user.get { id } },
                                                     immersiveMode = isImmersiveMode,
                                                     isCollected = {
                                                         it.id == thread?.get { collectMarkPid }

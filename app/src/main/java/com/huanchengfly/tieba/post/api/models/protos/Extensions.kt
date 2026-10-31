@@ -66,6 +66,18 @@ val PostInfoList.abstractText: String
         }
     }
 
+/**
+ * Some responses leave author_id as 0 and only fill author.id.
+ */
+val Post.resolvedAuthorId: Long
+    get() = author_id.takeIf { it != 0L } ?: author?.id ?: 0L
+
+/**
+ * Some responses leave author_id as 0 and only fill author.id.
+ */
+val SubPostList.resolvedAuthorId: Long
+    get() = author_id.takeIf { it != 0L } ?: author?.id ?: 0L
+
 val ThreadInfo.hasAgree: Int
     get() = agree?.hasAgree ?: 0
 val ThreadInfo.hasAgreed: Boolean

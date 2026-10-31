@@ -46,6 +46,7 @@ import com.huanchengfly.tieba.post.R
 import com.huanchengfly.tieba.post.api.models.protos.SubPostList
 import com.huanchengfly.tieba.post.api.models.protos.User
 import com.huanchengfly.tieba.post.api.models.protos.bawuType
+import com.huanchengfly.tieba.post.api.models.protos.resolvedAuthorId
 import com.huanchengfly.tieba.post.arch.ImmutableHolder
 import com.huanchengfly.tieba.post.arch.collectPartialAsState
 import com.huanchengfly.tieba.post.arch.onEvent
@@ -227,7 +228,7 @@ internal fun SubPostsContent(
         dialogState = confirmDeleteDialogState,
         onConfirm = {
             if (deleteSubPost == null) {
-                val isSelfPost = post?.get { author_id } == account?.uid?.toLongOrNull()
+                val isSelfPost = post?.get { resolvedAuthorId } == account?.uid?.toLongOrNull()
                 viewModel.send(
                     SubPostsUiIntent.DeletePost(
                         forumId = forumId,
@@ -240,7 +241,7 @@ internal fun SubPostsContent(
                 )
             } else {
                 val isSelfSubPost =
-                    deleteSubPost!!.get { author_id } == account?.uid?.toLongOrNull()
+                    deleteSubPost!!.get { resolvedAuthorId } == account?.uid?.toLongOrNull()
                 viewModel.send(
                     SubPostsUiIntent.DeletePost(
                         forumId = forumId,
@@ -421,7 +422,7 @@ internal fun SubPostsContent(
                                 PostCard(
                                     postHolder = it,
                                     contentRenders = postContentRenders,
-                                    canDelete = { it.author_id == account?.uid?.toLongOrNull() },
+                                    canDelete = { it.resolvedAuthorId == account?.uid?.toLongOrNull() },
                                     showSubPosts = false,
                                     onUserClick = {
                                         navigator.navigate(UserProfilePageDestination(it.id))
@@ -444,7 +445,7 @@ internal fun SubPostsContent(
                                                 forumName = forum?.get { name } ?: "",
                                                 threadId = threadId,
                                                 postId = postId,
-                                                replyUserId = it.author?.id ?: it.author_id,
+                                                replyUserId = it.resolvedAuthorId,
                                                 replyUserName = it.author?.nameShow.takeIf { name -> !name.isNullOrEmpty() }
                                                     ?: it.author?.name,
                                                 replyUserPortrait = it.author?.portrait,
@@ -486,7 +487,7 @@ internal fun SubPostsContent(
                     ) { index, item ->
                         SubPostItem(
                             item = item,
-                            canDelete = { it.author_id == account?.uid?.toLongOrNull() },
+                            canDelete = { it.resolvedAuthorId == account?.uid?.toLongOrNull() },
                             threadAuthorId = thread?.get { author?.id },
                             onUserClick = {
                                 navigator.navigate(UserProfilePageDestination(it.id))
@@ -511,7 +512,7 @@ internal fun SubPostsContent(
                                         threadId = threadId,
                                         postId = postId,
                                         subPostId = it.id,
-                                        replyUserId = it.author?.id ?: it.author_id,
+                                        replyUserId = it.resolvedAuthorId,
                                         replyUserName = it.author?.nameShow.takeIf { name -> !name.isNullOrEmpty() }
                                             ?: it.author?.name,
                                         replyUserPortrait = it.author?.portrait,
