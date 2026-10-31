@@ -3,7 +3,13 @@ package com.huanchengfly.tieba.post.api
 enum class ClientVersion(val version: String) {
     TIEBA_V11("11.10.8.6"),
     TIEBA_V12("12.52.1.0"),
-    TIEBA_V12_POST("12.52.1.0");
+    TIEBA_V12_POST("12.52.1.0"),
+
+    /**
+     * Only used for pb/floor: sub-post images are only returned to 22.x clients.
+     * Remove once all APIs move to a newer version.
+     */
+    TIEBA_V22("22.10.1.0");
 
     override fun toString(): String {
         return version

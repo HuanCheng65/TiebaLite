@@ -33,7 +33,7 @@ fun buildProtobufRequestBody(
     return MyMultipartBody.Builder(BOUNDARY)
         .apply {
             setType(MyMultipartBody.FORM)
-            if (clientVersion != ClientVersion.TIEBA_V12 && clientVersion != ClientVersion.TIEBA_V12_POST) {
+            if (clientVersion == ClientVersion.TIEBA_V11) {
                 addFormDataPart(Param.CLIENT_VERSION, clientVersion.version)
             }
             if (needSToken) {
@@ -100,7 +100,8 @@ fun buildCommonRequest(
         )
     }
 
-    ClientVersion.TIEBA_V12 -> {
+    ClientVersion.TIEBA_V12, ClientVersion.TIEBA_V22 -> {
+        val isV22 = clientVersion == ClientVersion.TIEBA_V22
         CommonRequest(
             BDUSS = AccountUtil.getBduss(),
             _client_id = ClientUtils.clientId ?: RetrofitTiebaApi.randomClientId,
@@ -124,7 +125,7 @@ fun buildCommonRequest(
             ),
             extra = "",
             first_install_time = App.Config.appFirstInstallTime,
-            framework_ver = "3340042",
+            framework_ver = if (isV22) "4220001" else "3340042",
             from = "1020031h",
             is_teenager = 0,
             last_update_time = App.Config.appLastUpdateTime,
@@ -139,12 +140,12 @@ fun buildCommonRequest(
             scr_dip = App.ScreenInfo.DENSITY.toDouble(),
             scr_h = getScreenHeight(),
             scr_w = getScreenWidth(),
-            sdk_ver = "2.34.0",
+            sdk_ver = if (isV22) "3.36.0" else "2.34.0",
             start_scheme = "",
             start_type = 1,
             stoken = AccountUtil.getSToken(),
-            swan_game_ver = "1038000",
-            tbs = tbs,
+            swan_game_ver = if (isV22) "2035000" else "1038000",
+            tbs = if (isV22) null else tbs,
             user_agent = getUserAgent("tieba/${clientVersion.version}"),
             z_id = AccountUtil.getAccountInfo { zid }
         )
