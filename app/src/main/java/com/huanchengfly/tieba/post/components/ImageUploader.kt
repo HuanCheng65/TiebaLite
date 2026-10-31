@@ -167,6 +167,11 @@ class ImageUploader(
                 }
             }
             .last()
+            .also { result ->
+                if (result.picId.isNullOrEmpty() || result.picInfo == null) {
+                    throw UploadPictureFailedException()
+                }
+            }
     }
 }
 
