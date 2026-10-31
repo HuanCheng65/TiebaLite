@@ -4,7 +4,6 @@ import okhttp3.Headers
 import okhttp3.MediaType
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.RequestBody
-import okhttp3.internal.toImmutableList
 import okio.Buffer
 import okio.BufferedSink
 import okio.ByteString
@@ -216,7 +215,7 @@ class MyMultipartBody internal constructor(
         /** Assemble the specified parts into a request body. */
         fun build(): MyMultipartBody {
             check(parts.isNotEmpty()) { "Multipart body must have at least one part." }
-            return MyMultipartBody(boundary, type, parts.toImmutableList())
+            return MyMultipartBody(boundary, type, parts.toList())
         }
     }
 

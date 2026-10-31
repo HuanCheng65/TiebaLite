@@ -9,9 +9,9 @@ wire = "6.4.0"
 accompanist = "0.34.0"
 compose-bom = "2026.09.00"
 compose-destinations = "1.11.9"
-sketch = "3.3.0"
-lottie = "6.3.0"
-glide = "4.16.0"
+sketch = "3.3.2"
+lottie = "6.7.1"
+glide = "5.0.9"
 retrofit = "3.0.0"
 androidx-activity = "1.13.0"
 androidx-lifecycle = "2.11.0"
@@ -46,7 +46,7 @@ compose-runtime-tracing = { module = "androidx.compose.runtime:runtime-tracing" 
 compose-destinations-core = { module = "io.github.raamcosta.compose-destinations:animations-core", version.ref = "compose-destinations" }
 compose-destinations-ksp = { module = "io.github.raamcosta.compose-destinations:ksp", version.ref = "compose-destinations" }
 
-accompanist-drawablepainter = { module = "com.google.accompanist:accompanist-drawablepainter", version.ref = "accompanist" }
+accompanist-drawablepainter = { module = "com.google.accompanist:accompanist-drawablepainter", version = "0.37.3" }
 accompanist-insets-ui = { module = "com.google.accompanist:accompanist-insets-ui", version.ref = "accompanist" }
 accompanist-systemuicontroller = { module = "com.google.accompanist:accompanist-systemuicontroller", version.ref = "accompanist" }
 accompanist-placeholder-material = { module = "com.google.accompanist:accompanist-placeholder-material", version.ref = "accompanist" }
@@ -82,11 +82,11 @@ androidx-hilt-lifecycle-viewmodel-compose = { module = "androidx.hilt:hilt-lifec
 androidx-hilt-compiler = { module = "androidx.hilt:hilt-compiler", version.ref = "androidx-hilt" }
 
 # Network & serialization
-okhttp = { module = "com.squareup.okhttp3:okhttp", version = "4.12.0" }
+okhttp = { module = "com.squareup.okhttp3:okhttp", version = "5.5.1" }
 retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit" }
 retrofit-converter-wire = { module = "com.squareup.retrofit2:converter-wire", version.ref = "retrofit" }
 wire-runtime = { module = "com.squareup.wire:wire-runtime", version.ref = "wire" }
-gson = { module = "com.google.code.gson:gson", version = "2.10.1" }
+gson = { module = "com.google.code.gson:gson", version = "2.15.0" }
 
 # Image
 sketch-core = { module = "io.github.panpf.sketch3:sketch", version.ref = "sketch" }
@@ -94,7 +94,7 @@ sketch-compose = { module = "io.github.panpf.sketch3:sketch-compose", version.re
 sketch-extensions-compose = { module = "io.github.panpf.sketch3:sketch-extensions-compose", version.ref = "sketch" }
 sketch-gif = { module = "io.github.panpf.sketch3:sketch-gif", version.ref = "sketch" }
 sketch-okhttp = { module = "io.github.panpf.sketch3:sketch-okhttp", version.ref = "sketch" }
-zoomimage-compose-sketch = { module = "io.github.panpf.zoomimage:zoomimage-compose-sketch", version = "1.0.1" }
+zoomimage-compose-sketch = { module = "io.github.panpf.zoomimage:zoomimage-compose-sketch", version = "1.0.2" }
 glide = { module = "com.github.bumptech.glide:glide", version.ref = "glide" }
 glide-ksp = { module = "com.github.bumptech.glide:ksp", version.ref = "glide" }
 glide-okhttp3-integration = { module = "com.github.bumptech.glide:okhttp3-integration", version.ref = "glide" }
