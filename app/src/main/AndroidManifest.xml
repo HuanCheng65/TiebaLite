@@ -153,6 +153,8 @@
                 android:resource="@xml/shortcut_new" />
         </activity>
 
+        <!-- Switching the launcher icon disables MainActivityV2 and enables one of these aliases,
+             so every alias must repeat the deep link filters of MainActivityV2. -->
         <activity-alias
             android:name=".activities.MainActivity"
             android:enabled="false"
@@ -184,6 +186,23 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
 
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:scheme="tblite" />
+            </intent-filter>
+
+            <intent-filter android:autoVerify="true">
+                <data
+                    android:host="unidispatch"
+                    android:scheme="com.baidu.tieba" />
+
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+            </intent-filter>
+
             <meta-data
                 android:name="android.app.shortcuts"
                 android:resource="@xml/shortcut_new" />
@@ -202,6 +221,23 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
 
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:scheme="tblite" />
+            </intent-filter>
+
+            <intent-filter android:autoVerify="true">
+                <data
+                    android:host="unidispatch"
+                    android:scheme="com.baidu.tieba" />
+
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+            </intent-filter>
+
             <meta-data
                 android:name="android.app.shortcuts"
                 android:resource="@xml/shortcut_new" />
@@ -217,6 +253,23 @@
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:scheme="tblite" />
+            </intent-filter>
+
+            <intent-filter android:autoVerify="true">
+                <data
+                    android:host="unidispatch"
+                    android:scheme="com.baidu.tieba" />
+
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
             </intent-filter>
 
             <meta-data
