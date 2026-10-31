@@ -194,7 +194,19 @@ class SingleAccountSigner(
                         }
                         result = true
                     }
-                    .flatMapConcat { signFlow(it) }
+                    .flatMapConcat { signData ->
+                        // A banned or closed forum must not stop signing the remaining forums
+                        signFlow(signData).catch { e ->
+                            lastFailure = e
+                            mProgressListener?.onFailure(
+                                position,
+                                totalCount,
+                                e.getErrorCode(),
+                                e.getErrorMessage()
+                            )
+                            delay(getSignDelay())
+                        }
+                    }
             }
             .catch { e ->
                 result = false
