@@ -25,7 +25,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Fullscreen
 import androidx.compose.material.icons.rounded.FullscreenExit
 import androidx.compose.material.icons.rounded.PlayArrow
-import androidx.compose.material.ripple.rememberRipple
+import androidx.compose.material.ripple
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.DisposableEffect
@@ -277,7 +277,7 @@ private fun FullScreenButton() {
         modifier = Modifier
             .padding(8.dp)
             .clickable(
-                indication = rememberRipple(bounded = false),
+                indication = ripple(bounded = false),
                 interactionSource = remember { MutableInteractionSource() }
             ) {
                 videoPlayerController.toggleFullScreen()

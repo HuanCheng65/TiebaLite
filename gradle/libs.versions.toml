@@ -1,19 +1,18 @@
 [versions]
-agp = "8.2.2"
-kotlin = "1.9.22"
-ksp = "1.9.22-1.0.17"
-hilt = "2.46.1"
-androidx-hilt = "1.1.0"
-wire = "4.9.3"
-dependency-analysis = "1.29.0"
+agp = "9.2.1"
+kotlin = "2.4.21"
+ksp = "2.3.12"
+hilt = "2.60.1"
+androidx-hilt = "1.2.0"
+wire = "6.4.0"
 
 accompanist = "0.34.0"
-compose-bom = "2024.01.00"
-compose-destinations = "1.10.0"
+compose-bom = "2026.09.00"
+compose-destinations = "1.11.9"
 sketch = "3.3.0"
 lottie = "6.3.0"
 glide = "4.16.0"
-retrofit = "2.9.0"
+retrofit = "3.0.0"
 androidx-activity = "1.8.2"
 androidx-lifecycle = "2.7.0"
 androidx-media3 = "1.2.1"
@@ -35,6 +34,7 @@ compose-bom = { module = "androidx.compose:compose-bom", version.ref = "compose-
 compose-animation = { module = "androidx.compose.animation:animation" }
 compose-animation-graphics = { module = "androidx.compose.animation:animation-graphics" }
 compose-material = { module = "androidx.compose.material:material" }
+compose-material-navigation = { module = "androidx.compose.material:material-navigation" }
 compose-material-icons-core = { module = "androidx.compose.material:material-icons-core" }
 compose-material-icons-extended = { module = "androidx.compose.material:material-icons-extended" }
 compose-ui-util = { module = "androidx.compose.ui:ui-util" }
@@ -120,11 +120,9 @@ androidx-test-espresso-core = { module = "androidx.test.espresso:espresso-core",
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
-kotlin-kapt = { id = "org.jetbrains.kotlin.kapt", version.ref = "kotlin" }
+kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 kotlin-parcelize = { id = "org.jetbrains.kotlin.plugin.parcelize", version.ref = "kotlin" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
 wire = { id = "com.squareup.wire", version.ref = "wire" }
-dependency-analysis = { id = "com.autonomousapps.dependency-analysis", version.ref = "dependency-analysis" }

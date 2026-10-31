@@ -38,7 +38,7 @@ import androidx.compose.material.icons.automirrored.rounded.ArrowBack
 import androidx.compose.material.icons.rounded.ExpandLess
 import androidx.compose.material.icons.rounded.ExpandMore
 import androidx.compose.material.icons.rounded.Search
-import androidx.compose.material.ripple.rememberRipple
+import androidx.compose.material.ripple
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.LaunchedEffect
@@ -329,7 +329,7 @@ private fun SearchSuggestionList(
             key = { it }
         ) {
             Container(
-                modifier = Modifier.animateItemPlacement()
+                modifier = Modifier.animateItem()
             ) {
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
@@ -578,7 +578,7 @@ private fun SearchTopBar(
                     .clip(RoundedCornerShape(100))
                     .clickable(
                         interactionSource = remember { MutableInteractionSource() },
-                        indication = rememberRipple(bounded = false, 24.dp),
+                        indication = ripple(bounded = false, 24.dp),
                         role = Role.Button,
                         onClick = onBack
                     ),

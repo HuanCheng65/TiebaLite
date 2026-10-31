@@ -27,7 +27,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Clear
 import androidx.compose.material.icons.rounded.PhotoSizeSelectActual
 import androidx.compose.material.icons.rounded.Search
-import androidx.compose.material.ripple.rememberRipple
+import androidx.compose.material.ripple
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -456,7 +456,7 @@ fun SearchBox(
                             .clip(RoundedCornerShape(100))
                             .clickable(
                                 interactionSource = remember { MutableInteractionSource() },
-                                indication = rememberRipple(bounded = false, 24.dp),
+                                indication = ripple(bounded = false, 24.dp),
                                 role = Role.Button
                             ) { onKeywordChange("") },
                         contentAlignment = Alignment.Center,
@@ -474,7 +474,7 @@ fun SearchBox(
                         .clip(RoundedCornerShape(100))
                         .clickable(
                             interactionSource = remember { MutableInteractionSource() },
-                            indication = rememberRipple(bounded = false, 24.dp),
+                            indication = ripple(bounded = false, 24.dp),
                             role = Role.Button
                         ) { onKeywordSubmit(keyword) },
                     contentAlignment = Alignment.Center,

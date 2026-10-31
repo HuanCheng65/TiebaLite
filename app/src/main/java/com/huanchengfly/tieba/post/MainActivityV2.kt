@@ -64,9 +64,8 @@ import androidx.window.layout.FoldingFeature
 import androidx.window.layout.WindowInfoTracker
 import com.github.panpf.sketch.compose.AsyncImage
 import com.github.panpf.sketch.fetch.newFileUri
-import com.google.accompanist.navigation.material.BottomSheetNavigator
-import com.google.accompanist.navigation.material.ExperimentalMaterialNavigationApi
-import com.google.accompanist.navigation.material.ModalBottomSheetLayout
+import androidx.compose.material.navigation.BottomSheetNavigator
+import androidx.compose.material.navigation.ModalBottomSheetLayout
 import com.google.accompanist.systemuicontroller.SystemUiController
 import com.huanchengfly.tieba.post.api.retrofit.exception.getErrorMessage
 import com.huanchengfly.tieba.post.arch.BaseComposeActivity
@@ -111,11 +110,11 @@ import com.huanchengfly.tieba.post.utils.requestPermission
 import com.ramcosta.composedestinations.DestinationsNavHost
 import com.ramcosta.composedestinations.animations.defaults.RootNavGraphDefaultAnimations
 import com.ramcosta.composedestinations.animations.rememberAnimatedNavHostEngine
-import com.ramcosta.composedestinations.navigation.navigate
 import com.ramcosta.composedestinations.spec.DestinationSpec
 import com.ramcosta.composedestinations.spec.Direction
 import com.ramcosta.composedestinations.utils.currentDestinationAsState
 import com.ramcosta.composedestinations.utils.currentDestinationFlow
+import com.ramcosta.composedestinations.utils.toDestinationsNavigator
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.BufferOverflow
@@ -140,7 +139,7 @@ val LocalNavController =
     staticCompositionLocalOf<NavHostController> { throw IllegalStateException("not allowed here!") }
 val LocalDestination = compositionLocalOf<DestinationSpec<*>?> { null }
 
-@OptIn(ExperimentalMaterialApi::class, ExperimentalMaterialNavigationApi::class)
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun rememberBottomSheetNavigator(
     animationSpec: AnimationSpec<Float> = SwipeableDefaults.AnimationSpec,
@@ -210,7 +209,7 @@ class MainActivityV2 : BaseComposeActivity() {
                         .take(1)
                         .collect {
                             if (waitingNavCollectorToNavigate.get() && direction != null) {
-                                value.navigate(direction!!)
+                                value.toDestinationsNavigator().navigate(direction!!)
                                 waitingNavCollectorToNavigate.set(false)
                                 direction = null
                             }
@@ -224,7 +223,7 @@ class MainActivityV2 : BaseComposeActivity() {
             waitingNavCollectorToNavigate.set(true)
             this.direction = direction
         } else {
-            myNavController?.navigate(direction)
+            myNavController?.toDestinationsNavigator()?.navigate(direction)
         }
     }
 
@@ -415,7 +414,6 @@ class MainActivityV2 : BaseComposeActivity() {
         }
     }
 
-    @OptIn(ExperimentalMaterialNavigationApi::class)
     @Composable
     override fun Content() {
         val okSignAlertDialogState = rememberDialogState()
@@ -553,7 +551,7 @@ private object TiebaNavHostDefaults {
     )
 
     @Composable
-    @OptIn(ExperimentalMaterialNavigationApi::class, ExperimentalAnimationApi::class)
+    @OptIn(ExperimentalAnimationApi::class)
     fun rememberNavHostEngine() = rememberAnimatedNavHostEngine(
         navHostContentAlignment = Alignment.TopStart,
         rootDefaultAnimations = RootNavGraphDefaultAnimations(
@@ -588,7 +586,6 @@ private object TiebaNavHostDefaults {
         ),
     )
 
-    @OptIn(ExperimentalMaterialNavigationApi::class)
     @Composable
     fun rememberBottomSheetNavigator(): BottomSheetNavigator = rememberBottomSheetNavigator(
         animationSpec = spring(stiffness = Spring.StiffnessMediumLow),

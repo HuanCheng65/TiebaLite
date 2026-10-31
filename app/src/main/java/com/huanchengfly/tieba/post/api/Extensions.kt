@@ -80,7 +80,7 @@ fun MyMultipartBody.Part.contentDisposition(): Map<String, String> {
     headers?.toString()?.split(";")?.forEach {
         val header = it.trim().split("=").toMutableList()
         if (header.size >= 2) {
-            val name = header.removeFirst().trim()
+            val name = header.removeAt(0).trim()
             val value = header.joinToString("=").trim().trim('"')
             headersMap[name] = value
         }

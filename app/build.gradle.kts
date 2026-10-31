@@ -1,10 +1,10 @@
-import com.android.build.gradle.internal.api.BaseVariantOutputImpl
+import com.android.build.api.variant.impl.VariantOutputImpl
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import java.util.Properties
 
 plugins {
     alias(libs.plugins.android.application)
-    alias(libs.plugins.kotlin.android)
-    alias(libs.plugins.kotlin.kapt)
+    alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.kotlin.parcelize)
     alias(libs.plugins.hilt)
@@ -45,11 +45,10 @@ wire {
 }
 
 android {
-    buildToolsVersion = "34.0.0"
-    compileSdk = 34
+    compileSdk = 37
     defaultConfig {
         applicationId = "com.huanchengfly.tieba.post"
-        minSdk = 21
+        minSdk = 23
         //noinspection OldTargetApi
         targetSdk = 34
         versionCode = applicationVersionCode
@@ -61,6 +60,7 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
     signingConfigs {
         if (keystoreFile.isNotBlank()) {
@@ -95,27 +95,9 @@ android {
             multiDexEnabled = true
         }
     }
-    composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.8"
-    }
     compileOptions {
         targetCompatibility = JavaVersion.VERSION_11
         sourceCompatibility = JavaVersion.VERSION_11
-    }
-    kotlinOptions {
-        jvmTarget = "11"
-        freeCompilerArgs += listOf(
-            "-P",
-            "plugin:androidx.compose.compiler.plugins.kotlin:reportsDestination=" + project.buildDir.absolutePath + "/compose_metrics"
-        )
-        freeCompilerArgs += listOf(
-            "-P",
-            "plugin:androidx.compose.compiler.plugins.kotlin:metricsDestination=" + project.buildDir.absolutePath + "/compose_metrics"
-        )
-        freeCompilerArgs += listOf(
-            "-P", "plugin:androidx.compose.compiler.plugins.kotlin:stabilityConfigurationPath=" +
-                    project.rootDir.absolutePath + "/compose_stability_configuration.txt"
-        )
     }
     packaging {
         resources {
@@ -124,20 +106,28 @@ android {
         }
     }
     namespace = "com.huanchengfly.tieba.post"
-    applicationVariants.configureEach {
-        val variant = this
-        outputs.configureEach {
-            val fileName =
-                "${variant.buildType.name}-${applicationVersionName}(${applicationVersionCode}).apk"
+}
 
-            (this as BaseVariantOutputImpl).outputFileName = fileName
-        }
-        kotlin.sourceSets {
-            getByName(variant.name) {
-                kotlin.srcDir("build/generated/ksp/${variant.name}/kotlin")
-            }
+androidComponents {
+    onVariants { variant ->
+        variant.outputs.forEach { output ->
+            (output as VariantOutputImpl).outputFileName.set(
+                "${variant.buildType}-${applicationVersionName}(${applicationVersionCode}).apk"
+            )
         }
     }
+}
+
+kotlin {
+    compilerOptions {
+        jvmTarget = JvmTarget.JVM_11
+    }
+}
+
+composeCompiler {
+    reportsDestination = layout.buildDirectory.dir("compose_metrics")
+    metricsDestination = layout.buildDirectory.dir("compose_metrics")
+    stabilityConfigurationFiles.add(rootProject.layout.projectDirectory.file("compose_stability_configuration.txt"))
 }
 
 dependencies {
@@ -163,9 +153,9 @@ dependencies {
     api(libs.wire.runtime)
 
     implementation(libs.hilt.android)
-    kapt(libs.hilt.compiler)
+    ksp(libs.hilt.compiler)
     implementation(libs.androidx.hilt.navigation.compose)
-    kapt(libs.androidx.hilt.compiler)
+    ksp(libs.androidx.hilt.compiler)
 
     implementation(libs.accompanist.drawablepainter)
     implementation(libs.accompanist.insets.ui)
@@ -187,6 +177,7 @@ dependencies {
     implementation(libs.compose.animation)
     implementation(libs.compose.animation.graphics)
     implementation(libs.compose.material)
+    implementation(libs.compose.material.navigation)
     implementation(libs.compose.material.icons.core)
     // Optional - Add full set of material icons
     implementation(libs.compose.material.icons.extended)
